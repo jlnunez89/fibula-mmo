@@ -1,0 +1,67 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using OpenTibia.Data.Contracts;
+using Sprache;
+
+namespace OpenTibia.Utilities.Grammar
+{
+    public class TileGrammar
+    {
+        private static readonly Parser<char> EqualSign = Parse.Char('=');
+        private static readonly Parser<char> OpenCurly = Parse.Char('{');
+        private static readonly Parser<char> CloseCurly = Parse.Char('}');
+        private static readonly Parser<char> DoubleQuote = Parse.Char('"');
+        private static readonly Parser<char> Backslash = Parse.Char('\\');
+        private static readonly Parser<char> Comma = Parse.Char(',');
+        
+        private static readonly Parser<string> Text =
+            from text in Parse.AnyChar.Except(Parse.WhiteSpace).Except(OpenCurly).Except(CloseCurly).Except(Comma).Except(EqualSign).AtLeastOnce().Text()
+            select text.Trim();
+
+        private static readonly Parser<string> EnclosedInCurly =
+            from openCurly in OpenCurly
+            from content in Content
+            from closeCurly in CloseCurly
+            select openCurly + content.ToString() + closeCurly;
+
+        private static readonly Parser<string> KeyValPair =
+            from key in Text
+            from _ in EqualSign
+            from value in EnclosedInCurly.Or(CipGrammar.QuotedMessage).Or(Text).Once()
+            select key + _ + value; // we want the whole thing .. key=val
+
+        public static readonly Parser<ContentElement> Content =
+            from leadingWs in Parse.WhiteSpace.Many()
+            from id in Parse.Number.Optional()
+            from ws in Parse.WhiteSpace.Many()
+            from attrs in KeyValPair.Or(Text).Optional().DelimitedBy(Comma)
+            select new ContentElement(id.IsEmpty ? "0" : id.Get(), attrs.Select(i => i.IsEmpty ? string.Empty : i.Get()).ToArray());
+        
+        public class ContentElement
+        {
+            public string Id { get; }
+
+            public object[] Attributes { get; }
+
+            public ContentElement(string id, params object[] attributes)
+            {
+                Id = id;
+                Attributes = attributes;
+            }
+
+            public override string ToString()
+            {
+                var sb = new StringBuilder();
+
+                foreach (var obj in Attributes)
+                {
+                    sb.Append(obj);
+                }
+
+                return $"{Id} {sb}";
+            }
+        }
+    }
+}

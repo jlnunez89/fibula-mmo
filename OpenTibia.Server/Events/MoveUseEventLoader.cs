@@ -1,0 +1,86 @@
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using System.Reflection;
+using OpenTibia.Data.Contracts;
+using OpenTibia.Server.Data.Interfaces;
+using OpenTibia.Server.Items;
+using Sprache;
+using static OpenTibia.Utilities.Grammar.EventGrammar;
+
+namespace OpenTibia.Server.Events
+{
+    public class MoveUseEventLoader : IEventLoader
+    {
+        /*
+            An item definition starts and ends with blank lines.
+
+            TypeID      = 1 # body container
+            Name        = ""
+            Flags       = {Container,Take}
+            Attributes  = {Capacity=1,Weight=0
+
+         */
+
+        public const char CommentSymbol = '#';
+        public const char PropertyValueSeparator = '=';
+        
+        public IDictionary<EventType, HashSet<IEvent>> Load(string moveUseFileName)
+        {
+            if (string.IsNullOrWhiteSpace(moveUseFileName))
+            {
+                throw new ArgumentNullException(nameof(moveUseFileName));
+            }
+
+            var moveUseFilePath = "OpenTibia.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + moveUseFileName;
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            var eventDictionary = new Dictionary<EventType, HashSet<IEvent>>
+            {
+                {EventType.Use, new HashSet<IEvent>()},
+                {EventType.MultiUse, new HashSet<IEvent>()},
+                {EventType.Movement, new HashSet<IEvent>()},
+                {EventType.Collision, new HashSet<IEvent>()},
+                {EventType.Separation, new HashSet<IEvent>()}
+            };
+
+            using (var stream = assembly.GetManifestResourceStream(moveUseFilePath))
+            {
+                if (stream == null)
+                {
+                    throw new Exception($"Failed to load {moveUseFilePath}.");
+                }
+
+                using (var reader = new StreamReader(stream))
+                {
+                    foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray()))
+                    {
+                        var inLine = readLine?.Split(new[] {ObjectsFileItemLoader.CommentSymbol}, 2).FirstOrDefault();
+
+                        // ignore comments and empty lines.
+                        if (string.IsNullOrWhiteSpace(inLine) || inLine.StartsWith("BEGIN") || inLine.StartsWith("END"))
+                        {
+                            continue;
+                        }
+
+                        try
+                        {
+                            var moveUseEventParsed = Event.Parse(inLine);
+
+                            eventDictionary[moveUseEventParsed.Type].Add(EventFactory.Create(moveUseEventParsed));
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex.Message);
+                            Console.WriteLine(ex.StackTrace);
+                        }
+                    }
+                }
+            }
+
+            return eventDictionary;
+        }
+    }
+}

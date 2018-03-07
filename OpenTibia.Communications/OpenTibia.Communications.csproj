@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Configuration\OpenTibia.Configuration.csproj" />
+    <ProjectReference Include="..\OpenTibia.Data.Contracts\OpenTibia.Data.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Data\OpenTibia.Data.csproj" />
+    <ProjectReference Include="..\OpenTibia.Security\OpenTibia.Security.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Data\OpenTibia.Server.Data.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Utils\OpenTibia.Server.Utils.csproj" />
+  </ItemGroup>
+
+</Project>
