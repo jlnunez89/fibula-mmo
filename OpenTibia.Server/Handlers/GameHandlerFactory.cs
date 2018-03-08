@@ -1,9 +1,15 @@
-﻿using OpenTibia.Communications;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="GameHandlerFactory.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Handlers
 {
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     public class GameHandlerFactory : IHandlerFactory
     {
         public IIncomingPacketHandler CreateIncommingForType(byte packeType)

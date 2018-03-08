@@ -1,42 +1,68 @@
-﻿using System.Net;
-using OpenTibia.Data.Contracts;
+﻿// <copyright file="ServiceConfiguration.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Configuration
 {
+    using System.Net;
+    using OpenTibia.Data.Contracts;
+
     public class ServiceConfiguration
     {
         public WorldType WorldType { get; set; }
+
         public IPAddress PublicGameIpAddress { get; set; }
+
         public ushort PublicGamePort { get; set; }
+
         public byte DailyResetHour { get; set; }
+
         public ushort MaximumTotalPlayers { get; set; }
+
         public ushort PremiumMainlandBuffer { get; set; }
+
         public ushort MaximumRookgardians { get; set; }
+
         public ushort PremiumRookgardiansBuffer { get; set; }
+
         public string QueryManagerPassword { get; set; }
+
         public string MessageOfTheDay { get; set; }
+
         public string LocationString { get; set; }
+
         public int GameVersionInt { get; set; }
+
         public string GameVersionString { get; set; }
+
         public int ClientVersionInt { get; set; }
+
         public string ClientVersionString { get; set; }
+
         public string WebsiteUrl { get; set; }
+
         public IPAddress PrivateGameIpAddress { get; set; }
+
         public ushort PrivateGamePort { get; set; }
+
         public bool UsingCipsoftRsaKeys { get; set; }
 
+        public string WorldName { get; set; }
+
         private static readonly object ConfigLock = new object();
-        private static ServiceConfiguration _config;
+        private static ServiceConfiguration config;
 
         public static ServiceConfiguration GetConfiguration()
         {
-            if(_config == null)
+            if (config == null)
             {
-                lock(ConfigLock)
+                lock (ConfigLock)
                 {
-                    if(_config == null)
+                    if (config == null)
                     {
-                        _config = new ServiceConfiguration
+                        config = new ServiceConfiguration
                         {
                             UsingCipsoftRsaKeys = true,
                             GameVersionInt = 10,
@@ -56,13 +82,14 @@ namespace OpenTibia.Configuration
                             QueryManagerPassword = "a6glaf0c",
                             LocationString = "United States",
                             MessageOfTheDay = "Welcome to OpenTibia.",
-                            WebsiteUrl = @"http://www.randomot.com"
+                            WebsiteUrl = @"http://www.randomot.com",
+                            WorldName = "Open Tibia"
                         };
                     }
                 }
             }
 
-            return _config;
+            return config;
         }
     }
 }

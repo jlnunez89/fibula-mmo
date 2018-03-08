@@ -1,9 +1,16 @@
-﻿namespace OpenTibia.Server.Standalone
+﻿// <copyright file="Program.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace OpenTibia.Server.Standalone
 {
     using System;
     using System.Threading;
     using System.Threading.Tasks;
     using OpenTibia.Communications;
+    using OpenTibia.Communications.Interfaces;
     using OpenTibia.Server.Events;
     using OpenTibia.Server.Handlers;
     using OpenTibia.Server.Handlers.Management;
@@ -12,15 +19,11 @@
 
     public class Program
     {
-        private static IOpenTibiaListener _loginListener;
-        private static IOpenTibiaListener _gameListener;
-        //private static IOpenTibiaListener managementListener;
-
+        private static IOpenTibiaListener loginListener;
+        private static IOpenTibiaListener gameListener;
+        // private static IOpenTibiaListener managementListener;
         static void Main()
         {
-            //GCNotifier.GarbageCollected += GCNotifier_GarbageCollected;
-            //GCNotifier.Start();
-
             var cancellationTokenSource = new CancellationTokenSource();
 
             // Set the loaders to use.
@@ -30,27 +33,24 @@
 
             // Set the persistence storage source (database)
 
-
             // Initilize client listening pipeline (but reject game connections)
-            _loginListener = new LoginListener(new ManagementHandlerFactory());
-            //managementListener = new ManagementListener(new ManagementHandlerFactory());
-            _gameListener = new GameListener(new GameHandlerFactory());
-
+            loginListener = new LoginListener(new ManagementHandlerFactory(), 7171);
+            gameListener = new GameListener(new GameHandlerFactory(), 7172);
+            // managementListener = new ManagementListener(new ManagementHandlerFactory());
             var listeningTask = RunAsync(cancellationTokenSource.Token);
 
             // Initilize game
             Game.Instance.Begin(cancellationTokenSource.Token);
 
             // TODO: open up game connections
-
             listeningTask.Wait(cancellationTokenSource.Token);
         }
 
         private static async Task RunAsync(CancellationToken cancellationToken)
         {
-            _loginListener.BeginListening();
-            //managementListener.BeginListening();
-            _gameListener.BeginListening();
+            loginListener.BeginListening();
+            // managementListener.BeginListening();
+            gameListener.BeginListening();
 
             while (!cancellationToken.IsCancellationRequested)
             {

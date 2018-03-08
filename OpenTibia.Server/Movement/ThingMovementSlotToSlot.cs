@@ -1,59 +1,67 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Events;
-using OpenTibia.Server.Movement.Policies;
-using OpenTibia.Server.Notifications;
+﻿// <copyright file="ThingMovementSlotToSlot.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Movement
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Events;
+    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Notifications;
+
     internal class ThingMovementSlotToSlot : MovementBase
     {
         public Location FromLocation { get; }
+
         public byte FromSlot { get; }
 
         public Location ToLocation { get; }
+
         public byte ToSlot { get; }
 
         public IItem Item { get; }
+
         public byte Count { get; }
 
         public ThingMovementSlotToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base (creatureRequestingId)
+            : base(creatureRequestingId)
         {
             // intentionally left thing null check out. Handled by Perform().
-
             if (count == 0)
             {
                 throw new ArgumentException("Invalid count zero.");
             }
 
-            FromLocation = fromLocation;
-            FromSlot = (byte)FromLocation.Slot;
+            this.FromLocation = fromLocation;
+            this.FromSlot = (byte)this.FromLocation.Slot;
 
-            ToLocation = toLocation;
-            ToSlot = (byte)ToLocation.Slot;
+            this.ToLocation = toLocation;
+            this.ToSlot = (byte)this.ToLocation.Slot;
 
-            Item = thingMoving as IItem;
-            Count = count;
-            
-            Policies.Add(new SlotContainsItemAndCountPolicy(creatureRequestingId, Item, FromSlot, Count));
+            this.Item = thingMoving as IItem;
+            this.Count = count;
+
+            this.Policies.Add(new SlotContainsItemAndCountPolicy(creatureRequestingId, this.Item, this.FromSlot, this.Count));
         }
 
         public override void Perform()
         {
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (Item == null || requestor == null)
+            if (this.Item == null || requestor == null)
             {
                 return;
             }
 
             bool partialRemove;
             // attempt to remove the item from the inventory
-            var movingItem = requestor.Inventory?.Remove(FromSlot, Count, out partialRemove);
+            var movingItem = requestor.Inventory?.Remove(this.FromSlot, this.Count, out partialRemove);
 
             if (movingItem == null)
             {
@@ -62,10 +70,10 @@ namespace OpenTibia.Server.Movement
 
             // attempt to place the intended item at the slot.
             IItem addedItem;
-            if (!requestor.Inventory.Add(movingItem, out addedItem, ToSlot, movingItem.Count))
+            if (!requestor.Inventory.Add(movingItem, out addedItem, this.ToSlot, movingItem.Count))
             {
                 // failed to add to the slot, add again to the source slot
-                if (!requestor.Inventory.Add(movingItem, out addedItem, FromSlot, movingItem.Count))
+                if (!requestor.Inventory.Add(movingItem, out addedItem, this.FromSlot, movingItem.Count))
                 {
                     // and we somehow failed to re-add it to the source container...
                     // throw to the ground.
@@ -102,7 +110,7 @@ namespace OpenTibia.Server.Movement
 
                 // added the new item to the slot
                 IItem extraAddedItem;
-                if (!requestor.Inventory.Add(addedItem, out extraAddedItem, FromSlot, movingItem.Count))
+                if (!requestor.Inventory.Add(addedItem, out extraAddedItem, this.FromSlot, movingItem.Count))
                 {
                     // we exchanged or got some leftover item, place back in the source container at any index.
                     IThing remainderThing = extraAddedItem;

@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
+﻿// <copyright file="SimpleDoSDefender.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Security
 {
+    using System;
+    using System.Collections.Concurrent;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
+    using System.Threading.Tasks;
+
     public class SimpleDoSDefender : IDoSDefender
     {
         // To prevent a memory attack... just blacklist a maximum of 1M addresses.
@@ -16,57 +22,59 @@ namespace OpenTibia.Security
         private const int BlockAtCount = 20;
 
         public HashSet<string> BlockedIpAddresses { get; }
+
         public ConcurrentDictionary<string, int> ConnectionCount { get; }
+
         public CancellationTokenSource CancellationTokenSource { get; }
 
-        private static SimpleDoSDefender _singleton;
+        private static SimpleDoSDefender singleton;
 
         private static readonly object SingletonLock = new object();
-        private Task _cleaningTask;
+        private Task cleaningTask;
 
         public static SimpleDoSDefender Instance
         {
             get
             {
-                if(_singleton == null)
+                if (singleton == null)
                 {
-                    lock(SingletonLock)
+                    lock (SingletonLock)
                     {
-                        if(_singleton == null)
+                        if (singleton == null)
                         {
-                            _singleton = new SimpleDoSDefender();
+                            singleton = new SimpleDoSDefender();
                         }
                     }
                 }
 
-                return _singleton;
+                return singleton;
             }
         }
 
         public SimpleDoSDefender()
         {
-            BlockedIpAddresses = new HashSet<string>();
-            ConnectionCount = new ConcurrentDictionary<string, int>();
-            CancellationTokenSource = new CancellationTokenSource();
+            this.BlockedIpAddresses = new HashSet<string>();
+            this.ConnectionCount = new ConcurrentDictionary<string, int>();
+            this.CancellationTokenSource = new CancellationTokenSource();
 
-            _cleaningTask = Task.Factory.StartNew(() =>
+            this.cleaningTask = Task.Factory.StartNew(() =>
             {
-                while (!CancellationTokenSource.Token.IsCancellationRequested)
+                while (!this.CancellationTokenSource.Token.IsCancellationRequested)
                 {
                     const int secondsToWait = 5;
                     Thread.Sleep(TimeSpan.FromSeconds(secondsToWait));
-                    var cleaningList = ConnectionCount.ToList();
+                    var cleaningList = this.ConnectionCount.ToList();
 
                     foreach (var kvp in cleaningList)
                     {
                         if (kvp.Value < secondsToWait)
                         {
                             int count;
-                            ConnectionCount.TryRemove(kvp.Key, out count);
+                            this.ConnectionCount.TryRemove(kvp.Key, out count);
                         }
                         else
                         {
-                            ConnectionCount.TryUpdate(kvp.Key, kvp.Value - secondsToWait, kvp.Value);
+                            this.ConnectionCount.TryUpdate(kvp.Key, kvp.Value - secondsToWait, kvp.Value);
                         }
                     }
                 }
@@ -75,19 +83,19 @@ namespace OpenTibia.Security
 
         public void AddToBlocked(string addressStr)
         {
-            if(BlockedIpAddresses.Count >= ListSizeLimit || string.IsNullOrWhiteSpace(addressStr))
+            if (this.BlockedIpAddresses.Count >= ListSizeLimit || string.IsNullOrWhiteSpace(addressStr))
             {
                 return;
             }
 
-            AddInternal(addressStr);
+            this.AddInternal(addressStr);
         }
 
         private void AddInternal(string addressStr)
         {
             try
             {
-                BlockedIpAddresses.Add(addressStr);
+                this.BlockedIpAddresses.Add(addressStr);
             }
             catch
             {
@@ -97,26 +105,26 @@ namespace OpenTibia.Security
 
         public bool IsBlockedAddress(string addressStr)
         {
-            return BlockedIpAddresses.Contains(addressStr);
+            return this.BlockedIpAddresses.Contains(addressStr);
         }
 
         public void LogConnectionAttempt(string addressStr)
         {
-            ConnectionCount.AddOrUpdate(addressStr, 0, (key, prev) => { return prev + 1; });
+            this.ConnectionCount.AddOrUpdate(addressStr, 0, (key, prev) => { return prev + 1; });
 
             try
             {
-                if (ConnectionCount[addressStr] == BlockAtCount)
+                if (this.ConnectionCount[addressStr] == BlockAtCount)
                 {
-                    AddInternal(addressStr);
+                    this.AddInternal(addressStr);
 
                     int count;
-                    ConnectionCount.TryRemove(addressStr, out count);
+                    this.ConnectionCount.TryRemove(addressStr, out count);
                 }
             }
             catch
-            { 
-                // happens if the key was removed exactly at the time we were querying. Just ignore. 
+            {
+                // happens if the key was removed exactly at the time we were querying. Just ignore.
             }
         }
     }

@@ -1,8 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// <copyright file="BinaryHeap.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+
     public class BinaryHeap<T>
     {
         protected T[] Data;
@@ -11,30 +17,32 @@ namespace OpenTibia.Utilities
 
         public BinaryHeap()
         {
-            Constructor(4, null);
+            this.Constructor(4, null);
         }
 
         public BinaryHeap(Comparison<T> comparison)
         {
-            Constructor(4, comparison);
+            this.Constructor(4, comparison);
         }
 
         public BinaryHeap(int capacity)
         {
-            Constructor(capacity, null);
+            this.Constructor(capacity, null);
         }
 
         public BinaryHeap(int capacity, Comparison<T> comparison)
         {
-            Constructor(capacity, comparison);
+            this.Constructor(capacity, comparison);
         }
 
         private void Constructor(int capacity, Comparison<T> comparison)
         {
-            Data = new T[capacity];
-            Comparison = comparison;
-            if (Comparison == null)
-                Comparison = Comparer<T>.Default.Compare;
+            this.Data = new T[capacity];
+            this.Comparison = comparison;
+            if (this.Comparison == null)
+            {
+                this.Comparison = Comparer<T>.Default.Compare;
+            }
         }
 
         public int Size { get; private set; }
@@ -45,11 +53,14 @@ namespace OpenTibia.Utilities
         /// <param name="item"></param>
         public void Insert(T item)
         {
-            if (Size == Data.Length)
-                Resize();
-            Data[Size] = item;
-            HeapifyUp(Size);
-            Size++;
+            if (this.Size == this.Data.Length)
+            {
+                this.Resize();
+            }
+
+            this.Data[this.Size] = item;
+            this.HeapifyUp(this.Size);
+            this.Size++;
         }
 
         /// <summary>
@@ -58,7 +69,7 @@ namespace OpenTibia.Utilities
         /// <returns></returns>
         public T Peak()
         {
-            return Data[0];
+            return this.Data[0];
         }
 
         /// <summary>
@@ -67,18 +78,18 @@ namespace OpenTibia.Utilities
         /// <returns></returns>
         public T Pop()
         {
-            var item = Data[0];
-            Size--;
-            Data[0] = Data[Size];
-            HeapifyDown(0);
+            var item = this.Data[0];
+            this.Size--;
+            this.Data[0] = this.Data[this.Size];
+            this.HeapifyDown(0);
             return item;
         }
 
         private void Resize()
         {
-            var resizedData = new T[Data.Length * 2];
-            Array.Copy(Data, 0, resizedData, 0, Data.Length);
-            Data = resizedData;
+            var resizedData = new T[this.Data.Length * 2];
+            Array.Copy(this.Data, 0, resizedData, 0, this.Data.Length);
+            this.Data = resizedData;
         }
 
         private void HeapifyUp(int childIdx)
@@ -86,36 +97,38 @@ namespace OpenTibia.Utilities
             if (childIdx > 0)
             {
                 var parentIdx = (childIdx - 1) / 2;
-                if (Comparison.Invoke(Data[childIdx], Data[parentIdx]) > 0)
+                if (this.Comparison.Invoke(this.Data[childIdx], this.Data[parentIdx]) > 0)
                 {
                     // swap parent and child
-                    var t = Data[parentIdx];
-                    Data[parentIdx] = Data[childIdx];
-                    Data[childIdx] = t;
-                    HeapifyUp(parentIdx);
+                    var t = this.Data[parentIdx];
+                    this.Data[parentIdx] = this.Data[childIdx];
+                    this.Data[childIdx] = t;
+                    this.HeapifyUp(parentIdx);
                 }
             }
         }
 
         private void HeapifyDown(int parentIdx)
         {
-            var leftChildIdx = 2 * parentIdx + 1;
+            var leftChildIdx = (2 * parentIdx) + 1;
             var rightChildIdx = leftChildIdx + 1;
             var largestChildIdx = parentIdx;
-            if (leftChildIdx < Size && Comparison.Invoke(Data[leftChildIdx], Data[largestChildIdx]) > 0)
+            if (leftChildIdx < this.Size && this.Comparison.Invoke(this.Data[leftChildIdx], this.Data[largestChildIdx]) > 0)
             {
                 largestChildIdx = leftChildIdx;
             }
-            if (rightChildIdx < Size && Comparison.Invoke(Data[rightChildIdx], Data[largestChildIdx]) > 0)
+
+            if (rightChildIdx < this.Size && this.Comparison.Invoke(this.Data[rightChildIdx], this.Data[largestChildIdx]) > 0)
             {
                 largestChildIdx = rightChildIdx;
             }
+
             if (largestChildIdx != parentIdx)
             {
-                var t = Data[parentIdx];
-                Data[parentIdx] = Data[largestChildIdx];
-                Data[largestChildIdx] = t;
-                HeapifyDown(largestChildIdx);
+                var t = this.Data[parentIdx];
+                this.Data[parentIdx] = this.Data[largestChildIdx];
+                this.Data[largestChildIdx] = t;
+                this.HeapifyDown(largestChildIdx);
             }
         }
     }

@@ -1,23 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿// <copyright file="Extensions.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
     public static class Extensions
     {
         /// <summary>
         /// Repeats the specified string n times.
         /// </summary>
         /// <param name="instr">The input string.</param>
-        /// <param name="n">The number of times input string 
+        /// <param name="n">The number of times input string
         /// should be repeated.</param>
         /// <returns></returns>
         // http://weblogs.asp.net/gunnarpeipman/archive/2009/05/13/string-repeat-smaller-and-faster-version.aspx
         public static string Repeat(this string instr, int n)
         {
             if (string.IsNullOrEmpty(instr))
+            {
                 return instr;
+            }
 
             var result = new StringBuilder(instr.Length * n);
             return result.Insert(0, instr, n).ToString();
@@ -28,7 +36,9 @@ namespace OpenTibia.Utilities
             var temp = new byte[unsignedIntegers.Length * sizeof(uint)];
 
             for (var i = 0; i < unsignedIntegers.Length; i++)
+            {
                 Array.Copy(BitConverter.GetBytes(unsignedIntegers[i]), 0, temp, i * 4, 4);
+            }
 
             return temp;
         }
@@ -36,12 +46,16 @@ namespace OpenTibia.Utilities
         public static uint[] ToUInt32Array(this byte[] bytes)
         {
             if (bytes.Length % 4 > 0)
+            {
                 throw new Exception();
+            }
 
             var temp = new uint[bytes.Length / 4];
 
             for (var i = 0; i < temp.Length; i++)
+            {
                 temp[i] = BitConverter.ToUInt32(bytes, i * 4);
+            }
 
             return temp;
         }
@@ -53,10 +67,12 @@ namespace OpenTibia.Utilities
         /// <returns></returns>
         public static string ToIpString(this byte[] value)
         {
-            var ret = "";
+            var ret = string.Empty;
 
             for (var i = 0; i < value.Length; i++)
+            {
                 ret += value[i] + ".";
+            }
 
             return ret.TrimEnd('.');
         }
@@ -75,6 +91,7 @@ namespace OpenTibia.Utilities
             {
                 text += bytes[i].ToPrintableChar();
             }
+
             return text;
         }
 
@@ -89,6 +106,7 @@ namespace OpenTibia.Utilities
             {
                 return '.';
             }
+
             return (char)value;
         }
 
@@ -105,13 +123,15 @@ namespace OpenTibia.Utilities
         /// <summary>
         /// Converts a string to a byte array
         /// </summary>
-        /// <param name="value"></param>
         /// <returns></returns>
         public static byte[] ToByteArray(this string s)
         {
             var value = new List<byte>();
             foreach (var c in s)
+            {
                 value.Add(c.ToByte());
+            }
+
             return value.ToArray();
         }
 
@@ -123,7 +143,10 @@ namespace OpenTibia.Utilities
             s = s.Replace(" ", string.Empty);
             var buffer = new byte[s.Length / 2];
             for (var i = 0; i < s.Length; i += 2)
+            {
                 buffer[i / 2] = Convert.ToByte(s.Substring(i, 2), 16);
+            }
+
             return buffer;
         }
 
@@ -135,11 +158,12 @@ namespace OpenTibia.Utilities
         public static string ToPrintableStringAsHex(this string value)
         {
             byte[] temp = value.ToBytesAsHex();
-            var loc = "";
+            var loc = string.Empty;
             for (var i = 0; i < temp.Length; i++)
             {
                 loc += temp[i].ToPrintableChar();
             }
+
             return loc;
         }
 
@@ -163,7 +187,10 @@ namespace OpenTibia.Utilities
         {
             byte[] bytes = value.ToBytesAsHex();
             if (bytes.Length >= 2)
+            {
                 return BitConverter.ToInt16(bytes, 0);
+            }
+
             return int.MinValue;
         }
 
@@ -175,7 +202,10 @@ namespace OpenTibia.Utilities
         {
             var sb = new StringBuilder(data.Length * 3);
             for (var i = start; i < start + length; i++)
+            {
                 sb.Append(Convert.ToString(data[i], 16).PadLeft(2, '0').PadRight(3, ' '));
+            }
+
             return sb.ToString().ToUpper();
         }
 

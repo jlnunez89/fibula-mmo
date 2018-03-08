@@ -1,19 +1,25 @@
-﻿using Microsoft.EntityFrameworkCore;
-using OpenTibia.Data.Configurations;
-using OpenTibia.Data.Models;
+﻿// <copyright file="OpenTibiaDbContext.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Data
 {
-    //[DbConfigurationType(typeof(OpenTibia.Db.MultipleDbConfiguration))]
+    using Microsoft.EntityFrameworkCore;
+    using OpenTibia.Data.Configurations;
+    using OpenTibia.Data.Models;
+
+    // [DbConfigurationType(typeof(OpenTibia.Db.MultipleDbConfiguration))]
     public class OpenTibiaDbContext : DbContext
     {
-        //private static string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
-        //private static readonly object _lockDbObject = new object();
-        
-        //private static DbConnection _mysqlDbConnection;
-        
-        //private static DbConnection GetCommonConnection()
-        //{
+        // private static string connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ConnectionString;
+        // private static readonly object _lockDbObject = new object();
+
+        // private static DbConnection _mysqlDbConnection;
+
+        // private static DbConnection GetCommonConnection()
+        // {
         //    if (_mysqlDbConnection == null || _mysqlDbConnection.State != System.Data.ConnectionState.Open)
         //    {
         //        lock (_lockDbObject)
@@ -26,9 +32,8 @@ namespace OpenTibia.Data
         //        }
         //    }
 
-        //    return _mysqlDbConnection;
-        //}
-
+        // return _mysqlDbConnection;
+        // }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             // TODO: to configuration

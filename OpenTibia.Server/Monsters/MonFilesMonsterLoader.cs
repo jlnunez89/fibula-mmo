@@ -1,14 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Items;
+﻿// <copyright file="MonFilesMonsterLoader.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Monsters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Items;
+
     public class MonFilesMonsterLoader : IMonsterLoader
     {
         /*
@@ -76,7 +82,7 @@ namespace OpenTibia.Server.Monsters
 
         public const char CommentSymbol = '#';
         public const char PropertyValueSeparator = '=';
-        
+
         Dictionary<ushort, MonsterType> IMonsterLoader.LoadMonsters(string loadFromFile)
         {
             if (string.IsNullOrWhiteSpace(loadFromFile))
@@ -104,8 +110,8 @@ namespace OpenTibia.Server.Monsters
                     {
                         var dataList = new List<Tuple<string, string>>();
 
-                        var propName = "";
-                        var propData = "";
+                        var propName = string.Empty;
+                        var propData = string.Empty;
 
                         foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
                         {
@@ -240,7 +246,7 @@ namespace OpenTibia.Server.Monsters
             var spawnsFilePath = "OpenTibia.Server.Data." + ServerConfiguration.DataFilesDirectory + "." + spawnsFileName;
 
             var assembly = Assembly.GetExecutingAssembly();
-            
+
             using (var stream = assembly.GetManifestResourceStream(spawnsFilePath))
             {
                 if (stream == null)

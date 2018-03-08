@@ -1,26 +1,34 @@
-﻿using System;
-using OpenTibia.Data.Contracts;
+﻿// <copyright file="Location.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Data.Models.Structs
 {
+    using System;
+    using OpenTibia.Data.Contracts;
+
     public struct Location
     {
         public int X { get; set; }
+
         public int Y { get; set; }
+
         public sbyte Z { get; set; }
 
-        public bool IsUnderground => Z > 7;
+        public bool IsUnderground => this.Z > 7;
 
         public LocationType Type
         {
             get
             {
-                if (X != 0xFFFF)
+                if (this.X != 0xFFFF)
                 {
                     return LocationType.Ground;
                 }
 
-                if ((Y & 0x40) != 0)
+                if ((this.Y & 0x40) != 0)
                 {
                     return LocationType.Container;
                 }
@@ -33,8 +41,8 @@ namespace OpenTibia.Server.Data.Models.Structs
         {
             return new Location
             {
-                X = (location1.X + location2.X),
-                Y = (location1.Y + location2.Y),
+                X = location1.X + location2.X,
+                Y = location1.Y + location2.Y,
                 Z = (sbyte)(location1.Z + location2.Z)
             };
         }
@@ -43,36 +51,36 @@ namespace OpenTibia.Server.Data.Models.Structs
         {
             return new Location
             {
-                X = (location2.X - location1.X),
-                Y = (location2.Y - location1.Y),
+                X = location2.X - location1.X,
+                Y = location2.Y - location1.Y,
                 Z = (sbyte)(location2.Z - location1.Z)
             };
         }
 
-        public Slot Slot => (Slot)Convert.ToByte(Y);
+        public Slot Slot => (Slot)Convert.ToByte(this.Y);
 
-        public byte Container => Convert.ToByte(Y - 0x40);
+        public byte Container => Convert.ToByte(this.Y - 0x40);
 
         public sbyte ContainerPosition
         {
             get
             {
-                return Convert.ToSByte(Z);
+                return Convert.ToSByte(this.Z);
             }
 
             set
             {
-                Z = value;
+                this.Z = value;
             }
         }
 
-        public int MaxValueIn2D => Math.Max(Math.Abs(X), Math.Abs(Y));
+        public int MaxValueIn2D => Math.Max(Math.Abs(this.X), Math.Abs(this.Y));
 
-        public int MaxValueIn3D => Math.Max(MaxValueIn2D, Math.Abs(Z));
+        public int MaxValueIn3D => Math.Max(this.MaxValueIn2D, Math.Abs(this.Z));
 
         public override string ToString()
         {
-            return $"[{X}, {Y}, {Z}]";
+            return $"[{this.X}, {this.Y}, {this.Z}]";
         }
 
         public override bool Equals(object obj)
@@ -84,9 +92,9 @@ namespace OpenTibia.Server.Data.Models.Structs
         {
             int hash = 13;
 
-            hash = (hash * 7) + X.GetHashCode();
-            hash = (hash * 7) + Y.GetHashCode();
-            hash = (hash * 7) + Z.GetHashCode();
+            hash = (hash * 7) + this.X.GetHashCode();
+            hash = (hash * 7) + this.Y.GetHashCode();
+            hash = (hash * 7) + this.Z.GetHashCode();
 
             return hash;
         }
@@ -155,10 +163,14 @@ namespace OpenTibia.Server.Data.Models.Structs
             if (!returnDiagonals)
             {
                 if (locationDiff.X < 0)
+                {
                     return Direction.West;
+                }
 
                 if (locationDiff.X > 0)
+                {
                     return Direction.East;
+                }
 
                 return locationDiff.Y < 0 ? Direction.North : Direction.South;
             }
@@ -166,7 +178,9 @@ namespace OpenTibia.Server.Data.Models.Structs
             if (locationDiff.X < 0)
             {
                 if (locationDiff.Y < 0)
+                {
                     return Direction.NorthWest;
+                }
 
                 return locationDiff.Y > 0 ? Direction.SouthWest : Direction.West;
             }
@@ -174,11 +188,13 @@ namespace OpenTibia.Server.Data.Models.Structs
             if (locationDiff.X > 0)
             {
                 if (locationDiff.Y < 0)
+                {
                     return Direction.NorthEast;
+                }
 
                 return locationDiff.Y > 0 ? Direction.SouthEast : Direction.East;
             }
-            
+
             return locationDiff.Y < 0 ? Direction.North : Direction.South;
         }
     }

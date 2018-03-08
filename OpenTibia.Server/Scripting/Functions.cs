@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Items;
-using OpenTibia.Server.Monsters;
-using OpenTibia.Server.Movement;
-using OpenTibia.Server.Notifications;
+﻿// <copyright file="Functions.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Scripting
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.ComponentModel;
+    using System.Linq;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Items;
+    using OpenTibia.Server.Monsters;
+    using OpenTibia.Server.Movement;
+    using OpenTibia.Server.Notifications;
+
     public static class Functions
     {
         public const string ThingOneIdentifier = "Obj1";
@@ -28,6 +34,7 @@ namespace OpenTibia.Server.Scripting
             {
                 return Convert.ChangeType(value, newType);
             }
+
             var converter = CustomConvertersFactory.GetConverter(newType);
 
             if (converter == null)
@@ -52,8 +59,10 @@ namespace OpenTibia.Server.Scripting
                     var convertedSingleItem = ConvertSingleItem(element, singleItemType);
                     elements.Add(convertedSingleItem);
                 }
+
                 return elements.ToArray(singleItemType);
             }
+
             return ConvertSingleItem(value, newType);
         }
 
@@ -66,11 +75,13 @@ namespace OpenTibia.Server.Scripting
                 {
                     return null;
                 }
+
                 return ConvertStringToNewNonNullableType(value, new NullableConverter(newType).UnderlyingType);
             }
+
             return ConvertStringToNewNonNullableType(value, newType);
         }
-        
+
         public static bool InvokeCondition(IThing obj1, IThing obj2, IPlayer user, string methodName, params object[] parameters)
         {
             if (string.IsNullOrWhiteSpace(methodName))
@@ -92,7 +103,7 @@ namespace OpenTibia.Server.Scripting
                 {
                     throw new MissingMethodException(type.Name, methodName);
                 }
-                
+
                 var methodParameters = methodInfo.GetParameters();
 
                 var parametersForInvocation = new List<object>();
@@ -176,7 +187,7 @@ namespace OpenTibia.Server.Scripting
                 }
 
                 var paramsArray = parametersForInvocation.ToArray();
-                
+
                 methodInfo.Invoke(null, paramsArray);
 
                 // update references to special parameters.
@@ -283,8 +294,8 @@ namespace OpenTibia.Server.Scripting
             }
 
             ItemFlag parsedFlag;
-            
-            return Enum.TryParse(flagStr, out parsedFlag) && ((IItem) itemThing).Type.Flags.Contains(parsedFlag);
+
+            return Enum.TryParse(flagStr, out parsedFlag) && ((IItem)itemThing).Type.Flags.Contains(parsedFlag);
         }
 
         public static bool HasProfession(IThing thing, byte profesionId)
@@ -303,7 +314,7 @@ namespace OpenTibia.Server.Scripting
 
             ItemAttribute actualAttribute;
 
-            if(!Enum.TryParse(attributeStr, out actualAttribute))
+            if (!Enum.TryParse(attributeStr, out actualAttribute))
             {
                 return false;
             }
@@ -312,7 +323,7 @@ namespace OpenTibia.Server.Scripting
             {
                 return false;
             }
-            
+
             switch (comparer.Trim())
             {
                 case "=":
@@ -338,7 +349,7 @@ namespace OpenTibia.Server.Scripting
 
         public static bool IsHouseOwner(IThing thing, IPlayer user)
         {
-            return IsHouse(thing); //&& thing.Tile.House.Owner == user.Name;
+            return IsHouse(thing); // && thing.Tile.House.Owner == user.Name;
         }
 
         public static bool Random(byte value)
@@ -392,7 +403,7 @@ namespace OpenTibia.Server.Scripting
                 return;
             }
 
-            targetTile.BruteRemoveItemWithId(fromItemId);            
+            targetTile.BruteRemoveItemWithId(fromItemId);
             targetTile.AddThing(ref newThing);
 
             Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, location, Game.Instance.GetMapTileDescription(conn.PlayerId, location)), targetTile.Location);
@@ -411,7 +422,8 @@ namespace OpenTibia.Server.Scripting
                 return;
             }
 
-            Game.Instance.NotifySpectatingPlayers(conn => new GenericNotification(conn, new MagicEffectPacket
+            Game.Instance.NotifySpectatingPlayers(
+                conn => new GenericNotification(conn, new MagicEffectPacket
                 {
                 Location = thing.Location,
                 Effect = (EffectT)effectByte
@@ -427,11 +439,12 @@ namespace OpenTibia.Server.Scripting
                 return;
             }
 
-            Game.Instance.NotifySpectatingPlayers(conn => new GenericNotification(conn, new MagicEffectPacket
+            Game.Instance.NotifySpectatingPlayers(
+                conn => new GenericNotification(conn, new MagicEffectPacket
                 {
                 Location = location,
                 Effect = (EffectT)effectByte
-            }), 
+            }),
             location);
         }
 
@@ -458,7 +471,7 @@ namespace OpenTibia.Server.Scripting
             {
                 return;
             }
-            
+
             targetTile.BruteRemoveItemWithId(itemId);
 
             Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, location, Game.Instance.GetMapTileDescription(conn.PlayerId, location)), targetTile.Location);
@@ -472,7 +485,6 @@ namespace OpenTibia.Server.Scripting
             {
                 IThing monsterAsThing = monster;
                 // place the monster.
-
                 var tile = Game.Instance.GetTileAt(location);
 
                 if (tile == null)
@@ -491,7 +503,7 @@ namespace OpenTibia.Server.Scripting
                 Game.Instance.NotifySpectatingPlayers(conn => new CreatureAddedNotification(conn, monster, EffectT.BubbleBlue), monster.Location);
             }
         }
-        
+
         public static void Change(ref IThing thing, ushort toItemId, byte unknown)
         {
             if (thing == null)
@@ -536,11 +548,10 @@ namespace OpenTibia.Server.Scripting
 
             Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, targetTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, targetTile.Location)), targetTile.Location);
         }
-        
+
         public static void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue)
         {
             // TODO: implement correctly when combat is...
-
             var damagedCreature = damagedThing as ICreature;
 
             if (damagedCreature == null)
@@ -550,9 +561,9 @@ namespace OpenTibia.Server.Scripting
 
             switch (damageSourceType)
             {
-                default: // physical 
+                default: // physical
                     break;
-                case 2: // magic? or mana? 
+                case 2: // magic? or mana?
                     break;
                 case 4: // fire instant
                     Effect(damagedThing, (byte)EffectT.Flame);
@@ -576,7 +587,7 @@ namespace OpenTibia.Server.Scripting
         {
             Game.Instance.AttemptLogout(user); // TODO: force?
         }
-        
+
         public static void Move(IThing thingToMove, Location targetLocation)
         {
             if (thingToMove == null)
@@ -601,7 +612,7 @@ namespace OpenTibia.Server.Scripting
         {
             Game.Instance.RequestMovement(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true));
         }
-                
+
         public static void MoveTop(IThing fromThing, Location targetLocation)
         {
             if (fromThing == null)
@@ -620,7 +631,7 @@ namespace OpenTibia.Server.Scripting
                 Game.Instance.RequestMovement(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
             }
         }
-        
+
         /// <summary>
         /// Moves the top thing in the stack of the <paramref name="fromThing"/>'s <see cref="Thing.Tile"/> to the relative location off of it.
         /// </summary>
@@ -635,7 +646,7 @@ namespace OpenTibia.Server.Scripting
             {
                 Game.Instance.RequestMovement(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(fromThing), targetLocation, item.Count));
             }
-            
+
             foreach (var creatureId in fromThing.Tile.CreatureIds.ToList())
             {
                 Game.Instance.RequestMovement(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
@@ -656,7 +667,6 @@ namespace OpenTibia.Server.Scripting
 
         public static void Text(IThing fromThing, string text, byte textType)
         {
-
         }
 
         public static void WriteName(IPlayer user, string format, IThing targetThing)

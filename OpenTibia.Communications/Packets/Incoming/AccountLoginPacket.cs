@@ -1,32 +1,44 @@
-﻿using OpenTibia.Server.Data;
+﻿// <copyright file="AccountLoginPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class AccountLoginPacket : PacketIncoming, IAccountLoginInfo
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
+    /// <summary>
+    /// Class that represents an account login packet.
+    /// </summary>
+    public class AccountLoginPacket : IPacketIncoming, IAccountLoginInfo
     {
-        public uint AccountNumber { get; set; }
-        public string Password { get; set; }
-        public uint[] XteaKey { get; set; }
-        //public byte GmMode { get; set; }
-        //public string CharacterName { get; set; }
-
-        public AccountLoginPacket(NetworkMessage message) : base(message)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AccountLoginPacket"/> class.
+        /// </summary>
+        /// <param name="message">The message to parse the packet from.</param>
+        public AccountLoginPacket(NetworkMessage message)
         {
+            this.XteaKey = new uint[]
+            {
+                message.GetUInt32(),
+                message.GetUInt32(),
+                message.GetUInt32(),
+                message.GetUInt32()
+            };
+
+            this.AccountNumber = message.GetUInt32();
+            this.Password = message.GetString();
         }
 
-        public override void Parse(NetworkMessage message)
-        {
-            //this.GmMode = message.GetByte();
+        /// <inheritdoc/>
+        public uint AccountNumber { get; }
 
-            XteaKey = new uint[4];
-            XteaKey[0] = message.GetUInt32();
-            XteaKey[1] = message.GetUInt32();
-            XteaKey[2] = message.GetUInt32();
-            XteaKey[3] = message.GetUInt32();
+        /// <inheritdoc/>
+        public string Password { get; }
 
-            AccountNumber = message.GetUInt32();
-            //this.CharacterName = message.GetString();
-            Password = message.GetString();
-        }
+        /// <inheritdoc/>
+        public uint[] XteaKey { get; }
     }
 }

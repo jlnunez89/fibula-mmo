@@ -1,28 +1,38 @@
-﻿using System;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Movement.Policies;
-using OpenTibia.Server.Notifications;
+﻿// <copyright file="ThingMovementContainerToSlot.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Movement
 {
+    using System;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Notifications;
+
     internal class ThingMovementContainerToSlot : MovementBase
     {
         public Location FromLocation { get; }
+
         public IContainer FromContainer { get; }
+
         public byte FromIndex { get; }
 
         public Location ToLocation { get; }
+
         public byte ToSlot { get; }
 
         public IThing Thing { get; }
+
         public byte Count { get; }
 
         public ThingMovementContainerToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base (creatureRequestingId)
+            : base(creatureRequestingId)
         {
             // intentionally left thing null check out. Handled by Perform().
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
             if (count == 0)
             {
@@ -34,41 +44,41 @@ namespace OpenTibia.Server.Movement
                 throw new ArgumentNullException(nameof(requestor));
             }
 
-            Thing = thingMoving;
-            Count = count;
+            this.Thing = thingMoving;
+            this.Count = count;
 
-            FromLocation = fromLocation;
-            FromContainer = (requestor as IPlayer)?.GetContainer(FromLocation.Container);
-            FromIndex = (byte)FromLocation.Z;
+            this.FromLocation = fromLocation;
+            this.FromContainer = (requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
+            this.FromIndex = (byte)this.FromLocation.Z;
 
-            ToLocation = toLocation;
-            ToSlot = (byte)ToLocation.Slot;
+            this.ToLocation = toLocation;
+            this.ToSlot = (byte)this.ToLocation.Slot;
 
-            var droppingItem = requestor.Inventory?[ToSlot];
-            
-            if (FromContainer != null && FromContainer.HolderId != requestor.CreatureId)
+            var droppingItem = requestor.Inventory?[this.ToSlot];
+
+            if (this.FromContainer != null && this.FromContainer.HolderId != requestor.CreatureId)
             {
-                Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(RequestorId, Thing, droppingItem));
+                this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing, droppingItem));
             }
 
-            Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(RequestorId, droppingItem));
-            Policies.Add(new GrabberHasContainerOpenPolicy(RequestorId, FromContainer));
-            Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(Thing as IItem, FromContainer, FromIndex, Count));
+            this.Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(this.RequestorId, droppingItem));
+            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.FromContainer));
+            this.Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
         }
 
         public override void Perform()
         {
             IItem addedItem;
-            var updateItem = Thing as IItem;
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var updateItem = this.Thing as IItem;
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (FromContainer == null || updateItem == null || requestor == null)
+            if (this.FromContainer == null || updateItem == null || requestor == null)
             {
                 return;
             }
-            
+
             // attempt to remove from the source container
-            if (!FromContainer.RemoveContent(updateItem.Type.TypeId, FromIndex, Count, out addedItem))
+            if (!this.FromContainer.RemoveContent(updateItem.Type.TypeId, this.FromIndex, this.Count, out addedItem))
             {
                 return;
             }
@@ -80,10 +90,10 @@ namespace OpenTibia.Server.Movement
 
             IThing currentThing = null;
             // attempt to place the intended item at the slot.
-            if (!requestor.Inventory.Add(updateItem, out addedItem, ToSlot, Count))
+            if (!requestor.Inventory.Add(updateItem, out addedItem, this.ToSlot, this.Count))
             {
                 // Something went wrong, add back to the source container...
-                if (FromContainer.AddContent(updateItem, 0xFF))
+                if (this.FromContainer.AddContent(updateItem, 0xFF))
                 {
                     return;
                 }
@@ -101,7 +111,7 @@ namespace OpenTibia.Server.Movement
                 }
 
                 // we exchanged or got some leftover item, place back in the source container at any index.
-                if (FromContainer.AddContent(addedItem, 0xFF))
+                if (this.FromContainer.AddContent(addedItem, 0xFF))
                 {
                     return;
                 }

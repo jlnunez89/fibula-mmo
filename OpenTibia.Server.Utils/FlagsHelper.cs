@@ -1,4 +1,10 @@
-﻿namespace OpenTibia.Utilities
+﻿// <copyright file="FlagsHelper.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace OpenTibia.Utilities
 {
     public static class FlagsHelper
     {
@@ -19,7 +25,7 @@
 
         public static uint SetFlag(uint keysVal, uint flagVal)
         {
-            return (keysVal | flagVal);
+            return keysVal | flagVal;
         }
     }
 }

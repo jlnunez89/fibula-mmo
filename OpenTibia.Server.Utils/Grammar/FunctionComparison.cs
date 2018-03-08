@@ -1,7 +1,13 @@
-﻿using OpenTibia.Data.Contracts;
+﻿// <copyright file="FunctionComparison.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities.Grammar
 {
+    using OpenTibia.Data.Contracts;
+
     public class FunctionComparison
     {
         public string Name { get; }
@@ -14,30 +20,30 @@ namespace OpenTibia.Utilities.Grammar
 
         public FunctionComparison(string name, string comparisonType, string comparingTo, params string[] parameters)
         {
-            Name = name;
-            Parameters = parameters;
-            CompareToIdentifier = comparingTo;
-            Parameters = parameters;
+            this.Name = name;
+            this.Parameters = parameters;
+            this.CompareToIdentifier = comparingTo;
+            this.Parameters = parameters;
 
             if (comparisonType == ">=")
             {
-                Type = FunctionComparisonType.GreaterThanOrEqual;
+                this.Type = FunctionComparisonType.GreaterThanOrEqual;
             }
             else if (comparisonType == "<=")
             {
-                Type = FunctionComparisonType.LessThanOrEqual;
+                this.Type = FunctionComparisonType.LessThanOrEqual;
             }
             else if (comparisonType == ">")
             {
-                Type = FunctionComparisonType.GreaterThan;
+                this.Type = FunctionComparisonType.GreaterThan;
             }
             else if (comparisonType == "<")
             {
-                Type = FunctionComparisonType.LessThan;
+                this.Type = FunctionComparisonType.LessThan;
             }
             else if (comparisonType == "==")
             {
-                Type = FunctionComparisonType.Equal;
+                this.Type = FunctionComparisonType.Equal;
             }
         }
     }

@@ -1,45 +1,52 @@
-﻿using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="ItemUseOnPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class ItemUseOnPacket : PacketIncoming
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+
+    public class ItemUseOnPacket : IPacketIncoming
     {
-        public Location FromLocation { get; set; }
-        public ushort FromSpriteId { get; set; }
-        public byte FromStackPosition { get; set; }
-        public Location ToLocation { get; set; }
-        public ushort ToSpriteId { get; set; }
-        public byte ToStackPosition { get; set; }
-
         public ItemUseOnPacket(NetworkMessage message)
-            : base(message)
         {
-        }
-
-        public override void Parse(NetworkMessage message)
-        {
-            FromLocation = new Location
+            this.FromLocation = new Location
             {
                 X = message.GetUInt16(),
                 Y = message.GetUInt16(),
                 Z = (sbyte)message.GetByte()
             };
 
-            FromSpriteId = message.GetUInt16();
+            this.FromSpriteId = message.GetUInt16();
 
-            FromStackPosition = message.GetByte();
+            this.FromStackPosition = message.GetByte();
 
-            ToLocation = new Location
+            this.ToLocation = new Location
             {
                 X = message.GetUInt16(),
                 Y = message.GetUInt16(),
                 Z = (sbyte)message.GetByte()
             };
 
-            ToSpriteId = message.GetUInt16();
+            this.ToSpriteId = message.GetUInt16();
 
-            ToStackPosition = message.GetByte();
+            this.ToStackPosition = message.GetByte();
         }
+
+        public Location FromLocation { get; set; }
+
+        public ushort FromSpriteId { get; set; }
+
+        public byte FromStackPosition { get; set; }
+
+        public Location ToLocation { get; set; }
+
+        public ushort ToSpriteId { get; set; }
+
+        public byte ToStackPosition { get; set; }
     }
 }

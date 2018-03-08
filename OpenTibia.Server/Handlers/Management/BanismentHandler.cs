@@ -1,27 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data;
-using OpenTibia.Data.Models;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="BanismentHandler.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Handlers.Management
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data;
+    using OpenTibia.Data.Models;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class BanismentHandler : IIncomingPacketHandler
     {
         public IList<IPacketOutgoing> ResponsePackets { get; private set; }
 
-        public void HandlePacket(NetworkMessage message, Connection connection)
+        public void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var ruleViolationPacket = new RuleViolationPacket(message);
-            
+
             byte banDays = 0;
             var banUntilDate = DateTime.Now;
-            
+
             using (var otContext = new OpenTibiaDbContext())
             {
                 var playerRecord = otContext.Players.Where(p => p.Charname.Equals(ruleViolationPacket.CharacterName)).FirstOrDefault();
@@ -71,13 +78,13 @@ namespace OpenTibia.Server.Handlers.Management
                             BanishedUntil = banUntilUnixTimestamp,
                             PunishmentType = 1
                         });
-                        
+
                         userRecord.Banished = 1;
                         userRecord.Banished_Until = banUntilUnixTimestamp;
-                        
+
                         otContext.SaveChanges();
 
-                        ResponsePackets.Add(new BanismentResultPacket
+                        this.ResponsePackets.Add(new BanismentResultPacket
                         {
                             BanDays = banDays,
                             BanishedUntil = (uint)banUntilDate.ToFileTimeUtc()
@@ -88,7 +95,7 @@ namespace OpenTibia.Server.Handlers.Management
                 }
             }
 
-            ResponsePackets.Add(new DefaultErrorPacket());
+            this.ResponsePackets.Add(new DefaultErrorPacket());
         }
     }
 }

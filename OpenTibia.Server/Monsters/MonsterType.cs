@@ -1,15 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Utilities;
+﻿// <copyright file="MonsterType.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Monsters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Utilities;
+
     public enum MonsterSkill : byte
     {
         HITPOINTS,
@@ -34,18 +40,27 @@ namespace OpenTibia.Server.Monsters
         public bool Locked { get; private set; }
 
         public ushort RaceId { get; private set; }
+
         public string Name { get; private set; }
+
         public string Article { get; private set; }
+
         public uint Experience { get; private set; }
+
         public ushort SummonCost { get; private set; }
+
         public ushort FleeThreshold { get; private set; }
+
         public byte LoseTarget { get; private set; }
 
         public ushort ConditionInfect { get; } // Holds ConditionType that this monster infects upon dealt damage.
 
         public HashSet<SpellsT> KnownSpells { get; }
+
         public HashSet<CreatureFlag> Flags { get; }
+
         public Dictionary<SkillType, ISkill> Skills { get; }
+
         public List<string> Phrases { get; }
 
         public List<Tuple<ushort, byte, ushort>> InventoryComposition { get; }
@@ -53,7 +68,9 @@ namespace OpenTibia.Server.Monsters
         public Tuple<byte, byte, byte, byte> Strategy { get; private set; }
 
         public ushort Attack { get; private set; }
+
         public ushort Defense { get; private set; }
+
         public ushort Armor { get; private set; }
 
         public Outfit Outfit { get; private set; }
@@ -61,90 +78,92 @@ namespace OpenTibia.Server.Monsters
         public ushort Corpse { get; private set; }
 
         public uint MaxHitPoints { get; private set; }
+
         public uint MaxManaPoints { get; }
 
         public BloodType Blood { get; private set; }
+
         public ushort Speed { get; private set; }
+
         public ushort Capacity { get; private set; }
 
         public MonsterType()
         {
-            RaceId = 0;
-            Name = string.Empty;
-            MaxManaPoints = 0;
+            this.RaceId = 0;
+            this.Name = string.Empty;
+            this.MaxManaPoints = 0;
 
-            Attack = 1;
-            Defense = 1;
-            Armor = 1;
+            this.Attack = 1;
+            this.Defense = 1;
+            this.Armor = 1;
 
-            Experience = 0;
-            SummonCost = 0;
-            FleeThreshold = 0;
-            LoseTarget = 0;
-            ConditionInfect = 0;
+            this.Experience = 0;
+            this.SummonCost = 0;
+            this.FleeThreshold = 0;
+            this.LoseTarget = 0;
+            this.ConditionInfect = 0;
 
-            Flags = new HashSet<CreatureFlag>();
-            KnownSpells = new HashSet<SpellsT>();
-            Phrases = new List<string>();
-            Skills = new Dictionary<SkillType, ISkill>();
-            InventoryComposition = new List<Tuple<ushort, byte, ushort>>();
+            this.Flags = new HashSet<CreatureFlag>();
+            this.KnownSpells = new HashSet<SpellsT>();
+            this.Phrases = new List<string>();
+            this.Skills = new Dictionary<SkillType, ISkill>();
+            this.InventoryComposition = new List<Tuple<ushort, byte, ushort>>();
 
-            Locked = false;
+            this.Locked = false;
         }
-        
+
         public void LockChanges()
         {
-            Locked = true;
+            this.Locked = true;
         }
 
         public void SetId(ushort id)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            RaceId = id;
+            this.RaceId = id;
         }
 
         public void SetName(string name)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Name = name;
+            this.Name = name;
         }
 
         internal void SetArticle(string article)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Article = article;
+            this.Article = article;
         }
 
         internal void SetOutfit(string outfitStr)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            // comes in the form 
+            // comes in the form
             // 68, 0-0-0-0
-
             var splitStr = outfitStr.Split(new[] { ',' }, 2);
             var outfitId = Convert.ToUInt16(splitStr[0]);
 
             var outfitSections = splitStr[1].Split('-').Select(s => Convert.ToByte(s)).ToArray();
 
-            if(outfitId == 0)
+            if (outfitId == 0)
             {
-                Outfit = new Outfit
+                this.Outfit = new Outfit
                 {
                     Id = outfitId,
                     LikeType = outfitSections[0]
@@ -152,7 +171,7 @@ namespace OpenTibia.Server.Monsters
             }
             else
             {
-                Outfit = new Outfit
+                this.Outfit = new Outfit
                 {
                     Id = outfitId,
                     Head = outfitSections[0],
@@ -165,17 +184,17 @@ namespace OpenTibia.Server.Monsters
 
         internal void SetCorpse(ushort corpse)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Corpse = corpse;
+            this.Corpse = corpse;
         }
 
         internal void SetBlood(string propData)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
@@ -184,73 +203,73 @@ namespace OpenTibia.Server.Monsters
 
             if (Enum.TryParse(propData, out bloodType))
             {
-                Blood = bloodType;
+                this.Blood = bloodType;
             }
         }
 
         internal void SetExperience(uint experience)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Experience = experience;
+            this.Experience = experience;
         }
 
         internal void SetSummonCost(ushort summonCost)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            SummonCost = summonCost;
+            this.SummonCost = summonCost;
         }
 
         internal void SetFleeTreshold(ushort fleeThreshold)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            FleeThreshold = fleeThreshold;
+            this.FleeThreshold = fleeThreshold;
         }
 
         internal void SetDefend(ushort defense)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Defense = defense;
+            this.Defense = defense;
         }
 
         internal void SetArmor(ushort armor)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Armor = armor;
+            this.Armor = armor;
         }
 
         internal void SetAttack(ushort attack)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Attack = attack;
+            this.Attack = attack;
         }
 
         internal void SetConditionInfect(ushort conditionValue, ConditionType posion)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
@@ -260,60 +279,59 @@ namespace OpenTibia.Server.Monsters
 
         internal void SetLoseTarget(byte loseTarget)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            LoseTarget = loseTarget;
+            this.LoseTarget = loseTarget;
         }
 
         internal void SetStrategy(string strategyStr)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            // comes in the form 
+            // comes in the form
             // 70, 30, 0, 0
-
             var strat = strategyStr.Split(',').Select(s => Convert.ToByte(s)).ToArray();
 
             if (strat.Length != 4)
             {
-                throw new InvalidDataException($"Unexpected number of elements in Strategy value {strategyStr} on monster type {Name}.");
+                throw new InvalidDataException($"Unexpected number of elements in Strategy value {strategyStr} on monster type {this.Name}.");
             }
 
-            Strategy = new Tuple<byte, byte, byte, byte>(strat[0], strat[1], strat[2], strat[3]);
+            this.Strategy = new Tuple<byte, byte, byte, byte>(strat[0], strat[1], strat[2], strat[3]);
         }
 
         internal void SetFlags(string flagsStr)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            foreach(var flagName in flagsStr.Split(','))
+            foreach (var flagName in flagsStr.Split(','))
             {
                 if (string.IsNullOrWhiteSpace(flagName))
                 {
                     continue;
                 }
-                
+
                 CreatureFlag creatureFlag;
 
                 if (Enum.TryParse(flagName, out creatureFlag))
                 {
-                    Flags.Add(creatureFlag);
+                    this.Flags.Add(creatureFlag);
                 }
             }
         }
 
         internal void SetSpells(string v)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
@@ -323,15 +341,15 @@ namespace OpenTibia.Server.Monsters
 
         internal void SetSkills(string v)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
             var enclosingChars = new Dictionary<char, char>
             {
-                {CipReader.CloseCurly, CipReader.OpenCurly},
-                {CipReader.CloseParenthesis, CipReader.OpenParenthesis}
+                { CipReader.CloseCurly, CipReader.OpenCurly },
+                { CipReader.CloseParenthesis, CipReader.OpenParenthesis }
             };
 
             var enclosures = CipReader.GetEnclosedButPreserveQuoted(v, enclosingChars);
@@ -347,9 +365,9 @@ namespace OpenTibia.Server.Monsters
 
                 if (skillParams.Length != 7)
                 {
-                    throw new InvalidDataException($"Unexpected number of elements in skill line {v} on monster type {Name}.");
+                    throw new InvalidDataException($"Unexpected number of elements in skill line {v} on monster type {this.Name}.");
                 }
-                
+
                 MonsterSkill mSkill;
 
                 if (!Enum.TryParse(skillParams[0].ToUpper(), out mSkill))
@@ -360,48 +378,53 @@ namespace OpenTibia.Server.Monsters
                 switch (mSkill)
                 {
                     case MonsterSkill.HITPOINTS:
-                        MaxHitPoints = Convert.ToUInt32(skillParams[1]);
+                        this.MaxHitPoints = Convert.ToUInt32(skillParams[1]);
                         break;
                     case MonsterSkill.GOSTRENGTH:
                         try
                         {
-                            Speed = Convert.ToUInt16(skillParams[1]);
+                            this.Speed = Convert.ToUInt16(skillParams[1]);
                         }
                         catch
                         {
                             // TODO: handle -1 here...
                         }
+
                         break;
                     case MonsterSkill.CARRYSTRENGTH:
-                        Capacity = Convert.ToUInt16(skillParams[1]);
+                        this.Capacity = Convert.ToUInt16(skillParams[1]);
                         break;
                     case MonsterSkill.FISTFIGHTING:
                         var fistLevel = Convert.ToUInt16(skillParams[1]);
                         if (fistLevel > 0)
                         {
-                            Skills[SkillType.Fist] = new Skill(SkillType.Fist, fistLevel, 1.00, 1, fistLevel, (ushort)(fistLevel * 2));
+                            this.Skills[SkillType.Fist] = new Skill(SkillType.Fist, fistLevel, 1.00, 1, fistLevel, (ushort)(fistLevel * 2));
                         }
+
                         break;
                     case MonsterSkill.AXEFIGHTING:
                         var axeLevel = Convert.ToUInt16(skillParams[1]);
                         if (axeLevel > 0)
                         {
-                            Skills[SkillType.Fist] = new Skill(SkillType.Fist, axeLevel, 1.00, 1, axeLevel, (ushort)(axeLevel * 2));
+                            this.Skills[SkillType.Fist] = new Skill(SkillType.Fist, axeLevel, 1.00, 1, axeLevel, (ushort)(axeLevel * 2));
                         }
+
                         break;
                     case MonsterSkill.SWORDFIGHTING:
                         var swordLevel = Convert.ToUInt16(skillParams[1]);
                         if (swordLevel > 0)
                         {
-                            Skills[SkillType.Fist] = new Skill(SkillType.Fist, swordLevel, 1.00, 1, swordLevel, (ushort)(swordLevel * 2));
+                            this.Skills[SkillType.Fist] = new Skill(SkillType.Fist, swordLevel, 1.00, 1, swordLevel, (ushort)(swordLevel * 2));
                         }
+
                         break;
                     case MonsterSkill.CLUBFIGHTING:
                         var clubLevel = Convert.ToUInt16(skillParams[1]);
                         if (clubLevel > 0)
                         {
-                            Skills[SkillType.Fist] = new Skill(SkillType.Fist, clubLevel, 1.00, 1, clubLevel, (ushort)(clubLevel * 2));
+                            this.Skills[SkillType.Fist] = new Skill(SkillType.Fist, clubLevel, 1.00, 1, clubLevel, (ushort)(clubLevel * 2));
                         }
+
                         break;
                 }
             }
@@ -409,20 +432,20 @@ namespace OpenTibia.Server.Monsters
 
         internal void SetInventory(string v)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
             var enclosingChars = new Dictionary<char, char>
             {
-                {CipReader.CloseCurly, CipReader.OpenCurly},
-                {CipReader.CloseParenthesis, CipReader.OpenParenthesis}
+                { CipReader.CloseCurly, CipReader.OpenCurly },
+                { CipReader.CloseParenthesis, CipReader.OpenParenthesis }
             };
 
             var enclosures = CipReader.GetEnclosedButPreserveQuoted(v, enclosingChars);
 
-            foreach(var enclosure in enclosures)
+            foreach (var enclosure in enclosures)
             {
                 var inventoryParams = enclosure.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
 
@@ -433,21 +456,21 @@ namespace OpenTibia.Server.Monsters
 
                 if (inventoryParams.Length != 3)
                 {
-                    throw new InvalidDataException($"Unexpected number of elements in inventory line {v} on monster type {Name}.");
+                    throw new InvalidDataException($"Unexpected number of elements in inventory line {v} on monster type {this.Name}.");
                 }
 
-                InventoryComposition.Add(new Tuple<ushort, byte, ushort>(Convert.ToUInt16(inventoryParams[0]), Convert.ToByte(inventoryParams[1]), Convert.ToUInt16(inventoryParams[2])));
+                this.InventoryComposition.Add(new Tuple<ushort, byte, ushort>(Convert.ToUInt16(inventoryParams[0]), Convert.ToByte(inventoryParams[1]), Convert.ToUInt16(inventoryParams[2])));
             }
         }
 
         internal void SetPhrases(string v)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            Phrases.AddRange(CipReader.SplitByTokenPreserveQuoted(v, ','));
+            this.Phrases.AddRange(CipReader.SplitByTokenPreserveQuoted(v, ','));
         }
     }
 }

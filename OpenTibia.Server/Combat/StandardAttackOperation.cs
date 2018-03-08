@@ -1,29 +1,34 @@
-﻿using System;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="StandardAttackOperation.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Combat
 {
+    using System;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class StandardAttackOperation : BaseAttackOperation
     {
         public StandardAttackOperation(ICombatActor hunter, ICombatActor prey)
             : base(hunter, prey)
         {
-
         }
 
         public override bool CanBeExecuted
         {
             get
             {
-                if (Target == null || !base.CanBeExecuted)
+                if (this.Target == null || !base.CanBeExecuted)
                 {
                     return false;
                 }
 
-                var locationDiff = Attacker.Location - Target.Location;
+                var locationDiff = this.Attacker.Location - this.Target.Location;
 
-                return locationDiff.Z == 0 && Attacker.AutoAttackRange >= locationDiff.MaxValueIn2D;
+                return locationDiff.Z == 0 && this.Attacker.AutoAttackRange >= locationDiff.MaxValueIn2D;
             }
         }
 
@@ -46,15 +51,15 @@ namespace OpenTibia.Server.Combat
                 throw new NotImplementedException();
             }
         }
-                
+
         protected override int InternalExecute(out EffectT resultingEffect, out bool shielded, out bool armored, out TextColor colorText)
         {
             resultingEffect = EffectT.XBlood;
             colorText = TextColor.Red;
             shielded = false;
             armored = false;
-            
-            var rng = new Random((int)Attacker.ActorId);
+
+            var rng = new Random((int)this.Attacker.ActorId);
 
             var val = rng.Next(4);
 

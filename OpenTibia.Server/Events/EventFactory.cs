@@ -1,10 +1,16 @@
-﻿using System;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using static OpenTibia.Utilities.Grammar.EventGrammar;
+﻿// <copyright file="EventFactory.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Events
 {
+    using System;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using static OpenTibia.Utilities.Grammar.EventGrammar;
+
     public static class EventFactory
     {
         public static IEvent Create(MoveUseEvent moveUseEvent)
@@ -18,7 +24,7 @@ namespace OpenTibia.Server.Events
             {
                 throw new ArgumentNullException(nameof(moveUseEvent.Rule));
             }
-            
+
             switch (moveUseEvent.Type)
             {
                 case EventType.Collision:

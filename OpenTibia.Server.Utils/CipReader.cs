@@ -1,10 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿// <copyright file="CipReader.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+
     public class CipReader
     {
         public const char Quote = '"';
@@ -24,7 +30,7 @@ namespace OpenTibia.Utilities
             {
                 return stack;
             }
-            
+
             var openEnclosure = new Stack<char>();
             var buffers = new Stack<StringBuilder>();
 
@@ -40,8 +46,8 @@ namespace OpenTibia.Utilities
                 }
 
                 var c = str[i];
-                
-                if(openClosePairs.ContainsValue(c) && !inQuote)
+
+                if (openClosePairs.ContainsValue(c) && !inQuote)
                 {
                     openEnclosure.Push(c);
                     buffers.Push(new StringBuilder());
@@ -84,7 +90,7 @@ namespace OpenTibia.Utilities
 
             for (var i = 0; i < str.Length; i++)
             {
-                if(str[i] == Quote && (i > 0 && str[i - 1] != Backslash))
+                if (str[i] == Quote && (i > 0 && str[i - 1] != Backslash))
                 {
                     inQuote = !inQuote;
                 }
@@ -106,10 +112,10 @@ namespace OpenTibia.Utilities
             }
 
             queue.Enqueue(sb.ToString());
-            
+
             return queue;
         }
-        
+
         public static IEnumerable<CipElement> Parse(string inputStr)
         {
             if (string.IsNullOrWhiteSpace(inputStr))
@@ -117,7 +123,7 @@ namespace OpenTibia.Utilities
                 return null;
             }
 
-            var enclosingChars = new Dictionary<char, char> {{CloseCurly, OpenCurly}, {CloseParenthesis, OpenParenthesis}};
+            var enclosingChars = new Dictionary<char, char> { { CloseCurly, OpenCurly }, { CloseParenthesis, OpenParenthesis} };
 
             inputStr = inputStr.Trim(' '); // remove extra leading and trailing spaces.
             inputStr = TrimEnclosures(inputStr, enclosingChars);
@@ -135,7 +141,7 @@ namespace OpenTibia.Utilities
             {
                 // comma separate but watch for strings in quotes ("").
                 var elements = SplitByTokenPreserveQuoted(enclosures.Pop(), ',').Select(ParseElement).ToList();
-                
+
                 var currentAttribute = pendingContent.Pop();
 
                 foreach (var element in elements)
@@ -154,7 +160,7 @@ namespace OpenTibia.Utilities
 
         private static string TrimEnclosures(string inputStr, Dictionary<char, char> enclosingChars)
         {
-            foreach(var encl in enclosingChars)
+            foreach (var encl in enclosingChars)
             {
                 if (inputStr.StartsWith(encl.Value.ToString()) && inputStr.EndsWith(encl.Key.ToString()))
                 {
@@ -176,20 +182,21 @@ namespace OpenTibia.Utilities
             Func<string, CipAttribute> extractAttribute = str =>
             {
                 var sections = str.Split(new[] { '=' }, 2);
-                
-                if(sections.Length < 2)
+
+                if (sections.Length < 2)
                 {
                     return new CipAttribute
                     {
                         Name = sections[0].EndsWith("=") ? sections[0].Substring(0, sections[0].Length - 1) : sections[0]
                     };
                 }
+
                 int numericValue;
 
                 return new CipAttribute
                 {
                     Name = sections[0],
-                    Value = int.TryParse(sections[1], out numericValue) ? (IConvertible) numericValue : sections[1]
+                    Value = int.TryParse(sections[1], out numericValue) ? (IConvertible)numericValue : sections[1]
                 };
             };
 

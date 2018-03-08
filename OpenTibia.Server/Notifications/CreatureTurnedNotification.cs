@@ -1,17 +1,24 @@
-﻿using System;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="CreatureTurnedNotification.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Notifications
 {
+    using System;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class CreatureTurnedNotification : Notification
     {
         public ICreature Creature { get; }
+
         public EffectT TurnedEffect { get; }
 
-        public CreatureTurnedNotification(Connection connection, ICreature creature, EffectT turnEffect = EffectT.None) 
+        public CreatureTurnedNotification(Connection connection, ICreature creature, EffectT turnEffect = EffectT.None)
             : base(connection)
         {
             if (creature == null)
@@ -19,24 +26,24 @@ namespace OpenTibia.Server.Notifications
                 throw new ArgumentNullException(nameof(creature));
             }
 
-            Creature = creature;
-            TurnedEffect = turnEffect;
+            this.Creature = creature;
+            this.TurnedEffect = turnEffect;
         }
 
         public override void Prepare()
         {
-            if (TurnedEffect != EffectT.None)
+            if (this.TurnedEffect != EffectT.None)
             {
-                ResponsePackets.Add(new MagicEffectPacket
+                this.ResponsePackets.Add(new MagicEffectPacket
                 {
-                    Effect = TurnedEffect,
-                    Location = Creature.Location
+                    Effect = this.TurnedEffect,
+                    Location = this.Creature.Location
                 });
             }
 
-            ResponsePackets.Add(new CreatureTurnedPacket
+            this.ResponsePackets.Add(new CreatureTurnedPacket
             {
-                Creature = Creature
+                Creature = this.Creature
             });
         }
     }

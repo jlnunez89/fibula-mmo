@@ -1,266 +1,278 @@
-﻿using System;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="CreatureMovedNotification.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Notifications
 {
+    using System;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+
     internal class CreatureMovedNotification : Notification
     {
         public bool WasTeleport { get; }
 
         public byte OldStackPosition { get; }
+
         public byte NewStackPosition { get; }
 
         public Location OldLocation { get; }
+
         public Location NewLocation { get; }
 
         public uint CreatureId { get; }
 
-        public CreatureMovedNotification(Connection connection, uint creatureId, Location fromLocation, byte fromStackPos, Location toLocation, byte toStackPos, bool wasTeleport) : base(connection)
+        public CreatureMovedNotification(Connection connection, uint creatureId, Location fromLocation, byte fromStackPos, Location toLocation, byte toStackPos, bool wasTeleport)
+            : base(connection)
         {
             var locationDiff = fromLocation - toLocation;
 
-            CreatureId = creatureId;
-            OldLocation = fromLocation;
-            OldStackPosition = fromStackPos;
-            NewLocation = toLocation;
-            NewStackPosition = toStackPos;
-            WasTeleport = wasTeleport || locationDiff.MaxValueIn3D > 1;
+            this.CreatureId = creatureId;
+            this.OldLocation = fromLocation;
+            this.OldStackPosition = fromStackPos;
+            this.NewLocation = toLocation;
+            this.NewStackPosition = toStackPos;
+            this.WasTeleport = wasTeleport || locationDiff.MaxValueIn3D > 1;
         }
 
         public override void Prepare()
         {
-            var player = Game.Instance.GetCreatureWithId(Connection.PlayerId) as IPlayer;
+            var player = Game.Instance.GetCreatureWithId(this.Connection.PlayerId) as IPlayer;
 
             if (player == null)
             {
                 return;
             }
 
-            var creature = Game.Instance.GetCreatureWithId(CreatureId);
+            var creature = Game.Instance.GetCreatureWithId(this.CreatureId);
 
-            if (CreatureId == Connection.PlayerId)
+            if (this.CreatureId == this.Connection.PlayerId)
             {
-                if (WasTeleport) // TODO: revise; this had a contradicting condition on the source (< 10 vs >= 10)
+                if (this.WasTeleport) // TODO: revise; this had a contradicting condition on the source (< 10 vs >= 10)
                 {
-                    if (OldStackPosition < 10)
+                    if (this.OldStackPosition < 10)
                     {
-                        ResponsePackets.Add(new RemoveAtStackposPacket
+                        this.ResponsePackets.Add(new RemoveAtStackposPacket
                         {
-                            Location = OldLocation,
-                            Stackpos = OldStackPosition
+                            Location = this.OldLocation,
+                            Stackpos = this.OldStackPosition
                         });
                     }
 
-                    ResponsePackets.Add(new MapDescriptionPacket
+                    this.ResponsePackets.Add(new MapDescriptionPacket
                     {
-                       Origin = NewLocation,
-                       DescriptionBytes = Game.Instance.GetMapDescriptionAt(player, NewLocation)
+                       Origin = this.NewLocation,
+                       DescriptionBytes = Game.Instance.GetMapDescriptionAt(player, this.NewLocation)
                     });
                 }
                 else
                 {
-                    if(OldLocation.Z == 7 && NewLocation.Z > 7)
+                    if (this.OldLocation.Z == 7 && this.NewLocation.Z > 7)
                     {
-                        if (OldStackPosition < 10)
+                        if (this.OldStackPosition < 10)
                         {
-                            ResponsePackets.Add(new RemoveAtStackposPacket
+                            this.ResponsePackets.Add(new RemoveAtStackposPacket
                             {
-                                Location = OldLocation,
-                                Stackpos = OldStackPosition
+                                Location = this.OldLocation,
+                                Stackpos = this.OldStackPosition
                             });
                         }
                     }
                     else
                     {
-                        ResponsePackets.Add(new CreatureMovedPacket
+                        this.ResponsePackets.Add(new CreatureMovedPacket
                         {
-                            FromLocation = OldLocation,
-                            FromStackpos = OldStackPosition,
-                            ToLocation = NewLocation
+                            FromLocation = this.OldLocation,
+                            FromStackpos = this.OldStackPosition,
+                            ToLocation = this.NewLocation
                         });
                     }
-                    
-                    //floor change down
-                    if (NewLocation.Z > OldLocation.Z)
+
+                    // floor change down
+                    if (this.NewLocation.Z > this.OldLocation.Z)
                     {
-                        //going from surface to underground
-                        if (NewLocation.Z == 8)
+                        // going from surface to underground
+                        if (this.NewLocation.Z == 8)
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
                             {
-                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 6), NewLocation.Z, (byte)(NewLocation.Z + 2), 18, 14, -1)
+                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 6), this.NewLocation.Z, (byte)(this.NewLocation.Z + 2), 18, 14, -1)
                             });
                         }
-                        //going further down
-                        else if (NewLocation.Z > OldLocation.Z && NewLocation.Z > 8 && NewLocation.Z < 14)
+
+                        // going further down
+                        else if (this.NewLocation.Z > this.OldLocation.Z && this.NewLocation.Z > 8 && this.NewLocation.Z < 14)
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
                             {
-                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 6), (byte)(NewLocation.Z + 2), (byte)(NewLocation.Z + 2), 18, 14, -3)
+                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 6), (byte)(this.NewLocation.Z + 2), (byte)(this.NewLocation.Z + 2), 18, 14, -3)
                             });
                         }
                         else
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeDown)
                             {
                                 DescriptionBytes = new byte[0] // no description needed.
                             });
                         }
 
-                        //moving down a floor makes us out of sync, include east and south
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceEast)
+                        // moving down a floor makes us out of sync, include east and south
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceEast)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X + 9), (ushort)(OldLocation.Y - 7), NewLocation.Z, NewLocation.IsUnderground, 1, 14)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X + 9), (ushort)(this.OldLocation.Y - 7), this.NewLocation.Z, this.NewLocation.IsUnderground, 1, 14)
                         });
 
-                        //south
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceSouth)
+                        // south
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceSouth)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y + 7), NewLocation.Z, NewLocation.IsUnderground, 18, 1)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y + 7), this.NewLocation.Z, this.NewLocation.IsUnderground, 18, 1)
                         });
                     }
-                    //floor change up
-                    else if (NewLocation.Z < OldLocation.Z)
+
+                    // floor change up
+                    else if (this.NewLocation.Z < this.OldLocation.Z)
                     {
-                        //going to surface
-                        if (NewLocation.Z == 7)
+                        // going to surface
+                        if (this.NewLocation.Z == 7)
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
                             {
-                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 6), 5, 0, 18, 14, 3)
+                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 6), 5, 0, 18, 14, 3)
                             });
                         }
-                        //underground, going one floor up (still underground)
-                        else if (NewLocation.Z > 7)
+
+                        // underground, going one floor up (still underground)
+                        else if (this.NewLocation.Z > 7)
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
                             {
-                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 6), (byte)(OldLocation.Z - 3), (byte)(OldLocation.Z - 3), 18, 14, 3)
+                                DescriptionBytes = Game.Instance.GetMapFloorsDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 6), (byte)(this.OldLocation.Z - 3), (byte)(this.OldLocation.Z - 3), 18, 14, 3)
                             });
                         }
                         else
                         {
-                            ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
+                            this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.FloorChangeUp)
                             {
                                 DescriptionBytes = new byte[0] // no description needed.
                             });
                         }
 
-                        //moving up a floor up makes us out of sync, include west and north
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceWest)
+                        // moving up a floor up makes us out of sync, include west and north
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceWest)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 5), NewLocation.Z, NewLocation.IsUnderground, 1, 14)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 5), this.NewLocation.Z, this.NewLocation.IsUnderground, 1, 14)
                         });
 
-                        //north
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceNorth)
+                        // north
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceNorth)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X - 8), (ushort)(OldLocation.Y - 6), NewLocation.Z, NewLocation.IsUnderground, 18, 1)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.OldLocation.Y - 6), this.NewLocation.Z, this.NewLocation.IsUnderground, 18, 1)
                         });
                     }
-                    
-                    if (OldLocation.Y > NewLocation.Y)
-                    { 
+
+                    if (this.OldLocation.Y > this.NewLocation.Y)
+                    {
                         // north, for old x
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceNorth)
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceNorth)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X - 8), (ushort)(NewLocation.Y - 6), NewLocation.Z, NewLocation.IsUnderground, 18, 1)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.NewLocation.Y - 6), this.NewLocation.Z, this.NewLocation.IsUnderground, 18, 1)
                         });
                     }
-                    else if (OldLocation.Y < NewLocation.Y)
+                    else if (this.OldLocation.Y < this.NewLocation.Y)
                     {
                         // south, for old x
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceSouth)
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceSouth)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(OldLocation.X - 8), (ushort)(NewLocation.Y + 7), NewLocation.Z, NewLocation.IsUnderground, 18, 1)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.OldLocation.X - 8), (ushort)(this.NewLocation.Y + 7), this.NewLocation.Z, this.NewLocation.IsUnderground, 18, 1)
                         });
                     }
 
-                    if (OldLocation.X < NewLocation.X)
+                    if (this.OldLocation.X < this.NewLocation.X)
                     {
                         // east, [with new y]
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceEast)
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceEast)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(NewLocation.X + 9), (ushort)(NewLocation.Y - 6), NewLocation.Z, NewLocation.IsUnderground, 1, 14)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.NewLocation.X + 9), (ushort)(this.NewLocation.Y - 6), this.NewLocation.Z, this.NewLocation.IsUnderground, 1, 14)
                         });
                     }
-                    else if (OldLocation.X > NewLocation.X)
+                    else if (this.OldLocation.X > this.NewLocation.X)
                     {
                         // west, [with new y]
-                        ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceWest)
+                        this.ResponsePackets.Add(new MapPartialDescriptionPacket(GameOutgoingPacketType.MapSliceWest)
                         {
-                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(NewLocation.X - 8), (ushort)(NewLocation.Y - 6), NewLocation.Z, NewLocation.IsUnderground, 1, 14)
+                            DescriptionBytes = Game.Instance.GetMapDescription(player, (ushort)(this.NewLocation.X - 8), (ushort)(this.NewLocation.Y - 6), this.NewLocation.Z, this.NewLocation.IsUnderground, 1, 14)
                         });
                     }
                 }
             }
-            else if (player.CanSee(OldLocation) && player.CanSee(NewLocation))
+            else if (player.CanSee(this.OldLocation) && player.CanSee(this.NewLocation))
             {
                 if (player.CanSee(creature))
                 {
-                    if (WasTeleport || OldLocation.Z == 7 && NewLocation.Z > 7 || OldStackPosition > 9)
+                    if (this.WasTeleport || this.OldLocation.Z == 7 && this.NewLocation.Z > 7 || this.OldStackPosition > 9)
                     {
-                        if (OldStackPosition < 10)
+                        if (this.OldStackPosition < 10)
                         {
-                            ResponsePackets.Add(new RemoveAtStackposPacket
+                            this.ResponsePackets.Add(new RemoveAtStackposPacket
                             {
-                                Location = OldLocation,
-                                Stackpos = OldStackPosition
+                                Location = this.OldLocation,
+                                Stackpos = this.OldStackPosition
                             });
                         }
-                        
-                        ResponsePackets.Add(new AddCreaturePacket
+
+                        this.ResponsePackets.Add(new AddCreaturePacket
                         {
-                            Location = NewLocation,
+                            Location = this.NewLocation,
                             Creature = creature,
-                            AsKnown = player.KnowsCreatureWithId(CreatureId),
+                            AsKnown = player.KnowsCreatureWithId(this.CreatureId),
                             RemoveThisCreatureId = player.ChooseToRemoveFromKnownSet() // chooses a victim if neeeded.
                         });
                     }
                     else
                     {
-                        ResponsePackets.Add(new CreatureMovedPacket
+                        this.ResponsePackets.Add(new CreatureMovedPacket
                         {
-                            FromLocation = OldLocation,
-                            FromStackpos = OldStackPosition,
-                            ToLocation = NewLocation
+                            FromLocation = this.OldLocation,
+                            FromStackpos = this.OldStackPosition,
+                            ToLocation = this.NewLocation
                         });
                     }
                 }
             }
-            else if (player.CanSee(OldLocation) && player.CanSee(creature))
+            else if (player.CanSee(this.OldLocation) && player.CanSee(creature))
             {
-                if (OldStackPosition < 10)
+                if (this.OldStackPosition < 10)
                 {
-                    ResponsePackets.Add(new RemoveAtStackposPacket
+                    this.ResponsePackets.Add(new RemoveAtStackposPacket
                     {
-                        Location = OldLocation,
-                        Stackpos = OldStackPosition
+                        Location = this.OldLocation,
+                        Stackpos = this.OldStackPosition
                     });
                 }
             }
-            else if (player.CanSee(NewLocation) && player.CanSee(creature))
+            else if (player.CanSee(this.NewLocation) && player.CanSee(creature))
             {
-                ResponsePackets.Add(new AddCreaturePacket
+                this.ResponsePackets.Add(new AddCreaturePacket
                 {
-                    Location = NewLocation,
+                    Location = this.NewLocation,
                     Creature = creature,
-                    AsKnown = player.KnowsCreatureWithId(CreatureId),
+                    AsKnown = player.KnowsCreatureWithId(this.CreatureId),
                     RemoveThisCreatureId = player.ChooseToRemoveFromKnownSet() // chooses a victim if neeeded.
                 });
             }
 
-            //if (this.WasTeleport)
-            //{
+            // if (this.WasTeleport)
+            // {
             //    this.ResponsePackets.Add(new MagicEffectPacket()
             //    {
             //        Location = this.NewLocation,
             //        Effect = Effect_t.BubbleBlue
             //    });
-            //}
+            // }
         }
     }
 }

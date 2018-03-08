@@ -1,4 +1,10 @@
-﻿namespace OpenTibia.Server
+﻿// <copyright file="Game.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Concurrent;
@@ -7,6 +13,7 @@
     using System.Threading;
     using System.Threading.Tasks;
     using OpenTibia.Communications;
+    using OpenTibia.Communications.Interfaces;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Data.Models;
@@ -29,50 +36,62 @@
     public class Game
     {
         /// <summary>
-        /// Defines the <see cref="TimeSpan"/> to wait between checks of orphaned conections. 
+        /// Defines the <see cref="TimeSpan"/> to wait between checks of orphaned conections.
         /// </summary>
         private static readonly TimeSpan CheckOrphanConnectionsDelay = TimeSpan.FromSeconds(1);
-        
+
         /// <summary>
         /// Singleton instance of the <see cref="Game"/> class.
         /// </summary>
         private static readonly Lazy<Game> GameInstance = new Lazy<Game>(() => new Game());
-        
+
         /// <summary>
         /// Gets the singleton instance of the <see cref="Game"/> class.
         /// </summary>
         public static Game Instance => Game.GameInstance.Value;
-        
+
+        private readonly object attackLock;
+        private readonly object walkLock;
+        private readonly object notifQueueLock;
+        private readonly object movQueueLock;
+        private readonly object combatQueueLock;
+
+        private WorldState status;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         public Game()
         {
-            _attackLock = new object();
-            _walkLock = new object();
-            _notifQueueLock = new object();
-            _movQueueLock = new object();
-            _combatQueueLock = new object();
+            this.attackLock = new object();
+            this.walkLock = new object();
+            this.notifQueueLock = new object();
+            this.movQueueLock = new object();
+            this.combatQueueLock = new object();
 
-            NotificationQueue = new ConcurrentQueue<INotification>();
-            MovementQueue = new ConcurrentQueue<IMovement>();
-            CombatQueue = new ConcurrentQueue<ICombatOperation>();
-            Connections = new ConcurrentDictionary<uint, Connection>();
-            Creatures = new ConcurrentDictionary<uint, Creature>();
+            this.NotificationQueue = new ConcurrentQueue<INotification>();
+            this.MovementQueue = new ConcurrentQueue<IMovement>();
+            this.CombatQueue = new ConcurrentQueue<ICombatOperation>();
+            this.Connections = new ConcurrentDictionary<uint, Connection>();
+            this.Creatures = new ConcurrentDictionary<uint, Creature>();
 
             // Initialize the map
-            Map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
+            this.Map = new Map.Map(new SectorMapLoader(ServerConfiguration.LiveMapDirectory));
 
             // Initialize game vars.
-            Status = WorldState.Creating;
-            LightColor = (byte)LightColors.White;
-            LightLevel = (byte)LightLevels.World;
+            this.Status = WorldState.Creating;
+            this.LightColor = (byte)LightColors.White;
+            this.LightLevel = (byte)LightLevels.World;
         }
 
         public IEventLoader EventLoader { get; private set; }
+
         public IItemLoader ItemLoader { get; private set; }
+
         public IMonsterLoader MonsterLoader { get; private set; }
+
         public DateTime MovementSynchronizationTime { get; private set; }
+
         public DateTime CombatSynchronizationTime { get; private set; }
 
         /// <summary>
@@ -96,15 +115,19 @@
         public byte LightColor { get; private set; }
 
         /// <summary>
-        /// Gets or sets the current world's <see cref="WorldState"/>.
+        /// Gets the current world's <see cref="WorldState"/>.
         /// </summary>
         public WorldState Status
         {
-            get { return _status; }
+            get
+            {
+                return this.status;
+            }
+
             private set
             {
-                _status = value;
-                Console.WriteLine($"Game world is now {_status}.");
+                this.status = value;
+                Console.WriteLine($"Game world is now {this.status}.");
             }
         }
 
@@ -129,7 +152,7 @@
         private ConcurrentQueue<ICombatOperation> CombatQueue { get; }
 
         /// <summary>
-        /// Gets the master <see cref="CancellationToken"/> passed down to any new thread started by the <see cref="Game"/> instance.
+        /// Gets or sets the master <see cref="CancellationToken"/> passed down to any new thread started by the <see cref="Game"/> instance.
         /// </summary>
         private CancellationToken CancelToken { get; set; }
 
@@ -138,18 +161,11 @@
         /// </summary>
         private Map.Map Map { get; }
 
-        private WorldState _status;
-        private readonly object _attackLock;
-        private readonly object _walkLock;
-        private readonly object _notifQueueLock;
-        private readonly object _movQueueLock;
-        private readonly object _combatQueueLock;
-
         public void Initialize(IEventLoader eventLoader, IItemLoader itemLoader, IMonsterLoader monsterLoader)
         {
-            EventLoader = eventLoader ?? throw new ArgumentNullException(nameof(eventLoader));
-            ItemLoader = itemLoader ?? throw new ArgumentNullException(nameof(itemLoader));
-            MonsterLoader = monsterLoader ?? throw new ArgumentNullException(nameof(monsterLoader));
+            this.EventLoader = eventLoader ?? throw new ArgumentNullException(nameof(eventLoader));
+            this.ItemLoader = itemLoader ?? throw new ArgumentNullException(nameof(itemLoader));
+            this.MonsterLoader = monsterLoader ?? throw new ArgumentNullException(nameof(monsterLoader));
         }
 
         /// <summary>
@@ -159,7 +175,7 @@
         /// <param name="targetLocation">The target location to find a path to.</param>
         /// <param name="endLocation">The last searched location before returning.</param>
         /// <param name="maxStepsCount">Optional. The maximum number of search steps to perform before giving up on finding the target location. Default is 100.</param>
-        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Direction"/>s leading to the end location. The <param name="endLocation"/> and <param name="targetLocation"/> may or may not be the same.</returns>
+        /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Direction"/>s leading to the end location. The <paramref name="endLocation"/> and <paramref name="targetLocation"/> may or may not be the same.</returns>
         public IEnumerable<Direction> Pathfind(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = 100)
         {
             endLocation = startLocation;
@@ -210,30 +226,30 @@
 
         public byte[] GetMapTileDescription(uint requestingPlayerId, Location location)
         {
-            var tile = Map[location];
-            var requestingPlayer = GetCreatureWithId(requestingPlayerId) as IPlayer;
+            var tile = this.Map[location];
+            var requestingPlayer = this.GetCreatureWithId(requestingPlayerId) as IPlayer;
 
             if (requestingPlayer == null)
             {
                 return new byte[0];
             }
 
-            return tile == null ? new byte[0] : Map.GetTileDescription(requestingPlayer, tile).ToArray();
+            return tile == null ? new byte[0] : this.Map.GetTileDescription(requestingPlayer, tile).ToArray();
         }
 
         public void SignalWalkAvailable()
         {
-            lock (_walkLock)
+            lock (this.walkLock)
             {
-                Monitor.Pulse(_walkLock);
+                Monitor.Pulse(this.walkLock);
             }
         }
 
         public void SignalAttackReady()
         {
-            lock (_attackLock)
+            lock (this.attackLock)
             {
-                Monitor.Pulse(_attackLock);
+                Monitor.Pulse(this.attackLock);
             }
         }
 
@@ -264,21 +280,21 @@
 
         public void RequestMovement(IMovement newMovement)
         {
-            lock (_movQueueLock)
+            lock (this.movQueueLock)
             {
                 this.MovementQueue.Enqueue(newMovement);
 
-                Monitor.Pulse(_movQueueLock);
+                Monitor.Pulse(this.movQueueLock);
             }
         }
 
         public void RequestCombatOp(ICombatOperation newOp)
         {
-            lock (_combatQueueLock)
+            lock (this.combatQueueLock)
             {
                 this.CombatQueue.Enqueue(newOp);
 
-                Monitor.Pulse(_combatQueueLock);
+                Monitor.Pulse(this.combatQueueLock);
             }
         }
 
@@ -302,7 +318,7 @@
             {
                 var conn = this.Connections[player.CreatureId];
 
-                InternalRequestNofitication(notificationFunc(conn));
+                this.InternalRequestNofitication(notificationFunc(conn));
             }
             catch (Exception ex)
             {
@@ -398,16 +414,8 @@
                                     this.InternalRequestNofitication(
                                         new GenericNotification(
                                             connection,
-                                            new PlayerWalkCancelPacket
-                                            {
-                                                Direction = player.Direction
-                                            },
-                                            new TextMessagePacket
-                                            {
-                                                Message = "Sorry, not possible.",
-                                                Type = MessageType.StatusSmall
-                                            }
-                                        )
+                                            new PlayerWalkCancelPacket { Direction = player.Direction },
+                                            new TextMessagePacket { Message = "Sorry, not possible.", Type = MessageType.StatusSmall })
                                     );
                                 }
                             }
@@ -425,8 +433,8 @@
                             minCoolDown = cooldownTime;
                         }
                     }
-                    
-                    lock (_walkLock)
+
+                    lock (this.walkLock)
                     {
                         if (minCoolDown != TimeSpan.MaxValue)
                         {
@@ -434,11 +442,11 @@
                             var timeDiff = minCoolDown - timeThatCheckTook; // factor in the time we took to check all queues.
                             var actualCooldown = timeDiff > TimeSpan.Zero ? timeDiff : TimeSpan.Zero; // and if that is positive.
 
-                            Monitor.Wait(_walkLock, actualCooldown); // there was work, but it's not time yet.
+                            Monitor.Wait(this.walkLock, actualCooldown); // there was work, but it's not time yet.
                         }
                         else
                         {
-                            Monitor.Wait(_walkLock); // there was no work, sleep until woken up.
+                            Monitor.Wait(this.walkLock); // there was no work, sleep until woken up.
                         }
                     }
                 }
@@ -452,7 +460,7 @@
 
         private void CheckCreatureAutoAttack()
         {
-            while (!CancelToken.IsCancellationRequested)
+            while (!this.CancelToken.IsCancellationRequested)
             {
                 try
                 {
@@ -494,7 +502,7 @@
                         }
                     }
 
-                    lock (_attackLock)
+                    lock (this.attackLock)
                     {
                         if (minCoolDown != TimeSpan.MaxValue)
                         {
@@ -502,11 +510,11 @@
                             var timeDiff = minCoolDown - timeThatCheckTook; // factor in the time we took to check all queues.
                             var actualCooldown = timeDiff > TimeSpan.Zero ? timeDiff : TimeSpan.Zero; // and if that is positive.
 
-                            Monitor.Wait(_attackLock, actualCooldown); // there was work, but it's not time yet.
+                            Monitor.Wait(this.attackLock, actualCooldown); // there was work, but it's not time yet.
                         }
                         else
                         {
-                            Monitor.Wait(_attackLock); // there was no work, sleep until woken up.
+                            Monitor.Wait(this.attackLock); // there was no work, sleep until woken up.
                         }
                     }
                 }
@@ -528,7 +536,8 @@
             var percentageCompleteFunc = new Func<byte>(() => (byte)Math.Floor(Math.Min(100, Math.Max((decimal)0, loadedCount * 100 / (totalCount + 1)))));
             var cts = new CancellationTokenSource();
 
-            Task.Factory.StartNew(() =>
+            Task.Factory.StartNew(
+            () =>
             {
                 while (!cts.IsCancellationRequested)
                 {
@@ -543,15 +552,15 @@
             {
                 Parallel.For(0, spawn.Count, i =>
                 {
-                    //var halfRadius = spawn.Radius / 2;
+                    // var halfRadius = spawn.Radius / 2;
                     var placed = false;
 
                     byte tries = 1;
                     do
                     {
                         // TODO: revisit this logic
-                        var randomLoc = spawn.Location + new Location { X = (int)Math.Round(i * Math.Cos(rng.Next(360)) - i), Y = (int)Math.Round(i * Math.Cos(rng.Next(360)) - i), Z = 0 };
-                        var randomTile = GetTileAt(randomLoc);
+                        var randomLoc = spawn.Location + new Location { X = (int)Math.Round((i * Math.Cos(rng.Next(360))) - i), Y = (int)Math.Round((i * Math.Cos(rng.Next(360))) - i), Z = 0 };
+                        var randomTile = this.GetTileAt(randomLoc);
 
                         if (randomTile == null)
                         {
@@ -563,7 +572,7 @@
                         // Need to actually pathfind to avoid placing a monster in unreachable places.
                         this.Pathfind(spawn.Location, randomTile.Location, out foundLocation, (i + 1) * 100);
 
-                        var foundTile = GetTileAt(foundLocation);
+                        var foundTile = this.GetTileAt(foundLocation);
 
                         if (foundTile != null && !foundTile.BlocksPass)
                         {
@@ -602,7 +611,7 @@
                     {
                         continue;
                     }
-                    
+
                     player.SetAttackTarget(0);
 
                     if (player.CanLogout)
@@ -619,7 +628,6 @@
             // A day is an hour in real time...
             // So night in realtime lasts 1/3 of the day IRL
             // Dusk and Dawns last for... 30 minutes IRL, so les aproximate that to 2 minutes.
-
             var nightTime = TimeSpan.FromMinutes(18);
             var dawnTime = TimeSpan.FromMinutes(2);
             var dayTime = TimeSpan.FromMinutes(38);
@@ -659,11 +667,11 @@
             while (!this.CancelToken.IsCancellationRequested)
             {
                 INotification notification;
-                lock (_notifQueueLock)
+                lock (this.notifQueueLock)
                 {
                     while (this.NotificationQueue.Count == 0 || !this.NotificationQueue.TryDequeue(out notification))
                     {
-                        Monitor.Wait(_notifQueueLock);
+                        Monitor.Wait(this.notifQueueLock);
                     }
                 }
 
@@ -687,11 +695,11 @@
             {
                 IMovement movement;
 
-                lock (this._movQueueLock)
+                lock (this.movQueueLock)
                 {
                     while (this.MovementQueue.Count == 0 || !this.MovementQueue.TryDequeue(out movement))
                     {
-                        Monitor.Wait(this._movQueueLock);
+                        Monitor.Wait(this.movQueueLock);
                     }
                 }
 
@@ -710,17 +718,8 @@
                         this.NotifySinglePlayer(player, conn =>
                             new GenericNotification(
                                 conn,
-                                new PlayerWalkCancelPacket
-                                {
-                                    Direction = player.ClientSafeDirection
-                                },
-                                new TextMessagePacket
-                                {
-                                    Message = movement.LastError ?? "Sorry, not possible.",
-                                    Type = MessageType.StatusSmall
-                                }
-                            )
-                        );
+                                new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
+                                new TextMessagePacket { Message = movement.LastError ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
                     }
                 }
                 catch (Exception ex)
@@ -731,18 +730,18 @@
                 }
             }
         }
-    
+
         private void CombatProcessor()
         {
             while (!this.CancelToken.IsCancellationRequested)
             {
                 ICombatOperation combatOp;
 
-                lock (this._combatQueueLock)
+                lock (this.combatQueueLock)
                 {
                     while (this.CombatQueue.Count == 0 || !this.CombatQueue.TryDequeue(out combatOp))
                     {
-                        Monitor.Wait(this._combatQueueLock);
+                        Monitor.Wait(this.combatQueueLock);
                     }
                 }
 
@@ -759,7 +758,7 @@
                             canAttack &= attackerAsCreature.CanSee(targetAsCreature);
                             canAttack &= this.CanThrowBetween(attackerAsCreature.Location, targetAsCreature.Location);
                         }
-                        
+
                         if (canAttack)
                         {
                             combatOp.Execute();
@@ -781,14 +780,14 @@
         {
             notification.Prepare();
 
-            lock (this._notifQueueLock)
+            lock (this.notifQueueLock)
             {
                 this.NotificationQueue.Enqueue(notification);
 
-                Monitor.Pulse(this._notifQueueLock);
+                Monitor.Pulse(this.notifQueueLock);
             }
         }
-        
+
         public IEnumerable<uint> GetSpectatingCreatureIds(Location location)
         {
             return this.Map.GetCreatureIdsAt(location);
@@ -810,8 +809,8 @@
             {
                 return true;
             }
-            
-            if (fromLocation.Z >= 8 && toLocation.Z < 8 || toLocation.Z >= 8 && fromLocation.Z < 8)
+
+            if ((fromLocation.Z >= 8 && toLocation.Z < 8) || (toLocation.Z >= 8 && fromLocation.Z < 8))
             {
                 return false;
             }
@@ -826,7 +825,7 @@
             var deltaX = Math.Abs(fromLocation.X - toLocation.X);
             var deltaY = Math.Abs(fromLocation.Y - toLocation.Y);
 
-            //distance checks
+            // distance checks
             if (deltaX - deltaZ > 8 || deltaY - deltaZ > 6)
             {
                 return false;
@@ -844,19 +843,19 @@
 
             var start = fromLocation.Z > toLocation.Z ? toLocation : fromLocation;
             var destination = fromLocation.Z > toLocation.Z ? fromLocation : toLocation;
-            
+
             var mx = (sbyte)(start.X < destination.X ? 1 : start.X == destination.X ? 0 : -1);
             var my = (sbyte)(start.Y < destination.Y ? 1 : start.Y == destination.Y ? 0 : -1);
 
             var a = destination.Y - start.Y;
             var b = start.X - destination.X;
-            var c = -(a * destination.X + b * destination.Y);
+            var c = -((a * destination.X) + (b * destination.Y));
 
             while ((start - destination).MaxValueIn2D != 0)
             {
-                var moveHor = Math.Abs(a * (start.X + mx) + b * start.Y + c);
-                var moveVer = Math.Abs(a * start.X + b * (start.Y + my) + c);
-                var moveCross = Math.Abs(a * (start.X + mx) + b * (start.Y + my) + c);
+                var moveHor = Math.Abs((a * (start.X + mx)) + (b * start.Y) + c);
+                var moveVer = Math.Abs((a * start.X) + (b * (start.Y + my)) + c);
+                var moveCross = Math.Abs((a * (start.X + mx)) + (b * (start.Y + my)) + c);
 
                 if (start.Y != destination.Y && (start.X == destination.X || moveHor > moveVer || moveHor > moveCross))
                 {
@@ -868,7 +867,7 @@
                     start.X += mx;
                 }
 
-                var tile = GetTileAt(start);
+                var tile = this.GetTileAt(start);
 
                 if (tile != null && tile.BlocksThrow)
                 {
@@ -892,8 +891,6 @@
             return true;
         }
 
-        #region temporary / refactor me
-
         internal Player Login(PlayerModel playerRecord, Connection connection)
         {
             var rng = new Random();
@@ -907,7 +904,7 @@
             this.NotifySpectatingPlayers(conn => new CreatureAddedNotification(conn, player, EffectT.BubbleBlue), player.Location);
 
             this.Connections.TryAdd(player.CreatureId, connection);
-            
+
             if (!this.Creatures.TryAdd(player.CreatureId, player))
             {
                 // TODO: proper logging
@@ -925,7 +922,6 @@
             }
 
             // TODO: stuff missing?
-
             var oldStackpos = player.Tile.GetStackPosition(player);
 
             IThing playerThing = player;
@@ -956,7 +952,7 @@
 
             var skip = -1;
             var stepZ = 1; // asume going down the ground
-            
+
             if (startZ > endZ)
             {
                 stepZ = -1; // we're going up!
@@ -981,7 +977,7 @@
             var fromLoc = creature.Location;
             var toLoc = fromLoc;
 
-            switch(direction)
+            switch (direction)
             {
                 case Direction.North:
                     toLoc.Y -= 1;
@@ -1025,31 +1021,28 @@
             return potentialResult;
         }
 
-        #endregion
-
-        #region test / debug. Remove later
         internal void TestingViaCreatureSpeech(IPlayer player, string msgStr)
         {
             var testStrObjs = msgStr.Replace("test.", string.Empty).Split(new[] { '.' }, StringSplitOptions.RemoveEmptyEntries);
-            
+
             if (!testStrObjs.Any())
             {
                 return;
             }
 
-            switch(testStrObjs[0])
+            switch (testStrObjs[0])
             {
                 case "mon":
                     if (testStrObjs.Length > 1)
                     {
                         var monsterId = Convert.ToUInt16(testStrObjs[1]);
 
-                        Task.Factory.StartNew(() => Functions.MonsterOnMap(player.LocationInFront, monsterId), CancelToken);
+                        Task.Factory.StartNew(() => Functions.MonsterOnMap(player.LocationInFront, monsterId), this.CancelToken);
                     }
+
                     break;
             }
         }
-        #endregion
 
         private void OnContainerContentEvent(sbyte operationType, IContainer container, byte index, IItem item)
         {

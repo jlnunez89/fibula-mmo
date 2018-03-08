@@ -1,80 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="ItemType.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Items
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     public class ItemType : IItemType
     {
         public ushort TypeId { get; private set; }
+
         public string Name { get; private set; }
+
         public string Description { get; private set; }
-        public HashSet<ItemFlag> Flags { get; }
-        public Dictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
+
+        public ISet<ItemFlag> Flags { get; }
+
+        public IDictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
+
         public bool Locked { get; private set; }
 
-        public ushort ClientId => Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(DefaultAttributes[ItemAttribute.DisguiseTarget]) : TypeId;
+        public ushort ClientId => this.Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseTarget]) : this.TypeId;
 
         public ItemType()
         {
-            TypeId = 0;
-            Name = string.Empty;
-            Description = string.Empty;
-            Flags = new HashSet<ItemFlag>();
-            DefaultAttributes = new Dictionary<ItemAttribute, IConvertible>();
-            Locked = false;
+            this.TypeId = 0;
+            this.Name = string.Empty;
+            this.Description = string.Empty;
+            this.Flags = new HashSet<ItemFlag>();
+            this.DefaultAttributes = new Dictionary<ItemAttribute, IConvertible>();
+            this.Locked = false;
         }
-        
+
         public void LockChanges()
         {
-            Locked = true;
+            this.Locked = true;
         }
 
         public void SetId(ushort typeId)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
 
-            TypeId = typeId;
+            this.TypeId = typeId;
         }
 
         public void SetName(string name)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
 
-            Name = name;
+            this.Name = name;
         }
 
         public void SetDescription(string description)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
 
-            Description = description.Trim('"');
+            this.Description = description.Trim('"');
         }
 
         public void SetFlag(ItemFlag flag)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
 
-            Flags.Add(flag);
+            this.Flags.Add(flag);
         }
 
         public void SetAttribute(string attributeName, int attributeValue)
         {
-            if (Locked)
+            if (this.Locked)
             {
                 throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
             }
@@ -86,7 +97,7 @@ namespace OpenTibia.Server.Items
                 throw new InvalidDataException($"Attempted to set an unknown Item attribute [{attributeName}].");
             }
 
-            DefaultAttributes[attribute] = attributeValue;
+            this.DefaultAttributes[attribute] = attributeValue;
         }
     }
 }

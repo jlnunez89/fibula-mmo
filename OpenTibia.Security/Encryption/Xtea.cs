@@ -1,20 +1,28 @@
-﻿using System;
+﻿// <copyright file="Xtea.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Security.Encryption
 {
+    using System;
+
     public static class Xtea
     {
-        public unsafe static bool Encrypt(ref byte[] buffer, ref int length, int index, uint[] key)
+        public static unsafe bool Encrypt(ref byte[] buffer, ref int length, int index, uint[] key)
         {
             if (key == null)
+            {
                 return false;
+            }
 
             int msgSize = length - index;
 
             int pad = msgSize % 8;
             if (pad > 0)
             {
-                msgSize += (8 - pad);
+                msgSize += 8 - pad;
                 length = index + msgSize;
             }
 
@@ -40,10 +48,12 @@ namespace OpenTibia.Security.Encryption
             return true;
         }
 
-        public unsafe static bool Decrypt(ref byte[] buffer, ref int length, int index, uint[] key)
+        public static unsafe bool Decrypt(ref byte[] buffer, ref int length, int index, uint[] key)
         {
             if (length <= index || (length - index) % 8 > 0 || key == null)
+            {
                 return false;
+            }
 
             fixed (byte* bufferPtr = buffer)
             {

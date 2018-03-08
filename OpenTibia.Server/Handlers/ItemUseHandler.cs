@@ -1,17 +1,23 @@
-﻿using System.Linq;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Actions;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="ItemUseHandler.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Handlers
 {
+    using System.Linq;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Actions;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Models.Structs;
+
     internal class ItemUseHandler : IncomingPacketHandler
     {
-        public override void HandlePacket(NetworkMessage message, Connection connection)
+        public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var itemUsePacket = new ItemUsePacket(message);
             var player = Game.Instance.GetCreatureWithId(connection.PlayerId) as Player;
@@ -30,7 +36,7 @@ namespace OpenTibia.Server.Handlers
 
                 if (locationDiff.Z != 0) // it's on a different floor...
                 {
-                    ResponsePackets.Add(new TextMessagePacket
+                    this.ResponsePackets.Add(new TextMessagePacket
                     {
                         Type = MessageType.StatusSmall,
                         Message = "There is no way."
@@ -41,7 +47,7 @@ namespace OpenTibia.Server.Handlers
 
                 if (locationDiff.MaxValueIn2D > 1)
                 {
-                    // Too far away to use it. 
+                    // Too far away to use it.
                     Location retryLoc;
                     var directions = Game.Instance.Pathfind(player.Location, itemUsePacket.FromLocation, out retryLoc).ToArray();
 
@@ -53,7 +59,7 @@ namespace OpenTibia.Server.Handlers
                     }
                     else // we found no way...
                     {
-                        ResponsePackets.Add(new TextMessagePacket
+                        this.ResponsePackets.Add(new TextMessagePacket
                         {
                             Type = MessageType.StatusSmall,
                             Message = "There is no way."

@@ -1,16 +1,24 @@
-﻿using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="Thing.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server
 {
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+
     public abstract class Thing : IThing
     {
         public event OnThingStateChange OnLocationChanged;
+
         public event OnThingStateChange OnThingAdded;
+
         public event OnThingStateChange OnThingRemoved;
 
-        protected ITile _tile;
-        protected Location _location;
+        protected ITile tile;
+        protected Location location;
 
         public const ushort CreatureThingId = 0x63;
 
@@ -26,41 +34,47 @@ namespace OpenTibia.Server
 
         public Location Location
         {
-            get { return _location; }
+            get
+            {
+                return this.location;
+            }
+
             protected set
             {
-                var oldValue = _location;
-                _location = value;
-
-                if (oldValue != _location)
+                var oldValue = this.location;
+                this.location = value;
+                if (oldValue != this.location)
                 {
-                    OnLocationChanged?.Invoke();
+                    this.OnLocationChanged?.Invoke();
                 }
             }
         }
 
         public ITile Tile
         {
-            get { return _tile; }
+            get
+            {
+                return this.tile;
+            }
+
             set
             {
                 if (value != null)
                 {
-                    Location = value.Location;
+                    this.Location = value.Location;
                 }
-
-                _tile = value;
+                this.tile = value;
             }
         }
 
         public void Added()
         {
-            OnThingAdded?.Invoke();
+            this.OnThingAdded?.Invoke();
         }
 
         public void Removed()
         {
-            OnThingRemoved?.Invoke();
+            this.OnThingRemoved?.Invoke();
         }
     }
 }

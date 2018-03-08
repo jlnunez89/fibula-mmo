@@ -1,23 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Items;
-using OpenTibia.Utilities;
+﻿// <copyright file="Tile.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Map
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Items;
+    using OpenTibia.Utilities;
+
     public class Tile : ITile
     {
-        private readonly Stack<uint> _creatureIdsOnTile;
+        private readonly Stack<uint> creatureIdsOnTile;
 
-        private readonly Stack<IItem> _topItems1OnTile;
+        private readonly Stack<IItem> topItems1OnTile;
 
-        private readonly Stack<IItem> _topItems2OnTile;
+        private readonly Stack<IItem> topItems2OnTile;
 
-        private readonly Stack<IItem> _downItemsOnTile;
+        private readonly Stack<IItem> downItemsOnTile;
 
         public Location Location { get; }
 
@@ -25,19 +31,19 @@ namespace OpenTibia.Server.Map
 
         public IItem Ground { get; set; }
 
-        public IEnumerable<uint> CreatureIds => _creatureIdsOnTile;
+        public IEnumerable<uint> CreatureIds => this.creatureIdsOnTile;
 
-        public IEnumerable<IItem> TopItems1 => _topItems1OnTile;
+        public IEnumerable<IItem> TopItems1 => this.topItems1OnTile;
 
-        public IEnumerable<IItem> TopItems2 => _topItems2OnTile;
+        public IEnumerable<IItem> TopItems2 => this.topItems2OnTile;
 
-        public IEnumerable<IItem> DownItems => _downItemsOnTile;
+        public IEnumerable<IItem> DownItems => this.downItemsOnTile;
 
         public bool HandlesCollision
         {
             get
             {
-                return Ground != null && Ground.HasCollision || TopItems1.Any(i => i.HasCollision) || TopItems2.Any(i => i.HasCollision) || DownItems.Any(i => i.HasCollision);
+                return this.Ground != null && this.Ground.HasCollision || this.TopItems1.Any(i => i.HasCollision) || this.TopItems2.Any(i => i.HasCollision) || this.DownItems.Any(i => i.HasCollision);
             }
         }
 
@@ -47,14 +53,14 @@ namespace OpenTibia.Server.Map
             {
                 var items = new List<IItem>();
 
-                if (Ground.HasCollision)
+                if (this.Ground.HasCollision)
                 {
-                    items.Add(Ground);
+                    items.Add(this.Ground);
                 }
 
-                items.AddRange(TopItems1.Where(i => i.HasCollision));
-                items.AddRange(TopItems2.Where(i => i.HasCollision));
-                items.AddRange(DownItems.Where(i => i.HasCollision));
+                items.AddRange(this.TopItems1.Where(i => i.HasCollision));
+                items.AddRange(this.TopItems2.Where(i => i.HasCollision));
+                items.AddRange(this.DownItems.Where(i => i.HasCollision));
 
                 return items;
             }
@@ -64,7 +70,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return Ground != null && Ground.HasSeparation || TopItems1.Any(i => i.HasSeparation) || TopItems2.Any(i => i.HasSeparation) || DownItems.Any(i => i.HasSeparation);
+                return this.Ground != null && this.Ground.HasSeparation || this.TopItems1.Any(i => i.HasSeparation) || this.TopItems2.Any(i => i.HasSeparation) || this.DownItems.Any(i => i.HasSeparation);
             }
         }
 
@@ -74,14 +80,14 @@ namespace OpenTibia.Server.Map
             {
                 var items = new List<IItem>();
 
-                if (Ground.HasSeparation)
+                if (this.Ground.HasSeparation)
                 {
-                    items.Add(Ground);
+                    items.Add(this.Ground);
                 }
 
-                items.AddRange(TopItems1.Where(i => i.HasSeparation));
-                items.AddRange(TopItems2.Where(i => i.HasSeparation));
-                items.AddRange(DownItems.Where(i => i.HasSeparation));
+                items.AddRange(this.TopItems1.Where(i => i.HasSeparation));
+                items.AddRange(this.TopItems2.Where(i => i.HasSeparation));
+                items.AddRange(this.DownItems.Where(i => i.HasSeparation));
 
                 return items;
             }
@@ -93,7 +99,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return Ground != null && Ground.BlocksThrow || TopItems1.Any(i => i.BlocksThrow) || TopItems2.Any(i => i.BlocksThrow) || DownItems.Any(i => i.BlocksThrow);
+                return this.Ground != null && this.Ground.BlocksThrow || this.TopItems1.Any(i => i.BlocksThrow) || this.TopItems2.Any(i => i.BlocksThrow) || this.DownItems.Any(i => i.BlocksThrow);
             }
         }
 
@@ -101,7 +107,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return Ground != null && Ground.BlocksPass || CreatureIds.Any() || TopItems1.Any(i => i.BlocksPass) || TopItems2.Any(i => i.BlocksPass) || DownItems.Any(i => i.BlocksPass);
+                return this.Ground != null && this.Ground.BlocksPass || this.CreatureIds.Any() || this.TopItems1.Any(i => i.BlocksPass) || this.TopItems2.Any(i => i.BlocksPass) || this.DownItems.Any(i => i.BlocksPass);
             }
         }
 
@@ -109,18 +115,18 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return Ground != null && Ground.BlocksLay || TopItems1.Any(i => i.BlocksLay) || TopItems2.Any(i => i.BlocksLay) || DownItems.Any(i => i.BlocksLay);
+                return this.Ground != null && this.Ground.BlocksLay || this.TopItems1.Any(i => i.BlocksLay) || this.TopItems2.Any(i => i.BlocksLay) || this.DownItems.Any(i => i.BlocksLay);
             }
         }
 
         public bool CanBeWalked(byte avoidDamageType = 0)
         {
-            return !CreatureIds.Any() 
-                && Ground != null 
-                && !Ground.IsPathBlocking(avoidDamageType)
-                && !TopItems1.Any(i => i.IsPathBlocking(avoidDamageType)) 
-                && !TopItems2.Any(i => i.IsPathBlocking(avoidDamageType)) 
-                && !DownItems.Any(i => i.IsPathBlocking(avoidDamageType));
+            return !this.CreatureIds.Any()
+                && this.Ground != null
+                && !this.Ground.IsPathBlocking(avoidDamageType)
+                && !this.TopItems1.Any(i => i.IsPathBlocking(avoidDamageType))
+                && !this.TopItems2.Any(i => i.IsPathBlocking(avoidDamageType))
+                && !this.DownItems.Any(i => i.IsPathBlocking(avoidDamageType));
         }
 
         public bool HasThing(IThing thing, byte count = 1)
@@ -131,33 +137,32 @@ namespace OpenTibia.Server.Map
             }
 
             var creature = thing as Creature;
-            var creaturesCheck = creature != null && _creatureIdsOnTile.Contains(creature.CreatureId);
+            var creaturesCheck = creature != null && this.creatureIdsOnTile.Contains(creature.CreatureId);
 
-            var top1Check = thing is Item && _topItems1OnTile.Count > 0 && _topItems1OnTile.Peek() == thing && thing.Count >= count;
-            var top2Check = thing is Item && _topItems2OnTile.Count > 0 && _topItems2OnTile.Peek() == thing && thing.Count >= count;
-            var downCheck = thing is Item && _downItemsOnTile.Count > 0 && _downItemsOnTile.Peek() == thing && thing.Count >= count;
+            var top1Check = thing is Item && this.topItems1OnTile.Count > 0 && this.topItems1OnTile.Peek() == thing && thing.Count >= count;
+            var top2Check = thing is Item && this.topItems2OnTile.Count > 0 && this.topItems2OnTile.Peek() == thing && thing.Count >= count;
+            var downCheck = thing is Item && this.downItemsOnTile.Count > 0 && this.downItemsOnTile.Peek() == thing && thing.Count >= count;
 
             return creaturesCheck || top1Check || top2Check || downCheck;
         }
 
-        //public static HashSet<string> PropSet = new HashSet<string>();
+        // public static HashSet<string> PropSet = new HashSet<string>();
 
-        //public string LoadedFrom { get; set; }
-
+        // public string LoadedFrom { get; set; }
         public Tile(ushort x, ushort y, sbyte z)
-            : this(new Location { X=x, Y=y, Z=z })
+            : this(new Location { X = x, Y = y, Z = z })
         {
         }
 
         public Tile(Location loc)
         {
-            Location = loc;
-            _creatureIdsOnTile = new Stack<uint>();
-            _topItems1OnTile = new Stack<IItem>();
-            _topItems2OnTile = new Stack<IItem>();
-            _downItemsOnTile = new Stack<IItem>();
+            this.Location = loc;
+            this.creatureIdsOnTile = new Stack<uint>();
+            this.topItems1OnTile = new Stack<IItem>();
+            this.topItems2OnTile = new Stack<IItem>();
+            this.downItemsOnTile = new Stack<IItem>();
         }
-    
+
         public void AddThing(ref IThing thing, byte count)
         {
             if (count == 0)
@@ -170,7 +175,7 @@ namespace OpenTibia.Server.Map
 
             if (creature != null)
             {
-                _creatureIdsOnTile.Push(creature.CreatureId);
+                this.creatureIdsOnTile.Push(creature.CreatureId);
                 creature.Tile = this;
                 creature.Added();
             }
@@ -178,30 +183,30 @@ namespace OpenTibia.Server.Map
             {
                 if (item.IsGround)
                 {
-                    Ground = item;
+                    this.Ground = item;
                     item.Added();
                 }
                 else if (item.IsTop1)
                 {
-                    _topItems1OnTile.Push(item);
+                    this.topItems1OnTile.Push(item);
                     item.Added();
                 }
                 else if (item.IsTop2)
                 {
-                    _topItems2OnTile.Push(item);
+                    this.topItems2OnTile.Push(item);
                     item.Added();
                 }
                 else
                 {
                     if (item.IsCumulative)
                     {
-                        var currentItem = _downItemsOnTile.Count > 0 ? _downItemsOnTile.Peek() as Item : null;
+                        var currentItem = this.downItemsOnTile.Count > 0 ? this.downItemsOnTile.Peek() as Item : null;
 
                         if (currentItem != null && currentItem.Type == item.Type && currentItem.Amount < 100)
                         {
                             // add these up.
                             var remaining = currentItem.Amount + count;
-                            
+
                             var newCount = (byte)Math.Min(remaining, 100);
 
                             currentItem.Amount = newCount;
@@ -211,20 +216,20 @@ namespace OpenTibia.Server.Map
                             if (remaining > 0)
                             {
                                 IThing newThing = ItemFactory.Create(item.Type.TypeId);
-                                AddThing(ref newThing, (byte)remaining);
+                                this.AddThing(ref newThing, (byte)remaining);
                                 thing = newThing;
                             }
                         }
                         else
                         {
                             item.Amount = count;
-                            _downItemsOnTile.Push(item);
+                            this.downItemsOnTile.Push(item);
                             item.Added();
                         }
                     }
                     else
                     {
-                        _downItemsOnTile.Push(item);
+                        this.downItemsOnTile.Push(item);
                         item.Added();
                     }
                 }
@@ -245,7 +250,7 @@ namespace OpenTibia.Server.Map
 
             if (creature != null)
             {
-                RemoveCreature(creature);
+                this.RemoveCreature(creature);
                 creature.Tile = null;
                 creature.Removed();
             }
@@ -255,19 +260,19 @@ namespace OpenTibia.Server.Map
 
                 if (item.IsGround)
                 {
-                    Ground = null;
+                    this.Ground = null;
                     item.Removed();
                     removeItem = false;
                 }
                 else if (item.IsTop1)
                 {
-                    _topItems1OnTile.Pop();
+                    this.topItems1OnTile.Pop();
                     item.Removed();
                     removeItem = false;
                 }
                 else if (item.IsTop2)
                 {
-                    _topItems2OnTile.Pop();
+                    this.topItems2OnTile.Pop();
                     item.Removed();
                     removeItem = false;
                 }
@@ -279,7 +284,7 @@ namespace OpenTibia.Server.Map
                         {
                             throw new ArgumentException("Remove count is greater than available.");
                         }
-                        
+
                         if (item.Amount > count)
                         {
                             // create a new item (it got split...)
@@ -295,7 +300,7 @@ namespace OpenTibia.Server.Map
 
                 if (removeItem)
                 {
-                    _downItemsOnTile.Pop();
+                    this.downItemsOnTile.Pop();
                     item.Removed();
                     item.Tile = null;
                 }
@@ -311,11 +316,11 @@ namespace OpenTibia.Server.Map
             var tempStack = new Stack<uint>();
             ICreature removed = null;
 
-            lock (_creatureIdsOnTile)
+            lock (this.creatureIdsOnTile)
             {
-                while (removed == null && _creatureIdsOnTile.Count > 0)
+                while (removed == null && this.creatureIdsOnTile.Count > 0)
                 {
-                    var temp = _creatureIdsOnTile.Pop();
+                    var temp = this.creatureIdsOnTile.Pop();
 
                     if (c.CreatureId == temp)
                     {
@@ -329,34 +334,34 @@ namespace OpenTibia.Server.Map
 
                 while (tempStack.Count > 0)
                 {
-                    _creatureIdsOnTile.Push(tempStack.Pop());
+                    this.creatureIdsOnTile.Push(tempStack.Pop());
                 }
             }
 
-            //Console.WriteLine($"Removed creature {c.Name} at {this.Location}");
+            // Console.WriteLine($"Removed creature {c.Name} at {this.Location}");
         }
-        
+
         private void AddTopItem1(IItem i)
         {
-            lock (_topItems1OnTile)
+            lock (this.topItems1OnTile)
             {
-                _topItems1OnTile.Push(i);
+                this.topItems1OnTile.Push(i);
             }
         }
 
         private void AddTopItem2(IItem i)
         {
-            lock (_topItems2OnTile)
+            lock (this.topItems2OnTile)
             {
-                _topItems2OnTile.Push(i);
+                this.topItems2OnTile.Push(i);
             }
         }
 
         private void AddDownItem(IItem i)
         {
-            lock (_downItemsOnTile)
+            lock (this.downItemsOnTile)
             {
-                _downItemsOnTile.Push(i);
+                this.downItemsOnTile.Push(i);
             }
         }
 
@@ -383,9 +388,10 @@ namespace OpenTibia.Server.Map
                     {
                         Console.WriteLine($"Tile.AddContent: Unexpected flag {element.Attributes?.First()?.Name}, igoring.");
                     }
+
                     continue;
                 }
-                
+
                 try
                 {
                     var item = ItemFactory.Create((ushort)element.Data);
@@ -404,7 +410,7 @@ namespace OpenTibia.Server.Map
 
                     if (item.IsGround)
                     {
-                        Ground = item;
+                        this.Ground = item;
                     }
                     else if (item.IsTop1)
                     {
@@ -426,7 +432,7 @@ namespace OpenTibia.Server.Map
                     // TODO: proper logging.
                     if (!ServerConfiguration.SupressInvalidItemWarnings)
                     {
-                        Console.WriteLine($"Tile.AddContent: Invalid item {element.Data} at {Location}, skipping.");
+                        Console.WriteLine($"Tile.AddContent: Invalid item {element.Data} at {this.Location}, skipping.");
                     }
                 }
             }
@@ -434,28 +440,28 @@ namespace OpenTibia.Server.Map
             // Reverse and add the stacks.
             while (top1ItemStackToReverse.Count > 0)
             {
-                AddTopItem1(top1ItemStackToReverse.Pop());
+                this.AddTopItem1(top1ItemStackToReverse.Pop());
             }
 
             while (top2ItemStackToReverse.Count > 0)
             {
-                AddTopItem2(top2ItemStackToReverse.Pop());
+                this.AddTopItem2(top2ItemStackToReverse.Pop());
             }
 
             while (downItemStackToReverse.Count > 0)
             {
-                AddDownItem(downItemStackToReverse.Pop());
+                this.AddDownItem(downItemStackToReverse.Pop());
             }
         }
 
         public IItem BruteFindItemWithId(ushort id)
         {
-            if (Ground != null && Ground.ThingId == id)
+            if (this.Ground != null && this.Ground.ThingId == id)
             {
-                return Ground;
+                return this.Ground;
             }
 
-            foreach(var item in _topItems1OnTile.Union(_topItems2OnTile).Union(_downItemsOnTile))
+            foreach (var item in this.topItems1OnTile.Union(this.topItems2OnTile).Union(this.downItemsOnTile))
             {
                 if (item.ThingId == id)
                 {
@@ -468,11 +474,11 @@ namespace OpenTibia.Server.Map
 
         public IItem BruteRemoveItemWithId(ushort id)
         {
-            if (Ground != null && Ground.ThingId == id)
+            if (this.Ground != null && this.Ground.ThingId == id)
             {
-                var ground = Ground;
+                var ground = this.Ground;
 
-                Ground = null;
+                this.Ground = null;
 
                 return ground;
             }
@@ -484,9 +490,9 @@ namespace OpenTibia.Server.Map
             var keepLooking = true;
             IItem itemFound = null;
 
-            while (keepLooking && _topItems1OnTile.Count > 0)
+            while (keepLooking && this.topItems1OnTile.Count > 0)
             {
-                var item = _topItems1OnTile.Pop();
+                var item = this.topItems1OnTile.Pop();
 
                 if (item.ThingId == id)
                 {
@@ -498,9 +504,9 @@ namespace OpenTibia.Server.Map
                 top1ItemStackToReverse.Push(item);
             }
 
-            while (keepLooking && _topItems2OnTile.Count > 0)
+            while (keepLooking && this.topItems2OnTile.Count > 0)
             {
-                var item = _topItems2OnTile.Pop();
+                var item = this.topItems2OnTile.Pop();
 
                 if (item.ThingId == id)
                 {
@@ -512,9 +518,9 @@ namespace OpenTibia.Server.Map
                 top2ItemStackToReverse.Push(item);
             }
 
-            while (keepLooking && _downItemsOnTile.Count > 0)
+            while (keepLooking && this.downItemsOnTile.Count > 0)
             {
-                var item = _downItemsOnTile.Pop();
+                var item = this.downItemsOnTile.Pop();
 
                 if (item.ThingId == id)
                 {
@@ -528,53 +534,38 @@ namespace OpenTibia.Server.Map
             // Reverse and add the stacks back
             while (top1ItemStackToReverse.Count > 0)
             {
-                AddTopItem1(top1ItemStackToReverse.Pop());
+                this.AddTopItem1(top1ItemStackToReverse.Pop());
             }
 
             while (top2ItemStackToReverse.Count > 0)
             {
-                AddTopItem2(top2ItemStackToReverse.Pop());
+                this.AddTopItem2(top2ItemStackToReverse.Pop());
             }
 
             while (downItemStackToReverse.Count > 0)
             {
-                AddDownItem(downItemStackToReverse.Pop());
+                this.AddDownItem(downItemStackToReverse.Pop());
             }
 
             return itemFound;
         }
-        
+
         public IThing GetThingAtStackPosition(byte stackPosition)
         {
-            if (stackPosition == 0 && Ground != null)
+            if (stackPosition == 0 && this.Ground != null)
             {
-                return Ground;
+                return this.Ground;
             }
 
-            var currentPos = Ground == null ? -1 : 0;
+            var currentPos = this.Ground == null ? -1 : 0;
 
-            if (stackPosition > currentPos + _topItems1OnTile.Count)
+            if (stackPosition > currentPos + this.topItems1OnTile.Count)
             {
-                currentPos += _topItems1OnTile.Count;
+                currentPos += this.topItems1OnTile.Count;
             }
             else
             {
-                foreach (var item in TopItems1)
-                {
-                    if (++currentPos == stackPosition)
-                    {
-                        return item;
-                    }
-                }
-            }
-                        
-            if (stackPosition > currentPos + _topItems2OnTile.Count)
-            {
-                currentPos += _topItems2OnTile.Count;
-            }
-            else
-            {
-                foreach (var item in TopItems2)
+                foreach (var item in this.TopItems1)
                 {
                     if (++currentPos == stackPosition)
                     {
@@ -583,14 +574,28 @@ namespace OpenTibia.Server.Map
                 }
             }
 
-
-            if (stackPosition > currentPos + _creatureIdsOnTile.Count)
+            if (stackPosition > currentPos + this.topItems2OnTile.Count)
             {
-                currentPos += _creatureIdsOnTile.Count;
+                currentPos += this.topItems2OnTile.Count;
             }
             else
             {
-                foreach (var creatureId in CreatureIds)
+                foreach (var item in this.TopItems2)
+                {
+                    if (++currentPos == stackPosition)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            if (stackPosition > currentPos + this.creatureIdsOnTile.Count)
+            {
+                currentPos += this.creatureIdsOnTile.Count;
+            }
+            else
+            {
+                foreach (var creatureId in this.CreatureIds)
                 {
                     if (++currentPos == stackPosition)
                     {
@@ -599,7 +604,7 @@ namespace OpenTibia.Server.Map
                 }
             }
 
-            return stackPosition <= currentPos + _downItemsOnTile.Count ? DownItems.FirstOrDefault(item => ++currentPos == stackPosition) : null;
+            return stackPosition <= currentPos + this.downItemsOnTile.Count ? this.DownItems.FirstOrDefault(item => ++currentPos == stackPosition) : null;
         }
 
         public byte GetStackPosition(IThing thing)
@@ -609,23 +614,14 @@ namespace OpenTibia.Server.Map
                 throw new ArgumentNullException(nameof(thing));
             }
 
-            if (Ground != null && thing == Ground)
+            if (this.Ground != null && thing == this.Ground)
             {
                 return 0;
             }
 
             var n = 0;
-            
-            foreach (var item in TopItems1)
-            {
-                ++n;
-                if (thing == item)
-                {
-                    return (byte) n;
-                }
-            }
-            
-            foreach (var item in TopItems2)
+
+            foreach (var item in this.TopItems1)
             {
                 ++n;
                 if (thing == item)
@@ -633,8 +629,17 @@ namespace OpenTibia.Server.Map
                     return (byte)n;
                 }
             }
-            
-            foreach (var creatureId in CreatureIds)
+
+            foreach (var item in this.TopItems2)
+            {
+                ++n;
+                if (thing == item)
+                {
+                    return (byte)n;
+                }
+            }
+
+            foreach (var creatureId in this.CreatureIds)
             {
                 ++n;
 
@@ -644,8 +649,8 @@ namespace OpenTibia.Server.Map
                     return (byte)n;
                 }
             }
-            
-            foreach (var item in DownItems)
+
+            foreach (var item in this.DownItems)
             {
                 ++n;
                 if (thing == item)
@@ -654,17 +659,17 @@ namespace OpenTibia.Server.Map
                 }
             }
 
-            //return byte.MaxValue; // TODO: throw?
+            // return byte.MaxValue; // TODO: throw?
             throw new Exception("Thing not found in tile.");
         }
 
         public void SetFlag(TileFlag flag)
         {
-            Flags |= (byte) flag;
+            this.Flags |= (byte)flag;
         }
 
-        //public FloorChangeDirection FloorChange
-        //{
+        // public FloorChangeDirection FloorChange
+        // {
         //    get
         //    {
         //        if (Ground.HasFlag(ItemFlag.FloorchangeDown))
@@ -693,21 +698,21 @@ namespace OpenTibia.Server.Map
         //            }
         //        }
 
-        //        return FloorChangeDirection.None;
+        // return FloorChangeDirection.None;
         //    }
-        //}
+        // }
 
-        //public bool IsWalkable { get { return Ground != null && !HasFlag(ItemFlag.Blocking); } }
+        // public bool IsWalkable { get { return Ground != null && !HasFlag(ItemFlag.Blocking); } }
 
-        //public bool HasFlag(ItemFlag flagVal)
-        //{
+        // public bool HasFlag(ItemFlag flagVal)
+        // {
         //    if (Ground != null)
         //    {
         //        if (ItemReader.FindItem(Ground.Type).hasFlag(flagVal))
         //            return true;
         //    }
 
-        //    if (TopItems1.Count > 0)
+        // if (TopItems1.Count > 0)
         //    {
         //        foreach (IItem item in TopItems1)
         //        {
@@ -716,7 +721,7 @@ namespace OpenTibia.Server.Map
         //        }
         //    }
 
-        //    if (TopItems2.Count > 0)
+        // if (TopItems2.Count > 0)
         //    {
         //        foreach (IItem item in TopItems2)
         //        {
@@ -725,7 +730,7 @@ namespace OpenTibia.Server.Map
         //        }
         //    }
 
-        //    if (CreatureIds.Count > 0)
+        // if (CreatureIds.Count > 0)
         //    {
         //        foreach (CreatureId creature in CreatureIds)
         //        {
@@ -734,7 +739,7 @@ namespace OpenTibia.Server.Map
         //        }
         //    }
 
-        //    if (DownItems.Count > 0)
+        // if (DownItems.Count > 0)
         //    {
         //        foreach (IItem item in DownItems)
         //        {
@@ -743,6 +748,6 @@ namespace OpenTibia.Server.Map
         //        }
         //    }
         //    return false;
-        //}
+        // }
     }
 }

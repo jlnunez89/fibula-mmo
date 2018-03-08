@@ -1,66 +1,76 @@
-﻿using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data;
+﻿// <copyright file="AutoMovePacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class AutoMovePacket : PacketIncoming
+    using System;
+    using System.IO;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
+    /// <summary>
+    /// Class that represents an auto movement packet.
+    /// </summary>
+    public class AutoMovePacket : IPacketIncoming, IAutoMoveInfo
     {
-        public Direction[] Directions { get; private set; }
-
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AutoMovePacket"/> class.
+        /// </summary>
+        /// <param name="message">The message to parse the packet from.</param>
         public AutoMovePacket(NetworkMessage message)
-            : base(message)
-        {
-        }
-
-        public override void Parse(NetworkMessage message)
         {
             try
             {
-                var movesCount = message.GetByte();
+                var numberOfMovements = message.GetByte();
 
-                Directions = new Direction[movesCount];
+                this.Directions = new Direction[numberOfMovements];
 
-                for (var i = 0; i < movesCount; i++)
+                for (var i = 0; i < numberOfMovements; i++)
                 {
-                    Direction direction;
                     var dir = message.GetByte();
-
                     switch (dir)
                     {
                         case 1:
-                            direction = Direction.East;
+                            this.Directions[i] = Direction.East;
                             break;
                         case 2:
-                            direction = Direction.NorthEast;
+                            this.Directions[i] = Direction.NorthEast;
                             break;
                         case 3:
-                            direction = Direction.North;
+                            this.Directions[i] = Direction.North;
                             break;
                         case 4:
-                            direction = Direction.NorthWest;
+                            this.Directions[i] = Direction.NorthWest;
                             break;
                         case 5:
-                            direction = Direction.West;
+                            this.Directions[i] = Direction.West;
                             break;
                         case 6:
-                            direction = Direction.SouthWest;
+                            this.Directions[i] = Direction.SouthWest;
                             break;
                         case 7:
-                            direction = Direction.South;
+                            this.Directions[i] = Direction.South;
                             break;
                         case 8:
-                            direction = Direction.SouthEast;
+                            this.Directions[i] = Direction.SouthEast;
                             break;
-                        default: continue;
+                        default:
+                            throw new InvalidDataException($"Invalid direction value {dir} on {nameof(AutoMovePacket)}.");
                     }
-
-                    Directions[i] = direction;
                 }
             }
-            catch
+            catch (Exception ex)
             {
-                // ignored
+                // TODO: proper logging
+                Console.WriteLine(ex.ToString());
             }
         }
+
+        /// <inheritdoc/>
+        public Direction[] Directions { get; }
     }
 }

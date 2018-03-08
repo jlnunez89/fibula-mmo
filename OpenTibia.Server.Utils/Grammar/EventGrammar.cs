@@ -1,10 +1,16 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using Sprache;
+﻿// <copyright file="EventGrammar.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities.Grammar
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using Sprache;
+
     public class EventGrammar
     {
         public static readonly Parser<MoveUseEvent> Event =
@@ -14,6 +20,7 @@ namespace OpenTibia.Utilities.Grammar
         public class MoveUseEvent
         {
             public EventType Type { get; }
+
             public ConditionalActionRule Rule { get; }
 
             public MoveUseEvent(ConditionalActionRule rule)
@@ -32,8 +39,8 @@ namespace OpenTibia.Utilities.Grammar
                     throw new ArgumentException("Invalid rule supplied.");
                 }
 
-                Type = eventType;
-                Rule = rule;
+                this.Type = eventType;
+                this.Rule = rule;
 
                 rule.ConditionSet.RemoveAt(0); // remove first.
             }

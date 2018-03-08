@@ -1,84 +1,94 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Events;
-using OpenTibia.Server.Movement.Policies;
-using OpenTibia.Server.Notifications;
+﻿// <copyright file="ThingMovementGroundToSlot.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Movement
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Events;
+    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Notifications;
+
     internal class ThingMovementGroundToSlot : MovementBase
     {
         public Location FromLocation { get; }
+
         public byte FromStackPos { get; }
+
         public ITile FromTile { get; }
 
         public Location ToLocation { get; }
+
         public byte ToSlot { get; }
 
         public IThing Thing { get; }
+
         public byte Count { get; }
 
         public ThingMovementGroundToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
             // intentionally left thing null check out. Handled by Perform().
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
             if (count == 0 || count > 100)
             {
                 throw new ArgumentException($"Invalid count {count}.", nameof(count));
             }
-            
-            FromLocation = fromLocation;
-            FromStackPos = fromStackPos;
-            FromTile = Game.Instance.GetTileAt(FromLocation);
 
-            ToLocation = toLocation;
-            ToSlot = (byte)toLocation.Slot;
+            this.FromLocation = fromLocation;
+            this.FromStackPos = fromStackPos;
+            this.FromTile = Game.Instance.GetTileAt(this.FromLocation);
 
-            Thing = thingMoving;
-            Count = count;
+            this.ToLocation = toLocation;
+            this.ToSlot = (byte)toLocation.Slot;
 
-            var droppingItem = requestor?.Inventory?[ToSlot];
+            this.Thing = thingMoving;
+            this.Count = count;
 
-            Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(RequestorId, droppingItem));
-            Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(RequestorId, Thing, droppingItem));
-            Policies.Add(new ThingIsTakeablePolicy(RequestorId, Thing));
-            Policies.Add(new LocationsMatchPolicy(Thing?.Location ?? new Location(), FromLocation));
-            Policies.Add(new TileContainsThingPolicy(Thing, FromLocation, Count));
+            var droppingItem = requestor?.Inventory?[this.ToSlot];
+
+            this.Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(this.RequestorId, droppingItem));
+            this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing, droppingItem));
+            this.Policies.Add(new ThingIsTakeablePolicy(this.RequestorId, this.Thing));
+            this.Policies.Add(new LocationsMatchPolicy(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Policies.Add(new TileContainsThingPolicy(this.Thing, this.FromLocation, this.Count));
         }
 
         public override void Perform()
         {
-            var updatedItem = Thing as IItem;
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var updatedItem = this.Thing as IItem;
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (FromTile == null || Thing == null || updatedItem == null || requestor == null)
+            if (this.FromTile == null || this.Thing == null || updatedItem == null || requestor == null)
             {
                 return;
             }
 
-            var thingAtTile = FromTile.GetThingAtStackPosition(FromStackPos);
+            var thingAtTile = this.FromTile.GetThingAtStackPosition(this.FromStackPos);
 
             if (thingAtTile == null)
             {
                 return;
             }
 
-            var thing = Thing;
-            FromTile.RemoveThing(ref thing, Count);
+            var thing = this.Thing;
+            this.FromTile.RemoveThing(ref thing, this.Count);
 
             // notify all spectator players of that tile.
-            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
+            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.FromTile.Location)), this.FromTile.Location);
 
             // and call any separation events.
-            if (FromTile.HandlesSeparation) // TODO: what happens on separation of less than required quantity, etc?
+            if (this.FromTile.HandlesSeparation) // TODO: what happens on separation of less than required quantity, etc?
             {
-                foreach (var itemWithSeparation in FromTile.ItemsWithSeparation)
+                foreach (var itemWithSeparation in this.FromTile.ItemsWithSeparation)
                 {
                     var separationEvents = Game.Instance.EventsCatalog[EventType.Separation].Cast<SeparationEvent>();
 
@@ -89,7 +99,7 @@ namespace OpenTibia.Server.Movement
                 }
             }
 
-            if (thing != Thing)
+            if (thing != this.Thing)
             {
                 // item got split cause we removed less than the total amount.
                 // update the thing we're adding to the container.
@@ -103,18 +113,18 @@ namespace OpenTibia.Server.Movement
 
             // attempt to place the intended item at the slot.
             IItem addedItem;
-            if (!requestor.Inventory.Add(updatedItem, out addedItem, ToSlot, updatedItem.Count))
+            if (!requestor.Inventory.Add(updatedItem, out addedItem, this.ToSlot, updatedItem.Count))
             {
                 // failed to add to the slot, add again to the source tile
-                FromTile.AddThing(ref thing, thing.Count);
+                this.FromTile.AddThing(ref thing, thing.Count);
 
                 // notify all spectator players of that tile.
-                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
+                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.FromTile.Location)), this.FromTile.Location);
 
                 // call any collision events again.
-                if (FromTile.HandlesCollision)
+                if (this.FromTile.HandlesCollision)
                 {
-                    foreach (var itemWithCollision in FromTile.ItemsWithCollision)
+                    foreach (var itemWithCollision in this.FromTile.ItemsWithCollision)
                     {
                         var collisionEvents = Game.Instance.EventsCatalog[EventType.Collision].Cast<CollisionEvent>();
 
@@ -136,18 +146,18 @@ namespace OpenTibia.Server.Movement
                 // we exchanged or got some leftover item, place back in the source container at any index.
                 IThing remainderThing = addedItem;
 
-                FromTile.AddThing(ref remainderThing, remainderThing.Count);
+                this.FromTile.AddThing(ref remainderThing, remainderThing.Count);
 
                 // notify all spectator players of that tile.
-                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, FromTile.Location)), FromTile.Location);
+                Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.FromTile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.FromTile.Location)), this.FromTile.Location);
 
                 // call any collision events again.
-                if (!FromTile.HandlesCollision)
+                if (!this.FromTile.HandlesCollision)
                 {
                     return;
                 }
 
-                foreach (var itemWithCollision in FromTile.ItemsWithCollision)
+                foreach (var itemWithCollision in this.FromTile.ItemsWithCollision)
                 {
                     var collisionEvents = Game.Instance.EventsCatalog[EventType.Collision].Cast<CollisionEvent>();
 

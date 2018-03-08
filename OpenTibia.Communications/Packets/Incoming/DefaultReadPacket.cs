@@ -1,20 +1,21 @@
-﻿using OpenTibia.Server.Data;
+﻿// <copyright file="DefaultReadPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class DefaultReadPacket : PacketIncoming
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
+    public class DefaultReadPacket : IPacketIncoming
     {
-        public byte[] InfoBytes { get; set; }
-        
         public DefaultReadPacket(NetworkMessage message)
-            : base(message)
         {
+            this.InfoBytes = message.GetBytes(message.Length - message.Position);
         }
 
-        public override void Parse(NetworkMessage message)
-        {
-            var dataLength = message.Length - message.Position;
-            InfoBytes = message.GetBytes(dataLength);
-        }
+        public byte[] InfoBytes { get; set; }
     }
 }

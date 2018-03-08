@@ -1,23 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Items;
+﻿// <copyright file="MonsterInventory.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Monsters
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Items;
+
     internal class MonsterInventory : IInventory
     {
-        private Dictionary<byte, Tuple<IItem, ushort>> _inventory;
-        private byte _lastPosByte;
+        private Dictionary<byte, Tuple<IItem, ushort>> inventory;
+        private byte lastPosByte;
 
-        private readonly object[] _recalcLocks;
+        private readonly object[] recalcLocks;
 
-        private byte _totalArmor;
-        private byte _totalAttack;
-        private byte _totalDefense;
-        
+        private byte totalArmor;
+        private byte totalAttack;
+        private byte totalDefense;
+
         public ICreature Owner { get; }
 
         public MonsterInventory(ICreature owner, IEnumerable<Tuple<ushort, byte, ushort>> inventoryComposition, ushort maxCapacity = 100) // 100 is arbitrary.
@@ -27,24 +33,24 @@ namespace OpenTibia.Server.Monsters
                 throw new ArgumentNullException(nameof(owner));
             }
 
-            Owner = owner;
-            _inventory = new Dictionary<byte, Tuple<IItem, ushort>>();
+            this.Owner = owner;
+            this.inventory = new Dictionary<byte, Tuple<IItem, ushort>>();
 
-            _recalcLocks = new object[3];
-            _lastPosByte = 0;
+            this.recalcLocks = new object[3];
+            this.lastPosByte = 0;
 
-            _totalAttack = 0xFF;
-            _totalArmor = 0xFF;
-            _totalDefense = 0xFF;
+            this.totalAttack = 0xFF;
+            this.totalArmor = 0xFF;
+            this.totalDefense = 0xFF;
 
-            DetermineLoot(inventoryComposition, maxCapacity);
+            this.DetermineLoot(inventoryComposition, maxCapacity);
         }
 
         private void DetermineLoot(IEnumerable<Tuple<ushort, byte, ushort>> inventoryComposition, ushort maxCapacity)
         {
             var rng = new Random();
 
-            foreach(var tuple in inventoryComposition)
+            foreach (var tuple in inventoryComposition)
             {
                 if (rng.Next(1000) > tuple.Item3)
                 {
@@ -56,7 +62,7 @@ namespace OpenTibia.Server.Monsters
 
                 if (newItem == null)
                 {
-                    Console.WriteLine($"Unknown item with id {tuple.Item1} as loot in monster type {(Owner as Monster)?.Type.RaceId}.");
+                    Console.WriteLine($"Unknown item with id {tuple.Item1} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
                     continue;
                 }
 
@@ -68,35 +74,35 @@ namespace OpenTibia.Server.Monsters
                 }
 
                 IItem unused;
-                Add(newItem, out unused);
+                this.Add(newItem, out unused);
             }
         }
 
-        public IItem this[byte idx] => _inventory.ContainsKey(idx) ? _inventory[idx].Item1 : null;
-        
+        public IItem this[byte idx] => this.inventory.ContainsKey(idx) ? this.inventory[idx].Item1 : null;
+
         public byte TotalArmor
         {
             get
             {
-                if (_totalArmor == 0xFF)
+                if (this.totalArmor == 0xFF)
                 {
-                    lock(_recalcLocks[0])
+                    lock (this.recalcLocks[0])
                     {
-                        if(_totalArmor == 0xFF)
+                        if (this.totalArmor == 0xFF)
                         {
                             var total = default(byte);
 
-                            foreach (var tuple in _inventory.Values)
+                            foreach (var tuple in this.inventory.Values)
                             {
                                 total += tuple.Item1.Armor;
                             }
 
-                            _totalArmor = total;
+                            this.totalArmor = total;
                         }
                     }
                 }
 
-                return _totalArmor;
+                return this.totalArmor;
             }
         }
 
@@ -104,24 +110,24 @@ namespace OpenTibia.Server.Monsters
         {
             get
             {
-                if (_totalAttack != 0xFF)
+                if (this.totalAttack != 0xFF)
                 {
-                    return _totalAttack;
+                    return this.totalAttack;
                 }
 
-                lock (_recalcLocks[1])
+                lock (this.recalcLocks[1])
                 {
-                    if (_totalAttack != 0xFF)
+                    if (this.totalAttack != 0xFF)
                     {
-                        return _totalAttack;
+                        return this.totalAttack;
                     }
 
-                    var total = _inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Attack));
+                    var total = this.inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Attack));
 
-                    _totalAttack = total;
+                    this.totalAttack = total;
                 }
 
-                return _totalAttack;
+                return this.totalAttack;
             }
         }
 
@@ -129,24 +135,24 @@ namespace OpenTibia.Server.Monsters
         {
             get
             {
-                if (_totalDefense != 0xFF)
+                if (this.totalDefense != 0xFF)
                 {
-                    return _totalDefense;
+                    return this.totalDefense;
                 }
 
-                lock (_recalcLocks[2])
+                lock (this.recalcLocks[2])
                 {
-                    if (_totalDefense != 0xFF)
+                    if (this.totalDefense != 0xFF)
                     {
-                        return _totalDefense;
+                        return this.totalDefense;
                     }
 
-                    var total = _inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Defense));
+                    var total = this.inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Defense));
 
-                    _totalDefense = total;
+                    this.totalDefense = total;
                 }
 
-                return _totalDefense;
+                return this.totalDefense;
             }
         }
 
@@ -156,7 +162,7 @@ namespace OpenTibia.Server.Monsters
         {
             extraItem = null;
 
-            _inventory[_lastPosByte++] = new Tuple<IItem, ushort>(item, lossProbability);
+            this.inventory[this.lastPosByte++] = new Tuple<IItem, ushort>(item, lossProbability);
 
             return true;
         }
@@ -165,10 +171,10 @@ namespace OpenTibia.Server.Monsters
         {
             wasPartial = false;
 
-            if (_inventory.ContainsKey(positionByte))
+            if (this.inventory.ContainsKey(positionByte))
             {
-                var found = _inventory[positionByte].Item1;
-                
+                var found = this.inventory[positionByte].Item1;
+
                 if (found.Count < count)
                 {
                     return null;
@@ -177,9 +183,9 @@ namespace OpenTibia.Server.Monsters
                 // remove the whole item
                 if (found.Count == count)
                 {
-                    _inventory.Remove(positionByte);
+                    this.inventory.Remove(positionByte);
                     found.SetHolder(null, default(Location));
-                    
+
                     return found;
                 }
 
@@ -187,12 +193,12 @@ namespace OpenTibia.Server.Monsters
 
                 newItem.SetAmount(count);
                 found.SetAmount((byte)(found.Amount - count));
-                
+
                 wasPartial = true;
                 return newItem;
             }
 
-            _inventory = new Dictionary<byte, Tuple<IItem, ushort>>(_inventory);
+            this.inventory = new Dictionary<byte, Tuple<IItem, ushort>>(this.inventory);
 
             return null;
         }
@@ -201,11 +207,11 @@ namespace OpenTibia.Server.Monsters
         {
             wasPartial = false;
             bool removed = false;
-            var slot = _inventory.Keys.FirstOrDefault(k => _inventory[k].Item1.Type.TypeId == itemId);
+            var slot = this.inventory.Keys.FirstOrDefault(k => this.inventory[k].Item1.Type.TypeId == itemId);
 
             try
             {
-                var found = _inventory[slot].Item1;
+                var found = this.inventory[slot].Item1;
 
                 if (found.Count < count)
                 {
@@ -215,7 +221,7 @@ namespace OpenTibia.Server.Monsters
                 // remove the whole item
                 if (found.Count == count)
                 {
-                    _inventory.Remove(slot);
+                    this.inventory.Remove(slot);
                     found.SetHolder(null, default(Location));
 
                     removed = true;
@@ -225,7 +231,7 @@ namespace OpenTibia.Server.Monsters
                 IItem newItem = ItemFactory.Create(found.Type.TypeId);
 
                 newItem.SetAmount(count);
-                found.SetAmount((byte) (found.Amount - count));
+                found.SetAmount((byte)(found.Amount - count));
 
                 wasPartial = true;
                 removed = true;
@@ -238,8 +244,8 @@ namespace OpenTibia.Server.Monsters
             finally
             {
                 if (removed)
-                { 
-                    _inventory = new Dictionary<byte, Tuple<IItem, ushort>>(_inventory);
+                {
+                    this.inventory = new Dictionary<byte, Tuple<IItem, ushort>>(this.inventory);
                 }
             }
         }

@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Communications;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="Notification.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Notifications
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     public abstract class Notification : INotification
     {
-        public Connection Connection {  get; }
+        public Connection Connection { get; }
 
         public IList<IPacketOutgoing> ResponsePackets { get; protected set; }
 
@@ -20,8 +27,8 @@ namespace OpenTibia.Server.Notifications
                 throw new ArgumentNullException(nameof(connection));
             }
 
-            Connection = connection;
-            ResponsePackets = new List<IPacketOutgoing>();
+            this.Connection = connection;
+            this.ResponsePackets = new List<IPacketOutgoing>();
         }
 
         protected Notification(Connection connection, params IPacketOutgoing[] packets)
@@ -30,12 +37,12 @@ namespace OpenTibia.Server.Notifications
             {
                 throw new ArgumentNullException(nameof(connection));
             }
-            
-            Connection = connection;
+
+            this.Connection = connection;
 
             foreach (var packet in packets)
             {
-                ResponsePackets.Add(packet);
+                this.ResponsePackets.Add(packet);
             }
         }
 
@@ -43,24 +50,24 @@ namespace OpenTibia.Server.Notifications
 
         public void Send()
         {
-            if (!ResponsePackets.Any())
+            if (!this.ResponsePackets.Any())
             {
                 return;
             }
 
             var networkMessage = new NetworkMessage(4);
-                
-            foreach(var packet in ResponsePackets)
+
+            foreach (var packet in this.ResponsePackets)
             {
                 networkMessage.AddPacket(packet);
             }
 
-            Connection.Send(networkMessage);
+            this.Connection.Send(networkMessage);
 
-            //foreach (var packet in ResponsePackets)
-            //{
+            // foreach (var packet in ResponsePackets)
+            // {
             //    packet.CleanUp();
-            //}
+            // }
         }
     }
 }

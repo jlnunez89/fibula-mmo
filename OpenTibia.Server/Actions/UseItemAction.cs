@@ -1,26 +1,31 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Events;
-using OpenTibia.Server.Scripting;
+﻿// <copyright file="UseItemAction.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Actions
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Events;
+    using OpenTibia.Server.Scripting;
+
     internal class UseItemAction : PlayerAction
     {
         public UseItemAction(IPlayer player, ItemUsePacket itemUsePacket, Location retryLocation)
             : base(player, itemUsePacket, retryLocation)
         {
-
         }
 
         protected override void InternalPerform()
         {
-            var itemUsePacket = Packet as ItemUsePacket;
+            var itemUsePacket = this.Packet as ItemUsePacket;
 
             IThing thingToUse = null;
 
@@ -29,33 +34,36 @@ namespace OpenTibia.Server.Actions
                 return;
             }
 
-            switch(itemUsePacket.FromLocation.Type)
+            switch (itemUsePacket.FromLocation.Type)
             {
                 case LocationType.Ground:
                     thingToUse = Game.Instance.GetTileAt(itemUsePacket.FromLocation)?.GetThingAtStackPosition(itemUsePacket.FromStackPos);
                     break;
                 case LocationType.Container:
-                    var fromContainer = Player.GetContainer(itemUsePacket.FromLocation.Container);
+                    var fromContainer = this.Player.GetContainer(itemUsePacket.FromLocation.Container);
                     try
                     {
                         thingToUse = fromContainer.Content[fromContainer.Content.Count - itemUsePacket.FromStackPos - 1];
                     }
-                    catch (ArgumentOutOfRangeException) { } // Happens when the content list does not contain the thing.
+                    catch (ArgumentOutOfRangeException)
+                    {
+                    } // Happens when the content list does not contain the thing.
                     break;
                 case LocationType.Slot:
                     try
                     {
-                        thingToUse = Player.Inventory[Convert.ToByte(itemUsePacket.FromLocation.Slot)];
+                        thingToUse = this.Player.Inventory[Convert.ToByte(itemUsePacket.FromLocation.Slot)];
                     }
                     catch
                     {
                         // ignored
                     }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            
+
             if (thingToUse == null)
             {
                 // No thing to use found, exit here.
@@ -71,7 +79,7 @@ namespace OpenTibia.Server.Actions
             }
             else if (thingAsItem != null && thingAsItem.IsContainer && thingAsContainer != null)
             {
-                var openContainerId = Player.GetContainerId(thingAsContainer);
+                var openContainerId = this.Player.GetContainerId(thingAsContainer);
 
                 if (openContainerId < 0)
                 {
@@ -79,23 +87,23 @@ namespace OpenTibia.Server.Actions
                     switch (itemUsePacket.FromLocation.Type)
                     {
                         case LocationType.Ground:
-                            Player.OpenContainer(thingAsContainer);
+                            this.Player.OpenContainer(thingAsContainer);
                             break;
                         case LocationType.Container:
-                            Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
+                            this.Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
                             break;
                         case LocationType.Slot:
-                            Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
+                            this.Player.OpenContainerAt(thingAsContainer, itemUsePacket.Index);
                             break;
                         default:
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    thingAsContainer.OnLocationChanged += Player.CheckInventoryContainerProximity;
+                    thingAsContainer.OnLocationChanged += this.Player.CheckInventoryContainerProximity;
 
-                    ResponsePackets.Add(new ContainerOpenPacket
+                    this.ResponsePackets.Add(new ContainerOpenPacket
                     {
-                        ContainerId = (byte)thingAsContainer.GetIdFor(Player.CreatureId),
+                        ContainerId = (byte)thingAsContainer.GetIdFor(this.Player.CreatureId),
                         ClientItemId = thingAsItem.ThingId,
                         HasParent = thingAsContainer.Parent != null,
                         Name = thingAsItem.Type.Name,
@@ -106,10 +114,10 @@ namespace OpenTibia.Server.Actions
                 else
                 {
                     // Close it.
-                    Player.CloseContainerWithId((byte)openContainerId);
-                    thingAsContainer.OnLocationChanged -= Player.CheckInventoryContainerProximity;
+                    this.Player.CloseContainerWithId((byte)openContainerId);
+                    thingAsContainer.OnLocationChanged -= this.Player.CheckInventoryContainerProximity;
 
-                    ResponsePackets.Add(new ContainerClosePacket
+                    this.ResponsePackets.Add(new ContainerClosePacket
                     {
                         ContainerId = (byte)openContainerId
                     });
@@ -119,7 +127,7 @@ namespace OpenTibia.Server.Actions
             {
                 var useEvents = Game.Instance.EventsCatalog[EventType.Use].Cast<UseEvent>();
 
-                var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == itemUsePacket.ClientId && e.Setup(thingToUse, null, Player) && e.CanBeExecuted);
+                var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == itemUsePacket.ClientId && e.Setup(thingToUse, null, this.Player) && e.CanBeExecuted);
 
                 if (candidate != null)
                 {

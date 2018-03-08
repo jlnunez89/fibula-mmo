@@ -1,8 +1,15 @@
-﻿using System;
-using OpenTibia.Server.Data;
+﻿// <copyright file="OpenTibiaProtocol.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications
 {
+    using System;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Server.Data;
+
     public abstract class OpenTibiaProtocol : IProtocol
     {
         public virtual bool KeepConnectionOpen { get; protected set; }
@@ -11,17 +18,17 @@ namespace OpenTibia.Communications
 
         protected OpenTibiaProtocol(IHandlerFactory handlerFactory)
         {
-            if ( handlerFactory == null)
+            if (handlerFactory == null)
             {
                 throw new ArgumentNullException(nameof(handlerFactory));
             }
 
-            HandlerFactory = handlerFactory;
+            this.HandlerFactory = handlerFactory;
         }
 
         public virtual void OnAcceptNewConnection(Connection connection, IAsyncResult ar)
         {
-            if(connection == null)
+            if (connection == null)
             {
                 throw new ArgumentNullException(nameof(connection));
             }
@@ -29,9 +36,9 @@ namespace OpenTibia.Communications
             connection.OnAccept(ar);
         }
 
-        public virtual void PostProcessPacket(Connection connection)
+        public virtual void PostProcessMessage(Connection connection)
         {
-            if(!KeepConnectionOpen)
+            if (!this.KeepConnectionOpen)
             {
                 connection.Close();
             }
@@ -42,6 +49,6 @@ namespace OpenTibia.Communications
             }
         }
 
-        public abstract void ProcessPacket(Connection connection, NetworkMessage inboundMessage);
+        public abstract void ProcessMessage(Connection connection, NetworkMessage inboundMessage);
     }
 }

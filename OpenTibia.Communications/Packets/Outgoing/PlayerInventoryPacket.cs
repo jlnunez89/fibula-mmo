@@ -1,10 +1,16 @@
-﻿using System;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="PlayerInventoryPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
+    using System;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     public class PlayerInventoryPacket : PacketOutgoing
     {
         public override byte PacketType => (byte)GameOutgoingPacketType.InventoryItem;
@@ -12,10 +18,10 @@ namespace OpenTibia.Communications.Packets.Outgoing
         public IPlayer Player { get; set; }
 
         public override void Add(NetworkMessage message)
-        {            
+        {
             var addInventoryItem = new Action<Slot>(slot =>
             {
-                if (Player.Inventory[(byte)slot] == null)
+                if (this.Player.Inventory[(byte)slot] == null)
                 {
                     message.AddByte((byte)GameOutgoingPacketType.InventoryEmpty);
                     message.AddByte((byte)slot);
@@ -24,7 +30,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
                 {
                     message.AddByte((byte)GameOutgoingPacketType.InventoryItem);
                     message.AddByte((byte)slot);
-                    message.AddItem(Player.Inventory[(byte)slot]);
+                    message.AddItem(this.Player.Inventory[(byte)slot]);
                 }
             });
 

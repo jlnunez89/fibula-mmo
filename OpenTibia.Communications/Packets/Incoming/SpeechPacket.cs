@@ -1,31 +1,31 @@
-﻿using System;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="SpeechPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class SpeechPacket : PacketIncoming
+    using System;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+
+    public class SpeechPacket : IPacketIncoming
     {
-        public Speech Speech { get; private set; }
-
         public SpeechPacket(NetworkMessage message)
-            : base(message)
-        {
-        }
-
-        public override void Parse(NetworkMessage message)
         {
             var type = message.GetByte();
 
             try
             {
-                switch (Speech.Type)
+                switch (this.Speech.Type)
                 {
                     case SpeechType.Private:
-                    //case SpeechType.PrivateRed:
+                    // case SpeechType.PrivateRed:
                     case SpeechType.RuleViolationAnswer:
-                        Speech = new Speech
+                        this.Speech = new Speech
                         {
                             Type = (SpeechType)type,
                             Receiver = message.GetString(),
@@ -33,10 +33,10 @@ namespace OpenTibia.Communications.Packets.Incoming
                         };
                         break;
                     case SpeechType.ChannelYellow:
-                        //case SpeechType.ChannelRed:
-                        //case SpeechType.ChannelRedAnonymous:
-                        //case SpeechType.ChannelWhite:
-                        Speech = new Speech
+                        // case SpeechType.ChannelRed:
+                        // case SpeechType.ChannelRedAnonymous:
+                        // case SpeechType.ChannelWhite:
+                        this.Speech = new Speech
                         {
                             Type = (SpeechType)type,
                             ChannelId = (ChatChannel)message.GetUInt16(),
@@ -44,7 +44,7 @@ namespace OpenTibia.Communications.Packets.Incoming
                         };
                         break;
                     default:
-                        Speech = new Speech
+                        this.Speech = new Speech
                         {
                             Type = (SpeechType)type,
                             Message = message.GetString()
@@ -57,5 +57,7 @@ namespace OpenTibia.Communications.Packets.Incoming
                 Console.WriteLine($"Unknown speech type {type}.");
             }
         }
+
+        public Speech Speech { get; private set; }
     }
 }

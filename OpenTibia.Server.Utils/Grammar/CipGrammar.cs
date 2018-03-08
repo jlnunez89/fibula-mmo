@@ -1,9 +1,15 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Sprache;
+﻿// <copyright file="CipGrammar.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities.Grammar
 {
+    using System.Collections.Generic;
+    using System.Linq;
+    using Sprache;
+
     public class CipGrammar
     {
         private static readonly Parser<char> EqualSign = Parse.Char('=');
@@ -40,13 +46,13 @@ namespace OpenTibia.Utilities.Grammar
             select text.Trim();
 
         private static readonly Parser<string> FunctionOrComparisonString =
-            from functionName in (Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign)).Many().Text()
+            from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
             from oneOrMoreArguments in Parse.AnyChar.Except(CloseParenthesis).Many().Text().Or(QuotedMessage)
             from close in CloseParenthesis
-            from functionComparison in (Parse.AnyChar.Except(Parse.WhiteSpace).Except(Comma)).Many().Text()
+            from functionComparison in Parse.AnyChar.Except(Parse.WhiteSpace).Except(Comma).Many().Text()
             select functionName.Trim() + open + oneOrMoreArguments + close + functionComparison.Trim();
-        
+
         public static readonly Parser<string> LocationString =
             from leadingSpaces in Parse.WhiteSpace.Many().Text()
             from open in OpenBracket
@@ -59,7 +65,7 @@ namespace OpenTibia.Utilities.Grammar
             from negZ in Parse.Char('-').Optional()
             from z in Parse.Number
             from close in CloseBracket
-            select $"{open}{(negX.IsEmpty ? "" : "-")}{x},{(negY.IsEmpty ? "" : "-")}{y},{(negZ.IsEmpty ? "" : "-")}{z}{close}";
+            select $"{open}{(negX.IsEmpty ? string.Empty : "-")}{x},{(negY.IsEmpty ? string.Empty : "-")}{y},{(negZ.IsEmpty ? string.Empty : "-")}{z}{close}";
 
         private static readonly Parser<string> KeyValStr =
             from key in Text
@@ -79,19 +85,19 @@ namespace OpenTibia.Utilities.Grammar
             select new ConditionalActionRule(conditions, actions);
 
         public static readonly Parser<ScriptFunction> Function =
-            from functionName in (Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign)).Many().Text()
+            from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
             from oneOrMoreArguments in LocationString.Or(QuotedMessage).Or(Parse.AnyChar.Except(CloseParenthesis).Except(Comma).Many().Text()).DelimitedBy(Comma)
             from close in CloseParenthesis
             select new ScriptFunction(functionName.Trim(), oneOrMoreArguments.ToArray());
 
         public static readonly Parser<FunctionComparison> Comparison =
-            from functionName in (Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign)).Many().Text()
+            from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
             from oneOrMoreArguments in LocationString.Or(QuotedMessage).Or(Parse.AnyChar.Except(CloseParenthesis).Except(Comma).Many().Text()).DelimitedBy(Comma)
             from close in CloseParenthesis
             from functionComparison in GreaterThanComparison.Or(GreaterThanOrEqualToComparison).Or(LessThanComparison).Or(LessThanOrEqualToComparison).Or(EqualToComparison)
-            from identifier in (Parse.AnyChar.Except(Comma)).Many().Text()
+            from identifier in Parse.AnyChar.Except(Comma).Many().Text()
             select new FunctionComparison(functionName.Trim(), functionComparison, identifier, oneOrMoreArguments.ToArray());
     }
 }

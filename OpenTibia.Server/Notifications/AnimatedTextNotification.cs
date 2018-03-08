@@ -1,20 +1,26 @@
-﻿using System;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="AnimatedTextNotification.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Notifications
 {
+    using System;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Models.Structs;
+
     internal class AnimatedTextNotification : Notification
     {
         public Location Location { get; }
-                
+
         public TextColor TextColor { get; }
 
         public string Text { get; }
 
-        public AnimatedTextNotification(Connection connection, Location location, string text, TextColor textColor = TextColor.White)  
+        public AnimatedTextNotification(Connection connection, Location location, string text, TextColor textColor = TextColor.White)
             : base(connection)
         {
             if (string.IsNullOrWhiteSpace(text))
@@ -22,18 +28,18 @@ namespace OpenTibia.Server.Notifications
                 throw new ArgumentNullException(nameof(text));
             }
 
-            Location = location;
-            Text = text;
-            TextColor = textColor;
+            this.Location = location;
+            this.Text = text;
+            this.TextColor = textColor;
         }
 
         public override void Prepare()
         {
-            ResponsePackets.Add(new AnimatedTextPacket
+            this.ResponsePackets.Add(new AnimatedTextPacket
             {
-                Location = Location,
-                Text = Text,
-                Color = TextColor
+                Location = this.Location,
+                Text = this.Text,
+                Color = this.TextColor
             });
         }
     }

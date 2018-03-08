@@ -1,13 +1,21 @@
-﻿using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="IThing.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Data.Interfaces
 {
+    using OpenTibia.Server.Data.Models.Structs;
+
     public delegate void OnThingStateChange();
 
     public interface IThing
     {
         event OnThingStateChange OnLocationChanged;
+
         event OnThingStateChange OnThingAdded;
+
         event OnThingStateChange OnThingRemoved;
 
         ushort ThingId { get; }
@@ -25,6 +33,7 @@ namespace OpenTibia.Server.Data.Interfaces
         bool CanBeMoved { get; }
 
         void Added();
+
         void Removed();
     }
 }

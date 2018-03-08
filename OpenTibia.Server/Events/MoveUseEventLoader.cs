@@ -1,16 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Items;
-using Sprache;
-using static OpenTibia.Utilities.Grammar.EventGrammar;
+﻿// <copyright file="MoveUseEventLoader.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Events
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Items;
+    using Sprache;
+    using static OpenTibia.Utilities.Grammar.EventGrammar;
+
     public class MoveUseEventLoader : IEventLoader
     {
         /*
@@ -25,7 +31,7 @@ namespace OpenTibia.Server.Events
 
         public const char CommentSymbol = '#';
         public const char PropertyValueSeparator = '=';
-        
+
         public IDictionary<EventType, HashSet<IEvent>> Load(string moveUseFileName)
         {
             if (string.IsNullOrWhiteSpace(moveUseFileName))
@@ -39,11 +45,11 @@ namespace OpenTibia.Server.Events
 
             var eventDictionary = new Dictionary<EventType, HashSet<IEvent>>
             {
-                {EventType.Use, new HashSet<IEvent>()},
-                {EventType.MultiUse, new HashSet<IEvent>()},
-                {EventType.Movement, new HashSet<IEvent>()},
-                {EventType.Collision, new HashSet<IEvent>()},
-                {EventType.Separation, new HashSet<IEvent>()}
+                { EventType.Use, new HashSet<IEvent>() },
+                { EventType.MultiUse, new HashSet<IEvent>() },
+                { EventType.Movement, new HashSet<IEvent>() },
+                { EventType.Collision, new HashSet<IEvent>() },
+                { EventType.Separation, new HashSet<IEvent>() }
             };
 
             using (var stream = assembly.GetManifestResourceStream(moveUseFilePath))
@@ -57,7 +63,7 @@ namespace OpenTibia.Server.Events
                 {
                     foreach (var readLine in reader.ReadToEnd().Split("\r\n".ToCharArray()))
                     {
-                        var inLine = readLine?.Split(new[] {ObjectsFileItemLoader.CommentSymbol}, 2).FirstOrDefault();
+                        var inLine = readLine?.Split(new[] { ObjectsFileItemLoader.CommentSymbol }, 2).FirstOrDefault();
 
                         // ignore comments and empty lines.
                         if (string.IsNullOrWhiteSpace(inLine) || inLine.StartsWith("BEGIN") || inLine.StartsWith("END"))

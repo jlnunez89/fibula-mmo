@@ -1,18 +1,24 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Configuration;
-using OpenTibia.Data;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data;
+﻿// <copyright file="PlayerLoginHandler.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Handlers
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Configuration;
+    using OpenTibia.Data;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data;
+
     internal class PlayerLoginHandler : IncomingPacketHandler
     {
-        public override void HandlePacket(NetworkMessage message, Connection connection)
+        public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var playerLoginPacket = new PlayerLoginPacket(message);
             connection.SetXtea(playerLoginPacket.XteaKey);
@@ -21,7 +27,7 @@ namespace OpenTibia.Server.Handlers
 
             if (playerLoginPacket.Version != gameConfig.ClientVersionInt)
             {
-                ResponsePackets.Add(new GameServerDisconnectPacket
+                this.ResponsePackets.Add(new GameServerDisconnectPacket
                 {
                     Reason = $"You need client version {gameConfig.ClientVersionString} to connect to this server."
                 });
@@ -31,7 +37,7 @@ namespace OpenTibia.Server.Handlers
 
             if (Game.Instance.Status == WorldState.Creating)
             {
-                ResponsePackets.Add(new GameServerDisconnectPacket
+                this.ResponsePackets.Add(new GameServerDisconnectPacket
                 {
                     Reason = "The game is just starting.\nPlease try again in a few minutes."
                 });
@@ -77,7 +83,7 @@ namespace OpenTibia.Server.Handlers
                     // Check if game is open to public
                     if (Game.Instance.Status != WorldState.Open)
                     {
-                        ResponsePackets.Add(new GameServerDisconnectPacket
+                        this.ResponsePackets.Add(new GameServerDisconnectPacket
                         {
                             Reason = "The game is not open to the public yet.\nCheck for news on our webpage."
                         });
@@ -91,17 +97,16 @@ namespace OpenTibia.Server.Handlers
                     try
                     {
                         // Set player status to online.
-                        //playerRecord.online = 1;
+                        // playerRecord.online = 1;
 
-                        //otContext.SaveChanges();
-                        
+                        // otContext.SaveChanges();
                         var player = Game.Instance.Login(playerRecord, connection);
 
                         // set this to allow future packets from this connection.
                         connection.IsAuthenticated = true;
                         connection.PlayerId = player.CreatureId;
 
-                        ResponsePackets.Add(new SelfAppearPacket
+                        this.ResponsePackets.Add(new SelfAppearPacket
                         {
                             CreatureId = player.CreatureId,
                             IsLogin = true,
@@ -109,76 +114,76 @@ namespace OpenTibia.Server.Handlers
                         });
 
                         // Add MapDescription
-                        ResponsePackets.Add(new MapDescriptionPacket
+                        this.ResponsePackets.Add(new MapDescriptionPacket
                         {
                             Origin = player.Location,
                             DescriptionBytes = Game.Instance.GetMapDescriptionAt(player, player.Location)
                         });
 
-                        ResponsePackets.Add(new MagicEffectPacket
+                        this.ResponsePackets.Add(new MagicEffectPacket
                         {
                             Location = player.Location,
                             Effect = EffectT.BubbleBlue
                         });
 
-                        ResponsePackets.Add(new PlayerInventoryPacket { Player = player });
-                        ResponsePackets.Add(new PlayerStatusPacket { Player = player });
-                        ResponsePackets.Add(new PlayerSkillsPacket { Player = player });
+                        this.ResponsePackets.Add(new PlayerInventoryPacket { Player = player });
+                        this.ResponsePackets.Add(new PlayerStatusPacket { Player = player });
+                        this.ResponsePackets.Add(new PlayerSkillsPacket { Player = player });
 
-                        ResponsePackets.Add(new WorldLightPacket { Level = Game.Instance.LightLevel, Color = Game.Instance.LightColor });
+                        this.ResponsePackets.Add(new WorldLightPacket { Level = Game.Instance.LightLevel, Color = Game.Instance.LightColor });
 
-                        ResponsePackets.Add(new CreatureLightPacket { Creature = player });
-                        
+                        this.ResponsePackets.Add(new CreatureLightPacket { Creature = player });
+
                         // Adds a text message
-                        ResponsePackets.Add(new TextMessagePacket
+                        this.ResponsePackets.Add(new TextMessagePacket
                         {
                             Type = MessageType.StatusDefault,
                             Message = "This is a test message"
                         });
 
-                        //std::string tempstring = g_config.getString(ConfigManager::LOGIN_MSG);
-                        //if (tempstring.size() > 0)
-                        //{
+                        // std::string tempstring = g_config.getString(ConfigManager::LOGIN_MSG);
+                        // if (tempstring.size() > 0)
+                        // {
                         //    AddTextMessage(msg, MSG_STATUS_DEFAULT, tempstring.c_str());
-                        //}
+                        // }
 
-                        //if (player->getLastLoginSaved() != 0)
-                        //{
+                        // if (player->getLastLoginSaved() != 0)
+                        // {
                         //    tempstring = "Your last visit was on ";
                         //    time_t lastLogin = player->getLastLoginSaved();
                         //    tempstring += ctime(&lastLogin);
                         //    tempstring.erase(tempstring.length() - 1);
                         //    tempstring += ".";
 
-                        //    AddTextMessage(msg, MSG_STATUS_DEFAULT, tempstring.c_str());
-                        //}
-                        //else
-                        //{
+                        // AddTextMessage(msg, MSG_STATUS_DEFAULT, tempstring.c_str());
+                        // }
+                        // else
+                        // {
                         //    tempstring = "Welcome to ";
                         //    tempstring += g_config.getString(ConfigManager::SERVER_NAME);
                         //    tempstring += ". Please choose an outfit.";
                         //    sendOutfitWindow(player);
-                        //}
+                        // }
 
                         // Add any Vips here.
 
-                        //for (VIPListSet::iterator it = player->VIPList.begin(); it != player->VIPList.end(); it++)
-                        //{
+                        // for (VIPListSet::iterator it = player->VIPList.begin(); it != player->VIPList.end(); it++)
+                        // {
                         //    bool online;
                         //    std::string vip_name;
                         //    if (IOPlayer::instance()->getNameByGuid((*it), vip_name))
                         //    {
                         //        online = (g_game.getPlayerByName(vip_name) != NULL);
-                        //        
-                        //msg->AddByte(0xD2);
-                        //msg->AddU32(guid);
-                        //msg->AddString(name);
-                        //msg->AddByte(isOnline ? 1 : 0);
+                        //
+                        // msg->AddByte(0xD2);
+                        // msg->AddU32(guid);
+                        // msg->AddString(name);
+                        // msg->AddByte(isOnline ? 1 : 0);
                         //    }
-                        //}
+                        // }
 
                         // Send condition icons
-                        ResponsePackets.Add(new PlayerConditionsPacket { Player = player });
+                        this.ResponsePackets.Add(new PlayerConditionsPacket { Player = player });
 
                         return;
                     }
@@ -190,7 +195,7 @@ namespace OpenTibia.Server.Handlers
 
                 if (failure != LoginFailureReason.None)
                 {
-                    ResponsePackets.Add(new GameServerDisconnectPacket
+                    this.ResponsePackets.Add(new GameServerDisconnectPacket
                     {
                         Reason = failure.ToString() // TODO: implement correctly.
                     });

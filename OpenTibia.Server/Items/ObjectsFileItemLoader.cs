@@ -1,13 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Utilities;
+﻿// <copyright file="ObjectsFileItemLoader.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Items
 {
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Reflection;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Utilities;
+
     public class ObjectsFileItemLoader : IItemLoader
     {
         /*
@@ -109,6 +115,7 @@ namespace OpenTibia.Server.Items
                                         Console.WriteLine($"Unknown flag [{flagName}] found on item with TypeID [{current.TypeId}].");
                                     }
                                 }
+
                                 break;
                             case "attributes":
                                 foreach (var attrStr in propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)).Split(','))
@@ -122,6 +129,7 @@ namespace OpenTibia.Server.Items
 
                                     current.SetAttribute(attrPair[0], Convert.ToInt32(attrPair[1]));
                                 }
+
                                 break;
                         }
                     }

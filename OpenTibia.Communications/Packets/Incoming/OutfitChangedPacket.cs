@@ -1,24 +1,24 @@
-﻿using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Models.Structs;
+﻿// <copyright file="OutfitChangedPacket.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications.Packets.Incoming
 {
-    public class OutfitChangedPacket : PacketIncoming
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+
+    public class OutfitChangedPacket : IPacketIncoming
     {
-        public Outfit Outfit { get; set; }
-
         public OutfitChangedPacket(NetworkMessage message)
-            : base(message)
         {
-        }
-
-        public override void Parse(NetworkMessage message)
-        {            
             ushort lookType = message.GetUInt16();
 
             if (lookType != 0)
             {
-                Outfit = new Outfit
+                this.Outfit = new Outfit
                 {
                     Id = lookType,
                     Head = message.GetByte(),
@@ -29,12 +29,14 @@ namespace OpenTibia.Communications.Packets.Incoming
             }
             else
             {
-                Outfit = new Outfit
+                this.Outfit = new Outfit
                 {
                     Id = lookType,
                     LikeType = message.GetUInt16()
                 };
             }
         }
+
+        public Outfit Outfit { get; set; }
     }
 }

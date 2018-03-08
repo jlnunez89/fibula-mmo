@@ -1,32 +1,43 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Server.Events;
-using OpenTibia.Server.Movement.Policies;
-using OpenTibia.Server.Notifications;
+﻿// <copyright file="ThingMovementContainerToContainer.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Movement
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Events;
+    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Notifications;
+
     internal class ThingMovementContainerToContainer : MovementBase
     {
         public Location FromLocation { get; }
+
         public IContainer FromContainer { get; }
+
         public byte FromIndex { get; }
 
         public Location ToLocation { get; }
+
         public IContainer ToContainer { get; }
+
         public byte ToIndex { get; }
 
         public IThing Thing { get; }
+
         public byte Count { get; }
 
         public ThingMovementContainerToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base (creatureRequestingId)
+            : base(creatureRequestingId)
         {
             // intentionally left thing null check out. Handled by Perform().
-            var requestor = Game.Instance.GetCreatureWithId(RequestorId);
+            var requestor = Game.Instance.GetCreatureWithId(this.RequestorId);
 
             if (count == 0)
             {
@@ -37,41 +48,41 @@ namespace OpenTibia.Server.Movement
             {
                 throw new ArgumentNullException(nameof(requestor));
             }
-            
-            Thing = thingMoving;
-            Count = count;
 
-            FromLocation = fromLocation;
-            FromContainer = (requestor as IPlayer)?.GetContainer(FromLocation.Container);
-            FromIndex = (byte)FromLocation.Z;
+            this.Thing = thingMoving;
+            this.Count = count;
 
-            ToLocation = toLocation;
-            ToContainer = (requestor as IPlayer)?.GetContainer(ToLocation.Container);
-            ToIndex = (byte)ToLocation.Z;
+            this.FromLocation = fromLocation;
+            this.FromContainer = (requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
+            this.FromIndex = (byte)this.FromLocation.Z;
 
-            if (FromContainer?.HolderId != ToContainer?.HolderId && ToContainer?.HolderId == RequestorId)
+            this.ToLocation = toLocation;
+            this.ToContainer = (requestor as IPlayer)?.GetContainer(this.ToLocation.Container);
+            this.ToIndex = (byte)this.ToLocation.Z;
+
+            if (this.FromContainer?.HolderId != this.ToContainer?.HolderId && this.ToContainer?.HolderId == this.RequestorId)
             {
-                Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(RequestorId, Thing));
+                this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing));
             }
 
-            Policies.Add(new GrabberHasContainerOpenPolicy(RequestorId, FromContainer));
-            Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(Thing as IItem, FromContainer, FromIndex, Count));
-            Policies.Add(new GrabberHasContainerOpenPolicy(RequestorId, ToContainer));
+            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.FromContainer));
+            this.Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
+            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.ToContainer));
         }
 
         public override void Perform()
         {
             IItem extraItem;
-            var updatedItem = Thing as IItem;
-            var requestor = RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(RequestorId);
+            var updatedItem = this.Thing as IItem;
+            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (FromContainer == null || ToContainer == null || updatedItem == null || requestor == null) 
+            if (this.FromContainer == null || this.ToContainer == null || updatedItem == null || requestor == null)
             {
                 return;
             }
-            
+
             // attempt to remove from the source container
-            if (!FromContainer.RemoveContent(updatedItem.Type.TypeId, FromIndex, Count, out extraItem))
+            if (!this.FromContainer.RemoveContent(updatedItem.Type.TypeId, this.FromIndex, this.Count, out extraItem))
             {
                 return;
             }
@@ -83,14 +94,14 @@ namespace OpenTibia.Server.Movement
 
             // successfully removed thing from the source container
             // attempt to add to the dest container
-            if (ToContainer.AddContent(updatedItem, ToIndex))
+            if (this.ToContainer.AddContent(updatedItem, this.ToIndex))
             {
                 return;
             }
 
             // failed to add to the dest container (whole or partial)
             // attempt to add again to the source at any index.
-            if (FromContainer.AddContent(updatedItem, 0xFF))
+            if (this.FromContainer.AddContent(updatedItem, 0xFF))
             {
                 return;
             }

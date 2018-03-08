@@ -1,28 +1,34 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using OpenTibia.Communications.Packets;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Configuration;
-using OpenTibia.Data;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="LoginProtocol.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Communications.Packets;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Configuration;
+    using OpenTibia.Data;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class LoginProtocol : OpenTibiaProtocol
     {
         public override bool KeepConnectionOpen => false;
 
         public LoginProtocol(IHandlerFactory handlerFactory)
-            : base (handlerFactory)
+            : base(handlerFactory)
         {
-
         }
 
-        public override void ProcessPacket(Connection connection, NetworkMessage inboundMessage)
+        public override void ProcessMessage(Connection connection, NetworkMessage inboundMessage)
         {
             if (connection == null)
             {
@@ -49,7 +55,7 @@ namespace OpenTibia.Communications
             if (newConnPacket.Version != gameConfig.ClientVersionInt)
             {
                 // TODO: hardcoded messages.
-                SendDisconnect(connection, $"You need client version {gameConfig.ClientVersionString} to connect to this server.");
+                this.SendDisconnect(connection, $"You need client version {gameConfig.ClientVersionString} to connect to this server.");
                 return;
             }
 
@@ -67,25 +73,24 @@ namespace OpenTibia.Communications
                 if (inboundMessage.GetByte() != 0)
                 {
                     // These RSA keys are also unsuccessful... give up.
-                    //loginPacket = new AccountLoginPacket(inboundMessage);
+                    // loginPacket = new AccountLoginPacket(inboundMessage);
 
-                    //connection.SetXtea(loginPacket?.XteaKey);
+                    // connection.SetXtea(loginPacket?.XteaKey);
 
                     //// TODO: hardcoded messages.
-                    //if (gameConfig.UsingCipsoftRSAKeys)
-                    //{
+                    // if (gameConfig.UsingCipsoftRSAKeys)
+                    // {
                     //    this.SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that does not replace the RSA Keys.\nWe recommend using Tibia Loader's 7.7 client.\nYou may also download the client from out website.");
-                    //}
-                    //else
-                    //{
+                    // }
+                    // else
+                    // {
                     //    this.SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that replaces the RSA Keys.\nWe recommend using OTLand's IP changer with a virgin 7.7 client.\nYou may also download the client from out website.");
-                    //}
-
+                    // }
                     return;
                 }
             }
 
-            var loginPacket = new AccountLoginPacket(inboundMessage);
+            IAccountLoginInfo loginPacket = new AccountLoginPacket(inboundMessage);
 
             connection.SetXtea(loginPacket.XteaKey);
 
@@ -97,7 +102,7 @@ namespace OpenTibia.Communications
                 if (user == null)
                 {
                     // TODO: hardcoded messages.
-                    SendDisconnect(connection, "Please enter a valid account number and password.");
+                    this.SendDisconnect(connection, "Please enter a valid account number and password.");
                 }
                 else
                 {
@@ -106,7 +111,7 @@ namespace OpenTibia.Communications
                     if (!charactersFound.Any())
                     {
                         // TODO: hardcoded messages.
-                        SendDisconnect(connection, $"Your account does not have any characters.\nPlease create a new character in our web site first: {gameConfig.WebsiteUrl}");
+                        this.SendDisconnect(connection, $"Your account does not have any characters.\nPlease create a new character in our web site first: {gameConfig.WebsiteUrl}");
                     }
                     else
                     {
@@ -114,11 +119,11 @@ namespace OpenTibia.Communications
 
                         foreach (var character in charactersFound)
                         {
-                            charList.Add(new CharacterListItem(character.Charname, gameConfig.PublicGameIpAddress, gameConfig.PublicGamePort));
+                            charList.Add(new CharacterListItem(character.Charname, gameConfig.PublicGameIpAddress, gameConfig.PublicGamePort, gameConfig.WorldName));
                         }
 
                         // TODO: motd
-                        SendCharacterList(connection, gameConfig.MessageOfTheDay, (ushort)Math.Min(user.Premium_Days + user.Trial_Premium_Days, ushort.MaxValue), charList);
+                        this.SendCharacterList(connection, gameConfig.MessageOfTheDay, (ushort)Math.Min(user.Premium_Days + user.Trial_Premium_Days, ushort.MaxValue), charList);
                     }
                 }
             }

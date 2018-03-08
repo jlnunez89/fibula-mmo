@@ -1,13 +1,12 @@
-﻿
+﻿// <copyright file="IFinishAuctionsInfo.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
 namespace OpenTibia.Communications.Packets
 {
     public interface IFinishAuctionsInfo
     {
-        uint VictimId { get; set; }
-        ushort VictimLevel { get; set; }
-        uint KillerId { get; set; }
-        string KillerName { get; set; }
-        byte Unjustified { get; set; }
-        uint Timestamp { get; set; }
     }
 }

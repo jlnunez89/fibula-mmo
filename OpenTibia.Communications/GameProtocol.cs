@@ -1,22 +1,28 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Configuration;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="GameProtocol.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Communications
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Configuration;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class GameProtocol : OpenTibiaProtocol
     {
-        public override bool KeepConnectionOpen => true;
-
         public GameProtocol(IHandlerFactory handlerFactory)
-            : base (handlerFactory)
+            : base(handlerFactory)
         {
-
         }
 
-        public override void ProcessPacket(Connection connection, NetworkMessage inboundMessage)
+        public override bool KeepConnectionOpen => true;
+
+        public override void ProcessMessage(Connection connection, NetworkMessage inboundMessage)
         {
             if (connection == null)
             {
@@ -27,7 +33,7 @@ namespace OpenTibia.Communications
             {
                 throw new ArgumentNullException(nameof(inboundMessage));
             }
-            
+
             byte packetType;
 
             if (!connection.IsAuthenticated || connection.XTeaKey.Sum(b => b) == 0)
@@ -49,8 +55,9 @@ namespace OpenTibia.Communications
 
                 inboundMessage.RsaDecrypt(useCipKeys: gameConfig.UsingCipsoftRsaKeys);
 
-                if (inboundMessage.GetByte() != 0) // means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
+                if (inboundMessage.GetByte() != 0)
                 {
+                    // means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
                     inboundMessage = messageCopy;
 
                     inboundMessage.RsaDecrypt(useCipKeys: !gameConfig.UsingCipsoftRsaKeys);
@@ -71,10 +78,10 @@ namespace OpenTibia.Communications
                 packetType = inboundMessage.GetByte();
             }
 
-            var handler = HandlerFactory.CreateIncommingForType(packetType);
+            var handler = this.HandlerFactory.CreateIncommingForType(packetType);
 
-            handler?.HandlePacket(inboundMessage, connection);
-            
+            handler?.HandleMessageContents(inboundMessage, connection);
+
             if (handler?.ResponsePackets != null && handler.ResponsePackets.Any())
             {
                 // Send any responses prepared for this.
@@ -88,16 +95,5 @@ namespace OpenTibia.Communications
                 connection.Send(message);
             }
         }
-
-        //private void SendDisconnect(Connection connection, string reason)
-        //{
-        //    NetworkMessage message = new NetworkMessage(4);
-        //    message.AddPacket(new GameServerDisconnectPacket()
-        //    {
-        //        Reason = reason
-        //    });
-
-        //    connection.Send(message);
-        //}
     }
 }

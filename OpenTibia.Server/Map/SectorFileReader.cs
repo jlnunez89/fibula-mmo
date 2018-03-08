@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Utilities;
+﻿// <copyright file="SectorFileReader.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Map
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Utilities;
+
     public class SectorFileReader
     {
         public const char CommentSymbol = '#';
@@ -15,7 +21,7 @@ namespace OpenTibia.Server.Map
 
         public const string AttributeSeparator = ",";
         public const string AttributeDefinition = "=";
-        
+
         public static IList<Tile> ReadSector(string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
         {
             var loadedTilesList = new List<Tile>();
@@ -41,7 +47,7 @@ namespace OpenTibia.Server.Map
 
                 var tileInfo = data[0].Split(new[] { PositionSeparator }, 2);
                 var tileData = data[1];
-                    
+
                 var newTile = new Tile(new Location
                 {
                     X = (ushort)(xOffset + Convert.ToUInt16(tileInfo[0])),
@@ -52,7 +58,7 @@ namespace OpenTibia.Server.Map
                 // load and add tile flags and contents.
                 foreach (var element in CipReader.Parse(tileData))
                 {
-                    foreach(var attribute in element.Attributes)
+                    foreach (var attribute in element.Attributes)
                     {
                         if (attribute.Name.Equals("Content"))
                         {
@@ -80,8 +86,7 @@ namespace OpenTibia.Server.Map
             }
 
             // TODO: proper logging.
-            //Console.WriteLine($"Sector file {sectorFileContents.Name}: {loadedTilesList.Count} tiles loaded.");
-
+            // Console.WriteLine($"Sector file {sectorFileContents.Name}: {loadedTilesList.Count} tiles loaded.");
             return loadedTilesList;
         }
     }

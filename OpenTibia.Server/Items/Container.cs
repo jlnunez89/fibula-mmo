@@ -1,47 +1,55 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Utilities;
+﻿// <copyright file="Container.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Items
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Utilities;
+
     public class Container : Item, IContainer
     {
         public event OnContentAdded OnContentAdded;
+
         public event OnContentUpdated OnContentUpdated;
+
         public event OnContentRemoved OnContentRemoved;
 
         public IList<IItem> Content { get; }
+
         public Dictionary<uint, byte> OpenedBy { get; }
 
-        private readonly object _openedByLock;
-                
-        public byte Volume => Convert.ToByte(Attributes.ContainsKey(ItemAttribute.Capacity) ? Attributes[ItemAttribute.Capacity] : 0x08);
+        private readonly object openedByLock;
 
-        public new Location Location => Parent?.Location ?? base.Location;
+        public byte Volume => Convert.ToByte(this.Attributes.ContainsKey(ItemAttribute.Capacity) ? this.Attributes[ItemAttribute.Capacity] : 0x08);
+
+        public new Location Location => this.Parent?.Location ?? base.Location;
 
         public Container(ItemType type)
-            : base (type)
+            : base(type)
         {
-            Content = new List<IItem>();
-            OpenedBy = new Dictionary<uint, byte>();
-            _openedByLock = new object();
-            
-            OnContentUpdated += Game.Instance.OnContainerContentUpdated;
-            OnContentAdded += Game.Instance.OnContainerContentAdded;
-            OnContentRemoved += Game.Instance.OnContainerContentRemoved;
+            this.Content = new List<IItem>();
+            this.OpenedBy = new Dictionary<uint, byte>();
+            this.openedByLock = new object();
+
+            this.OnContentUpdated += Game.Instance.OnContainerContentUpdated;
+            this.OnContentAdded += Game.Instance.OnContainerContentAdded;
+            this.OnContentRemoved += Game.Instance.OnContainerContentRemoved;
         }
 
-        //~Container()
-        //{
+        // ~Container()
+        // {
         //    OnContentUpdated -= Game.Instance.OnContainerContentUpdated;
         //    OnContentAdded -= Game.Instance.OnContainerContentAdded;
         //    OnContentRemoved -= Game.Instance.OnContainerContentRemoved;
-        //}
-
+        // }
         public override void AddContent(IEnumerable<object> contentObjs)
         {
             if (contentObjs == null)
@@ -61,6 +69,7 @@ namespace OpenTibia.Server.Items
                     {
                         Console.WriteLine($"Container.AddContent: Unexpected flag {element.Attributes?.First()?.Name}, igoring.");
                     }
+
                     continue;
                 }
 
@@ -77,11 +86,11 @@ namespace OpenTibia.Server.Items
 
                         continue;
                     }
-                    
+
                     // TODO: this is hacky.
-                    ((Item) item).AddAttributes(element.Attributes);
-                    
-                    AddContent(item, 0xFF);
+                    ((Item)item).AddAttributes(element.Attributes);
+
+                    this.AddContent(item, 0xFF);
                 }
                 catch (ArgumentException)
                 {
@@ -93,7 +102,7 @@ namespace OpenTibia.Server.Items
                 }
             }
         }
-        
+
         /// <summary>
         /// Attempts to add the joined item to this container's content at the default index.
         /// </summary>
@@ -101,16 +110,16 @@ namespace OpenTibia.Server.Items
         /// <returns>True if the operation was successful, false otherwise</returns>
         public override bool Join(IItem otherItem)
         {
-            if (Content.Count >= Volume)
+            if (this.Content.Count >= this.Volume)
             {
                 // we can't add the additional item, since we're at capacity.
                 return false;
             }
 
             otherItem.SetParent(this);
-            Content.Add(otherItem);
+            this.Content.Add(otherItem);
 
-            OnContentAdded?.Invoke(this, otherItem);
+            this.OnContentAdded?.Invoke(this, otherItem);
 
             return true;
         }
@@ -123,26 +132,26 @@ namespace OpenTibia.Server.Items
             }
 
             // Validate that the item being added is not a parent of this item.
-            if (IsChildOf(item))
+            if (this.IsChildOf(item))
             {
                 return false;
             }
 
             try
             {
-                var existingItem = Content[Content.Count - index - 1];
+                var existingItem = this.Content[this.Content.Count - index - 1];
 
                 if (existingItem != null)
                 {
                     var joinResult = existingItem.Join(item);
 
-                    OnContentUpdated?.Invoke(this, index, existingItem);
+                    this.OnContentUpdated?.Invoke(this, index, existingItem);
 
                     if (joinResult)
                     {
                         return true;
                     }
-                    
+
                     // attempt to add to the parent of this item.
                     if (existingItem.Parent != null && existingItem.Parent.Join(item))
                     {
@@ -154,20 +163,20 @@ namespace OpenTibia.Server.Items
             {
                 // ignored
             }
-            
-            return Join(item);
+
+            return this.Join(item);
         }
 
         public bool RemoveContent(ushort itemId, byte index, byte count, out IItem splitItem)
         {
             splitItem = null;
-            
+
             // see if item at index is cummulative, and if it is the same type we're adding.
             IItem existingItem = null;
 
             try
             {
-                existingItem = Content[Content.Count - index - 1];
+                existingItem = this.Content[this.Content.Count - index - 1];
             }
             catch
             {
@@ -188,12 +197,12 @@ namespace OpenTibia.Server.Items
                     existingItem.SetAmount(count); // restore the "removed" count, since we removed "all" of the item.
 
                     existingItem.SetParent(null);
-                    Content.RemoveAt(Content.Count - index - 1);
-                    OnContentRemoved?.Invoke(this, index);
+                    this.Content.RemoveAt(this.Content.Count - index - 1);
+                    this.OnContentRemoved?.Invoke(this, index);
                 }
                 else
                 {
-                    OnContentUpdated?.Invoke(this, index, existingItem);
+                    this.OnContentUpdated?.Invoke(this, index, existingItem);
                 }
             }
 
@@ -212,7 +221,7 @@ namespace OpenTibia.Server.Items
 
             try
             {
-                existingItem = Content[Content.Count - fromIndex - 1];
+                existingItem = this.Content[this.Content.Count - fromIndex - 1];
             }
             catch
             {
@@ -241,14 +250,14 @@ namespace OpenTibia.Server.Items
         /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
         public byte Open(uint creatureOpeningId, byte containerId)
         {
-            lock (_openedByLock)
+            lock (this.openedByLock)
             {
-                if (!OpenedBy.ContainsKey(creatureOpeningId))
+                if (!this.OpenedBy.ContainsKey(creatureOpeningId))
                 {
-                    OpenedBy.Add(creatureOpeningId, containerId);
+                    this.OpenedBy.Add(creatureOpeningId, containerId);
                 }
 
-                return OpenedBy[creatureOpeningId];
+                return this.OpenedBy[creatureOpeningId];
             }
         }
 
@@ -258,11 +267,11 @@ namespace OpenTibia.Server.Items
         /// <param name="creatureClosingId">The id of the creature closing this container.</param>
         public void Close(uint creatureClosingId)
         {
-            lock (_openedByLock)
+            lock (this.openedByLock)
             {
-                if (OpenedBy.ContainsKey(creatureClosingId))
+                if (this.OpenedBy.ContainsKey(creatureClosingId))
                 {
-                    OpenedBy.Remove(creatureClosingId);
+                    this.OpenedBy.Remove(creatureClosingId);
                 }
             }
         }
@@ -274,11 +283,11 @@ namespace OpenTibia.Server.Items
         /// <returns>A non-negative number if an id was found, -1 otherwise.</returns>
         public sbyte GetIdFor(uint creatureId)
         {
-            lock (_openedByLock)
+            lock (this.openedByLock)
             {
-                if (OpenedBy.ContainsKey(creatureId))
+                if (this.OpenedBy.ContainsKey(creatureId))
                 {
-                    return (sbyte)OpenedBy[creatureId];
+                    return (sbyte)this.OpenedBy[creatureId];
                 }
             }
 

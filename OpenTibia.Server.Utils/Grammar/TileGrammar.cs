@@ -1,12 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using OpenTibia.Data.Contracts;
-using Sprache;
+﻿// <copyright file="TileGrammar.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Utilities.Grammar
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text;
+    using OpenTibia.Data.Contracts;
+    using Sprache;
+
     public class TileGrammar
     {
         private static readonly Parser<char> EqualSign = Parse.Char('=');
@@ -15,7 +21,7 @@ namespace OpenTibia.Utilities.Grammar
         private static readonly Parser<char> DoubleQuote = Parse.Char('"');
         private static readonly Parser<char> Backslash = Parse.Char('\\');
         private static readonly Parser<char> Comma = Parse.Char(',');
-        
+
         private static readonly Parser<string> Text =
             from text in Parse.AnyChar.Except(Parse.WhiteSpace).Except(OpenCurly).Except(CloseCurly).Except(Comma).Except(EqualSign).AtLeastOnce().Text()
             select text.Trim();
@@ -38,7 +44,7 @@ namespace OpenTibia.Utilities.Grammar
             from ws in Parse.WhiteSpace.Many()
             from attrs in KeyValPair.Or(Text).Optional().DelimitedBy(Comma)
             select new ContentElement(id.IsEmpty ? "0" : id.Get(), attrs.Select(i => i.IsEmpty ? string.Empty : i.Get()).ToArray());
-        
+
         public class ContentElement
         {
             public string Id { get; }
@@ -47,20 +53,20 @@ namespace OpenTibia.Utilities.Grammar
 
             public ContentElement(string id, params object[] attributes)
             {
-                Id = id;
-                Attributes = attributes;
+                this.Id = id;
+                this.Attributes = attributes;
             }
 
             public override string ToString()
             {
                 var sb = new StringBuilder();
 
-                foreach (var obj in Attributes)
+                foreach (var obj in this.Attributes)
                 {
                     sb.Append(obj);
                 }
 
-                return $"{Id} {sb}";
+                return $"{this.Id} {sb}";
             }
         }
     }

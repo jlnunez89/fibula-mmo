@@ -1,20 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using OpenTibia.Server.Data.Interfaces;
-using OpenTibia.Server.Data.Models.Structs;
-using OpenTibia.Utilities;
+﻿// <copyright file="TileNode.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Algorithms
 {
+    using System;
+    using System.Collections.Generic;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Utilities;
+
     internal class TileNode : INode
     {
-        private bool _isInClosedList;
-        
+        private bool isInClosedList;
+
         public string SearchId { get; }
 
         public ITile Tile { get; }
 
-        public int TotalCost => MovementCost + EstimatedCost;
+        public int TotalCost => this.MovementCost + this.EstimatedCost;
 
         public int MovementCost { get; private set; }
 
@@ -29,7 +35,7 @@ namespace OpenTibia.Server.Algorithms
                 var rng = new Random();
                 var children = new List<TileNode>();
 
-                var currentLoc = Tile.Location;
+                var currentLoc = this.Tile.Location;
 
                 var offsets = new List<Location>();
 
@@ -56,7 +62,7 @@ namespace OpenTibia.Server.Algorithms
                         continue;
                     }
 
-                    children.Add(TileNodeCache.Create(SearchId, tile));
+                    children.Add(TileNodeCache.Create(this.SearchId, tile));
                 }
 
                 return children;
@@ -70,12 +76,12 @@ namespace OpenTibia.Server.Algorithms
             get
             {
                 // TODO: handle damage types to avoid
-                return _isInClosedList || MovementCost > 0 && !Tile.CanBeWalked();
+                return this.isInClosedList || this.MovementCost > 0 && !this.Tile.CanBeWalked();
             }
 
             set
             {
-                _isInClosedList = value;
+                this.isInClosedList = value;
             }
         }
 
@@ -91,40 +97,39 @@ namespace OpenTibia.Server.Algorithms
                 throw new ArgumentNullException(nameof(tile));
             }
 
-            Tile = tile;
-            _isInClosedList = false;
-            SearchId = searchId;
+            this.Tile = tile;
+            this.isInClosedList = false;
+            this.SearchId = searchId;
         }
-        
 
         public void SetMovementCost(INode parent)
         {
             var parentNode = parent as TileNode;
 
-            if (Tile == null || parentNode?.Tile == null)
+            if (this.Tile == null || parentNode?.Tile == null)
             {
                 return;
             }
 
-            var locationDiff = Tile.Location - parentNode.Tile.Location;
+            var locationDiff = this.Tile.Location - parentNode.Tile.Location;
             var isDiagonal = Math.Min(Math.Abs(locationDiff.X), 1) + Math.Min(Math.Abs(locationDiff.Y), 1) == 2;
 
             var newCost = parent.MovementCost + (isDiagonal ? 3 : 1);
-            MovementCost = MovementCost > 0 ? Math.Min(MovementCost, newCost) : newCost;
+            this.MovementCost = this.MovementCost > 0 ? Math.Min(this.MovementCost, newCost) : newCost;
         }
 
         public void SetEstimatedCost(INode goal)
         {
             var goalNode = goal as TileNode;
 
-            if (Tile == null || goalNode?.Tile == null)
+            if (this.Tile == null || goalNode?.Tile == null)
             {
                 return;
             }
 
-            var locationDiff = Tile.Location - goalNode.Tile.Location;
+            var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
-            EstimatedCost = Math.Abs(locationDiff.X) + Math.Abs(locationDiff.Y);
+            this.EstimatedCost = Math.Abs(locationDiff.X) + Math.Abs(locationDiff.Y);
         }
 
         public bool IsGoal(INode goal)
@@ -136,8 +141,8 @@ namespace OpenTibia.Server.Algorithms
                 // true to stop ASAP.
                 return true;
             }
-            
-            var locationDiff = Tile.Location - goalNode.Tile.Location;
+
+            var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
             return Math.Abs(locationDiff.X) <= 1 && Math.Abs(locationDiff.Y) <= 1;
         }

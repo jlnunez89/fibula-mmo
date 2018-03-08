@@ -1,4 +1,10 @@
-﻿namespace OpenTibia.Data.Configurations
+﻿// <copyright file="BanishmentConfiguration.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace OpenTibia.Data.Configurations
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +27,7 @@
 
             builder.Property(t => t.AccountId)
                 .IsRequired();
-            
+
             builder.Property(t => t.Violation)
                 .IsRequired();
 

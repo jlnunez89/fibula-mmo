@@ -7,7 +7,17 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Server.Standalone.xml</DocumentationFile>
   </PropertyGroup>
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
+  </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Communications\OpenTibia.Communications.csproj" />
     <ProjectReference Include="..\OpenTibia.Server\OpenTibia.Server.csproj" />

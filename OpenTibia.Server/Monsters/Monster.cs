@@ -1,10 +1,16 @@
-﻿using System;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="Monster.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Monsters
 {
+    using System;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     public class Monster : Creature
     {
         public MonsterType Type { get; }
@@ -13,29 +19,29 @@ namespace OpenTibia.Server.Monsters
 
         public sealed override IInventory Inventory { get; protected set; }
 
-        public override bool CanBeMoved => !Type.Flags.Contains(CreatureFlag.Unpushable);
+        public override bool CanBeMoved => !this.Type.Flags.Contains(CreatureFlag.Unpushable);
 
-        public override ushort AttackPower => Math.Max(Type.Attack, Inventory.TotalAttack);
+        public override ushort AttackPower => Math.Max(this.Type.Attack, this.Inventory.TotalAttack);
 
-        public override ushort ArmorRating => Math.Max(Type.Armor, Inventory.TotalArmor);
+        public override ushort ArmorRating => Math.Max(this.Type.Armor, this.Inventory.TotalArmor);
 
-        public override ushort DefensePower => Math.Max(Type.Defense, Inventory.TotalDefense);
+        public override ushort DefensePower => Math.Max(this.Type.Defense, this.Inventory.TotalDefense);
 
-        public override byte AutoAttackRange => (byte)(Type.Flags.Contains(CreatureFlag.DistanceFighting) ? 5 : 1);
+        public override byte AutoAttackRange => (byte)(this.Type.Flags.Contains(CreatureFlag.DistanceFighting) ? 5 : 1);
 
         public Monster(MonsterType monsterType)
             : base(GetNewId(), monsterType.Name, monsterType.Article, monsterType.MaxHitPoints, monsterType.MaxManaPoints, monsterType.Corpse)
         {
-            Type = monsterType;
-            Experience = monsterType.Experience;
-            Speed += monsterType.Speed;
-            Outfit = monsterType.Outfit;
+            this.Type = monsterType;
+            this.Experience = monsterType.Experience;
+            this.Speed += monsterType.Speed;
+            this.Outfit = monsterType.Outfit;
 
-            Inventory = new MonsterInventory(this, monsterType.InventoryComposition);
+            this.Inventory = new MonsterInventory(this, monsterType.InventoryComposition);
 
-            foreach (var kvp in Type.Skills.ToList())
+            foreach (var kvp in this.Type.Skills.ToList())
             {
-                Type.Skills[kvp.Key] = kvp.Value;
+                this.Type.Skills[kvp.Key] = kvp.Value;
             }
         }
     }

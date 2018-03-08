@@ -1,21 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Communications;
-using OpenTibia.Communications.Packets.Incoming;
-using OpenTibia.Communications.Packets.Outgoing;
-using OpenTibia.Data;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="PlayerLoginHandler.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Handlers.Management
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Communications.Packets.Incoming;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class PlayerLoginHandler : IIncomingPacketHandler
     {
         public IList<IPacketOutgoing> ResponsePackets { get; private set; }
 
-        public void HandlePacket(NetworkMessage message, Connection connection)
+        public void HandleMessageContents(NetworkMessage message, Connection connection)
         {
             var playerLoginPacket = new ManagementPlayerLoginPacket(message);
             var failure = LoginFailureReason.None;
@@ -240,7 +247,7 @@ namespace OpenTibia.Server.Handlers.Management
 
                         otContext.SaveChanges();
 
-                        ResponsePackets.Add(new PlayerLoginSucessPacket
+                        this.ResponsePackets.Add(new PlayerLoginSucessPacket
                         {
                             AccountId = playerRecord.Account_Id,
                             CharacterName = playerRecord.Charname,
@@ -262,7 +269,7 @@ namespace OpenTibia.Server.Handlers.Management
                     }
                 }
 
-                ResponsePackets.Add(new PlayerLoginRejectionPacket
+                this.ResponsePackets.Add(new PlayerLoginRejectionPacket
                 {
                     Reason = (byte)failure
                 });

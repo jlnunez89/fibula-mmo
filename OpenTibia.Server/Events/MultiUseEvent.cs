@@ -1,11 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using OpenTibia.Data.Contracts;
-using OpenTibia.Server.Data.Interfaces;
+﻿// <copyright file="MultiUseEvent.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
 
 namespace OpenTibia.Server.Events
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using OpenTibia.Data.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+
     internal class MultiUseEvent : BaseEvent
     {
         public ushort ItemToUseId { get; }
@@ -13,11 +19,10 @@ namespace OpenTibia.Server.Events
         public ushort ItemToUseOnId { get; }
 
         public MultiUseEvent(IList<string> conditionSet, IList<string> actionSet)
-            : base (conditionSet, actionSet)
+            : base(conditionSet, actionSet)
         {
-            // Look for a IsType condition. 
-
-            var isTypeConditions = Conditions.Where(func => IsTypeFunctionName.Equals(func.FunctionName));
+            // Look for a IsType condition.
+            var isTypeConditions = this.Conditions.Where(func => IsTypeFunctionName.Equals(func.FunctionName));
 
             var typeConditionsList = isTypeConditions as IList<IEventFunction> ?? isTypeConditions.ToList();
             var firstTypeCondition = typeConditionsList.FirstOrDefault();
@@ -33,8 +38,8 @@ namespace OpenTibia.Server.Events
                 throw new ArgumentNullException($"Unable to find second {IsTypeFunctionName} function.");
             }
 
-            ItemToUseId = Convert.ToUInt16(firstTypeCondition.Parameters[1]);
-            ItemToUseOnId = Convert.ToUInt16(secondTypeCondition.Parameters[1]);
+            this.ItemToUseId = Convert.ToUInt16(firstTypeCondition.Parameters[1]);
+            this.ItemToUseOnId = Convert.ToUInt16(secondTypeCondition.Parameters[1]);
         }
 
         public override EventType Type => EventType.MultiUse;
