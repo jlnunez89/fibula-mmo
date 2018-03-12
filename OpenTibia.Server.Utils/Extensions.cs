@@ -196,7 +196,8 @@ namespace OpenTibia.Utilities
 
         /// <summary>Converts an array of bytes into a formatted string of hex digits (ex: E4 CA B2)</summary>
         /// <param name="data">The array of bytes to be translated into a string of hex digits.</param>
-        /// <param name="length">The length of data to convert</param>
+        /// <param name="start">The start position to convert.</param>
+        /// <param name="length">The length of data to convert.</param>
         /// <returns>Returns a well formatted string of hex digits with spacing.</returns>
         public static string ToHexString(this byte[] data, int start, int length)
         {

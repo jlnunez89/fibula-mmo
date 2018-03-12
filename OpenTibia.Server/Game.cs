@@ -191,7 +191,7 @@ namespace OpenTibia.Server
 
             try
             {
-                if (result == State.Failed)
+                if (result == SearchState.Failed)
                 {
                     var lastTile = aSar.GetPath()?.LastOrDefault() as TileNode;
 

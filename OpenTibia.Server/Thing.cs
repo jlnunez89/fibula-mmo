@@ -11,11 +11,7 @@ namespace OpenTibia.Server
 
     public abstract class Thing : IThing
     {
-        public event OnThingStateChange OnLocationChanged;
-
-        public event OnThingStateChange OnThingAdded;
-
-        public event OnThingStateChange OnThingRemoved;
+        public event OnThingStateChanged OnThingChanged;
 
         protected ITile tile;
         protected Location location;
@@ -45,7 +41,7 @@ namespace OpenTibia.Server
                 this.location = value;
                 if (oldValue != this.location)
                 {
-                    this.OnLocationChanged?.Invoke();
+                    this.OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(this.Location) });
                 }
             }
         }
@@ -69,12 +65,12 @@ namespace OpenTibia.Server
 
         public void Added()
         {
-            this.OnThingAdded?.Invoke();
+            // this.OnThingAdded?.Invoke();
         }
 
         public void Removed()
         {
-            this.OnThingRemoved?.Invoke();
+            // this.OnThingRemoved?.Invoke();
         }
     }
 }

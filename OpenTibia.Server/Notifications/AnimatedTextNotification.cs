@@ -11,6 +11,7 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Utils;
 
     internal class AnimatedTextNotification : Notification
     {
@@ -23,10 +24,7 @@ namespace OpenTibia.Server.Notifications
         public AnimatedTextNotification(Connection connection, Location location, string text, TextColor textColor = TextColor.White)
             : base(connection)
         {
-            if (string.IsNullOrWhiteSpace(text))
-            {
-                throw new ArgumentNullException(nameof(text));
-            }
+            text.ThrowIfNullOrWhiteSpace(nameof(text));
 
             this.Location = location;
             this.Text = text;

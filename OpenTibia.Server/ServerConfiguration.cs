@@ -8,7 +8,7 @@ namespace OpenTibia.Server
 {
     public class ServerConfiguration
     {
-        public const string BaseDirLocalPath = @"data\";
+        public const string BaseDirLocalPath = @"C:\Users\jln89\Downloads\game\";
 
         public const string LiveMapDirectory = BaseDirLocalPath + "map";
         public const string OriginalMapDirectory = BaseDirLocalPath + "origmap";

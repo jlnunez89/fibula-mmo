@@ -7,23 +7,24 @@
 namespace OpenTibia.Server.Data.Interfaces
 {
     using System;
-    using System.Collections.Generic;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Models.Structs;
 
     public delegate void OnAttackTargetChange(uint oldTargetId, uint newTargetId);
-    // public delegate void OnAttackPerformed(uint fromCreatureId, uint toCreatureId);
-    public interface ICombatActor
+
+    public interface ICombatActor : INeedsCooldowns
     {
         event OnAttackTargetChange OnTargetChanged;
 
+        /// <summary>
+        /// Gets the id of the actor.
+        /// </summary>
         uint ActorId { get; }
 
-        Dictionary<CooldownType, Tuple<DateTime, TimeSpan>> Cooldowns { get; }
-
+        /// <summary>
+        /// Gets the blood type of the actor.
+        /// </summary>
         BloodType Blood { get; }
-
-        uint FollowId { get; }
 
         uint AutoAttackTargetId { get; }
 
@@ -40,12 +41,12 @@ namespace OpenTibia.Server.Data.Interfaces
         TimeSpan CombatCooldownTimeRemaining { get; }
 
         /// <summary>
-        /// How fast an Actor can earn a new AutoAttack credit.
+        /// Gets a metric of how fast an Actor can earn a new AutoAttack credit per second.
         /// </summary>
         decimal BaseAttackSpeed { get; }
 
         /// <summary>
-        /// How fast an Actor can earn a new AutoDefense credit.
+        /// Gets a metric of how fast an Actor can earn a new AutoDefense credit per second.
         /// </summary>
         decimal BaseDefenseSpeed { get; }
 
@@ -61,6 +62,6 @@ namespace OpenTibia.Server.Data.Interfaces
 
         void UpdateLastAttack(TimeSpan cost);
 
-        void CheckAutoAttack();
+        void CheckAutoAttack(IThing thingChanged, ThingStateChangedEventArgs eventAgrs);
     }
 }

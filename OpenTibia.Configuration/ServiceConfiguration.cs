@@ -70,7 +70,7 @@ namespace OpenTibia.Configuration
                             ClientVersionInt = 770,
                             ClientVersionString = "7.7",
                             WorldType = WorldType.Hardcore,
-                            PublicGameIpAddress = IPAddress.Parse("104.210.149.211"),
+                            PublicGameIpAddress = IPAddress.Parse("127.0.0.1"),
                             PublicGamePort = 7172,
                             PrivateGameIpAddress = IPAddress.Parse("10.0.0.5"),
                             PrivateGamePort = 7170,

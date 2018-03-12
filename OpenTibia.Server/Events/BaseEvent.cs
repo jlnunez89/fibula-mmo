@@ -75,7 +75,7 @@ namespace OpenTibia.Server.Events
 
                 if (!resultComparison.WasSuccessful)
                 {
-                    throw new ParseException("Failed to parse string {str} into a function or function comparison.");
+                    throw new ParseException($"Failed to parse string {str} into a function or function comparison.");
                 }
 
                 functionList.Add(new EventFunctionComparison(resultComparison.Value.Name, resultComparison.Value.Type, resultComparison.Value.CompareToIdentifier, resultComparison.Value.Parameters));

@@ -31,7 +31,7 @@ namespace OpenTibia.Utilities.Grammar
 
         private static readonly Parser<char> Quoted = Parse.AnyChar.Except(DoubleQuote);
         private static readonly Parser<char> Escaped =
-            from _ in Backslash
+            from blackSlash in Backslash
             from c in Parse.AnyChar
             select c;
 
@@ -58,10 +58,10 @@ namespace OpenTibia.Utilities.Grammar
             from open in OpenBracket
             from negX in Parse.Char('-').Optional()
             from x in Parse.Number
-            from _1 in Comma
+            from firstComma in Comma
             from negY in Parse.Char('-').Optional()
             from y in Parse.Number
-            from _2 in Comma
+            from secondComma in Comma
             from negZ in Parse.Char('-').Optional()
             from z in Parse.Number
             from close in CloseBracket
@@ -69,9 +69,9 @@ namespace OpenTibia.Utilities.Grammar
 
         private static readonly Parser<string> KeyValStr =
             from key in Text
-            from _ in EqualSign
+            from eq in EqualSign
             from value in Text
-            select key + _ + value; // we want the whole thing .. key=val
+            select key + eq + value; // we want the whole thing .. key=val
 
         private static readonly Parser<IEnumerable<string>> Conditions = FunctionOrComparisonString.Or(QuotedMessage).Or(KeyValStr).Or(Text).DelimitedBy(Comma);
         private static readonly Parser<IEnumerable<string>> Actions = FunctionOrComparisonString.Or(QuotedMessage).Or(KeyValStr).Or(Text).DelimitedBy(Comma);
@@ -79,7 +79,7 @@ namespace OpenTibia.Utilities.Grammar
         public static readonly Parser<ConditionalActionRule> ConditionalActionRule =
             from conditions in Conditions
             from leading in Parse.WhiteSpace.Optional().Many()
-            from _ in ConditionsActionsSeparator
+            from separator in ConditionsActionsSeparator
             from trailing in Parse.WhiteSpace.Many()
             from actions in Actions
             select new ConditionalActionRule(conditions, actions);

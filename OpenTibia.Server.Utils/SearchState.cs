@@ -1,4 +1,4 @@
-﻿// <copyright file="SortedListExtensions.cs" company="2Dudes">
+﻿// <copyright file="AStar.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -32,45 +32,24 @@ OTHER DEALINGS IN THE SOFTWARE.
 
 namespace OpenTibia.Utilities
 {
-    using System.Collections.Generic;
-
     /// <summary>
-    /// Extension methods to make the System.Collections.Generic.SortedList easier to use.
+    /// A* algorithm states while searching for the goal.
     /// </summary>
-    internal static class SortedListExtensions
+    public enum SearchState
     {
         /// <summary>
-        /// Checks if the SortedList is empty.
+        /// The AStar algorithm is still searching for the goal.
         /// </summary>
-        /// <typeparam name="TKey">The </typeparam>
-        /// <typeparam name="TValue"></typeparam>
-        /// <param name="sortedList">SortedList to check if it is empty.</param>
-        /// <returns>True if sortedList is empty, false if it still has elements.</returns>
-        internal static bool IsEmpty<TKey, TValue>(this SortedList<TKey, TValue> sortedList)
-        {
-            return sortedList.Count == 0;
-        }
+        Searching,
 
         /// <summary>
-        /// Adds a INode to the SortedList.
+        /// The AStar algorithm has found the goal.
         /// </summary>
-        /// <param name="sortedList">SortedList to add the node to.</param>
-        /// <param name="node">Node to add to the sortedList.</param>
-        internal static void Add(this SortedList<int, INode> sortedList, INode node)
-        {
-            sortedList.Add(node.TotalCost, node);
-        }
+        GoalFound,
 
         /// <summary>
-        /// Removes the node from the sorted list with the smallest TotalCost and returns that node.
+        /// The AStar algorithm has failed to find a solution.
         /// </summary>
-        /// <param name="sortedList">SortedList to remove and return the smallest TotalCost node.</param>
-        /// <returns>Node with the smallest TotalCost.</returns>
-        internal static INode Pop(this SortedList<int, INode> sortedList)
-        {
-            var top = sortedList.Values[0];
-            sortedList.RemoveAt(0);
-            return top;
-        }
+        Failed
     }
 }

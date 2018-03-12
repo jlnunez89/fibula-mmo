@@ -142,7 +142,7 @@ namespace OpenTibia.Server
             this.KnownCreatures = new Dictionary<uint, long>();
             this.VipList = new Dictionary<string, bool>();
 
-            this.OnLocationChanged += this.CheckInventoryContainerProximity;
+            this.OnThingChanged += this.CheckInventoryContainerProximity;
         }
 
         // ~PlayerId()
@@ -220,9 +220,9 @@ namespace OpenTibia.Server
             this.PendingAction = null;
         }
 
-        protected override void CheckPendingActions()
+        protected override void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventArgs)
         {
-            if (this.PendingAction == null)
+            if (this.PendingAction == null || thingChanged != this || eventArgs.PropertyChanged != nameof(this.Location))
             {
                 return;
             }
@@ -315,7 +315,7 @@ namespace OpenTibia.Server
             return null;
         }
 
-        public void CheckInventoryContainerProximity()
+        public void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs)
         {
             for (byte i = 0; i < this.OpenContainers.Length; i++)
             {
@@ -338,7 +338,7 @@ namespace OpenTibia.Server
 
                             if (container != null)
                             {
-                                container.OnLocationChanged -= this.CheckInventoryContainerProximity;
+                                container.OnThingChanged -= this.CheckInventoryContainerProximity;
                             }
 
                             var containerId = i;

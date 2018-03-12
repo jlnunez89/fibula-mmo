@@ -15,22 +15,72 @@ namespace OpenTibia.Server
 
     public abstract class Creature : Thing, ICreature, ICombatActor
     {
-        public static uint IdCounter = 1;
         private static readonly object IdLock = new object();
-
-        public static uint GetNewId()
-        {
-            lock (IdLock)
-            {
-                return IdCounter++; // we got 2^32 ids to give per game run... enough!
-            }
-        }
+        private static uint idCounter = 1;
 
         private readonly object enqueueWalkLock;
 
-        // public event OnCreatureStateChange OnZeroHealth;
+        protected Creature(
+            uint id,
+            string name,
+            string article,
+            uint maxHitpoints,
+            uint maxManapoints,
+            ushort corpse = 0,
+            ushort hitpoints = 0,
+            ushort manapoints = 0)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                throw new ArgumentNullException(nameof(name));
+            }
+
+            if (maxHitpoints == 0)
+            {
+                throw new ArgumentException($"{nameof(maxHitpoints)} must be positive.");
+            }
+
+            this.enqueueWalkLock = new object();
+
+            this.CreatureId = id;
+            this.Name = name;
+            this.Article = article;
+            this.MaxHitpoints = maxHitpoints;
+            this.Hitpoints = Math.Min(this.MaxHitpoints, hitpoints == 0 ? this.MaxHitpoints : hitpoints);
+            this.MaxManapoints = maxManapoints;
+            this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
+            this.Corpse = corpse;
+
+            this.Cooldowns = new Dictionary<CooldownType, Tuple<DateTime, TimeSpan>>
+            {
+                { CooldownType.Move, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
+                { CooldownType.Action, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
+                { CooldownType.Combat, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
+                { CooldownType.Talk, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) }
+            };
+
+            this.Outfit = new Outfit
+            {
+                Id = 0,
+                LikeType = 0
+            };
+
+            this.Speed = 220;
+
+            this.WalkingQueue = new ConcurrentQueue<Tuple<byte, Direction>>();
+
+            // Subscribe any attack-impacting conditions here
+            this.OnThingChanged += this.CheckAutoAttack;         // Are we in range with our target now/still?
+            this.OnThingChanged += this.CheckPendingActions;                    // Are we in range with our pending action?
+            // OnTargetChanged += CheckAutoAttack;          // Are we attacking someone new / not attacking anymore?
+            // OnInventoryChanged += Mind.AttackConditionsChanged;        // Equipped / DeEquiped something?
+            this.Skills = new Dictionary<SkillType, ISkill>();
+            this.Hostiles = new HashSet<uint>();
+            this.Friendly = new HashSet<uint>();
+        }
+
         public event OnAttackTargetChange OnTargetChanged;
-        // public event OnCreatureStateChange OnInventoryChanged;
+
         public override ushort ThingId => CreatureThingId;
 
         public override byte Count => 0x01;
@@ -102,8 +152,6 @@ namespace OpenTibia.Server
 
         public abstract ushort DefensePower { get; }
 
-        public uint FollowId { get; protected set; }
-
         public uint AutoAttackTargetId { get; protected set; }
 
         public abstract byte AutoAttackRange { get; }
@@ -122,9 +170,9 @@ namespace OpenTibia.Server
 
         public TimeSpan LastAttackCost => this.Cooldowns[CooldownType.Combat].Item2;
 
-        public Dictionary<SkillType, ISkill> Skills { get; }
+        public IDictionary<SkillType, ISkill> Skills { get; }
 
-        public Dictionary<CooldownType, Tuple<DateTime, TimeSpan>> Cooldowns { get; }
+        public IDictionary<CooldownType, Tuple<DateTime, TimeSpan>> Cooldowns { get; }
 
         // public IList<Condition> Conditions { get; protected set; } // TODO: implement.
         public bool IsInvisible { get; protected set; } // TODO: implement.
@@ -145,66 +193,15 @@ namespace OpenTibia.Server
 
         public abstract IInventory Inventory { get; protected set; }
 
-        protected Creature(
-            uint id,
-            string name,
-            string article,
-            uint maxHitpoints,
-            uint maxManapoints,
-            ushort corpse = 0,
-            ushort hitpoints = 0,
-            ushort manapoints = 0)
+        public static uint GetNewId()
         {
-            if (string.IsNullOrWhiteSpace(name))
+            lock (IdLock)
             {
-                throw new ArgumentNullException(nameof(name));
+                return idCounter++; // we got 2^32 ids to give per game run... enough!
             }
-
-            if (maxHitpoints == 0)
-            {
-                throw new ArgumentException($"{nameof(maxHitpoints)} must be positive.");
-            }
-
-            this.enqueueWalkLock = new object();
-
-            this.CreatureId = id;
-            this.Name = name;
-            this.Article = article;
-            this.MaxHitpoints = maxHitpoints;
-            this.Hitpoints = Math.Min(this.MaxHitpoints, hitpoints == 0 ? this.MaxHitpoints : hitpoints);
-            this.MaxManapoints = maxManapoints;
-            this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
-            this.Corpse = corpse;
-
-            this.Cooldowns = new Dictionary<CooldownType, Tuple<DateTime, TimeSpan>>
-            {
-                { CooldownType.Move, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
-                { CooldownType.Action, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
-                { CooldownType.Combat, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) },
-                { CooldownType.Talk, new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.Zero) }
-            };
-
-            this.Outfit = new Outfit
-            {
-                Id = 0,
-                LikeType = 0
-            };
-
-            this.Speed = 220;
-
-            this.WalkingQueue = new ConcurrentQueue<Tuple<byte,Direction>>();
-
-            // Subscribe any attack-impacting conditions here
-            this.OnLocationChanged += this.CheckAutoAttack;         // Are we in range with our target now/still?
-            this.OnLocationChanged += this.CheckPendingActions;                    // Are we in range with our pending action?
-            // OnTargetChanged += CheckAutoAttack;          // Are we attacking someone new / not attacking anymore?
-            // OnInventoryChanged += Mind.AttackConditionsChanged;        // Equipped / DeEquiped something?
-            this.Skills = new Dictionary<SkillType, ISkill>();
-            this.Hostiles = new HashSet<uint>();
-            this.Friendly = new HashSet<uint>();
         }
 
-        protected virtual void CheckPendingActions() { }
+        protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }
 
         // ~CreatureId()
         // {
@@ -308,7 +305,7 @@ namespace OpenTibia.Server
 
                     if (attackTarget != null)
                     {
-                        attackTarget.OnLocationChanged -= this.CheckAutoAttack;
+                        attackTarget.OnThingChanged -= this.CheckAutoAttack;
                     }
 
                     this.AutoAttackTargetId = 0;
@@ -325,7 +322,7 @@ namespace OpenTibia.Server
 
                 if (attackTarget != null)
                 {
-                    attackTarget.OnLocationChanged += this.CheckAutoAttack;
+                    attackTarget.OnThingChanged += this.CheckAutoAttack;
                 }
 
                 // }
@@ -337,7 +334,7 @@ namespace OpenTibia.Server
 
             // report the change to our subscribers.
             this.OnTargetChanged?.Invoke(oldTargetId, targetId);
-            this.CheckAutoAttack();
+            this.CheckAutoAttack(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(this.location) });
         }
 
         public void UpdateLastAttack(TimeSpan exahust)
@@ -345,7 +342,7 @@ namespace OpenTibia.Server
             this.Cooldowns[CooldownType.Combat] = new Tuple<DateTime, TimeSpan>(Game.Instance.CombatSynchronizationTime, exahust);
         }
 
-        public void CheckAutoAttack()
+        public void CheckAutoAttack(IThing thingChanged, ThingStateChangedEventArgs eventAgrs)
         {
             if (this.AutoAttackTargetId == 0)
             {
@@ -354,7 +351,7 @@ namespace OpenTibia.Server
 
             var attackTarget = Game.Instance.GetCreatureWithId(this.AutoAttackTargetId);
 
-            if (attackTarget == null)
+            if (attackTarget == null || (thingChanged != this && thingChanged != attackTarget) || eventAgrs.PropertyChanged != nameof(Thing.Location))
             {
                 return;
             }

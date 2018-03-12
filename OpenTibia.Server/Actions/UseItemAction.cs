@@ -99,7 +99,7 @@ namespace OpenTibia.Server.Actions
                             throw new ArgumentOutOfRangeException();
                     }
 
-                    thingAsContainer.OnLocationChanged += this.Player.CheckInventoryContainerProximity;
+                    thingAsContainer.OnThingChanged += this.Player.CheckInventoryContainerProximity;
 
                     this.ResponsePackets.Add(new ContainerOpenPacket
                     {
@@ -115,7 +115,7 @@ namespace OpenTibia.Server.Actions
                 {
                     // Close it.
                     this.Player.CloseContainerWithId((byte)openContainerId);
-                    thingAsContainer.OnLocationChanged -= this.Player.CheckInventoryContainerProximity;
+                    thingAsContainer.OnThingChanged -= this.Player.CheckInventoryContainerProximity;
 
                     this.ResponsePackets.Add(new ContainerClosePacket
                     {

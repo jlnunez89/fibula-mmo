@@ -423,12 +423,10 @@ namespace OpenTibia.Server.Scripting
             }
 
             Game.Instance.NotifySpectatingPlayers(
-                conn => new GenericNotification(conn, new MagicEffectPacket
-                {
-                Location = thing.Location,
-                Effect = (EffectT)effectByte
-            }),
-            thing.Location);
+                conn => new GenericNotification(
+                    conn,
+                    new MagicEffectPacket { Location = thing.Location, Effect = (EffectT)effectByte }),
+                thing.Location);
         }
 
         public static void EffectOnMap(Location location, byte effectByte)
@@ -440,12 +438,10 @@ namespace OpenTibia.Server.Scripting
             }
 
             Game.Instance.NotifySpectatingPlayers(
-                conn => new GenericNotification(conn, new MagicEffectPacket
-                {
-                Location = location,
-                Effect = (EffectT)effectByte
-            }),
-            location);
+                conn => new GenericNotification(
+                    conn, 
+                    new MagicEffectPacket { Location = location, Effect = (EffectT)effectByte }),
+                location);
         }
 
         public static void Delete(IThing thing)
@@ -484,7 +480,6 @@ namespace OpenTibia.Server.Scripting
             if (monster != null)
             {
                 IThing monsterAsThing = monster;
-                // place the monster.
                 var tile = Game.Instance.GetTileAt(location);
 
                 if (tile == null)
@@ -493,6 +488,7 @@ namespace OpenTibia.Server.Scripting
                     return;
                 }
 
+                // place the monster.
                 tile.AddThing(ref monsterAsThing);
 
                 if (!Game.Instance.Creatures.TryAdd(monster.CreatureId, monster))

@@ -43,7 +43,7 @@ namespace OpenTibia.Server.Data.Interfaces
 
         void ClearPendingActions();
 
-        void CheckInventoryContainerProximity();
+        void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs);
 
         sbyte OpenContainer(IContainer thingAsContainer);
 

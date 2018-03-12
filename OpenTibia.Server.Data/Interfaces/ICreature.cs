@@ -14,7 +14,7 @@ namespace OpenTibia.Server.Data.Interfaces
 
     public delegate void OnCreatureStateChange();
 
-    public interface ICreature : IThing
+    public interface ICreature : IThing, INeedsCooldowns
     {
         // event OnCreatureStateChange OnZeroHealth;
         // event OnCreatureStateChange OnInventoryChanged;
@@ -54,13 +54,7 @@ namespace OpenTibia.Server.Data.Interfaces
 
         byte NextStepId { get; set; }
 
-        Dictionary<SkillType, ISkill> Skills { get; }
-
-        /// <summary>
-        /// Stores information about cooldowns for a creature where the key is a <see cref="CooldownType"/>, and the value is a <see cref="Tuple{T1, T2}"/>.
-        /// The tuple elements are a <see cref="DateTime"/>, to store the time when the cooldown started, and a <see cref="TimeSpan"/> to denote how long it should last.
-        /// </summary>
-        Dictionary<CooldownType, Tuple<DateTime, TimeSpan>> Cooldowns { get; }
+        IDictionary<SkillType, ISkill> Skills { get; }
 
         bool IsInvisible { get; } // TODO: implement.
 

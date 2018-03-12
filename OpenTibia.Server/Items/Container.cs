@@ -212,8 +212,8 @@ namespace OpenTibia.Server.Items
         /// <summary>
         /// Gets the Count of the item in the specified index of the <see cref="Content"/> of this container.
         /// </summary>
-        /// <param name="itemIdExpected">The id of the item to expect at that index.</param>
         /// <param name="fromIndex">The index to check at this container's <see cref="Container.Content"/>.</param>
+        /// <param name="itemIdExpected">The id of the item to expect at that index.</param>
         /// <returns>Returns an <see cref="sbyte"/> with a value between 1 and 100 with the Count of the item at the index <paramref name="fromIndex"/>, 0 if the item does not match the type of the <paramref name="itemIdExpected"/>, or -1 if there is no item at that index.</returns>
         public sbyte CountContentAmountAt(byte fromIndex, ushort itemIdExpected = 0)
         {

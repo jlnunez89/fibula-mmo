@@ -187,8 +187,11 @@ namespace OpenTibia.Server.Handlers
 
                         return;
                     }
-                    catch
+                    catch (Exception ex)
                     {
+                        // TODO: propper logging
+                        Console.WriteLine(ex);
+
                         failure = LoginFailureReason.InternalServerError;
                     }
                 }

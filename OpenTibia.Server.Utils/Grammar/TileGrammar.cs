@@ -34,9 +34,9 @@ namespace OpenTibia.Utilities.Grammar
 
         private static readonly Parser<string> KeyValPair =
             from key in Text
-            from _ in EqualSign
+            from eq in EqualSign
             from value in EnclosedInCurly.Or(CipGrammar.QuotedMessage).Or(Text).Once()
-            select key + _ + value; // we want the whole thing .. key=val
+            select key + eq + value; // we want the whole thing .. key=val
 
         public static readonly Parser<ContentElement> Content =
             from leadingWs in Parse.WhiteSpace.Many()

@@ -35,39 +35,6 @@ namespace OpenTibia.Utilities
     using System.Collections.Generic;
 
     /// <summary>
-    /// AStar algorithm states while searching for the goal.
-    /// </summary>
-    public enum State
-    {
-        /// <summary>
-        /// The AStar algorithm is still searching for the goal.
-        /// </summary>
-        Searching,
-
-        /// <summary>
-        /// The AStar algorithm has found the goal.
-        /// </summary>
-        GoalFound,
-
-        /// <summary>
-        /// The AStar algorithm has failed to find a solution.
-        /// </summary>
-        Failed
-    }
-
-    /// <summary>
-    /// System.Collections.Generic.SortedList by default does not allow duplicate items.
-    /// Since items are keyed by TotalCost there can be duplicate entries per key.
-    /// </summary>
-    internal class DuplicateComparer : IComparer<int>
-    {
-        public int Compare(int x, int y)
-        {
-            return (x <= y) ? -1 : 1;
-        }
-    }
-
-    /// <summary>
     /// Interface to setup and run the AStar algorithm.
     /// </summary>
     public class AStar
@@ -148,13 +115,13 @@ namespace OpenTibia.Utilities
         /// Steps the AStar algorithm forward until it either fails or finds the goal node.
         /// </summary>
         /// <returns>Returns the state the algorithm finished in, Failed or GoalFound.</returns>
-        public State Run()
+        public SearchState Run()
         {
             // Continue searching until either failure or the goal node has been found.
             while (true)
             {
                 var s = this.Step();
-                if (s != State.Searching)
+                if (s != SearchState.Searching)
                 {
                     return s;
                 }
@@ -165,11 +132,11 @@ namespace OpenTibia.Utilities
         /// Moves the AStar algorithm forward one step.
         /// </summary>
         /// <returns>Returns the state the alorithm is in after the step, either Failed, GoalFound or still Searching.</returns>
-        public State Step()
+        public SearchState Step()
         {
             if (this.MaxSteps > 0 && this.Steps == this.MaxSteps)
             {
-                return State.Failed;
+                return SearchState.Failed;
             }
 
             this.Steps++;
@@ -179,7 +146,7 @@ namespace OpenTibia.Utilities
                 // There are no more nodes to search, return failure.
                 if (this.openList.IsEmpty())
                 {
-                    return State.Failed;
+                    return SearchState.Failed;
                 }
 
                 // Check the next best node in the graph by TotalCost.
@@ -204,7 +171,7 @@ namespace OpenTibia.Utilities
             // Found the goal, stop searching.
             if (this.current.IsGoal(this.goal))
             {
-                return State.GoalFound;
+                return SearchState.GoalFound;
             }
 
             // Node was not the goal so add all children nodes to the open list.
@@ -240,7 +207,7 @@ namespace OpenTibia.Utilities
             }
 
             // This step did not find the goal so return status of still searching.
-            return State.Searching;
+            return SearchState.Searching;
         }
 
         /// <summary>

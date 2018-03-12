@@ -132,6 +132,7 @@ namespace OpenTibia.Communications
             {
                 // TODO: I must not swallow exceptions.
                 // TODO: is closing the connection really necesary?
+                Console.WriteLine(e.ToString());
                 this.Close();
             }
 

@@ -10,6 +10,7 @@ namespace OpenTibia.Server.Algorithms
     using System.Collections.Generic;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
+    using OpenTibia.Server.Utils;
     using OpenTibia.Utilities;
 
     internal class TileNode : INode
@@ -44,7 +45,8 @@ namespace OpenTibia.Server.Algorithms
                 {
                     for (var dy = -1; dy <= 1; dy++)
                     {
-                        if (dx == 0 && dy == 0) // skip the current tile.
+                        // skip the current tile.
+                        if (dx == 0 && dy == 0)
                         {
                             continue;
                         }
@@ -87,15 +89,8 @@ namespace OpenTibia.Server.Algorithms
 
         public TileNode(string searchId, ITile tile)
         {
-            if (string.IsNullOrWhiteSpace(searchId))
-            {
-                throw new ArgumentNullException(nameof(searchId));
-            }
-
-            if (tile == null)
-            {
-                throw new ArgumentNullException(nameof(tile));
-            }
+            searchId.ThrowIfNullOrWhiteSpace(nameof(searchId));
+            tile.ThrowIfNull(nameof(tile));
 
             this.Tile = tile;
             this.isInClosedList = false;

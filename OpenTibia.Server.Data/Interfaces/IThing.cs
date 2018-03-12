@@ -8,15 +8,11 @@ namespace OpenTibia.Server.Data.Interfaces
 {
     using OpenTibia.Server.Data.Models.Structs;
 
-    public delegate void OnThingStateChange();
+    public delegate void OnThingStateChanged(IThing thingThatChanged, ThingStateChangedEventArgs eventArgs);
 
     public interface IThing
     {
-        event OnThingStateChange OnLocationChanged;
-
-        event OnThingStateChange OnThingAdded;
-
-        event OnThingStateChange OnThingRemoved;
+        event OnThingStateChanged OnThingChanged;
 
         ushort ThingId { get; }
 

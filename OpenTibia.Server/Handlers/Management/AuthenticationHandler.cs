@@ -6,26 +6,22 @@
 
 namespace OpenTibia.Server.Handlers.Management
 {
-    using System;
-    using System.Collections.Generic;
     using OpenTibia.Communications;
-    using OpenTibia.Communications.Interfaces;
     using OpenTibia.Communications.Packets.Incoming;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Configuration;
     using OpenTibia.Server.Data;
-    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Utils;
 
-    internal class AuthenticationHandler : IIncomingPacketHandler
+    /// <summary>
+    /// Class that represents an authentication request handler for the management service
+    /// </summary>
+    internal class AuthenticationHandler : IncomingPacketHandler
     {
-        public IList<IPacketOutgoing> ResponsePackets { get; private set; }
-
-        public void HandleMessageContents(NetworkMessage message, Connection connection)
+        /// <inheritdoc/>
+        public override void HandleMessageContents(NetworkMessage message, Connection connection)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
+            connection.ThrowIfNull(nameof(connection));
 
             var authPacket = new AuthenticationPacket(message);
 
