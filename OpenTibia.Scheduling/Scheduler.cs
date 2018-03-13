@@ -7,9 +7,10 @@
 namespace OpenTibia.Scheduling
 {
     using System;
+    using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using OpenTibia.Server.Interfaces;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Utils;
     using Priority_Queue;
 
@@ -44,6 +45,16 @@ namespace OpenTibia.Scheduling
         private FastPriorityQueue<BaseEvent> priorityQueue;
 
         /// <summary>
+        /// Stores the ids of cancelled events.
+        /// </summary>
+        private ISet<string> cancelledEvents;
+
+        /// <summary>
+        /// A dictionary to keep track of who requested which events.
+        /// </summary>
+        private IDictionary<uint, ISet<string>> eventsPerRequestor;
+
+        /// <summary>
         /// A cancellation token to use on the queue processing thread.
         /// </summary>
         private CancellationToken cancellationToken;
@@ -57,6 +68,11 @@ namespace OpenTibia.Scheduling
         /// A lock object to monitor when new events are added to the queue.
         /// </summary>
         private object eventsAvailableLock;
+
+        /// <summary>
+        /// A lock object to semaphore the events per requestor dictionary.
+        /// </summary>
+        private object eventsPerRequestorLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Scheduler"/> class.
@@ -73,17 +89,62 @@ namespace OpenTibia.Scheduling
                 throw new ArgumentException($"{nameof(referenceTime)} must be within the past hour's time.");
             }
 
+            this.eventsPerRequestorLock = new object();
             this.eventsAvailableLock = new object();
             this.queueLock = new object();
             this.startTime = referenceTime;
             this.priorityQueue = new FastPriorityQueue<BaseEvent>(Scheduler.MaxQueueNodes);
             this.cancellationToken = new CancellationTokenSource().Token;
+            this.cancelledEvents = new HashSet<string>();
+            this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
 
             Task.Factory.StartNew(this.QueueProcessing, this.cancellationToken);
         }
 
         /// <inheritdoc/>
         public event EventFired OnEventFired;
+
+        /// <summary>
+        /// Cancels all the events attributed to a requestor.
+        /// </summary>
+        /// <param name="requestorId">The id of the requestor.</param>
+        public void CancelAllFor(uint requestorId)
+        {
+            requestorId.ThrowIfDefaultValue();
+
+            lock (this.eventsPerRequestorLock)
+            {
+                if (!this.eventsPerRequestor.ContainsKey(requestorId) || this.eventsPerRequestor[requestorId].Count == 0)
+                {
+                    return;
+                }
+
+                foreach (var eventId in this.eventsPerRequestor[requestorId])
+                {
+                    this.CancelEvent(eventId);
+                }
+
+                this.eventsPerRequestor.Remove(requestorId);
+            }
+        }
+
+        /// <summary>
+        /// Cancels an event.
+        /// </summary>
+        /// <param name="eventId">The id of the event to cancel.</param>
+        public void CancelEvent(string eventId)
+        {
+            eventId.ThrowIfNullOrWhiteSpace();
+
+            try
+            {
+                this.cancelledEvents.Add(eventId);
+            }
+            catch
+            {
+                // just ignore any collisions.
+            }
+        }
 
         /// <inheritdoc/>
         public void ImmediateEvent(IEvent eventToSchedule)
@@ -101,7 +162,33 @@ namespace OpenTibia.Scheduling
             {
                 lock (this.queueLock)
                 {
+                    if (this.priorityQueue.Contains(castedEvent))
+                    {
+                        throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
+                    }
+
                     this.priorityQueue.Enqueue(castedEvent, 0);
+                }
+
+                // check and add event attribution to the requestor
+                if (castedEvent.RequestorId > 0)
+                {
+                    lock (this.eventsPerRequestorLock)
+                    {
+                        if (!this.eventsPerRequestor.ContainsKey(castedEvent.RequestorId))
+                        {
+                            this.eventsPerRequestor.Add(castedEvent.RequestorId, new HashSet<string>());
+                        }
+
+                        try
+                        {
+                            this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
+                        }
+                        catch
+                        {
+                            // ignore clashes, it was our goal to add it anyways.
+                        }
+                    }
                 }
 
                 Monitor.Pulse(this.eventsAvailableLock);
@@ -131,7 +218,33 @@ namespace OpenTibia.Scheduling
             {
                 lock (this.queueLock)
                 {
+                    if (this.priorityQueue.Contains(castedEvent))
+                    {
+                        throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
+                    }
+
                     this.priorityQueue.Enqueue(castedEvent, this.GetMillisecondsAfterReferenceTime(runAt));
+                }
+
+                // check and add event attribution to the requestor
+                if (castedEvent.RequestorId > 0)
+                {
+                    lock (this.eventsPerRequestorLock)
+                    {
+                        if (!this.eventsPerRequestor.ContainsKey(castedEvent.RequestorId))
+                        {
+                            this.eventsPerRequestor.Add(castedEvent.RequestorId, new HashSet<string>());
+                        }
+
+                        try
+                        {
+                            this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
+                        }
+                        catch
+                        {
+                            // ignore clashes, it was our goal to add it anyways.
+                        }
+                    }
                 }
 
                 Monitor.Pulse(this.eventsAvailableLock);
@@ -183,6 +296,15 @@ namespace OpenTibia.Scheduling
                             // the first item always points to the next-in-time event available.
                             var nextEvent = this.priorityQueue.First;
 
+                            // check if this event has been cancelled.
+                            if (this.cancelledEvents.Contains(nextEvent.EventId))
+                            {
+                                // dequeue, clean and move next.
+                                this.priorityQueue.Dequeue();
+                                this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
+                                continue;
+                            }
+
                             // check if the event is due
                             if (nextEvent.Priority <= currentTimeInMilliseconds)
                             {
@@ -199,6 +321,46 @@ namespace OpenTibia.Scheduling
                         }
                     }
                 }
+            }
+        }
+
+        /// <summary>
+        /// Cleans all events attributed to the specified event or requestor id.
+        /// </summary>
+        /// <param name="eventId">The id of the event to cancel.</param>
+        /// <param name="eventRequestor">The id of the requestor.</param>
+        private void CleanAllAttributedTo(string eventId, uint eventRequestor = 0)
+        {
+            try
+            {
+                this.cancelledEvents.Remove(eventId);
+            }
+            catch
+            {
+                // ignore, as if this fails then the value is not there.
+            }
+
+            if (eventRequestor == 0)
+            {
+                // no requestor, so it shouldn't be on the other dictionary.
+                return;
+            }
+
+            try
+            {
+                lock (this.eventsPerRequestorLock)
+                {
+                    this.eventsPerRequestor[eventRequestor].Remove(eventId);
+
+                    if (this.eventsPerRequestor[eventRequestor].Count == 0)
+                    {
+                        this.eventsPerRequestor.Remove(eventRequestor);
+                    }
+                }
+            }
+            catch
+            {
+                // ignore, as if this fails then the value is not there.
             }
         }
     }

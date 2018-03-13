@@ -4,10 +4,9 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Scheduling
+namespace OpenTibia.Scheduling.Contracts
 {
     using System;
-    using OpenTibia.Server.Interfaces;
 
     /// <summary>
     /// Represents an event being fired.
@@ -38,5 +37,17 @@ namespace OpenTibia.Scheduling
         /// <param name="eventToSchedule">The event to schedule.</param>
         /// <param name="runAt">The time at which the event should be fired.</param>
         void ScheduleEvent(IEvent eventToSchedule, DateTime runAt);
+
+        /// <summary>
+        /// Cancels a specific event by it's id.
+        /// </summary>
+        /// <param name="eventId">The event to cancel.</param>
+        void CancelEvent(string eventId);
+
+        /// <summary>
+        /// Cancels all events attributed to the specified requestor.
+        /// </summary>
+        /// <param name="requestorId">The id of the requestor.</param>
+        void CancelAllFor(uint requestorId);
     }
 }

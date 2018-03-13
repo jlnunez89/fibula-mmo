@@ -10,7 +10,7 @@ namespace OpenTibia.Scheduling.Tests
     using System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
-    using OpenTibia.Server.Interfaces;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.TestUtils;
 
     /// <summary>
@@ -23,7 +23,7 @@ namespace OpenTibia.Scheduling.Tests
         /// Checks <see cref="Scheduler"/> initialization.
         /// </summary>
         [TestMethod]
-        public void TestSchedulerInit()
+        public void Scheduler_Initialization()
         {
             DateTime anyNonDefaultDateTime = DateTime.Now;
             DateTime defaultDateTime = default(DateTime);
@@ -66,6 +66,7 @@ namespace OpenTibia.Scheduling.Tests
             DateTime defaultDateTime = default(DateTime);
             DateTime invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
             DateTime validRunAtDateTime = anyNonDefaultDateTime + TimeSpan.FromMilliseconds(1);
+            DateTime twoSecondsFromNowDateTime = anyNonDefaultDateTime + TimeSpan.FromSeconds(2);
 
             Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
 
@@ -80,6 +81,129 @@ namespace OpenTibia.Scheduling.Tests
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, defaultDateTime), $"Parameter runAt has the default value.");
 
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, invalidRunAtDateTime), $"Value cannot be earlier than the reference time of the scheduler: {anyNonDefaultDateTime}.{Environment.NewLine}Parameter name: runAt");
+
+            // schedule twice
+            scheduler.ScheduleEvent(bEventMock.Object, twoSecondsFromNowDateTime);
+
+            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ImmediateEvent(bEventMock.Object), $"The event is already scheduled.{Environment.NewLine}Parameter name: eventToSchedule");
+        }
+
+        /// <summary>
+        /// Checks that <see cref="Scheduler.CancelEvent(string)"/> does what it should.
+        /// </summary>
+        [TestMethod]
+        public void Cancelling_SingleEvent()
+        {
+            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
+            TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
+            TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
+            DateTime anyNonDefaultDateTime = DateTime.Now;
+            DateTime twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
+
+            const int ExpectedCounterValueBeforeRun = 0;
+            const int ExpectedCounterValueAfterRun = 0;
+
+            var scheduledEventFiredCounter = 0;
+
+            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>();
+
+            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+
+            scheduler.OnEventFired += (sender, eventArgs) =>
+            {
+                // test that sender is the same scheduler instance, while we're here.
+                Assert.AreEqual(scheduler, sender);
+
+                // check that event has a reference.
+                Assert.IsNotNull(eventArgs?.Event);
+
+                if (eventArgs.Event == bEventMockForScheduled.Object)
+                {
+                    scheduledEventFiredCounter++;
+                }
+            };
+
+            // fire a scheduled event that shall be fired only after some seconds.
+            scheduler.ScheduleEvent(bEventMockForScheduled.Object, twoSecondsFromNowDate);
+
+            // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
+            Task.Delay(overheadDelay)
+                .ContinueWith(prev =>
+                {
+                    Assert.AreEqual(ExpectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
+                })
+                .Wait();
+
+            // cancel this event.
+            scheduler.CancelEvent(bEventMockForScheduled.Object.EventId);
+
+            // delay for three seconds and check that the counter has NOT gone up for scheduled.
+            Task.Delay(threeSecondsTimeSpan)
+                .ContinueWith(prev =>
+                {
+                    Assert.AreEqual(ExpectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
+                })
+                .Wait();
+        }
+
+        /// <summary>
+        /// Checks that <see cref="Scheduler.CancelAllFor(uint)"/> does what it should.
+        /// </summary>
+        [TestMethod]
+        public void Cancelling_AllEventsFor()
+        {
+            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
+            TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
+            TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
+            DateTime anyNonDefaultDateTime = DateTime.Now;
+            DateTime twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
+
+            const uint anyRequestorId = 100u;
+            const int ExpectedCounterValueBeforeRun = 0;
+            const int ExpectedCounterValueAfterRun = 0;
+
+            var scheduledEventFiredCounter = 0;
+
+            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(anyRequestorId);
+
+            Scheduler scheduler = new Scheduler(anyNonDefaultDateTime);
+
+            scheduler.OnEventFired += (sender, eventArgs) =>
+            {
+                // test that sender is the same scheduler instance, while we're here.
+                Assert.AreEqual(scheduler, sender);
+
+                // check that event has a reference.
+                Assert.IsNotNull(eventArgs?.Event);
+
+                scheduledEventFiredCounter++;
+            };
+
+            // fire a scheduled event that shall be fired only after some seconds.
+            scheduler.ScheduleEvent(bEventMockForScheduled1.Object, twoSecondsFromNowDate);
+            scheduler.ScheduleEvent(bEventMockForScheduled2.Object, twoSecondsFromNowDate);
+            scheduler.ScheduleEvent(bEventMockForScheduled3.Object, twoSecondsFromNowDate);
+
+            // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
+            Task.Delay(overheadDelay)
+                .ContinueWith(prev =>
+                {
+                    Assert.AreEqual(ExpectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueBeforeRun}, got {scheduledEventFiredCounter}.");
+                })
+                .Wait();
+
+            // cancel this event.
+            scheduler.CancelAllFor(anyRequestorId);
+
+            // delay for three seconds and check that the counter has NOT gone up for scheduled.
+            Task.Delay(threeSecondsTimeSpan)
+                .ContinueWith(prev =>
+                {
+                    Assert.AreEqual(ExpectedCounterValueAfterRun, scheduledEventFiredCounter, $"Scheduled events counter does not match: Expected {ExpectedCounterValueAfterRun}, got {scheduledEventFiredCounter}.");
+                })
+                .Wait();
         }
 
         /// <summary>

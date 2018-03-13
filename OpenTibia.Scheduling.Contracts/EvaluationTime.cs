@@ -4,7 +4,7 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Server.Interfaces
+namespace OpenTibia.Scheduling.Contracts
 {
     /// <summary>
     /// Represents options for when to evaluate the conditionals defined on an <see cref="IEvent"/>.

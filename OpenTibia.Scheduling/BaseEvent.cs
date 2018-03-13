@@ -6,8 +6,9 @@
 
 namespace OpenTibia.Scheduling
 {
+    using System;
     using System.Collections.Generic;
-    using OpenTibia.Server.Interfaces;
+    using OpenTibia.Scheduling.Contracts;
     using Priority_Queue;
 
     /// <summary>
@@ -15,6 +16,25 @@ namespace OpenTibia.Scheduling
     /// </summary>
     public abstract class BaseEvent : FastPriorityQueueNode, IEvent
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseEvent"/> class.
+        /// </summary>
+        public BaseEvent()
+        {
+            this.EventId = Guid.NewGuid().ToString("N");
+            this.RequestorId = 0;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="BaseEvent"/> class.
+        /// </summary>
+        /// <param name="requestorId">Optional. The id of the creature or entity requesting the event.</param>
+        public BaseEvent(uint requestorId = 0)
+            : this()
+        {
+            this.RequestorId = requestorId;
+        }
+
         /// <inheritdoc/>
         public abstract EvaluationTime EvaluateAt { get; }
 
@@ -25,12 +45,19 @@ namespace OpenTibia.Scheduling
         public abstract IEnumerable<IEventFunction> Conditions { get; }
 
         /// <inheritdoc/>
-        public abstract IEnumerable<IEventFunction> Actions { get; }
+        public abstract IEnumerable<IEventFunction> ActionsOnPass { get; }
+
+        /// <inheritdoc/>
+        public abstract IEnumerable<IEventFunction> ActionsOnFail { get; }
 
         /// <inheritdoc/>
         public abstract IDictionary<string, IEventArgument> Arguments { get; }
 
+        public string EventId { get; }
+
+        public uint RequestorId { get; }
+
         /// <inheritdoc/>
-        public abstract void Execute();
+        public abstract void Process();
     }
 }

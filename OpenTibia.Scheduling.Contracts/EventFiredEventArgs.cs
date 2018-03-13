@@ -4,10 +4,9 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Scheduling
+namespace OpenTibia.Scheduling.Contracts
 {
     using System;
-    using OpenTibia.Server.Interfaces;
     using OpenTibia.Server.Utils;
 
     /// <summary>

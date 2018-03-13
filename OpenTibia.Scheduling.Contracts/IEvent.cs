@@ -4,7 +4,7 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Server.Interfaces
+namespace OpenTibia.Scheduling.Contracts
 {
     using System.Collections.Generic;
 
@@ -19,6 +19,16 @@ namespace OpenTibia.Server.Interfaces
         EvaluationTime EvaluateAt { get; }
 
         /// <summary>
+        /// Gets a unique identifier for this event.
+        /// </summary>
+        string EventId { get; }
+
+        /// <summary>
+        /// Gets the id of the requestor of this event, if available.
+        /// </summary>
+        uint RequestorId { get; }
+
+        /// <summary>
         /// Gets a value indicating whether the event can be executed.
         /// </summary>
         bool CanBeExecuted { get; }
@@ -29,9 +39,14 @@ namespace OpenTibia.Server.Interfaces
         IEnumerable<IEventFunction> Conditions { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventFunction"/> that will be executed as part of this event.
+        /// Gets the collection of <see cref="IEventFunction"/> that will be executed if the conditions check succeeds.
         /// </summary>
-        IEnumerable<IEventFunction> Actions { get; }
+        IEnumerable<IEventFunction> ActionsOnPass { get; }
+
+        /// <summary>
+        /// Gets the collection of <see cref="IEventFunction"/> that will be executed if the conditions check fails.
+        /// </summary>
+        IEnumerable<IEventFunction> ActionsOnFail { get; }
 
         /// <summary>
         /// Gets a dictionary of <see cref="IEventArgument"/> that is available to all conditions and actions.
@@ -39,8 +54,8 @@ namespace OpenTibia.Server.Interfaces
         IDictionary<string, IEventArgument> Arguments { get; }
 
         /// <summary>
-        /// Executes the event.
+        /// Executes the event. Performs the <see cref="ActionsOnPass"/> on the <see cref="ActionsOnFail"/> depending if the conditions were met.
         /// </summary>
-        void Execute();
+        void Process();
     }
 }
