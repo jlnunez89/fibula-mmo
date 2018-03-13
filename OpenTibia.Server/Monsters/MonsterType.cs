@@ -14,7 +14,7 @@ namespace OpenTibia.Server.Monsters
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Utilities;
+    using OpenTibia.Server.Parsing;
 
     public enum MonsterSkill : byte
     {
@@ -55,7 +55,7 @@ namespace OpenTibia.Server.Monsters
 
         public ushort ConditionInfect { get; } // Holds ConditionType that this monster infects upon dealt damage.
 
-        public HashSet<SpellsT> KnownSpells { get; }
+        public HashSet<KnownSpell> KnownSpells { get; }
 
         public HashSet<CreatureFlag> Flags { get; }
 
@@ -104,7 +104,7 @@ namespace OpenTibia.Server.Monsters
             this.ConditionInfect = 0;
 
             this.Flags = new HashSet<CreatureFlag>();
-            this.KnownSpells = new HashSet<SpellsT>();
+            this.KnownSpells = new HashSet<KnownSpell>();
             this.Phrases = new List<string>();
             this.Skills = new Dictionary<SkillType, ISkill>();
             this.InventoryComposition = new List<Tuple<ushort, byte, ushort>>();
@@ -348,11 +348,11 @@ namespace OpenTibia.Server.Monsters
 
             var enclosingChars = new Dictionary<char, char>
             {
-                { CipReader.CloseCurly, CipReader.OpenCurly },
-                { CipReader.CloseParenthesis, CipReader.OpenParenthesis }
+                { CipParser.CloseCurly, CipParser.OpenCurly },
+                { CipParser.CloseParenthesis, CipParser.OpenParenthesis }
             };
 
-            var enclosures = CipReader.GetEnclosedButPreserveQuoted(v, enclosingChars);
+            var enclosures = CipParser.GetEnclosedButPreserveQuoted(v, enclosingChars);
 
             foreach (var enclosure in enclosures)
             {
@@ -439,11 +439,11 @@ namespace OpenTibia.Server.Monsters
 
             var enclosingChars = new Dictionary<char, char>
             {
-                { CipReader.CloseCurly, CipReader.OpenCurly },
-                { CipReader.CloseParenthesis, CipReader.OpenParenthesis }
+                { CipParser.CloseCurly, CipParser.OpenCurly },
+                { CipParser.CloseParenthesis, CipParser.OpenParenthesis }
             };
 
-            var enclosures = CipReader.GetEnclosedButPreserveQuoted(v, enclosingChars);
+            var enclosures = CipParser.GetEnclosedButPreserveQuoted(v, enclosingChars);
 
             foreach (var enclosure in enclosures)
             {
@@ -470,7 +470,7 @@ namespace OpenTibia.Server.Monsters
                 throw new InvalidOperationException("This MonsterType is locked and cannot be altered.");
             }
 
-            this.Phrases.AddRange(CipReader.SplitByTokenPreserveQuoted(v, ','));
+            this.Phrases.AddRange(CipParser.SplitByTokenPreserveQuoted(v, ','));
         }
     }
 }

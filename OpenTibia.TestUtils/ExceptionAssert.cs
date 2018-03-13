@@ -1,9 +1,11 @@
-﻿
-namespace OpenTibia.TestUtils
+﻿namespace OpenTibia.TestUtils
 {
     using System;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+    /// <summary>
+    /// Class that contains extensions for asserting exceptions.
+    /// </summary>
     public static class ExceptionAssert
     {
         /// <summary>

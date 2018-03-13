@@ -51,7 +51,7 @@ namespace OpenTibia.Server.Handlers
                     Location retryLoc;
                     var directions = Game.Instance.Pathfind(player.Location, useOnPacket.FromLocation, out retryLoc).ToArray();
 
-                    player.SetPendingAction(new UseItemOnAction(player, useOnPacket, retryLoc));
+                    player.SetPendingAction(new UseItemOnPlayerAction(player, useOnPacket, retryLoc));
 
                     if (directions.Length > 0)
                     {
@@ -70,7 +70,7 @@ namespace OpenTibia.Server.Handlers
                 }
             }
 
-            new UseItemOnAction(player, useOnPacket, useOnPacket.FromLocation).Perform();
+            new UseItemOnPlayerAction(player, useOnPacket, useOnPacket.FromLocation).Perform();
         }
     }
 }

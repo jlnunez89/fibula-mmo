@@ -4,13 +4,10 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Utilities.Grammar
+namespace OpenTibia.Server.Parsing.Grammar
 {
-    using System;
-    using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using OpenTibia.Data.Contracts;
     using Sprache;
 
     public class TileGrammar

@@ -175,7 +175,7 @@ namespace OpenTibia.Utilities
         public static string ToHexString(this int value)
         {
             var temp = BitConverter.GetBytes(value);
-            return temp.ToHexString(0, temp.Length);
+            return temp.ToHexString();
         }
 
         /// <summary>

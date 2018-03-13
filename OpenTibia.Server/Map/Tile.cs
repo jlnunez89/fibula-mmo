@@ -13,7 +13,7 @@ namespace OpenTibia.Server.Map
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Items;
-    using OpenTibia.Utilities;
+    using OpenTibia.Server.Parsing;
 
     public class Tile : ITile
     {

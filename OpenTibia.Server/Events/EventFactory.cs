@@ -9,7 +9,7 @@ namespace OpenTibia.Server.Events
     using System;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
-    using static OpenTibia.Utilities.Grammar.EventGrammar;
+    using static OpenTibia.Server.Parsing.Grammar.EventGrammar;
 
     public static class EventFactory
     {

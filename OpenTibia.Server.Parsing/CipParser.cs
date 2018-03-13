@@ -4,14 +4,14 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Utilities
+namespace OpenTibia.Server.Parsing
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
 
-    public class CipReader
+    public static class CipParser
     {
         public const char Quote = '"';
         public const char Space = ' ';

@@ -4,10 +4,6 @@
     <TargetFramework>netcoreapp2.0</TargetFramework>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Scheduling.Contracts.xml</DocumentationFile>
-  </PropertyGroup>
-
   <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
@@ -17,7 +13,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTibia.Server.Utils\OpenTibia.Server.Utils.csproj" />
+    <PackageReference Include="Sprache" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Data.Contracts\OpenTibia.Data.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

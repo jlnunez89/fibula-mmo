@@ -21,11 +21,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server", "OpenTib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Standalone", "OpenTibia.Server.Standalone\OpenTibia.Server.Standalone.csproj", "{09C8B3A3-0032-484A-82A7-22ED12E5F230}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTibia.Scheduling", "OpenTibia.Scheduling\OpenTibia.Scheduling.csproj", "{96AD17E9-2749-4B25-9496-1B03CDAADD4B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling", "OpenTibia.Scheduling\OpenTibia.Scheduling.csproj", "{96AD17E9-2749-4B25-9496-1B03CDAADD4B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTibia.Scheduling.Tests", "OpenTibia.Scheduling.Tests\OpenTibia.Scheduling.Tests.csproj", "{F246DBC2-0838-4654-972C-8AA338188550}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Tests", "OpenTibia.Scheduling.Tests\OpenTibia.Scheduling.Tests.csproj", "{F246DBC2-0838-4654-972C-8AA338188550}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.TestUtils", "OpenTibia.TestUtils\OpenTibia.TestUtils.csproj", "{B062CD6A-6C71-41E5-A9BE-CC34DAB889F3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Contracts", "OpenTibia.Scheduling.Contracts\OpenTibia.Scheduling.Contracts.csproj", "{D9364390-7106-477F-A775-146B9013D613}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTibia.Server.Parsing", "OpenTibia.Server.Parsing\OpenTibia.Server.Parsing.csproj", "{96F706FE-5077-47FA-89EE-423B8E99F173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +85,14 @@ Global
 		{B062CD6A-6C71-41E5-A9BE-CC34DAB889F3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B062CD6A-6C71-41E5-A9BE-CC34DAB889F3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B062CD6A-6C71-41E5-A9BE-CC34DAB889F3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9364390-7106-477F-A775-146B9013D613}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9364390-7106-477F-A775-146B9013D613}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9364390-7106-477F-A775-146B9013D613}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9364390-7106-477F-A775-146B9013D613}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F706FE-5077-47FA-89EE-423B8E99F173}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F706FE-5077-47FA-89EE-423B8E99F173}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

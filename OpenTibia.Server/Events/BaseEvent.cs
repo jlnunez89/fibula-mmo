@@ -11,8 +11,9 @@ namespace OpenTibia.Server.Events
     using System.Linq;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Parsing.Grammar;
     using OpenTibia.Server.Scripting;
-    using OpenTibia.Utilities.Grammar;
+
     using Sprache;
 
     internal abstract class BaseEvent : IEvent

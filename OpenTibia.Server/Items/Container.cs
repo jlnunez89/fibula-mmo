@@ -12,7 +12,7 @@ namespace OpenTibia.Server.Items
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Utilities;
+    using OpenTibia.Server.Parsing;
 
     public class Container : Item, IContainer
     {

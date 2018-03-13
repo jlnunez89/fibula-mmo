@@ -12,7 +12,7 @@ namespace OpenTibia.Server.Items
     using System.Linq;
     using System.Reflection;
     using OpenTibia.Data.Contracts;
-    using OpenTibia.Utilities;
+    using OpenTibia.Server.Parsing;
 
     public class ObjectsFileItemLoader : IItemLoader
     {
@@ -99,7 +99,7 @@ namespace OpenTibia.Server.Items
                                 current.SetDescription(propData);
                                 break;
                             case "flags":
-                                foreach (var element in CipReader.Parse(propData))
+                                foreach (var element in CipParser.Parse(propData))
                                 {
                                     ItemFlag flagMatch;
 

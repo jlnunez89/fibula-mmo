@@ -439,6 +439,7 @@
     <ProjectReference Include="..\OpenTibia.Data.Contracts\OpenTibia.Data.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Data\OpenTibia.Data.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Data\OpenTibia.Server.Data.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Parsing\OpenTibia.Server.Parsing.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Utils\OpenTibia.Server.Utils.csproj" />
   </ItemGroup>
 

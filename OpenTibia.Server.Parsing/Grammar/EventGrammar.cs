@@ -4,7 +4,7 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Utilities.Grammar
+namespace OpenTibia.Server.Parsing.Grammar
 {
     using System;
     using System.Linq;

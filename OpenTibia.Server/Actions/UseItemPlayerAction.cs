@@ -16,9 +16,9 @@ namespace OpenTibia.Server.Actions
     using OpenTibia.Server.Events;
     using OpenTibia.Server.Scripting;
 
-    internal class UseItemAction : PlayerAction
+    internal class UseItemPlayerAction : BasePlayerAction
     {
-        public UseItemAction(IPlayer player, ItemUsePacket itemUsePacket, Location retryLocation)
+        public UseItemPlayerAction(IPlayer player, ItemUsePacket itemUsePacket, Location retryLocation)
             : base(player, itemUsePacket, retryLocation)
         {
         }

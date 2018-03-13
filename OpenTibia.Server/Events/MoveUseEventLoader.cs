@@ -15,7 +15,7 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Items;
     using Sprache;
-    using static OpenTibia.Utilities.Grammar.EventGrammar;
+    using static OpenTibia.Server.Parsing.Grammar.EventGrammar;
 
     public class MoveUseEventLoader : IEventLoader
     {

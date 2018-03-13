@@ -14,7 +14,7 @@ namespace OpenTibia.Server.Actions
     using OpenTibia.Server.Notifications;
     using OpenTibia.Server.Utils;
 
-    internal abstract class PlayerAction : IAction
+    internal abstract class BasePlayerAction : IAction
     {
         public IPlayer Player { get; }
 
@@ -24,7 +24,7 @@ namespace OpenTibia.Server.Actions
 
         public IList<IPacketOutgoing> ResponsePackets { get; }
 
-        protected PlayerAction(IPlayer player, IPacketIncoming packet, Location retryLocation)
+        protected BasePlayerAction(IPlayer player, IPacketIncoming packet, Location retryLocation)
         {
             player.ThrowIfNull(nameof(player));
             packet.ThrowIfNull(nameof(packet));

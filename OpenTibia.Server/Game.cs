@@ -638,25 +638,25 @@ namespace OpenTibia.Server
                 Thread.Sleep(dayTime);
 
                 this.LightLevel = 130;
-                this.LightColor = (byte)OpenTibia.Data.Contracts.LightColors.Orange;
+                this.LightColor = (byte)LightColors.Orange;
                 this.NotifyAllPlayers(conn => new WorldLightChangedNotification(conn, this.LightLevel, this.LightColor));
 
                 Thread.Sleep(duskTime);
 
                 this.LightLevel = 30;
-                this.LightColor = (byte)OpenTibia.Data.Contracts.LightColors.White;
+                this.LightColor = (byte)LightColors.White;
                 this.NotifyAllPlayers(conn => new WorldLightChangedNotification(conn, this.LightLevel, this.LightColor));
 
                 Thread.Sleep(nightTime);
 
                 this.LightLevel = 130;
-                this.LightColor = (byte)OpenTibia.Data.Contracts.LightColors.Orange;
+                this.LightColor = (byte)LightColors.Orange;
                 this.NotifyAllPlayers(conn => new WorldLightChangedNotification(conn, this.LightLevel, this.LightColor));
 
                 Thread.Sleep(dawnTime);
 
                 this.LightLevel = 255;
-                this.LightColor = (byte)OpenTibia.Data.Contracts.LightColors.White;
+                this.LightColor = (byte)LightColors.White;
                 this.NotifyAllPlayers(conn => new WorldLightChangedNotification(conn, this.LightLevel, this.LightColor));
             }
         }

@@ -385,7 +385,7 @@ namespace OpenTibia.Data.Contracts
         None = 0xAAAA
     }
 
-    public enum SpellsT : byte
+    public enum KnownSpell : byte
     {
         AnimateDead,
         Antidote,

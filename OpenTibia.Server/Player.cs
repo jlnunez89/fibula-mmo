@@ -122,7 +122,7 @@ namespace OpenTibia.Server
             };
 
             this.LightBrightness = (byte)LightLevels.Torch;
-            this.LightColor = (byte)OpenTibia.Data.Contracts.LightColors.Orange;
+            this.LightColor = (byte)LightColors.Orange;
             this.CarryStrength = 150;
 
             this.SoulPoints = 0;

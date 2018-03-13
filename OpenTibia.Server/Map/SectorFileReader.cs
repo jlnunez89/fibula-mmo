@@ -11,7 +11,7 @@ namespace OpenTibia.Server.Map
     using System.Linq;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Utilities;
+    using OpenTibia.Server.Parsing;
 
     public class SectorFileReader
     {
@@ -56,7 +56,7 @@ namespace OpenTibia.Server.Map
                 });
 
                 // load and add tile flags and contents.
-                foreach (var element in CipReader.Parse(tileData))
+                foreach (var element in CipParser.Parse(tileData))
                 {
                     foreach (var attribute in element.Attributes)
                     {

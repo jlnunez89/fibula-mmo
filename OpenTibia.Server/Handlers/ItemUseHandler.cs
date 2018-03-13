@@ -34,8 +34,9 @@ namespace OpenTibia.Server.Handlers
             {
                 var locationDiff = itemUsePacket.FromLocation - player.Location;
 
-                if (locationDiff.Z != 0) // it's on a different floor...
+                if (locationDiff.Z != 0)
                 {
+                    // it's on a different floor...
                     this.ResponsePackets.Add(new TextMessagePacket
                     {
                         Type = MessageType.StatusSmall,
@@ -51,14 +52,15 @@ namespace OpenTibia.Server.Handlers
                     Location retryLoc;
                     var directions = Game.Instance.Pathfind(player.Location, itemUsePacket.FromLocation, out retryLoc).ToArray();
 
-                    player.SetPendingAction(new UseItemAction(player, itemUsePacket, retryLoc));
+                    player.SetPendingAction(new UseItemPlayerAction(player, itemUsePacket, retryLoc));
 
                     if (directions.Any())
                     {
                         player.AutoWalk(directions);
                     }
-                    else // we found no way...
+                    else
                     {
+                        // we found no way...
                         this.ResponsePackets.Add(new TextMessagePacket
                         {
                             Type = MessageType.StatusSmall,
@@ -70,7 +72,7 @@ namespace OpenTibia.Server.Handlers
                 }
             }
 
-            new UseItemAction(player, itemUsePacket, itemUsePacket.FromLocation).Perform();
+            new UseItemPlayerAction(player, itemUsePacket, itemUsePacket.FromLocation).Perform();
         }
     }
 }

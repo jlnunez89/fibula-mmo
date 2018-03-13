@@ -14,9 +14,9 @@ namespace OpenTibia.Server.Actions
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Movement;
 
-    internal class MoveItemAction : PlayerAction
+    internal class MoveItemPlayerAction : BasePlayerAction
     {
-        public MoveItemAction(IPlayer player, ItemMovePacket itemMovePacket, Location retryAtLocation)
+        public MoveItemPlayerAction(IPlayer player, ItemMovePacket itemMovePacket, Location retryAtLocation)
             : base(player, itemMovePacket, retryAtLocation)
         {
         }
