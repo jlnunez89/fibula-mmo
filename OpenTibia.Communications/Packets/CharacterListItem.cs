@@ -7,7 +7,7 @@
 namespace OpenTibia.Communications.Packets
 {
     using System.Net;
-    using OpenTibia.Server.Utils;
+    using OpenTibia.Common.Helpers;
 
     public class CharacterListItem : ICharacterListItem
     {

@@ -67,7 +67,7 @@ namespace OpenTibia.Server.Items
                     // TODO: proper logging.
                     if (!ServerConfiguration.SupressInvalidItemWarnings)
                     {
-                        Console.WriteLine($"Container.AddContent: Unexpected flag {element.Attributes?.First()?.Name}, igoring.");
+                        Console.WriteLine($"Container.AddContent: Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
                     }
 
                     continue;

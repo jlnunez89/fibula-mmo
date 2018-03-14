@@ -9,28 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementContainerToGround : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public IContainer FromContainer { get; }
-
-        public byte FromIndex { get; }
-
-        public Location ToLocation { get; }
-
-        public ITile ToTile { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
         public ThingMovementContainerToGround(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -57,14 +44,30 @@ namespace OpenTibia.Server.Movement
             this.ToLocation = toLocation;
             this.ToTile = Game.Instance.GetTileAt(this.ToLocation);
 
-            this.Policies.Add(new CanThrowBetweenPolicy(this.RequestorId, requestor.Location, this.ToLocation));
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.FromContainer));
-            this.Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
-            this.Policies.Add(new LocationNotObstructedPolicy(this.RequestorId, this.Thing, this.ToLocation));
-            this.Policies.Add(new LocationHasTileWithGroundPolicy(this.ToLocation));
+            this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, requestor.Location, this.ToLocation));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.FromContainer));
+            this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
+            this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public IContainer FromContainer { get; }
+
+        public byte FromIndex { get; }
+
+        public Location ToLocation { get; }
+
+        public ITile ToTile { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             IItem extraItem;
             var itemToUpdate = this.Thing as IItem;

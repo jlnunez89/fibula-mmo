@@ -7,7 +7,7 @@
 namespace OpenTibia.Scheduling.Contracts
 {
     using System;
-    using OpenTibia.Server.Utils;
+    using OpenTibia.Common.Helpers;
 
     /// <summary>
     /// Class that represents the event arguments of an EventFired event.

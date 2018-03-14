@@ -10,28 +10,15 @@ namespace OpenTibia.Server.Movement
     using System.Linq;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementGroundToSlot : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromStackPos { get; }
-
-        public ITile FromTile { get; }
-
-        public Location ToLocation { get; }
-
-        public byte ToSlot { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
         public ThingMovementGroundToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -55,14 +42,30 @@ namespace OpenTibia.Server.Movement
 
             var droppingItem = requestor?.Inventory?[this.ToSlot];
 
-            this.Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(this.RequestorId, droppingItem));
-            this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing, droppingItem));
-            this.Policies.Add(new ThingIsTakeablePolicy(this.RequestorId, this.Thing));
-            this.Policies.Add(new LocationsMatchPolicy(this.Thing?.Location ?? new Location(), this.FromLocation));
-            this.Policies.Add(new TileContainsThingPolicy(this.Thing, this.FromLocation, this.Count));
+            this.Conditions.Add(new SlotHasContainerAndContainerHasEnoughCapacityEventCondition(this.RequestorId, droppingItem));
+            this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing, droppingItem));
+            this.Conditions.Add(new ThingIsTakeableEventCondition(this.RequestorId, this.Thing));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromStackPos { get; }
+
+        public ITile FromTile { get; }
+
+        public Location ToLocation { get; }
+
+        public byte ToSlot { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             var updatedItem = this.Thing as IItem;
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);

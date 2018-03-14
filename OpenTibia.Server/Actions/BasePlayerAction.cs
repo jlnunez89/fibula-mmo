@@ -8,11 +8,11 @@ namespace OpenTibia.Server.Actions
 {
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Notifications;
-    using OpenTibia.Server.Utils;
 
     internal abstract class BasePlayerAction : IAction
     {

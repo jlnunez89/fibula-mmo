@@ -9,26 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementSlotToGround : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromSlot { get; }
-
-        public Location ToLocation { get; }
-
-        public ITile ToTile { get; }
-
-        public IItem Item { get; }
-
-        public byte Count { get; }
-
         public ThingMovementSlotToGround(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -51,15 +40,29 @@ namespace OpenTibia.Server.Movement
 
             if (requestor != null)
             {
-                this.Policies.Add(new CanThrowBetweenPolicy(this.RequestorId, requestor.Location, this.ToLocation));
+                this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, requestor.Location, this.ToLocation));
             }
 
-            this.Policies.Add(new SlotContainsItemAndCountPolicy(creatureRequestingId, this.Item, this.FromSlot, this.Count));
-            this.Policies.Add(new LocationNotObstructedPolicy(this.RequestorId, this.Item, this.ToLocation));
-            this.Policies.Add(new LocationHasTileWithGroundPolicy(this.ToLocation));
+            this.Conditions.Add(new SlotContainsItemAndCountEventCondition(creatureRequestingId, this.Item, this.FromSlot, this.Count));
+            this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Item, this.ToLocation));
+            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromSlot { get; }
+
+        public Location ToLocation { get; }
+
+        public ITile ToTile { get; }
+
+        public IItem Item { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 

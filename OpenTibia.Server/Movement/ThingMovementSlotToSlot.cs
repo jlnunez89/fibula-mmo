@@ -9,26 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementSlotToSlot : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromSlot { get; }
-
-        public Location ToLocation { get; }
-
-        public byte ToSlot { get; }
-
-        public IItem Item { get; }
-
-        public byte Count { get; }
-
         public ThingMovementSlotToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -47,10 +36,24 @@ namespace OpenTibia.Server.Movement
             this.Item = thingMoving as IItem;
             this.Count = count;
 
-            this.Policies.Add(new SlotContainsItemAndCountPolicy(creatureRequestingId, this.Item, this.FromSlot, this.Count));
+            this.Conditions.Add(new SlotContainsItemAndCountEventCondition(creatureRequestingId, this.Item, this.FromSlot, this.Count));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromSlot { get; }
+
+        public Location ToLocation { get; }
+
+        public byte ToSlot { get; }
+
+        public IItem Item { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 

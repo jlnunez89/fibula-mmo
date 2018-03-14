@@ -23,7 +23,6 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Scheduling.Contracts\OpenTibia.Scheduling.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Utils\OpenTibia.Server.Utils.csproj" />
-    <ProjectReference Include="..\OpenTibia.Server\OpenTibia.Server.csproj" />
   </ItemGroup>
 
 </Project>

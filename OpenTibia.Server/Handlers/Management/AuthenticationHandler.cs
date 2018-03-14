@@ -6,12 +6,12 @@
 
 namespace OpenTibia.Server.Handlers.Management
 {
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Communications;
     using OpenTibia.Communications.Packets.Incoming;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Configuration;
     using OpenTibia.Server.Data;
-    using OpenTibia.Server.Utils;
 
     /// <summary>
     /// Class that represents an authentication request handler for the management service

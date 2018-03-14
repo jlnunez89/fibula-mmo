@@ -6,21 +6,20 @@
 
 namespace OpenTibia.Scheduling.Contracts
 {
-    using System.Collections.Generic;
-
     /// <summary>
-    /// Interface for event functions.
+    /// Interface for event conditions.
     /// </summary>
-    public interface IEventFunction
+    public interface IEventCondition
     {
         /// <summary>
-        /// Gets the name of the function.
+        /// Gets the error message to use when the evaluation fails.
         /// </summary>
-        string Name { get; }
+        string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets a dictionary of <see cref="IEventArgument"/> parameters indexed by their <see cref="string"/> names as the keys.
+        /// Evaluates the condition.
         /// </summary>
-        IDictionary<string, IEventArgument> Parameters { get; }
+        /// <returns>True if the condition passes, false otherwise.</returns>
+        bool Evaluate();
     }
 }

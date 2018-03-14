@@ -6,12 +6,11 @@
 
 namespace OpenTibia.Server.Notifications
 {
-    using System;
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Communications;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Server.Utils;
 
     internal class AnimatedTextNotification : Notification
     {

@@ -17,6 +17,8 @@ namespace OpenTibia.Server
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data.Contracts;
     using OpenTibia.Data.Models;
+    using OpenTibia.Scheduling;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Algorithms;
     using OpenTibia.Server.Combat;
     using OpenTibia.Server.Data.Interfaces;
@@ -53,7 +55,6 @@ namespace OpenTibia.Server
         private readonly object attackLock;
         private readonly object walkLock;
         private readonly object notifQueueLock;
-        private readonly object movQueueLock;
         private readonly object combatQueueLock;
 
         private WorldState status;
@@ -66,11 +67,11 @@ namespace OpenTibia.Server
             this.attackLock = new object();
             this.walkLock = new object();
             this.notifQueueLock = new object();
-            this.movQueueLock = new object();
             this.combatQueueLock = new object();
 
+            this.Scheduler = new Scheduler(DateTime.Now); // TODO: chose another date here?
+
             this.NotificationQueue = new ConcurrentQueue<INotification>();
-            this.MovementQueue = new ConcurrentQueue<IMovement>();
             this.CombatQueue = new ConcurrentQueue<ICombatOperation>();
             this.Connections = new ConcurrentDictionary<uint, Connection>();
             this.Creatures = new ConcurrentDictionary<uint, Creature>();
@@ -131,6 +132,8 @@ namespace OpenTibia.Server
             }
         }
 
+        private IScheduler Scheduler { get; }
+
         /// <summary>
         /// Gets the <see cref="ConcurrentDictionary{TKey,TValue}"/> of all <see cref="Connection"/>s in the game, in which the Key is the <see cref="Creature.CreatureId"/>.
         /// </summary>
@@ -140,11 +143,6 @@ namespace OpenTibia.Server
         /// Gets the current <see cref="ConcurrentQueue{T}"/> of <see cref="INotification"/>s, which the game processes on the <see cref="NotificationsProcessor"/> method.
         /// </summary>
         private ConcurrentQueue<INotification> NotificationQueue { get; }
-
-        /// <summary>
-        /// Gets the current <see cref="ConcurrentQueue{T}"/> of <see cref="IMovement"/>s, which the game processes on the <see cref="MovementsProcessor"/> method.
-        /// </summary>
-        private ConcurrentQueue<IMovement> MovementQueue { get; }
 
         /// <summary>
         /// Gets the current <see cref="ConcurrentQueue{T}"/> of <see cref="ICombatOperation"/>s, which the game processes on the <see cref="CombatProcessor"/> method.
@@ -269,23 +267,19 @@ namespace OpenTibia.Server
             Task.Factory.StartNew(this.CheckCreatureAutoAttack, TaskCreationOptions.LongRunning);
 
             Task.Factory.StartNew(this.NotificationsProcessor, TaskCreationOptions.LongRunning);
-            Task.Factory.StartNew(this.MovementsProcessor, TaskCreationOptions.LongRunning);
             Task.Factory.StartNew(this.CombatProcessor, TaskCreationOptions.LongRunning);
 
             this.EventsCatalog = this.EventLoader.Load(ServerConfiguration.MoveUseFileName);
+
+            this.Scheduler.OnEventFired += this.ProcessFiredEvent;
 
             // Leave this at the very end, when everything is ready...
             this.Status = WorldState.Open;
         }
 
-        public void RequestMovement(IMovement newMovement)
+        public void ScheduleEvent(IEvent newMovement)
         {
-            lock (this.movQueueLock)
-            {
-                this.MovementQueue.Enqueue(newMovement);
-
-                Monitor.Pulse(this.movQueueLock);
-            }
+            this.Scheduler.ImmediateEvent(newMovement);
         }
 
         public void RequestCombatOp(ICombatOperation newOp)
@@ -689,45 +683,39 @@ namespace OpenTibia.Server
         }
 
         // Movement thread
-        private void MovementsProcessor()
+        private void ProcessFiredEvent(object sender, EventFiredEventArgs eventArgs)
         {
-            while (!this.CancelToken.IsCancellationRequested)
+            if (sender != this.Scheduler || eventArgs?.Event == null)
             {
-                IMovement movement;
+                return;
+            }
 
-                lock (this.movQueueLock)
+            IEvent evt = eventArgs.Event;
+
+            try
+            {
+                if (evt.CanBeExecuted)
                 {
-                    while (this.MovementQueue.Count == 0 || !this.MovementQueue.TryDequeue(out movement))
-                    {
-                        Monitor.Wait(this.movQueueLock);
-                    }
+                    evt.Process();
+                    return;
                 }
 
-                try
-                {
-                    // Movements that cannot be performed are discarded nontheless.
-                    if (movement.CanBePerformed)
-                    {
-                        movement.Perform();
-                    }
+                var player = this.Creatures[evt.RequestorId] as IPlayer;
 
-                    var player = this.Creatures[movement.RequestorId] as IPlayer;
-
-                    if (player != null)
-                    {
-                        this.NotifySinglePlayer(player, conn =>
-                            new GenericNotification(
-                                conn,
-                                new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
-                                new TextMessagePacket { Message = movement.LastError ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
-                    }
-                }
-                catch (Exception ex)
+                if (player != null)
                 {
-                    // TODO: proper logging
-                    Console.WriteLine(ex.Message);
-                    Console.WriteLine(ex.StackTrace);
+                    this.NotifySinglePlayer(player, conn =>
+                        new GenericNotification(
+                            conn,
+                            new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
+                            new TextMessagePacket { Message = evt.ErrorMessage ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
                 }
+            }
+            catch (Exception ex)
+            {
+                // TODO: proper logging
+                Console.WriteLine(ex.Message);
+                Console.WriteLine(ex.StackTrace);
             }
         }
 
@@ -1011,11 +999,11 @@ namespace OpenTibia.Server
 
             var movement = new CreatureMovementOnMap(creature.CreatureId, creature, fromLoc, toLoc);
 
-            var potentialResult = movement.CanBePerformed;
+            var potentialResult = movement.CanBeExecuted;
 
             if (potentialResult) // pre check
             {
-                this.RequestMovement(movement);
+                this.ScheduleEvent(movement);
             }
 
             return potentialResult;

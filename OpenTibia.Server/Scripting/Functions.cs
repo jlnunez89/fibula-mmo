@@ -596,17 +596,17 @@ namespace OpenTibia.Server.Scripting
 
             if (thingAsCreature != null)
             {
-                Game.Instance.RequestMovement(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation));
+                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, thingAsCreature, thingToMove.Location, targetLocation));
             }
             else if (thingAsItem != null)
             {
-                Game.Instance.RequestMovement(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count));
+                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, thingAsItem, thingToMove.Location, thingToMove.Tile.GetStackPosition(thingToMove), targetLocation, thingAsItem.Count));
             }
         }
 
         public static void MoveRel(ICreature user, IThing objectUsed, Location locationOffset)
         {
-            Game.Instance.RequestMovement(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true));
+            Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, user, user.Location, user.Tile.GetStackPosition(user), objectUsed.Location + locationOffset, 1, true));
         }
 
         public static void MoveTop(IThing fromThing, Location targetLocation)
@@ -619,12 +619,12 @@ namespace OpenTibia.Server.Scripting
             // Move all down items and creatures on tile.
             foreach (var item in fromThing.Tile.DownItems.ToList())
             {
-                Game.Instance.RequestMovement(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(item), targetLocation));
+                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(item), targetLocation));
             }
 
             foreach (var creatureId in fromThing.Tile.CreatureIds.ToList())
             {
-                Game.Instance.RequestMovement(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
+                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
             }
         }
 
@@ -640,12 +640,12 @@ namespace OpenTibia.Server.Scripting
             // Move all down items and creatures on tile.
             foreach (var item in fromThing.Tile.DownItems.ToList())
             {
-                Game.Instance.RequestMovement(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(fromThing), targetLocation, item.Count));
+                Game.Instance.ScheduleEvent(new ThingMovementOnMap(0, item, fromThing.Location, fromThing.Tile.GetStackPosition(fromThing), targetLocation, item.Count));
             }
 
             foreach (var creatureId in fromThing.Tile.CreatureIds.ToList())
             {
-                Game.Instance.RequestMovement(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
+                Game.Instance.ScheduleEvent(new CreatureMovementOnMap(0, Game.Instance.GetCreatureWithId(creatureId), fromThing.Location, targetLocation, true));
             }
         }
 

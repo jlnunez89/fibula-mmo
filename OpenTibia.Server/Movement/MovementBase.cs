@@ -7,22 +7,22 @@
 namespace OpenTibia.Server.Movement
 {
     using System;
-    using System.Collections.Generic;
-    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Scheduling;
+    using OpenTibia.Server.Data;
 
-    internal abstract class MovementBase : IMovement
+    internal abstract class MovementBase : BaseEvent
     {
-        public uint RequestorId { get; protected set; }
+        protected MovementBase(uint requestorId)
+            : base(requestorId)
+        {
+        }
 
         public MovementState State { get; protected set; }
 
-        public IList<IMovementPolicy> Policies { get; protected set; }
-
         public bool Force { get; protected set; }
 
-        public string LastError { get; protected set; }
-
-        public bool CanBePerformed
+        /// <inheritdoc/>
+        public override bool CanBeExecuted
         {
             get
             {
@@ -30,14 +30,14 @@ namespace OpenTibia.Server.Movement
 
                 if (!this.Force)
                 {
-                    foreach (var policy in this.Policies)
+                    foreach (var policy in this.Conditions)
                     {
                         allPassed &= policy.Evaluate();
 
                         if (!allPassed)
                         {
                             Console.WriteLine($"Failed movement policy {policy.GetType().Name}.");
-                            this.LastError = policy.ErrorMessage;
+                            this.ErrorMessage = policy.ErrorMessage;
                             break;
                         }
                     }
@@ -46,13 +46,5 @@ namespace OpenTibia.Server.Movement
                 return allPassed;
             }
         }
-
-        protected MovementBase(uint requestorId)
-        {
-            this.RequestorId = requestorId; // allowed to be null.
-            this.Policies = new List<IMovementPolicy>();
-        }
-
-        public abstract void Perform();
     }
 }

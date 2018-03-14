@@ -34,24 +34,24 @@ namespace OpenTibia.Scheduling.Contracts
         bool CanBeExecuted { get; }
 
         /// <summary>
-        /// Gets the collection of conditional <see cref="IEventFunction"/> that the event must pass on evaluation.
+        /// Gets the error message that should be bubbled back to the player if the event cannot be executed.
         /// </summary>
-        IEnumerable<IEventFunction> Conditions { get; }
+        string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventFunction"/> that will be executed if the conditions check succeeds.
+        /// Gets the collection of conditional <see cref="IEventCondition"/> that the event must pass on evaluation.
         /// </summary>
-        IEnumerable<IEventFunction> ActionsOnPass { get; }
+        IList<IEventCondition> Conditions { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventFunction"/> that will be executed if the conditions check fails.
+        /// Gets the collection of <see cref="IEventCondition"/> that will be executed if the conditions check succeeds.
         /// </summary>
-        IEnumerable<IEventFunction> ActionsOnFail { get; }
+        IList<IEventAction> ActionsOnPass { get; }
 
         /// <summary>
-        /// Gets a dictionary of <see cref="IEventArgument"/> that is available to all conditions and actions.
+        /// Gets the collection of <see cref="IEventCondition"/> that will be executed if the conditions check fails.
         /// </summary>
-        IDictionary<string, IEventArgument> Arguments { get; }
+        IList<IEventAction> ActionsOnFail { get; }
 
         /// <summary>
         /// Executes the event. Performs the <see cref="ActionsOnPass"/> on the <see cref="ActionsOnFail"/> depending if the conditions were met.

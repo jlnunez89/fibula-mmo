@@ -10,8 +10,8 @@ namespace OpenTibia.Scheduling
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Scheduling.Contracts;
-    using OpenTibia.Server.Utils;
     using Priority_Queue;
 
     /// <summary>

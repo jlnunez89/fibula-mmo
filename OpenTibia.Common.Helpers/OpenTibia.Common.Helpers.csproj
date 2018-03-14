@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Scheduling.Contracts.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Common.Helpers.xml</DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
@@ -14,10 +14,6 @@
 
   <ItemGroup>
     <AdditionalFiles Include="stylecop.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj" />
   </ItemGroup>
 
 </Project>

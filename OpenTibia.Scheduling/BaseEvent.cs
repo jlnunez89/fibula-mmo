@@ -23,6 +23,10 @@ namespace OpenTibia.Scheduling
         {
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
+
+            this.Conditions = new List<IEventCondition>();
+            this.ActionsOnPass = new List<IEventAction>();
+            this.ActionsOnFail = new List<IEventAction>();
         }
 
         /// <summary>
@@ -36,26 +40,28 @@ namespace OpenTibia.Scheduling
         }
 
         /// <inheritdoc/>
+        public string EventId { get; }
+
+        /// <inheritdoc/>
+        public uint RequestorId { get; }
+
+        /// <inheritdoc/>
+        public string ErrorMessage { get; protected set; }
+
+        /// <inheritdoc/>
         public abstract EvaluationTime EvaluateAt { get; }
 
         /// <inheritdoc/>
         public abstract bool CanBeExecuted { get; }
 
         /// <inheritdoc/>
-        public abstract IEnumerable<IEventFunction> Conditions { get; }
+        public IList<IEventCondition> Conditions { get; }
 
         /// <inheritdoc/>
-        public abstract IEnumerable<IEventFunction> ActionsOnPass { get; }
+        public IList<IEventAction> ActionsOnPass { get; }
 
         /// <inheritdoc/>
-        public abstract IEnumerable<IEventFunction> ActionsOnFail { get; }
-
-        /// <inheritdoc/>
-        public abstract IDictionary<string, IEventArgument> Arguments { get; }
-
-        public string EventId { get; }
-
-        public uint RequestorId { get; }
+        public IList<IEventAction> ActionsOnFail { get; }
 
         /// <inheritdoc/>
         public abstract void Process();

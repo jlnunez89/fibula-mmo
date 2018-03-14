@@ -7,27 +7,14 @@
 namespace OpenTibia.Server.Movement
 {
     using System;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementContainerToSlot : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public IContainer FromContainer { get; }
-
-        public byte FromIndex { get; }
-
-        public Location ToLocation { get; }
-
-        public byte ToSlot { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
         public ThingMovementContainerToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -58,15 +45,32 @@ namespace OpenTibia.Server.Movement
 
             if (this.FromContainer != null && this.FromContainer.HolderId != requestor.CreatureId)
             {
-                this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing, droppingItem));
+                this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing, droppingItem));
             }
 
-            this.Policies.Add(new SlotHasContainerAndContainerHasEnoughCapacityPolicy(this.RequestorId, droppingItem));
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.FromContainer));
-            this.Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
+            this.Conditions.Add(new SlotHasContainerAndContainerHasEnoughCapacityEventCondition(this.RequestorId, droppingItem));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.FromContainer));
+            this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public IContainer FromContainer { get; }
+
+        public byte FromIndex { get; }
+
+        public Location ToLocation { get; }
+
+        public byte ToSlot { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        /// <inheritdoc/>
+        public override void Process()
         {
             IItem addedItem;
             var updateItem = this.Thing as IItem;

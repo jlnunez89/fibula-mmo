@@ -9,30 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementGroundToContainer : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromStackPos { get; }
-
-        public ITile FromTile { get; }
-
-        public Location ToLocation { get; }
-
-        public IContainer ToContainer { get; }
-
-        public byte ToIndex { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
         public ThingMovementGroundToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -62,17 +47,35 @@ namespace OpenTibia.Server.Movement
 
             if (this.ToContainer != null && this.ToContainer.HolderId == this.RequestorId)
             {
-                this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing));
+                this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing));
             }
 
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.ToContainer));
-            this.Policies.Add(new ContainerHasEnoughCapacityPolicy(this.ToContainer));
-            this.Policies.Add(new ThingIsTakeablePolicy(this.RequestorId, this.Thing));
-            this.Policies.Add(new LocationsMatchPolicy(this.Thing?.Location ?? new Location(), this.FromLocation));
-            this.Policies.Add(new TileContainsThingPolicy(this.Thing, this.FromLocation, this.Count));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.ToContainer));
+            this.Conditions.Add(new ContainerHasEnoughCapacityEventCondition(this.ToContainer));
+            this.Conditions.Add(new ThingIsTakeableEventCondition(this.RequestorId, this.Thing));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromStackPos { get; }
+
+        public ITile FromTile { get; }
+
+        public Location ToLocation { get; }
+
+        public IContainer ToContainer { get; }
+
+        public byte ToIndex { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             var thingAsItem = this.Thing as IItem;
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);

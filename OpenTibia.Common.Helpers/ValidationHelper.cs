@@ -1,10 +1,10 @@
-﻿// <copyright file="Common.cs" company="2Dudes">
+﻿// <copyright file="ValidationHelper.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
 
-namespace OpenTibia.Server.Utils
+namespace OpenTibia.Common.Helpers
 {
     using System;
     using System.Collections.Generic;
@@ -12,7 +12,7 @@ namespace OpenTibia.Server.Utils
     /// <summary>
     /// Class that provides extension methods for common validation operations.
     /// </summary>
-    public static class Common
+    public static class ValidationHelper
     {
         /// <summary>
         /// Throws am <see cref="ArgumentNullException"/> if the analyzed string is null or white space only.

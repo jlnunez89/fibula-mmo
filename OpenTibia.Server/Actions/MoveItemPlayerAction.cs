@@ -10,6 +10,7 @@ namespace OpenTibia.Server.Actions
     using System.Threading.Tasks;
     using OpenTibia.Communications.Packets.Incoming;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Movement;
@@ -53,7 +54,7 @@ namespace OpenTibia.Server.Actions
             var thing = this.Player.Inventory[(byte)itemMovePacket.FromLocation.Slot];
 
             var delayTime = TimeSpan.FromMilliseconds(200);
-            IMovement movement = null;
+            IEvent movement = null;
 
             switch (itemMovePacket.ToLocation.Type)
             {
@@ -71,7 +72,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.RequestMovement(movement); });
+                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
             }
         }
 
@@ -81,7 +82,7 @@ namespace OpenTibia.Server.Actions
             var thing = container.Content[container.Content.Count - itemMovePacket.FromLocation.Z - 1];
 
             var delayTime = TimeSpan.FromMilliseconds(200);
-            IMovement movement = null;
+            IEvent movement = null;
 
             switch (itemMovePacket.ToLocation.Type)
             {
@@ -99,7 +100,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.RequestMovement(movement); });
+                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
             }
         }
 
@@ -109,7 +110,7 @@ namespace OpenTibia.Server.Actions
             var thing = fromTile?.GetThingAtStackPosition(itemMovePacket.FromStackPos);
 
             var delayTime = TimeSpan.FromMilliseconds(200);
-            IMovement movement = null;
+            IEvent movement = null;
 
             switch (itemMovePacket.ToLocation.Type)
             {
@@ -136,7 +137,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.RequestMovement(movement); });
+                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
             }
         }
     }

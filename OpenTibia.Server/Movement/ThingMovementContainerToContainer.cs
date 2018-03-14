@@ -9,30 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementContainerToContainer : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public IContainer FromContainer { get; }
-
-        public byte FromIndex { get; }
-
-        public Location ToLocation { get; }
-
-        public IContainer ToContainer { get; }
-
-        public byte ToIndex { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
         public ThingMovementContainerToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -62,15 +47,34 @@ namespace OpenTibia.Server.Movement
 
             if (this.FromContainer?.HolderId != this.ToContainer?.HolderId && this.ToContainer?.HolderId == this.RequestorId)
             {
-                this.Policies.Add(new GrabberHasEnoughCarryStrengthPolicy(this.RequestorId, this.Thing));
+                this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing));
             }
 
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.FromContainer));
-            this.Policies.Add(new ContainerHasItemAndEnoughAmountPolicy(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.ToContainer));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.FromContainer));
+            this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.ToContainer));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public IContainer FromContainer { get; }
+
+        public byte FromIndex { get; }
+
+        public Location ToLocation { get; }
+
+        public IContainer ToContainer { get; }
+
+        public byte ToIndex { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        /// <inheritdoc/>
+        public override void Process()
         {
             IItem extraItem;
             var updatedItem = this.Thing as IItem;

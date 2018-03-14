@@ -9,30 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementOnMap : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromStackPos { get; }
-
-        public ITile FromTile { get; }
-
-        public Location ToLocation { get; }
-
-        public ITile ToTile { get; }
-
-        public IThing Thing { get; }
-
-        public byte Count { get; }
-
-        public bool IsTeleport { get; }
-
         public ThingMovementOnMap(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1, bool isTeleport = false)
             : base(creatureRequestingId)
         {
@@ -57,18 +42,37 @@ namespace OpenTibia.Server.Movement
 
             if (!isTeleport && requestor != null)
             {
-                this.Policies.Add(new CanThrowBetweenPolicy(this.RequestorId, this.FromLocation, this.ToLocation));
+                this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, this.FromLocation, this.ToLocation));
             }
 
-            this.Policies.Add(new RequestorIsInRangeToMovePolicy(this.RequestorId, this.FromLocation));
-            this.Policies.Add(new LocationNotObstructedPolicy(this.RequestorId, this.Thing, this.ToLocation));
-            this.Policies.Add(new LocationHasTileWithGroundPolicy(this.ToLocation));
-            this.Policies.Add(new UnpassItemsInRangePolicy(this.RequestorId, this.Thing, this.ToLocation));
-            this.Policies.Add(new LocationsMatchPolicy(this.Thing?.Location ?? new Location(), this.FromLocation));
-            this.Policies.Add(new TileContainsThingPolicy(this.Thing, this.FromLocation, this.Count));
+            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.RequestorId, this.FromLocation));
+            this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
+            this.Conditions.Add(new UnpassItemsInRangeEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromStackPos { get; }
+
+        public ITile FromTile { get; }
+
+        public Location ToLocation { get; }
+
+        public ITile ToTile { get; }
+
+        public IThing Thing { get; }
+
+        public byte Count { get; }
+
+        public bool IsTeleport { get; }
+
+        /// <inheritdoc/>
+        public override void Process()
         {
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 

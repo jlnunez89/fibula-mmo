@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Contra
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTibia.Server.Parsing", "OpenTibia.Server.Parsing\OpenTibia.Server.Parsing.csproj", "{96F706FE-5077-47FA-89EE-423B8E99F173}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OpenTibia.Common.Helpers", "OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj", "{B8ABFB06-BC23-40CB-BB6F-5D3C6A6F5401}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -93,6 +95,10 @@ Global
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{96F706FE-5077-47FA-89EE-423B8E99F173}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B8ABFB06-BC23-40CB-BB6F-5D3C6A6F5401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B8ABFB06-BC23-40CB-BB6F-5D3C6A6F5401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B8ABFB06-BC23-40CB-BB6F-5D3C6A6F5401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B8ABFB06-BC23-40CB-BB6F-5D3C6A6F5401}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

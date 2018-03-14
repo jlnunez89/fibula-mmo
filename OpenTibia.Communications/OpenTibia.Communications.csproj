@@ -21,6 +21,7 @@
     <PackageReference Include="StyleCop.Analyzers" Version="1.0.2" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj" />
     <ProjectReference Include="..\OpenTibia.Configuration\OpenTibia.Configuration.csproj" />
     <ProjectReference Include="..\OpenTibia.Data.Contracts\OpenTibia.Data.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Data\OpenTibia.Data.csproj" />

@@ -10,7 +10,7 @@ namespace OpenTibia.Server.Movement
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
 
     internal class CreatureMovementOnMap : ThingMovementOnMap
     {
@@ -33,14 +33,14 @@ namespace OpenTibia.Server.Movement
                 return;
             }
 
-            this.Policies.Add(new LocationNotAviodPolicy(this.RequestorId, this.Thing, this.ToLocation));
-            this.Policies.Add(new LocationsAreDistantByPolicy(this.FromLocation, this.ToLocation));
-            this.Policies.Add(new CreatureThrowBetweenFloorsPolicy(this.RequestorId, this.Thing, this.ToLocation));
+            this.Conditions.Add(new LocationNotAviodEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+            this.Conditions.Add(new LocationsAreDistantByEventCondition(this.FromLocation, this.ToLocation));
+            this.Conditions.Add(new CreatureThrowBetweenFloorsEventCondition(this.RequestorId, this.Thing, this.ToLocation));
         }
 
-        public override void Perform()
+        public override void Process()
         {
-            base.Perform();
+            base.Process();
 
             if (this.IsTeleport)
             {

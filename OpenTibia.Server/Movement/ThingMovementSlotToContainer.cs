@@ -9,28 +9,15 @@ namespace OpenTibia.Server.Movement
     using System;
     using System.Linq;
     using OpenTibia.Data.Contracts;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Movement.Policies;
+    using OpenTibia.Server.Movement.EventConditions;
     using OpenTibia.Server.Notifications;
 
     internal class ThingMovementSlotToContainer : MovementBase
     {
-        public Location FromLocation { get; }
-
-        public byte FromSlot { get; }
-
-        public Location ToLocation { get; }
-
-        public IContainer ToContainer { get; }
-
-        public byte ToIndex { get; }
-
-        public IItem Item { get; }
-
-        public byte Count { get; }
-
         public ThingMovementSlotToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
             : base(creatureRequestingId)
         {
@@ -57,12 +44,28 @@ namespace OpenTibia.Server.Movement
             this.Item = thingMoving as IItem;
             this.Count = count;
 
-            this.Policies.Add(new SlotContainsItemAndCountPolicy(creatureRequestingId, this.Item, this.FromSlot, this.Count));
-            this.Policies.Add(new GrabberHasContainerOpenPolicy(this.RequestorId, this.ToContainer));
-            this.Policies.Add(new ContainerHasEnoughCapacityPolicy(this.ToContainer));
+            this.Conditions.Add(new SlotContainsItemAndCountEventCondition(creatureRequestingId, this.Item, this.FromSlot, this.Count));
+            this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.ToContainer));
+            this.Conditions.Add(new ContainerHasEnoughCapacityEventCondition(this.ToContainer));
         }
 
-        public override void Perform()
+        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+
+        public Location FromLocation { get; }
+
+        public byte FromSlot { get; }
+
+        public Location ToLocation { get; }
+
+        public IContainer ToContainer { get; }
+
+        public byte ToIndex { get; }
+
+        public IItem Item { get; }
+
+        public byte Count { get; }
+
+        public override void Process()
         {
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 

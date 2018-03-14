@@ -8,9 +8,9 @@ namespace OpenTibia.Server.Algorithms
 {
     using System;
     using System.Collections.Generic;
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Server.Data.Interfaces;
     using OpenTibia.Server.Data.Models.Structs;
-    using OpenTibia.Server.Utils;
     using OpenTibia.Utilities;
 
     internal class TileNode : INode
