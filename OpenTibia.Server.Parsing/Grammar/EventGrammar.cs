@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Parsing.Grammar
 
         public class MoveUseEvent
         {
-            public EventType Type { get; }
+            public ItemEventType Type { get; }
 
             public ConditionalActionRule Rule { get; }
 
@@ -32,7 +32,7 @@ namespace OpenTibia.Server.Parsing.Grammar
 
                 var firstCondition = rule.ConditionSet.FirstOrDefault();
 
-                EventType eventType;
+                ItemEventType eventType;
 
                 if (!Enum.TryParse(firstCondition, out eventType))
                 {

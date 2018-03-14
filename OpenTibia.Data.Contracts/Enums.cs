@@ -532,7 +532,7 @@ namespace OpenTibia.Data.Contracts
         None = 255
     }
 
-    public enum EventType : byte
+    public enum ItemEventType : byte
     {
         Use,
         MultiUse,
@@ -550,7 +550,7 @@ namespace OpenTibia.Data.Contracts
         Equal
     }
 
-    public enum ShootTypeT : byte
+    public enum ShotType : byte
     {
         Spear = 0x00,
         Bolt = 0x01,

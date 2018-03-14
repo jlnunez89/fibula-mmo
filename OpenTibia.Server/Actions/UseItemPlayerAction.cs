@@ -1,4 +1,4 @@
-﻿// <copyright file="UseItemAction.cs" company="2Dudes">
+﻿// <copyright file="UseItemPlayerAction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -125,7 +125,7 @@ namespace OpenTibia.Server.Actions
             }
             else
             {
-                var useEvents = Game.Instance.EventsCatalog[EventType.Use].Cast<UseEvent>();
+                var useEvents = Game.Instance.EventsCatalog[ItemEventType.Use].Cast<UseItemEvent>();
 
                 var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == itemUsePacket.ClientId && e.Setup(thingToUse, null, this.Player) && e.CanBeExecuted);
 

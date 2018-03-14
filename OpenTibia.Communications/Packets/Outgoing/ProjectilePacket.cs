@@ -19,7 +19,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
 
         public Location ToLocation { get; set; }
 
-        public ShootTypeT ShootType { get; set; }
+        public ShotType ShootType { get; set; }
 
         public override void Add(NetworkMessage message)
         {

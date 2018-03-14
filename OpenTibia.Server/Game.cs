@@ -84,7 +84,7 @@ namespace OpenTibia.Server
             this.LightLevel = (byte)LightLevels.World;
         }
 
-        public IEventLoader EventLoader { get; private set; }
+        public IItemEventLoader EventLoader { get; private set; }
 
         public IItemLoader ItemLoader { get; private set; }
 
@@ -100,9 +100,9 @@ namespace OpenTibia.Server
         public ConcurrentDictionary<uint, Creature> Creatures { get; }
 
         /// <summary>
-        /// Gets the <see cref="IDictionary{TKey,TValue}"/> containing the <see cref="IEvent"/>s of the game.
+        /// Gets the <see cref="IDictionary{TKey,TValue}"/> containing the <see cref="IItemEvent"/>s of the game.
         /// </summary>
-        public IDictionary<EventType, HashSet<IEvent>> EventsCatalog { get; private set; }
+        public IDictionary<ItemEventType, HashSet<IItemEvent>> EventsCatalog { get; private set; }
 
         /// <summary>
         /// Gets the current world's light level <see cref="byte"/> value.
@@ -161,7 +161,7 @@ namespace OpenTibia.Server
         /// </summary>
         private Map.Map Map { get; }
 
-        public void Initialize(IEventLoader eventLoader, IItemLoader itemLoader, IMonsterLoader monsterLoader)
+        public void Initialize(IItemEventLoader eventLoader, IItemLoader itemLoader, IMonsterLoader monsterLoader)
         {
             this.EventLoader = eventLoader ?? throw new ArgumentNullException(nameof(eventLoader));
             this.ItemLoader = itemLoader ?? throw new ArgumentNullException(nameof(itemLoader));

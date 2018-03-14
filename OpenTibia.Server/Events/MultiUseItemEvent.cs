@@ -1,4 +1,4 @@
-﻿// <copyright file="MultiUseEvent.cs" company="2Dudes">
+﻿// <copyright file="MultiUseItemEvent.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -12,19 +12,19 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
 
-    internal class MultiUseEvent : BaseEvent
+    internal class MultiUseItemEvent : BaseItemEvent
     {
         public ushort ItemToUseId { get; }
 
         public ushort ItemToUseOnId { get; }
 
-        public MultiUseEvent(IList<string> conditionSet, IList<string> actionSet)
+        public MultiUseItemEvent(IList<string> conditionSet, IList<string> actionSet)
             : base(conditionSet, actionSet)
         {
             // Look for a IsType condition.
             var isTypeConditions = this.Conditions.Where(func => IsTypeFunctionName.Equals(func.FunctionName));
 
-            var typeConditionsList = isTypeConditions as IList<IEventFunction> ?? isTypeConditions.ToList();
+            var typeConditionsList = isTypeConditions as IList<IItemEventFunction> ?? isTypeConditions.ToList();
             var firstTypeCondition = typeConditionsList.FirstOrDefault();
             var secondTypeCondition = typeConditionsList.Skip(1).FirstOrDefault();
 
@@ -42,6 +42,6 @@ namespace OpenTibia.Server.Events
             this.ItemToUseOnId = Convert.ToUInt16(secondTypeCondition.Parameters[1]);
         }
 
-        public override EventType Type => EventType.MultiUse;
+        public override ItemEventType Type => ItemEventType.MultiUse;
     }
 }

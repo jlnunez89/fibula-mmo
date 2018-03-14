@@ -27,7 +27,7 @@ namespace OpenTibia.Server.Standalone
             var cancellationTokenSource = new CancellationTokenSource();
 
             // Set the loaders to use.
-            Game.Instance.Initialize(new MoveUseEventLoader(), new ObjectsFileItemLoader(), new MonFilesMonsterLoader());
+            Game.Instance.Initialize(new MoveUseItemEventLoader(), new ObjectsFileItemLoader(), new MonFilesMonsterLoader());
 
             // TODO: load and validate external aux files.
 

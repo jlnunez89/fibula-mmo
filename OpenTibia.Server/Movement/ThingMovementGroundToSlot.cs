@@ -90,7 +90,7 @@ namespace OpenTibia.Server.Movement
             {
                 foreach (var itemWithSeparation in this.FromTile.ItemsWithSeparation)
                 {
-                    var separationEvents = Game.Instance.EventsCatalog[EventType.Separation].Cast<SeparationEvent>();
+                    var separationEvents = Game.Instance.EventsCatalog[ItemEventType.Separation].Cast<SeparationItemEvent>();
 
                     var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, requestor) && e.CanBeExecuted);
 
@@ -126,7 +126,7 @@ namespace OpenTibia.Server.Movement
                 {
                     foreach (var itemWithCollision in this.FromTile.ItemsWithCollision)
                     {
-                        var collisionEvents = Game.Instance.EventsCatalog[EventType.Collision].Cast<CollisionEvent>();
+                        var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
                         var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, updatedItem) && e.CanBeExecuted);
 
@@ -159,7 +159,7 @@ namespace OpenTibia.Server.Movement
 
                 foreach (var itemWithCollision in this.FromTile.ItemsWithCollision)
                 {
-                    var collisionEvents = Game.Instance.EventsCatalog[EventType.Collision].Cast<CollisionEvent>();
+                    var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
                     var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, remainderThing) && e.CanBeExecuted);
 

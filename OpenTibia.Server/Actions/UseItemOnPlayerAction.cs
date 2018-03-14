@@ -1,4 +1,4 @@
-﻿// <copyright file="UseItemOnAction.cs" company="2Dudes">
+﻿// <copyright file="UseItemOnPlayerAction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -97,7 +97,7 @@ namespace OpenTibia.Server.Actions
                 return;
             }
 
-            var useEvents = Game.Instance.EventsCatalog[EventType.MultiUse].Cast<MultiUseEvent>();
+            var useEvents = Game.Instance.EventsCatalog[ItemEventType.MultiUse].Cast<MultiUseItemEvent>();
 
             var candidate = useEvents.FirstOrDefault(e => e.ItemToUseId == useOnPacket.FromSpriteId && e.ItemToUseOnId == useOnPacket.ToSpriteId && e.Setup(thingToUse, thingToUseOn, this.Player) && e.CanBeExecuted);
 

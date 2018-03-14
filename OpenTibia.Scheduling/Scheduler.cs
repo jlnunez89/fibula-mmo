@@ -22,6 +22,7 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
+        /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
         private const int MaxQueueNodes = 1000000;
 
         /// <summary>

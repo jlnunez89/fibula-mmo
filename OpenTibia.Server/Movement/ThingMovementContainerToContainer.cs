@@ -122,7 +122,7 @@ namespace OpenTibia.Server.Movement
 
             foreach (var itemWithCollision in requestor.Tile.ItemsWithCollision)
             {
-                var collisionEvents = Game.Instance.EventsCatalog[EventType.Collision].Cast<CollisionEvent>();
+                var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
                 var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing) && e.CanBeExecuted);
 

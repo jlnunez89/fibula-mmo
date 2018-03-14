@@ -1,4 +1,4 @@
-﻿// <copyright file="SeparationEvent.cs" company="2Dudes">
+﻿// <copyright file="SeparationItemEvent.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -11,11 +11,11 @@ namespace OpenTibia.Server.Events
     using System.Linq;
     using OpenTibia.Data.Contracts;
 
-    internal class SeparationEvent : BaseEvent
+    internal class SeparationItemEvent : BaseItemEvent
     {
         public ushort ThingIdOfSeparation { get; }
 
-        public SeparationEvent(IList<string> conditionSet, IList<string> actionSet)
+        public SeparationItemEvent(IList<string> conditionSet, IList<string> actionSet)
             : base(conditionSet, actionSet)
         {
             var isTypeCondition = this.Conditions.FirstOrDefault(func => IsTypeFunctionName.Equals(func.FunctionName));
@@ -28,6 +28,6 @@ namespace OpenTibia.Server.Events
             this.ThingIdOfSeparation = Convert.ToUInt16(isTypeCondition.Parameters[1]);
         }
 
-        public override EventType Type => EventType.Separation;
+        public override ItemEventType Type => ItemEventType.Separation;
     }
 }

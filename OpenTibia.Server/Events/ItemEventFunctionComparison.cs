@@ -1,4 +1,4 @@
-﻿// <copyright file="EventFunctionComparison.cs" company="2Dudes">
+﻿// <copyright file="ItemEventFunctionComparison.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -9,7 +9,7 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Data.Contracts;
     using OpenTibia.Server.Data.Interfaces;
 
-    internal class EventFunctionComparison : IEventFunction
+    internal class ItemEventFunctionComparison : IItemEventFunction
     {
         public string FunctionName { get; }
 
@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Events
 
         public string CompareToIdentifier { get; }
 
-        public EventFunctionComparison(string name, FunctionComparisonType type, string compareIdentifier, object[] parameters)
+        public ItemEventFunctionComparison(string name, FunctionComparisonType type, string compareIdentifier, object[] parameters)
         {
             this.FunctionName = name;
             this.Type = type;

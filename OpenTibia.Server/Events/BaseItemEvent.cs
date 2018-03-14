@@ -1,4 +1,4 @@
-﻿// <copyright file="BaseEvent.cs" company="2Dudes">
+﻿// <copyright file="BaseItemEvent.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
@@ -16,13 +16,13 @@ namespace OpenTibia.Server.Events
 
     using Sprache;
 
-    internal abstract class BaseEvent : IEvent
+    internal abstract class BaseItemEvent : IItemEvent
     {
         public const string IsTypeFunctionName = "IsType";
 
         private bool isSetup;
 
-        public abstract EventType Type { get; }
+        public abstract ItemEventType Type { get; }
 
         public IThing Obj1 { get; protected set; }
 
@@ -30,9 +30,9 @@ namespace OpenTibia.Server.Events
 
         public IPlayer User { get; protected set; }
 
-        public IEnumerable<IEventFunction> Actions { get; }
+        public IEnumerable<IItemEventFunction> Actions { get; }
 
-        public IEnumerable<IEventFunction> Conditions { get; protected set; }
+        public IEnumerable<IItemEventFunction> Conditions { get; protected set; }
 
         public bool CanBeExecuted
         {
@@ -42,7 +42,7 @@ namespace OpenTibia.Server.Events
             }
         }
 
-        public BaseEvent(IList<string> conditionSet, IList<string> actionSet)
+        public BaseItemEvent(IList<string> conditionSet, IList<string> actionSet)
         {
             this.Conditions = this.ParseFunctions(conditionSet);
             this.Actions = this.ParseFunctions(actionSet);
@@ -50,9 +50,9 @@ namespace OpenTibia.Server.Events
             this.isSetup = false;
         }
 
-        private IEnumerable<IEventFunction> ParseFunctions(IList<string> stringSet)
+        private IEnumerable<IItemEventFunction> ParseFunctions(IList<string> stringSet)
         {
-            var functionList = new List<IEventFunction>();
+            var functionList = new List<IItemEventFunction>();
 
             const string specialCaseNoOperationAction = "NOP";
 
@@ -67,7 +67,7 @@ namespace OpenTibia.Server.Events
 
                 if (resultFunction.WasSuccessful)
                 {
-                    functionList.Add(new EventFunction(resultFunction.Value.Name, resultFunction.Value.Parameters));
+                    functionList.Add(new ItemEventFunction(resultFunction.Value.Name, resultFunction.Value.Parameters));
 
                     continue;
                 }
@@ -79,7 +79,7 @@ namespace OpenTibia.Server.Events
                     throw new ParseException($"Failed to parse string {str} into a function or function comparison.");
                 }
 
-                functionList.Add(new EventFunctionComparison(resultComparison.Value.Name, resultComparison.Value.Type, resultComparison.Value.CompareToIdentifier, resultComparison.Value.Parameters));
+                functionList.Add(new ItemEventFunctionComparison(resultComparison.Value.Name, resultComparison.Value.Type, resultComparison.Value.CompareToIdentifier, resultComparison.Value.Parameters));
             }
 
             return functionList;
