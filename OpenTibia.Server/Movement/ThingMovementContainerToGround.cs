@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Movement
     internal class ThingMovementContainerToGround : MovementBase
     {
         public ThingMovementContainerToGround(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+            : base(creatureRequestingId, EvaluationTime.OnExecute)
         {
             // intentionally left thing null check out. Handled by Perform().
             var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
@@ -49,9 +49,9 @@ namespace OpenTibia.Server.Movement
             this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
             this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Thing, this.ToLocation));
             this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveContainerToGround));
+        }
 
         public Location FromLocation { get; }
 
@@ -67,11 +67,10 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        public override void Process()
+        private void MoveContainerToGround()
         {
             IItem extraItem;
             var itemToUpdate = this.Thing as IItem;
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
             if (this.FromContainer == null || this.ToTile == null || itemToUpdate == null)
             {
@@ -106,7 +105,7 @@ namespace OpenTibia.Server.Movement
             {
                 var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, requestor as IPlayer) && e.CanBeExecuted);
+                var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
 
                 // Execute all actions.
                 candidate?.Execute();

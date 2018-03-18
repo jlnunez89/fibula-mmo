@@ -48,6 +48,7 @@ namespace OpenTibia.Scheduling.Contracts
         /// Cancels all events attributed to the specified requestor.
         /// </summary>
         /// <param name="requestorId">The id of the requestor.</param>
-        void CancelAllFor(uint requestorId);
+        /// <param name="specificType">Optional. The type of event to remove. By default, it will remove all.</param>
+        void CancelAllFor(uint requestorId, Type specificType = null);
     }
 }

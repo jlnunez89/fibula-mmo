@@ -13,6 +13,8 @@ namespace OpenTibia.Communications
 
     public class Connection
     {
+        private object writeLock;
+
         public delegate void OnConnectionClose(Connection c);
 
         public delegate void OnProcess(Connection c, NetworkMessage m);
@@ -41,6 +43,7 @@ namespace OpenTibia.Communications
 
         public Connection()
         {
+            this.writeLock = new object();
             this.Socket = null;
             this.Stream = null;
             this.InMessage = new NetworkMessage(0);
@@ -169,7 +172,10 @@ namespace OpenTibia.Communications
 
             try
             {
-                this.Stream.BeginWrite(message.Buffer, 0, message.Length, null, null);
+                lock (this.writeLock)
+                {
+                    this.Stream.BeginWrite(message.Buffer, 0, message.Length, null, null);
+                }
             }
             catch (ObjectDisposedException)
             {

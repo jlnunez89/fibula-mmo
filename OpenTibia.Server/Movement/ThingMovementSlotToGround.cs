@@ -19,14 +19,11 @@ namespace OpenTibia.Server.Movement
     internal class ThingMovementSlotToGround : MovementBase
     {
         public ThingMovementSlotToGround(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+            : base(creatureRequestingId, EvaluationTime.OnExecute)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0)
             {
-                throw new ArgumentException("Invalid count zero.");
+                throw new ArgumentException("Invalid count zero.", nameof(count));
             }
 
             this.FromLocation = fromLocation;
@@ -38,17 +35,17 @@ namespace OpenTibia.Server.Movement
             this.Item = thingMoving as IItem;
             this.Count = count;
 
-            if (requestor != null)
+            if (this.Requestor != null)
             {
-                this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, requestor.Location, this.ToLocation));
+                this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, this.Requestor.Location, this.ToLocation));
             }
 
             this.Conditions.Add(new SlotContainsItemAndCountEventCondition(creatureRequestingId, this.Item, this.FromSlot, this.Count));
             this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Item, this.ToLocation));
             this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveFromSlotToGround));
+        }
 
         public Location FromLocation { get; }
 
@@ -62,18 +59,17 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        public override void Process()
+        private void MoveFromSlotToGround()
         {
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
-            if (this.Item == null || requestor == null)
+            if (this.Item == null || this.Requestor == null)
             {
                 return;
             }
 
             bool partialRemove;
+
             // attempt to remove the item from the inventory
-            var movingItem = requestor.Inventory?.Remove(this.FromSlot, this.Count, out partialRemove);
+            var movingItem = this.Requestor.Inventory?.Remove(this.FromSlot, this.Count, out partialRemove);
 
             if (movingItem == null)
             {
@@ -97,7 +93,7 @@ namespace OpenTibia.Server.Movement
             {
                 var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, requestor as IPlayer) && e.CanBeExecuted);
+                var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
 
                 // Execute all actions.
                 candidate?.Execute();

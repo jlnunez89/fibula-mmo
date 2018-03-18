@@ -23,7 +23,7 @@ namespace OpenTibia.Server.Handlers
                 return;
             }
 
-            // TODO: if player actually has permissions to change outfit.
+            // TODO: check if player actually has permissions to change outfit.
             player.SetOutfit(packet.Outfit);
 
             Game.Instance.NotifySpectatingPlayers(conn => new CreatureChangedOutfitNotification(conn, player), player.Location);

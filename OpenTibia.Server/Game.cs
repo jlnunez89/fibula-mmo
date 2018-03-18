@@ -12,6 +12,7 @@ namespace OpenTibia.Server
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using OpenTibia.Common.Helpers;
     using OpenTibia.Communications;
     using OpenTibia.Communications.Interfaces;
     using OpenTibia.Communications.Packets.Outgoing;
@@ -91,7 +92,7 @@ namespace OpenTibia.Server
 
         public IMonsterLoader MonsterLoader { get; private set; }
 
-        public DateTime MovementSynchronizationTime { get; private set; }
+        public DateTime CurrentTime { get; private set; }
 
         public DateTime CombatSynchronizationTime { get; private set; }
 
@@ -261,13 +262,13 @@ namespace OpenTibia.Server
             this.CancelToken = masterCancellationToken;
 
             Task.Factory.StartNew(this.ConnectionSweeper, TaskCreationOptions.LongRunning);
-            Task.Factory.StartNew(this.DayCycle, TaskCreationOptions.LongRunning);
+            //Task.Factory.StartNew(this.DayCycle, TaskCreationOptions.LongRunning);
 
-            Task.Factory.StartNew(this.CheckCreatureWalk, TaskCreationOptions.LongRunning);
-            Task.Factory.StartNew(this.CheckCreatureAutoAttack, TaskCreationOptions.LongRunning);
+            //Task.Factory.StartNew(this.CheckCreatureWalk, TaskCreationOptions.LongRunning);
+            //Task.Factory.StartNew(this.CheckCreatureAutoAttack, TaskCreationOptions.LongRunning);
 
             Task.Factory.StartNew(this.NotificationsProcessor, TaskCreationOptions.LongRunning);
-            Task.Factory.StartNew(this.CombatProcessor, TaskCreationOptions.LongRunning);
+            //Task.Factory.StartNew(this.CombatProcessor, TaskCreationOptions.LongRunning);
 
             this.EventsCatalog = this.EventLoader.Load(ServerConfiguration.MoveUseFileName);
 
@@ -277,9 +278,26 @@ namespace OpenTibia.Server
             this.Status = WorldState.Open;
         }
 
-        public void ScheduleEvent(IEvent newMovement)
+        public bool ScheduleEvent(IEvent newEvent, TimeSpan delay = default(TimeSpan))
         {
-            this.Scheduler.ImmediateEvent(newMovement);
+            newEvent.ThrowIfNull(nameof(newEvent));
+
+            // pre check if can be executed only if not explicitly set to executeTime
+            if (newEvent.EvaluateAt == EvaluationTime.OnExecute || newEvent.CanBeExecuted)
+            {
+                var noDelay = delay == default(TimeSpan) || delay < TimeSpan.Zero;
+
+                if (noDelay)
+                {
+                    this.Scheduler.ImmediateEvent(newEvent);
+                    return true;
+                }
+
+                this.Scheduler.ScheduleEvent(newEvent, DateTime.Now + delay);
+                return true;
+            }
+
+            return false;
         }
 
         public void RequestCombatOp(ICombatOperation newOp)
@@ -380,13 +398,13 @@ namespace OpenTibia.Server
             {
                 try
                 {
-                    this.MovementSynchronizationTime = DateTime.Now;
+                    this.CurrentTime = DateTime.Now;
                     var minCoolDown = TimeSpan.MaxValue;
 
                     foreach (var creature in this.Creatures.Values.Where(c => c.WalkingQueue.Count > 0).ToList())
                     {
                         Tuple<byte, Direction> nextTuple;
-                        var cooldownTime = creature.CalculateRemainingCooldownTime(CooldownType.Move, this.MovementSynchronizationTime);
+                        var cooldownTime = creature.CalculateRemainingCooldownTime(CooldownType.Move, this.CurrentTime);
 
                         if (cooldownTime <= TimeSpan.Zero && creature.WalkingQueue.TryPeek(out nextTuple) && creature.NextStepId == nextTuple.Item1)
                         {
@@ -415,7 +433,7 @@ namespace OpenTibia.Server
                             }
 
                             // recalc cooldown for this creature
-                            cooldownTime = creature.CalculateRemainingCooldownTime(CooldownType.Move, this.MovementSynchronizationTime);
+                            cooldownTime = creature.CalculateRemainingCooldownTime(CooldownType.Move, this.CurrentTime);
 
                             if (creature.WalkingQueue.Count > 0 && cooldownTime < minCoolDown)
                             {
@@ -432,7 +450,7 @@ namespace OpenTibia.Server
                     {
                         if (minCoolDown != TimeSpan.MaxValue)
                         {
-                            var timeThatCheckTook = DateTime.Now - this.MovementSynchronizationTime;
+                            var timeThatCheckTook = DateTime.Now - this.CurrentTime;
                             var timeDiff = minCoolDown - timeThatCheckTook; // factor in the time we took to check all queues.
                             var actualCooldown = timeDiff > TimeSpan.Zero ? timeDiff : TimeSpan.Zero; // and if that is positive.
 
@@ -661,9 +679,10 @@ namespace OpenTibia.Server
             while (!this.CancelToken.IsCancellationRequested)
             {
                 INotification notification;
-                lock (this.notifQueueLock)
+
+                while (this.NotificationQueue.Count == 0 || !this.NotificationQueue.TryDequeue(out notification))
                 {
-                    while (this.NotificationQueue.Count == 0 || !this.NotificationQueue.TryDequeue(out notification))
+                    lock (this.notifQueueLock)
                     {
                         Monitor.Wait(this.notifQueueLock);
                     }
@@ -671,6 +690,7 @@ namespace OpenTibia.Server
 
                 try
                 {
+                    Console.WriteLine($"Sending {notification.GetType().Name} [{notification.EventId}] to {notification.Connection.PlayerId}");
                     notification.Send();
                 }
                 catch (Exception ex)
@@ -692,24 +712,12 @@ namespace OpenTibia.Server
 
             IEvent evt = eventArgs.Event;
 
+            Console.WriteLine($"Processing event {evt.EventId}.");
+
             try
             {
-                if (evt.CanBeExecuted)
-                {
-                    evt.Process();
-                    return;
-                }
-
-                var player = this.Creatures[evt.RequestorId] as IPlayer;
-
-                if (player != null)
-                {
-                    this.NotifySinglePlayer(player, conn =>
-                        new GenericNotification(
-                            conn,
-                            new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
-                            new TextMessagePacket { Message = evt.ErrorMessage ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
-                }
+                evt.Process();
+                Console.WriteLine($"Processed event {evt.EventId}.");
             }
             catch (Exception ex)
             {
@@ -768,12 +776,7 @@ namespace OpenTibia.Server
         {
             notification.Prepare();
 
-            lock (this.notifQueueLock)
-            {
-                this.NotificationQueue.Enqueue(notification);
-
-                Monitor.Pulse(this.notifQueueLock);
-            }
+            this.ScheduleEvent(notification);
         }
 
         public IEnumerable<uint> GetSpectatingCreatureIds(Location location)
@@ -960,7 +963,7 @@ namespace OpenTibia.Server
             return totalBytes.ToArray();
         }
 
-        internal bool RequestCreatureWalkToDirection(ICreature creature, Direction direction)
+        internal bool RequestCreatureWalkToDirection(ICreature creature, Direction direction, TimeSpan delay = default(TimeSpan))
         {
             var fromLoc = creature.Location;
             var toLoc = fromLoc;
@@ -999,14 +1002,7 @@ namespace OpenTibia.Server
 
             var movement = new CreatureMovementOnMap(creature.CreatureId, creature, fromLoc, toLoc);
 
-            var potentialResult = movement.CanBeExecuted;
-
-            if (potentialResult) // pre check
-            {
-                this.ScheduleEvent(movement);
-            }
-
-            return potentialResult;
+            return this.ScheduleEvent(movement, delay);
         }
 
         internal void TestingViaCreatureSpeech(IPlayer player, string msgStr)

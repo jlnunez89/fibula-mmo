@@ -42,6 +42,8 @@ namespace OpenTibia.Server.Data.Interfaces
 
         IEnumerable<IItem> DownItems { get; }
 
+        byte[] CachedDescription { get; }
+
         void AddThing(ref IThing thing, byte count = 1);
 
         void RemoveThing(ref IThing thing, byte count = 1);

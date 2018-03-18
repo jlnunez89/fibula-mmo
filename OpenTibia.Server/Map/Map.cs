@@ -321,14 +321,13 @@ namespace OpenTibia.Server.Map
         public IList<byte> GetDescription(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, bool isUnderground, byte windowSizeX = MapConstants.DefaultMapWindowSizeX, byte windowSizeY = MapConstants.DefaultMapWindowSizeY)
         {
             var tempBytes = new List<byte>();
-            // GetMapDescription(pos.x - 8, pos.y - 6, pos.z, 18, 14, msg);
 
-            // we crawl from the groun up to the very top of the world (7 -> 0).
+            var skip = -1;
+
+            // we crawl from the ground up to the very top of the world (7 -> 0).
             var crawlTo = 0;
             var crawlFrom = 7;
             var crawlDelta = -1;
-
-            var skip = -1;
 
             // Unless... we're undeground.
             // Then we crawl from 2 floors up, this, and 2 floors down for a total of 5 floors.
@@ -389,147 +388,155 @@ namespace OpenTibia.Server.Map
 
         public IList<byte> GetTileDescription(IPlayer player, ITile tile)
         {
+            if (tile == null)
+            {
+                return new byte[0];
+            }
+
+            if (tile.CachedDescription != null)
+            {
+                return tile.CachedDescription;
+            }
+
             var tempBytes = new List<byte>();
 
-            if (tile != null)
+            var count = 0;
+            const int numberOfObjectsLimit = 9;
+
+            if (tile.Ground != null)
             {
-                var count = 0;
-                const int numberOfObjectsLimit = 9;
-                if (tile.Ground != null)
+                tempBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
+                count++;
+            }
+
+            foreach (var item in tile.TopItems1)
+            {
+                if (count == numberOfObjectsLimit)
                 {
-                    tempBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
-                    count++;
+                    break;
                 }
 
-                foreach (var item in tile.TopItems1)
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
                 {
-                    if (count == numberOfObjectsLimit)
-                    {
-                        break;
-                    }
-
-                    tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
-
-                    if (item.IsCumulative)
-                    {
-                        tempBytes.Add(item.Amount);
-                    }
-                    else if (item.IsLiquidPool || item.IsLiquidContainer)
-                    {
-                        tempBytes.Add(item.LiquidType);
-                    }
-
-                    count++;
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
                 }
 
-                foreach (var item in tile.TopItems2)
+                count++;
+            }
+
+            foreach (var item in tile.TopItems2)
+            {
+                if (count == numberOfObjectsLimit)
                 {
-                    if (count == numberOfObjectsLimit)
-                    {
-                        break;
-                    }
-
-                    tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
-
-                    if (item.IsCumulative)
-                    {
-                        tempBytes.Add(item.Amount);
-                    }
-                    else if (item.IsLiquidPool || item.IsLiquidContainer)
-                    {
-                        tempBytes.Add(item.LiquidType);
-                    }
-
-                    count++;
+                    break;
                 }
 
-                foreach (var creatureId in tile.CreatureIds)
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
                 {
-                    var creature = Game.Instance.GetCreatureWithId(creatureId);
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
+                }
 
-                    if (creature == null)
-                    {
-                        continue;
-                    }
+                count++;
+            }
 
-                    if (count == numberOfObjectsLimit)
-                    {
-                        break;
-                    }
+            foreach (var creatureId in tile.CreatureIds)
+            {
+                var creature = Game.Instance.GetCreatureWithId(creatureId);
 
-                    if (player.KnowsCreatureWithId(creatureId))
+                if (creature == null)
+                {
+                    continue;
+                }
+
+                if (count == numberOfObjectsLimit)
+                {
+                    break;
+                }
+
+                if (player.KnowsCreatureWithId(creatureId))
+                {
+                    tempBytes.AddRange(BitConverter.GetBytes((ushort)GameOutgoingPacketType.AddKnownCreature));
+                    tempBytes.AddRange(BitConverter.GetBytes(creatureId));
+                }
+                else
+                {
+                    tempBytes.AddRange(BitConverter.GetBytes((ushort)GameOutgoingPacketType.AddUnknownCreature));
+                    tempBytes.AddRange(BitConverter.GetBytes(player.ChooseToRemoveFromKnownSet()));
+                    tempBytes.AddRange(BitConverter.GetBytes(creatureId));
+
+                    player.AddKnownCreature(creatureId);
+
+                    var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
+                    tempBytes.AddRange(BitConverter.GetBytes((ushort)creatureNameBytes.Length));
+                    tempBytes.AddRange(creatureNameBytes);
+                }
+
+                tempBytes.Add((byte)Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints));
+                tempBytes.Add((byte)creature.ClientSafeDirection);
+
+                if (player.CanSee(creature))
+                {
+                    // Add creature outfit
+                    tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.Id));
+
+                    if (creature.Outfit.Id > 0)
                     {
-                        tempBytes.AddRange(BitConverter.GetBytes((ushort)GameOutgoingPacketType.AddKnownCreature));
-                        tempBytes.AddRange(BitConverter.GetBytes(creatureId));
+                        tempBytes.Add(creature.Outfit.Head);
+                        tempBytes.Add(creature.Outfit.Body);
+                        tempBytes.Add(creature.Outfit.Legs);
+                        tempBytes.Add(creature.Outfit.Feet);
                     }
                     else
                     {
-                        tempBytes.AddRange(BitConverter.GetBytes((ushort)GameOutgoingPacketType.AddUnknownCreature));
-                        tempBytes.AddRange(BitConverter.GetBytes(player.ChooseToRemoveFromKnownSet()));
-                        tempBytes.AddRange(BitConverter.GetBytes(creatureId));
-
-                        player.AddKnownCreature(creatureId);
-
-                        var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
-                        tempBytes.AddRange(BitConverter.GetBytes((ushort)creatureNameBytes.Length));
-                        tempBytes.AddRange(creatureNameBytes);
+                        tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.LikeType));
                     }
-
-                    tempBytes.Add((byte)Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints));
-                    tempBytes.Add((byte)creature.ClientSafeDirection);
-
-                    if (player.CanSee(creature))
-                    {
-                        // Add creature outfit
-                        tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.Id));
-
-                        if (creature.Outfit.Id > 0)
-                        {
-                            tempBytes.Add(creature.Outfit.Head);
-                            tempBytes.Add(creature.Outfit.Body);
-                            tempBytes.Add(creature.Outfit.Legs);
-                            tempBytes.Add(creature.Outfit.Feet);
-                        }
-                        else
-                        {
-                            tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.LikeType));
-                        }
-                    }
-                    else
-                    {
-                        tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
-                        tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
-                    }
-
-                    tempBytes.Add(creature.LightBrightness);
-                    tempBytes.Add(creature.LightColor);
-
-                    tempBytes.AddRange(BitConverter.GetBytes(creature.Speed));
-
-                    tempBytes.Add(creature.Skull); // skull
-                    tempBytes.Add(creature.Shield); // shield
                 }
-
-                foreach (var item in tile.DownItems)
+                else
                 {
-                    if (count == numberOfObjectsLimit)
-                    {
-                        break;
-                    }
-
-                    tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
-
-                    if (item.IsCumulative)
-                    {
-                        tempBytes.Add(item.Amount);
-                    }
-                    else if (item.IsLiquidPool || item.IsLiquidContainer)
-                    {
-                        tempBytes.Add(item.LiquidType);
-                    }
-
-                    count++;
+                    tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
+                    tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
                 }
+
+                tempBytes.Add(creature.LightBrightness);
+                tempBytes.Add(creature.LightColor);
+
+                tempBytes.AddRange(BitConverter.GetBytes(creature.Speed));
+
+                tempBytes.Add(creature.Skull);
+                tempBytes.Add(creature.Shield);
+            }
+
+            foreach (var item in tile.DownItems)
+            {
+                if (count == numberOfObjectsLimit)
+                {
+                    break;
+                }
+
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
+                {
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
+                }
+
+                count++;
             }
 
             return tempBytes;

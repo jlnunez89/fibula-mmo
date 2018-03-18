@@ -72,7 +72,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
+                Game.Instance.ScheduleEvent(movement, delayTime);
             }
         }
 
@@ -100,7 +100,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
+                Game.Instance.ScheduleEvent(movement, delayTime);
             }
         }
 
@@ -137,7 +137,7 @@ namespace OpenTibia.Server.Actions
             // submit the movement.
             if (movement != null)
             {
-                Task.Delay(delayTime).ContinueWith(previous => { Game.Instance.ScheduleEvent(movement); });
+                Game.Instance.ScheduleEvent(movement, delayTime);
             }
         }
     }

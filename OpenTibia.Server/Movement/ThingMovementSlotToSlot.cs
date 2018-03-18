@@ -18,8 +18,8 @@ namespace OpenTibia.Server.Movement
 
     internal class ThingMovementSlotToSlot : MovementBase
     {
-        public ThingMovementSlotToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+        public ThingMovementSlotToSlot(uint requestorId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
+            : base(requestorId, EvaluationTime.OnExecute)
         {
             // intentionally left thing null check out. Handled by Perform().
             if (count == 0)
@@ -36,10 +36,10 @@ namespace OpenTibia.Server.Movement
             this.Item = thingMoving as IItem;
             this.Count = count;
 
-            this.Conditions.Add(new SlotContainsItemAndCountEventCondition(creatureRequestingId, this.Item, this.FromSlot, this.Count));
-        }
+            this.Conditions.Add(new SlotContainsItemAndCountEventCondition(requestorId, this.Item, this.FromSlot, this.Count));
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveBetweenSlots));
+        }
 
         public Location FromLocation { get; }
 
@@ -53,18 +53,17 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        public override void Process()
+        private void MoveBetweenSlots()
         {
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
-            if (this.Item == null || requestor == null)
+            if (this.Item == null || this.Requestor == null)
             {
                 return;
             }
 
             bool partialRemove;
+
             // attempt to remove the item from the inventory
-            var movingItem = requestor.Inventory?.Remove(this.FromSlot, this.Count, out partialRemove);
+            var movingItem = this.Requestor.Inventory?.Remove(this.FromSlot, this.Count, out partialRemove);
 
             if (movingItem == null)
             {
@@ -73,23 +72,23 @@ namespace OpenTibia.Server.Movement
 
             // attempt to place the intended item at the slot.
             IItem addedItem;
-            if (!requestor.Inventory.Add(movingItem, out addedItem, this.ToSlot, movingItem.Count))
+            if (!this.Requestor.Inventory.Add(movingItem, out addedItem, this.ToSlot, movingItem.Count))
             {
                 // failed to add to the slot, add again to the source slot
-                if (!requestor.Inventory.Add(movingItem, out addedItem, this.FromSlot, movingItem.Count))
+                if (!this.Requestor.Inventory.Add(movingItem, out addedItem, this.FromSlot, movingItem.Count))
                 {
                     // and we somehow failed to re-add it to the source container...
                     // throw to the ground.
                     IThing thing = movingItem;
-                    requestor.Tile.AddThing(ref thing, movingItem.Count);
+                    this.Requestor.Tile.AddThing(ref thing, movingItem.Count);
 
                     // notify all spectator players of that tile.
-                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, requestor.Location)), requestor.Location);
+                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.Requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.Requestor.Location)), this.Requestor.Location);
 
                     // call any collision events again.
-                    if (requestor.Tile.HandlesCollision)
+                    if (this.Requestor.Tile.HandlesCollision)
                     {
-                        foreach (var itemWithCollision in requestor.Tile.ItemsWithCollision)
+                        foreach (var itemWithCollision in this.Requestor.Tile.ItemsWithCollision)
                         {
                             var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
@@ -113,23 +112,23 @@ namespace OpenTibia.Server.Movement
 
                 // added the new item to the slot
                 IItem extraAddedItem;
-                if (!requestor.Inventory.Add(addedItem, out extraAddedItem, this.FromSlot, movingItem.Count))
+                if (!this.Requestor.Inventory.Add(addedItem, out extraAddedItem, this.FromSlot, movingItem.Count))
                 {
                     // we exchanged or got some leftover item, place back in the source container at any index.
                     IThing remainderThing = extraAddedItem;
 
-                    requestor.Tile.AddThing(ref remainderThing, remainderThing.Count);
+                    this.Requestor.Tile.AddThing(ref remainderThing, remainderThing.Count);
 
                     // notify all spectator players of that tile.
-                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, requestor.Tile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, requestor.Location)), requestor.Location);
+                    Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.Requestor.Tile.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.Requestor.Location)), this.Requestor.Location);
 
                     // call any collision events again.
-                    if (!requestor.Tile.HandlesCollision)
+                    if (!this.Requestor.Tile.HandlesCollision)
                     {
                         return;
                     }
 
-                    foreach (var itemWithCollision in requestor.Tile.ItemsWithCollision)
+                    foreach (var itemWithCollision in this.Requestor.Tile.ItemsWithCollision)
                     {
                         var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 

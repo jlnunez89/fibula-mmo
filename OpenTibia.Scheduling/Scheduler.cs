@@ -109,9 +109,20 @@ namespace OpenTibia.Scheduling
         /// Cancels all the events attributed to a requestor.
         /// </summary>
         /// <param name="requestorId">The id of the requestor.</param>
-        public void CancelAllFor(uint requestorId)
+        /// <param name="specificType">Optional. The type of event to remove. By default, it will remove all.</param>
+        public void CancelAllFor(uint requestorId, Type specificType = null)
         {
             requestorId.ThrowIfDefaultValue();
+
+            if (specificType == null)
+            {
+                specificType = typeof(BaseEvent);
+            }
+
+            if (specificType as IEvent == null)
+            {
+                throw new ArgumentException($"Invalid type of event specified. Type must derive from {nameof(IEvent)}.", nameof(specificType));
+            }
 
             lock (this.eventsPerRequestorLock)
             {
@@ -122,6 +133,7 @@ namespace OpenTibia.Scheduling
 
                 foreach (var eventId in this.eventsPerRequestor[requestorId])
                 {
+                    // TODO: remove only the specified type.
                     this.CancelEvent(eventId);
                 }
 
@@ -284,6 +296,7 @@ namespace OpenTibia.Scheduling
                         if (this.priorityQueue.First == null)
                         {
                             // no more items on the queue, go to wait.
+                            Console.WriteLine($"{nameof(Scheduler)}: Queue empty.");
                             continue;
                         }
 
@@ -317,7 +330,7 @@ namespace OpenTibia.Scheduling
                             }
 
                             // else the next item is in the future, so figure out how long to wait, update and break.
-                            waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority - currentTimeInMilliseconds);
+                            waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < currentTimeInMilliseconds ? 0 : nextEvent.Priority - currentTimeInMilliseconds);
                             break;
                         }
                     }

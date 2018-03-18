@@ -44,17 +44,17 @@ namespace OpenTibia.Scheduling.Contracts
         IList<IEventCondition> Conditions { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventCondition"/> that will be executed if the conditions check succeeds.
+        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check succeeds.
         /// </summary>
         IList<IEventAction> ActionsOnPass { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventCondition"/> that will be executed if the conditions check fails.
+        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check fails.
         /// </summary>
         IList<IEventAction> ActionsOnFail { get; }
-
+        
         /// <summary>
-        /// Executes the event. Performs the <see cref="ActionsOnPass"/> on the <see cref="ActionsOnFail"/> depending if the conditions were met.
+        /// Processes the event.
         /// </summary>
         void Process();
     }

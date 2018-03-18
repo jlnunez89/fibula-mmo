@@ -25,6 +25,8 @@ namespace OpenTibia.Server.Map
 
         private readonly Stack<IItem> downItemsOnTile;
 
+        private byte[] cachedDescription;
+
         public Location Location { get; }
 
         public byte Flags { get; private set; }
@@ -43,7 +45,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return this.Ground != null && this.Ground.HasCollision || this.TopItems1.Any(i => i.HasCollision) || this.TopItems2.Any(i => i.HasCollision) || this.DownItems.Any(i => i.HasCollision);
+                return (this.Ground != null && this.Ground.HasCollision) || this.TopItems1.Any(i => i.HasCollision) || this.TopItems2.Any(i => i.HasCollision) || this.DownItems.Any(i => i.HasCollision);
             }
         }
 
@@ -70,7 +72,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return this.Ground != null && this.Ground.HasSeparation || this.TopItems1.Any(i => i.HasSeparation) || this.TopItems2.Any(i => i.HasSeparation) || this.DownItems.Any(i => i.HasSeparation);
+                return (this.Ground != null && this.Ground.HasSeparation) || this.TopItems1.Any(i => i.HasSeparation) || this.TopItems2.Any(i => i.HasSeparation) || this.DownItems.Any(i => i.HasSeparation);
             }
         }
 
@@ -99,7 +101,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return this.Ground != null && this.Ground.BlocksThrow || this.TopItems1.Any(i => i.BlocksThrow) || this.TopItems2.Any(i => i.BlocksThrow) || this.DownItems.Any(i => i.BlocksThrow);
+                return (this.Ground != null && this.Ground.BlocksThrow) || this.TopItems1.Any(i => i.BlocksThrow) || this.TopItems2.Any(i => i.BlocksThrow) || this.DownItems.Any(i => i.BlocksThrow);
             }
         }
 
@@ -107,7 +109,7 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return this.Ground != null && this.Ground.BlocksPass || this.CreatureIds.Any() || this.TopItems1.Any(i => i.BlocksPass) || this.TopItems2.Any(i => i.BlocksPass) || this.DownItems.Any(i => i.BlocksPass);
+                return (this.Ground != null && this.Ground.BlocksPass) || this.CreatureIds.Any() || this.TopItems1.Any(i => i.BlocksPass) || this.TopItems2.Any(i => i.BlocksPass) || this.DownItems.Any(i => i.BlocksPass);
             }
         }
 
@@ -115,8 +117,106 @@ namespace OpenTibia.Server.Map
         {
             get
             {
-                return this.Ground != null && this.Ground.BlocksLay || this.TopItems1.Any(i => i.BlocksLay) || this.TopItems2.Any(i => i.BlocksLay) || this.DownItems.Any(i => i.BlocksLay);
+                return (this.Ground != null && this.Ground.BlocksLay) || this.TopItems1.Any(i => i.BlocksLay) || this.TopItems2.Any(i => i.BlocksLay) || this.DownItems.Any(i => i.BlocksLay);
             }
+        }
+
+        public byte[] CachedDescription
+        {
+            get
+            {
+                if (this.cachedDescription == null)
+                {
+                    this.cachedDescription = this.GetItemDescriptionBytes();
+                }
+
+                return this.cachedDescription;
+            }
+        }
+
+        private byte[] GetItemDescriptionBytes()
+        {
+            // not valid to cache response if there are creatures.
+            if (this.creatureIdsOnTile.Count > 0)
+            {
+                return null;
+            }
+
+            var tempBytes = new List<byte>();
+
+            var count = 0;
+            const int numberOfObjectsLimit = 9;
+
+            if (this.Ground != null)
+            {
+                tempBytes.AddRange(BitConverter.GetBytes(this.Ground.Type.ClientId));
+                count++;
+            }
+
+            foreach (var item in this.TopItems1)
+            {
+                if (count == numberOfObjectsLimit)
+                {
+                    break;
+                }
+
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
+                {
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
+                }
+
+                count++;
+            }
+
+            foreach (var item in this.TopItems2)
+            {
+                if (count == numberOfObjectsLimit)
+                {
+                    break;
+                }
+
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
+                {
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
+                }
+
+                count++;
+            }
+
+            foreach (var item in this.DownItems)
+            {
+                if (count == numberOfObjectsLimit)
+                {
+                    break;
+                }
+
+                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                if (item.IsCumulative)
+                {
+                    tempBytes.Add(item.Amount);
+                }
+                else if (item.IsLiquidPool || item.IsLiquidContainer)
+                {
+                    tempBytes.Add(item.LiquidType);
+                }
+
+                count++;
+            }
+
+            return tempBytes.ToArray();
         }
 
         public bool CanBeWalked(byte avoidDamageType = 0)
@@ -178,6 +278,9 @@ namespace OpenTibia.Server.Map
                 this.creatureIdsOnTile.Push(creature.CreatureId);
                 creature.Tile = this;
                 creature.Added();
+                
+                // invalidate the cache.
+                this.cachedDescription = null;
             }
             else if (item != null)
             {
@@ -235,6 +338,9 @@ namespace OpenTibia.Server.Map
                 }
 
                 item.Tile = this;
+
+                // invalidate the cache.
+                this.cachedDescription = null;
             }
         }
 
@@ -309,6 +415,9 @@ namespace OpenTibia.Server.Map
             {
                 throw new InvalidCastException("Thing did not cast to either a CreatureId or Item.");
             }
+
+            // invalidate the cache.
+            this.cachedDescription = null;
         }
 
         public void RemoveCreature(ICreature c)
@@ -346,6 +455,9 @@ namespace OpenTibia.Server.Map
             lock (this.topItems1OnTile)
             {
                 this.topItems1OnTile.Push(i);
+
+                // invalidate the cache.
+                this.cachedDescription = null;
             }
         }
 
@@ -354,6 +466,9 @@ namespace OpenTibia.Server.Map
             lock (this.topItems2OnTile)
             {
                 this.topItems2OnTile.Push(i);
+
+                // invalidate the cache.
+                this.cachedDescription = null;
             }
         }
 
@@ -362,6 +477,9 @@ namespace OpenTibia.Server.Map
             lock (this.downItemsOnTile)
             {
                 this.downItemsOnTile.Push(i);
+
+                // invalidate the cache.
+                this.cachedDescription = null;
             }
         }
 

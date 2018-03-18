@@ -394,23 +394,18 @@ namespace OpenTibia.Server
             }
         }
 
-        public void WalkTo(Direction direction)
-        {
-            lock (this.enqueueWalkLock)
-            {
-                if (this.WalkingQueue.Count > 0)
-                {
-                    this.StopWalking();
-                }
-
-                this.WalkingQueue.Enqueue(new Tuple<byte, Direction>(this.NextStepId, direction));
-                Game.Instance.SignalWalkAvailable();
-            }
-        }
-
         public TimeSpan CalculateRemainingCooldownTime(CooldownType type, DateTime currentTime)
         {
-            var timeDiff = this.Cooldowns[type].Item1 + this.Cooldowns[type].Item2 - currentTime;
+            TimeSpan timeDiff = TimeSpan.Zero;
+
+            try
+            {
+                timeDiff = this.Cooldowns[type].Item1 + this.Cooldowns[type].Item2 - currentTime;
+            }
+            catch
+            {
+                Console.WriteLine($"WARN: cooldown type {type} not found in {this.Name}'s cooldowns.");
+            }
 
             return timeDiff > TimeSpan.Zero ? timeDiff : TimeSpan.Zero;
         }
@@ -420,7 +415,7 @@ namespace OpenTibia.Server
             var tilePenalty = this.Tile?.Ground?.MovementPenalty;
             var totalPenalty = (tilePenalty ?? 200) * (wasDiagonal ? 2 : 1);
 
-            this.Cooldowns[CooldownType.Move] = new Tuple<DateTime, TimeSpan>(Game.Instance.MovementSynchronizationTime, TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)this.Speed)));
+            this.Cooldowns[CooldownType.Move] = new Tuple<DateTime, TimeSpan>(DateTime.Now, TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)this.Speed)));
 
             this.NextStepId = (byte)(lastStepId + 1);
         }

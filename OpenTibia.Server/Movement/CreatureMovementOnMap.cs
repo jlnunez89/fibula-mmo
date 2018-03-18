@@ -16,50 +16,45 @@ namespace OpenTibia.Server.Movement
     {
         public Direction AttemptedDirection { get; }
 
-        public CreatureMovementOnMap(uint creatureRequestingId, ICreature creatureMoving, Location fromLocation, Location toLocation, bool isTeleport = false, byte count = 1)
-            : base(creatureRequestingId, creatureMoving, fromLocation, creatureMoving.GetStackPosition(), toLocation, count, isTeleport)
+        public CreatureMovementOnMap(uint requestorId, ICreature creatureMoving, Location fromLocation, Location toLocation, bool isTeleport = false, byte count = 1)
+            : base(requestorId, creatureMoving, fromLocation, creatureMoving.GetStackPosition(), toLocation, count, isTeleport)
         {
             if (count == 0)
             {
-                throw new ArgumentException("Invalid count zero.");
+                throw new ArgumentException("Invalid count zero.", nameof(count));
             }
-
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
             this.AttemptedDirection = fromLocation.DirectionTo(toLocation, true);
 
-            if (this.IsTeleport || requestor == null)
+            // don't add any conditions if this wasn't a creature requesting.
+            if (!this.IsTeleport && this.Requestor != null)
             {
-                return;
+                this.Conditions.Add(new LocationNotAviodEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+                this.Conditions.Add(new LocationsAreDistantByEventCondition(this.FromLocation, this.ToLocation));
+                this.Conditions.Add(new CreatureThrowBetweenFloorsEventCondition(this.RequestorId, this.Thing, this.ToLocation));
             }
 
-            this.Conditions.Add(new LocationNotAviodEventCondition(this.RequestorId, this.Thing, this.ToLocation));
-            this.Conditions.Add(new LocationsAreDistantByEventCondition(this.FromLocation, this.ToLocation));
-            this.Conditions.Add(new CreatureThrowBetweenFloorsEventCondition(this.RequestorId, this.Thing, this.ToLocation));
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveCreature));
         }
 
-        public override void Process()
+        private void MoveCreature()
         {
-            base.Process();
-
             if (this.IsTeleport)
             {
                 return;
             }
 
-            var requestor = Game.Instance.GetCreatureWithId(this.RequestorId);
-
             // update both creature's to face the push direction... a *real* push!
-            if (requestor != this.Thing)
+            if (this.Requestor != this.Thing)
             {
-                requestor?.TurnToDirection(requestor.Location.DirectionTo(this.Thing.Location));
+                this.Requestor?.TurnToDirection(this.Requestor.Location.DirectionTo(this.Thing.Location));
             }
 
             ((Creature)this.Thing)?.TurnToDirection(this.AttemptedDirection);
 
-            if (requestor != null && requestor == this.Thing)
+            if (this.Requestor != null && this.Requestor == this.Thing)
             {
-                requestor.UpdateLastStepInfo(requestor.NextStepId, wasDiagonal: this.AttemptedDirection > Direction.West);
+                this.Requestor.UpdateLastStepInfo(this.Requestor.NextStepId, wasDiagonal: this.AttemptedDirection > Direction.West);
             }
         }
     }

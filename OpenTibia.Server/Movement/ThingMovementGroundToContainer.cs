@@ -18,20 +18,17 @@ namespace OpenTibia.Server.Movement
 
     internal class ThingMovementGroundToContainer : MovementBase
     {
-        public ThingMovementGroundToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+        public ThingMovementGroundToContainer(uint requestorId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
+            : base(requestorId, EvaluationTime.OnExecute)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0)
             {
                 throw new ArgumentException("Invalid count zero.");
             }
 
-            if (requestor == null)
+            if (this.Requestor == null)
             {
-                throw new ArgumentNullException(nameof(requestor));
+                throw new ArgumentException("Invalid requestor id.", nameof(requestorId));
             }
 
             this.Thing = thingMoving;
@@ -42,7 +39,7 @@ namespace OpenTibia.Server.Movement
             this.FromTile = Game.Instance.GetTileAt(this.FromLocation);
 
             this.ToLocation = toLocation;
-            this.ToContainer = (requestor as IPlayer)?.GetContainer(toLocation.Container);
+            this.ToContainer = (this.Requestor as IPlayer)?.GetContainer(toLocation.Container);
             this.ToIndex = (byte)this.ToLocation.Z;
 
             if (this.ToContainer != null && this.ToContainer.HolderId == this.RequestorId)
@@ -53,11 +50,11 @@ namespace OpenTibia.Server.Movement
             this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.ToContainer));
             this.Conditions.Add(new ContainerHasEnoughCapacityEventCondition(this.ToContainer));
             this.Conditions.Add(new ThingIsTakeableEventCondition(this.RequestorId, this.Thing));
-            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? default(Location), this.FromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.PickupToContainer));
+        }
 
         public Location FromLocation { get; }
 
@@ -75,10 +72,9 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        public override void Process()
+        private void PickupToContainer()
         {
             var thingAsItem = this.Thing as IItem;
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
             if (this.FromTile == null || this.ToContainer == null || this.Thing == null || thingAsItem == null)
             {
@@ -115,7 +111,7 @@ namespace OpenTibia.Server.Movement
                     {
                         var separationEvents = Game.Instance.EventsCatalog[ItemEventType.Separation].Cast<SeparationItemEvent>();
 
-                        var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, thing, requestor as IPlayer) && e.CanBeExecuted);
+                        var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
 
                         // Execute all actions.
                         candidate?.Execute();

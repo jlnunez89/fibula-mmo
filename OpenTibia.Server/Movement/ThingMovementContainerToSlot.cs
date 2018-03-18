@@ -15,35 +15,32 @@ namespace OpenTibia.Server.Movement
 
     internal class ThingMovementContainerToSlot : MovementBase
     {
-        public ThingMovementContainerToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+        public ThingMovementContainerToSlot(uint requestorId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
+            : base(requestorId, EvaluationTime.OnExecute)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0)
             {
-                throw new ArgumentException("Invalid count zero.");
+                throw new ArgumentException("Invalid count zero.", nameof(count));
             }
 
-            if (requestor == null)
+            if (this.Requestor == null)
             {
-                throw new ArgumentNullException(nameof(requestor));
+                throw new ArgumentException("Invalid requestor id.", nameof(requestorId));
             }
 
             this.Thing = thingMoving;
             this.Count = count;
 
             this.FromLocation = fromLocation;
-            this.FromContainer = (requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
+            this.FromContainer = (this.Requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
             this.FromIndex = (byte)this.FromLocation.Z;
 
             this.ToLocation = toLocation;
             this.ToSlot = (byte)this.ToLocation.Slot;
 
-            var droppingItem = requestor.Inventory?[this.ToSlot];
+            var droppingItem = this.Requestor.Inventory?[this.ToSlot];
 
-            if (this.FromContainer != null && this.FromContainer.HolderId != requestor.CreatureId)
+            if (this.FromContainer != null && this.FromContainer.HolderId != this.RequestorId)
             {
                 this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing, droppingItem));
             }
@@ -51,9 +48,9 @@ namespace OpenTibia.Server.Movement
             this.Conditions.Add(new SlotHasContainerAndContainerHasEnoughCapacityEventCondition(this.RequestorId, droppingItem));
             this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.FromContainer));
             this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveContainerToSlot));
+        }
 
         public Location FromLocation { get; }
 
@@ -69,14 +66,12 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        /// <inheritdoc/>
-        public override void Process()
+        private void MoveContainerToSlot()
         {
             IItem addedItem;
             var updateItem = this.Thing as IItem;
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (this.FromContainer == null || updateItem == null || requestor == null)
+            if (this.FromContainer == null || updateItem == null || this.Requestor == null)
             {
                 return;
             }
@@ -93,8 +88,9 @@ namespace OpenTibia.Server.Movement
             }
 
             IThing currentThing = null;
+
             // attempt to place the intended item at the slot.
-            if (!requestor.Inventory.Add(updateItem, out addedItem, this.ToSlot, this.Count))
+            if (!this.Requestor.Inventory.Add(updateItem, out addedItem, this.ToSlot, this.Count))
             {
                 // Something went wrong, add back to the source container...
                 if (this.FromContainer.AddContent(updateItem, 0xFF))
@@ -125,10 +121,10 @@ namespace OpenTibia.Server.Movement
                 currentThing = addedItem;
             }
 
-            requestor.Tile.AddThing(ref currentThing, currentThing.Count);
+            this.Requestor.Tile.AddThing(ref currentThing, currentThing.Count);
 
             // notify all spectator players of that tile.
-            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, requestor.Location)), requestor.Location);
+            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.Requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.Requestor.Location)), this.Requestor.Location);
         }
     }
 }

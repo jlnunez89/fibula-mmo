@@ -8,6 +8,7 @@ namespace OpenTibia.Scheduling
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using OpenTibia.Scheduling.Contracts;
     using Priority_Queue;
 
@@ -19,10 +20,12 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
         /// </summary>
-        public BaseEvent()
+        /// <param name="evaluationTime">Optional. The time at which the event's conditions should be evaluated. Default is <see cref="EvaluationTime.OnExecute"/>.</param>
+        public BaseEvent(EvaluationTime evaluationTime = EvaluationTime.OnExecute)
         {
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
+            this.EvaluateAt = evaluationTime;
 
             this.Conditions = new List<IEventCondition>();
             this.ActionsOnPass = new List<IEventAction>();
@@ -32,9 +35,10 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
         /// </summary>
-        /// <param name="requestorId">Optional. The id of the creature or entity requesting the event.</param>
-        public BaseEvent(uint requestorId = 0)
-            : this()
+        /// <param name="requestorId">Optional. The id of the creature or entity requesting the event. Default is 0.</param>
+        /// <param name="evaluationTime">Optional. The time at which the event's conditions should be evaluated. Default is <see cref="EvaluationTime.OnExecute"/>.</param>
+        public BaseEvent(uint requestorId = 0, EvaluationTime evaluationTime = EvaluationTime.OnExecute)
+            : this(evaluationTime)
         {
             this.RequestorId = requestorId;
         }
@@ -49,10 +53,36 @@ namespace OpenTibia.Scheduling
         public string ErrorMessage { get; protected set; }
 
         /// <inheritdoc/>
-        public abstract EvaluationTime EvaluateAt { get; }
+        public EvaluationTime EvaluateAt { get; }
+
+        public bool Force { get; protected set; }
 
         /// <inheritdoc/>
-        public abstract bool CanBeExecuted { get; }
+        public bool CanBeExecuted
+        {
+            get
+            {
+                var allPassed = true;
+
+                if (!this.Force)
+                {
+                    foreach (var policy in this.Conditions)
+                    {
+                        allPassed &= policy.Evaluate();
+
+                        if (!allPassed)
+                        {
+                            // TODO: proper logging.
+                            Console.WriteLine($"Failed event condition {policy.GetType().Name}.");
+                            this.ErrorMessage = policy.ErrorMessage;
+                            break;
+                        }
+                    }
+                }
+
+                return allPassed;
+            }
+        }
 
         /// <inheritdoc/>
         public IList<IEventCondition> Conditions { get; }
@@ -63,7 +93,30 @@ namespace OpenTibia.Scheduling
         /// <inheritdoc/>
         public IList<IEventAction> ActionsOnFail { get; }
 
-        /// <inheritdoc/>
-        public abstract void Process();
+        /// <summary>
+        /// Executes the event. Performs the <see cref="ActionsOnPass"/> on the <see cref="ActionsOnFail"/> depending if the conditions were met.
+        /// </summary>
+        public void Process()
+        {
+            if (this.EvaluateAt == EvaluationTime.OnSchedule || this.CanBeExecuted)
+            {
+                int i = 1;
+                foreach (var action in this.ActionsOnPass)
+                {
+                    Stopwatch sw = Stopwatch.StartNew();
+                    action.Execute();
+                    sw.Stop();
+
+                    Console.WriteLine($"Executed ({i++} of {this.ActionsOnPass.Count})... done in {sw.Elapsed}.");
+                }
+
+                return;
+            }
+
+            foreach (var action in this.ActionsOnFail)
+            {
+                action.Execute();
+            }
+        }
     }
 }

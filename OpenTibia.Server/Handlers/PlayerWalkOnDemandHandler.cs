@@ -33,15 +33,11 @@ namespace OpenTibia.Server.Handlers
             }
 
             player.ClearPendingActions();
-            var cooldownRemaining = player.CalculateRemainingCooldownTime(CooldownType.Move, Game.Instance.MovementSynchronizationTime);
 
-            if (cooldownRemaining == TimeSpan.Zero)
+            var cooldownRemaining = player.CalculateRemainingCooldownTime(CooldownType.Move, DateTime.Now);
+
+            if (!Game.Instance.RequestCreatureWalkToDirection(player, this.Direction, cooldownRemaining))
             {
-                if (Game.Instance.RequestCreatureWalkToDirection(player, this.Direction))
-                {
-                    return;
-                }
-
                 this.ResponsePackets.Add(new PlayerWalkCancelPacket
                 {
                     Direction = player.Direction
@@ -52,15 +48,6 @@ namespace OpenTibia.Server.Handlers
                     Message = "Sorry, not possible.",
                     Type = MessageType.StatusSmall
                 });
-            }
-            else
-            {
-                // schedule de walk.
-                Task.Delay(cooldownRemaining)
-                    .ContinueWith(previous =>
-                    {
-                        player.AutoWalk(this.Direction);
-                    });
             }
         }
     }

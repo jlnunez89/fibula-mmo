@@ -19,14 +19,11 @@ namespace OpenTibia.Server.Movement
     internal class ThingMovementOnMap : MovementBase
     {
         public ThingMovementOnMap(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1, bool isTeleport = false)
-            : base(creatureRequestingId)
+            : base(creatureRequestingId, EvaluationTime.OnBoth)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0)
             {
-                throw new ArgumentException("Invalid count zero.");
+                throw new ArgumentException("Invalid count zero.", nameof(count));
             }
 
             this.FromLocation = fromLocation;
@@ -40,7 +37,7 @@ namespace OpenTibia.Server.Movement
             this.Count = count;
             this.IsTeleport = isTeleport;
 
-            if (!isTeleport && requestor != null)
+            if (!isTeleport && this.Requestor != null)
             {
                 this.Conditions.Add(new CanThrowBetweenEventCondition(this.RequestorId, this.FromLocation, this.ToLocation));
             }
@@ -49,11 +46,11 @@ namespace OpenTibia.Server.Movement
             this.Conditions.Add(new LocationNotObstructedEventCondition(this.RequestorId, this.Thing, this.ToLocation));
             this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.ToLocation));
             this.Conditions.Add(new UnpassItemsInRangeEventCondition(this.RequestorId, this.Thing, this.ToLocation));
-            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? default(Location), this.FromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveThing));
+        }
 
         public Location FromLocation { get; }
 
@@ -71,11 +68,8 @@ namespace OpenTibia.Server.Movement
 
         public bool IsTeleport { get; }
 
-        /// <inheritdoc/>
-        public override void Process()
+        private void MoveThing()
         {
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (this.FromTile == null || this.ToTile == null)
             {
                 return;
@@ -128,7 +122,7 @@ namespace OpenTibia.Server.Movement
                 {
                     var separationEvents = Game.Instance.EventsCatalog[ItemEventType.Separation].Cast<SeparationItemEvent>();
 
-                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, thing, requestor as IPlayer) && e.CanBeExecuted);
+                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
 
                     // Execute all actions.
                     candidate?.Execute();
@@ -141,7 +135,7 @@ namespace OpenTibia.Server.Movement
                 {
                     var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 
-                    var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, requestor as IPlayer) && e.CanBeExecuted);
+                    var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
 
                     // Execute all actions.
                     candidate?.Execute();

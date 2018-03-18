@@ -20,11 +20,8 @@ namespace OpenTibia.Server.Movement
     internal class ThingMovementGroundToSlot : MovementBase
     {
         public ThingMovementGroundToSlot(uint creatureRequestingId, IThing thingMoving, Location fromLocation, byte fromStackPos, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+            : base(creatureRequestingId, EvaluationTime.OnExecute)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0 || count > 100)
             {
                 throw new ArgumentException($"Invalid count {count}.", nameof(count));
@@ -40,16 +37,16 @@ namespace OpenTibia.Server.Movement
             this.Thing = thingMoving;
             this.Count = count;
 
-            var droppingItem = requestor?.Inventory?[this.ToSlot];
+            var droppingItem = this.Requestor?.Inventory?[this.ToSlot];
 
             this.Conditions.Add(new SlotHasContainerAndContainerHasEnoughCapacityEventCondition(this.RequestorId, droppingItem));
             this.Conditions.Add(new GrabberHasEnoughCarryStrengthEventCondition(this.RequestorId, this.Thing, droppingItem));
             this.Conditions.Add(new ThingIsTakeableEventCondition(this.RequestorId, this.Thing));
-            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? new Location(), this.FromLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(this.Thing?.Location ?? default(Location), this.FromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(this.Thing, this.FromLocation, this.Count));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveFromGroudToSlot));
+        }
 
         public Location FromLocation { get; }
 
@@ -65,12 +62,11 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        public override void Process()
+        private void MoveFromGroudToSlot()
         {
             var updatedItem = this.Thing as IItem;
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (this.FromTile == null || this.Thing == null || updatedItem == null || requestor == null)
+            if (this.FromTile == null || this.Thing == null || updatedItem == null || this.Requestor == null)
             {
                 return;
             }
@@ -95,7 +91,7 @@ namespace OpenTibia.Server.Movement
                 {
                     var separationEvents = Game.Instance.EventsCatalog[ItemEventType.Separation].Cast<SeparationItemEvent>();
 
-                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, requestor) && e.CanBeExecuted);
+                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, this.Requestor) && e.CanBeExecuted);
 
                     // Execute all actions.
                     candidate?.Execute();
@@ -116,7 +112,7 @@ namespace OpenTibia.Server.Movement
 
             // attempt to place the intended item at the slot.
             IItem addedItem;
-            if (!requestor.Inventory.Add(updatedItem, out addedItem, this.ToSlot, updatedItem.Count))
+            if (!this.Requestor.Inventory.Add(updatedItem, out addedItem, this.ToSlot, updatedItem.Count))
             {
                 // failed to add to the slot, add again to the source tile
                 this.FromTile.AddThing(ref thing, thing.Count);

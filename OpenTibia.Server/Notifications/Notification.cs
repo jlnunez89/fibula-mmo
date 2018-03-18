@@ -11,35 +11,29 @@ namespace OpenTibia.Server.Notifications
     using System.Linq;
     using OpenTibia.Communications;
     using OpenTibia.Communications.Interfaces;
+    using OpenTibia.Scheduling;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Server.Data;
     using OpenTibia.Server.Data.Interfaces;
 
-    public abstract class Notification : INotification
+    public abstract class Notification : BaseEvent, INotification
     {
         public Connection Connection { get; }
 
         public IList<IPacketOutgoing> ResponsePackets { get; protected set; }
 
-        protected Notification(Connection connection)
+        public Notification(Connection connection)
+            : base(connection?.PlayerId ?? 0, EvaluationTime.OnSchedule)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
-
-            this.Connection = connection;
+            this.Connection = connection ?? throw new ArgumentNullException(nameof(connection));
             this.ResponsePackets = new List<IPacketOutgoing>();
+
+            this.ActionsOnPass.Add(new GenericEventAction(this.Send));
         }
 
-        protected Notification(Connection connection, params IPacketOutgoing[] packets)
+        public Notification(Connection connection, params IPacketOutgoing[] packets)
+            : this(connection)
         {
-            if (connection == null)
-            {
-                throw new ArgumentNullException(nameof(connection));
-            }
-
-            this.Connection = connection;
-
             foreach (var packet in packets)
             {
                 this.ResponsePackets.Add(packet);
@@ -63,6 +57,7 @@ namespace OpenTibia.Server.Notifications
             }
 
             this.Connection.Send(networkMessage);
+            Console.WriteLine($"Sent {this.GetType().Name} [{this.EventId}] to {this.Connection.PlayerId}");
 
             // foreach (var packet in ResponsePackets)
             // {

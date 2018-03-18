@@ -6,44 +6,61 @@
 
 namespace OpenTibia.Server.Movement
 {
-    using System;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Data.Contracts;
     using OpenTibia.Scheduling;
-    using OpenTibia.Server.Data;
+    using OpenTibia.Scheduling.Contracts;
+    using OpenTibia.Server.Data.Interfaces;
+    using OpenTibia.Server.Notifications;
 
+    /// <summary>
+    /// Class that represents a common base bewteen movements.
+    /// </summary>
     internal abstract class MovementBase : BaseEvent
     {
-        protected MovementBase(uint requestorId)
-            : base(requestorId)
+        /// <summary>
+        /// Caches the requestor creature, if defined.
+        /// </summary>
+        private ICreature requestor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MovementBase"/> class.
+        /// </summary>
+        /// <param name="requestorId">The id of the creature requesting the movement.</param>
+        /// <param name="evaluationTime">The time to evaluate the movement.</param>
+        protected MovementBase(uint requestorId, EvaluationTime evaluationTime)
+            : base(requestorId, evaluationTime)
         {
+            this.ActionsOnFail.Add(
+                new GenericEventAction(
+                    () =>
+                    {
+                        var player = this.Requestor as Player;
+
+                        if (player != null)
+                        {
+                            Game.Instance.NotifySinglePlayer(player, conn =>
+                                new GenericNotification(
+                                    conn,
+                                    new PlayerWalkCancelPacket { Direction = player.ClientSafeDirection },
+                                    new TextMessagePacket { Message = this.ErrorMessage ?? "Sorry, not possible.", Type = MessageType.StatusSmall }));
+                        }
+                    }));
         }
 
-        public MovementState State { get; protected set; }
-
-        public bool Force { get; protected set; }
-
-        /// <inheritdoc/>
-        public override bool CanBeExecuted
+        /// <summary>
+        /// Gets the creature that is requesting the event, if known.
+        /// </summary>
+        public ICreature Requestor
         {
             get
             {
-                var allPassed = true;
-
-                if (!this.Force)
+                if (this.requestor == null)
                 {
-                    foreach (var policy in this.Conditions)
-                    {
-                        allPassed &= policy.Evaluate();
-
-                        if (!allPassed)
-                        {
-                            Console.WriteLine($"Failed movement policy {policy.GetType().Name}.");
-                            this.ErrorMessage = policy.ErrorMessage;
-                            break;
-                        }
-                    }
+                    this.requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
                 }
 
-                return allPassed;
+                return this.requestor;
             }
         }
     }

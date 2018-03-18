@@ -18,31 +18,28 @@ namespace OpenTibia.Server.Movement
 
     internal class ThingMovementContainerToContainer : MovementBase
     {
-        public ThingMovementContainerToContainer(uint creatureRequestingId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
-            : base(creatureRequestingId)
+        public ThingMovementContainerToContainer(uint requestorId, IThing thingMoving, Location fromLocation, Location toLocation, byte count = 1)
+            : base(requestorId, EvaluationTime.OnExecute)
         {
-            // intentionally left thing null check out. Handled by Perform().
-            var requestor = Game.Instance.GetCreatureWithId(this.RequestorId);
-
             if (count == 0)
             {
-                throw new ArgumentException("Invalid count zero.");
+                throw new ArgumentException("Invalid count zero.", nameof(count));
             }
 
-            if (requestor == null)
+            if (this.Requestor == null)
             {
-                throw new ArgumentNullException(nameof(requestor));
+                throw new ArgumentException("Invalid requestor id.", nameof(requestorId));
             }
 
             this.Thing = thingMoving;
             this.Count = count;
 
             this.FromLocation = fromLocation;
-            this.FromContainer = (requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
+            this.FromContainer = (this.Requestor as IPlayer)?.GetContainer(this.FromLocation.Container);
             this.FromIndex = (byte)this.FromLocation.Z;
 
             this.ToLocation = toLocation;
-            this.ToContainer = (requestor as IPlayer)?.GetContainer(this.ToLocation.Container);
+            this.ToContainer = (this.Requestor as IPlayer)?.GetContainer(this.ToLocation.Container);
             this.ToIndex = (byte)this.ToLocation.Z;
 
             if (this.FromContainer?.HolderId != this.ToContainer?.HolderId && this.ToContainer?.HolderId == this.RequestorId)
@@ -53,9 +50,9 @@ namespace OpenTibia.Server.Movement
             this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.FromContainer));
             this.Conditions.Add(new ContainerHasItemAndEnoughAmountEventCondition(this.Thing as IItem, this.FromContainer, this.FromIndex, this.Count));
             this.Conditions.Add(new GrabberHasContainerOpenEventCondition(this.RequestorId, this.ToContainer));
-        }
 
-        public override EvaluationTime EvaluateAt => EvaluationTime.OnExecute;
+            this.ActionsOnPass.Add(new GenericEventAction(this.MoveBetweenContainers));
+        }
 
         public Location FromLocation { get; }
 
@@ -73,14 +70,12 @@ namespace OpenTibia.Server.Movement
 
         public byte Count { get; }
 
-        /// <inheritdoc/>
-        public override void Process()
+        private void MoveBetweenContainers()
         {
             IItem extraItem;
             var updatedItem = this.Thing as IItem;
-            var requestor = this.RequestorId == 0 ? null : Game.Instance.GetCreatureWithId(this.RequestorId);
 
-            if (this.FromContainer == null || this.ToContainer == null || updatedItem == null || requestor == null)
+            if (this.FromContainer == null || this.ToContainer == null || updatedItem == null || this.Requestor == null)
             {
                 return;
             }
@@ -113,18 +108,18 @@ namespace OpenTibia.Server.Movement
             // and we somehow failed to re-add it to the source container...
             // throw to the ground.
             IThing thing = updatedItem;
-            requestor.Tile.AddThing(ref thing, updatedItem.Count);
+            this.Requestor.Tile.AddThing(ref thing, updatedItem.Count);
 
             // notify all spectator players of that tile.
-            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, requestor.Location)), requestor.Location);
+            Game.Instance.NotifySpectatingPlayers(conn => new TileUpdatedNotification(conn, this.Requestor.Location, Game.Instance.GetMapTileDescription(conn.PlayerId, this.Requestor.Location)), this.Requestor.Location);
 
             // and handle collision.
-            if (!requestor.Tile.HandlesCollision)
+            if (!this.Requestor.Tile.HandlesCollision)
             {
                 return;
             }
 
-            foreach (var itemWithCollision in requestor.Tile.ItemsWithCollision)
+            foreach (var itemWithCollision in this.Requestor.Tile.ItemsWithCollision)
             {
                 var collisionEvents = Game.Instance.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
 

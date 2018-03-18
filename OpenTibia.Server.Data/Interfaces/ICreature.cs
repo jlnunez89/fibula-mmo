@@ -76,8 +76,6 @@ namespace OpenTibia.Server.Data.Interfaces
 
         void StopWalking();
 
-        void WalkTo(Direction direction);
-
         void AutoWalk(params Direction[] directions);
 
         TimeSpan CalculateRemainingCooldownTime(CooldownType type, DateTime currentTime);
