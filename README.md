@@ -1,37 +1,13 @@
-## Welcome to GitHub Pages
+# OpenTibiaCore
+#### A NetCore OpenTibia (7.71) server to rule them all?
 
-You can use the [editor on GitHub](https://github.com/jlnunez89/opentibiacore/edit/master/README.md) to maintain and preview the content for your website in Markdown files.
+### Why Tibia 7.71?
+There was an infamous CipSoft hack in which all assets required to run the game at the time were leaked to the public. So, this is as real as it gets. 
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+Also, I kind of happen to hate aimbots and hotkeys- which were introduced on version 8 of the game.
 
-### Markdown
+### Why NetCore/C#?
+Because it is **awesome**. It is fast, simple and way more maintainable than C++. It's also what half the industry uses and, well, I happen to be part of that half of the industry. And since it's mainly just me as the madman behind condig this, I get to f-ing *PICK* yo.
 
-Markdown is a lightweight and easy-to-use syntax for styling your writing. It includes conventions for
 
-```markdown
-Syntax highlighted code block
 
-# Header 1
-## Header 2
-### Header 3
-
-- Bulleted
-- List
-
-1. Numbered
-2. List
-
-**Bold** and _Italic_ and `Code` text
-
-[Link](url) and ![Image](src)
-```
-
-For more details see [GitHub Flavored Markdown](https://guides.github.com/features/mastering-markdown/).
-
-### Jekyll Themes
-
-Your Pages site will use the layout and styles from the Jekyll theme you have selected in your [repository settings](https://github.com/jlnunez89/opentibiacore/settings). The name of this theme is saved in the Jekyll `_config.yml` configuration file.
-
-### Support or Contact
-
-Having trouble with Pages? Check out our [documentation](https://help.github.com/categories/github-pages-basics/) or [contact support](https://github.com/contact) and we’ll help you sort it out.
