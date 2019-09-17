@@ -12,7 +12,7 @@
 namespace OpenTibia.Scheduling.Contracts
 {
     using System;
-    using OpenTibia.Common.Helpers;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
 
     /// <summary>

@@ -17,7 +17,7 @@ namespace OpenTibia.Server.Standalone
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using OpenTibia.Common.Helpers;
+    using OpenTibia.Common.Utilities;
     using Serilog;
 
     /// <summary>

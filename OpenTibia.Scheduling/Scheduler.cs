@@ -16,7 +16,7 @@ namespace OpenTibia.Scheduling
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Logging;
-    using OpenTibia.Common.Helpers;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using Priority_Queue;

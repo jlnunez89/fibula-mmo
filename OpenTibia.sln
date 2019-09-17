@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.29306.81
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Standalone", "OpenTibia.Server.Standalone\OpenTibia.Server.Standalone.csproj", "{09C8B3A3-0032-484A-82A7-22ED12E5F230}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Common.Helpers", "OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj", "{03310BF8-2E7E-4EA4-8472-62F66094B477}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Contracts", "OpenTibia.Scheduling.Contracts\OpenTibia.Scheduling.Contracts.csproj", "{19F8C588-045E-4053-9A40-61FFEEA558E5}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling", "OpenTibia.Scheduling\OpenTibia.Scheduling.csproj", "{922B02E2-D172-4082-821D-71793BF831C7}"
@@ -14,6 +12,16 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Tests", "OpenTibia.Scheduling.Tests\OpenTibia.Scheduling.Tests.csproj", "{73FABC59-E6D9-416A-AB4F-520628CC057B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Common.Utilities.Testing", "OpenTibia.Common.Utilities.Testing\OpenTibia.Common.Utilities.Testing.csproj", "{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Communications.Contracts", "OpenTibia.Communications.Contracts\OpenTibia.Communications.Contracts.csproj", "{AE67C7E5-3F59-4DAA-ADB2-000E42F1A4FA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Communications", "OpenTibia.Communications\OpenTibia.Communications.csproj", "{289C8080-E76F-498A-A62F-01C859BC89C3}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Security.Contracts", "OpenTibia.Security.Contracts\OpenTibia.Security.Contracts.csproj", "{6F5916A2-E764-4A3F-A1DC-5F23406C98E6}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Security", "OpenTibia.Security\OpenTibia.Security.csproj", "{62AFA1F8-A5F7-4701-A350-4D84B105A1B0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Common.Utilities", "OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj", "{5FDD525B-5B02-4D64-880A-92A149177381}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,10 +33,6 @@ Global
 		{09C8B3A3-0032-484A-82A7-22ED12E5F230}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{09C8B3A3-0032-484A-82A7-22ED12E5F230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{09C8B3A3-0032-484A-82A7-22ED12E5F230}.Release|Any CPU.Build.0 = Release|Any CPU
-		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Release|Any CPU.Build.0 = Release|Any CPU
 		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -45,6 +49,26 @@ Global
 		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE67C7E5-3F59-4DAA-ADB2-000E42F1A4FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE67C7E5-3F59-4DAA-ADB2-000E42F1A4FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE67C7E5-3F59-4DAA-ADB2-000E42F1A4FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE67C7E5-3F59-4DAA-ADB2-000E42F1A4FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{289C8080-E76F-498A-A62F-01C859BC89C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{289C8080-E76F-498A-A62F-01C859BC89C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{289C8080-E76F-498A-A62F-01C859BC89C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{289C8080-E76F-498A-A62F-01C859BC89C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F5916A2-E764-4A3F-A1DC-5F23406C98E6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F5916A2-E764-4A3F-A1DC-5F23406C98E6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F5916A2-E764-4A3F-A1DC-5F23406C98E6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F5916A2-E764-4A3F-A1DC-5F23406C98E6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62AFA1F8-A5F7-4701-A350-4D84B105A1B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62AFA1F8-A5F7-4701-A350-4D84B105A1B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62AFA1F8-A5F7-4701-A350-4D84B105A1B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62AFA1F8-A5F7-4701-A350-4D84B105A1B0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FDD525B-5B02-4D64-880A-92A149177381}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FDD525B-5B02-4D64-880A-92A149177381}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FDD525B-5B02-4D64-880A-92A149177381}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FDD525B-5B02-4D64-880A-92A149177381}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

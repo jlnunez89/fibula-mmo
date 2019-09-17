@@ -5,8 +5,13 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Scheduling.Contracts.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Server.Utils.xml</DocumentationFile>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="BinaryHeap.cs" />
+    <Compile Remove="BytePair.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Remove="stylecop.json" />
@@ -17,14 +22,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Sprache" Version="2.2.0" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
   </ItemGroup>
 
 </Project>
