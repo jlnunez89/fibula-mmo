@@ -7,6 +7,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Standalone
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Common.Helpers", "OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj", "{03310BF8-2E7E-4EA4-8472-62F66094B477}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Contracts", "OpenTibia.Scheduling.Contracts\OpenTibia.Scheduling.Contracts.csproj", "{19F8C588-045E-4053-9A40-61FFEEA558E5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling", "OpenTibia.Scheduling\OpenTibia.Scheduling.csproj", "{922B02E2-D172-4082-821D-71793BF831C7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Scheduling.Tests", "OpenTibia.Scheduling.Tests\OpenTibia.Scheduling.Tests.csproj", "{73FABC59-E6D9-416A-AB4F-520628CC057B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Common.Utilities.Testing", "OpenTibia.Common.Utilities.Testing\OpenTibia.Common.Utilities.Testing.csproj", "{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +29,22 @@ Global
 		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{03310BF8-2E7E-4EA4-8472-62F66094B477}.Release|Any CPU.Build.0 = Release|Any CPU
+		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{19F8C588-045E-4053-9A40-61FFEEA558E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{922B02E2-D172-4082-821D-71793BF831C7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{922B02E2-D172-4082-821D-71793BF831C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{922B02E2-D172-4082-821D-71793BF831C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{922B02E2-D172-4082-821D-71793BF831C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73FABC59-E6D9-416A-AB4F-520628CC057B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73FABC59-E6D9-416A-AB4F-520628CC057B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73FABC59-E6D9-416A-AB4F-520628CC057B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73FABC59-E6D9-416A-AB4F-520628CC057B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EDE7092D-6788-4FCC-8D55-5D2D46EDF8F0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
