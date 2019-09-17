@@ -56,7 +56,7 @@ namespace OpenTibia.Common.Helpers
         {
             obj.ThrowIfNull();
 
-            if (EqualityComparer<T>.Default.Equals(obj, default(T)))
+            if (EqualityComparer<T>.Default.Equals(obj, default))
             {
                 throw new ArgumentException($"Parameter {(string.IsNullOrWhiteSpace(paramName) ? nameof(obj) : paramName)} has the default value.");
             }
