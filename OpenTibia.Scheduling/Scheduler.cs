@@ -15,8 +15,9 @@ namespace OpenTibia.Scheduling
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.Hosting;
     using Microsoft.Extensions.Logging;
-    using OpenTibia.Common.Helpers;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using Priority_Queue;
@@ -24,7 +25,7 @@ namespace OpenTibia.Scheduling
     /// <summary>
     /// Class that represents a scheduler for events.
     /// </summary>
-    public class Scheduler : IScheduler
+    public class Scheduler : IScheduler, IHostedService
     {
         /// <summary>
         /// The maximum number of nodes that the internal queue can hold.
@@ -116,11 +117,11 @@ namespace OpenTibia.Scheduling
         public ILogger<Scheduler> Logger { get; }
 
         /// <summary>
-        /// Processes the queue and fires events.
+        /// Begins the scheduler's processing the queue and firing events.
         /// </summary>
-        /// <param name="cancellationToken">The token to watch for cancellation.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public async Task RunAsync(CancellationToken cancellationToken)
+        /// <param name="cancellationToken">A token to observe for cancellation.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous processing operation.</returns>
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             this.Logger.LogDebug("Scheduler started.");
 
@@ -186,6 +187,17 @@ namespace OpenTibia.Scheduling
             });
 
             this.Logger.LogDebug("Scheduler finished.");
+        }
+
+        /// <summary>
+        /// Stops the scheduler's processing.
+        /// </summary>
+        /// <param name="cancellationToken">A token to observe for cancellation.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        public Task StopAsync(CancellationToken cancellationToken)
+        {
+            // Do nothing here.
+            return Task.CompletedTask;
         }
 
         /// <summary>

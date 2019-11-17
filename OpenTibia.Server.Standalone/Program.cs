@@ -11,13 +11,29 @@
 
 namespace OpenTibia.Server.Standalone
 {
+    using System;
     using System.IO;
     using System.Threading;
     using System.Threading.Tasks;
+    using Microsoft.ApplicationInsights;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.Hosting;
-    using OpenTibia.Common.Helpers;
+    using OpenTibia.Common;
+    using OpenTibia.Common.Contracts.Abstractions;
+    using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications;
+    using OpenTibia.Communications.Contracts;
+    using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Communications.Handlers;
+    using OpenTibia.Data.Contracts.Abstractions;
+    using OpenTibia.Data.CosmosDB;
+    using OpenTibia.Providers.Azure;
+    using OpenTibia.Providers.Contracts;
+    using OpenTibia.Scheduling;
+    using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Security;
+    using OpenTibia.Security.Contracts;
     using Serilog;
 
     /// <summary>
@@ -64,11 +80,11 @@ namespace OpenTibia.Server.Standalone
                     configApp.AddEnvironmentVariables(prefix: "OTS_");
                     configApp.AddCommandLine(args);
                 })
-                .ConfigureServices(ConfigureServices)
+                .ConfigureServices(Program.ConfigureServices)
                 .UseSerilog()
                 .Build();
 
-            await host.RunAsync(MasterCancellationTokenSource.Token);
+            await host.RunAsync(Program.MasterCancellationTokenSource.Token);
         }
 
         /// <summary>
@@ -81,16 +97,50 @@ namespace OpenTibia.Server.Standalone
             hostingContext.ThrowIfNull(nameof(hostingContext));
             services.ThrowIfNull(nameof(services));
 
+            // configure options
+            services.Configure<GameConfigurationOptions>(hostingContext.Configuration.GetSection(nameof(GameConfigurationOptions)));
+            services.Configure<ProtocolConfigurationOptions>(hostingContext.Configuration.GetSection(nameof(ProtocolConfigurationOptions)));
+
             // Add the master cancellation token source of the entire service.
-            services.AddSingleton(MasterCancellationTokenSource);
+            services.AddSingleton(Program.MasterCancellationTokenSource);
 
             // Add known instances of configuration and logger.
             services.AddSingleton(hostingContext.Configuration);
             services.AddSingleton(Log.Logger);
+            services.AddSingleton<TelemetryClient>();
 
-            // TODO: Add service implementations here.
+            // Add service implementations here.
+            services.AddSingleton<IProtocolFactory, ProtocolFactory>();
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
+
+            services.AddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
+            services.AddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
+
+            services.AddSingleton<Func<IOpenTibiaDbContext>>(s => s.GetService<IOpenTibiaDbContext>);
+            services.AddSingleton<IApplicationContext, ApplicationContext>();
+
+            services.AddCosmosDb(hostingContext.Configuration);
+
+            services.AddGameHandlers();
+            services.AddLoginHandlers();
+            services.AddManagementHandlers();
+
             // Those executing should derive from IHostedService and be added using AddHostedService.
-            services.AddHostedService<SampleHostedService>();
+            services.AddSingleton<SimpleDoSDefender>();
+            services.AddHostedService(s => s.GetService<SimpleDoSDefender>());
+            services.AddSingleton<IDoSDefender>(s => s.GetService<SimpleDoSDefender>());
+
+            services.AddSingleton<LoginListener>();
+            services.AddHostedService(s => s.GetService<LoginListener>());
+            services.AddSingleton<IOpenTibiaListener>(s => s.GetService<LoginListener>());
+
+            services.AddSingleton<GameListener>();
+            services.AddHostedService(s => s.GetService<GameListener>());
+            services.AddSingleton<IOpenTibiaListener>(s => s.GetService<GameListener>());
+
+            services.AddSingleton<Scheduler>();
+            services.AddHostedService(s => s.GetService<Scheduler>());
+            services.AddSingleton<IScheduler>(s => s.GetService<Scheduler>());
         }
     }
 }

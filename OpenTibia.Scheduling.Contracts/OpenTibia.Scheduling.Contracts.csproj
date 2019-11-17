@@ -17,14 +17,14 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\OpenTibia.Common.Helpers\OpenTibia.Common.Helpers.csproj" />
+    <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
   </ItemGroup>
 
 </Project>

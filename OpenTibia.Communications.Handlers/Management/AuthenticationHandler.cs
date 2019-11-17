@@ -1,0 +1,44 @@
+﻿// <copyright file="AuthenticationHandler.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+
+namespace OpenTibia.Communications.Handlers.Management
+{
+    using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Communications.Contracts.Enumerations;
+    using OpenTibia.Communications.Handlers;
+    using OpenTibia.Communications.Packets;
+    using OpenTibia.Communications.Packets.Outgoing;
+
+    /// <summary>
+    /// Class that represents an authentication request handler for the management service.
+    /// </summary>
+    public class AuthenticationHandler : BaseHandler
+    {
+        /// <summary>
+        /// Gets the type of packet that this handler is for.
+        /// </summary>
+        public override byte ForPacketType => (byte)IncomingManagementPacketType.AuthenticationRequest;
+
+        /// <summary>
+        /// Handles the contents of a network message.
+        /// </summary>
+        /// <param name="message">The message to handle.</param>
+        /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
+        public override void HandleRequest(INetworkMessage message, IConnection connection)
+        {
+            connection.ThrowIfNull(nameof(connection));
+
+            var authInfo = message.ReadAuthenticationInfo();
+
+            var result = authInfo.Password.Equals(ServiceConfiguration.GetConfiguration().QueryManagerPassword);
+
+            connection.IsAuthenticated = result;
+
+            this.ResponsePackets.Add(new AuthenticationResultPacket(!result));
+        }
+    }
+}
