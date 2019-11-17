@@ -35,13 +35,13 @@ namespace OpenTibia.Common.Utilities
         /// <summary>
         /// Throws an <see cref="ArgumentNullException"/> if the analyzed object reference is null.
         /// </summary>
-        /// <param name="obj">The object reference to analyze.</param>
+        /// <param name="o">The object reference to analyze.</param>
         /// <param name="paramName">The parameter name to use.</param>
-        public static void ThrowIfNull(this object obj, string paramName = "")
+        public static void ThrowIfNull(this object o, string paramName = "")
         {
-            if (obj == null)
+            if (o == null)
             {
-                throw new ArgumentNullException(string.IsNullOrWhiteSpace(paramName) ? nameof(obj) : paramName);
+                throw new ArgumentNullException(string.IsNullOrWhiteSpace(paramName) ? nameof(o) : paramName);
             }
         }
 
@@ -49,16 +49,16 @@ namespace OpenTibia.Common.Utilities
         /// Throws an <see cref="ArgumentException"/> if the analyzed variable has the default value for it's type.
         /// </summary>
         /// <typeparam name="T">The type of the <see cref="IConvertible"/>.</typeparam>
-        /// <param name="obj">The variable to analyze.</param>
+        /// <param name="o">The variable to analyze.</param>
         /// <param name="paramName">The parameter name to use.</param>
-        public static void ThrowIfDefaultValue<T>(this T obj, string paramName = "")
+        public static void ThrowIfDefaultValue<T>(this T o, string paramName = "")
             where T : IConvertible
         {
-            obj.ThrowIfNull();
+            o.ThrowIfNull();
 
-            if (EqualityComparer<T>.Default.Equals(obj, default))
+            if (EqualityComparer<T>.Default.Equals(o, default))
             {
-                throw new ArgumentException($"Parameter {(string.IsNullOrWhiteSpace(paramName) ? nameof(obj) : paramName)} has the default value.");
+                throw new ArgumentException($"Parameter {(string.IsNullOrWhiteSpace(paramName) ? nameof(o) : paramName)} has the default value.");
             }
         }
     }

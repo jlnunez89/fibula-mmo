@@ -29,11 +29,6 @@ namespace OpenTibia.Common.Utilities
         private readonly SortedList<int, INode> closedList;
 
         /// <summary>
-        /// The current node.
-        /// </summary>
-        private INode current;
-
-        /// <summary>
         /// The goal node.
         /// </summary>
         private INode goal;
@@ -46,7 +41,10 @@ namespace OpenTibia.Common.Utilities
         /// <param name="maxSearchSteps">Optional. The maximum number of Step operations to perform on the search.</param>
         public AStar(INode start, INode goal, int maxSearchSteps = 100)
         {
-            var duplicateComparer = new DuplicateComparer();
+            start.ThrowIfNull(nameof(start));
+            goal.ThrowIfNull(nameof(goal));
+
+            var duplicateComparer = new DuplicateIntegerComparer();
             this.openList = new SortedList<int, INode>(duplicateComparer);
             this.closedList = new SortedList<int, INode>(duplicateComparer);
             this.Reset(start, goal);
@@ -76,7 +74,7 @@ namespace OpenTibia.Common.Utilities
         /// <summary>
         /// Gets the current node that the AStar algorithm is at.
         /// </summary>
-        public INode CurrentNode => this.current;
+        public INode CurrentNode { get; private set; }
 
         /// <summary>
         /// Resets the AStar algorithm with the newly specified start node and goal node.
@@ -85,12 +83,15 @@ namespace OpenTibia.Common.Utilities
         /// <param name="goal">The goal node for the AStar algorithm.</param>
         public void Reset(INode start, INode goal)
         {
+            start.ThrowIfNull(nameof(start));
+            goal.ThrowIfNull(nameof(goal));
+
             this.openList.Clear();
             this.closedList.Clear();
-            this.current = start;
+            this.CurrentNode = start;
             this.goal = goal;
-            this.openList.Add(this.current);
-            this.current.IsInOpenList = true;
+            this.openList.Add(this.CurrentNode);
+            this.CurrentNode.IsInOpenList = true;
         }
 
         /// <summary>
@@ -132,10 +133,10 @@ namespace OpenTibia.Common.Utilities
                 }
 
                 // Check the next best node in the graph by TotalCost.
-                this.current = this.openList.Pop();
+                this.CurrentNode = this.openList.Pop();
 
                 // This node has already been searched, check the next one.
-                if (this.current.IsInClosedList)
+                if (this.CurrentNode.IsInClosedList)
                 {
                     continue;
                 }
@@ -146,19 +147,19 @@ namespace OpenTibia.Common.Utilities
 
             // Remove from the open list and place on the closed list
             // since this node is now being searched.
-            this.current.IsInOpenList = false;
-            this.closedList.Add(this.current);
-            this.current.IsInClosedList = true;
+            this.CurrentNode.IsInOpenList = false;
+            this.closedList.Add(this.CurrentNode);
+            this.CurrentNode.IsInClosedList = true;
 
             // Found the goal, stop searching.
-            if (this.current.IsGoal(this.goal))
+            if (this.CurrentNode.IsGoal(this.goal))
             {
                 return SearchState.GoalFound;
             }
 
             // Node was not the goal so add all children nodes to the open list.
             // Each child needs to have its movement cost set and estimated cost.
-            foreach (var child in this.current.Children)
+            foreach (var child in this.CurrentNode.Children)
             {
                 // If the child has already been searched (closed list) just ignore.
                 if (child.IsInClosedList)
@@ -170,19 +171,19 @@ namespace OpenTibia.Common.Utilities
                 if (child.IsInOpenList)
                 {
                     var oldCost = child.MovementCost;
-                    child.SetMovementCost(this.current);
+                    child.SetMovementCost(this.CurrentNode);
 
                     if (oldCost != child.MovementCost)
                     {
                         // it's better with this parent.
-                        child.Parent = this.current;
+                        child.Parent = this.CurrentNode;
                     }
 
                     continue;
                 }
 
-                child.Parent = this.current;
-                child.SetMovementCost(this.current);
+                child.Parent = this.CurrentNode;
+                child.SetMovementCost(this.CurrentNode);
                 child.SetEstimatedCost(this.goal);
                 this.openList.Add(child);
                 child.IsInOpenList = true;
@@ -199,9 +200,9 @@ namespace OpenTibia.Common.Utilities
         /// <returns>Returns null if the algorithm has never been run.</returns>
         public IEnumerable<INode> GetPath()
         {
-            if (this.current != null)
+            if (this.CurrentNode != null)
             {
-                var next = this.current;
+                var next = this.CurrentNode;
                 var path = new List<INode>();
                 while (next != null)
                 {

@@ -25,8 +25,14 @@ namespace OpenTibia.Common.Utilities
     /// </summary>
     public interface INode
     {
+        /// <summary>
+        /// Gets or sets a value indicating whether this node is part of the open list.
+        /// </summary>
         bool IsInOpenList { get; set; }
 
+        /// <summary>
+        /// Gets or sets a value indicating whether this node is part of the closed list.
+        /// </summary>
         bool IsInClosedList { get; set; }
 
         /// <summary>

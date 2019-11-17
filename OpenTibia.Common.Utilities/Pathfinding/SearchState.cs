@@ -12,22 +12,22 @@
 namespace OpenTibia.Common.Utilities
 {
     /// <summary>
-    /// A* algorithm states while searching for the goal.
+    /// Enumerates the possible A* algorithm states.
     /// </summary>
     public enum SearchState
     {
         /// <summary>
-        /// The A* algorithm is still searching for the goal.
+        /// The algorithm is running, searching for the goal.
         /// </summary>
         Searching,
 
         /// <summary>
-        /// The A* algorithm has found the goal.
+        /// The algorithm has found the goal.
         /// </summary>
         GoalFound,
 
         /// <summary>
-        /// The A* algorithm has failed to find a solution.
+        /// The algorithm has failed to find a solution.
         /// </summary>
         Failed,
     }

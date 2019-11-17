@@ -15,6 +15,8 @@ namespace OpenTibia.Communications
     using System.Collections.Generic;
     using System.Linq;
     using Microsoft.Extensions.Options;
+    using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
@@ -59,9 +61,13 @@ namespace OpenTibia.Communications
             IOptions<GameConfigurationOptions> gameConfigOptions,
             IOptions<ProtocolConfigurationOptions> protocolConfigOptions)
         {
+            handlerSelectors.ThrowIfNull(nameof(handlerSelectors));
+            gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
+            protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
+
             this.handlerSelectorsKnown = handlerSelectors.ToList();
-            this.gameConfig = gameConfigOptions.Value;
-            this.protocolConfig = protocolConfigOptions.Value;
+            this.gameConfig = gameConfigOptions?.Value;
+            this.protocolConfig = protocolConfigOptions?.Value;
 
             this.protocolInstancesCreated = new Dictionary<OpenTibiaProtocolType, IProtocol>();
             this.protocolCreationLock = new object();
@@ -89,23 +95,13 @@ namespace OpenTibia.Communications
 
                         IProtocol protocolToAdd = null;
 
-                        switch (protocolType)
+                        protocolToAdd = protocolType switch
                         {
-                            case OpenTibiaProtocolType.LoginProtocol:
-                                protocolToAdd = new LoginProtocol(handlerSelector, this.protocolConfig, this.gameConfig);
-
-                                break;
-                            case OpenTibiaProtocolType.GameProtocol:
-                                protocolToAdd = new GameProtocol(handlerSelector, this.protocolConfig);
-
-                                break;
-                            case OpenTibiaProtocolType.ManagementProtocol:
-                                protocolToAdd = new ManagementProtocol(handlerSelector);
-
-                                break;
-                            default:
-                                throw new NotSupportedException($"The protocol type '{protocolType}' is not supported by this factory.");
-                        }
+                            OpenTibiaProtocolType.LoginProtocol => new LoginProtocol(handlerSelector, this.protocolConfig, this.gameConfig),
+                            OpenTibiaProtocolType.GameProtocol => new GameProtocol(handlerSelector, this.protocolConfig),
+                            OpenTibiaProtocolType.ManagementProtocol => new ManagementProtocol(handlerSelector),
+                            _ => throw new NotSupportedException($"The protocol type '{protocolType}' is not supported by this factory."),
+                        };
 
                         this.protocolInstancesCreated.Add(protocolType, protocolToAdd);
                     }

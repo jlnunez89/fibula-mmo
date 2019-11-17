@@ -17,6 +17,7 @@ namespace OpenTibia.Communications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Delegates;
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validation is done through ThrowIfNull* methods.")]
     public class Connection : IConnection
     {
         private readonly object writeLock;
@@ -50,12 +51,12 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Event fired when this connection has it's <see cref="IConnection.InboundMessage"/> ready to be proccessed.
         /// </summary>
-        public event OnMessageReadyToProccess MessageReadyToProccess;
+        public event OnMessageReadyToProccess MessageReady;
 
         /// <summary>
-        /// Event fired right after this connection has had it's <see cref="IConnection.InboundMessage"/> proccessed by any subscriber of the <see cref="MessageReadyToProccess"/> event.
+        /// Event fired right after this connection has had it's <see cref="IConnection.InboundMessage"/> proccessed by any subscriber of the <see cref="MessageReady"/> event.
         /// </summary>
-        public event OnMessageProccessed AfterMessageProcessed;
+        public event OnMessageProccessed MessageProcessed;
 
         public INetworkMessage InboundMessage { get; }
 
@@ -65,6 +66,9 @@ namespace OpenTibia.Communications
 
         public bool IsAuthenticated { get; set; }
 
+        /// <summary>
+        /// Gets the Socket IP address of this connection, if it is open.
+        /// </summary>
         public string SocketIp
         {
             get
@@ -136,6 +140,17 @@ namespace OpenTibia.Communications
             this.ConnectionClosed?.Invoke(this);
         }
 
+        /// <summary>
+        /// Marks this connection as authenticated and associates it with a player.
+        /// </summary>
+        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
+        public void AuthenticateAndAssociate(Guid toPlayerId)
+        {
+            this.PlayerId = toPlayerId;
+
+            this.IsAuthenticated = true;
+        }
+
         private void OnRead(IAsyncResult ar)
         {
             if (!this.CompleteRead(ar))
@@ -145,12 +160,12 @@ namespace OpenTibia.Communications
 
             try
             {
-                if (this.MessageReadyToProccess != null)
+                if (this.MessageReady != null)
                 {
-                    this.MessageReadyToProccess.Invoke(this, this.InboundMessage);
+                    this.MessageReady.Invoke(this, this.InboundMessage);
 
                     // By design, AfterMessageProcessed is only fired if we have at least one subscriber.
-                    this.AfterMessageProcessed?.Invoke(this);
+                    this.MessageProcessed?.Invoke(this);
                 }
             }
             catch (Exception e)
@@ -204,24 +219,6 @@ namespace OpenTibia.Communications
 
             return false;
         }
-
-        // private bool isInTransaction = false;
-        // private NetworkMessage transactionMessage = new NetworkMessage();
-
-        // public void BeginTransaction()
-        // {
-        //    if (!isInTransaction)
-        //    {
-        //        transactionMessage.Reset();
-        //        isInTransaction = true;
-        //    }
-        // }
-
-        // public void CommitTransaction()
-        // {
-        //    SendMessage(transactionMessage, true);
-        //    isInTransaction = false;
-        // }
 
         private void SendMessage(INetworkMessage message, bool useEncryption, bool managementProtocol = false)
         {

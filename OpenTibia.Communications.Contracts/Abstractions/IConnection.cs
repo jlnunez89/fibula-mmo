@@ -25,29 +25,19 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         event OnConnectionClosed ConnectionClosed;
 
         /// <summary>
-        /// Event fired right after this connection has had it's <see cref="InboundMessage"/> proccessed by any subscriber of the <see cref="MessageReadyToProccess"/> event.
+        /// Event fired right after this connection has had it's <see cref="InboundMessage"/> proccessed by any subscriber of the <see cref="MessageReady"/> event.
         /// </summary>
-        event OnMessageProccessed AfterMessageProcessed;
+        event OnMessageProccessed MessageProcessed;
 
         /// <summary>
         /// Event fired when this connection has it's <see cref="InboundMessage"/> ready to be proccessed.
         /// </summary>
-        event OnMessageReadyToProccess MessageReadyToProccess;
+        event OnMessageReadyToProccess MessageReady;
 
         /// <summary>
         /// Gets the inbound message in this connection.
         /// </summary>
         INetworkMessage InboundMessage { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this connection is authenticated.
-        /// </summary>
-        bool IsAuthenticated { get; set; }
-
-        /// <summary>
-        /// Gets or sets the Id of the player that this connection is associated to.
-        /// </summary>
-        Guid PlayerId { get; set; }
 
         /// <summary>
         /// Gets the Socket IP address of this connection, if it is open.
@@ -60,9 +50,25 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         bool IsOrphaned { get; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether this connection is authenticated.
+        /// </summary>
+        bool IsAuthenticated { get; set; }
+
+        /// <summary>
+        /// Gets or sets the Id of the player that this connection is associated to.
+        /// </summary>
+        Guid PlayerId { get; set; }
+
+        /// <summary>
         /// Gets or sets this connection's XTea key.
         /// </summary>
         uint[] XTeaKey { get; set; }
+
+        /// <summary>
+        /// Marks this connection as authenticated and associates it with a player.
+        /// </summary>
+        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
+        void AuthenticateAndAssociate(Guid toPlayerId);
 
         void BeginStreamRead();
 
@@ -76,6 +82,6 @@ namespace OpenTibia.Communications.Contracts.Abstractions
 
         void Send(INetworkMessage message);
 
-        void Send(INetworkMessage message, bool useEncryption, bool managementProtocol = false);
+        // void Send(INetworkMessage message, bool useEncryption, bool managementProtocol = false);
     }
 }

@@ -43,7 +43,7 @@ namespace OpenTibia.Communications
         protected IHandlerSelector HandlerSelector { get; private set; }
 
         /// <summary>
-        /// Processes an incomming message from the connection.
+        /// Processes an inbound message from the connection.
         /// </summary>
         /// <param name="connection">The connection where the message is being read from.</param>
         /// <param name="inboundMessage">The message to process.</param>

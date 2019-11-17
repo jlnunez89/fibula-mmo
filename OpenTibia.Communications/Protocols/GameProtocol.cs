@@ -13,6 +13,7 @@ namespace OpenTibia.Communications
 {
     using System.Linq;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
@@ -100,12 +101,12 @@ namespace OpenTibia.Communications
                 return;
             }
 
-            handler.HandleRequest(inboundMessage, connection);
+            var (intendsToRespond, responsePackets) = handler.HandleRequest(inboundMessage, connection);
 
-            if (handler.IntendsToRespond)
+            if (intendsToRespond)
             {
                 // Send any responses prepared for this.
-                var responseMessage = handler.PrepareResponse();
+                var responseMessage = handler.PrepareResponse(responsePackets);
 
                 connection.Send(responseMessage);
             }

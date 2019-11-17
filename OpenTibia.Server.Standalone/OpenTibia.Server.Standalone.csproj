@@ -16,26 +16,33 @@
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.Extensions.Configuration" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.2.4" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="2.2.0" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.2.0" />
-    <PackageReference Include="Serilog" Version="2.8.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="Serilog" Version="2.9.1-dev-01151" />
     <PackageReference Include="Serilog.Extensions.Hosting" Version="3.0.0" />
-    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.0" />
-    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
-    <PackageReference Include="Serilog.Sinks.File" Version="4.0.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+    <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.1-dev-00209" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.2-dev-00824" />
+    <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
+    <ProjectReference Include="..\OpenTibia.Common\OpenTibia.Common.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications.Handlers\OpenTibia.Communications.Handlers.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications\OpenTibia.Communications.csproj" />
+    <ProjectReference Include="..\OpenTibia.Data.CosmosDB\OpenTibia.Data.CosmosDB.csproj" />
+    <ProjectReference Include="..\OpenTibia.Providers.Azure\OpenTibia.Providers.Azure.csproj" />
+    <ProjectReference Include="..\OpenTibia.Providers.Contracts\OpenTibia.Providers.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Scheduling\OpenTibia.Scheduling.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">

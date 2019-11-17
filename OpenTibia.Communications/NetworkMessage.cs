@@ -66,7 +66,7 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="NetworkMessage"/> class.
         /// </summary>
-        /// <param name="startingIndex">The index at which to set the <see cref="Position"/> of this message.</param>
+        /// <param name="startingIndex">The index at which to set the <see cref="Cursor"/> of this message.</param>
         private NetworkMessage(int startingIndex)
         {
             this.Reset(startingIndex);
@@ -80,7 +80,7 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Gets the position that the message will read from next.
         /// </summary>
-        public int Position { get; private set; }
+        public int Cursor { get; private set; }
 
         /// <summary>
         /// Gets the buffer of this message.
@@ -88,14 +88,14 @@ namespace OpenTibia.Communications
         public byte[] Buffer => this.buffer;
 
         /// <summary>
-        /// Clears the message buffer and resets the <see cref="Position"/> to the given index.
+        /// Clears the message buffer and resets the <see cref="Cursor"/> to the given index.
         /// </summary>
-        /// <param name="startingIndex">The index at which to reset the <see cref="Position"/> of this message.</param>
+        /// <param name="startingIndex">The index at which to reset the <see cref="Cursor"/> of this message.</param>
         public void Reset(int startingIndex)
         {
             this.buffer = new byte[NetworkMessage.BufferSize];
             this.length = startingIndex;
-            this.Position = startingIndex;
+            this.Cursor = startingIndex;
         }
 
         /// <summary>
@@ -112,12 +112,12 @@ namespace OpenTibia.Communications
         /// <returns>The value read.</returns>
         public byte GetByte()
         {
-            if (this.Position + 1 > this.Length)
+            if (this.Cursor + 1 > this.Length)
             {
                 throw new IndexOutOfRangeException($"{nameof(this.GetByte)} out of range.");
             }
 
-            return this.buffer[this.Position++];
+            return this.buffer[this.Cursor++];
         }
 
         /// <summary>
@@ -127,15 +127,15 @@ namespace OpenTibia.Communications
         /// <returns>The bytes read.</returns>
         public byte[] GetBytes(int count)
         {
-            if (this.Position + count > this.Length)
+            if (this.Cursor + count > this.Length)
             {
                 throw new IndexOutOfRangeException($"{nameof(this.GetBytes)} out of range.");
             }
 
             byte[] t = new byte[count];
-            Array.Copy(this.buffer, this.Position, t, 0, count);
+            Array.Copy(this.buffer, this.Cursor, t, 0, count);
 
-            this.Position += count;
+            this.Cursor += count;
             return t;
         }
 
@@ -148,7 +148,7 @@ namespace OpenTibia.Communications
             NetworkMessage newMessage = new NetworkMessage
             {
                 length = this.Length,
-                Position = this.Position,
+                Cursor = this.Cursor,
             };
 
             this.Buffer.CopyTo(newMessage.buffer, 0);
@@ -163,9 +163,9 @@ namespace OpenTibia.Communications
         public string GetString()
         {
             int len = this.GetUInt16();
-            string t = Encoding.Default.GetString(this.buffer, this.Position, len);
+            string t = Encoding.Default.GetString(this.buffer, this.Cursor, len);
 
-            this.Position += len;
+            this.Cursor += len;
             return t;
         }
 
@@ -219,13 +219,13 @@ namespace OpenTibia.Communications
                 throw new Exception("Message buffer is full.");
             }
 
-            Array.Copy(value, 0, this.buffer, this.Position, value.Length);
+            Array.Copy(value, 0, this.buffer, this.Cursor, value.Length);
 
-            this.Position += value.Length;
+            this.Cursor += value.Length;
 
-            if (this.Position > this.Length)
+            if (this.Cursor > this.Length)
             {
-                this.length = this.Position;
+                this.length = this.Cursor;
             }
         }
 
@@ -263,11 +263,11 @@ namespace OpenTibia.Communications
         /// <param name="count">The number of zero-bytes to add.</param>
         public void AddPaddingBytes(int count)
         {
-            this.Position += count;
+            this.Cursor += count;
 
-            if (this.Position > this.Length)
+            if (this.Cursor > this.Length)
             {
-                this.length = this.Position;
+                this.length = this.Cursor;
             }
         }
 
@@ -277,13 +277,13 @@ namespace OpenTibia.Communications
         /// <returns>The value peeked.</returns>
         public byte PeekByte()
         {
-            return this.buffer[this.Position];
+            return this.buffer[this.Cursor];
         }
 
         public void Resize(int size)
         {
             this.length = size;
-            this.Position = 0;
+            this.Cursor = 0;
         }
 
         /// <summary>
@@ -294,7 +294,7 @@ namespace OpenTibia.Communications
         public byte[] PeekBytes(int count)
         {
             byte[] t = new byte[count];
-            Array.Copy(this.buffer, this.Position, t, 0, count);
+            Array.Copy(this.buffer, this.Cursor, t, 0, count);
             return t;
         }
 
@@ -345,17 +345,17 @@ namespace OpenTibia.Communications
         /// <param name="count">The number of bytes to skip.</param>
         public void SkipBytes(int count)
         {
-            if (this.Position + count > this.Length)
+            if (this.Cursor + count > this.Length)
             {
                 throw new IndexOutOfRangeException($"{nameof(this.SkipBytes)} out of range.");
             }
 
-            this.Position += count;
+            this.Cursor += count;
         }
 
         public void RsaDecrypt(bool useCipKeys = true)
         {
-            Rsa.Decrypt(ref this.buffer, this.Position, this.length, useCipKeys);
+            Rsa.Decrypt(ref this.buffer, this.Cursor, this.length, useCipKeys);
         }
 
         public bool XteaDecrypt(uint[] key)
@@ -404,7 +404,7 @@ namespace OpenTibia.Communications
                 return false;
             }
 
-            this.Position = 4;
+            this.Cursor = 4;
             return true;
         }
 

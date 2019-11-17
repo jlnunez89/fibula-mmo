@@ -29,7 +29,7 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <summary>
         /// Gets the message position.
         /// </summary>
-        int Position { get; }
+        int Cursor { get; }
 
         /// <summary>
         /// Adds a byte to the message.

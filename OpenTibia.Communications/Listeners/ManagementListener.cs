@@ -30,7 +30,7 @@ namespace OpenTibia.Communications
         /// <param name="connectionManager">A reference to the connection manager service implementation.</param>
         /// <param name="port">The port where this listener will listen.</param>
         public ManagementListener(IProtocolFactory protocolFactory, IDoSDefender dosDefender, IConnectionManager connectionManager, int port = DefaultManagementListenerPort)
-            : base(port, protocolFactory.CreateForType(OpenTibiaProtocolType.ManagementProtocol), dosDefender, connectionManager)
+            : base(port, protocolFactory?.CreateForType(OpenTibiaProtocolType.ManagementProtocol), dosDefender, connectionManager)
         {
         }
     }

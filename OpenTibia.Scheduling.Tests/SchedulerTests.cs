@@ -269,7 +269,7 @@ namespace OpenTibia.Scheduling.Tests
                 };
 
                 // start the scheduler.
-                Task schedulerTask = scheduler.RunAsync(cts.Token);
+                Task schedulerTask = scheduler.StartAsync(cts.Token);
             }
 
             // fire a scheduled event that shall be fired only after some seconds.

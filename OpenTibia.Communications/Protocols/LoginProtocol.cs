@@ -11,22 +11,23 @@
 
 namespace OpenTibia.Communications
 {
-    using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Net;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Classs that represents the login protocol.
+    /// </summary>
     internal class LoginProtocol : BaseProtocol
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginProtocol"/> class.
         /// </summary>
-        /// <param name="handlerSelector"></param>
-        /// <param name="protocolConfigOptions"></param>
-        /// <param name="gameConfigOptions"></param>
+        /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
+        /// <param name="protocolConfigOptions">A reference to the protocol configuration options.</param>
+        /// <param name="gameConfigOptions">A reference to the game configuration options.</param>
         public LoginProtocol(
             IHandlerSelector handlerSelector,
             ProtocolConfigurationOptions protocolConfigOptions,
@@ -40,131 +41,52 @@ namespace OpenTibia.Communications
             this.GameConfiguration = gameConfigOptions;
         }
 
+        /// <summary>
+        /// Gets a reference to the protocol configuration options.
+        /// </summary>
         public ProtocolConfigurationOptions ProtocolConfiguration { get; }
 
+        /// <summary>
+        /// Gets a reference to the game configuration options.
+        /// </summary>
         public GameConfigurationOptions GameConfiguration { get; }
 
+        /// <summary>
+        /// Processes an incomming message from the connection.
+        /// </summary>
+        /// <param name="connection">The connection where the message is being read from.</param>
+        /// <param name="inboundMessage">The message to process.</param>
         public override void ProcessMessage(IConnection connection, INetworkMessage inboundMessage)
         {
             connection.ThrowIfNull(nameof(connection));
             inboundMessage.ThrowIfNull(nameof(inboundMessage));
 
-            IncomingManagementPacketType packetType = (IncomingManagementPacketType)inboundMessage.GetByte();
+            byte packetType = inboundMessage.GetByte();
 
-            if (packetType != IncomingManagementPacketType.LoginServerRequest)
+            if (packetType != (byte)IncomingManagementPacketType.LoginServerRequest)
             {
-                // TODO: proper logging.
                 // This packet should NOT have been routed to this protocol.
-                Trace.TraceWarning("Non LoginServerRequest packet routed to LoginProtocol. Packet was ignored.");
+                // TODO: proper logging.
+                Trace.TraceWarning($"Non {nameof(IncomingManagementPacketType.LoginServerRequest)} packet routed to {nameof(LoginProtocol)}. Packet was ignored.");
                 return;
             }
 
-            var newConnectionInfo = inboundMessage.ReadNewConnectionInfo();
+            var handler = this.HandlerSelector.SelectForType(packetType);
 
-            if (newConnectionInfo.Version != this.ProtocolConfiguration.ClientVersion.Numeric)
+            if (handler == null)
             {
-                // TODO: hardcoded messages.
-                this.SendDisconnect(connection, $"You need client version {this.ProtocolConfiguration.ClientVersion.Description} to connect to this server.");
-
                 return;
             }
 
-            // Make a copy of the message in case we fail to decrypt using the first set of keys.
-            var messageCopy = inboundMessage.Copy();
+            var (intendsToRespond, responsePackets) = handler.HandleRequest(inboundMessage, connection);
 
-            inboundMessage.RsaDecrypt(useCipKeys: this.ProtocolConfiguration.UsingCipsoftRsaKeys);
-
-            // If GetByte() here is not Zero, it means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
-            if (inboundMessage.GetByte() != 0)
+            if (intendsToRespond)
             {
-                inboundMessage = messageCopy;
+                // Send any responses prepared for this.
+                var responseMessage = handler.PrepareResponse(responsePackets);
 
-                inboundMessage.RsaDecrypt(useCipKeys: !this.ProtocolConfiguration.UsingCipsoftRsaKeys);
-
-                if (inboundMessage.GetByte() != 0)
-                {
-                    // These RSA keys are also unsuccessful... give up.
-                    // loginPacket = new AccountLoginPacket(inboundMessage);
-
-                    // connection.SetXtea(loginPacket?.XteaKey);
-
-                    //// TODO: hardcoded messages.
-                    // if (gameConfig.UsingCipsoftRSAKeys)
-                    // {
-                    //    this.SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that does not replace the RSA Keys.\nWe recommend using Tibia Loader's 7.7 client.\nYou may also download the client from our website.");
-                    // }
-                    // else
-                    // {
-                    //    this.SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that replaces the RSA Keys.\nWe recommend using OTLand's IP changer with a virgin 7.7 client.\nYou may also download the client from our website.");
-                    // }
-                    return;
-                }
+                connection.Send(responseMessage);
             }
-
-            var accLoginInfo = inboundMessage.ReadAccountLoginInfo();
-
-            connection.XTeaKey = accLoginInfo.XteaKey;
-
-            using (var otContext = new OpenTibiaDbContext())
-            {
-                // validate credentials.
-                var user = otContext.Users.FirstOrDefault(u => u.Login == accLoginInfo.AccountNumber && u.Passwd.Equals(accLoginInfo.Password));
-
-                if (user == null)
-                {
-                    // TODO: hardcoded messages.
-                    this.SendDisconnect(connection, "Please enter a valid account number and password.");
-                }
-                else
-                {
-                    var charactersFound = otContext.Players.Where(p => p.Account_Nr == user.Login);
-
-                    if (!charactersFound.Any())
-                    {
-                        // TODO: hardcoded messages.
-                        this.SendDisconnect(connection, $"You have no characters.\nPlease create a new character in our web site first: {this.GameConfiguration.World.WebsiteUrl}");
-                    }
-                    else
-                    {
-                        var charList = new List<ICharacterListItem>();
-
-                        foreach (var character in charactersFound)
-                        {
-                            charList.Add(new CharacterListItem(
-                                character.Charname,
-                                IPAddress.Parse(this.GameConfiguration.PublicAddressBinding.Ipv4Address),
-                                this.GameConfiguration.PublicAddressBinding.Port,
-                                this.GameConfiguration.World.Name));
-                        }
-
-                        // TODO: motd
-                        this.SendCharacterList(connection, this.GameConfiguration.World.MessageOfTheDay, (ushort)Math.Min(user.Premium_Days + user.Trial_Premium_Days, ushort.MaxValue), charList);
-                    }
-                }
-            }
-        }
-
-        private void SendDisconnect(IConnection connection, string reason)
-        {
-            var message = new NetworkMessage();
-
-            message.WriteLoginServerDisconnectPacket(new LoginServerDisconnectPacket(reason));
-
-            connection.Send(message);
-        }
-
-        private void SendCharacterList(IConnection connection, string motd, ushort premiumDays, IEnumerable<ICharacterListItem> chars)
-        {
-            var message = new NetworkMessage();
-
-            if (motd != string.Empty)
-            {
-                message.WriteMessageOfTheDayPacket(new MessageOfTheDayPacket(motd));
-            }
-
-            message.WriteCharacterListPacket(new CharacterListPacket(chars, premiumDays));
-
-            connection.Send(message);
         }
     }
 }

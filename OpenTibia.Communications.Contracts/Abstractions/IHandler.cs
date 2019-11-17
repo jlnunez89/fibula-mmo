@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Interface for a message handler.
     /// </summary>
@@ -22,21 +24,18 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         byte ForPacketType { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this handler intends to respond to the request.
-        /// </summary>
-        bool IntendsToRespond { get; }
-
-        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        void HandleRequest(INetworkMessage message, IConnection connection);
+        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
+        (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection);
 
         /// <summary>
-        /// Prepares a <see cref="INetworkMessage"/> as a response if this handler <see cref="IntendsToRespond"/>.
+        /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.
         /// </summary>
+        /// <param name="responsePackets">The packets that compose that response.</param>
         /// <returns>The response as a <see cref="INetworkMessage"/>.</returns>
-        INetworkMessage PrepareResponse();
+        INetworkMessage PrepareResponse(IEnumerable<IOutgoingPacket> responsePackets);
     }
 }

@@ -64,26 +64,32 @@ namespace OpenTibia.Security
         /// </summary>
         /// <param name="cancellationToken">A token to observe for cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the result of the asynchronous operation.</returns>
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            while (!cancellationToken.IsCancellationRequested)
+            Task.Run(async () =>
             {
-                var cleaningList = this.connectionCount.ToList();
-
-                foreach (var kvp in cleaningList)
+                while (!cancellationToken.IsCancellationRequested)
                 {
-                    if (kvp.Value < TimeframeInSeconds)
-                    {
-                        this.connectionCount.TryRemove(kvp.Key, out int count);
-                    }
-                    else
-                    {
-                        this.connectionCount.TryUpdate(kvp.Key, kvp.Value - TimeframeInSeconds, kvp.Value);
-                    }
-                }
+                    var cleaningList = this.connectionCount.ToList();
 
-                await Task.Delay(TimeSpan.FromSeconds(TimeframeInSeconds));
-            }
+                    foreach (var kvp in cleaningList)
+                    {
+                        if (kvp.Value < TimeframeInSeconds)
+                        {
+                            this.connectionCount.TryRemove(kvp.Key, out int count);
+                        }
+                        else
+                        {
+                            this.connectionCount.TryUpdate(kvp.Key, kvp.Value - TimeframeInSeconds, kvp.Value);
+                        }
+                    }
+
+                    await Task.Delay(TimeSpan.FromSeconds(TimeframeInSeconds));
+                }
+            });
+
+            // return this to allow other IHostedService-s to start.
+            return Task.CompletedTask;
         }
 
         /// <summary>

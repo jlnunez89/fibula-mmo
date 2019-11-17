@@ -9,6 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
+#pragma warning disable CA1062 // Validate arguments of public methods
 namespace OpenTibia.Communications
 {
     using System;
@@ -94,3 +95,4 @@ namespace OpenTibia.Communications
         }
     }
 }
+#pragma warning restore CA1062 // Validate arguments of public methods

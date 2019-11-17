@@ -14,6 +14,9 @@ namespace OpenTibia.Communications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Classs that represents the management protocol.
+    /// </summary>
     internal class ManagementProtocol : BaseProtocol
     {
         /// <summary>
@@ -48,11 +51,11 @@ namespace OpenTibia.Communications
                 return;
             }
 
-            handler.HandleRequest(inboundMessage, connection);
+            var (intendsToRespond, responsePackets) = handler.HandleRequest(inboundMessage, connection);
 
-            if (handler.IntendsToRespond)
+            if (intendsToRespond)
             {
-                var responseMessage = handler.PrepareResponse();
+                var responseMessage = handler.PrepareResponse(responsePackets);
 
                 connection.Send(responseMessage);
             }

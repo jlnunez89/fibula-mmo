@@ -20,6 +20,9 @@ namespace OpenTibia.Communications
     /// </summary>
     public class LoginListener : BaseListener
     {
+        /// <summary>
+        /// The default port which the login listener will be listening to.
+        /// </summary>
         private const int DefaultLoginListenerPort = 7171;
 
         /// <summary>
@@ -30,7 +33,7 @@ namespace OpenTibia.Communications
         /// <param name="connectionManager">A reference to the connection manager service implementation.</param>
         /// <param name="port">The port where this listener will listen.</param>
         public LoginListener(IProtocolFactory protocolFactory, IDoSDefender dosDefender, IConnectionManager connectionManager, int port = DefaultLoginListenerPort)
-            : base(port, protocolFactory.CreateForType(OpenTibiaProtocolType.LoginProtocol), dosDefender, connectionManager)
+            : base(port, protocolFactory?.CreateForType(OpenTibiaProtocolType.LoginProtocol), dosDefender, connectionManager)
         {
         }
     }

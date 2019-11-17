@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="Incoming\AttackPacket.cs" />
+    <Compile Remove="Incoming\AutoMovePacket.cs" />
+    <Compile Remove="Incoming\CharacterDeathPacket.cs" />
+    <Compile Remove="Incoming\ContainerCloseRequestPacket.cs" />
+    <Compile Remove="Incoming\ContainerMoveUpPacket.cs" />
+    <Compile Remove="Incoming\CreatePlayerListPacket.cs" />
+    <Compile Remove="Incoming\DebugAssertionPacket.cs" />
+    <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
+    <Compile Remove="Incoming\InsertHousePacket.cs" />
+    <Compile Remove="Incoming\ItemMovePacket.cs" />
+    <Compile Remove="Incoming\ItemUseOnPacket.cs" />
+    <Compile Remove="Incoming\ItemUsePacket.cs" />
+    <Compile Remove="Incoming\LookAtPacket.cs" />
+    <Compile Remove="Incoming\ManagementPlayerLoginPacket.cs" />
+    <Compile Remove="Incoming\ManagementPlayerLogoutPacket.cs" />
+    <Compile Remove="Incoming\OutfitChangedPacket.cs" />
+    <Compile Remove="Incoming\PacketIncoming.cs" />
+    <Compile Remove="Incoming\PlayerLoginPacket.cs" />
+    <Compile Remove="Incoming\RuleViolationPacket.cs" />
+    <Compile Remove="Incoming\SpeechPacket.cs" />
+    <Compile Remove="Incoming\StatementPacket.cs" />
+    <Compile Remove="Outgoing\AddCreaturePacket.cs" />
+    <Compile Remove="Outgoing\AddItemPacket.cs" />
+    <Compile Remove="Outgoing\AnimatedTextPacket.cs" />
+    <Compile Remove="Outgoing\AuctionsResultPacket.cs" />
+    <Compile Remove="Outgoing\AuthenticationResultPacket.cs" />
+    <Compile Remove="Outgoing\BanismentResultPacket.cs" />
+    <Compile Remove="Outgoing\ClearOnlinePlayersResultPacket.cs" />
+    <Compile Remove="Outgoing\ContainerAddItemPacket.cs" />
+    <Compile Remove="Outgoing\ContainerClosePacket.cs" />
+    <Compile Remove="Outgoing\ContainerOpenPacket.cs" />
+    <Compile Remove="Outgoing\ContainerRemoveItemPacket.cs" />
+    <Compile Remove="Outgoing\ContainerUpdateItemPacket.cs" />
+    <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />
+    <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
+    <Compile Remove="Outgoing\CreatureLightPacket.cs" />
+    <Compile Remove="Outgoing\CreatureMovedPacket.cs" />
+    <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />
+    <Compile Remove="Outgoing\CreatureTurnedPacket.cs" />
+    <Compile Remove="Outgoing\GameServerDisconnectPacket.cs" />
+    <Compile Remove="Outgoing\InventoryClearSlotPacket.cs" />
+    <Compile Remove="Outgoing\InventorySetSlotPacket.cs" />
+    <Compile Remove="Outgoing\LoadPlayersResultPacket.cs" />
+    <Compile Remove="Outgoing\MagicEffectPacket.cs" />
+    <Compile Remove="Outgoing\MapDescriptionPacket.cs" />
+    <Compile Remove="Outgoing\MapPartialDescriptionPacket.cs" />
+    <Compile Remove="Outgoing\NotationResultPacket.cs" />
+    <Compile Remove="Outgoing\PlayerChooseOutfitPacket.cs" />
+    <Compile Remove="Outgoing\PlayerConditionsPacket.cs" />
+    <Compile Remove="Outgoing\PlayerInventoryPacket.cs" />
+    <Compile Remove="Outgoing\PlayerLoginRejectionPacket.cs" />
+    <Compile Remove="Outgoing\PlayerLoginSucessPacket.cs" />
+    <Compile Remove="Outgoing\PlayerSkillsPacket.cs" />
+    <Compile Remove="Outgoing\PlayerStatusPacket.cs" />
+    <Compile Remove="Outgoing\PlayerWalkCancelPacket.cs" />
+    <Compile Remove="Outgoing\ProjectilePacket.cs" />
+    <Compile Remove="Outgoing\RemoveAtStackposPacket.cs" />
+    <Compile Remove="Outgoing\SelfAppearPacket.cs" />
+    <Compile Remove="Outgoing\ServerStatusPacket.cs" />
+    <Compile Remove="Outgoing\TextMessagePacket.cs" />
+    <Compile Remove="Outgoing\UpdateTilePacket.cs" />
+    <Compile Remove="Outgoing\WorldConfigPacket.cs" />
+    <Compile Remove="Outgoing\WorldLightPacket.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="StyleCop.Cache" />
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Communications.Contracts\OpenTibia.Communications.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications.Packets.Contracts\OpenTibia.Communications.Packets.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Security\OpenTibia.Security.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
+  </ItemGroup>
+</Project>

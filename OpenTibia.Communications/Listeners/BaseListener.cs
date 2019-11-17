@@ -64,54 +64,62 @@ namespace OpenTibia.Communications
         /// </summary>
         /// <param name="cancellationToken">A token to observe for cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous listening operation.</returns>
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            try
+            Task.Run(async () =>
             {
-                this.Start();
-
-                // Stop() makes AcceptSocketAsync() throw an ObjectDisposedException.
-                cancellationToken.Register(() => this.Stop());
-
-                while (!cancellationToken.IsCancellationRequested)
+                try
                 {
-                    try
+                    this.Start();
+
+                    // Stop() makes AcceptSocketAsync() throw an ObjectDisposedException.
+                    // This means that when the token is cancelled, the callback action here will be to Stop() the listener,
+                    // exception which gets caught below in the try catch.
+                    cancellationToken.Register(() => this.Stop());
+
+                    while (!cancellationToken.IsCancellationRequested)
                     {
-                        var socket = await this.AcceptSocketAsync();
-
-                        Connection connection = new Connection(socket);
-
-                        if (this.defender.IsBlocked(connection.SocketIp))
+                        try
                         {
-                            // TODO: evaluate if it is worth just leaving the connection open but ignore it, so that they think they are successfully DoSing...
-                            // But we would need to think if it is a connection drain attack then...
-                            connection.Close();
+                            var socket = await this.AcceptSocketAsync().ConfigureAwait(false);
 
-                            continue;
+                            Connection connection = new Connection(socket);
+
+                            if (this.defender.IsBlocked(connection.SocketIp))
+                            {
+                                // TODO: evaluate if it is worth just leaving the connection open but ignore it, so that they think they are successfully DoSing...
+                                // But we would need to think if it is a connection drain attack then...
+                                connection.Close();
+
+                                continue;
+                            }
+
+                            this.connectionManager.Register(connection);
+
+                            connection.ConnectionClosed += this.OnConnectionClose;
+                            connection.MessageReady += this.protocol.ProcessMessage;
+                            connection.MessageProcessed += this.protocol.PostProcessMessage;
+
+                            this.defender.LogConnectionAttempt(connection.SocketIp);
+
+                            connection.BeginStreamRead();
                         }
-
-                        this.connectionManager.Register(connection);
-
-                        connection.ConnectionClosed += this.OnConnectionClose;
-                        connection.MessageReadyToProccess += this.protocol.ProcessMessage;
-                        connection.AfterMessageProcessed += this.protocol.PostProcessMessage;
-
-                        this.defender.LogConnectionAttempt(connection.SocketIp);
-
-                        connection.BeginStreamRead();
-                    }
-                    catch (ObjectDisposedException)
-                    {
-                        // This is normal when the listerner is stopped because of token cancellation.
-                        break;
+                        catch (ObjectDisposedException)
+                        {
+                            // This is normal when the listerner is stopped because of token cancellation.
+                            break;
+                        }
                     }
                 }
-            }
-            catch (SocketException socEx)
-            {
-                // TODO: proper logging.
-                Console.WriteLine(socEx.ToString());
-            }
+                catch (SocketException socEx)
+                {
+                    // TODO: proper logging.
+                    Console.WriteLine(socEx.ToString());
+                }
+            });
+
+            // return this to allow other IHostedService-s to start.
+            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -140,8 +148,8 @@ namespace OpenTibia.Communications
 
             // De-subscribe to this event first.
             connection.ConnectionClosed -= this.OnConnectionClose;
-            connection.MessageReadyToProccess -= this.protocol.ProcessMessage;
-            connection.AfterMessageProcessed -= this.protocol.PostProcessMessage;
+            connection.MessageReady -= this.protocol.ProcessMessage;
+            connection.MessageProcessed -= this.protocol.PostProcessMessage;
 
             this.connectionManager.Unregister(connection);
         }

@@ -9,9 +9,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace OpenTibia.Common.Utilities
 {
     using System;
+    using System.Globalization;
 
     /**
         * Copyright (c) 2002 Chew Keong TAN
@@ -40,32 +42,34 @@ namespace OpenTibia.Common.Utilities
         * */
     public class BigInteger
     {
-        // maximum length of the BigInteger in uint (4 bytes)
-        // change this to suit the required level of precision.
+        /// <summary>
+        /// Maximum length of the BigInteger in uint (4 bytes). Change this to suit the required level of precision.
+        /// </summary>
         private const int MaxLength = 70;
 
-        private readonly uint[] data;             // stores bytes from the Big Integer
-        public int DataLength;                 // number of actual chars used
+        /// <summary>
+        /// Stores bytes from the Big Integer.
+        /// </summary>
+        private readonly uint[] data;
 
-        // ***********************************************************************
-        // Constructor (Default value for BigInteger is 0
-        // ***********************************************************************
+        /// <summary>
+        /// Number of actual chars used.
+        /// </summary>
+        private int dataLength;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
         public BigInteger()
         {
             this.data = new uint[MaxLength];
-            this.DataLength = 1;
+            this.dataLength = 1;
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by long)
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The value to initialize with.</param>
         public BigInteger(long value)
         {
             this.data = new uint[MaxLength];
@@ -73,54 +77,53 @@ namespace OpenTibia.Common.Utilities
 
             // copy bytes from long to BigInteger without any assumption of
             // the length of the long datatype
-            this.DataLength = 0;
-            while (value != 0 && this.DataLength < MaxLength)
+            this.dataLength = 0;
+            while (value != 0 && this.dataLength < MaxLength)
             {
-                this.data[this.DataLength] = (uint)(value & 0xFFFFFFFF);
+                this.data[this.dataLength] = (uint)(value & 0xFFFFFFFF);
                 value >>= 32;
-                this.DataLength++;
+                this.dataLength++;
             }
 
-            if (tempVal > 0) // overflow check for +ve value
+            // overflow check for +ve value
+            if (tempVal > 0)
             {
                 if (value != 0 || (this.data[MaxLength - 1] & 0x80000000) != 0)
                 {
                     throw new ArithmeticException("Positive overflow in constructor.");
                 }
             }
-            else if (tempVal < 0) // underflow check for -ve value
+            else if (tempVal < 0)
             {
-                if (value != -1 || (this.data[this.DataLength - 1] & 0x80000000) == 0)
+                // underflow check for -ve value
+                if (value != -1 || (this.data[this.dataLength - 1] & 0x80000000) == 0)
                 {
                     throw new ArithmeticException("Negative underflow in constructor.");
                 }
             }
 
-            if (this.DataLength == 0)
+            if (this.dataLength == 0)
             {
-                this.DataLength = 1;
+                this.dataLength = 1;
             }
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by ulong)
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="value"></param>
+        /// <param name="value">The value to initialize with.</param>
         public BigInteger(ulong value)
         {
             this.data = new uint[MaxLength];
 
             // copy bytes from ulong to BigInteger without any assumption of
             // the length of the ulong datatype
-            this.DataLength = 0;
-            while (value != 0 && this.DataLength < MaxLength)
+            this.dataLength = 0;
+            while (value != 0 && this.dataLength < MaxLength)
             {
-                this.data[this.DataLength] = (uint)(value & 0xFFFFFFFF);
+                this.data[this.dataLength] = (uint)(value & 0xFFFFFFFF);
                 value >>= 32;
-                this.DataLength++;
+                this.dataLength++;
             }
 
             if (value != 0 || (this.data[MaxLength - 1] & 0x80000000) != 0)
@@ -128,65 +131,61 @@ namespace OpenTibia.Common.Utilities
                 throw new ArithmeticException("Positive overflow in constructor.");
             }
 
-            if (this.DataLength == 0)
+            if (this.dataLength == 0)
             {
-                this.DataLength = 1;
+                this.dataLength = 1;
             }
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by BigInteger)
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="bi"></param>
+        /// <param name="bi">The value to initialize with.</param>
         public BigInteger(BigInteger bi)
         {
             this.data = new uint[MaxLength];
 
-            this.DataLength = bi.DataLength;
+            this.dataLength = bi.dataLength;
 
-            for (int i = 0; i < this.DataLength; i++)
+            for (int i = 0; i < this.dataLength; i++)
             {
                 this.data[i] = bi.data[i];
             }
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by a string of digits of the
-        //              specified base)
-        //
-        // Example (base 10)
-        // -----------------
-        // To initialize "a" with the default value of 1234 in base 10
-        //      BigInteger a = new BigInteger("1234", 10)
-        //
-        // To initialize "a" with the default value of -1234
-        //      BigInteger a = new BigInteger("-1234", 10)
-        //
-        // Example (base 16)
-        // -----------------
-        // To initialize "a" with the default value of 0x1D4F in base 16
-        //      BigInteger a = new BigInteger("1D4F", 16)
-        //
-        // To initialize "a" with the default value of -0x1D4F
-        //      BigInteger a = new BigInteger("-1D4F", 16)
-        //
-        // Note that string values are specified in the <sign><magnitude>
-        // format.
-        //
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="value"></param>
-        /// <param name="radix"></param>
+        /// <param name="value">The value to initialize with.</param>
+        /// <param name="radix">The base of the value to initialize with.</param>
+        /// <remarks>
+        /// Example (base 10)
+        /// -----------------
+        /// To initialize "a" with the default value of 1234 in base 10
+        ///      BigInteger a = new BigInteger("1234", 10)
+        ///
+        /// To initialize "a" with the default value of -1234
+        ///      BigInteger a = new BigInteger("-1234", 10)
+        ///
+        /// Example (base 16)
+        /// -----------------
+        /// To initialize "a" with the default value of 0x1D4F in base 16
+        ///      BigInteger a = new BigInteger("1D4F", 16)
+        ///
+        /// To initialize "a" with the default value of -0x1D4F
+        ///      BigInteger a = new BigInteger("-1D4F", 16)
+        ///
+        /// Note that string values are specified in the {sign}{magnitude} format.
+        /// </remarks>
         public BigInteger(string value, int radix)
         {
+            value.ThrowIfNullOrWhiteSpace(nameof(value));
+
             BigInteger multiplier = new BigInteger(1);
             BigInteger result = new BigInteger();
-            value = value.ToUpper().Trim();
+
+            value = value.ToUpper(CultureInfo.CurrentCulture).Trim();
+
             int limit = 0;
 
             if (value[0] == '-')
@@ -204,7 +203,7 @@ namespace OpenTibia.Common.Utilities
                 }
                 else if (posVal >= 'A' && posVal <= 'Z')
                 {
-                    posVal = (posVal - 'A') + 10;
+                    posVal = posVal - 'A' + 10;
                 }
                 else
                 {
@@ -221,23 +220,25 @@ namespace OpenTibia.Common.Utilities
                     posVal = -posVal;
                 }
 
-                result = result + (multiplier * posVal);
+                result += multiplier * posVal;
 
                 if ((i - 1) >= limit)
                 {
-                    multiplier = multiplier * radix;
+                    multiplier *= radix;
                 }
             }
 
-            if (value[0] == '-') // negative values
+            // negative values
+            if (value[0] == '-')
             {
                 if ((result.data[MaxLength - 1] & 0x80000000) == 0)
                 {
                     throw new ArithmeticException("Negative underflow in constructor.");
                 }
             }
-            else // positive values
+            else
             {
+                // positive values
                 if ((result.data[MaxLength - 1] & 0x80000000) != 0)
                 {
                     throw new ArithmeticException("Positive overflow in constructor.");
@@ -245,45 +246,46 @@ namespace OpenTibia.Common.Utilities
             }
 
             this.data = new uint[MaxLength];
-            for (int i = 0; i < result.DataLength; i++)
+            for (int i = 0; i < result.dataLength; i++)
             {
                 this.data[i] = result.data[i];
             }
 
-            this.DataLength = result.DataLength;
+            this.dataLength = result.dataLength;
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by an array of bytes)
-        //
-        // The lowest index of the input byte array (i.e [0]) should contain the
-        // most significant byte of the number, and the highest index should
-        // contain the least significant byte.
-        //
-        // E.g.
-        // To initialize "a" with the default value of 0x1D4F in base 16
-        //      byte[] temp = { 0x1D, 0x4F };
-        //      BigInteger a = new BigInteger(temp)
-        //
-        // Note that this method of initialization does not allow the
-        // sign to be specified.
-        //
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="inData"></param>
+        /// <param name="inData">The bytes of the value to initialize with.</param>
+        /// <remarks>
+        /// The lowest index of the input byte array (i.e [0]) should contain the
+        /// most significant byte of the number, and the highest index should
+        /// contain the least significant byte.
+        ///
+        /// E.g.
+        /// To initialize "a" with the default value of 0x1D4F in base 16
+        ///      byte[] temp = { 0x1D, 0x4F };
+        ///      BigInteger a = new BigInteger(temp)
+        ///
+        /// Note that this method of initialization does not allow the
+        /// sign to be specified.
+        /// </remarks>
         public BigInteger(byte[] inData)
         {
-            this.DataLength = inData.Length >> 2;
+            inData.ThrowIfNull(nameof(inData));
+
+            this.dataLength = inData.Length >> 2;
 
             int leftOver = inData.Length & 0x3;
-            if (leftOver != 0) // length not multiples of 4
+
+            // length not multiples of 4
+            if (leftOver != 0)
             {
-                this.DataLength++;
+                this.dataLength++;
             }
 
-            if (this.DataLength > MaxLength)
+            if (this.dataLength > MaxLength)
             {
                 throw new ArithmeticException("Byte overflow in constructor.");
             }
@@ -298,45 +300,43 @@ namespace OpenTibia.Common.Utilities
 
             if (leftOver == 1)
             {
-                this.data[this.DataLength - 1] = inData[0];
+                this.data[this.dataLength - 1] = inData[0];
             }
             else if (leftOver == 2)
             {
-                this.data[this.DataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                this.data[this.dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
             }
             else if (leftOver == 3)
             {
-                this.data[this.DataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                this.data[this.dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
             }
 
-            while (this.DataLength > 1 && this.data[this.DataLength - 1] == 0)
+            while (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
             {
-                this.DataLength--;
+                this.dataLength--;
             }
-
-            // Console.WriteLine("Len = " + dataLength);
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by an array of bytes of the
-        // specified length.)
-        // ***********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="inData"></param>
-        /// <param name="inLen"></param>
+        /// <param name="inData">The bytes of the value to initialize with.</param>
+        /// <param name="inLen">The lenght of the bytes value.</param>
         public BigInteger(byte[] inData, int inLen)
         {
-            this.DataLength = inLen >> 2;
+            inData.ThrowIfNull(nameof(inData));
+
+            this.dataLength = inLen >> 2;
 
             int leftOver = inLen & 0x3;
-            if (leftOver != 0) // length not multiples of 4
+
+            // length not multiples of 4
+            if (leftOver != 0)
             {
-                this.DataLength++;
+                this.dataLength++;
             }
 
-            if (this.DataLength > MaxLength || inLen > inData.Length)
+            if (this.dataLength > MaxLength || inLen > inData.Length)
             {
                 throw new ArithmeticException("Byte overflow in constructor.");
             }
@@ -351,59 +351,54 @@ namespace OpenTibia.Common.Utilities
 
             if (leftOver == 1)
             {
-                this.data[this.DataLength - 1] = inData[0];
+                this.data[this.dataLength - 1] = inData[0];
             }
             else if (leftOver == 2)
             {
-                this.data[this.DataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
+                this.data[this.dataLength - 1] = (uint)((inData[0] << 8) + inData[1]);
             }
             else if (leftOver == 3)
             {
-                this.data[this.DataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
+                this.data[this.dataLength - 1] = (uint)((inData[0] << 16) + (inData[1] << 8) + inData[2]);
             }
 
-            if (this.DataLength == 0)
+            if (this.dataLength == 0)
             {
-                this.DataLength = 1;
+                this.dataLength = 1;
             }
 
-            while (this.DataLength > 1 && this.data[this.DataLength - 1] == 0)
+            while (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
             {
-                this.DataLength--;
+                this.dataLength--;
             }
-
-            // Console.WriteLine("Len = " + dataLength);
         }
 
-        // ***********************************************************************
-        // Constructor (Default value provided by an array of unsigned integers)
-        // *********************************************************************
         /// <summary>
         /// Initializes a new instance of the <see cref="BigInteger"/> class.
         /// </summary>
-        /// <param name="inData"></param>
+        /// <param name="inData">The uint collection of the value to initialize with.</param>
         public BigInteger(uint[] inData)
         {
-            this.DataLength = inData.Length;
+            inData.ThrowIfNull(nameof(inData));
 
-            if (this.DataLength > MaxLength)
+            this.dataLength = inData.Length;
+
+            if (this.dataLength > MaxLength)
             {
                 throw new ArithmeticException("Byte overflow in constructor.");
             }
 
             this.data = new uint[MaxLength];
 
-            for (int i = this.DataLength - 1, j = 0; i >= 0; i--, j++)
+            for (int i = this.dataLength - 1, j = 0; i >= 0; i--, j++)
             {
                 this.data[j] = inData[i];
             }
 
-            while (this.DataLength > 1 && this.data[this.DataLength - 1] == 0)
+            while (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
             {
-                this.DataLength--;
+                this.dataLength--;
             }
-
-            // Console.WriteLine("Len = " + dataLength);
         }
 
         // ***********************************************************************
@@ -435,27 +430,28 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator +(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
-
-            result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
+            BigInteger result = new BigInteger
+            {
+                dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength,
+            };
 
             long carry = 0;
-            for (int i = 0; i < result.DataLength; i++)
+            for (int i = 0; i < result.dataLength; i++)
             {
                 long sum = bi1.data[i] + (long)bi2.data[i] + carry;
                 carry = sum >> 32;
                 result.data[i] = (uint)(sum & 0xFFFFFFFF);
             }
 
-            if (carry != 0 && result.DataLength < MaxLength)
+            if (carry != 0 && result.dataLength < MaxLength)
             {
-                result.data[result.DataLength] = (uint)carry;
-                result.DataLength++;
+                result.data[result.dataLength] = (uint)carry;
+                result.dataLength++;
             }
 
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             // overflow check
@@ -490,15 +486,15 @@ namespace OpenTibia.Common.Utilities
                 index++;
             }
 
-            if (index > result.DataLength)
+            if (index > result.dataLength)
             {
-                result.DataLength = index;
+                result.dataLength = index;
             }
             else
             {
-                while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+                while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
                 {
-                    result.DataLength--;
+                    result.dataLength--;
                 }
             }
 
@@ -521,12 +517,16 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator -(BigInteger bi1, BigInteger bi2)
         {
-            BigInteger result = new BigInteger();
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
 
-            result.DataLength = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
+            BigInteger result = new BigInteger
+            {
+                dataLength = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength,
+            };
 
             long carryIn = 0;
-            for (int i = 0; i < result.DataLength; i++)
+            for (int i = 0; i < result.dataLength; i++)
             {
                 long diff;
 
@@ -546,18 +546,18 @@ namespace OpenTibia.Common.Utilities
             // roll over to negative
             if (carryIn != 0)
             {
-                for (int i = result.DataLength; i < MaxLength; i++)
+                for (int i = result.dataLength; i < MaxLength; i++)
                 {
                     result.data[i] = 0xFFFFFFFF;
                 }
 
-                result.DataLength = MaxLength;
+                result.dataLength = MaxLength;
             }
 
             // fixed in v1.03 to give correct datalength for a - (-b)
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             // overflow check
@@ -576,6 +576,8 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator --(BigInteger bi1)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+
             BigInteger result = new BigInteger(bi1);
 
             long val;
@@ -597,14 +599,14 @@ namespace OpenTibia.Common.Utilities
                 index++;
             }
 
-            if (index > result.DataLength)
+            if (index > result.dataLength)
             {
-                result.DataLength = index;
+                result.dataLength = index;
             }
 
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             // overflow check
@@ -612,8 +614,7 @@ namespace OpenTibia.Common.Utilities
 
             // overflow if initial value was -ve but -- caused a sign
             // change to positive.
-            if ((bi1.data[lastPos] & 0x80000000) != 0 &&
-               (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
+            if ((bi1.data[lastPos] & 0x80000000) != 0 && (result.data[lastPos] & 0x80000000) != (bi1.data[lastPos] & 0x80000000))
             {
                 throw new ArithmeticException("Underflow in --.");
             }
@@ -626,19 +627,24 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator *(BigInteger bi1, BigInteger bi2)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
             int lastPos = MaxLength - 1;
             bool bi1Neg = false, bi2Neg = false;
 
             // take the absolute value of the inputs
             try
             {
-                if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
+                // bi1 negative
+                if ((bi1.data[lastPos] & 0x80000000) != 0)
                 {
                     bi1Neg = true;
                     bi1 = -bi1;
                 }
 
-                if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
+                // bi2 negative
+                if ((bi2.data[lastPos] & 0x80000000) != 0)
                 {
                     bi2Neg = true;
                     bi2 = -bi2;
@@ -653,7 +659,7 @@ namespace OpenTibia.Common.Utilities
             // multiply the absolute values
             try
             {
-                for (int i = 0; i < bi1.DataLength; i++)
+                for (int i = 0; i < bi1.dataLength; i++)
                 {
                     if (bi1.data[i] == 0)
                     {
@@ -661,11 +667,10 @@ namespace OpenTibia.Common.Utilities
                     }
 
                     ulong mcarry = 0;
-                    for (int j = 0, k = i; j < bi2.DataLength; j++, k++)
+                    for (int j = 0, k = i; j < bi2.dataLength; j++, k++)
                     {
                         // k = i + j
-                        ulong val = (bi1.data[i] * (ulong)bi2.data[j]) +
-                                     result.data[k] + mcarry;
+                        ulong val = (bi1.data[i] * (ulong)bi2.data[j]) + result.data[k] + mcarry;
 
                         result.data[k] = (uint)(val & 0xFFFFFFFF);
                         mcarry = val >> 32;
@@ -673,7 +678,7 @@ namespace OpenTibia.Common.Utilities
 
                     if (mcarry != 0)
                     {
-                        result.data[i + bi2.DataLength] = (uint)mcarry;
+                        result.data[i + bi2.dataLength] = (uint)mcarry;
                     }
                 }
             }
@@ -682,31 +687,32 @@ namespace OpenTibia.Common.Utilities
                 throw new ArithmeticException("Multiplication overflow.");
             }
 
-            result.DataLength = bi1.DataLength + bi2.DataLength;
-            if (result.DataLength > MaxLength)
+            result.dataLength = bi1.dataLength + bi2.dataLength;
+            if (result.dataLength > MaxLength)
             {
-                result.DataLength = MaxLength;
+                result.dataLength = MaxLength;
             }
 
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             // overflow check (result is -ve)
             if ((result.data[lastPos] & 0x80000000) != 0)
             {
-                if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000) // different sign
+                // different sign
+                if (bi1Neg != bi2Neg && result.data[lastPos] == 0x80000000)
                 {
                     // handle the special case where multiplication produces
                     // a max negative number in 2's complement.
-                    if (result.DataLength == 1)
+                    if (result.dataLength == 1)
                     {
                         return result;
                     }
 
                     bool isMaxNeg = true;
-                    for (int i = 0; i < result.DataLength - 1 && isMaxNeg; i++)
+                    for (int i = 0; i < result.dataLength - 1 && isMaxNeg; i++)
                     {
                         if (result.data[i] != 0)
                         {
@@ -737,54 +743,12 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator <<(BigInteger bi1, int shiftVal)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+
             BigInteger result = new BigInteger(bi1);
-            result.DataLength = ShiftLeft(result.data, shiftVal);
+            result.dataLength = ShiftLeft(result.data, shiftVal);
 
             return result;
-        }
-
-        // least significant bits at lower part of buffer
-        private static int ShiftLeft(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int bufLen = buffer.Length;
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            for (int count = shiftVal; count > 0;)
-            {
-                if (count < shiftAmount)
-                {
-                    shiftAmount = count;
-                }
-
-                // Console.WriteLine("shiftAmount = {0}", shiftAmount);
-                ulong carry = 0;
-                for (int i = 0; i < bufLen; i++)
-                {
-                    ulong val = ((ulong)buffer[i]) << shiftAmount;
-                    val |= carry;
-
-                    buffer[i] = (uint)(val & 0xFFFFFFFF);
-                    carry = val >> 32;
-                }
-
-                if (carry != 0)
-                {
-                    if (bufLen + 1 <= buffer.Length)
-                    {
-                        buffer[bufLen] = (uint)carry;
-                        bufLen++;
-                    }
-                }
-
-                count -= shiftAmount;
-            }
-
-            return bufLen;
         }
 
         // ***********************************************************************
@@ -792,12 +756,15 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator >>(BigInteger bi1, int shiftVal)
         {
-            BigInteger result = new BigInteger(bi1);
-            result.DataLength = ShiftRight(result.data, shiftVal);
+            bi1.ThrowIfNull(nameof(bi1));
 
-            if ((bi1.data[MaxLength - 1] & 0x80000000) != 0) // negative
+            BigInteger result = new BigInteger(bi1);
+            result.dataLength = ShiftRight(result.data, shiftVal);
+            
+            // negative
+            if ((bi1.data[MaxLength - 1] & 0x80000000) != 0)
             {
-                for (int i = MaxLength - 1; i >= result.DataLength; i--)
+                for (int i = MaxLength - 1; i >= result.dataLength; i--)
                 {
                     result.data[i] = 0xFFFFFFFF;
                 }
@@ -805,61 +772,19 @@ namespace OpenTibia.Common.Utilities
                 uint mask = 0x80000000;
                 for (int i = 0; i < 32; i++)
                 {
-                    if ((result.data[result.DataLength - 1] & mask) != 0)
+                    if ((result.data[result.dataLength - 1] & mask) != 0)
                     {
                         break;
                     }
 
-                    result.data[result.DataLength - 1] |= mask;
+                    result.data[result.dataLength - 1] |= mask;
                     mask >>= 1;
                 }
 
-                result.DataLength = MaxLength;
+                result.dataLength = MaxLength;
             }
 
             return result;
-        }
-
-        private static int ShiftRight(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int invShift = 0;
-            int bufLen = buffer.Length;
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            // Console.WriteLine("bufLen = " + bufLen + " buffer.Length = " + buffer.Length);
-            for (int count = shiftVal; count > 0;)
-            {
-                if (count < shiftAmount)
-                {
-                    shiftAmount = count;
-                    invShift = 32 - shiftAmount;
-                }
-
-                // Console.WriteLine("shiftAmount = {0}", shiftAmount);
-                ulong carry = 0;
-                for (int i = bufLen - 1; i >= 0; i--)
-                {
-                    ulong val = ((ulong)buffer[i]) >> shiftAmount;
-                    val |= carry;
-
-                    carry = ((ulong)buffer[i]) << invShift;
-                    buffer[i] = (uint)val;
-                }
-
-                count -= shiftAmount;
-            }
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            return bufLen;
         }
 
         // ***********************************************************************
@@ -867,6 +792,8 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator ~(BigInteger bi1)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+
             BigInteger result = new BigInteger(bi1);
 
             for (int i = 0; i < MaxLength; i++)
@@ -874,11 +801,11 @@ namespace OpenTibia.Common.Utilities
                 result.data[i] = ~bi1.data[i];
             }
 
-            result.DataLength = MaxLength;
+            result.dataLength = MaxLength;
 
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             return result;
@@ -889,9 +816,11 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger operator -(BigInteger bi1)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+
             // handle neg of zero separately since it'll cause an overflow
             // if we proceed.
-            if (bi1.DataLength == 1 && bi1.data[0] == 0)
+            if (bi1.dataLength == 1 && bi1.data[0] == 0)
             {
                 return new BigInteger();
             }
@@ -924,11 +853,11 @@ namespace OpenTibia.Common.Utilities
                 throw new ArithmeticException("Overflow in negation.\n");
             }
 
-            result.DataLength = MaxLength;
+            result.dataLength = MaxLength;
 
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
             {
-                result.DataLength--;
+                result.dataLength--;
             }
 
             return result;
@@ -952,36 +881,14 @@ namespace OpenTibia.Common.Utilities
             return !bi1.Equals(bi2);
         }
 
-        public override bool Equals(object o)
-        {
-            BigInteger bi = (BigInteger)o;
-
-            if (bi == null || this.DataLength != bi.DataLength)
-            {
-                return false;
-            }
-
-            for (int i = 0; i < this.DataLength; i++)
-            {
-                if (this.data[i] != bi.data[i])
-                {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        public override int GetHashCode()
-        {
-            return this.ToString().GetHashCode();
-        }
-
         // ***********************************************************************
         // Overloading of inequality operator
         // ***********************************************************************
         public static bool operator >(BigInteger bi1, BigInteger bi2)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
             int pos = MaxLength - 1;
 
             // bi1 is negative, bi2 is positive
@@ -997,7 +904,7 @@ namespace OpenTibia.Common.Utilities
             }
 
             // same sign
-            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
+            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--)
             {
             }
@@ -1017,6 +924,9 @@ namespace OpenTibia.Common.Utilities
 
         public static bool operator <(BigInteger bi1, BigInteger bi2)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
             int pos = MaxLength - 1;
 
             // bi1 is negative, bi2 is positive
@@ -1032,7 +942,7 @@ namespace OpenTibia.Common.Utilities
             }
 
             // same sign
-            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
+            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
             for (pos = len - 1; pos >= 0 && bi1.data[pos] == bi2.data[pos]; pos--)
             {
             }
@@ -1061,6 +971,297 @@ namespace OpenTibia.Common.Utilities
         }
 
         // ***********************************************************************
+        // Overloading of division operator
+        // ***********************************************************************
+        public static BigInteger operator /(BigInteger bi1, BigInteger bi2)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            BigInteger quotient = new BigInteger();
+            BigInteger remainder = new BigInteger();
+
+            int lastPos = MaxLength - 1;
+            bool divisorNeg = false, dividendNeg = false;
+
+            // bi1 negative
+            if ((bi1.data[lastPos] & 0x80000000) != 0)
+            {
+                bi1 = -bi1;
+                dividendNeg = true;
+            }
+
+            // bi2 negative
+            if ((bi2.data[lastPos] & 0x80000000) != 0)
+            {
+                bi2 = -bi2;
+                divisorNeg = true;
+            }
+
+            if (bi1 < bi2)
+            {
+                return quotient;
+            }
+
+            if (bi2.dataLength == 1)
+            {
+                SingleByteDivide(bi1, bi2, quotient, remainder);
+            }
+            else
+            {
+                MultiByteDivide(bi1, bi2, quotient, remainder);
+            }
+
+            if (dividendNeg != divisorNeg)
+            {
+                return -quotient;
+            }
+
+            return quotient;
+        }
+
+        // ***********************************************************************
+        // Overloading of modulus operator
+        // ***********************************************************************
+        public static BigInteger operator %(BigInteger bi1, BigInteger bi2)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            BigInteger quotient = new BigInteger();
+            BigInteger remainder = new BigInteger(bi1);
+
+            int lastPos = MaxLength - 1;
+            bool dividendNeg = false;
+
+            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
+            {
+                bi1 = -bi1;
+                dividendNeg = true;
+            }
+
+            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
+            {
+                bi2 = -bi2;
+            }
+
+            if (bi1 < bi2)
+            {
+                return remainder;
+            }
+
+            if (bi2.dataLength == 1)
+            {
+                SingleByteDivide(bi1, bi2, quotient, remainder);
+            }
+            else
+            {
+                MultiByteDivide(bi1, bi2, quotient, remainder);
+            }
+
+            if (dividendNeg)
+            {
+                return -remainder;
+            }
+
+            return remainder;
+        }
+
+        // ***********************************************************************
+        // Overloading of bitwise AND operator
+        // ***********************************************************************
+        public static BigInteger operator &(BigInteger bi1, BigInteger bi2)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            BigInteger result = new BigInteger();
+
+            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+
+            for (int i = 0; i < len; i++)
+            {
+                uint sum = bi1.data[i] & bi2.data[i];
+                result.data[i] = sum;
+            }
+
+            result.dataLength = MaxLength;
+
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
+            {
+                result.dataLength--;
+            }
+
+            return result;
+        }
+
+        // ***********************************************************************
+        // Overloading of bitwise OR operator
+        // ***********************************************************************
+        public static BigInteger operator |(BigInteger bi1, BigInteger bi2)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            BigInteger result = new BigInteger();
+
+            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+
+            for (int i = 0; i < len; i++)
+            {
+                uint sum = bi1.data[i] | bi2.data[i];
+                result.data[i] = sum;
+            }
+
+            result.dataLength = MaxLength;
+
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
+            {
+                result.dataLength--;
+            }
+
+            return result;
+        }
+
+        // ***********************************************************************
+        // Overloading of bitwise XOR operator
+        // ***********************************************************************
+        public static BigInteger operator ^(BigInteger bi1, BigInteger bi2)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            BigInteger result = new BigInteger();
+
+            int len = (bi1.dataLength > bi2.dataLength) ? bi1.dataLength : bi2.dataLength;
+
+            for (int i = 0; i < len; i++)
+            {
+                uint sum = bi1.data[i] ^ bi2.data[i];
+                result.data[i] = sum;
+            }
+
+            result.dataLength = MaxLength;
+
+            while (result.dataLength > 1 && result.data[result.dataLength - 1] == 0)
+            {
+                result.dataLength--;
+            }
+
+            return result;
+        }
+
+        /// <inheritdoc/>
+        public override int GetHashCode()
+        {
+            return this.ToString().GetHashCode(StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <inheritdoc/>
+        public override bool Equals(object o)
+        {
+            BigInteger bi = o as BigInteger;
+
+            if (bi == null || this.dataLength != bi.dataLength)
+            {
+                return false;
+            }
+
+            for (int i = 0; i < this.dataLength; i++)
+            {
+                if (this.data[i] != bi.data[i])
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        // least significant bits at lower part of buffer
+        private static int ShiftLeft(uint[] buffer, int shiftVal)
+        {
+            int shiftAmount = 32;
+            int bufLen = buffer.Length;
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            for (int count = shiftVal; count > 0;)
+            {
+                if (count < shiftAmount)
+                {
+                    shiftAmount = count;
+                }
+
+                ulong carry = 0;
+                for (int i = 0; i < bufLen; i++)
+                {
+                    ulong val = ((ulong)buffer[i]) << shiftAmount;
+                    val |= carry;
+
+                    buffer[i] = (uint)(val & 0xFFFFFFFF);
+                    carry = val >> 32;
+                }
+
+                if (carry != 0)
+                {
+                    if (bufLen + 1 <= buffer.Length)
+                    {
+                        buffer[bufLen] = (uint)carry;
+                        bufLen++;
+                    }
+                }
+
+                count -= shiftAmount;
+            }
+
+            return bufLen;
+        }
+
+        private static int ShiftRight(uint[] buffer, int shiftVal)
+        {
+            int shiftAmount = 32;
+            int invShift = 0;
+            int bufLen = buffer.Length;
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            for (int count = shiftVal; count > 0;)
+            {
+                if (count < shiftAmount)
+                {
+                    shiftAmount = count;
+                    invShift = 32 - shiftAmount;
+                }
+
+                ulong carry = 0;
+                for (int i = bufLen - 1; i >= 0; i--)
+                {
+                    ulong val = ((ulong)buffer[i]) >> shiftAmount;
+                    val |= carry;
+
+                    carry = ((ulong)buffer[i]) << invShift;
+                    buffer[i] = (uint)val;
+                }
+
+                count -= shiftAmount;
+            }
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            return bufLen;
+        }
+
+        // ***********************************************************************
         // Private function that supports the division of two numbers with
         // a divisor that has more than 1 digit.
         //
@@ -1068,13 +1269,19 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         private static void MultiByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
         {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            outQuotient.ThrowIfNull(nameof(outQuotient));
+            outRemainder.ThrowIfNull(nameof(outRemainder));
+
             uint[] result = new uint[MaxLength];
 
-            int remainderLen = bi1.DataLength + 1;
+            int remainderLen = bi1.dataLength + 1;
             uint[] remainder = new uint[remainderLen];
 
             uint mask = 0x80000000;
-            uint val = bi2.data[bi2.DataLength - 1];
+            uint val = bi2.data[bi2.dataLength - 1];
             int shift = 0, resultPos = 0;
 
             while (mask != 0 && (val & mask) == 0)
@@ -1083,41 +1290,30 @@ namespace OpenTibia.Common.Utilities
                 mask >>= 1;
             }
 
-            // Console.WriteLine("shift = {0}", shift);
-            // Console.WriteLine("Before bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
-            for (int i = 0; i < bi1.DataLength; i++)
+            for (int i = 0; i < bi1.dataLength; i++)
             {
                 remainder[i] = bi1.data[i];
             }
 
             ShiftLeft(remainder, shift);
-            bi2 = bi2 << shift;
+            bi2 <<= shift;
 
-            /*
-            Console.WriteLine("bi1 Len = {0}, bi2 Len = {1}", bi1.dataLength, bi2.dataLength);
-            Console.WriteLine("dividend = " + bi1 + "\ndivisor = " + bi2);
-            for(int q = remainderLen - 1; q >= 0; q--)
-                    Console.Write("{0:x2}", remainder[q]);
-            Console.WriteLine();
-            */
-
-            int j = remainderLen - bi2.DataLength;
+            int j = remainderLen - bi2.dataLength;
             int pos = remainderLen - 1;
 
-            ulong firstDivisorByte = bi2.data[bi2.DataLength - 1];
-            ulong secondDivisorByte = bi2.data[bi2.DataLength - 2];
+            ulong firstDivisorByte = bi2.data[bi2.dataLength - 1];
+            ulong secondDivisorByte = bi2.data[bi2.dataLength - 2];
 
-            int divisorLen = bi2.DataLength + 1;
+            int divisorLen = bi2.dataLength + 1;
             uint[] dividendPart = new uint[divisorLen];
 
             while (j > 0)
             {
                 ulong dividend = ((ulong)remainder[pos] << 32) + remainder[pos - 1];
-                // Console.WriteLine("dividend = {0}", dividend);
+
                 ulong qHat = dividend / firstDivisorByte;
                 ulong rHat = dividend % firstDivisorByte;
 
-                // Console.WriteLine("q_hat = {0:X}, r_hat = {1:X}", q_hat, r_hat);
                 bool done = false;
                 while (!done)
                 {
@@ -1144,30 +1340,18 @@ namespace OpenTibia.Common.Utilities
                 BigInteger kk = new BigInteger(dividendPart);
                 BigInteger ss = bi2 * (long)qHat;
 
-                // Console.WriteLine("ss before = " + ss);
                 while (ss > kk)
                 {
                     qHat--;
                     ss -= bi2;
-                    // Console.WriteLine(ss);
                 }
 
                 BigInteger yy = kk - ss;
 
-                // Console.WriteLine("ss = " + ss);
-                // Console.WriteLine("kk = " + kk);
-                // Console.WriteLine("yy = " + yy);
                 for (int h = 0; h < divisorLen; h++)
                 {
-                    remainder[pos - h] = yy.data[bi2.DataLength - h];
+                    remainder[pos - h] = yy.data[bi2.dataLength - h];
                 }
-
-                /*
-                Console.WriteLine("dividend = ");
-                for(int q = remainderLen - 1; q >= 0; q--)
-                        Console.Write("{0:x2}", remainder[q]);
-                Console.WriteLine("\n************ q_hat = {0:X}\n", q_hat);
-                */
 
                 result[resultPos++] = (uint)qHat;
 
@@ -1175,9 +1359,9 @@ namespace OpenTibia.Common.Utilities
                 j--;
             }
 
-            outQuotient.DataLength = resultPos;
+            outQuotient.dataLength = resultPos;
             int y = 0;
-            for (int x = outQuotient.DataLength - 1; x >= 0; x--, y++)
+            for (int x = outQuotient.dataLength - 1; x >= 0; x--, y++)
             {
                 outQuotient.data[y] = result[x];
             }
@@ -1187,19 +1371,19 @@ namespace OpenTibia.Common.Utilities
                 outQuotient.data[y] = 0;
             }
 
-            while (outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0)
+            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
             {
-                outQuotient.DataLength--;
+                outQuotient.dataLength--;
             }
 
-            if (outQuotient.DataLength == 0)
+            if (outQuotient.dataLength == 0)
             {
-                outQuotient.DataLength = 1;
+                outQuotient.dataLength = 1;
             }
 
-            outRemainder.DataLength = ShiftRight(remainder, shift);
+            outRemainder.dataLength = ShiftRight(remainder, shift);
 
-            for (y = 0; y < outRemainder.DataLength; y++)
+            for (y = 0; y < outRemainder.dataLength; y++)
             {
                 outRemainder.data[y] = remainder[y];
             }
@@ -1216,7 +1400,10 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         private static void SingleByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
         {
-            outQuotient.ThrowIfNull(nameof(outQuotient));
+            if (outQuotient == null)
+            {
+                throw new ArgumentNullException(nameof(outQuotient));
+            }
 
             uint[] result = new uint[MaxLength];
             int resultPos = 0;
@@ -1227,19 +1414,17 @@ namespace OpenTibia.Common.Utilities
                 outRemainder.data[i] = bi1.data[i];
             }
 
-            outRemainder.DataLength = bi1.DataLength;
+            outRemainder.dataLength = bi1.dataLength;
 
-            while (outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0)
+            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
             {
-                outRemainder.DataLength--;
+                outRemainder.dataLength--;
             }
 
             ulong divisor = bi2.data[0];
-            int pos = outRemainder.DataLength - 1;
+            int pos = outRemainder.dataLength - 1;
             ulong dividend = outRemainder.data[pos];
 
-            // Console.WriteLine("divisor = " + divisor + " dividend = " + dividend);
-            // Console.WriteLine("divisor = " + bi2 + "\ndividend = " + bi1);
             if (dividend >= divisor)
             {
                 ulong quotient = dividend / divisor;
@@ -1252,19 +1437,17 @@ namespace OpenTibia.Common.Utilities
 
             while (pos >= 0)
             {
-                // Console.WriteLine(pos);
                 dividend = ((ulong)outRemainder.data[pos + 1] << 32) + outRemainder.data[pos];
                 ulong quotient = dividend / divisor;
                 result[resultPos++] = (uint)quotient;
 
                 outRemainder.data[pos + 1] = 0;
                 outRemainder.data[pos--] = (uint)(dividend % divisor);
-                // Console.WriteLine(">>>> " + bi1);
             }
 
-            outQuotient.DataLength = resultPos;
+            outQuotient.dataLength = resultPos;
             int j = 0;
-            for (int i = outQuotient.DataLength - 1; i >= 0; i--, j++)
+            for (int i = outQuotient.dataLength - 1; i >= 0; i--, j++)
             {
                 outQuotient.data[j] = result[i];
             }
@@ -1274,189 +1457,27 @@ namespace OpenTibia.Common.Utilities
                 outQuotient.data[j] = 0;
             }
 
-            while (outQuotient.DataLength > 1 && outQuotient.data[outQuotient.DataLength - 1] == 0)
+            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
             {
-                outQuotient.DataLength--;
+                outQuotient.dataLength--;
             }
 
-            if (outQuotient.DataLength == 0)
+            if (outQuotient.dataLength == 0)
             {
-                outQuotient.DataLength = 1;
+                outQuotient.dataLength = 1;
             }
 
-            while (outRemainder.DataLength > 1 && outRemainder.data[outRemainder.DataLength - 1] == 0)
+            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
             {
-                outRemainder.DataLength--;
+                outRemainder.dataLength--;
             }
         }
 
-        // ***********************************************************************
-        // Overloading of division operator
-        // ***********************************************************************
-        public static BigInteger operator /(BigInteger bi1, BigInteger bi2)
-        {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger();
-
-            int lastPos = MaxLength - 1;
-            bool divisorNeg = false, dividendNeg = false;
-
-            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
-            {
-                bi1 = -bi1;
-                dividendNeg = true;
-            }
-
-            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
-            {
-                bi2 = -bi2;
-                divisorNeg = true;
-            }
-
-            if (bi1 < bi2)
-            {
-                return quotient;
-            }
-
-            if (bi2.DataLength == 1)
-            {
-                SingleByteDivide(bi1, bi2, quotient, remainder);
-            }
-            else
-            {
-                MultiByteDivide(bi1, bi2, quotient, remainder);
-            }
-
-            if (dividendNeg != divisorNeg)
-            {
-                return -quotient;
-            }
-
-            return quotient;
-        }
-
-        // ***********************************************************************
-        // Overloading of modulus operator
-        // ***********************************************************************
-        public static BigInteger operator %(BigInteger bi1, BigInteger bi2)
-        {
-            BigInteger quotient = new BigInteger();
-            BigInteger remainder = new BigInteger(bi1);
-
-            int lastPos = MaxLength - 1;
-            bool dividendNeg = false;
-
-            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
-            {
-                bi1 = -bi1;
-                dividendNeg = true;
-            }
-
-            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
-            {
-                bi2 = -bi2;
-            }
-
-            if (bi1 < bi2)
-            {
-                return remainder;
-            }
-
-            if (bi2.DataLength == 1)
-            {
-                SingleByteDivide(bi1, bi2, quotient, remainder);
-            }
-            else
-            {
-                MultiByteDivide(bi1, bi2, quotient, remainder);
-            }
-
-            if (dividendNeg)
-            {
-                return -remainder;
-            }
-
-            return remainder;
-        }
-
-        // ***********************************************************************
-        // Overloading of bitwise AND operator
-        // ***********************************************************************
-        public static BigInteger operator &(BigInteger bi1, BigInteger bi2)
-        {
-            BigInteger result = new BigInteger();
-
-            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
-
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = bi1.data[i] & bi2.data[i];
-                result.data[i] = sum;
-            }
-
-            result.DataLength = MaxLength;
-
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
-            {
-                result.DataLength--;
-            }
-
-            return result;
-        }
-
-        // ***********************************************************************
-        // Overloading of bitwise OR operator
-        // ***********************************************************************
-        public static BigInteger operator |(BigInteger bi1, BigInteger bi2)
-        {
-            BigInteger result = new BigInteger();
-
-            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
-
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = bi1.data[i] | bi2.data[i];
-                result.data[i] = sum;
-            }
-
-            result.DataLength = MaxLength;
-
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
-            {
-                result.DataLength--;
-            }
-
-            return result;
-        }
-
-        // ***********************************************************************
-        // Overloading of bitwise XOR operator
-        // ***********************************************************************
-        public static BigInteger operator ^(BigInteger bi1, BigInteger bi2)
-        {
-            BigInteger result = new BigInteger();
-
-            int len = (bi1.DataLength > bi2.DataLength) ? bi1.DataLength : bi2.DataLength;
-
-            for (int i = 0; i < len; i++)
-            {
-                uint sum = bi1.data[i] ^ bi2.data[i];
-                result.data[i] = sum;
-            }
-
-            result.DataLength = MaxLength;
-
-            while (result.DataLength > 1 && result.data[result.DataLength - 1] == 0)
-            {
-                result.DataLength--;
-            }
-
-            return result;
-        }
-
-        // ***********************************************************************
-        // Returns max(this, bi)
-        // ***********************************************************************
+        /// <summary>
+        /// Returns the maximum between this and another <see cref="BigInteger"/>.
+        /// </summary>
+        /// <param name="bi">The other integer.</param>
+        /// <returns>The maximum between this and another <see cref="BigInteger"/>.</returns>
         public BigInteger Max(BigInteger bi)
         {
             if (this > bi)
@@ -1467,9 +1488,11 @@ namespace OpenTibia.Common.Utilities
             return new BigInteger(bi);
         }
 
-        // ***********************************************************************
-        // Returns min(this, bi)
-        // ***********************************************************************
+        /// <summary>
+        /// Returns the minimum between this and another <see cref="BigInteger"/>.
+        /// </summary>
+        /// <param name="bi">The other integer.</param>
+        /// <returns>The minimum between this and another <see cref="BigInteger"/>.</returns>
         public BigInteger Min(BigInteger bi)
         {
             if (this < bi)
@@ -1480,9 +1503,10 @@ namespace OpenTibia.Common.Utilities
             return new BigInteger(bi);
         }
 
-        // ***********************************************************************
-        // Returns the absolute value
-        // ***********************************************************************
+        /// <summary>
+        /// Returns the absolute value of this integer.
+        /// </summary>
+        /// <returns>The absolute value of this integer.</returns>
         public BigInteger Abs()
         {
             if ((this.data[MaxLength - 1] & 0x80000000) != 0)
@@ -1493,24 +1517,23 @@ namespace OpenTibia.Common.Utilities
             return new BigInteger(this);
         }
 
-        // ***********************************************************************
-        // Returns a string representing the BigInteger in base 10.
-        // ***********************************************************************
+        /// <summary>
+        /// Returns the string representation of this integer in base 10.
+        /// </summary>
+        /// <returns>The string representation of this integer in base 10.</returns>
         public override string ToString()
         {
             return this.ToString(10);
         }
 
-        // ***********************************************************************
-        // Returns a string representing the BigInteger in sign-and-magnitude
-        // format in the specified radix.
-        //
-        // Example
-        // -------
-        // If the value of BigInteger is -255 in base 10, then
-        // ToString(16) returns "-FF"
-        //
-        // ***********************************************************************
+        /// <summary>
+        /// Returns a string representing the <see cref="BigInteger"/> in sign-and-magnitude format in the specified radix.
+        /// </summary>
+        /// <param name="radix">The base in which the interger is.</param>
+        /// <returns>The string representing the <see cref="BigInteger"/> in sign-and-magnitude format in the specified radix.</returns>
+        /// <remarks>
+        /// If the value of BigInteger is -255 in base 10, then ToString(16) returns "-FF".
+        /// </remarks>
         public string ToString(int radix)
         {
             if (radix < 2 || radix > 36)
@@ -1540,13 +1563,13 @@ namespace OpenTibia.Common.Utilities
             BigInteger remainder = new BigInteger();
             BigInteger biRadix = new BigInteger(radix);
 
-            if (a.DataLength == 1 && a.data[0] == 0)
+            if (a.dataLength == 1 && a.data[0] == 0)
             {
                 result = "0";
             }
             else
             {
-                while (a.DataLength > 1 || (a.DataLength == 1 && a.data[0] != 0))
+                while (a.dataLength > 1 || (a.dataLength == 1 && a.data[0] != 0))
                 {
                     SingleByteDivide(a, biRadix, quotient, remainder);
 
@@ -1586,9 +1609,9 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public string ToHexString()
         {
-            string result = this.data[this.DataLength - 1].ToString("X");
+            string result = this.data[this.dataLength - 1].ToString("X");
 
-            for (int i = this.DataLength - 2; i >= 0; i--)
+            for (int i = this.dataLength - 2; i >= 0; i--)
             {
                 result += this.data[i].ToString("X8");
             }
@@ -1610,7 +1633,8 @@ namespace OpenTibia.Common.Utilities
             BigInteger tempNum;
             bool thisNegative = false;
 
-            if ((this.data[MaxLength - 1] & 0x80000000) != 0) // negative this
+            // negative this
+            if ((this.data[MaxLength - 1] & 0x80000000) != 0)
             {
                 tempNum = -this % n;
                 thisNegative = true;
@@ -1620,7 +1644,8 @@ namespace OpenTibia.Common.Utilities
                 tempNum = this % n;  // ensures (tempNum * tempNum) < b^(2k)
             }
 
-            if ((n.data[MaxLength - 1] & 0x80000000) != 0) // negative n
+            // negative n
+            if ((n.data[MaxLength - 1] & 0x80000000) != 0)
             {
                 n = -n;
             }
@@ -1628,19 +1653,19 @@ namespace OpenTibia.Common.Utilities
             // calculate constant = b^(2k) / m
             BigInteger constant = new BigInteger();
 
-            int i = n.DataLength << 1;
+            int i = n.dataLength << 1;
             constant.data[i] = 0x00000001;
-            constant.DataLength = i + 1;
+            constant.dataLength = i + 1;
 
-            constant = constant / n;
+            constant /= n;
             int totalBits = exp.BitCount();
             int count = 0;
 
             // perform squaring and multiply exponentiation
-            for (int pos = 0; pos < exp.DataLength; pos++)
+            for (int pos = 0; pos < exp.dataLength; pos++)
             {
                 uint mask = 0x01;
-                // Console.WriteLine("pos = " + pos);
+
                 for (int index = 0; index < 32; index++)
                 {
                     if ((exp.data[pos] & mask) != 0)
@@ -1652,9 +1677,10 @@ namespace OpenTibia.Common.Utilities
 
                     tempNum = this.BarrettReduction(tempNum * tempNum, n, constant);
 
-                    if (tempNum.DataLength == 1 && tempNum.data[0] == 1)
+                    if (tempNum.dataLength == 1 && tempNum.data[0] == 1)
                     {
-                        if (thisNegative && (exp.data[0] & 0x1) != 0) // odd exp
+                        // odd exp
+                        if (thisNegative && (exp.data[0] & 0x1) != 0)
                         {
                             return -resultNum;
                         }
@@ -1670,7 +1696,8 @@ namespace OpenTibia.Common.Utilities
                 }
             }
 
-            if (thisNegative && (exp.data[0] & 0x1) != 0) // odd exp
+            // odd exp
+            if (thisNegative && (exp.data[0] & 0x1) != 0)
             {
                 return -resultNum;
             }
@@ -1687,54 +1714,54 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         private BigInteger BarrettReduction(BigInteger x, BigInteger n, BigInteger constant)
         {
-            int k = n.DataLength,
+            int k = n.dataLength,
                 kPlusOne = k + 1,
                 kMinusOne = k - 1;
 
             BigInteger q1 = new BigInteger();
 
             // q1 = x / b^(k-1)
-            for (int i = kMinusOne, j = 0; i < x.DataLength; i++, j++)
+            for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
             {
                 q1.data[j] = x.data[i];
             }
 
-            q1.DataLength = x.DataLength - kMinusOne;
-            if (q1.DataLength <= 0)
+            q1.dataLength = x.dataLength - kMinusOne;
+            if (q1.dataLength <= 0)
             {
-                q1.DataLength = 1;
+                q1.dataLength = 1;
             }
 
             BigInteger q2 = q1 * constant;
             BigInteger q3 = new BigInteger();
 
             // q3 = q2 / b^(k+1)
-            for (int i = kPlusOne, j = 0; i < q2.DataLength; i++, j++)
+            for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
             {
                 q3.data[j] = q2.data[i];
             }
 
-            q3.DataLength = q2.DataLength - kPlusOne;
-            if (q3.DataLength <= 0)
+            q3.dataLength = q2.dataLength - kPlusOne;
+            if (q3.dataLength <= 0)
             {
-                q3.DataLength = 1;
+                q3.dataLength = 1;
             }
 
             // r1 = x mod b^(k+1)
             // i.e. keep the lowest (k+1) words
             BigInteger r1 = new BigInteger();
-            int lengthToCopy = (x.DataLength > kPlusOne) ? kPlusOne : x.DataLength;
+            int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
             for (int i = 0; i < lengthToCopy; i++)
             {
                 r1.data[i] = x.data[i];
             }
 
-            r1.DataLength = lengthToCopy;
+            r1.dataLength = lengthToCopy;
 
             // r2 = (q3 * n) mod b^(k+1)
             // partial multiplication of q3 and n
             BigInteger r2 = new BigInteger();
-            for (int i = 0; i < q3.DataLength; i++)
+            for (int i = 0; i < q3.dataLength; i++)
             {
                 if (q3.data[i] == 0)
                 {
@@ -1743,7 +1770,7 @@ namespace OpenTibia.Common.Utilities
 
                 ulong mcarry = 0;
                 int t = i;
-                for (int j = 0; j < n.DataLength && t < kPlusOne; j++, t++)
+                for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
                 {
                     // t = i + j
                     ulong val = (q3.data[i] * (ulong)n.data[j]) +
@@ -1759,18 +1786,20 @@ namespace OpenTibia.Common.Utilities
                 }
             }
 
-            r2.DataLength = kPlusOne;
-            while (r2.DataLength > 1 && r2.data[r2.DataLength - 1] == 0)
+            r2.dataLength = kPlusOne;
+            while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
             {
-                r2.DataLength--;
+                r2.dataLength--;
             }
 
             r1 -= r2;
-            if ((r1.data[MaxLength - 1] & 0x80000000) != 0) // negative
+
+            // negative
+            if ((r1.data[MaxLength - 1] & 0x80000000) != 0)
             {
                 BigInteger val = new BigInteger();
                 val.data[kPlusOne] = 0x00000001;
-                val.DataLength = kPlusOne + 1;
+                val.dataLength = kPlusOne + 1;
                 r1 += val;
             }
 
@@ -1782,15 +1811,20 @@ namespace OpenTibia.Common.Utilities
             return r1;
         }
 
-        // ***********************************************************************
-        // Returns gcd(this, bi)
-        // ***********************************************************************
+        /// <summary>
+        /// Returns the greatest common divisor between this and another <see cref="BigInteger"/>.
+        /// </summary>
+        /// <param name="bi">The other <see cref="BigInteger"/>.</param>
+        /// <returns>The greatest common divisor between this and another <see cref="BigInteger"/>.</returns>
         public BigInteger Gcd(BigInteger bi)
         {
+            bi.ThrowIfNull(nameof(bi));
+
             BigInteger x;
             BigInteger y;
 
-            if ((this.data[MaxLength - 1] & 0x80000000) != 0) // negative
+            // negative
+            if ((this.data[MaxLength - 1] & 0x80000000) != 0)
             {
                 x = -this;
             }
@@ -1799,7 +1833,8 @@ namespace OpenTibia.Common.Utilities
                 x = this;
             }
 
-            if ((bi.data[MaxLength - 1] & 0x80000000) != 0) // negative
+            // negative
+            if ((bi.data[MaxLength - 1] & 0x80000000) != 0)
             {
                 y = -bi;
             }
@@ -1810,7 +1845,7 @@ namespace OpenTibia.Common.Utilities
 
             BigInteger g = y;
 
-            while (x.DataLength > 1 || (x.DataLength == 1 && x.data[0] != 0))
+            while (x.dataLength > 1 || (x.dataLength == 1 && x.data[0] != 0))
             {
                 g = x;
                 x = y % x;
@@ -1820,11 +1855,15 @@ namespace OpenTibia.Common.Utilities
             return g;
         }
 
-        // ***********************************************************************
-        // Populates "this" with the specified amount of random bits
-        // ***********************************************************************
+        /// <summary>
+        /// Populates this integer with the specified amount of random bits.
+        /// </summary>
+        /// <param name="bits">The number of random bits to populate with.</param>
+        /// <param name="rand">A <see cref="Random"/> instance to use.</param>
         public void GenRandomBits(int bits, Random rand)
         {
+            rand.ThrowIfNull(nameof(rand));
+
             int dwords = bits >> 5;
             int remBits = bits & 0x1F;
 
@@ -1861,11 +1900,11 @@ namespace OpenTibia.Common.Utilities
                 this.data[dwords - 1] |= 0x80000000;
             }
 
-            this.DataLength = dwords;
+            this.dataLength = dwords;
 
-            if (this.DataLength == 0)
+            if (this.dataLength == 0)
             {
-                this.DataLength = 1;
+                this.dataLength = 1;
             }
         }
 
@@ -1880,12 +1919,12 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public int BitCount()
         {
-            while (this.DataLength > 1 && this.data[this.DataLength - 1] == 0)
+            while (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
             {
-                this.DataLength--;
+                this.dataLength--;
             }
 
-            uint value = this.data[this.DataLength - 1];
+            uint value = this.data[this.dataLength - 1];
             uint mask = 0x80000000;
             int bits = 32;
 
@@ -1895,7 +1934,7 @@ namespace OpenTibia.Common.Utilities
                 mask >>= 1;
             }
 
-            bits += (this.DataLength - 1) << 5;
+            bits += (this.dataLength - 1) << 5;
 
             return bits;
         }
@@ -1913,16 +1952,17 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public long LongValue()
         {
-            long val = 0;
+            long val = this.data[0];
 
-            val = this.data[0];
             try
-            { // exception if maxLength = 1
+            { 
+                // exception if maxLength = 1
                 val |= (long)this.data[1] << 32;
             }
             catch (Exception)
             {
-                if ((this.data[0] & 0x80000000) != 0) // negative
+                // negative
+                if ((this.data[0] & 0x80000000) != 0)
                 {
                     val = (int)this.data[0];
                 }
@@ -1948,19 +1988,19 @@ namespace OpenTibia.Common.Utilities
                 a %= b;
             }
 
-            if (a.DataLength == 1 && a.data[0] == 0)
+            if (a.dataLength == 1 && a.data[0] == 0)
             {
                 return 0;  // a == 0
             }
 
-            if (a.DataLength == 1 && a.data[0] == 1)
+            if (a.dataLength == 1 && a.data[0] == 1)
             {
                 return 1;  // a == 1
             }
 
             if (a < 0)
             {
-                if (((b - 1).data[0] & 0x2) == 0) // if( (((b-1) >> 1).data[0] & 0x1) == 0)
+                if (((b - 1).data[0] & 0x2) == 0)
                 {
                     return Jacobi(-a, b);
                 }
@@ -1969,7 +2009,7 @@ namespace OpenTibia.Common.Utilities
             }
 
             int e = 0;
-            for (int index = 0; index < a.DataLength; index++)
+            for (int index = 0; index < a.dataLength; index++)
             {
                 uint mask = 0x01;
 
@@ -1977,7 +2017,7 @@ namespace OpenTibia.Common.Utilities
                 {
                     if ((a.data[index] & mask) != 0)
                     {
-                        index = a.DataLength;      // to break the outer loop
+                        index = a.dataLength;      // to break the outer loop
                         break;
                     }
 
@@ -1999,7 +2039,7 @@ namespace OpenTibia.Common.Utilities
                 s = -s;
             }
 
-            if (a1.DataLength == 1 && a1.data[0] == 1)
+            if (a1.dataLength == 1 && a1.data[0] == 1)
             {
                 return s;
             }
@@ -2022,7 +2062,7 @@ namespace OpenTibia.Common.Utilities
             BigInteger a = modulus;
             BigInteger b = this;
 
-            while (b.DataLength > 1 || (b.DataLength == 1 && b.data[0] != 0))
+            while (b.dataLength > 1 || (b.dataLength == 1 && b.data[0] != 0))
             {
                 BigInteger quotient = new BigInteger();
                 BigInteger remainder = new BigInteger();
@@ -2034,7 +2074,7 @@ namespace OpenTibia.Common.Utilities
                     p[1] = pval;
                 }
 
-                if (b.DataLength == 1)
+                if (b.dataLength == 1)
                 {
                     SingleByteDivide(a, b, quotient, remainder);
                 }
@@ -2042,13 +2082,6 @@ namespace OpenTibia.Common.Utilities
                 {
                     MultiByteDivide(a, b, quotient, remainder);
                 }
-
-                /*
-                Console.WriteLine(quotient.dataLength);
-                Console.WriteLine("{0} = {1}({2}) + {3}  p = {4}", a.ToString(10),
-                                  b.ToString(10), quotient.ToString(10), remainder.ToString(10),
-                                  p[1].ToString(10));
-                */
 
                 q[0] = q[1];
                 r[0] = r[1];
@@ -2061,7 +2094,7 @@ namespace OpenTibia.Common.Utilities
                 step++;
             }
 
-            if (r[0].DataLength > 1 || (r[0].DataLength == 1 && r[0].data[0] != 1))
+            if (r[0].dataLength > 1 || (r[0].dataLength == 1 && r[0].data[0] != 1))
             {
                 throw new ArithmeticException("No inverse!");
             }
@@ -2092,9 +2125,8 @@ namespace OpenTibia.Common.Utilities
 
             byte[] result = new byte[numBytes];
 
-            // Console.WriteLine(result.Length);
             int pos = 0;
-            uint tempVal, val = this.data[this.DataLength - 1];
+            uint tempVal, val = this.data[this.dataLength - 1];
 
             if ((tempVal = val >> 24 & 0xFF) != 0)
             {
@@ -2116,7 +2148,7 @@ namespace OpenTibia.Common.Utilities
                 result[pos++] = (byte)tempVal;
             }
 
-            for (int i = this.DataLength - 2; i >= 0; i--, pos += 4)
+            for (int i = this.dataLength - 2; i >= 0; i--, pos += 4)
             {
                 val = this.data[i];
                 result[pos + 3] = (byte)(val & 0xFF);
@@ -2137,15 +2169,18 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public void SetBit(uint bitNum)
         {
-            uint bytePos = bitNum >> 5;             // divide by 32
-            byte bitPos = (byte)(bitNum & 0x1F);    // get the lowest 5 bits
+            // divide by 32
+            uint bytePos = bitNum >> 5;
 
-            uint mask = (uint)1 << bitPos;
+            // get the lowest 5 bits
+            byte bitPos = (byte)(bitNum & 0x1F);
+
+            uint mask = 1U << bitPos;
             this.data[bytePos] |= mask;
 
-            if (bytePos >= this.DataLength)
+            if (bytePos >= this.dataLength)
             {
-                this.DataLength = (int)bytePos + 1;
+                this.dataLength = (int)bytePos + 1;
             }
         }
 
@@ -2157,18 +2192,18 @@ namespace OpenTibia.Common.Utilities
         {
             uint bytePos = bitNum >> 5;
 
-            if (bytePos < this.DataLength)
+            if (bytePos < this.dataLength)
             {
                 byte bitPos = (byte)(bitNum & 0x1F);
 
-                uint mask = (uint)1 << bitPos;
+                uint mask = 1U << bitPos;
                 uint mask2 = 0xFFFFFFFF ^ mask;
 
                 this.data[bytePos] &= mask2;
 
-                if (this.DataLength > 1 && this.data[this.DataLength - 1] == 0)
+                if (this.dataLength > 1 && this.data[this.dataLength - 1] == 0)
                 {
-                    this.DataLength--;
+                    this.dataLength--;
                 }
             }
         }
@@ -2185,13 +2220,14 @@ namespace OpenTibia.Common.Utilities
         {
             uint numBits = (uint)this.BitCount();
 
-            if ((numBits & 0x1) != 0) // odd number of bits
+            // odd number of bits
+            if ((numBits & 0x1) != 0)
             {
                 numBits = (numBits >> 1) + 1;
             }
             else
             {
-                numBits = numBits >> 1;
+                numBits >>= 1;
             }
 
             uint bytePos = numBits >> 5;
@@ -2206,11 +2242,11 @@ namespace OpenTibia.Common.Utilities
             }
             else
             {
-                mask = (uint)1 << bitPos;
+                mask = 1U << bitPos;
                 bytePos++;
             }
 
-            result.DataLength = (int)bytePos;
+            result.dataLength = (int)bytePos;
 
             for (int i = (int)bytePos - 1; i >= 0; i--)
             {
@@ -2267,7 +2303,7 @@ namespace OpenTibia.Common.Utilities
         // ***********************************************************************
         public static BigInteger[] LucasSequence(BigInteger p, BigInteger q, BigInteger k, BigInteger n)
         {
-            if (k.DataLength == 1 && k.data[0] == 0)
+            if (k.dataLength == 1 && k.data[0] == 0)
             {
                 BigInteger[] result = new BigInteger[3];
 
@@ -2281,16 +2317,16 @@ namespace OpenTibia.Common.Utilities
             // for Barrett Reduction
             BigInteger constant = new BigInteger();
 
-            int nLen = n.DataLength << 1;
+            int nLen = n.dataLength << 1;
             constant.data[nLen] = 0x00000001;
-            constant.DataLength = nLen + 1;
+            constant.dataLength = nLen + 1;
 
-            constant = constant / n;
+            constant /= n;
 
             // calculate values of s and t
             int s = 0;
 
-            for (int index = 0; index < k.DataLength; index++)
+            for (int index = 0; index < k.dataLength; index++)
             {
                 uint mask = 0x01;
 
@@ -2298,7 +2334,7 @@ namespace OpenTibia.Common.Utilities
                 {
                     if ((k.data[index] & mask) != 0)
                     {
-                        index = k.DataLength;      // to break the outer loop
+                        index = k.dataLength;      // to break the outer loop
                         break;
                     }
 
@@ -2309,7 +2345,6 @@ namespace OpenTibia.Common.Utilities
 
             BigInteger t = k >> s;
 
-            // Console.WriteLine("s = " + s + " t = " + t);
             return LucasSequenceHelper(p, q, t, n, constant, s);
         }
 
@@ -2329,24 +2364,26 @@ namespace OpenTibia.Common.Utilities
             }
 
             int numbits = k.BitCount();
-            uint mask = (uint)0x1 << ((numbits & 0x1F) - 1);
+            uint mask = 0x1U << ((numbits & 0x1F) - 1);
 
             // v = v0, v1 = v1, u1 = u1, Q_k = Q^0
             BigInteger v = 2 % n, qK = 1 % n,
                        v1 = p % n, u1 = qK;
             bool flag = true;
 
-            for (int i = k.DataLength - 1; i >= 0; i--) // iterate on the binary expansion of k
+            // iterate on the binary expansion of k
+            for (int i = k.dataLength - 1; i >= 0; i--)
             {
-                // Console.WriteLine("round");
                 while (mask != 0)
                 {
-                    if (i == 0 && mask == 0x00000001) // last bit
+                    // last bit
+                    if (i == 0 && mask == 0x00000001)
                     {
                         break;
                     }
 
-                    if ((k.data[i] & mask) != 0) // bit is set
+                    // bit is set
+                    if ((k.data[i] & mask) != 0)
                     {
                         // index doubling with addition
                         u1 = (u1 * v1) % n;
@@ -2432,3 +2469,4 @@ namespace OpenTibia.Common.Utilities
         }
     }
 }
+#pragma warning restore CA1303 // Do not pass literals as localized parameters
