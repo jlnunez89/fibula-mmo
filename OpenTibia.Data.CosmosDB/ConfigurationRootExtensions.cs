@@ -35,7 +35,7 @@ namespace OpenTibia.Data.CosmosDB
             // configure options
             services.Configure<CosmosDbConfigurationOptions>(configuration.GetSection(nameof(CosmosDbConfigurationOptions)));
 
-            services.AddSingleton<IOpenTibiaDbContext, OpenTibiaCosmosDbContext>();
+            services.AddTransient<IOpenTibiaDbContext, OpenTibiaCosmosDbContext>();
         }
     }
 }
