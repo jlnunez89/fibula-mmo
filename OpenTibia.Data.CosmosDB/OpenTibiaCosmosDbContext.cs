@@ -112,7 +112,7 @@ namespace OpenTibia.Data.CosmosDB
                         if (OpenTibiaCosmosDbContext.accountkey == null)
                         {
                             // Attempt to retrieve secret using the provider.
-                            OpenTibiaCosmosDbContext.accountkey = this.SecretsProvider.GetSecretValueAsync(this.CosmosDbConfiguration.AccountEndpointSecretName).Result;
+                            OpenTibiaCosmosDbContext.accountkey = this.SecretsProvider.GetSecretValueAsync(this.CosmosDbConfiguration.AccountKeySecretName).Result;
                         }
                     }
                 }
