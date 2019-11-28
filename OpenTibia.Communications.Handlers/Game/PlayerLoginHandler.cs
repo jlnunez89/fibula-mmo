@@ -104,15 +104,6 @@ namespace OpenTibia.Communications.Handlers.Game
             // Associate the xTea key to allow future validate packets from this connection.
             connection.SetupAuthenticationKey(loginInfo.XteaKey);
 
-            if (!connection.Authenticate(loginInfo.XteaKey))
-            {
-                connection.SetupAuthenticationKey(loginInfo.XteaKey);
-
-                responsePackets.Add(new GameServerDisconnectPacket("There was a problem with your session key.\nPlease logging in again."));
-
-                return (true, responsePackets);
-            }
-
             using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
 
             AccountEntity account = unitOfWork.Accounts.FindOne(a => a.Number == loginInfo.AccountNumber && a.Password.Equals(loginInfo.Password));

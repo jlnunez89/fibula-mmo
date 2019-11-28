@@ -146,8 +146,6 @@ namespace OpenTibia.Communications.Handlers.Management
                 return (true, responsePackets);
             }
 
-            var guidToSave = new Guid(accLoginInfo.XteaKey.ToByteArray());
-
             var charactersFound = unitOfWork.Characters.FindMany(p => p.AccountId == account.Id);
 
             if (!charactersFound.Any())
@@ -171,11 +169,6 @@ namespace OpenTibia.Communications.Handlers.Management
 
             responsePackets.Add(new MessageOfTheDayPacket(this.GameConfiguration.World.MessageOfTheDay));
             responsePackets.Add(new CharacterListPacket(charList, (ushort)(account.PremiumDays + account.TrialOrBonusPremiumDays)));
-
-            // Save the XTEA key in the accocunt, so that we can retrieve, assign and compare in the connection to the game server.
-            account.SessionKey = guidToSave.ToString();
-
-            unitOfWork.Complete();
 
             return (true, responsePackets);
         }
