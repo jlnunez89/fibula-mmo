@@ -12,7 +12,6 @@
 #pragma warning disable CA1062 // Validate arguments of public methods
 namespace OpenTibia.Communications
 {
-    using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
@@ -27,14 +26,14 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Gets the <see cref="ConcurrentDictionary{TKey,TValue}"/> of all <see cref="IConnection"/>s, in which the Key is the <see cref="IConnection.PlayerId"/>.
         /// </summary>
-        private readonly ConcurrentDictionary<Guid, IConnection> connectionsMap;
+        private readonly ConcurrentDictionary<uint, IConnection> connectionsMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionManager"/> class.
         /// </summary>
         public ConnectionManager()
         {
-            this.connectionsMap = new ConcurrentDictionary<Guid, IConnection>();
+            this.connectionsMap = new ConcurrentDictionary<uint, IConnection>();
         }
 
         /// <summary>
@@ -64,7 +63,7 @@ namespace OpenTibia.Communications
         /// </summary>
         /// <param name="playerId">The player id for which to look a connection for.</param>
         /// <returns>The connection instance, if found, and null otherwise.</returns>
-        public IConnection FindByPlayerId(Guid playerId)
+        public IConnection FindByPlayerId(uint playerId)
         {
             if (this.connectionsMap.TryGetValue(playerId, out IConnection connection))
             {

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IPlayerLoginInfo.cs" company="2Dudes">
+// <copyright file="ICharacterLoginInfo.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -12,17 +12,17 @@
 namespace OpenTibia.Communications.Packets.Contracts.Abstractions
 {
     /// <summary>
-    /// Interface for player login information.
+    /// Interface for character login information.
     /// </summary>
-    public interface IPlayerLoginInfo
+    public interface ICharacterLoginInfo
     {
         /// <summary>
-        /// Gets the operating system of the player's client.
+        /// Gets the operating system of the character's client.
         /// </summary>
         ushort Os { get; }
 
         /// <summary>
-        /// Gets the version of the player's client.
+        /// Gets the version of the character's client.
         /// </summary>
         ushort Version { get; }
 
@@ -34,7 +34,7 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
         /// <summary>
         /// Gets a value indicating whether this character is a gamemaster.
         /// </summary>
-        bool IsGm { get; }
+        bool IsGamemaster { get; }
 
         /// <summary>
         /// Gets the account number of the character.

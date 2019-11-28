@@ -9,9 +9,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts
+namespace OpenTibia.Communications.Contracts
 {
-    using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Communications.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents options for the configuration of a world.

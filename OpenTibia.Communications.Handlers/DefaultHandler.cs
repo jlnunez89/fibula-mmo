@@ -58,7 +58,7 @@ namespace OpenTibia.Communications.Handlers
                 sb.AppendFormat("{0:x2} ", b);
             }
 
-            Console.WriteLine($"Default handler received the following packet type: {this.IncomingPacketType}");
+            Console.WriteLine($"Default handler received the following packet type: {this.IncomingPacketType.ToString("X2")}");
             Console.WriteLine(sb.ToString());
             Console.WriteLine();
 

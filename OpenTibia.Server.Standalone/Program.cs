@@ -34,6 +34,7 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
+    using OpenTibia.Server.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>
@@ -113,19 +114,39 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IProtocolFactory, ProtocolFactory>();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
 
+            // TODO: abstract these out as AddAzureProviders();
             services.AddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
             services.AddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
 
+            services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
+
+            // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
+            // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
+            // rather than save an actual copy of the DB context in the app context.
             services.AddSingleton<Func<IOpenTibiaDbContext>>(s => s.GetService<IOpenTibiaDbContext>);
             services.AddSingleton<IApplicationContext, ApplicationContext>();
 
-            services.AddCosmosDb(hostingContext.Configuration);
+            services.AddSingleton<IMap, Map>();
+            services.AddSingleton<IMapLoader, AllBlankMapLoader>();
+
+            services.AddSingleton<IItemFactory, ItemFactory>();
+            services.AddSingleton<IItemTypeLoader, ObjectsFileItemTypeLoader>();
+
+            services.Configure<ObjectsFileItemTypeLoaderOptions>(hostingContext.Configuration.GetSection(nameof(ObjectsFileItemTypeLoaderOptions)));
+
+            services.AddSingleton<ICreatureFactory, CreatureFactory>();
+            services.AddSingleton<ICreatureManager, CreatureManager>();
+            services.AddSingleton<ICreatureFinder>(s => s.GetService<ICreatureManager>());
 
             services.AddGameHandlers();
             services.AddLoginHandlers();
             services.AddManagementHandlers();
 
             // Those executing should derive from IHostedService and be added using AddHostedService.
+            services.AddSingleton<Scheduler>();
+            services.AddHostedService(s => s.GetService<Scheduler>());
+            services.AddSingleton<IScheduler>(s => s.GetService<Scheduler>());
+
             services.AddSingleton<SimpleDoSDefender>();
             services.AddHostedService(s => s.GetService<SimpleDoSDefender>());
             services.AddSingleton<IDoSDefender>(s => s.GetService<SimpleDoSDefender>());
@@ -138,9 +159,9 @@ namespace OpenTibia.Server.Standalone
             services.AddHostedService(s => s.GetService<GameListener>());
             services.AddSingleton<IOpenTibiaListener>(s => s.GetService<GameListener>());
 
-            services.AddSingleton<Scheduler>();
-            services.AddHostedService(s => s.GetService<Scheduler>());
-            services.AddSingleton<IScheduler>(s => s.GetService<Scheduler>());
+            services.AddSingleton<Game>();
+            services.AddHostedService(s => s.GetService<Game>());
+            services.AddSingleton<IGame>(s => s.GetService<Game>());
         }
     }
 }

@@ -50,7 +50,7 @@ namespace OpenTibia.Communications.Handlers
         /// <returns>An instance of an <see cref="IHandler"/> implementaion.</returns>
         public IHandler SelectForType(byte forType)
         {
-            IHandler handler = this.handlersKnown.Single(h => h.ForPacketType == forType);
+            IHandler handler = this.handlersKnown.SingleOrDefault(h => h.ForPacketType == forType);
 
             if (handler == null)
             {

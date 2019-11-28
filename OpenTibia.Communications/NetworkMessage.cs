@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications
 {
     using System;
+    using System.Linq;
     using System.Text;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Security.Encryption;
@@ -51,7 +52,7 @@ namespace OpenTibia.Communications
         /// </summary>
         /// <param name="isOutbound">A value indicating whether this message is an outboud message.</param>
         public NetworkMessage(bool isOutbound = true)
-            : this (isOutbound ? OutboundMessageStartingIndex : 0)
+            : this(isOutbound ? OutboundMessageStartingIndex : 0)
         {
         }
 
@@ -187,13 +188,6 @@ namespace OpenTibia.Communications
             return BitConverter.ToUInt32(this.GetBytes(sizeof(uint)), 0);
         }
 
-        public byte[] GetPacket()
-        {
-            byte[] t = new byte[this.Length - 2];
-            Array.Copy(this.buffer, 2, t, 0, this.Length - 2);
-            return t;
-        }
-
         /// <summary>
         /// Adds a byte to the message.
         /// </summary>
@@ -220,6 +214,27 @@ namespace OpenTibia.Communications
             }
 
             Array.Copy(value, 0, this.buffer, this.Cursor, value.Length);
+
+            this.Cursor += value.Length;
+
+            if (this.Cursor > this.Length)
+            {
+                this.length = this.Cursor;
+            }
+        }
+
+        /// <summary>
+        /// Adds a byte range to the message.
+        /// </summary>
+        /// <param name="value">The bytes to add.</param>
+        public void AddBytes(ReadOnlySpan<byte> value)
+        {
+            if (value.Length + this.Length > NetworkMessage.BufferSize)
+            {
+                throw new Exception("Message buffer is full.");
+            }
+
+            value.CopyTo(this.buffer.AsSpan(this.Cursor));
 
             this.Cursor += value.Length;
 
@@ -258,85 +273,13 @@ namespace OpenTibia.Communications
         }
 
         /// <summary>
-        /// Adds a number of bytes with value Zero to the message.
+        /// Changes the <see cref="Length"/> of this message and resets its <see cref="Cursor"/>.
         /// </summary>
-        /// <param name="count">The number of zero-bytes to add.</param>
-        public void AddPaddingBytes(int count)
-        {
-            this.Cursor += count;
-
-            if (this.Cursor > this.Length)
-            {
-                this.length = this.Cursor;
-            }
-        }
-
-        /// <summary>
-        /// Peeks the next byte from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        public byte PeekByte()
-        {
-            return this.buffer[this.Cursor];
-        }
-
+        /// <param name="size">The new size of the message.</param>
         public void Resize(int size)
         {
             this.length = size;
             this.Cursor = 0;
-        }
-
-        /// <summary>
-        /// Peeks the next bytes from the message.
-        /// </summary>
-        /// <param name="count">The number of bytes to peek.</param>
-        /// <returns>The bytes peeked.</returns>
-        public byte[] PeekBytes(int count)
-        {
-            byte[] t = new byte[count];
-            Array.Copy(this.buffer, this.Cursor, t, 0, count);
-            return t;
-        }
-
-        /// <summary>
-        /// Peeks an unsigned short value from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        public ushort PeekUInt16()
-        {
-            return BitConverter.ToUInt16(this.PeekBytes(sizeof(ushort)), 0);
-        }
-
-        /// <summary>
-        /// Peeks an unsigned integer value from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        public uint PeekUInt32()
-        {
-            return BitConverter.ToUInt32(this.PeekBytes(sizeof(uint)), 0);
-        }
-
-        /// <summary>
-        /// Peeks a string from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        public string PeekString()
-        {
-            int len = this.PeekUInt16();
-            return Encoding.ASCII.GetString(this.PeekBytes(len + 2), 2, len);
-        }
-
-        /// <summary>
-        /// Replaces a range of bytes in the message.
-        /// </summary>
-        /// <param name="index">The index at which to begin replacing the byte range.</param>
-        /// <param name="value">The byte range to replace in the message.</param>
-        public void ReplaceBytes(int index, byte[] value)
-        {
-            if (this.Length - index >= value.Length)
-            {
-                Array.Copy(value, 0, this.buffer, index, value.Length);
-            }
         }
 
         /// <summary>
@@ -363,11 +306,6 @@ namespace OpenTibia.Communications
             return Xtea.Decrypt(ref this.buffer, ref this.length, 2, key);
         }
 
-        public bool XteaEncrypt(uint[] key)
-        {
-            return Xtea.Encrypt(ref this.buffer, ref this.length, 2, key);
-        }
-
         public bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false)
         {
             if (!insertOnlyOneLength)
@@ -385,6 +323,10 @@ namespace OpenTibia.Communications
             // Must be before Xtea, because the packet length is encrypted as well
             this.InsertPacketLength();
 
+            var messageBytes = this.Buffer.Take(this.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
+
+            Console.WriteLine($"Message bytes before being sent: {messageBytes}");
+
             if (!this.XteaEncrypt(xteaKey))
             {
                 return false;
@@ -397,15 +339,9 @@ namespace OpenTibia.Communications
             return true;
         }
 
-        public bool PrepareToRead(uint[] xteaKey)
+        private bool XteaEncrypt(uint[] key)
         {
-            if (!this.XteaDecrypt(xteaKey))
-            {
-                return false;
-            }
-
-            this.Cursor = 4;
-            return true;
+            return Xtea.Encrypt(ref this.buffer, ref this.length, 2, key);
         }
 
         private void InsertPacketLength()
@@ -416,11 +352,6 @@ namespace OpenTibia.Communications
         private void InsertTotalLength()
         {
             Array.Copy(BitConverter.GetBytes((ushort)(this.length - 2)), 0, this.buffer, 0, 2);
-        }
-
-        private ushort GetPacketHeader()
-        {
-            return BitConverter.ToUInt16(this.buffer, 0);
         }
     }
 }

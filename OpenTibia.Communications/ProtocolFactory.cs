@@ -19,6 +19,7 @@ namespace OpenTibia.Communications
     using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Class that provides methods for <see cref="IProtocol"/> creation.
@@ -34,6 +35,11 @@ namespace OpenTibia.Communications
         /// The protocol configuration options.
         /// </summary>
         private readonly ProtocolConfigurationOptions protocolConfig;
+
+        /// <summary>
+        /// The logger to use.
+        /// </summary>
+        private readonly ILogger logger;
 
         /// <summary>
         /// Holds the handler selectors known to this factory, injected by dependency injection, and passed down to the protocol instance.
@@ -53,18 +59,22 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="ProtocolFactory"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="handlerSelectors">The handler selectors to pass down to the protocol instance.</param>
         /// <param name="gameConfigOptions">A reference to the game configuration options.</param>
         /// <param name="protocolConfigOptions">A referebce to the protocol configuration options.</param>
         public ProtocolFactory(
+            ILogger logger,
             IEnumerable<IHandlerSelector> handlerSelectors,
             IOptions<GameConfigurationOptions> gameConfigOptions,
             IOptions<ProtocolConfigurationOptions> protocolConfigOptions)
         {
+            logger.ThrowIfNull(nameof(logger));
             handlerSelectors.ThrowIfNull(nameof(handlerSelectors));
             gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
 
+            this.logger = logger;
             this.handlerSelectorsKnown = handlerSelectors.ToList();
             this.gameConfig = gameConfigOptions?.Value;
             this.protocolConfig = protocolConfigOptions?.Value;
@@ -97,9 +107,9 @@ namespace OpenTibia.Communications
 
                         protocolToAdd = protocolType switch
                         {
-                            OpenTibiaProtocolType.LoginProtocol => new LoginProtocol(handlerSelector, this.protocolConfig, this.gameConfig),
-                            OpenTibiaProtocolType.GameProtocol => new GameProtocol(handlerSelector, this.protocolConfig),
-                            OpenTibiaProtocolType.ManagementProtocol => new ManagementProtocol(handlerSelector),
+                            OpenTibiaProtocolType.LoginProtocol => new LoginProtocol(this.logger, handlerSelector, this.protocolConfig, this.gameConfig),
+                            OpenTibiaProtocolType.GameProtocol => new GameProtocol(this.logger, handlerSelector, this.protocolConfig),
+                            OpenTibiaProtocolType.ManagementProtocol => new ManagementProtocol(this.logger, handlerSelector),
                             _ => throw new NotSupportedException($"The protocol type '{protocolType}' is not supported by this factory."),
                         };
 

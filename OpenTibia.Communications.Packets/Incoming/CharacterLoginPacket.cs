@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="PlayerLoginPacket.cs" company="2Dudes">
+// <copyright file="CharacterLoginPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -15,28 +15,28 @@ namespace OpenTibia.Communications.Packets.Incoming
     using OpenTibia.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a player login packet.
+    /// Class that represents a character login packet.
     /// </summary>
-    public sealed class PlayerLoginPacket : IIncomingPacket, IPlayerLoginInfo
+    public sealed class CharacterLoginPacket : IIncomingPacket, ICharacterLoginInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerLoginPacket"/> class.
+        /// Initializes a new instance of the <see cref="CharacterLoginPacket"/> class.
         /// </summary>
         /// <param name="xteaKey">The XTEA key to use in all further communications with this client.</param>
-        /// <param name="operatingSystem">The operating system of the player's client.</param>
-        /// <param name="version">The version of the player's client.</param>
-        /// <param name="isGamemaster">A value indicating whether this player is a gamemaster.</param>
-        /// <param name="accountNumber">The account number of this player.</param>
+        /// <param name="operatingSystem">The operating system of the character's client.</param>
+        /// <param name="version">The version of the character's client.</param>
+        /// <param name="isGamemaster">A value indicating whether this character is a gamemaster.</param>
+        /// <param name="accountNumber">The account number of this character.</param>
         /// <param name="characterName">The character name.</param>
         /// <param name="password">The password used.</param>
-        public PlayerLoginPacket(uint[] xteaKey, ushort operatingSystem, ushort version, bool isGamemaster, uint accountNumber, string characterName, string password)
+        public CharacterLoginPacket(uint[] xteaKey, ushort operatingSystem, ushort version, bool isGamemaster, uint accountNumber, string characterName, string password)
         {
             this.XteaKey = xteaKey;
 
             this.Os = operatingSystem;
             this.Version = version;
 
-            this.IsGm = isGamemaster;
+            this.IsGamemaster = isGamemaster;
 
             this.AccountNumber = accountNumber;
             this.CharacterName = characterName;
@@ -44,12 +44,12 @@ namespace OpenTibia.Communications.Packets.Incoming
         }
 
         /// <summary>
-        /// Gets the operating system of the player's client.
+        /// Gets the operating system of the character's client.
         /// </summary>
         public ushort Os { get; }
 
         /// <summary>
-        /// Gets the version of the player's client.
+        /// Gets the version of the character's client.
         /// </summary>
         public ushort Version { get; }
 
@@ -61,7 +61,7 @@ namespace OpenTibia.Communications.Packets.Incoming
         /// <summary>
         /// Gets a value indicating whether this character is a gamemaster.
         /// </summary>
-        public bool IsGm { get; }
+        public bool IsGamemaster { get; }
 
         /// <summary>
         /// Gets the account number of the character.

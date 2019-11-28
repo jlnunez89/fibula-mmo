@@ -1,8 +1,13 @@
-﻿// <copyright file="CreatureMovedPacket.cs" company="2Dudes">
+﻿// -----------------------------------------------------------------
+// <copyright file="CreatureMovedPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
+// Author: Jose L. Nunez de Caceres
+// http://linkedin.com/in/jlnunez89
+//
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
+// -----------------------------------------------------------------
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
@@ -30,10 +35,16 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.CreatureMoved;
 
+        /// <summary>
+        /// Gets the tile source location.
+        /// </summary>
         public Location FromLocation { get; }
 
         public byte FromStackpos { get; }
 
+        /// <summary>
+        /// Gets the tile target location.
+        /// </summary>
         public Location ToLocation { get; }
 
         /// <summary>

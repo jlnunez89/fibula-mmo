@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Communications.Handlers.Management
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Net;
@@ -128,48 +129,55 @@ namespace OpenTibia.Communications.Handlers.Management
 
             var accLoginInfo = message.ReadAccountLoginInfo();
 
-            connection.XTeaKey = accLoginInfo.XteaKey;
+            // Associate the xTea key to allow future validate packets from this connection.
+            connection.SetupAuthenticationKey(accLoginInfo.XteaKey);
 
-            using (var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext))
+            using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
+
+            // validate credentials.
+            var accounts = unitOfWork.Accounts.FindMany(u => u.Number == accLoginInfo.AccountNumber && u.Password.Equals(accLoginInfo.Password));
+            var account = accounts.FirstOrDefault();
+
+            if (account == null)
             {
-                // validate credentials.
-                var accounts = unitOfWork.Accounts.Find(u => u.Number == accLoginInfo.AccountNumber && u.Password.Equals(accLoginInfo.Password));
-                var account = accounts.FirstOrDefault();
-
-                if (account == null)
-                {
-                    // TODO: hardcoded messages.
-                    responsePackets.Add(new LoginServerDisconnectPacket("Please enter a valid account number and password."));
-
-                    return (true, responsePackets);
-                }
-
-                var charactersFound = unitOfWork.Characters.Find(p => p.AccountId == account.Id);
-
-                if (!charactersFound.Any())
-                {
-                    // TODO: hardcoded messages.
-                    responsePackets.Add(new LoginServerDisconnectPacket($"You don't have any characters in your account.\nPlease create a new character in our web site: {this.GameConfiguration.World.WebsiteUrl}"));
-
-                    return (true, responsePackets);
-                }
-
-                var charList = new List<ICharacterListItem>();
-
-                foreach (var character in charactersFound)
-                {
-                    charList.Add(new CharacterListItem(
-                        character.Name,
-                        IPAddress.Parse(this.GameConfiguration.PublicAddressBinding.Ipv4Address),
-                        this.GameConfiguration.PublicAddressBinding.Port,
-                        this.GameConfiguration.World.Name));
-                }
-
-                responsePackets.Add(new MessageOfTheDayPacket(this.GameConfiguration.World.MessageOfTheDay));
-                responsePackets.Add(new CharacterListPacket(charList, (ushort)(account.PremiumDays + account.TrialOrBonusPremiumDays)));
+                // TODO: hardcoded messages.
+                responsePackets.Add(new LoginServerDisconnectPacket("Please enter a valid account number and password."));
 
                 return (true, responsePackets);
             }
+
+            var guidToSave = new Guid(accLoginInfo.XteaKey.ToByteArray());
+
+            var charactersFound = unitOfWork.Characters.FindMany(p => p.AccountId == account.Id);
+
+            if (!charactersFound.Any())
+            {
+                // TODO: hardcoded messages.
+                responsePackets.Add(new LoginServerDisconnectPacket($"You don't have any characters in your account.\nPlease create a new character in our web site: {this.GameConfiguration.World.WebsiteUrl}"));
+
+                return (true, responsePackets);
+            }
+
+            var charList = new List<ICharacterListItem>();
+
+            foreach (var character in charactersFound)
+            {
+                charList.Add(new CharacterListItem(
+                    character.Name,
+                    IPAddress.Parse(this.GameConfiguration.PublicAddressBinding.Ipv4Address),
+                    this.GameConfiguration.PublicAddressBinding.Port,
+                    this.GameConfiguration.World.Name));
+            }
+
+            responsePackets.Add(new MessageOfTheDayPacket(this.GameConfiguration.World.MessageOfTheDay));
+            responsePackets.Add(new CharacterListPacket(charList, (ushort)(account.PremiumDays + account.TrialOrBonusPremiumDays)));
+
+            // Save the XTEA key in the accocunt, so that we can retrieve, assign and compare in the connection to the game server.
+            account.SessionKey = guidToSave.ToString();
+
+            unitOfWork.Complete();
+
+            return (true, responsePackets);
         }
     }
 }

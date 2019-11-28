@@ -11,8 +11,6 @@
 
 namespace OpenTibia.Communications.Contracts
 {
-    using OpenTibia.Server.Contracts;
-
     /// <summary>
     /// Class that represents options for game configuration.
     /// </summary>

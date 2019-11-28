@@ -16,6 +16,7 @@ namespace OpenTibia.Communications
     using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Classs that represents the game protocol.
@@ -25,17 +26,26 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="GameProtocol"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
         /// <param name="protocolConfigOptions">A reference to the protocol configuration options.</param>
         public GameProtocol(
+            ILogger logger,
             IHandlerSelector handlerSelector,
             ProtocolConfigurationOptions protocolConfigOptions)
             : base(handlerSelector)
         {
+            logger.ThrowIfNull(nameof(logger));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
 
+            this.Logger = logger.ForContext<GameProtocol>();
             this.ProtocolConfiguration = protocolConfigOptions;
         }
+
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets a reference to the Protocol configuration options.

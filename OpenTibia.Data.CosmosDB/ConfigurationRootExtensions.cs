@@ -28,7 +28,7 @@ namespace OpenTibia.Data.CosmosDB
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddCosmosDb(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCosmosDBDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 

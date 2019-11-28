@@ -12,7 +12,6 @@
     <None Remove="Game\**" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="GameHandler.cs" />
     <Compile Remove="Management\AuthenticationHandler.cs" />
     <Compile Remove="Management\BanismentHandler.cs" />
     <Compile Remove="Management\CharacterDeathHandler.cs" />
@@ -36,8 +35,20 @@
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\PlayerLoginHandler.cs" />
+    <Compile Include="Game\PlayerWalkEastHandler.cs" />
+    <Compile Include="Game\PlayerWalkNortheastHandler.cs" />
+    <Compile Include="Game\PlayerWalkNorthHandler.cs" />
+    <Compile Include="Game\PlayerWalkNorthWestHandler.cs" />
+    <Compile Include="Game\PlayerWalkOnDemandHandler.cs" />
+    <Compile Include="Game\PlayerWalkSoutheastHandler.cs" />
+    <Compile Include="Game\PlayerWalkSouthHandler.cs" />
+    <Compile Include="Game\PlayerWalkSouthwestHandler.cs" />
+    <Compile Include="Game\PlayerWalkWestHandler.cs" />
+  </ItemGroup>
+  <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0-preview3.19553.2" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

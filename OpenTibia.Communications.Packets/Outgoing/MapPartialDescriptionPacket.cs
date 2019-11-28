@@ -1,8 +1,13 @@
-﻿// <copyright file="MapPartialDescriptionPacket.cs" company="2Dudes">
+﻿// -----------------------------------------------------------------
+// <copyright file="MapPartialDescriptionPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
+// Author: Jose L. Nunez de Caceres
+// http://linkedin.com/in/jlnunez89
+//
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
+// -----------------------------------------------------------------
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
@@ -10,13 +15,17 @@ namespace OpenTibia.Communications.Packets.Outgoing
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a partial map description packet.
+    /// </summary>
     public class MapPartialDescriptionPacket : IOutgoingPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="MapPartialDescriptionPacket"/> class.
         /// </summary>
-        /// <param name="mapDescriptionType"></param>
-        public MapPartialDescriptionPacket(OutgoingGamePacketType mapDescriptionType, byte[] descriptionBytes)
+        /// <param name="mapDescriptionType">The type of map description.</param>
+        /// <param name="descriptionBytes">The description bytes.</param>
+        public MapPartialDescriptionPacket(OutgoingGamePacketType mapDescriptionType, ReadOnlyMemory<byte> descriptionBytes)
         {
             if (mapDescriptionType != OutgoingGamePacketType.MapSliceEast &&
                 mapDescriptionType != OutgoingGamePacketType.MapSliceNorth &&
@@ -32,9 +41,15 @@ namespace OpenTibia.Communications.Packets.Outgoing
             this.DescriptionBytes = descriptionBytes;
         }
 
+        /// <summary>
+        /// Gets the type of this packet.
+        /// </summary>
         public byte PacketType { get; }
 
-        public byte[] DescriptionBytes { get; }
+        /// <summary>
+        /// Gets the description bytes.
+        /// </summary>
+        public ReadOnlyMemory<byte> DescriptionBytes { get; }
 
         /// <summary>
         /// Writes the packet to the message provided.

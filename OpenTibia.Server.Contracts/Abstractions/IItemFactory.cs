@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="WorldType.cs" company="2Dudes">
+// <copyright file="IItemFactory.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,26 +9,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts.Enumerations
+namespace OpenTibia.Server.Contracts.Abstractions
 {
     /// <summary>
-    /// Enumeration of the possible world types.
+    /// Interface for an item factory.
     /// </summary>
-    public enum WorldType : byte
+    public interface IItemFactory
     {
         /// <summary>
-        /// No PvP allowed.
+        /// Creates a new <see cref="IItem"/> given the id of its type.
         /// </summary>
-        Safe,
-
-        /// <summary>
-        /// PvP is allowed but punished.
-        /// </summary>
-        Normal,
-
-        /// <summary>
-        /// PvP is unpunished.
-        /// </summary>
-        Hardcore,
+        /// <param name="typeId">The id of the type.</param>
+        /// <returns>The new <see cref="IItem"/> instance.</returns>
+        IItem Create(ushort typeId);
     }
 }

@@ -98,12 +98,12 @@ namespace OpenTibia.Data.Entities.Contracts.Abstractions
         /// </summary>
         bool Deleted { get; }
 
-        //int Lastrecover { get; }
+        // int Lastrecover { get; }
 
-        //short Posts { get; }
+        // short Posts { get; }
 
-        //int Last_Post { get; }
+        // int Last_Post { get; }
 
-        //byte Roses { get; }
+        // byte Roses { get; }
     }
 }

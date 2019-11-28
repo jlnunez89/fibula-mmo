@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using System.Collections.Generic;
     using OpenTibia.Scheduling.Contracts.Abstractions;
 
     /// <summary>
@@ -19,9 +18,5 @@ namespace OpenTibia.Communications.Contracts.Abstractions
     /// </summary>
     public interface INotification : IEvent
     {
-        /// <summary>
-        /// Gets the packets that must be send as part of this notification.
-        /// </summary>
-        IList<IOutgoingPacket> Packets { get; }
     }
 }

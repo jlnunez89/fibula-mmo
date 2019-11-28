@@ -16,11 +16,11 @@ namespace OpenTibia.Scheduling
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
-    using Microsoft.Extensions.Logging;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using Priority_Queue;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a scheduler for events.
@@ -83,11 +83,11 @@ namespace OpenTibia.Scheduling
         /// </summary>
         /// <param name="logger">The logger to use.</param>
         /// <param name="referenceTime">Optional. The time to use as reference. Defaults to <see cref="DateTimeOffset.UtcNow"/>.</param>
-        public Scheduler(ILogger<Scheduler> logger, DateTimeOffset? referenceTime = null)
+        public Scheduler(ILogger logger, DateTimeOffset? referenceTime = null)
         {
             logger.ThrowIfNull(nameof(logger));
 
-            this.Logger = logger;
+            this.Logger = logger.ForContext<Scheduler>();
 
             var startTime = referenceTime ?? DateTimeOffset.UtcNow;
             var refTimeDifference = DateTimeOffset.UtcNow - startTime;
@@ -114,19 +114,19 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// Gets a reference to the logger instance.
         /// </summary>
-        public ILogger<Scheduler> Logger { get; }
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Begins the scheduler's processing the queue and firing events.
         /// </summary>
         /// <param name="cancellationToken">A token to observe for cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous processing operation.</returns>
-        public async Task StartAsync(CancellationToken cancellationToken)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
-            this.Logger.LogDebug("Scheduler started.");
-
-            await Task.Factory.StartNew(() =>
+            Task.Run(() =>
             {
+                this.Logger.Debug("Scheduler started.");
+
                 TimeSpan waitForNewTimeOut = TimeSpan.Zero;
 
                 while (!cancellationToken.IsCancellationRequested)
@@ -144,7 +144,7 @@ namespace OpenTibia.Scheduling
                             if (this.priorityQueue.First == null)
                             {
                                 // no more items on the queue, go to wait.
-                                this.Logger.LogWarning("Queue empty.");
+                                this.Logger.Warning("Queue empty.");
                                 continue;
                             }
 
@@ -184,9 +184,12 @@ namespace OpenTibia.Scheduling
                         }
                     }
                 }
+
+                this.Logger.Debug("Scheduler finished.");
             });
 
-            this.Logger.LogDebug("Scheduler finished.");
+            // return this to allow other IHostedService-s to start.
+            return Task.CompletedTask;
         }
 
         /// <summary>

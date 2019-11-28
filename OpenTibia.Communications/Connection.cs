@@ -17,13 +17,25 @@ namespace OpenTibia.Communications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Delegates;
 
+    /// <summary>
+    /// Class that represents a connection.
+    /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validation is done through ThrowIfNull* methods.")]
     public class Connection : IConnection
     {
+        /// <summary>
+        /// A lock used to sempahore writes to the connection's stream.
+        /// </summary>
         private readonly object writeLock;
 
+        /// <summary>
+        /// The socket of this connection.
+        /// </summary>
         private readonly Socket socket;
 
+        /// <summary>
+        /// This connection's stream.
+        /// </summary>
         private readonly NetworkStream stream;
 
         /// <summary>
@@ -58,13 +70,25 @@ namespace OpenTibia.Communications
         /// </summary>
         public event OnMessageProccessed MessageProcessed;
 
+        /// <summary>
+        /// Gets a reference to the inbound network message.
+        /// </summary>
         public INetworkMessage InboundMessage { get; }
 
-        public Guid PlayerId { get; set; }
+        /// <summary>
+        /// Gets the XTea key used for all communications through this connection.
+        /// </summary>
+        public uint[] XTeaKey { get; private set; }
 
-        public uint[] XTeaKey { get; set; }
+        /// <summary>
+        /// Gets the id of the player that this connection is tied to.
+        /// </summary>
+        public uint PlayerId { get; private set; }
 
-        public bool IsAuthenticated { get; set; }
+        /// <summary>
+        /// Gets a value indicating whether this connection has been authenticated.
+        /// </summary>
+        public bool IsAuthenticated { get; private set; }
 
         /// <summary>
         /// Gets the Socket IP address of this connection, if it is open.
@@ -77,6 +101,9 @@ namespace OpenTibia.Communications
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether the connection is an orphan.
+        /// </summary>
         public bool IsOrphaned
         {
             get
@@ -85,52 +112,17 @@ namespace OpenTibia.Communications
             }
         }
 
+        /// <summary>
+        /// Begins reading from this connection.
+        /// </summary>
         public void BeginStreamRead()
         {
             this.stream.BeginRead(this.InboundMessage.Buffer, 0, 2, this.OnRead, null);
         }
 
-        public void Send(INetworkMessage message)
-        {
-            this.Send(message, true);
-        }
-
-        public void Send(INetworkMessage message, bool useEncryption, bool managementProtocol = false)
-        {
-            // if (isInTransaction)
-            // {
-            //    if (useEncryption == false)
-            //        throw new Exception("Cannot send a packet without encryption as part of a transaction.");
-
-            // transactionMessage.AddBytes(message.GetPacket());
-            // }
-            // else
-            // {
-            this.SendMessage(message, useEncryption, managementProtocol);
-            // }
-        }
-
-        public void Send(INotification notification)
-        {
-            notification.ThrowIfNull(nameof(notification));
-
-            var networkMessage = new NetworkMessage();
-
-            if (notification.Packets.Count == 0)
-            {
-                return;
-            }
-
-            foreach (var packet in notification.Packets)
-            {
-                packet.WriteToMessage(networkMessage);
-            }
-
-            this.Send(networkMessage);
-
-            Console.WriteLine($"Sent {notification.GetType().Name} [{notification.EventId}] to {this.PlayerId}");
-        }
-
+        /// <summary>
+        /// Closes this connection.
+        /// </summary>
         public void Close()
         {
             this.stream.Close();
@@ -141,14 +133,47 @@ namespace OpenTibia.Communications
         }
 
         /// <summary>
-        /// Marks this connection as authenticated and associates it with a player.
+        /// Sends a network message via this connection.
+        /// </summary>
+        /// <param name="message">The network message to send.</param>
+        public void Send(INetworkMessage message)
+        {
+            this.Send(message, true);
+        }
+
+        /// <summary>
+        /// Associates this connection with a player.
         /// </summary>
         /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
-        public void AuthenticateAndAssociate(Guid toPlayerId)
+        public void AssociateToPlayer(uint toPlayerId)
         {
             this.PlayerId = toPlayerId;
+        }
 
-            this.IsAuthenticated = true;
+        /// <summary>
+        /// Authenticates this connection with the key provided to it.
+        /// </summary>
+        /// <param name="xteaKey">The XTea key to use in this connection's communications.</param>
+        /// <returns>True if the keys match and the connection is authenticated, false otherwise.</returns>
+        public bool Authenticate(uint[] xteaKey)
+        {
+            this.IsAuthenticated = this.XTeaKey.Length == xteaKey.Length;
+
+            for (int i = 0; i < this.XTeaKey.Length; i++)
+            {
+                this.IsAuthenticated &= this.XTeaKey[i] == xteaKey[i];
+            }
+
+            return this.IsAuthenticated;
+        }
+
+        /// <summary>
+        /// Sets up an Xtea key expected to be matched on subsequent messages.
+        /// </summary>
+        /// <param name="xteaKey">The XTea key to use in this connection's communications.</param>
+        public void SetupAuthenticationKey(uint[] xteaKey)
+        {
+            this.XTeaKey = xteaKey;
         }
 
         private void OnRead(IAsyncResult ar)
@@ -218,6 +243,11 @@ namespace OpenTibia.Communications
             }
 
             return false;
+        }
+
+        private void Send(INetworkMessage message, bool useEncryption, bool managementProtocol = false)
+        {
+            this.SendMessage(message, useEncryption, managementProtocol);
         }
 
         private void SendMessage(INetworkMessage message, bool useEncryption, bool managementProtocol = false)
