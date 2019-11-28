@@ -157,9 +157,9 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         CreatureOutfit = 0x8E,
 
         /// <summary>
-        /// Send a player status text.
+        /// Send a player stats.
         /// </summary>
-        PlayerStatus = 0xA0,
+        PlayerStats = 0xA0,
 
         /// <summary>
         /// Update a player skill.

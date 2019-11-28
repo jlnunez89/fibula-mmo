@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -36,7 +35,7 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// </summary>
         /// <param name="playerId">The player id for which to look a connection for.</param>
         /// <returns>The connection instance, if found, and null otherwise.</returns>
-        IConnection FindByPlayerId(Guid playerId);
+        IConnection FindByPlayerId(uint playerId);
 
         /// <summary>
         /// Gets all active connections known to this manager.

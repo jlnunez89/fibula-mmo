@@ -14,12 +14,12 @@ namespace OpenTibia.Scheduling.Tests
     using System;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Logging;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Moq;
     using OpenTibia.Common.Utilities.Testing;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Tests for the <see cref="Scheduler"/> class.
@@ -33,7 +33,7 @@ namespace OpenTibia.Scheduling.Tests
         [TestMethod]
         public void Scheduler_Initialization()
         {
-            Mock<ILogger<Scheduler>> loggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> loggerMock = new Mock<ILogger>();
 
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset defaultDateTime = default;
@@ -55,7 +55,7 @@ namespace OpenTibia.Scheduling.Tests
         [TestMethod]
         public void InmediateEvent_Throws_WhenBad()
         {
-            Mock<ILogger<Scheduler>> loggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> loggerMock = new Mock<ILogger>();
 
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
 
@@ -75,7 +75,7 @@ namespace OpenTibia.Scheduling.Tests
         public void ScheduleEvent_Throws_WhenBad()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
-            Mock<ILogger<Scheduler>> schedulerLoggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
@@ -107,7 +107,7 @@ namespace OpenTibia.Scheduling.Tests
         public void Cancelling_SingleEvent()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
-            Mock<ILogger<Scheduler>> schedulerLoggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
             TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
@@ -168,7 +168,7 @@ namespace OpenTibia.Scheduling.Tests
         public void Cancelling_AllEventsFor()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
-            Mock<ILogger<Scheduler>> schedulerLoggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
             TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
@@ -231,7 +231,7 @@ namespace OpenTibia.Scheduling.Tests
         public void OnEventFired_IsCalled()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
-            Mock<ILogger<Scheduler>> schedulerLoggerMock = new Mock<ILogger<Scheduler>>();
+            Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
             const int ExpectedCounterValueBeforeRun = 0;
             const int ExpectedCounterValueAfterRun = 1;

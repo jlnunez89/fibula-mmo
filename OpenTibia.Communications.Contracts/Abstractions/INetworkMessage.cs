@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
+    using System;
+
     /// <summary>
     /// Interface that represents a network message.
     /// </summary>
@@ -44,10 +46,10 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         void AddBytes(byte[] value);
 
         /// <summary>
-        /// Adds a number of bytes with value Zero to the message.
+        /// Adds a byte span to the message.
         /// </summary>
-        /// <param name="count">The number of zero-bytes to add.</param>
-        void AddPaddingBytes(int count);
+        /// <param name="value">The bytes span to add.</param>
+        void AddBytes(ReadOnlySpan<byte> value);
 
         /// <summary>
         /// Add a string to the message.
@@ -80,8 +82,6 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <returns>The bytes read.</returns>
         byte[] GetBytes(int count);
 
-        byte[] GetPacket();
-
         /// <summary>
         /// Reads a string value from the message.
         /// </summary>
@@ -100,53 +100,13 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <returns>The value read.</returns>
         uint GetUInt32();
 
-        /// <summary>
-        /// Peeks the next byte from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        byte PeekByte();
-
-        /// <summary>
-        /// Peeks the next bytes from the message.
-        /// </summary>
-        /// <param name="count">The number of bytes to peek.</param>
-        /// <returns>The bytes peeked.</returns>
-        byte[] PeekBytes(int count);
-
-        /// <summary>
-        /// Peeks a string from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        string PeekString();
-
-        /// <summary>
-        /// Peeks an unsigned short value from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        ushort PeekUInt16();
-
-        /// <summary>
-        /// Peeks an unsigned integer value from the message.
-        /// </summary>
-        /// <returns>The value peeked.</returns>
-        uint PeekUInt32();
-
-        bool PrepareToRead(uint[] xteaKey);
-
         bool PrepareToSend(uint[] xteaKey);
 
         bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false);
 
-        /// <summary>
-        /// Replaces a range of bytes in the message.
-        /// </summary>
-        /// <param name="index">The index at which to begin replacing the byte range.</param>
-        /// <param name="value">The byte range to replace in the message.</param>
-        void ReplaceBytes(int index, byte[] value);
-
         void Reset();
 
-        void Reset(int startingIndex);
+        //void Reset(int startingIndex);
 
         void Resize(int size);
 
@@ -159,8 +119,6 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         void SkipBytes(int count);
 
         bool XteaDecrypt(uint[] key);
-
-        bool XteaEncrypt(uint[] key);
 
         /// <summary>
         /// Creates a copy of this message.

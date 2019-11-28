@@ -24,7 +24,6 @@
     <Compile Remove="Abstractions\IOnlinePlayerListInfo.cs" />
     <Compile Remove="Abstractions\IOutfitInfo.cs" />
     <Compile Remove="Abstractions\IPlayerLoaded.cs" />
-    <Compile Remove="Abstractions\IPlayerLoginInfo.cs" />
     <Compile Remove="Abstractions\IPlayerLogoutInfo.cs" />
     <Compile Remove="Abstractions\IRuleViolationInfo.cs" />
     <Compile Remove="Abstractions\ISpeechInfo.cs" />
@@ -42,7 +41,7 @@
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

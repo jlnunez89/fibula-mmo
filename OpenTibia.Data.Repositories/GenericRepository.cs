@@ -48,7 +48,7 @@ namespace OpenTibia.Data
         /// </summary>
         /// <param name="id">The id to match.</param>
         /// <returns>The entity found, if any.</returns>
-        public TEntity Get(string id)
+        public TEntity GetById(string id)
         {
             return this.Context.Set<TEntity>().Find(id);
         }
@@ -71,9 +71,20 @@ namespace OpenTibia.Data
         /// </summary>
         /// <param name="predicate">The expression to satisfy.</param>
         /// <returns>The collection of entities retrieved.</returns>
-        public IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate)
+        public IEnumerable<TEntity> FindMany(Expression<Func<TEntity, bool>> predicate)
         {
             return this.Context.Set<TEntity>().Where(predicate);
+        }
+
+        /// <summary>
+        /// Finds an entity in the set within the context that satisfies an expression.
+        /// If more than one entity satisfies the expression, one is picked up in an unknown criteria.
+        /// </summary>
+        /// <param name="predicate">The expression to satisfy.</param>
+        /// <returns>The entity found.</returns>
+        public TEntity FindOne(Expression<Func<TEntity, bool>> predicate)
+        {
+            return this.Context.Set<TEntity>().FirstOrDefault(predicate);
         }
 
         /// <summary>

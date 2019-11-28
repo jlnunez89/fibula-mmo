@@ -60,6 +60,11 @@ namespace OpenTibia.Data.Entities
         public string SessionIp { get; set; }
 
         /// <summary>
+        /// Gets or sets the session key in use for this account, if any.
+        /// </summary>
+        public string SessionKey { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of premium days left on the account.
         /// </summary>
         public ushort PremiumDays { get; set; }

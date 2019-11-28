@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using System;
     using OpenTibia.Communications.Contracts.Delegates;
 
     /// <summary>
@@ -45,43 +44,58 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         string SocketIp { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the connection is orphan.
+        /// Gets a value indicating whether the connection is an orphan.
         /// </summary>
         bool IsOrphaned { get; }
 
         /// <summary>
-        /// Gets or sets a value indicating whether this connection is authenticated.
+        /// Gets a value indicating whether this connection is authenticated.
         /// </summary>
-        bool IsAuthenticated { get; set; }
+        bool IsAuthenticated { get; }
 
         /// <summary>
-        /// Gets or sets the Id of the player that this connection is associated to.
+        /// Gets the Id of the player that this connection is associated to.
         /// </summary>
-        Guid PlayerId { get; set; }
+        uint PlayerId { get; }
 
         /// <summary>
-        /// Gets or sets this connection's XTea key.
+        /// Gets this connection's XTea key.
         /// </summary>
-        uint[] XTeaKey { get; set; }
+        uint[] XTeaKey { get; }
 
         /// <summary>
-        /// Marks this connection as authenticated and associates it with a player.
+        /// Sets up an Xtea key expected to be matched on subsequent messages.
+        /// </summary>
+        /// <param name="xteaKey">The XTea key to use in this connection's communications.</param>
+        void SetupAuthenticationKey(uint[] xteaKey);
+
+        /// <summary>
+        /// Authenticates this connection with the key provided.
+        /// </summary>
+        /// <param name="xteaKey">The XTea key to validate.</param>
+        /// <returns>True if the keys match and the connection is authenticated, false otherwise.</returns>
+        bool Authenticate(uint[] xteaKey);
+
+        /// <summary>
+        /// Associates this connection with a player.
         /// </summary>
         /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
-        void AuthenticateAndAssociate(Guid toPlayerId);
+        void AssociateToPlayer(uint toPlayerId);
 
+        /// <summary>
+        /// Begins reading from this connection.
+        /// </summary>
         void BeginStreamRead();
 
+        /// <summary>
+        /// Closes this connection.
+        /// </summary>
         void Close();
 
         /// <summary>
-        /// Sends a notification via this connection.
+        /// Sends a network message via this connection.
         /// </summary>
-        /// <param name="notification">The notification to send.</param>
-        void Send(INotification notification);
-
+        /// <param name="message">The network message to send.</param>
         void Send(INetworkMessage message);
-
-        // void Send(INetworkMessage message, bool useEncryption, bool managementProtocol = false);
     }
 }

@@ -9,6 +9,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Abstractions\IContainerItem.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -17,18 +21,20 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.12.0-beta2" />
+    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.12.0-beta3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.0-preview3.19554.8" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.0-preview3.19553.2" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Communications.Contracts\OpenTibia.Communications.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Data.Contracts\OpenTibia.Data.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Scheduling.Contracts\OpenTibia.Scheduling.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

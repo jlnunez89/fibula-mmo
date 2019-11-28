@@ -58,18 +58,21 @@ namespace OpenTibia.Data.Entities.Contracts.Abstractions
         /// </summary>
         DateTimeOffset LastLogin { get; }
 
-        //byte Online { get; }
+        /// <summary>
+        /// Gets a value indicating whether this character is currently online.
+        /// </summary>
+        bool IsOnline { get; }
 
-        //byte Hideprofile { get; set; }
+        // byte Hideprofile { get; set; }
 
-        //int Playerdelete { get; set; }
+        // int Playerdelete { get; set; }
 
-        //string Residence { get; set; }
+        // string Residence { get; set; }
 
-        //string Oldname { get; set; }
+        // string Oldname { get; set; }
 
-        //string Comment { get; set; }
+        // string Comment { get; set; }
 
-        //string CharIp { get; set; }
+        // string CharIp { get; set; }
     }
 }

@@ -11,8 +11,10 @@
 
 namespace OpenTibia.Communications
 {
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Classs that represents the management protocol.
@@ -22,11 +24,20 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="ManagementProtocol"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
-        public ManagementProtocol(IHandlerSelector handlerSelector)
+        public ManagementProtocol(ILogger logger, IHandlerSelector handlerSelector)
             : base(handlerSelector)
         {
+            logger.ThrowIfNull(nameof(logger));
+
+            this.Logger = logger.ForContext<GameProtocol>();
         }
+
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Processes an incomming message from the connection.

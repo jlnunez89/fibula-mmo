@@ -14,11 +14,11 @@ namespace OpenTibia.Scheduling
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.Extensions.Logging;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
     using Priority_Queue;
+    using Serilog;
 
     /// <summary>
     /// Abstract class that represents the base event for scheduling.
@@ -37,7 +37,7 @@ namespace OpenTibia.Scheduling
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
             this.EvaluateAt = evaluationTime;
-            this.Logger = logger;
+            this.Logger = logger.ForContext(this.GetType());
 
             this.Conditions = new List<IEventCondition>();
             this.ActionsOnPass = new List<IEventAction>();
@@ -96,7 +96,7 @@ namespace OpenTibia.Scheduling
 
                     if (!allPassed)
                     {
-                        this.Logger.LogDebug($"Failed event condition {policy.GetType().Name}.");
+                        this.Logger.Debug($"Failed event condition {policy.GetType().Name}.");
                         this.ErrorMessage = policy.ErrorMessage;
                         break;
                     }
@@ -124,7 +124,7 @@ namespace OpenTibia.Scheduling
 
             if (this.EvaluateAt == EvaluationTime.OnSchedule || this.CanBeExecuted)
             {
-                for (int i = 1; i <= this.ActionsOnPass.Count; i++)
+                for (int i = 0; i < this.ActionsOnPass.Count; i++)
                 {
                     sw.Restart();
 
@@ -132,13 +132,13 @@ namespace OpenTibia.Scheduling
 
                     sw.Stop();
 
-                    this.Logger.LogTrace($"Executed ({i++} of {this.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
+                    this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
                 }
 
                 return;
             }
 
-            for (int i = 1; i <= this.ActionsOnFail.Count; i++)
+            for (int i = 0; i < this.ActionsOnFail.Count; i++)
             {
                 sw.Restart();
 
@@ -146,7 +146,7 @@ namespace OpenTibia.Scheduling
 
                 sw.Stop();
 
-                this.Logger.LogTrace($"Executed ({i++} of {this.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
+                this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
             }
         }
     }

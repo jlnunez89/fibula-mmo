@@ -1,8 +1,13 @@
-﻿// <copyright file="PlayerWalkCancelPacket.cs" company="2Dudes">
+﻿// -----------------------------------------------------------------
+// <copyright file="PlayerWalkCancelPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
+// Author: Jose L. Nunez de Caceres
+// http://linkedin.com/in/jlnunez89
+//
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
+// -----------------------------------------------------------------
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
@@ -10,20 +15,29 @@ namespace OpenTibia.Communications.Packets.Outgoing
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a packet for cancelling a player's walk.
+    /// </summary>
     public class PlayerWalkCancelPacket : IOutgoingPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerWalkCancelPacket"/> class.
         /// </summary>
-        /// <param name="direction"></param>
-        public PlayerWalkCancelPacket(Direction direction)
+        /// <param name="turnToDirection">The direction to leave the player facing after cancellation.</param>
+        public PlayerWalkCancelPacket(Direction turnToDirection)
         {
-            this.Direction = direction;
+            this.ResultingDirection = turnToDirection;
         }
 
-        public byte PacketType => (byte)OutgoingGamePacketType.PlayerWalkCancel;
+        /// <summary>
+        /// Gets the type of this packet.
+        /// </summary>
+        public byte PacketType => (byte)OutgoingGamePacketType.WalkCancel;
 
-        public Direction Direction { get; }
+        /// <summary>
+        /// Gets the direction in which the creature will be left facing.
+        /// </summary>
+        public Direction ResultingDirection { get; }
 
         /// <summary>
         /// Writes the packet to the message provided.

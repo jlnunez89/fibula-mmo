@@ -59,5 +59,10 @@ namespace OpenTibia.Data.Entities
         /// Gets or sets the last observed date and time that this character successfully loged in.
         /// </summary>
         public DateTimeOffset LastLogin { get; set; }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether this character is currently online.
+        /// </summary>
+        public bool IsOnline { get; set; }
     }
 }

@@ -28,7 +28,7 @@ namespace OpenTibia.Data.Contracts.Abstractions
         /// </summary>
         /// <param name="id">The id to search the entity by.</param>
         /// <returns>The entity that matched the id supplied.</returns>
-        TEntity Get(string id);
+        TEntity GetById(string id);
 
         /// <summary>
         /// Gets a collection of all entities from a type.
@@ -41,7 +41,15 @@ namespace OpenTibia.Data.Contracts.Abstractions
         /// </summary>
         /// <param name="predicate">The predicate to use for matching.</param>
         /// <returns>The entities that matched the predicate.</returns>
-        IEnumerable<TEntity> Find(Expression<Func<TEntity, bool>> predicate);
+        IEnumerable<TEntity> FindMany(Expression<Func<TEntity, bool>> predicate);
+
+        /// <summary>
+        /// Finds an entity in the set within the context that satisfies an expression.
+        /// If more than one entity satisfies the expression, one is picked up in an unknown criteria.
+        /// </summary>
+        /// <param name="predicate">The expression to satisfy.</param>
+        /// <returns>The entity found.</returns>
+        TEntity FindOne(Expression<Func<TEntity, bool>> predicate);
 
         /// <summary>
         /// Adds an entity to the repository.

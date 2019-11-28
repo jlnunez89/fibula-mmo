@@ -8,6 +8,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Server.Standalone.xml</DocumentationFile>
+    <CodeAnalysisRuleSet />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <CodeAnalysisRuleSet />
   </PropertyGroup>
   <ItemGroup>
     <None Remove="stylecop.json" />
@@ -29,7 +33,7 @@
     <PackageReference Include="Serilog.Settings.Configuration" Version="3.1.1-dev-00209" />
     <PackageReference Include="Serilog.Sinks.Console" Version="3.1.2-dev-00824" />
     <PackageReference Include="Serilog.Sinks.File" Version="4.1.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.113">
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -43,9 +47,13 @@
     <ProjectReference Include="..\OpenTibia.Providers.Azure\OpenTibia.Providers.Azure.csproj" />
     <ProjectReference Include="..\OpenTibia.Providers.Contracts\OpenTibia.Providers.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Scheduling\OpenTibia.Scheduling.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server\OpenTibia.Server.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="dat\objects.srv">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="hostsettings.json">

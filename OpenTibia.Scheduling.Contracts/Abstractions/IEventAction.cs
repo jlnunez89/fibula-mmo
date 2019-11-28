@@ -12,12 +12,12 @@
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
     /// <summary>
-    /// Interface for event conditions.
+    /// Interface for event actions.
     /// </summary>
     public interface IEventAction
     {
         /// <summary>
-        /// Executes the condition.
+        /// Executes the action.
         /// </summary>
         void Execute();
     }

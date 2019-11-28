@@ -11,11 +11,11 @@
 
 namespace OpenTibia.Communications
 {
-    using System.Diagnostics;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Classs that represents the login protocol.
@@ -25,21 +25,30 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="LoginProtocol"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
         /// <param name="protocolConfigOptions">A reference to the protocol configuration options.</param>
         /// <param name="gameConfigOptions">A reference to the game configuration options.</param>
         public LoginProtocol(
+            ILogger logger,
             IHandlerSelector handlerSelector,
             ProtocolConfigurationOptions protocolConfigOptions,
             GameConfigurationOptions gameConfigOptions)
             : base(handlerSelector, keepConnectionOpen: false)
         {
+            logger.ThrowIfNull(nameof(logger));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
             gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
 
+            this.Logger = logger.ForContext<LoginProtocol>();
             this.ProtocolConfiguration = protocolConfigOptions;
             this.GameConfiguration = gameConfigOptions;
         }
+
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets a reference to the protocol configuration options.
@@ -66,8 +75,8 @@ namespace OpenTibia.Communications
             if (packetType != (byte)IncomingManagementPacketType.LoginServerRequest)
             {
                 // This packet should NOT have been routed to this protocol.
-                // TODO: proper logging.
-                Trace.TraceWarning($"Non {nameof(IncomingManagementPacketType.LoginServerRequest)} packet routed to {nameof(LoginProtocol)}. Packet was ignored.");
+                this.Logger.Warning($"Non {nameof(IncomingManagementPacketType.LoginServerRequest)} packet routed to {nameof(LoginProtocol)}. Packet was ignored.");
+
                 return;
             }
 
