@@ -76,6 +76,7 @@ namespace OpenTibia.Server
                         {
                             if (attribute.Value is IEnumerable<CipElement> elements)
                             {
+                                var pendingToAddQueue = new Queue<IThing>();
 
                                 foreach (var element in elements)
                                 {
