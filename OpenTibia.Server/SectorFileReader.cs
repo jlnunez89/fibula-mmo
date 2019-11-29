@@ -23,11 +23,10 @@ namespace OpenTibia.Server
     public class SectorFileReader
     {
         public const char CommentSymbol = '#';
-        public const char SectorSeparator = ':';
-        public const char PositionSeparator = '-';
 
-        public const string AttributeSeparator = ",";
-        public const string AttributeDefinition = "=";
+        public const char SectorSeparator = ':';
+
+        public const char PositionSeparator = '-';
 
         public static IList<(Location, Tile)> ReadSector(IItemFactory itemFactory, string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
         {
@@ -64,8 +63,8 @@ namespace OpenTibia.Server
                     Z = z,
                 };
 
-                // start off with a tile that has void in it.
-                Tile? newTile = null;
+                // start off with a tile that has no ground in it.
+                Tile newTile = new Tile(null);
 
                 // load and add tile flags and contents.
                 foreach (var e in CipFileParser.Parse(tileData))
@@ -76,8 +75,6 @@ namespace OpenTibia.Server
                         {
                             if (attribute.Value is IEnumerable<CipElement> elements)
                             {
-                                var pendingToAddQueue = new Queue<IThing>();
-
                                 foreach (var element in elements)
                                 {
                                     if (element.IsFlag)
@@ -99,37 +96,16 @@ namespace OpenTibia.Server
                                         continue;
                                     }
 
-                                    if (!newTile.HasValue)
-                                    {
-                                        if (((IItem)itemAsThing).IsGround)
-                                        {
-                                            newTile = new Tile((IItem)itemAsThing);
-
-                                            while (pendingToAddQueue.Count > 0)
-                                            {
-                                                IThing thingFromQueue = pendingToAddQueue.Dequeue();
-
-                                                newTile.Value.AddThing(itemFactory, ref thingFromQueue);
-                                            }
-                                        }
-                                        else
-                                        {
-                                            pendingToAddQueue.Enqueue(itemAsThing);
-                                        }
-
-                                        continue;
-                                    }
-
-                                    newTile.Value.AddThing(itemFactory, ref itemAsThing);
+                                    newTile.AddThing(itemFactory, ref itemAsThing);
                                 }
                             }
                         }
                         else
                         {
                             // it's a flag
-                            if (newTile.HasValue && Enum.TryParse(attribute.Name, out TileFlag flagMatch))
+                            if (Enum.TryParse(attribute.Name, out TileFlag flagMatch))
                             {
-                                newTile.Value.SetFlag(flagMatch);
+                                newTile.SetFlag(flagMatch);
                             }
                             else
                             {
@@ -140,10 +116,7 @@ namespace OpenTibia.Server
                     }
                 }
 
-                if (newTile.HasValue)
-                {
-                    loadedTilesList.Add((location, newTile.Value));
-                }
+                loadedTilesList.Add((location, newTile));
             }
 
             // TODO: proper logging.
