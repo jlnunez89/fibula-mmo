@@ -103,6 +103,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
             // Associate the xTea key to allow future validate packets from this connection.
             connection.SetupAuthenticationKey(loginInfo.XteaKey);
+            connection.Authenticate(loginInfo.XteaKey);
 
             using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
 

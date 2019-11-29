@@ -3,6 +3,8 @@
 .vs/
 bin/
 obj/
+map/
+originalMap/
 packages/
 TestResults/
 PublishProfiles/

@@ -23,6 +23,19 @@ namespace OpenTibia.Server
     public class ItemType : IItemType
     {
         /// <summary>
+        /// Initializes a new instance of the <see cref="ItemType"/> class.
+        /// </summary>
+        public ItemType()
+        {
+            this.TypeId = 0;
+            this.Name = string.Empty;
+            this.Description = string.Empty;
+            this.Flags = new HashSet<ItemFlag>();
+            this.DefaultAttributes = new Dictionary<ItemAttribute, IConvertible>();
+            this.Locked = false;
+        }
+
+        /// <summary>
         /// Gets the id of the type of this item.
         /// </summary>
         public ushort TypeId { get; private set; }
@@ -53,19 +66,6 @@ namespace OpenTibia.Server
         /// Gets the client id of the type of this item.
         /// </summary>
         public ushort ClientId => this.Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseTarget]) : this.TypeId;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ItemType"/> class.
-        /// </summary>
-        public ItemType()
-        {
-            this.TypeId = 0;
-            this.Name = string.Empty;
-            this.Description = string.Empty;
-            this.Flags = new HashSet<ItemFlag>();
-            this.DefaultAttributes = new Dictionary<ItemAttribute, IConvertible>();
-            this.Locked = false;
-        }
 
         public void LockChanges()
         {

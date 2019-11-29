@@ -146,14 +146,16 @@ namespace OpenTibia.Server
 
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
             {
+                var zOffset = fromZ - currentZ;
+
                 for (var nx = 0; nx < windowSizeX; nx++)
                 {
                     for (var ny = 0; ny < windowSizeY; ny++)
                     {
                         Location targetLocation = new Location
                         {
-                            X = (ushort)(fromX + nx),
-                            Y = (ushort)(fromY + ny),
+                            X = (ushort)(fromX + nx + zOffset),
+                            Y = (ushort)(fromY + ny + zOffset),
                             Z = currentZ,
                         };
 

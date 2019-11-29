@@ -12,7 +12,7 @@
 namespace OpenTibia.Common.Utilities
 {
     /// <summary>
-    /// Class that provides methods for flag setting and checking.
+    /// Helper class that provides methods for flag setting and checking.
     /// </summary>
     public static class FlagExtensions
     {

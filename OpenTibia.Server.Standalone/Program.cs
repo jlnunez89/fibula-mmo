@@ -127,7 +127,9 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IApplicationContext, ApplicationContext>();
 
             services.AddSingleton<IMap, Map>();
-            services.AddSingleton<IMapLoader, AllBlankMapLoader>();
+            services.AddSingleton<IMapLoader, SectorMapLoader>();
+
+            services.Configure<SectorMapLoaderOptions>(hostingContext.Configuration.GetSection(nameof(SectorMapLoaderOptions)));
 
             services.AddSingleton<IItemFactory, ItemFactory>();
             services.AddSingleton<IItemTypeLoader, ObjectsFileItemTypeLoader>();
