@@ -43,7 +43,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the attributes of this type of item.
         /// </summary>
-        // TODO: get rid of this and add all attributes as properties.
+        // TODO: get rid of this and add all attributes as properties?
         IDictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
 
         /// <summary>

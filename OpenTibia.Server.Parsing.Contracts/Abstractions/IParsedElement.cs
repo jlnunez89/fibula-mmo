@@ -24,6 +24,11 @@ namespace OpenTibia.Server.Parsing.Contracts.Abstractions
         int Id { get; }
 
         /// <summary>
+        /// Gets a value indicating whether  this element is a flag.
+        /// </summary>
+        bool IsFlag { get; }
+
+        /// <summary>
         /// Gets the attributes of the element.
         /// </summary>
         IList<IParsedAttribute> Attributes { get; }

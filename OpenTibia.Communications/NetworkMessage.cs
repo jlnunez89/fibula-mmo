@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications
 {
     using System;
+    using System.Buffers;
     using System.Linq;
     using System.Text;
     using OpenTibia.Communications.Contracts.Abstractions;
@@ -224,10 +225,10 @@ namespace OpenTibia.Communications
         }
 
         /// <summary>
-        /// Adds a byte range to the message.
+        /// Adds a byte sequence to the message.
         /// </summary>
         /// <param name="value">The bytes to add.</param>
-        public void AddBytes(ReadOnlySpan<byte> value)
+        public void AddBytes(ReadOnlySequence<byte> value)
         {
             if (value.Length + this.Length > NetworkMessage.BufferSize)
             {
@@ -236,7 +237,7 @@ namespace OpenTibia.Communications
 
             value.CopyTo(this.buffer.AsSpan(this.Cursor));
 
-            this.Cursor += value.Length;
+            this.Cursor += (int)value.Length;
 
             if (this.Cursor > this.Length)
             {
@@ -323,9 +324,8 @@ namespace OpenTibia.Communications
             // Must be before Xtea, because the packet length is encrypted as well
             this.InsertPacketLength();
 
-            var messageBytes = this.Buffer.Take(this.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
-
-            Console.WriteLine($"Message bytes before being sent: {messageBytes}");
+            //var messageBytes = this.Buffer.Take(this.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
+            //Console.WriteLine($"Message bytes before being sent: {messageBytes}");
 
             if (!this.XteaEncrypt(xteaKey))
             {

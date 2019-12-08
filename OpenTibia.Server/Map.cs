@@ -12,14 +12,17 @@
 namespace OpenTibia.Server
 {
     using System;
+    using System.Buffers;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using Serilog;
 
     /// <summary>
     /// Class that represents the map for the game server.
@@ -31,47 +34,46 @@ namespace OpenTibia.Server
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
         /// <summary>
-        /// The highest floor in the map.
-        /// </summary>
-        private const int HighestFloor = 0;
-
-        /// <summary>
-        /// The deepest floor in the map.
-        /// </summary>
-        private const int DeepestFloor = 15;
-
-        /// <summary>
-        /// The total number or floors in the map.
-        /// </summary>
-        private const int NumberOfFloors = DeepestFloor - HighestFloor;
-
-        /// <summary>
         /// Holds the <see cref="Tile"/>s data based on <see cref="Location"/>.
         /// </summary>
         private readonly ConcurrentDictionary<Location, Tile> tiles;
 
-        ///// <summary>
-        ///// Holds the cache of bytes for <see cref="Tile"/> descriptions, queried by <see cref="Location"/>.
-        ///// </summary>
-        // private readonly ConcurrentDictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>)> tilesCache;
+        /// <summary>
+        /// Holds the cache of bytes for <see cref="Tile"/> descriptions, queried by <see cref="Location"/>.
+        /// </summary>
+        private readonly IDictionary<Location, (DateTimeOffset lastUpdated, ReadOnlyMemory<byte> data, int[] lengths)> tilesCache;
+
+        /// <summary>
+        /// A lock object for the <see cref="tilesCache"/>.
+        /// </summary>
+        private readonly object tilesCacheLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Map"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="mapLoader">The map loader to use to load this map.</param>
         /// <param name="creatureFinder">A reference to the creature finder.</param>
-        public Map(IMapLoader mapLoader, ICreatureFinder creatureFinder)
+        public Map(ILogger logger, IMapLoader mapLoader, ICreatureFinder creatureFinder)
         {
+            logger.ThrowIfNull(nameof(logger));
             mapLoader.ThrowIfNull(nameof(mapLoader));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
+            this.Logger = logger.ForContext<Map>();
             this.Loader = mapLoader;
             this.CreatureFinder = creatureFinder;
 
             this.tiles = new ConcurrentDictionary<Location, Tile>();
 
-            // this.tilesCache = new ConcurrentDictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>)>();
+            this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, int[] lengths)>();
+            this.tilesCacheLock = new object();
         }
+
+        /// <summary>
+        /// Gets the reference to the current logger.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the reference to the creature finder.
@@ -89,7 +91,7 @@ namespace OpenTibia.Server
         /// <param name="player">The player for which the map is being described.</param>
         /// <param name="centerLocation">The center location from which to get the description.</param>
         /// <returns>The description bytes.</returns>
-        public ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, Location centerLocation)
+        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, Location centerLocation)
         {
             ushort fromX = (ushort)(centerLocation.X - 8);
             ushort fromY = (ushort)(centerLocation.Y - 6);
@@ -107,10 +109,10 @@ namespace OpenTibia.Server
         /// <param name="windowSizeX">The size of the window on the X axis.</param>
         /// <param name="windowSizeY">The size of the window on the Y axis.</param>
         /// <returns>The description bytes.</returns>
-        public ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY)
+        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY)
         {
-            ushort toX = (ushort)(fromX + windowSizeX - 1);
-            ushort toY = (ushort)(fromY + windowSizeY - 1);
+            ushort toX = (ushort)(fromX + windowSizeX);
+            ushort toY = (ushort)(fromY + windowSizeY);
 
             sbyte fromZ = (sbyte)(currentZ > 7 ? currentZ - 2 : 7);
             sbyte toZ = (sbyte)(currentZ > 7 ? currentZ + 2 : 0);
@@ -129,227 +131,290 @@ namespace OpenTibia.Server
         /// <param name="fromZ">The coordinate Z value at which the window of description begins.</param>
         /// <param name="toZ">The coordinate Z value at which the window of description ends.</param>
         /// <returns>The description bytes.</returns>
-        public ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ)
+        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ)
         {
-            var totalBytes = new List<byte>();
+            if (fromX > toX)
+            {
+                throw new ArgumentException($"{nameof(fromX)}:{fromX} must be less than or equal to {nameof(toX)}:{toX}.");
+            }
+
+            if (fromY > toY)
+            {
+                throw new ArgumentException($"{nameof(fromY)}:{fromY} must be less than or equal to {nameof(toY)}:{toY}.");
+            }
+
+            var firstSegment = new MapDescriptionSegment(ReadOnlyMemory<byte>.Empty);
+
+            MapDescriptionSegment lastSegment = firstSegment;
 
             sbyte stepZ = 1;
             byte currentSkipCount = byte.MaxValue;
 
             if (fromZ > toZ)
             {
-                stepZ = -1; // we're going up!
+                // we're going up!
+                stepZ = -1;
             }
 
-            byte windowSizeX = (byte)(toX - fromX + 1);
-            byte windowSizeY = (byte)(toY - fromY + 1);
+            byte windowSizeX = (byte)(toX - fromX);
+            byte windowSizeY = (byte)(toY - fromY);
+
+            if (windowSizeX > IMap.DefaultWindowSizeX)
+            {
+                this.Logger.Debug($"DescribeForPlayer {nameof(windowSizeX)} is over {nameof(IMap.DefaultWindowSizeX)} ({IMap.DefaultWindowSizeX}).");
+            }
+
+            if (windowSizeY > IMap.DefaultWindowSizeY)
+            {
+                this.Logger.Debug($"DescribeForPlayer {nameof(windowSizeY)} is over {nameof(IMap.DefaultWindowSizeY)} ({IMap.DefaultWindowSizeY}).");
+            }
 
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
             {
+                var zOffset = fromZ - currentZ;
+
                 for (var nx = 0; nx < windowSizeX; nx++)
                 {
                     for (var ny = 0; ny < windowSizeY; ny++)
                     {
                         Location targetLocation = new Location
                         {
-                            X = (ushort)(fromX + nx),
-                            Y = (ushort)(fromY + ny),
+                            X = (ushort)(fromX + nx + zOffset),
+                            Y = (ushort)(fromY + ny + zOffset),
                             Z = currentZ,
                         };
 
-                        var bytesFromTile = this.DescribeTileForPlayer(player, targetLocation);
+                        var segmentsFromTile = this.DescribeTileForPlayer(player, targetLocation);
 
-                        if (bytesFromTile.Length > 0)
+                        // See if we actually have segments to append.
+                        if (segmentsFromTile != null && segmentsFromTile.Any())
                         {
                             if (currentSkipCount < byte.MaxValue)
                             {
-                                totalBytes.Add(currentSkipCount);
-                                totalBytes.Add(0xFF);
+                                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
+                            }
+
+                            foreach (var segment in segmentsFromTile)
+                            {
+                                lastSegment.Append(segment);
+                                lastSegment = segment;
                             }
 
                             currentSkipCount = byte.MinValue;
-
-                            totalBytes.AddRange(bytesFromTile.ToArray());
-
                             continue;
                         }
 
                         if (++currentSkipCount == byte.MaxValue)
                         {
-                            totalBytes.Add(byte.MaxValue);
-                            totalBytes.Add(0xFF);
+                            lastSegment = lastSegment.Append(new byte[] { byte.MaxValue, 0xFF });
                         }
                     }
                 }
             }
 
-            if (currentSkipCount < byte.MaxValue)
+            if (++currentSkipCount < byte.MaxValue)
             {
-                totalBytes.Add(currentSkipCount);
-                totalBytes.Add(0xFF);
+                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
             }
 
-            return totalBytes.ToArray();
+            // HACK: add a last segment to seal the deal.
+            lastSegment = lastSegment.Append(ReadOnlyMemory<byte>.Empty);
+
+            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, 0);
         }
 
         /// <summary>
-        /// Gets the description of a tile as seen by the given <paramref name="player"/>.
+        /// Gets the description segment of a tile as seen by the given <paramref name="player"/>.
         /// </summary>
         /// <param name="player">The player for which the tile is being described.</param>
         /// <param name="location">The location of the tile being described.</param>
-        /// <returns>The description bytes.</returns>
-        public ReadOnlyMemory<byte> DescribeTileForPlayer(IPlayer player, Location location)
+        /// <returns>A collection of description segments from the tile.</returns>
+        public IEnumerable<MapDescriptionSegment> DescribeTileForPlayer(IPlayer player, Location location)
         {
             if (!this.GetTileAt(location, out Tile tile))
             {
-                return new byte[0];
+                return Enumerable.Empty<MapDescriptionSegment>();
             }
 
-            var tempBytes = new List<byte>();
-            var count = 0;
+            var segments = new List<MapDescriptionSegment>();
 
-            // Add ground and top items.
-            if (tile.Ground != null)
+            lock (this.tilesCacheLock)
             {
-                tempBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
-                count++;
-            }
-
-            foreach (var item in tile.TopItems1)
-            {
-                if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                if (!this.tilesCache.TryGetValue(location, out (DateTimeOffset lastModified, ReadOnlyMemory<byte> value, int[] pointers) cachedTileData) || cachedTileData.lastModified < tile.LastModified)
                 {
-                    break;
-                }
+                    this.Logger.Verbose($"Regenerated description for tile at {location}.");
 
-                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+                    // This tile's data is not cached or it's cached version is no longer valid, we need to regenerate it.
+                    var tempBytes = new List<byte>();
+                    var count = 0;
+                    var newPointers = new int[IMap.MaximumNumberOfThingsToDescribePerTile];
 
-                if (item.IsCumulative)
-                {
-                    tempBytes.Add(item.Amount);
-                }
-                else if (item.IsLiquidPool || item.IsLiquidContainer)
-                {
-                    tempBytes.Add(item.LiquidType);
-                }
-
-                count++;
-            }
-
-            foreach (var item in tile.TopItems2)
-            {
-                if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
-                {
-                    break;
-                }
-
-                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
-
-                if (item.IsCumulative)
-                {
-                    tempBytes.Add(item.Amount);
-                }
-                else if (item.IsLiquidPool || item.IsLiquidContainer)
-                {
-                    tempBytes.Add(item.LiquidType);
-                }
-
-                count++;
-            }
-
-            // Add creatures in the tile.
-            foreach (var creatureId in tile.CreatureIds)
-            {
-                if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
-                {
-                    break;
-                }
-
-                var creature = this.CreatureFinder.FindCreatureById(creatureId);
-
-                if (creature == null)
-                {
-                    continue;
-                }
-
-                if (player.KnowsCreatureWithId(creatureId))
-                {
-                    tempBytes.Add((byte)OutgoingGamePacketType.AddKnownCreature);
-                    tempBytes.Add(0x00);
-                    tempBytes.AddRange(BitConverter.GetBytes(creatureId));
-                }
-                else
-                {
-                    tempBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
-                    tempBytes.Add(0x00);
-                    tempBytes.AddRange(BitConverter.GetBytes(player.ChooseToRemoveFromKnownSet()));
-                    tempBytes.AddRange(BitConverter.GetBytes(creatureId));
-
-                    // TODO: is this the best spot for this ?
-                    player.AddKnownCreature(creatureId);
-
-                    var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
-                    tempBytes.AddRange(BitConverter.GetBytes((ushort)creatureNameBytes.Length));
-                    tempBytes.AddRange(creatureNameBytes);
-                }
-
-                tempBytes.Add((byte)Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints));
-                tempBytes.Add(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
-
-                if (player.CanSee(creature))
-                {
-                    // Add creature outfit
-                    tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.Id));
-
-                    if (creature.Outfit.Id > 0)
+                    // Add ground and top items.
+                    if (tile.Ground != null)
                     {
-                        tempBytes.Add(creature.Outfit.Head);
-                        tempBytes.Add(creature.Outfit.Body);
-                        tempBytes.Add(creature.Outfit.Legs);
-                        tempBytes.Add(creature.Outfit.Feet);
+                        tempBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
+
+                        newPointers[count] = tempBytes.Count;
+                        count++;
                     }
-                    else
+
+                    foreach (var item in tile.TopItems1)
                     {
-                        tempBytes.AddRange(BitConverter.GetBytes(creature.Outfit.ItemIdLookAlike));
+                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        {
+                            break;
+                        }
+
+                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                        if (item.IsCumulative)
+                        {
+                            tempBytes.Add(item.Amount);
+                        }
+                        else if (item.IsLiquidPool || item.IsLiquidContainer)
+                        {
+                            tempBytes.Add(item.LiquidType);
+                        }
+
+                        newPointers[count] = tempBytes.Count;
+                        count++;
                     }
+
+                    foreach (var item in tile.TopItems2)
+                    {
+                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        {
+                            break;
+                        }
+
+                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                        if (item.IsCumulative)
+                        {
+                            tempBytes.Add(item.Amount);
+                        }
+                        else if (item.IsLiquidPool || item.IsLiquidContainer)
+                        {
+                            tempBytes.Add(item.LiquidType);
+                        }
+
+                        newPointers[count] = tempBytes.Count;
+                        count++;
+                    }
+
+                    foreach (var item in tile.DownItems)
+                    {
+                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        {
+                            break;
+                        }
+
+                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+
+                        if (item.IsCumulative)
+                        {
+                            tempBytes.Add(item.Amount);
+                        }
+                        else if (item.IsLiquidPool || item.IsLiquidContainer)
+                        {
+                            tempBytes.Add(item.LiquidType);
+                        }
+
+                        newPointers[count] = tempBytes.Count;
+                        count++;
+                    }
+
+                    // copy the value of the last valid pointer into the remaining.
+                    var copyFromIndex = Math.Max(0, count - 1);
+
+                    for (int i = copyFromIndex; i < newPointers.Length; i++)
+                    {
+                        newPointers[i] = newPointers[copyFromIndex];
+                    }
+
+                    cachedTileData = (tile.LastModified, tempBytes.ToArray(), newPointers);
+                    this.tilesCache[location] = cachedTileData;
                 }
-                else
+
+                // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
+                segments.Add(new MapDescriptionSegment(cachedTileData.value.Slice(0, cachedTileData.pointers[Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
+
+                // TODO: The creatures part is more dynamic, figure out how/if we can cache it.
+                // Add creatures in the tile.
+                if (tile.CreatureIds.Any())
                 {
-                    tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
-                    tempBytes.AddRange(BitConverter.GetBytes((ushort)0));
+                    var creatureBytes = new List<byte>();
+
+                    foreach (var creatureId in tile.CreatureIds)
+                    {
+                        var creature = this.CreatureFinder.FindCreatureById(creatureId);
+
+                        if (creature == null)
+                        {
+                            continue;
+                        }
+
+                        if (player.KnowsCreatureWithId(creatureId))
+                        {
+                            creatureBytes.Add((byte)OutgoingGamePacketType.AddKnownCreature);
+                            creatureBytes.Add(0x00);
+                            creatureBytes.AddRange(BitConverter.GetBytes(creatureId));
+                        }
+                        else
+                        {
+                            creatureBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
+                            creatureBytes.Add(0x00);
+                            creatureBytes.AddRange(BitConverter.GetBytes(player.ChooseToRemoveFromKnownSet()));
+                            creatureBytes.AddRange(BitConverter.GetBytes(creatureId));
+
+                            // TODO: is this the best spot for this ?
+                            player.AddKnownCreature(creatureId);
+
+                            var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
+                            creatureBytes.AddRange(BitConverter.GetBytes((ushort)creatureNameBytes.Length));
+                            creatureBytes.AddRange(creatureNameBytes);
+                        }
+
+                        creatureBytes.Add((byte)Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints));
+                        creatureBytes.Add(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
+
+                        if (player.CanSee(creature))
+                        {
+                            // Add creature outfit
+                            creatureBytes.AddRange(BitConverter.GetBytes(creature.Outfit.Id));
+
+                            if (creature.Outfit.Id > 0)
+                            {
+                                creatureBytes.Add(creature.Outfit.Head);
+                                creatureBytes.Add(creature.Outfit.Body);
+                                creatureBytes.Add(creature.Outfit.Legs);
+                                creatureBytes.Add(creature.Outfit.Feet);
+                            }
+                            else
+                            {
+                                creatureBytes.AddRange(BitConverter.GetBytes(creature.Outfit.ItemIdLookAlike));
+                            }
+                        }
+                        else
+                        {
+                            creatureBytes.AddRange(BitConverter.GetBytes((ushort)0));
+                            creatureBytes.AddRange(BitConverter.GetBytes((ushort)0));
+                        }
+
+                        creatureBytes.Add(creature.EmittedLightLevel);
+                        creatureBytes.Add(creature.EmittedLightColor);
+
+                        creatureBytes.AddRange(BitConverter.GetBytes(creature.Speed));
+
+                        creatureBytes.Add(creature.Skull);
+                        creatureBytes.Add(creature.Shield);
+                    }
+
+                    segments.Add(new MapDescriptionSegment(creatureBytes.ToArray()));
                 }
 
-                tempBytes.Add(creature.EmittedLightLevel);
-                tempBytes.Add(creature.EmittedLightColor);
-
-                tempBytes.AddRange(BitConverter.GetBytes(creature.Speed));
-
-                tempBytes.Add(creature.Skull);
-                tempBytes.Add(creature.Shield);
+                return segments;
             }
-
-            foreach (var item in tile.DownItems)
-            {
-                if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
-                {
-                    break;
-                }
-
-                tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
-
-                if (item.IsCumulative)
-                {
-                    tempBytes.Add(item.Amount);
-                }
-                else if (item.IsLiquidPool || item.IsLiquidContainer)
-                {
-                    tempBytes.Add(item.LiquidType);
-                }
-
-                count++;
-            }
-
-            return tempBytes.ToArray();
         }
 
         /// <summary>

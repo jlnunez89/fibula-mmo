@@ -12,6 +12,7 @@
 namespace OpenTibia.Server
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading;
@@ -21,6 +22,7 @@ namespace OpenTibia.Server
     using OpenTibia.Data.Entities;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -202,42 +204,45 @@ namespace OpenTibia.Server
 
             IThing playerThing = player as IThing;
 
-            tile.RemoveThing(this.ItemFactory, ref playerThing);
-
-            this.RequestNofitication(
-                new CreatureRemovedNotification(
-                    this.Logger,
-                    this.CreatureManager,
-                    () =>
-                    {
-                        var targetConnections = new List<IConnection>();
-
-                        foreach (var connection in this.ConnectionManager.GetAllActive())
+            if (tile.RemoveThing(this.ItemFactory, ref playerThing))
+            {
+                this.RequestNofitication(
+                    new CreatureRemovedNotification(
+                        this.Logger,
+                        this.CreatureManager,
+                        () =>
                         {
-                            var p = this.CreatureManager.FindCreatureById(connection.PlayerId);
+                            var targetConnections = new List<IConnection>();
 
-                            if (p == null || !p.CanSee(player.Location))
+                            foreach (var connection in this.ConnectionManager.GetAllActive())
                             {
-                                continue;
+                                var p = this.CreatureManager.FindCreatureById(connection.PlayerId);
+
+                                if (p == null || !p.CanSee(player.Location))
+                                {
+                                    continue;
+                                }
+
+                                targetConnections.Add(connection);
                             }
 
-                            targetConnections.Add(connection);
-                        }
+                            return targetConnections;
+                        },
+                        new CreatureRemovedNotificationArguments(player, oldStackpos, AnimatedEffect.Puff)));
 
-                        return targetConnections;
-                    },
-                    new CreatureRemovedNotificationArguments(player, oldStackpos, AnimatedEffect.Puff)));
+                this.CreatureManager.UnregisterCreature(player);
 
-            this.CreatureManager.UnregisterCreature(player);
+                var currentConnection = this.ConnectionManager.FindByPlayerId(player.Id);
 
-            var currentConnection = this.ConnectionManager.FindByPlayerId(player.Id);
+                if (currentConnection != null)
+                {
+                    this.ConnectionManager.Unregister(currentConnection);
+                }
 
-            if (currentConnection != null)
-            {
-                this.ConnectionManager.Unregister(currentConnection);
+                return true;
             }
 
-            return true;
+            return false;
         }
 
         /// <summary>
@@ -306,6 +311,79 @@ namespace OpenTibia.Server
             return true;
         }
 
+        public bool PlayerMoveThing(IPlayer player, ushort clientId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
+        {
+            if (!this.map.GetTileAt(fromLocation, out Tile sourceTile))
+            {
+                return false;
+            }
+
+            var thingAtStackPos = sourceTile.GetThingAtStackPosition(this.CreatureManager, fromStackPos);
+
+            if (thingAtStackPos == null || thingAtStackPos.ThingId != clientId)
+            {
+                return false;
+            }
+
+            if (player != thingAtStackPos)
+            {
+                var directionToThing = player.Location.DirectionTo(fromLocation);
+
+                player.TurnToDirection(directionToThing);
+
+                if (this.map.GetTileAt(player.Location, out Tile playerTile))
+                {
+                    var playerStackPos = playerTile.GetStackPositionOfThing(player);
+
+                    this.RequestNofitication(
+                        new CreatureTurnedNotification(
+                            this.Logger,
+                            () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
+                            new CreatureTurnedNotificationArguments(player, playerStackPos)));
+                }
+            }
+
+            var locationDiff = fromLocation - toLocation;
+
+            bool moveSuccessful = this.MoveThingBetweenTiles(thingAtStackPos, fromLocation, fromStackPos, toLocation, count, thingAtStackPos is ICreature ? locationDiff.MaxValueIn2D > 1 : false);
+
+            if (moveSuccessful && player != thingAtStackPos)
+            {
+                var directionToDestination = player.Location.DirectionTo(toLocation);
+
+                player.TurnToDirection(directionToDestination);
+
+                if (this.map.GetTileAt(player.Location, out Tile playerTile))
+                {
+                    var playerStackPos = playerTile.GetStackPositionOfThing(player);
+
+                    this.RequestNofitication(
+                        new CreatureTurnedNotification(
+                            this.Logger,
+                            () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
+                            new CreatureTurnedNotificationArguments(player, playerStackPos)));
+                }
+            }
+
+            return moveSuccessful;
+        }
+
+        public void PlayerTurnToDirection(IPlayer player, Direction direction)
+        {
+            player.TurnToDirection(direction);
+
+            if (this.map.GetTileAt(player.Location, out Tile playerTile))
+            {
+                var playerStackPos = playerTile.GetStackPositionOfThing(player);
+
+                this.RequestNofitication(
+                    new CreatureTurnedNotification(
+                        this.Logger,
+                        () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
+                        new CreatureTurnedNotificationArguments(player, playerStackPos)));
+            }
+        }
+
         public bool MoveThingBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false)
         {
             if (thing == null || !this.map.GetTileAt(fromTileLocation, out Tile fromTile) || !this.map.GetTileAt(toTileLocation, out Tile toTile))
@@ -323,9 +401,13 @@ namespace OpenTibia.Server
 
             thing.Location = toTileLocation;
 
+            var moveDirection = fromTileLocation.DirectionTo(toTileLocation);
+
             // Then deal with the consequences of the move.
-            if (thing is ICreature)
+            if (thing is ICreature creature)
             {
+                creature.TurnToDirection(moveDirection);
+
                 var thingStackPosition = toTile.GetStackPositionOfThing(thing);
 
                 if (thingStackPosition != byte.MaxValue)
@@ -335,7 +417,7 @@ namespace OpenTibia.Server
                             this.Logger,
                             this,
                             this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersInRangeFrom(fromTileLocation, toTileLocation),
+                            () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
                             new CreatureMovedNotificationArguments(
                                 (thing as ICreature).Id,
                                 fromTileLocation,
@@ -364,7 +446,8 @@ namespace OpenTibia.Server
                 this.RequestNofitication(
                     new TileUpdatedNotification(
                             this.Logger,
-                            () => this.GetConnectionsOfPlayersInRangeFrom(fromTileLocation),
+                            this.CreatureManager,
+                            () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation),
                             new TileUpdatedNotificationArguments(
                                 fromTileLocation,
                                 this.GetDescriptionOfTile)));
@@ -372,7 +455,8 @@ namespace OpenTibia.Server
                 this.RequestNofitication(
                     new TileUpdatedNotification(
                             this.Logger,
-                            () => this.GetConnectionsOfPlayersInRangeFrom(toTileLocation),
+                            this.CreatureManager,
+                            () => this.GetConnectionsOfPlayersThatCanSee(toTileLocation),
                             new TileUpdatedNotificationArguments(
                                 toTileLocation,
                                 this.GetDescriptionOfTile)));
@@ -424,25 +508,44 @@ namespace OpenTibia.Server
             return true;
         }
 
-        public ReadOnlyMemory<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location)
+        public ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
 
             return this.map.DescribeForPlayer(player, location);
         }
 
-        public ReadOnlyMemory<byte> GetDescriptionOfMapForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte currentZ, sbyte toZ)
+        public ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY, sbyte startingZOffset = 0)
         {
             player.ThrowIfNull(nameof(player));
 
-            return this.map.DescribeForPlayer(player, fromX, toX, fromY, toY, currentZ, toZ);
+            return this.map.DescribeForPlayer(player, startX, (ushort)(startX + windowSizeX), startY, (ushort)(startY + windowSizeY), startZ, endZ);
         }
 
-        public ReadOnlyMemory<byte> GetDescriptionOfTile(IPlayer player, Location location)
+        public ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
 
-            return this.map.DescribeTileForPlayer(player, location);
+            var firstSegment = new MapDescriptionSegment(ReadOnlyMemory<byte>.Empty);
+
+            MapDescriptionSegment lastSegment = firstSegment;
+
+            var segmentsFromTile = this.map.DescribeTileForPlayer(player, location);
+
+            // See if we actually have segments to append.
+            if (segmentsFromTile != null && segmentsFromTile.Any())
+            {
+                foreach (var segment in segmentsFromTile)
+                {
+                    lastSegment.Append(segment);
+                    lastSegment = segment;
+                }
+            }
+
+            // HACK: add a last segment to seal the deal.
+            lastSegment = lastSegment.Append(ReadOnlyMemory<byte>.Empty);
+
+            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, 0);
         }
 
         /// <summary>
@@ -574,12 +677,12 @@ namespace OpenTibia.Server
 
             IEvent evt = eventArgs.Event;
 
-            this.Logger.Debug($"Processing event {evt.EventId}.");
+            this.Logger.Verbose($"Processing event {evt.EventId}.");
 
             try
             {
                 evt.Process();
-                this.Logger.Debug($"Processed event {evt.EventId}.");
+                this.Logger.Verbose($"Processed event {evt.EventId}.");
             }
             catch (Exception ex)
             {
@@ -588,7 +691,7 @@ namespace OpenTibia.Server
             }
         }
 
-        private IEnumerable<IConnection> GetConnectionsOfPlayersInRangeFrom(params Location[] locations)
+        private IEnumerable<IConnection> GetConnectionsOfPlayersThatCanSee(params Location[] locations)
         {
             var activeConnections = this.ConnectionManager.GetAllActive();
 

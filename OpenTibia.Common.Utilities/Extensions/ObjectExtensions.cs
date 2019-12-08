@@ -13,6 +13,9 @@ namespace OpenTibia.Common.Utilities
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// Helper class that provides methods for all objects.
+    /// </summary>
     public static class ObjectExtensions
     {
         /// <summary>

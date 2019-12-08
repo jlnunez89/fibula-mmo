@@ -105,7 +105,7 @@ namespace OpenTibia.Server
 
         public override string Description => this.Name;
 
-        public override string InspectionText => this.InspectionText;
+        public override string InspectionText => this.Description;
 
         public byte SoulPoints { get; } // TODO: nobody likes soulpoints... figure out what to do with them :)
 

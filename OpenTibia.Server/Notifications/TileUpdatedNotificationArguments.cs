@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Notifications
 {
     using System;
+    using System.Buffers;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -22,7 +23,7 @@ namespace OpenTibia.Server.Notifications
         /// </summary>
         /// <param name="location"></param>
         /// <param name="descriptionFunction"></param>
-        public TileUpdatedNotificationArguments(Location location, Func<IPlayer, Location, ReadOnlyMemory<byte>> descriptionFunction)
+        public TileUpdatedNotificationArguments(Location location, Func<IPlayer, Location, ReadOnlySequence<byte>> descriptionFunction)
         {
             this.Location = location;
             this.TileDescriptionFunction = descriptionFunction;
@@ -30,6 +31,6 @@ namespace OpenTibia.Server.Notifications
 
         public Location Location { get; }
 
-        public Func<IPlayer, Location, ReadOnlyMemory<byte>> TileDescriptionFunction { get; }
+        public Func<IPlayer, Location, ReadOnlySequence<byte>> TileDescriptionFunction { get; }
     }
 }

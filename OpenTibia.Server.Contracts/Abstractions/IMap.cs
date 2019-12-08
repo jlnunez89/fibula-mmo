@@ -12,6 +12,9 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
+    using System.Buffers;
+    using System.Collections.Generic;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -35,17 +38,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         public const byte DefaultWindowSizeY = 14;
 
         /// <summary>
-        /// The default window size in the Z coordinate.
-        /// </summary>
-        public const byte DefaultWindowSizeZ = 1;
-
-        /// <summary>
         /// Gets the description of the map as seen by the given <paramref name="player"/>.
         /// </summary>
         /// <param name="player">The player for which the map is being described.</param>
         /// <param name="centerLocation">The center location from which to get the description.</param>
         /// <returns>The description bytes.</returns>
-        ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, Location centerLocation);
+        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, Location centerLocation);
 
         /// <summary>
         /// Gets the specified window's description of the map as seen by the given <paramref name="player"/>.
@@ -57,7 +55,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="windowSizeX">The size of the window on the X axis.</param>
         /// <param name="windowSizeY">The size of the window on the Y axis.</param>
         /// <returns>The description bytes.</returns>
-        ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = DefaultWindowSizeX, byte windowSizeY = DefaultWindowSizeY);
+        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = DefaultWindowSizeX, byte windowSizeY = DefaultWindowSizeY);
 
         /// <summary>
         /// Gets the specified window's description of the map as seen by the given <paramref name="player"/>.
@@ -70,14 +68,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="fromZ">The coordinate Z value at which the window of description begins.</param>
         /// <param name="toZ">The coordinate Z value at which the window of description ends.</param>
         /// <returns>The description bytes.</returns>
-        ReadOnlyMemory<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ);
+        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ);
 
         /// <summary>
-        /// Gets the description of a tile as seen by the given <paramref name="player"/>.
+        /// Gets the description segments of a tile as seen by the given <paramref name="player"/>.
         /// </summary>
         /// <param name="player">The player for which the tile is being described.</param>
         /// <param name="location">The location of the tile being described.</param>
-        /// <returns>The description bytes.</returns>
-        ReadOnlyMemory<byte> DescribeTileForPlayer(IPlayer player, Location location);
+        /// <returns>A collection of description segments from the tile.</returns>
+        IEnumerable<MapDescriptionSegment> DescribeTileForPlayer(IPlayer player, Location location);
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CreatureTurnedPacket.cs" company="2Dudes">
+// <copyright file="CreatureTurnedNotificationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,29 +9,31 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Communications.Packets.Outgoing
+namespace OpenTibia.Server.Notifications
 {
-    using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Communications.Contracts.Enumerations;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
-    public class CreatureTurnedPacket : IOutgoingPacket
+    /// <summary>
+    /// Class that represents arguments for the creature turned notification.
+    /// </summary>
+    internal class CreatureTurnedNotificationArguments : INotificationArguments
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreatureTurnedPacket"/> class.
+        /// Initializes a new instance of the <see cref="CreatureTurnedNotificationArguments"/> class.
         /// </summary>
         /// <param name="creature">The creature that turned.</param>
         /// <param name="creatureStackPosition">The position in the stack of the creature that turned.</param>
-        public CreatureTurnedPacket(ICreature creature, byte creatureStackPosition)
+        /// <param name="turnEffect">Optional. An effect of the turn.</param>
+        public CreatureTurnedNotificationArguments(ICreature creature, byte creatureStackPosition, AnimatedEffect turnEffect = AnimatedEffect.None)
         {
+            creature.ThrowIfNull(nameof(creature));
+
             this.Creature = creature;
             this.StackPosition = creatureStackPosition;
+            this.TurnedEffect = turnEffect;
         }
-
-        /// <summary>
-        /// Gets the type of this packet.
-        /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.TransformThing;
 
         /// <summary>
         /// Gets the creature that turned.
@@ -44,12 +46,8 @@ namespace OpenTibia.Communications.Packets.Outgoing
         public byte StackPosition { get; }
 
         /// <summary>
-        /// Writes the packet to the message provided.
+        /// Gets the effect of the turn, if any.
         /// </summary>
-        /// <param name="message">The message to write this packet to.</param>
-        public void WriteToMessage(INetworkMessage message)
-        {
-            message.WriteCreatureTurnedPacket(this);
-        }
+        public AnimatedEffect TurnedEffect { get; }
     }
 }

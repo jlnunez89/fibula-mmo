@@ -54,7 +54,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="dat\objects.srv">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="hostsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

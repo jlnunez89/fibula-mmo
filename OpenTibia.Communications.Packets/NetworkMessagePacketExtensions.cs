@@ -20,6 +20,7 @@ namespace OpenTibia.Communications.Packets
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
     /// Static class that defines extension methods for <see cref="INetworkMessage"/>, which allow it to
@@ -183,30 +184,30 @@ namespace OpenTibia.Communications.Packets
             return new DefaultReadPacket(message.GetBytes(message.Length - message.Cursor));
         }
 
-        ///// <summary>
-        ///// Reads item movement information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The item movement information.</returns>
-        // public static IItemMoveInfo ReadItemMoveInfo(this INetworkMessage message)
-        // {
-        //    return new ItemMovePacket(
-        //        fromLocation: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        clientId: message.GetUInt16(),
-        //        fromStackPos: message.GetByte(),
-        //        toLocation: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        count: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads item movement information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The item movement information.</returns>
+        public static IItemMoveInfo ReadItemMoveInfo(this INetworkMessage message)
+        {
+            return new ItemMovePacket(
+                fromLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                clientId: message.GetUInt16(),
+                fromStackPos: message.GetByte(),
+                toLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                count: message.GetByte());
+        }
 
         ///// <summary>
         ///// Reads the item used on information sent in the message.
@@ -253,23 +254,23 @@ namespace OpenTibia.Communications.Packets
         //        index: message.GetByte());
         // }
 
-        ///// <summary>
-        ///// Reads the look at information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The look at information.</returns>
-        // public static ILookAtInfo ReadLookAtInfo(this INetworkMessage message)
-        // {
-        //    return new LookAtPacket(
-        //        location: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        thingId: message.GetUInt16(),
-        //        stackPos: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads the look at information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The look at information.</returns>
+        public static ILookAtInfo ReadLookAtInfo(this INetworkMessage message)
+        {
+            return new LookAtPacket(
+                location: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                thingId: message.GetUInt16(),
+                stackPos: message.GetByte());
+        }
 
         ///// <summary>
         ///// Reads the management service player log in information sent in the message.
@@ -774,23 +775,23 @@ namespace OpenTibia.Communications.Packets
         // message.AddString(packet.Text);
         // }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="CreatureTurnedPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteCreatureTurnedPacket(this INetworkMessage message, CreatureTurnedPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="CreatureTurnedPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteCreatureTurnedPacket(this INetworkMessage message, CreatureTurnedPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddLocation(packet.Creature.Location);
-        //    message.AddByte(packet.Creature.GetStackPosition());
-        //    message.AddUInt16(packet.Creature.ThingId);
-        //    message.AddUInt32(packet.Creature.Id);
-        //    message.AddByte((byte)packet.Creature.Direction);
-        // }
+            message.AddLocation(packet.Creature.Location);
+            message.AddByte(packet.StackPosition);
+            message.AddUInt16(packet.Creature.ThingId);
+            message.AddUInt32(packet.Creature.Id);
+            message.AddByte((byte)packet.Creature.Direction);
+        }
 
         /// <summary>
         /// Writes the contents of the <see cref="DefaultErrorPacket"/> into the message.
@@ -943,7 +944,7 @@ namespace OpenTibia.Communications.Packets
 
             message.AddLocation(packet.Origin);
 
-            message.AddBytes(packet.DescriptionBytes.Span);
+            message.AddBytes(packet.DescriptionBytes);
         }
 
         /// <summary>
@@ -957,7 +958,7 @@ namespace OpenTibia.Communications.Packets
 
             message.WritePacketType(packet);
 
-            message.AddBytes(packet.DescriptionBytes.Span);
+            message.AddBytes(packet.DescriptionBytes);
         }
 
         /// <summary>
@@ -1300,7 +1301,7 @@ namespace OpenTibia.Communications.Packets
 
             if (packet.DescriptionBytes.Length > 0)
             {
-                message.AddBytes(packet.DescriptionBytes.Span);
+                message.AddBytes(packet.DescriptionBytes);
                 message.AddByte(0x00); // skip count
             }
             else

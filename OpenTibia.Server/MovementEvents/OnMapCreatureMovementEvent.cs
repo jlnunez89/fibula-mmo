@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Server.MovementEvents
 {
-    using System;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;

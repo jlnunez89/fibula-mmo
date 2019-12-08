@@ -14,10 +14,8 @@
     <Compile Remove="Abstractions\IContainerInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />
     <Compile Remove="Abstractions\IInsertHouseInfo.cs" />
-    <Compile Remove="Abstractions\IItemMoveInfo.cs" />
     <Compile Remove="Abstractions\IItemUseInfo.cs" />
     <Compile Remove="Abstractions\IItemUseOnInfo.cs" />
-    <Compile Remove="Abstractions\ILookAtInfo.cs" />
     <Compile Remove="Abstractions\IManagementPlayerLoginInfo.cs" />
     <Compile Remove="Abstractions\INamelockInfo.cs" />
     <Compile Remove="Abstractions\IOnlinePlayer.cs" />

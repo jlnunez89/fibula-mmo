@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
     using System;
+    using System.Buffers;
 
     /// <summary>
     /// Interface that represents a network message.
@@ -46,10 +47,10 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         void AddBytes(byte[] value);
 
         /// <summary>
-        /// Adds a byte span to the message.
+        /// Adds a byte sequence to the message.
         /// </summary>
         /// <param name="value">The bytes span to add.</param>
-        void AddBytes(ReadOnlySpan<byte> value);
+        void AddBytes(ReadOnlySequence<byte> value);
 
         /// <summary>
         /// Add a string to the message.
@@ -100,16 +101,30 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <returns>The value read.</returns>
         uint GetUInt32();
 
+        /// <summary>
+        /// Prepares the message to send it, encrypting it.
+        /// </summary>
+        /// <param name="xteaKey">The key to encrypt with.</param>
+        /// <returns>True if the message could be prepared, false otherwise.</returns>
         bool PrepareToSend(uint[] xteaKey);
 
         bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false);
 
+        /// <summary>
+        /// Resets the message.
+        /// </summary>
         void Reset();
 
-        //void Reset(int startingIndex);
-
+        /// <summary>
+        /// Resizes the message to a specific size.
+        /// </summary>
+        /// <param name="size">The new size of the message.</param>
         void Resize(int size);
 
+        /// <summary>
+        /// Decrypts the contents of the message.
+        /// </summary>
+        /// <param name="useCipKeys">A value indicating whether to use the CipSoft encryption keys, or the Open Tibia Server keys.</param>
         void RsaDecrypt(bool useCipKeys = true);
 
         /// <summary>
@@ -118,6 +133,11 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <param name="count">The number of bytes to skip.</param>
         void SkipBytes(int count);
 
+        /// <summary>
+        /// Attempts to decrypt the message using XTea keys.
+        /// </summary>
+        /// <param name="key">The key to use.</param>
+        /// <returns>True if the message could be decrypted, false otherwise.</returns>
         bool XteaDecrypt(uint[] key);
 
         /// <summary>

@@ -103,15 +103,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
             // Associate the xTea key to allow future validate packets from this connection.
             connection.SetupAuthenticationKey(loginInfo.XteaKey);
-
-            if (!connection.Authenticate(loginInfo.XteaKey))
-            {
-                connection.SetupAuthenticationKey(loginInfo.XteaKey);
-
-                responsePackets.Add(new GameServerDisconnectPacket("There was a problem with your session key.\nPlease logging in again."));
-
-                return (true, responsePackets);
-            }
+            connection.Authenticate(loginInfo.XteaKey);
 
             using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
 
@@ -182,7 +174,7 @@ namespace OpenTibia.Communications.Handlers.Game
                     // Add MapDescription
                     var mapDescription = this.Game.GetDescriptionOfMapForPlayer(player, player.Location);
 
-                    responsePackets.Add(new MapDescriptionPacket(player.Location, mapDescription.ToArray()));
+                    responsePackets.Add(new MapDescriptionPacket(player.Location, mapDescription));
 
                     responsePackets.Add(new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue));
 

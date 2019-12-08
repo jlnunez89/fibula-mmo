@@ -20,6 +20,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IItem : IThing
     {
+        /// <summary>
+        /// The maximum amount value of cummulative items.
+        /// </summary>
+        public const byte MaximumAmountOfCummulativeItems = 100;
+
         // event ItemHolderChangeEvent OnHolderChanged;
 
         // event ItemAmountChangeEvent OnAmountChanged;
@@ -41,6 +46,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         // IContainerItem Parent { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is ground floor.
+        /// </summary>
         bool IsGround { get; }
 
         byte MovementPenalty { get; }
@@ -91,13 +99,13 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         byte Amount { get; }
 
+        void SetAmount(byte remainingCount);
+
         // bool IsPathBlocking(byte avoidType = 0);
 
         // void AddContent(IEnumerable<object> content);
 
         // void SetHolder(ICreature creature, Location fromLocation);
-
-        // void SetAmount(byte remainingCount);
 
         // void SetParent(IContainerItem parentContainer);
 

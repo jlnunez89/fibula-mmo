@@ -13,20 +13,16 @@ namespace OpenTibia.Server.Contracts.Structs
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
-    /// Structure of a tile in the map.
+    /// Class that represents a tile in the map.
     /// </summary>
-    public struct Tile
+    public class Tile
     {
-        /// <summary>
-        /// A default <see cref="Tile"/> that is empty.
-        /// </summary>
-        public static readonly Tile Empty = default;
-
         /// <summary>
         /// Stores the ids of the creatures in the tile.
         /// </summary>
@@ -48,13 +44,14 @@ namespace OpenTibia.Server.Contracts.Structs
         private readonly Stack<IItem> downItemsOnTile;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Tile"/> struct.
+        /// Initializes a new instance of the <see cref="Tile"/> class.
         /// </summary>
         /// <param name="ground">The ground item to initialize the tile with.</param>
         public Tile(IItem ground)
         {
             this.Ground = ground;
             this.Flags = (byte)TileFlag.None;
+            this.LastModified = DateTimeOffset.UtcNow;
 
             this.creatureIdsOnTile = new Stack<uint>();
             this.topItems1OnTile = new Stack<IItem>();
@@ -91,6 +88,16 @@ namespace OpenTibia.Server.Contracts.Structs
         /// Gets the flags from this tile.
         /// </summary>
         public byte Flags { get; private set; }
+
+        /// <summary>
+        /// Gets the last date and time that this tile was modified.
+        /// </summary>
+        public DateTimeOffset LastModified { get; private set; }
+
+        /// <summary>
+        /// Gets the count of creatures in this tile.
+        /// </summary>
+        public int CreatureCount => this.creatureIdsOnTile.Count;
 
         /// <summary>
         /// Sets a flag on this tile.
@@ -140,14 +147,14 @@ namespace OpenTibia.Server.Contracts.Structs
                     {
                         var currentItem = this.downItemsOnTile.Count > 0 ? this.downItemsOnTile.Peek() as IItem : null;
 
-                        if (currentItem != null && currentItem.Type == item.Type && currentItem.Amount < 100)
+                        if (currentItem != null && currentItem.Type == item.Type && currentItem.Amount < IItem.MaximumAmountOfCummulativeItems)
                         {
                             // add these up.
                             var remaining = currentItem.Amount + count;
 
-                            var newCount = (byte)Math.Min(remaining, 100);
+                            var newCount = (byte)Math.Min(remaining, IItem.MaximumAmountOfCummulativeItems);
 
-                            // currentItem.Amount = newCount;
+                            currentItem.SetAmount(newCount);
 
                             remaining -= newCount;
 
@@ -162,7 +169,7 @@ namespace OpenTibia.Server.Contracts.Structs
                         }
                         else
                         {
-                            // item.Amount = count;
+                            item.SetAmount(count);
 
                             this.downItemsOnTile.Push(item);
                         }
@@ -173,8 +180,9 @@ namespace OpenTibia.Server.Contracts.Structs
                     }
                 }
 
-                // invalidate the cache.
-                // this.cachedDescription = null;
+                // Update the tile's version so that it invalidates the cache.
+                // TOOD: if we start caching creatures, move to outer scope.
+                this.LastModified = DateTimeOffset.UtcNow;
             }
         }
 
@@ -198,34 +206,28 @@ namespace OpenTibia.Server.Contracts.Structs
             }
             else if (thing is IItem item)
             {
-                var removeItem = true;
-
                 if (item.IsGround)
                 {
                     this.Ground = null;
-
-                    removeItem = false;
                 }
                 else if (item.IsTop1)
                 {
                     this.topItems1OnTile.Pop();
-
-                    removeItem = false;
                 }
                 else if (item.IsTop2)
                 {
                     this.topItems2OnTile.Pop();
-
-                    removeItem = false;
                 }
                 else
                 {
+                    // Down items.
+                    var removeItem = true;
+
                     if (item.IsCumulative)
                     {
                         if (item.Amount < count)
                         {
-                            // throwing because this should have been checked before.
-                            throw new ArgumentException("Remove count is greater than available.");
+                            return false;
                         }
 
                         if (item.Amount > count)
@@ -233,21 +235,20 @@ namespace OpenTibia.Server.Contracts.Structs
                             // create a new item (it got split...)
                             var newItem = itemFactory.Create(item.Type.TypeId);
 
-                            // newItem.SetAmount(count);
+                            newItem.SetAmount(count);
 
-                            // item.Amount -= count;
+                            item.SetAmount((byte)(item.Amount - count));
 
                             thing = newItem;
+
                             removeItem = false;
                         }
                     }
-                }
 
-                if (removeItem)
-                {
-                    this.downItemsOnTile.Pop();
-
-                    // item.Tile = null;
+                    if (removeItem)
+                    {
+                        this.downItemsOnTile.Pop();
+                    }
                 }
             }
             else
@@ -255,7 +256,7 @@ namespace OpenTibia.Server.Contracts.Structs
                 throw new InvalidCastException($"Thing did not cast to either a {nameof(ICreature)} or {nameof(IItem)}.");
             }
 
-            //this.contentLastEditionTime = DateTimeOffset.Now;
+            this.LastModified = DateTimeOffset.UtcNow;
 
             return true;
         }
@@ -297,7 +298,6 @@ namespace OpenTibia.Server.Contracts.Structs
             foreach (var creatureId in this.CreatureIds)
             {
                 ++n;
-
                 if (thing is ICreature creature && creature.Id == creatureId)
                 {
                     return n;
@@ -314,6 +314,76 @@ namespace OpenTibia.Server.Contracts.Structs
             }
 
             return byte.MaxValue;
+        }
+
+        /// <summary>
+        /// Attempts to get the <see cref="IThing"/> at the position of the stack given.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <param name="stackPosition">The position in the stack.</param>
+        /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
+        public IThing GetThingAtStackPosition(ICreatureFinder creatureFinder, byte stackPosition)
+        {
+            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+
+            if (stackPosition == 0 && this.Ground != null)
+            {
+                return this.Ground;
+            }
+
+            var currentPos = this.Ground == null ? -1 : 0;
+
+            if (stackPosition > currentPos + this.topItems1OnTile.Count)
+            {
+                currentPos += this.topItems1OnTile.Count;
+            }
+            else
+            {
+                foreach (var item in this.topItems1OnTile)
+                {
+                    if (++currentPos == stackPosition)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            if (stackPosition > currentPos + this.topItems2OnTile.Count)
+            {
+                currentPos += this.topItems2OnTile.Count;
+            }
+            else
+            {
+                foreach (var item in this.topItems2OnTile)
+                {
+                    if (++currentPos == stackPosition)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            // ignore the creatures in this tile, we deal with these at the end.
+            currentPos += this.creatureIdsOnTile.Count;
+
+            if (stackPosition > currentPos + this.downItemsOnTile.Count)
+            {
+                currentPos += this.downItemsOnTile.Count;
+            }
+            else
+            {
+                foreach (var item in this.downItemsOnTile)
+                {
+                    if (++currentPos == stackPosition)
+                    {
+                        return item;
+                    }
+                }
+            }
+
+            currentPos -= this.creatureIdsOnTile.Count;
+
+            return stackPosition <= currentPos + this.creatureIdsOnTile.Count ? creatureFinder.FindCreatureById(this.creatureIdsOnTile.Skip(1 - stackPosition - currentPos).First()) : null;
         }
 
         /// <summary>

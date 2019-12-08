@@ -36,6 +36,11 @@ namespace OpenTibia.Server.Parsing
         public int Id { get; }
 
         /// <summary>
+        /// Gets a value indicating whether  this element is a flag.
+        /// </summary>
+        public bool IsFlag => this.Id < 0;
+
+        /// <summary>
         /// Gets the attributes of the element.
         /// </summary>
         public IList<IParsedAttribute> Attributes { get; }

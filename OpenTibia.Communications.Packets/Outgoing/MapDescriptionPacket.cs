@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications.Packets.Outgoing
 {
     using System;
+    using System.Buffers;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -26,7 +27,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// </summary>
         /// <param name="origin">The origin location.</param>
         /// <param name="descriptionBytes">The description bytes.</param>
-        public MapDescriptionPacket(Location origin, ReadOnlyMemory<byte> descriptionBytes)
+        public MapDescriptionPacket(Location origin, ReadOnlySequence<byte> descriptionBytes)
         {
             this.Origin = origin;
             this.DescriptionBytes = descriptionBytes;
@@ -45,7 +46,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the description bytes.
         /// </summary>
-        public ReadOnlyMemory<byte> DescriptionBytes { get; }
+        public ReadOnlySequence<byte> DescriptionBytes { get; }
 
         /// <summary>
         /// Writes the packet to the message provided.

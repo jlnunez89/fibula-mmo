@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications.Packets.Outgoing
 {
     using System;
+    using System.Buffers;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
 
@@ -25,7 +26,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// </summary>
         /// <param name="mapDescriptionType">The type of map description.</param>
         /// <param name="descriptionBytes">The description bytes.</param>
-        public MapPartialDescriptionPacket(OutgoingGamePacketType mapDescriptionType, ReadOnlyMemory<byte> descriptionBytes)
+        public MapPartialDescriptionPacket(OutgoingGamePacketType mapDescriptionType, ReadOnlySequence<byte> descriptionBytes)
         {
             if (mapDescriptionType != OutgoingGamePacketType.MapSliceEast &&
                 mapDescriptionType != OutgoingGamePacketType.MapSliceNorth &&
@@ -49,7 +50,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the description bytes.
         /// </summary>
-        public ReadOnlyMemory<byte> DescriptionBytes { get; }
+        public ReadOnlySequence<byte> DescriptionBytes { get; }
 
         /// <summary>
         /// Writes the packet to the message provided.

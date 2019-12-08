@@ -40,6 +40,9 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// </summary>
         public Location FromLocation { get; }
 
+        /// <summary>
+        /// Gets the position in the stack of the creatue in the source location.
+        /// </summary>
         public byte FromStackpos { get; }
 
         /// <summary>

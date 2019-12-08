@@ -24,8 +24,31 @@ namespace OpenTibia.Server
 
         // public event ItemAmountChangeEvent OnAmountChanged;
 
+        // private uint holder;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Item"/> class.
+        /// </summary>
+        /// <param name="type">The type of this item.</param>
+        public Item(IItemType type)
+        {
+            this.Type = type;
+            // this.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
+
+            // make a copy of the type we are based on...
+            // this.Name = this.Type.Name;
+            // this.Description = this.Type.Description;
+            // this.Flags = new HashSet<ItemFlag>(this.Type.Flags);
+            this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
+        }
+
+        public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
+
         public IItemType Type { get; }
 
+        /// <summary>
+        /// Gets the id of this thing, which is the item's client id.
+        /// </summary>
         public override ushort ThingId => this.Type.ClientId;
 
         // public override byte Count => this.Amount;
@@ -38,7 +61,7 @@ namespace OpenTibia.Server
             {
                 if (!this.Type.Flags.Contains(ItemFlag.ChangeUse))
                 {
-                    throw new InvalidOperationException($"Attempted to ChangeOnUse an item which doesn't have a target: {this.ThingId}");
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ChangeOnUseTo)} on an item which doesn't have a target: {this.ThingId}");
                 }
 
                 return Convert.ToUInt16(this.Attributes[ItemAttribute.ChangeTarget]);
@@ -51,8 +74,7 @@ namespace OpenTibia.Server
 
         public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.SeparationEvent);
 
-        public override string Description // TODO: implement correctly.
-            => $"{this.Type.Name}{(string.IsNullOrWhiteSpace(this.Type.Description) ? string.Empty : "\n" + this.Type.Description)}";
+        public override string Description => $"{this.Type.Name}{(string.IsNullOrWhiteSpace(this.Type.Description) ? string.Empty : "\n" + this.Type.Description)}";
 
         public override string InspectionText => this.Description;
 
@@ -73,8 +95,6 @@ namespace OpenTibia.Server
 
         public Location CarryLocation { get; private set; }
 
-        public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
-
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
 
         public byte Amount
@@ -83,9 +103,10 @@ namespace OpenTibia.Server
             {
                 if (this.Attributes.ContainsKey(ItemAttribute.Amount))
                 {
-                    return (byte)Math.Min(100, Convert.ToInt32(this.Attributes[ItemAttribute.Amount]));
+                    return (byte)Math.Min(IItem.MaximumAmountOfCummulativeItems, Convert.ToInt32(this.Attributes[ItemAttribute.Amount]));
                 }
-                return 0x01;
+
+                return 1;
             }
 
             set
@@ -152,8 +173,9 @@ namespace OpenTibia.Server
             {
                 if (!this.Type.Flags.Contains(ItemFlag.LiquidSource))
                 {
-                    return 0x00;
+                    return 0;
                 }
+
                 return Convert.ToByte(this.Attributes[ItemAttribute.SourceLiquidType]);
             }
 
@@ -177,7 +199,7 @@ namespace OpenTibia.Server
                     return Convert.ToByte(this.Attributes[ItemAttribute.ThrowAttackValue]);
                 }
 
-                return 0x00;
+                return 0;
             }
         }
 
@@ -200,7 +222,7 @@ namespace OpenTibia.Server
                     return Convert.ToByte(this.Attributes[ItemAttribute.ThrowDefendValue]);
                 }
 
-                return 0x00;
+                return 0;
             }
         }
 
@@ -213,7 +235,7 @@ namespace OpenTibia.Server
                     return Convert.ToByte(this.Attributes[ItemAttribute.ArmorValue]);
                 }
 
-                return 0x00;
+                return 0;
             }
         }
 
@@ -245,22 +267,13 @@ namespace OpenTibia.Server
 
         // public IContainer Parent { get; private set; }
 
-        // private uint holder;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Item"/> class.
-        /// </summary>
-        /// <param name="type"></param>
-        public Item(IItemType type)
+        public void SetAmount(byte amount)
         {
-            this.Type = type;
-            // this.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
+            var oldAmount = this.Amount;
 
-            // make a copy of the type we are based on...
-            // this.Name = this.Type.Name;
-            // this.Description = this.Type.Description;
-            // this.Flags = new HashSet<ItemFlag>(this.Type.Flags);
-            this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
+            this.Amount = Math.Min((byte)IItem.MaximumAmountOfCummulativeItems, amount);
+
+            //this.OnAmountChanged?.Invoke(this, oldAmount);
         }
 
         public void AddAttributes(IList<IParsedAttribute> attributes)
@@ -305,15 +318,6 @@ namespace OpenTibia.Server
         //    this.CarryLocation = holdingLoc;
 
         // this.OnHolderChanged?.Invoke(this, oldHolder);
-        // }
-
-        // public void SetAmount(byte amount)
-        // {
-        //    var oldAmount = this.Amount;
-
-        // this.Amount = Math.Min((byte)100, amount);
-
-        // this.OnAmountChanged?.Invoke(this, oldAmount);
         // }
 
         // public void SetParent(IContainer parentContainer)
