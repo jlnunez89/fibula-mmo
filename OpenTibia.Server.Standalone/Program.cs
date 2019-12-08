@@ -114,10 +114,7 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IProtocolFactory, ProtocolFactory>();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
 
-            // TODO: abstract these out as AddAzureProviders();
-            services.AddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
-            services.AddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
-
+            services.AddAzureProviders(hostingContext.Configuration);
             services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
 
             // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
