@@ -185,7 +185,12 @@ namespace OpenTibia.Server.Contracts.Structs
         /// <inheritdoc/>
         public override bool Equals(object obj)
         {
-            return obj is Location && this == (Location)obj;
+            if (obj is Location other)
+            {
+                return this.X == other.X && this.Y == other.Y && this.Z == other.Z;
+            }
+
+            return false;
         }
 
         /// <inheritdoc/>

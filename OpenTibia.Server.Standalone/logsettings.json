@@ -1,6 +1,6 @@
 {
   "Serilog": {
-    "MinimumLevel": "Debug",
+    "MinimumLevel": "Verbose",
     "Using": [
       "Serilog.Sinks.Console",
       "Serilog.Sinks.File"
@@ -9,7 +9,7 @@
       {
         "Name": "Console",
         "Args": {
-          "restrictedToMinimumLevel": "Debug",
+          "restrictedToMinimumLevel": "Verbose",
           "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
         }
       },

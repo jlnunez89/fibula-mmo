@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="TileUpdatedNotification.cs" company="2Dudes">
+// <copyright file="CreatureTurnedNotification.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -16,28 +16,26 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
-    /// Class that represents a notification for a tile update.
+    /// Class that represents a notification for when a creature has turned.
     /// </summary>
-    internal class TileUpdatedNotification : Notification
+    internal class CreatureTurnedNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TileUpdatedNotification"/> class.
+        /// Initializes a new instance of the <see cref="CreatureTurnedNotification"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="creatureFinder">A reference to the creature finder instance.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public TileUpdatedNotification(ILogger logger, ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, TileUpdatedNotificationArguments arguments)
+        public CreatureTurnedNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureTurnedNotificationArguments arguments)
             : base(logger)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));
 
-            this.CreatureFinder = creatureFinder;
             this.TargetConnectionsFunction = determineTargetConnectionsFunction;
             this.Arguments = arguments;
         }
@@ -45,12 +43,7 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Gets this notification's arguments.
         /// </summary>
-        public TileUpdatedNotificationArguments Arguments { get; }
-
-        /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
+        public CreatureTurnedNotificationArguments Arguments { get; }
 
         /// <summary>
         /// Gets the function for determining target connections for this notification.
@@ -64,14 +57,16 @@ namespace OpenTibia.Server.Notifications
         /// <returns>A collection of <see cref="IOutgoingPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutgoingPacket> Prepare(uint playerId)
         {
-            if (!(this.CreatureFinder.FindCreatureById(playerId) is IPlayer player))
+            var packets = new List<IOutgoingPacket>();
+
+            if (this.Arguments.TurnedEffect != AnimatedEffect.None)
             {
-                return null;
+                packets.Add(new MagicEffectPacket(this.Arguments.Creature.Location, this.Arguments.TurnedEffect));
             }
 
-            var descriptionBytes = this.Arguments.TileDescriptionFunction(player, this.Arguments.Location);
+            packets.Add(new CreatureTurnedPacket(this.Arguments.Creature, this.Arguments.StackPosition));
 
-            return new UpdateTilePacket(this.Arguments.Location, descriptionBytes).YieldSingleItem();
+            return packets;
         }
     }
 }

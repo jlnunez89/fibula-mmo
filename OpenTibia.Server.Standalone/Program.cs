@@ -128,6 +128,7 @@ namespace OpenTibia.Server.Standalone
 
             services.AddSingleton<IMap, Map>();
             services.AddSingleton<IMapLoader, SectorMapLoader>();
+            services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
 
             services.Configure<SectorMapLoaderOptions>(hostingContext.Configuration.GetSection(nameof(SectorMapLoaderOptions)));
 

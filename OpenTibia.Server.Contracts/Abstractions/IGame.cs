@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
+    using System.Buffers;
     using Microsoft.Extensions.Hosting;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Data.Entities;
@@ -66,6 +67,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the walk was possible and scheduled, false otherwise.</returns>
         bool PlayerWalkToDirection(IPlayer player, Direction direction);
 
+        bool PlayerMoveThing(IPlayer player, ushort clientId, Location fromLocation, byte fromStackPos, Location toLocation, byte count);
+
+        void PlayerTurnToDirection(IPlayer player, Direction direction);
+
         bool MoveThingBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false);
 
         /// <summary>
@@ -74,10 +79,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="notification">The notification.</param>
         void RequestNofitication(INotification notification);
 
-        ReadOnlyMemory<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location);
+        ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location);
 
-        ReadOnlyMemory<byte> GetDescriptionOfMapForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte currentZ, sbyte toZ);
+        ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY, sbyte startingZOffset = 0);
 
-        ReadOnlyMemory<byte> GetDescriptionOfTile(IPlayer player, Location location);
+        ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location);
     }
 }

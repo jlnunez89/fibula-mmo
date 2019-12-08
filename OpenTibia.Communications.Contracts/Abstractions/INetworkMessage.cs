@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
     using System;
+    using System.Buffers;
 
     /// <summary>
     /// Interface that represents a network message.
@@ -46,10 +47,10 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         void AddBytes(byte[] value);
 
         /// <summary>
-        /// Adds a byte span to the message.
+        /// Adds a byte sequence to the message.
         /// </summary>
         /// <param name="value">The bytes span to add.</param>
-        void AddBytes(ReadOnlySpan<byte> value);
+        void AddBytes(ReadOnlySequence<byte> value);
 
         /// <summary>
         /// Add a string to the message.

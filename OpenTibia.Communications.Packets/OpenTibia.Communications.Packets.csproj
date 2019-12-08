@@ -16,10 +16,8 @@
     <Compile Remove="Incoming\DebugAssertionPacket.cs" />
     <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
     <Compile Remove="Incoming\InsertHousePacket.cs" />
-    <Compile Remove="Incoming\ItemMovePacket.cs" />
     <Compile Remove="Incoming\ItemUseOnPacket.cs" />
     <Compile Remove="Incoming\ItemUsePacket.cs" />
-    <Compile Remove="Incoming\LookAtPacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLoginPacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLogoutPacket.cs" />
     <Compile Remove="Incoming\OutfitChangedPacket.cs" />
@@ -41,7 +39,6 @@
     <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
     <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />
-    <Compile Remove="Outgoing\CreatureTurnedPacket.cs" />
     <Compile Remove="Outgoing\InventoryClearSlotPacket.cs" />
     <Compile Remove="Outgoing\InventorySetSlotPacket.cs" />
     <Compile Remove="Outgoing\LoadPlayersResultPacket.cs" />

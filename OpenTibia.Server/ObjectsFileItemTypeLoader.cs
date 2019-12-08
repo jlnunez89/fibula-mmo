@@ -164,8 +164,8 @@ namespace OpenTibia.Server
                 }
             }
 
-            // wrap up the last ItemType and add it if it has enought properties set:
-            if (current.TypeId != 0 && string.IsNullOrWhiteSpace(current.Name))
+            // wrap up the last ItemType and add it if it has enough properties set:
+            if (current.TypeId != 0 && !string.IsNullOrWhiteSpace(current.Name))
             {
                 current.LockChanges();
                 itemDictionary.Add(current.TypeId, current);

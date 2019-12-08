@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Notifications
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
@@ -19,10 +20,11 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>
-    /// Class that represents a notification for a creature moving.
+    /// Class that represents a notification for when a creature has moved.
     /// </summary>
     internal class CreatureMovedNotification : Notification
     {
@@ -95,7 +97,7 @@ namespace OpenTibia.Server.Notifications
                     // Then send the entire description at the new location.
                     packets.Add(new MapDescriptionPacket(this.Arguments.NewLocation, this.Game.GetDescriptionOfMapForPlayer(player, this.Arguments.NewLocation)));
 
-                    return null;
+                    return packets;
                 }
 
                 if (this.Arguments.OldLocation.Z == 7 && this.Arguments.NewLocation.Z > 7)
@@ -116,180 +118,144 @@ namespace OpenTibia.Server.Notifications
                     // going from surface to underground
                     if (this.Arguments.NewLocation.Z == 8)
                     {
-                        packets.Add(new MapPartialDescriptionPacket(
-                            OutgoingGamePacketType.FloorChangeDown,
-                            this.Game.GetDescriptionOfMapForPlayer(
-                                player,
-                                (ushort)(this.Arguments.OldLocation.X - 8),
-                                (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                                (ushort)(this.Arguments.OldLocation.Y - 6),
-                                (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                                (sbyte)(this.Arguments.NewLocation.Z - 1),
-                                (sbyte)(this.Arguments.NewLocation.Z + 2 - 1))));
+                        //packets.Add(new MapPartialDescriptionPacket(
+                        //    OutgoingGamePacketType.FloorChangeDown,
+                        //    this.Game.GetDescriptionOfMapForPlayer(
+                        //        player,
+                        //        (ushort)(this.Arguments.OldLocation.X - 8),
+                        //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                        //        (ushort)(this.Arguments.OldLocation.Y - 6),
+                        //        (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
+                        //        (sbyte)(this.Arguments.NewLocation.Z - 1),
+                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 1))));
                     }
 
                     // going further down
                     else if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z && this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < IMap.DefaultWindowSizeY)
                     {
-                        packets.Add(new MapPartialDescriptionPacket(
-                            OutgoingGamePacketType.FloorChangeDown,
-                            this.Game.GetDescriptionOfMapForPlayer(
-                                player,
-                                (ushort)(this.Arguments.OldLocation.X - 8),
-                                (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                                (ushort)(this.Arguments.OldLocation.Y - 6),
-                                (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                                (sbyte)(this.Arguments.NewLocation.Z + 2 - 3),
-                                (sbyte)(this.Arguments.NewLocation.Z + 2 - 3))));
+                        //packets.Add(new MapPartialDescriptionPacket(
+                        //    OutgoingGamePacketType.FloorChangeDown,
+                        //    this.Game.GetDescriptionOfMapForPlayer(
+                        //        player,
+                        //        (ushort)(this.Arguments.OldLocation.X - 8),
+                        //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                        //        (ushort)(this.Arguments.OldLocation.Y - 6),
+                        //        (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
+                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 3),
+                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 3))));
                     }
                     else
                     {
-                        packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, new byte[0]));
+                        packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, new ReadOnlySequence<byte>(new byte[0])));
                     }
 
-                    // moving down a floor makes us out of sync, include east and south
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceEast,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X + 9),
-                            (ushort)(this.Arguments.OldLocation.X + 9),
-                            (ushort)(this.Arguments.OldLocation.Y - 7),
-                            (ushort)(this.Arguments.OldLocation.Y - 7 + IMap.DefaultWindowSizeY - 1),
-                            this.Arguments.NewLocation.Z,
-                            this.Arguments.NewLocation.Z)));
+                    //// moving down a floor makes us out of sync, include east and south
+                    //packets.Add(new MapPartialDescriptionPacket(
+                    //    OutgoingGamePacketType.MapSliceEast,
+                    //    this.Game.GetDescriptionOfMapForPlayer(
+                    //        player,
+                    //        (ushort)(this.Arguments.OldLocation.X + 9),
+                    //        (ushort)(this.Arguments.OldLocation.X + 9),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 7),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 7 + IMap.DefaultWindowSizeY - 1),
+                    //        this.Arguments.NewLocation.Z,
+                    //        this.Arguments.NewLocation.Z)));
 
-                    // south
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceSouth,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                            (ushort)(this.Arguments.OldLocation.Y + 7),
-                            (ushort)(this.Arguments.OldLocation.Y + 7),
-                            this.Arguments.NewLocation.Z,
-                            this.Arguments.NewLocation.Z)));
+                    //// south
+                    //packets.Add(new MapPartialDescriptionPacket(
+                    //    OutgoingGamePacketType.MapSliceSouth,
+                    //    this.Game.GetDescriptionOfMapForPlayer(
+                    //        player,
+                    //        (ushort)(this.Arguments.OldLocation.X - 8),
+                    //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                    //        (ushort)(this.Arguments.OldLocation.Y + 7),
+                    //        (ushort)(this.Arguments.OldLocation.Y + 7),
+                    //        this.Arguments.NewLocation.Z,
+                    //        this.Arguments.NewLocation.Z)));
                 }
 
                 // floor change up
                 else if (this.Arguments.NewLocation.Z < this.Arguments.OldLocation.Z)
                 {
                     // going to surface
-                    if (this.Arguments.NewLocation.Z == 7)
-                    {
-                        packets.Add(new MapPartialDescriptionPacket(
-                            OutgoingGamePacketType.FloorChangeUp,
-                            this.Game.GetDescriptionOfMapForPlayer(
-                                player,
-                                (ushort)(this.Arguments.OldLocation.X - 8),
-                                (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                                (ushort)(this.Arguments.OldLocation.Y - 6),
-                                (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                                5,
-                                0)));
-                    }
+                    //if (this.Arguments.NewLocation.Z == 7)
+                    //{
+                    //    packets.Add(new MapPartialDescriptionPacket(
+                    //        OutgoingGamePacketType.FloorChangeUp,
+                    //        this.Game.GetDescriptionOfMapForPlayer(
+                    //            player,
+                    //            (ushort)(this.Arguments.OldLocation.X - 8),
+                    //            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                    //            (ushort)(this.Arguments.OldLocation.Y - 6),
+                    //            (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
+                    //            5,
+                    //            0)));
+                    //}
 
-                    // underground, going one floor up (still underground)
-                    else if (this.Arguments.NewLocation.Z > 7)
-                    {
-                        packets.Add(new MapPartialDescriptionPacket(
-                            OutgoingGamePacketType.FloorChangeUp,
-                            this.Game.GetDescriptionOfMapForPlayer(
-                                player,
-                                (ushort)(this.Arguments.OldLocation.X - 8),
-                                (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                                (ushort)(this.Arguments.OldLocation.Y - 6),
-                                (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                                (sbyte)(this.Arguments.OldLocation.Z - 3),
-                                (sbyte)(this.Arguments.OldLocation.Z - 3))));
-                    }
-                    else
-                    {
-                        packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, new byte[0]));
-                    }
+                    //// underground, going one floor up (still underground)
+                    //else if (this.Arguments.NewLocation.Z > 7)
+                    //{
+                    //    packets.Add(new MapPartialDescriptionPacket(
+                    //        OutgoingGamePacketType.FloorChangeUp,
+                    //        this.Game.GetDescriptionOfMapForPlayer(
+                    //            player,
+                    //            (ushort)(this.Arguments.OldLocation.X - 8),
+                    //            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                    //            (ushort)(this.Arguments.OldLocation.Y - 6),
+                    //            (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
+                    //            (sbyte)(this.Arguments.OldLocation.Z - 3),
+                    //            (sbyte)(this.Arguments.OldLocation.Z - 3))));
+                    //}
+                    //else
+                    //{
+                    //    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, new ReadOnlySequence<byte>(ReadOnlyMemory<byte>.Empty)));
+                    //}
 
-                    // moving up a floor up makes us out of sync, include west and north
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceWest,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.Y - 5),
-                            (ushort)(this.Arguments.OldLocation.Y - 5 + IMap.DefaultWindowSizeY - 1),
-                            this.Arguments.NewLocation.Z,
-                            this.Arguments.NewLocation.Z)));
+                    //// moving up a floor up makes us out of sync, include west and north
+                    //packets.Add(new MapPartialDescriptionPacket(
+                    //    OutgoingGamePacketType.MapSliceWest,
+                    //    this.Game.GetDescriptionOfMapForPlayer(
+                    //        player,
+                    //        (ushort)(this.Arguments.OldLocation.X - 8),
+                    //        (ushort)(this.Arguments.OldLocation.X - 8),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 5),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 5 + IMap.DefaultWindowSizeY - 1),
+                    //        this.Arguments.NewLocation.Z,
+                    //        this.Arguments.NewLocation.Z)));
 
-                    // north
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceNorth,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                            (ushort)(this.Arguments.OldLocation.Y - 6),
-                            (ushort)(this.Arguments.OldLocation.Y - 6),
-                            this.Arguments.NewLocation.Z,
-                            this.Arguments.NewLocation.Z)));
+                    //// north
+                    //packets.Add(new MapPartialDescriptionPacket(
+                    //    OutgoingGamePacketType.MapSliceNorth,
+                    //    this.Game.GetDescriptionOfMapForPlayer(
+                    //        player,
+                    //        (ushort)(this.Arguments.OldLocation.X - 8),
+                    //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 6),
+                    //        (ushort)(this.Arguments.OldLocation.Y - 6),
+                    //        this.Arguments.NewLocation.Z,
+                    //        this.Arguments.NewLocation.Z)));
                 }
 
                 if (this.Arguments.OldLocation.Y > this.Arguments.NewLocation.Y)
                 {
-                    // north, for old x
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceNorth,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                            (ushort)(this.Arguments.NewLocation.Y - 6),
-                            (ushort)(this.Arguments.NewLocation.Y - 6),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0))));
+                    // Creature is moving north, so we need to send the additional north bytes.
+                    packets.Add(this.NorthSliceDescription(player));
                 }
                 else if (this.Arguments.OldLocation.Y < this.Arguments.NewLocation.Y)
                 {
-                    // south, for old x
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceSouth,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.OldLocation.X - 8),
-                            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                            (ushort)(this.Arguments.NewLocation.Y + 7),
-                            (ushort)(this.Arguments.NewLocation.Y + 7),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0))));
+                    // Creature is moving south, so we need to send the additional south bytes.
+                    packets.Add(this.SouthSliceDescription(player));
                 }
 
                 if (this.Arguments.OldLocation.X < this.Arguments.NewLocation.X)
                 {
-                    // east, [with new y]
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceEast,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.NewLocation.X + 9),
-                            (ushort)(this.Arguments.NewLocation.X + 9),
-                            (ushort)(this.Arguments.NewLocation.Y - 6),
-                            (ushort)(this.Arguments.NewLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0))));
+                    // Creature is moving east, so we need to send the additional east bytes.
+                    packets.Add(this.EastSliceDescription(player));
                 }
                 else if (this.Arguments.OldLocation.X > this.Arguments.NewLocation.X)
                 {
-                    // west, [with new y]
-                    packets.Add(new MapPartialDescriptionPacket(
-                        OutgoingGamePacketType.MapSliceWest,
-                        this.Game.GetDescriptionOfMapForPlayer(
-                            player,
-                            (ushort)(this.Arguments.NewLocation.X - 8),
-                            (ushort)(this.Arguments.NewLocation.X - 8),
-                            (ushort)(this.Arguments.NewLocation.Y - 6),
-                            (ushort)(this.Arguments.NewLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                            (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0))));
+                    // Creature is moving west, so we need to send the additional west bytes.
+                    packets.Add(this.WestSliceDescription(player));
                 }
             }
             else if (player.CanSee(this.Arguments.OldLocation) && player.CanSee(this.Arguments.NewLocation))
@@ -329,6 +295,188 @@ namespace OpenTibia.Server.Notifications
             }
 
             return packets;
+        }
+
+        private MapPartialDescriptionPacket NorthSliceDescription(IPlayer player)
+        {
+            // A = old location, B = new location.
+            //
+            //       |---------- IMap.DefaultWindowSizeX = 18 ----------|
+            //                           as seen by A
+            //       x  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  B  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  A  .  .  .  .  .  .  .  .  .      | IMap.DefaultWindowSizeY = 14
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      | as seen by A
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
+            //
+            // x = target start of window (~) to refresh.
+            var offset = new Location()
+            {
+                // -8
+                X = -((IMap.DefaultWindowSizeX / 2) - 1),
+
+                // -7
+                Y = -(IMap.DefaultWindowSizeY / 2),
+            };
+
+            var windowStartLocation = this.Arguments.OldLocation + offset;
+
+            return new MapPartialDescriptionPacket(
+                OutgoingGamePacketType.MapSliceNorth,
+                this.Game.GetDescriptionOfMapForPlayer(
+                    player,
+                    (ushort)windowStartLocation.X,
+                    (ushort)windowStartLocation.Y,
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    IMap.DefaultWindowSizeX,
+                    1));
+        }
+
+        private IOutgoingPacket SouthSliceDescription(IPlayer player)
+        {
+            // A = old location, B = new location
+            //
+            //       |---------- IMap.DefaultWindowSizeX = 18 ----------|
+            //                           as seen by A
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  A  .  .  .  .  .  .  .  .  .      | IMap.DefaultWindowSizeY = 14
+            //       .  .  .  .  .  .  .  .  B  .  .  .  .  .  .  .  .  .      | as seen by A
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
+            //       x  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~
+            //
+            // x = target start of window (~) to refresh.
+            var offset = new Location()
+            {
+                // -8
+                X = -((IMap.DefaultWindowSizeX / 2) - 1),
+
+                // +7
+                Y = IMap.DefaultWindowSizeY / 2,
+            };
+
+            var windowStartLocation = this.Arguments.NewLocation + offset;
+
+            return new MapPartialDescriptionPacket(
+                OutgoingGamePacketType.MapSliceSouth,
+                this.Game.GetDescriptionOfMapForPlayer(
+                    player,
+                    (ushort)windowStartLocation.X,
+                    (ushort)windowStartLocation.Y,
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    IMap.DefaultWindowSizeX,
+                    1));
+        }
+
+        private IOutgoingPacket EastSliceDescription(IPlayer player)
+        {
+            // A = old location, B = new location
+            //
+            //       |---------- IMap.DefaultWindowSizeX = 18 ----------|
+            //                           as seen by A
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  x  ---
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  A  B  .  .  .  .  .  .  .  .  ~   | IMap.DefaultWindowSizeY = 14
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   | as seen by A
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
+            //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~  ---
+            //
+            // x = target start of window (~) to refresh.
+            var offset = new Location()
+            {
+                // +9
+                X = IMap.DefaultWindowSizeX / 2,
+
+                // -6
+                Y = -((IMap.DefaultWindowSizeY / 2) - 1),
+            };
+
+            var windowStartLocation = this.Arguments.NewLocation + offset;
+
+            return new MapPartialDescriptionPacket(
+                OutgoingGamePacketType.MapSliceEast,
+                this.Game.GetDescriptionOfMapForPlayer(
+                    player,
+                    (ushort)windowStartLocation.X,
+                    (ushort)windowStartLocation.Y,
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    1,
+                    IMap.DefaultWindowSizeY));
+        }
+
+        private IOutgoingPacket WestSliceDescription(IPlayer player)
+        {
+            // A = old location, B = new location
+            //
+            //          |---------- IMap.DefaultWindowSizeX = 18 ----------|
+            //                           as seen by A
+            //       x  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ---
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  B  A  .  .  .  .  .  .  .  .  .   | IMap.DefaultWindowSizeY = 14
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   | as seen by A
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
+            //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ---
+            //
+            // x = target start of window (~) to refresh.
+            var offset = new Location()
+            {
+                // -9
+                X = -(IMap.DefaultWindowSizeX / 2),
+
+                // -6
+                Y = -((IMap.DefaultWindowSizeY / 2) - 1),
+            };
+
+            var windowStartLocation = this.Arguments.OldLocation + offset;
+
+            return new MapPartialDescriptionPacket(
+                OutgoingGamePacketType.MapSliceWest,
+                this.Game.GetDescriptionOfMapForPlayer(
+                    player,
+                    (ushort)windowStartLocation.X,
+                    (ushort)windowStartLocation.Y,
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    1,
+                    IMap.DefaultWindowSizeY));
         }
     }
 }

@@ -12,13 +12,16 @@
 namespace OpenTibia.Server
 {
     using System;
+    using System.Collections;
     using System.Collections.Generic;
+    using System.IO;
     using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing;
+    using Serilog;
 
     public class SectorFileReader
     {
@@ -28,7 +31,7 @@ namespace OpenTibia.Server
 
         public const char PositionSeparator = '-';
 
-        public static IList<(Location, Tile)> ReadSector(IItemFactory itemFactory, string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
+        public static IList<(Location, Tile)> ReadSector(ILogger logger, IItemFactory itemFactory, string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
 
@@ -50,7 +53,7 @@ namespace OpenTibia.Server
 
                 if (data.Length != 2)
                 {
-                    throw new Exception($"Malformed line [{inLine}] in sector file: [{fileName}]");
+                    throw new InvalidDataException($"Malformed line [{inLine}] in sector file: [{fileName}]");
                 }
 
                 var tileInfo = data[0].Split(new[] { PositionSeparator }, 2);
@@ -75,13 +78,14 @@ namespace OpenTibia.Server
                         {
                             if (attribute.Value is IEnumerable<CipElement> elements)
                             {
+                                var thingStack = new Stack<IThing>();
+
                                 foreach (var element in elements)
                                 {
                                     if (element.IsFlag)
                                     {
                                         // A flag is unexpected in this context.
-                                        // TODO: proper logging.
-                                        Console.WriteLine($"SectorFileReader.AddContentElements: Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
+                                        logger.Warning($"SectorFileReader.AddContentElements: Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
 
                                         continue;
                                     }
@@ -90,13 +94,20 @@ namespace OpenTibia.Server
 
                                     if (itemAsThing == null)
                                     {
-                                        // TODO: proper logging.
-                                        Console.WriteLine($"SectorFileReader.AddContentElements: Item with id {element.Id} not found in the catalog, skipping.");
+                                        logger.Warning($"SectorFileReader.AddContentElements: Item with id {element.Id} not found in the catalog, skipping.");
 
                                         continue;
                                     }
 
-                                    newTile.AddThing(itemFactory, ref itemAsThing);
+                                    thingStack.Push(itemAsThing);
+                                }
+
+                                // Add them in reversed order.
+                                while (thingStack.Count > 0)
+                                {
+                                    var thing = thingStack.Pop();
+
+                                    newTile.AddThing(itemFactory, ref thing);
                                 }
                             }
                         }
@@ -109,8 +120,7 @@ namespace OpenTibia.Server
                             }
                             else
                             {
-                                // TODO: proper logging.
-                                Console.WriteLine($"Unknown flag [{attribute.Name}] found on tile at location {location}.");
+                                logger.Warning($"Unknown flag [{attribute.Name}] found on tile at location {location}.");
                             }
                         }
                     }

@@ -60,6 +60,9 @@ namespace OpenTibia.Server
         /// </summary>
         public IDictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item type is locked and no longer accepting changes.
+        /// </summary>
         public bool Locked { get; private set; }
 
         /// <summary>
@@ -67,61 +70,85 @@ namespace OpenTibia.Server
         /// </summary>
         public ushort ClientId => this.Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseTarget]) : this.TypeId;
 
+        /// <summary>
+        /// Locks the type, preventing it from accepting changes.
+        /// </summary>
         public void LockChanges()
         {
             this.Locked = true;
         }
 
+        /// <summary>
+        /// Sets the type's id.
+        /// </summary>
+        /// <param name="typeId">The id of the type.</param>
         public void SetId(ushort typeId)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetId)}({nameof(typeId)}={typeId}");
             }
 
             this.TypeId = typeId;
         }
 
+        /// <summary>
+        /// Sets the type's name.
+        /// </summary>
+        /// <param name="name">The name of the type.</param>
         public void SetName(string name)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetName)}({nameof(name)}={name}");
             }
 
             this.Name = name;
         }
 
+        /// <summary>
+        /// Sets the type's description.
+        /// </summary>
+        /// <param name="description">The description of the type.</param>
         public void SetDescription(string description)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetDescription)}({nameof(description)}={description}");
             }
 
             this.Description = description.Trim('"');
         }
 
+        /// <summary>
+        /// Sets a flag in this type.
+        /// </summary>
+        /// <param name="flag">The flag to set in the type.</param>
         public void SetFlag(ItemFlag flag)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetFlag)}({nameof(flag)}={flag}");
             }
 
             this.Flags.Add(flag);
         }
 
+        /// <summary>
+        /// Sets an attribute in this type.
+        /// </summary>
+        /// <param name="attributeName">The name of the attribute to set in the type.</param>
+        /// <param name="attributeValue">The value of the attribute to set in the type.</param>
         public void SetAttribute(string attributeName, int attributeValue)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException("This ItemType is locked and cannot be altered.");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetAttribute)}({nameof(attributeName)}={attributeName},{nameof(attributeValue)}={attributeValue}");
             }
 
             if (!Enum.TryParse(attributeName, out ItemAttribute attribute))
             {
-                throw new InvalidDataException($"Attempted to set an unknown Item attribute [{attributeName}].");
+                throw new InvalidDataException($"Attempted to set an unknown item attribute [{attributeName}].");
             }
 
             this.DefaultAttributes[attribute] = attributeValue;

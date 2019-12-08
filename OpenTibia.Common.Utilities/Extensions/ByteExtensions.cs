@@ -12,7 +12,6 @@
 namespace OpenTibia.Common.Utilities
 {
     using System;
-    using System.Text;
 
     public static class ByteExtensions
     {

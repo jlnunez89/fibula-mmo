@@ -174,7 +174,7 @@ namespace OpenTibia.Communications.Handlers.Game
                     // Add MapDescription
                     var mapDescription = this.Game.GetDescriptionOfMapForPlayer(player, player.Location);
 
-                    responsePackets.Add(new MapDescriptionPacket(player.Location, mapDescription.ToArray()));
+                    responsePackets.Add(new MapDescriptionPacket(player.Location, mapDescription));
 
                     responsePackets.Add(new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue));
 
