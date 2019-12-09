@@ -18,6 +18,7 @@ namespace OpenTibia.Providers.Azure
     using System.Threading.Tasks;
     using Microsoft.Azure.KeyVault;
     using Microsoft.Extensions.Configuration;
+    using Microsoft.Extensions.Options;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Providers.Contracts;
     using Serilog;
@@ -35,20 +36,18 @@ namespace OpenTibia.Providers.Azure
         /// <summary>
         /// Initializes a new instance of the <see cref="KeyVaultSecretsProvider"/> class.
         /// </summary>
-        /// <param name="configuration">A reference to the configuration.</param>
+        /// <param name="secretsProviderOptions">A reference to the secrets provider options.</param>
         /// <param name="tokenProvider">A reference to the token provider service to use to obtain access to the vault.</param>
         /// <param name="logger">A logger for this provider.</param>
         public KeyVaultSecretsProvider(
-            IConfiguration configuration,
+            IOptions<KeyVaultSecretsProviderOptions> secretsProviderOptions,
             ITokenProvider tokenProvider,
             ILogger logger)
         {
-            configuration.ThrowIfNull(nameof(configuration));
+            secretsProviderOptions?.Value.ThrowIfNull(nameof(secretsProviderOptions));
             tokenProvider.ThrowIfNull(nameof(tokenProvider));
 
-            var vaultBaseUri = configuration.GetValue<string>("VaultBaseUrl");
-
-            this.BaseUri = new Uri(vaultBaseUri);
+            this.BaseUri = new Uri(secretsProviderOptions.Value.VaultBaseUrl);
             this.keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.TokenCallback));
             this.Logger = logger.ForContext<KeyVaultSecretsProvider>();
         }
