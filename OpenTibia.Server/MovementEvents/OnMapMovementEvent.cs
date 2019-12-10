@@ -76,7 +76,12 @@ namespace OpenTibia.Server.MovementEvents
             {
                 bool moveSuccessful = game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, fromStackPos, toLocation, count, isTeleport);
 
-                if (moveSuccessful && this.Requestor is IPlayer player && player != thingMoving)
+                if (!moveSuccessful)
+                {
+                    // handles check for isPlayer.
+                    this.NotifyOfFailure();
+                }
+                else if (this.Requestor is IPlayer player && player != thingMoving)
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
