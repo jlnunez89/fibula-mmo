@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using System;
     using System.Buffers;
 
     /// <summary>

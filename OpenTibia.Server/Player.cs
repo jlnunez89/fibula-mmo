@@ -21,21 +21,24 @@ namespace OpenTibia.Server
 
     public class Player : Creature, IPlayer
     {
-        private const int KnownCreatureLimit = 100; // TODO: not sure of the number for this version... debugs will tell :|
+        /// <summary>
+        /// The limit of creatures that a player's client can keep track of.
+        /// </summary>
+        // TODO: not sure of the number for this version... debugs will tell :|
+        private const int KnownCreatureLimit = 100;
 
         private const sbyte MaxContainers = 16;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
         /// </summary>
-        /// <param name="gameInstance"></param>
-        /// <param name="characterId"></param>
-        /// <param name="name"></param>
-        /// <param name="maxHitpoints"></param>
-        /// <param name="maxManapoints"></param>
-        /// <param name="corpse"></param>
-        /// <param name="hitpoints"></param>
-        /// <param name="manapoints"></param>
+        /// <param name="characterId">The id of the character that this player represents.</param>
+        /// <param name="name">The name of the player.</param>
+        /// <param name="maxHitpoints">The maximum number of hitpoints that the player starts with.</param>
+        /// <param name="maxManapoints">The maximum number of manapoints that the player starts with.</param>
+        /// <param name="corpse">The id of the corpse for the player.</param>
+        /// <param name="hitpoints">Optional. The number of hitpoints that the player starts with. Defaults to <paramref name="maxHitpoints"/>.</param>
+        /// <param name="manapoints">Optional. The number of manapoints that the player starts with. Defaults to <paramref name="maxManapoints"/>.</param>
         public Player(
             string characterId,
             string name,

@@ -13,6 +13,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -75,7 +76,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         {
             var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
 
-            this.TileAccessor.GetTileAt(this.Location, out Tile destTile);
+            this.TileAccessor.GetTileAt(this.Location, out ITile destTile);
 
             if (requestor == null || this.Thing == null)
             {

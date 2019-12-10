@@ -13,6 +13,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
 {
     using System;
     using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -73,7 +74,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return false;
             }
 
-            if (!this.TileAccessor.GetTileAt(this.Location, out Tile sourceTile) /*|| !sourceTile.HasThing(this.Thing)*/)
+            if (!this.TileAccessor.GetTileAt(this.Location, out ITile sourceTile) /*|| !sourceTile.HasThing(this.Thing)*/)
             {
                 // This tile no longer has the thing, or it's obstructed (i.e. someone placed something on top of it).
                 return false;

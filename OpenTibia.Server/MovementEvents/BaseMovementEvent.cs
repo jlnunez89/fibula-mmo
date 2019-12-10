@@ -86,7 +86,10 @@ namespace OpenTibia.Server.MovementEvents
             }
         }
 
-        private void NotifyOfFailure()
+        /// <summary>
+        /// Notifies the requestor player, if any,of this failure.
+        /// </summary>
+        protected void NotifyOfFailure()
         {
             if (this.Requestor is Player player)
             {

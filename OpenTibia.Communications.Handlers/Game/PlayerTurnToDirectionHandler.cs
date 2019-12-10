@@ -56,7 +56,7 @@ namespace OpenTibia.Communications.Handlers.Game
             // No other content in message.
             if (this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                this.Game.PlayerTurnToDirection(player, this.Direction);
+                this.Game.PlayerRequest_TurnToDirection(player, this.Direction);
             }
 
             return (false, null);

@@ -52,7 +52,7 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, ContainerUpHandler>();
             //services.AddSingleton<IHandler, FollowHandler>();
             //services.AddSingleton<IHandler, HouseWindowPostHandler>();
-            services.AddSingleton<IHandler, ItemMoveHandler>();
+            services.AddSingleton<IHandler, MoveThingHandler>();
             //services.AddSingleton<IHandler, ItemRotateHandler>();
             //services.AddSingleton<IHandler, ItemUseBattleHandler>();
             //services.AddSingleton<IHandler, ItemUseHandler>();

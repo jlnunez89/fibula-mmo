@@ -46,9 +46,8 @@ namespace OpenTibia.Server.MovementEvents
             Location fromLocation,
             byte fromStackPos,
             Location toLocation,
-            bool isTeleport = false,
-            byte count = 1)
-            : base(logger, game, connectionManager, tileAccessor, creatureFinder, requestorId, creatureMoving, fromLocation, fromStackPos, toLocation, count, isTeleport)
+            bool isTeleport = false)
+            : base(logger, game, connectionManager, tileAccessor, creatureFinder, requestorId, creatureMoving, fromLocation, fromStackPos, toLocation, 1, isTeleport)
         {
             // Don't add any conditions if this wasn't a creature requesting, i.e. if the request comes from a script.
             if (!isTeleport && this.Requestor != null)

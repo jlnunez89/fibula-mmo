@@ -13,6 +13,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -50,7 +51,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            return this.TileAccessor.GetTileAt(this.Location, out Tile tile) && tile.Ground != null;
+            return this.TileAccessor.GetTileAt(this.Location, out ITile tile) && tile.Ground != null;
         }
     }
 }

@@ -185,20 +185,20 @@ namespace OpenTibia.Communications.Packets
         }
 
         /// <summary>
-        /// Reads item movement information sent in the message.
+        /// Reads thing movement information sent in the message.
         /// </summary>
         /// <param name="message">The mesage to read the information from.</param>
-        /// <returns>The item movement information.</returns>
-        public static IItemMoveInfo ReadItemMoveInfo(this INetworkMessage message)
+        /// <returns>The thing movement information.</returns>
+        public static IThingMoveInfo ReadMoveThingInfo(this INetworkMessage message)
         {
-            return new ItemMovePacket(
+            return new ThingMovePacket(
                 fromLocation: new Location
                 {
                     X = message.GetUInt16(),
                     Y = message.GetUInt16(),
                     Z = (sbyte)message.GetByte(),
                 },
-                clientId: message.GetUInt16(),
+                thingClientId: message.GetUInt16(),
                 fromStackPos: message.GetByte(),
                 toLocation: new Location
                 {

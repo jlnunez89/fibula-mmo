@@ -59,11 +59,9 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            //player.ClearPendingActions();
-
             var responsePackets = new List<IOutgoingPacket>();
 
-            if (!this.Game.PlayerWalkToDirection(player, this.Direction))
+            if (!this.Game.PlayerRequest_WalkToDirection(player, this.Direction))
             {
                 responsePackets.Add(new PlayerWalkCancelPacket(this.Direction));
 

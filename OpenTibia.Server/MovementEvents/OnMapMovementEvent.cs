@@ -72,7 +72,22 @@ namespace OpenTibia.Server.MovementEvents
             this.Conditions.Add(new LocationsMatchEventCondition(thingMoving?.Location ?? default, fromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, count));
 
-            this.ActionsOnPass.Add(new GenericEventAction(() => { game.MoveThingBetweenTiles(thingMoving, fromLocation, fromStackPos, toLocation, count, isTeleport); }));
+            this.ActionsOnPass.Add(new GenericEventAction(() =>
+            {
+                bool moveSuccessful = game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, fromStackPos, toLocation, count, isTeleport);
+
+                if (!moveSuccessful)
+                {
+                    // handles check for isPlayer.
+                    this.NotifyOfFailure();
+                }
+                else if (this.Requestor is IPlayer player && player != thingMoving)
+                {
+                    var directionToDestination = player.Location.DirectionTo(toLocation);
+
+                    game.PlayerRequest_TurnToDirection(player, directionToDestination);
+                }
+            }));
         }
     }
 }

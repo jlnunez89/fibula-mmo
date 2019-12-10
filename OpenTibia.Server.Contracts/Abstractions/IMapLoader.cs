@@ -42,7 +42,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="toY">The end Y coordinate for the load window.</param>
         /// <param name="fromZ">The start Z coordinate for the load window.</param>
         /// <param name="toZ">The end Z coordinate for the load window.</param>
-        /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="Tile"/>.</returns>
-        IEnumerable<(Location Location, Tile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ);
+        /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="ITile"/>.</returns>
+        IEnumerable<(Location Location, ITile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ);
     }
 }

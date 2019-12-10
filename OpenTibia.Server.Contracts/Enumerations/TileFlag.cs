@@ -11,8 +11,10 @@
 
 namespace OpenTibia.Server.Contracts.Enumerations
 {
+    using OpenTibia.Server.Contracts.Abstractions;
+
     /// <summary>
-    /// Enumerates the flags of a <see cref="Tile"/>.
+    /// Enumerates the flags of a <see cref="ITile"/>.
     /// </summary>
     public enum TileFlag : byte
     {

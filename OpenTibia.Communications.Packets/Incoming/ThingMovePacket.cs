@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ItemMovePacket.cs" company="2Dudes">
+// <copyright file="ThingMovePacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -16,21 +16,21 @@ namespace OpenTibia.Communications.Packets.Incoming
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Class that represents an item movement packet.
+    /// Class that represents a thing movement packet.
     /// </summary>
-    public class ItemMovePacket : IIncomingPacket, IItemMoveInfo
+    public class ThingMovePacket : IIncomingPacket, IThingMoveInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ItemMovePacket"/> class.
+        /// Initializes a new instance of the <see cref="ThingMovePacket"/> class.
         /// </summary>
-        /// <param name="fromLocation">The location from which the item is being moved.</param>
-        /// <param name="clientId">The id of the item being moved.</param>
-        /// <param name="fromStackPos">The position in the stack of the item being moved.</param>
-        /// <param name="toLocation">The location to which the item is being moved.</param>
-        /// <param name="count">The amount of the item being moved.</param>
-        public ItemMovePacket(Location fromLocation, ushort clientId, byte fromStackPos, Location toLocation, byte count)
+        /// <param name="fromLocation">The location from which the thing is being moved.</param>
+        /// <param name="thingClientId">The id of the thing being moved.</param>
+        /// <param name="fromStackPos">The position in the stack of the thing being moved.</param>
+        /// <param name="toLocation">The location to which the thing is being moved.</param>
+        /// <param name="count">The amount of the thing being moved.</param>
+        public ThingMovePacket(Location fromLocation, ushort thingClientId, byte fromStackPos, Location toLocation, byte count)
         {
-            this.ClientId = clientId;
+            this.ThingClientId = thingClientId;
 
             this.FromLocation = fromLocation;
             this.FromStackPos = fromStackPos;
@@ -41,27 +41,27 @@ namespace OpenTibia.Communications.Packets.Incoming
         }
 
         /// <summary>
-        /// Gets the id of the item, as seen by the client.
+        /// Gets the id of the thing, as seen by the client.
         /// </summary>
-        public ushort ClientId { get; }
+        public ushort ThingClientId { get; }
 
         /// <summary>
-        /// Gets the location from which the item is being moved.
+        /// Gets the location from which the thing is being moved.
         /// </summary>
         public Location FromLocation { get; }
 
         /// <summary>
-        /// Gets the position in the stack at the location from which the item is being moved.
+        /// Gets the position in the stack at the location from which the thing is being moved.
         /// </summary>
         public byte FromStackPos { get; }
 
         /// <summary>
-        /// Gets the location to which the item is being moved.
+        /// Gets the location to which the thing is being moved.
         /// </summary>
         public Location ToLocation { get; }
 
         /// <summary>
-        /// Gets the amount of the item being moved.
+        /// Gets the amount of the thing being moved.
         /// </summary>
         public byte Count { get; }
     }

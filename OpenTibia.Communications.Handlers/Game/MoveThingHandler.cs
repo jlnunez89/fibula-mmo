@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ItemMoveHandler.cs" company="2Dudes">
+// <copyright file="MoveThingHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -22,16 +22,16 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents an item movement handler for the game server.
+    /// Class that represents a handler for a player moving something on the game.
     /// </summary>
-    public class ItemMoveHandler : GameHandler
+    public class MoveThingHandler : GameHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ItemMoveHandler"/> class.
+        /// Initializes a new instance of the <see cref="MoveThingHandler"/> class.
         /// </summary>
         /// <param name="gameInstance">A reference to the game instance.</param>
         /// <param name="creatureFinder">A reference to the creature finder.</param>
-        public ItemMoveHandler(IGame gameInstance, ICreatureFinder creatureFinder)
+        public MoveThingHandler(IGame gameInstance, ICreatureFinder creatureFinder)
             : base(gameInstance)
         {
             this.CreatureFinder = creatureFinder;
@@ -55,7 +55,7 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
         public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
         {
-            var itemMoveInfo = message.ReadItemMoveInfo();
+            var moveThingInfo = message.ReadMoveThingInfo();
 
             var responsePackets = new List<IOutgoingPacket>();
 
@@ -67,9 +67,9 @@ namespace OpenTibia.Communications.Handlers.Game
             // player.ClearPendingActions();
 
             // Before actually moving the item, check if we're close enough to use it.
-            if (itemMoveInfo.FromLocation.Type == LocationType.Ground)
+            if (moveThingInfo.FromLocation.Type == LocationType.Ground)
             {
-                var locationDiff = itemMoveInfo.FromLocation - player.Location;
+                var locationDiff = moveThingInfo.FromLocation - player.Location;
 
                 if (locationDiff.Z != 0)
                 {
@@ -78,7 +78,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
                 else if (locationDiff.MaxValueIn2D > 1)
                 {
-                    // Too far away to use it.
+                    // Too far away to move it.
                     //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
 
                     //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
@@ -96,7 +96,14 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
-            if (!responsePackets.Any() && !this.Game.PlayerMoveThing(player, itemMoveInfo.ClientId, itemMoveInfo.FromLocation, itemMoveInfo.FromStackPos, itemMoveInfo.ToLocation, itemMoveInfo.Count))
+            if (player.Location != moveThingInfo.FromLocation)
+            {
+                var directionToThing = player.Location.DirectionTo(moveThingInfo.FromLocation);
+
+                this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
+            }
+
+            if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThing(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation, moveThingInfo.FromStackPos, moveThingInfo.ToLocation, moveThingInfo.Count))
             {
                 responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
             }
