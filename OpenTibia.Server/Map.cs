@@ -34,12 +34,12 @@ namespace OpenTibia.Server
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
         /// <summary>
-        /// Holds the <see cref="Tile"/>s data based on <see cref="Location"/>.
+        /// Holds the <see cref="ITile"/>s data based on <see cref="Location"/>.
         /// </summary>
-        private readonly ConcurrentDictionary<Location, Tile> tiles;
+        private readonly ConcurrentDictionary<Location, ITile> tiles;
 
         /// <summary>
-        /// Holds the cache of bytes for <see cref="Tile"/> descriptions, queried by <see cref="Location"/>.
+        /// Holds the cache of bytes for tile descriptions, queried by <see cref="Location"/>.
         /// </summary>
         private readonly IDictionary<Location, (DateTimeOffset lastUpdated, ReadOnlyMemory<byte> data, int[] lengths)> tilesCache;
 
@@ -64,7 +64,7 @@ namespace OpenTibia.Server
             this.Loader = mapLoader;
             this.CreatureFinder = creatureFinder;
 
-            this.tiles = new ConcurrentDictionary<Location, Tile>();
+            this.tiles = new ConcurrentDictionary<Location, ITile>();
 
             this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, int[] lengths)>();
             this.tilesCacheLock = new object();
@@ -231,7 +231,7 @@ namespace OpenTibia.Server
         /// <returns>A collection of description segments from the tile.</returns>
         public IEnumerable<MapDescriptionSegment> DescribeTileForPlayer(IPlayer player, Location location)
         {
-            if (!this.GetTileAt(location, out Tile tile))
+            if (!this.GetTileAt(location, out ITile tile))
             {
                 return Enumerable.Empty<MapDescriptionSegment>();
             }
@@ -418,12 +418,12 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Attempts to get a <see cref="Tile"/> at a given <see cref="Location"/>, if any.
+        /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
         /// </summary>
         /// <param name="location">The location to get the file from.</param>
-        /// <param name="tile">A reference to the <see cref="Tile"/> found, if any.</param>
-        /// <returns>A value indicating whether a <see cref="Tile"/> was found, false otherwise.</returns>
-        public bool GetTileAt(Location location, out Tile tile)
+        /// <param name="tile">A reference to the <see cref="ITile"/> found, if any.</param>
+        /// <returns>A value indicating whether a <see cref="ITile"/> was found, false otherwise.</returns>
+        public bool GetTileAt(Location location, out ITile tile)
         {
             if (!this.Loader.HasLoaded(location.X, location.Y, location.Z))
             {

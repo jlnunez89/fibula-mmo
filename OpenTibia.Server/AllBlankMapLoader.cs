@@ -14,7 +14,6 @@ namespace OpenTibia.Server
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -22,7 +21,7 @@ namespace OpenTibia.Server
     {
         public byte PercentageComplete => 0x64;
 
-        private ConcurrentDictionary<Location, Tile> tilesAndLocations;
+        private ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
         private bool preloaded;
 
@@ -31,7 +30,7 @@ namespace OpenTibia.Server
             this.ItemFactory = itemFactory;
 
             this.preloaded = false;
-            this.tilesAndLocations = new ConcurrentDictionary<Location, Tile>();
+            this.tilesAndLocations = new ConcurrentDictionary<Location, ITile>();
         }
 
         public IItemFactory ItemFactory { get; }
@@ -41,11 +40,11 @@ namespace OpenTibia.Server
             return this.tilesAndLocations.ContainsKey(new Location() { X = x, Y = y, Z = z });
         }
 
-        public IEnumerable<(Location Location, Tile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
+        public IEnumerable<(Location Location, ITile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
             if (fromZ != 7)
             {
-                return Enumerable.Empty<(Location, Tile)>();
+                return Enumerable.Empty<(Location, ITile)>();
             }
 
             if (!this.preloaded)
@@ -62,7 +61,7 @@ namespace OpenTibia.Server
                 return this.PreloadBlankMap(madeUpCenterLocation);
             }
 
-            var tuplesAdded = new List<(Location loc, Tile tile)>();
+            var tuplesAdded = new List<(Location loc, ITile tile)>();
 
             for (int x = fromX; x <= toX; x++)
             {
@@ -84,7 +83,7 @@ namespace OpenTibia.Server
             return tuplesAdded;
         }
 
-        private IEnumerable<(Location Location, Tile Tile)> PreloadBlankMap(Location centerLocation)
+        private IEnumerable<(Location Location, ITile Tile)> PreloadBlankMap(Location centerLocation)
         {
             return this.Load(centerLocation.X - 20, centerLocation.X + 20, centerLocation.Y - 10, centerLocation.Y + 10, centerLocation.Z, centerLocation.Z);
         }

@@ -16,7 +16,6 @@ namespace OpenTibia.Server
     using System.IO;
     using System.Linq;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -31,11 +30,11 @@ namespace OpenTibia.Server
 
         public const char PositionSeparator = '-';
 
-        public static IList<(Location, Tile)> ReadSector(ILogger logger, IItemFactory itemFactory, string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
+        public static IList<(Location, ITile)> ReadSector(ILogger logger, IItemFactory itemFactory, string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
 
-            var loadedTilesList = new List<(Location, Tile)>();
+            var loadedTilesList = new List<(Location, ITile)>();
 
             var lines = sectorFileContents.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
@@ -67,7 +66,7 @@ namespace OpenTibia.Server
                 };
 
                 // start off with a tile that has no ground in it.
-                Tile newTile = new Tile(null);
+                ITile newTile = new Tile(null);
 
                 // load and add tile flags and contents.
                 foreach (var e in CipFileParser.Parse(tileData))

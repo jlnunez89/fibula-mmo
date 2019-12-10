@@ -121,8 +121,8 @@ namespace OpenTibia.Server
         /// <param name="toY">The end Y coordinate for the load window.</param>
         /// <param name="fromZ">The start Z coordinate for the load window.</param>
         /// <param name="toZ">The end Z coordinate for the load window.</param>
-        /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="Tile"/>.</returns>
-        public IEnumerable<(Location Location, Tile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
+        /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="ITile"/>.</returns>
+        public IEnumerable<(Location Location, ITile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
             var fromSectorX = fromX / 32;
             var toSectorX = toX / 32;
@@ -134,7 +134,7 @@ namespace OpenTibia.Server
                 throw new InvalidOperationException("Bad range supplied.");
             }
 
-            var tuplesAdded = new List<(Location loc, Tile tile)>();
+            var tuplesAdded = new List<(Location loc, ITile tile)>();
 
             this.totalTileCount = ((toSectorX - fromSectorX + 1) * 32) * ((toSectorY - fromSectorY + 1) * 32) * (toZ - fromZ + 1);
             this.totalLoadedCount = default;

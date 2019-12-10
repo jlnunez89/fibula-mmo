@@ -51,7 +51,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            return this.TileAccessor.GetTileAt(this.Location, out Tile tile) && tile.Ground != null;
+            return this.TileAccessor.GetTileAt(this.Location, out ITile tile) && tile.Ground != null;
         }
     }
 }

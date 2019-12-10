@@ -179,7 +179,7 @@ namespace OpenTibia.Server
 
             playerThing.Location = Map.VeteranStart;
 
-            if (this.map.GetTileAt(player.Location, out Tile targetTile))
+            if (this.map.GetTileAt(player.Location, out ITile targetTile))
             {
                 targetTile.AddThing(this.ItemFactory, ref playerThing);
             }
@@ -199,7 +199,7 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            if (!this.map.GetTileAt(player.Location, out Tile tile))
+            if (!this.map.GetTileAt(player.Location, out ITile tile))
             {
                 return false;
             }
@@ -246,7 +246,7 @@ namespace OpenTibia.Server
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
         public bool PlayerRequest_MoveThing(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
         {
-            if (!this.map.GetTileAt(fromLocation, out Tile sourceTile))
+            if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
             {
                 return false;
             }
@@ -314,7 +314,7 @@ namespace OpenTibia.Server
             // TODO: should this be scheduled too?
             player.TurnToDirection(direction);
 
-            if (this.map.GetTileAt(player.Location, out Tile playerTile))
+            if (this.map.GetTileAt(player.Location, out ITile playerTile))
             {
                 var playerStackPos = playerTile.GetStackPositionOfThing(player);
 
@@ -373,7 +373,7 @@ namespace OpenTibia.Server
                     break;
             }
 
-            if (!this.map.GetTileAt(fromLoc, out Tile fromTile))
+            if (!this.map.GetTileAt(fromLoc, out ITile fromTile))
             {
                 return false;
             }
@@ -410,7 +410,7 @@ namespace OpenTibia.Server
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         public bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false)
         {
-            if (thing == null || !this.map.GetTileAt(fromTileLocation, out Tile fromTile) || !this.map.GetTileAt(toTileLocation, out Tile toTile))
+            if (thing == null || !this.map.GetTileAt(fromTileLocation, out ITile fromTile) || !this.map.GetTileAt(toTileLocation, out ITile toTile))
             {
                 return false;
             }

@@ -94,7 +94,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 switch (lookAtInfo.Location.Type)
                 {
                     case LocationType.Ground:
-                        thing = this.TileAccessor.GetTileAt(lookAtInfo.Location, out Tile targetTile) ? targetTile.GetThingAtStackPosition(this.CreatureFinder, lookAtInfo.StackPosition) : null;
+                        thing = this.TileAccessor.GetTileAt(lookAtInfo.Location, out ITile targetTile) ? targetTile.GetThingAtStackPosition(this.CreatureFinder, lookAtInfo.StackPosition) : null;
                         break;
                     case LocationType.Container:
                         // TODO: implement containers.

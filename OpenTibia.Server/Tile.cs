@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts
+namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;

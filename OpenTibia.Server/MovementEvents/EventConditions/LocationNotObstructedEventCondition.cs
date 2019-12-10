@@ -76,7 +76,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         {
             var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
 
-            this.TileAccessor.GetTileAt(this.Location, out Tile destTile);
+            this.TileAccessor.GetTileAt(this.Location, out ITile destTile);
 
             if (requestor == null || this.Thing == null)
             {
