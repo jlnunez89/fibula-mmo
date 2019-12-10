@@ -12,11 +12,11 @@
 namespace OpenTibia.Server
 {
     using System;
-    using System.Collections;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -108,6 +108,8 @@ namespace OpenTibia.Server
                                     var thing = thingStack.Pop();
 
                                     newTile.AddThing(itemFactory, ref thing);
+
+                                    thing.Location = location;
                                 }
                             }
                         }

@@ -164,7 +164,7 @@ namespace OpenTibia.Communications.Handlers.Game
                     // Set player status to online.
                     character.IsOnline = true;
 
-                    var player = this.Game.PlayerLogin(character, connection);
+                    var player = this.Game.PlayerRequest_Login(character, connection);
 
                     // Also, associate it to the new player.
                     connection.AssociateToPlayer(player.Id);

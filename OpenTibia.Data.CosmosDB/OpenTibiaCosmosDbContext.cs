@@ -71,7 +71,7 @@ namespace OpenTibia.Data.CosmosDB
         }
 
         /// <summary>
-        /// Gets the application's context.
+        /// Gets the configuration options.
         /// </summary>
         public CosmosDbConfigurationOptions CosmosDbConfiguration { get; }
 

@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
-    using System;
     using System.Buffers;
     using System.Collections.Generic;
     using OpenTibia.Server.Contracts;

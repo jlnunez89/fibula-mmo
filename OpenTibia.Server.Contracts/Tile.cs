@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts.Structs
+namespace OpenTibia.Server.Contracts
 {
     using System;
     using System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace OpenTibia.Server.Contracts.Structs
     /// <summary>
     /// Class that represents a tile in the map.
     /// </summary>
-    public class Tile
+    public class Tile : ITile
     {
         /// <summary>
         /// Stores the ids of the creatures in the tile.

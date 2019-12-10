@@ -12,7 +12,6 @@
 namespace OpenTibia.Communications.Handlers.Game
 {
     using System.Collections.Generic;
-    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;

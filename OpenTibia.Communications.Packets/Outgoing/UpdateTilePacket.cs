@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
-    using System;
     using System.Buffers;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;

@@ -14,6 +14,7 @@ namespace OpenTibia.Server
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -51,7 +52,14 @@ namespace OpenTibia.Server
             {
                 this.preloaded = true;
 
-                return this.PreloadBlankMap(Map.VeteranStart);
+                var madeUpCenterLocation = new Location()
+                {
+                    X = 1000,
+                    Y = 1000,
+                    Z = 7,
+                };
+
+                return this.PreloadBlankMap(madeUpCenterLocation);
             }
 
             var tuplesAdded = new List<(Location loc, Tile tile)>();

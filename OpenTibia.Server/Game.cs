@@ -38,7 +38,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// The default adavance time step span.
         /// </summary>
-        private const int GameStepSizeInMilliseconds = 500;
+        private const int GameStepSizeInMilliseconds = 100;
 
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
@@ -59,6 +59,10 @@ namespace OpenTibia.Server
         /// Stores a reference to the pathfinder helper algorithm.
         /// </summary>
         private readonly IPathFinder pathFinder;
+
+        private readonly Queue<(IEvent, TimeSpan)> requestedMovementEventsQueue;
+
+        private readonly object requestedMovementEventsQueueLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
@@ -90,6 +94,8 @@ namespace OpenTibia.Server
             // this.NotificationFactory = notificationFactory;
 
             // this.CombatQueue = new ConcurrentQueue<ICombatOperation>();
+            this.requestedMovementEventsQueue = new Queue<(IEvent, TimeSpan)>();
+            this.requestedMovementEventsQueueLock = new object();
 
             this.map = map;
             this.scheduler = scheduler;
@@ -159,7 +165,7 @@ namespace OpenTibia.Server
         /// <param name="character">The character that the player is logging in to.</param>
         /// <param name="connection">The connection that the player uses.</param>
         /// <returns>An instance of the new <see cref="IPlayer"/> in the game.</returns>
-        public IPlayer PlayerLogin(CharacterEntity character, IConnection connection)
+        public IPlayer PlayerRequest_Login(CharacterEntity character, IConnection connection)
         {
             var player = this.CreatureFactory.Create(CreatureType.Player, new PlayerCreationMetadata(character.Id, character.Name, 100, 100, 100, 100, 4240)) as Player;
 
@@ -186,7 +192,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="player">The player to attempt to attempt log out.</param>
         /// <returns>True if the log-out was successful, false otherwise.</returns>
-        public bool PlayerLogout(IPlayer player)
+        public bool PlayerRequest_Logout(IPlayer player)
         {
             if (!player.IsLogoutAllowed)
             {
@@ -210,24 +216,7 @@ namespace OpenTibia.Server
                     new CreatureRemovedNotification(
                         this.Logger,
                         this.CreatureManager,
-                        () =>
-                        {
-                            var targetConnections = new List<IConnection>();
-
-                            foreach (var connection in this.ConnectionManager.GetAllActive())
-                            {
-                                var p = this.CreatureManager.FindCreatureById(connection.PlayerId);
-
-                                if (p == null || !p.CanSee(player.Location))
-                                {
-                                    continue;
-                                }
-
-                                targetConnections.Add(connection);
-                            }
-
-                            return targetConnections;
-                        },
+                        () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
                         new CreatureRemovedNotificationArguments(player, oldStackpos, AnimatedEffect.Puff)));
 
                 this.CreatureManager.UnregisterCreature(player);
@@ -246,21 +235,108 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Attempts to schedule a creature's walk in the provided direction.
+        /// Attempts to move a thing on behalf of a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="thingId">The id of the thing attempting to be moved.</param>
+        /// <param name="fromLocation">The location from which the thing is being moved.</param>
+        /// <param name="fromStackPos">The position in the stack of the location from which the thing is being moved.</param>
+        /// <param name="toLocation">The location to which the thing is being moved.</param>
+        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <returns>True if the thing movement was accepted, false otherwise.</returns>
+        public bool PlayerRequest_MoveThing(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
+        {
+            if (!this.map.GetTileAt(fromLocation, out Tile sourceTile))
+            {
+                return false;
+            }
+
+            var thingAtStackPos = sourceTile.GetThingAtStackPosition(this.CreatureManager, fromStackPos);
+
+            if (thingAtStackPos == null || thingAtStackPos.ThingId != thingId)
+            {
+                return false;
+            }
+
+            IEvent movementEvent = null;
+
+            // Seems like a valid movement for now, enqueue it.
+            if (thingAtStackPos is ICreature creature)
+            {
+                movementEvent = new OnMapCreatureMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    player.Id,
+                    creature,
+                    fromLocation,
+                    fromStackPos,
+                    toLocation);
+            }
+            else if (thingAtStackPos is IItem item)
+            {
+                movementEvent = new OnMapMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    player.Id,
+                    item,
+                    fromLocation,
+                    fromStackPos,
+                    toLocation);
+            }
+
+            if (movementEvent != null)
+            {
+                lock (this.requestedMovementEventsQueueLock)
+                {
+                    this.requestedMovementEventsQueue.Enqueue((movementEvent, TimeSpan.FromMilliseconds(100)));
+                }
+            }
+
+            return movementEvent != null;
+        }
+
+        /// <summary>
+        /// Attempts to turn a player to the requested direction.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="direction">The direction to turn to.</param>
+        /// <returns>True if the turn request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_TurnToDirection(IPlayer player, Direction direction)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            // TODO: should this be scheduled too?
+            player.TurnToDirection(direction);
+
+            if (this.map.GetTileAt(player.Location, out Tile playerTile))
+            {
+                var playerStackPos = playerTile.GetStackPositionOfThing(player);
+
+                this.RequestNofitication(
+                    new CreatureTurnedNotification(
+                        this.Logger,
+                        () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
+                        new CreatureTurnedNotificationArguments(player, playerStackPos)));
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to schedule a player's walk in the provided direction.
         /// </summary>
         /// <param name="player">The player making the request.</param>
         /// <param name="direction">The direction to walk to.</param>
         /// <returns>True if the walk was possible and scheduled, false otherwise.</returns>
-        public bool PlayerWalkToDirection(IPlayer player, Direction direction)
+        public bool PlayerRequest_WalkToDirection(IPlayer player, Direction direction)
         {
             player.ThrowIfNull(nameof(player));
-
-            var cooldownRemaining = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, DateTimeOffset.UtcNow);
-
-            if (cooldownRemaining > TimeSpan.Zero)
-            {
-                return false;
-            }
 
             var fromLoc = player.Location;
             var toLoc = fromLoc;
@@ -304,87 +380,35 @@ namespace OpenTibia.Server
 
             var playerStackPosition = fromTile.GetStackPositionOfThing(player);
 
-            var movementEvent = new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, playerStackPosition, toLoc);
+            if (playerStackPosition == byte.MaxValue)
+            {
+                return false;
+            }
 
-            this.scheduler.ImmediateEvent(movementEvent);
+            // Seems like a valid movement for now, enqueue it.
+            var movementEvent = new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, playerStackPosition, toLoc);
+            var cooldownRemaining = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
+
+            lock (this.requestedMovementEventsQueueLock)
+            {
+                this.requestedMovementEventsQueue.Enqueue((movementEvent, cooldownRemaining > TimeSpan.Zero ? cooldownRemaining : TimeSpan.Zero));
+            }
 
             return true;
         }
 
-        public bool PlayerMoveThing(IPlayer player, ushort clientId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
-        {
-            if (!this.map.GetTileAt(fromLocation, out Tile sourceTile))
-            {
-                return false;
-            }
-
-            var thingAtStackPos = sourceTile.GetThingAtStackPosition(this.CreatureManager, fromStackPos);
-
-            if (thingAtStackPos == null || thingAtStackPos.ThingId != clientId)
-            {
-                return false;
-            }
-
-            if (player != thingAtStackPos)
-            {
-                var directionToThing = player.Location.DirectionTo(fromLocation);
-
-                player.TurnToDirection(directionToThing);
-
-                if (this.map.GetTileAt(player.Location, out Tile playerTile))
-                {
-                    var playerStackPos = playerTile.GetStackPositionOfThing(player);
-
-                    this.RequestNofitication(
-                        new CreatureTurnedNotification(
-                            this.Logger,
-                            () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
-                            new CreatureTurnedNotificationArguments(player, playerStackPos)));
-                }
-            }
-
-            var locationDiff = fromLocation - toLocation;
-
-            bool moveSuccessful = this.MoveThingBetweenTiles(thingAtStackPos, fromLocation, fromStackPos, toLocation, count, thingAtStackPos is ICreature ? locationDiff.MaxValueIn2D > 1 : false);
-
-            if (moveSuccessful && player != thingAtStackPos)
-            {
-                var directionToDestination = player.Location.DirectionTo(toLocation);
-
-                player.TurnToDirection(directionToDestination);
-
-                if (this.map.GetTileAt(player.Location, out Tile playerTile))
-                {
-                    var playerStackPos = playerTile.GetStackPositionOfThing(player);
-
-                    this.RequestNofitication(
-                        new CreatureTurnedNotification(
-                            this.Logger,
-                            () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
-                            new CreatureTurnedNotificationArguments(player, playerStackPos)));
-                }
-            }
-
-            return moveSuccessful;
-        }
-
-        public void PlayerTurnToDirection(IPlayer player, Direction direction)
-        {
-            player.TurnToDirection(direction);
-
-            if (this.map.GetTileAt(player.Location, out Tile playerTile))
-            {
-                var playerStackPos = playerTile.GetStackPositionOfThing(player);
-
-                this.RequestNofitication(
-                    new CreatureTurnedNotification(
-                        this.Logger,
-                        () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
-                        new CreatureTurnedNotificationArguments(player, playerStackPos)));
-            }
-        }
-
-        public bool MoveThingBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false)
+        /// <summary>
+        /// Inmediately attempts to perform a thing movement between two tiles.
+        /// </summary>
+        /// <param name="thing">The thing being moved.</param>
+        /// <param name="fromTileLocation">The tile from which the movement is being performed.</param>
+        /// <param name="fromTileStackPos">The position in the stack of the tile from which the movement is being performed.</param>
+        /// <param name="toTileLocation">The tile to which the movement is being performed.</param>
+        /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
+        /// <returns>True if the movement was successfully performed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false)
         {
             if (thing == null || !this.map.GetTileAt(fromTileLocation, out Tile fromTile) || !this.map.GetTileAt(toTileLocation, out Tile toTile))
             {
@@ -508,6 +532,12 @@ namespace OpenTibia.Server
             return true;
         }
 
+        /// <summary>
+        /// Gets the description bytes of the map in behalf of a given player at a given location.
+        /// </summary>
+        /// <param name="player">The player for which the description is being retrieved for.</param>
+        /// <param name="location">The center location from which the description is being retrieved.</param>
+        /// <returns>A sequence of bytes representing the description.</returns>
         public ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
@@ -515,6 +545,18 @@ namespace OpenTibia.Server
             return this.map.DescribeForPlayer(player, location);
         }
 
+        /// <summary>
+        /// Gets the description bytes of the map in behalf of a given player for the specified window.
+        /// </summary>
+        /// <param name="player">The player for which the description is being retrieved for.</param>
+        /// <param name="startX">The starting X coordinate of the window.</param>
+        /// <param name="startY">The starting Y coordinate of the window.</param>
+        /// <param name="startZ">The starting Z coordinate of the window.</param>
+        /// <param name="endZ">The ending Z coordinate of the window.</param>
+        /// <param name="windowSizeX">The size of the window in X.</param>
+        /// <param name="windowSizeY">The size of the window in Y.</param>
+        /// <param name="startingZOffset">Optional. A starting offset for Z.</param>
+        /// <returns>A sequence of bytes representing the description.</returns>
         public ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY, sbyte startingZOffset = 0)
         {
             player.ThrowIfNull(nameof(player));
@@ -522,6 +564,12 @@ namespace OpenTibia.Server
             return this.map.DescribeForPlayer(player, startX, (ushort)(startX + windowSizeX), startY, (ushort)(startY + windowSizeY), startZ, endZ);
         }
 
+        /// <summary>
+        /// Gets the description bytes of a single tile of the map in behalf of a given player at a given location.
+        /// </summary>
+        /// <param name="player">The player for which the description is being retrieved for.</param>
+        /// <param name="location">The location from which the description of the tile is being retrieved.</param>
+        /// <returns>A sequence of bytes representing the tile's description.</returns>
         public ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
@@ -616,27 +664,133 @@ namespace OpenTibia.Server
             // store the current time for global reference and actual calculations.
             this.CurrentTime = DateTimeOffset.UtcNow;
 
-            // var eventsToSchedule =
+            var eventsToSchedule =
 
-            // // handle all creature thinking and decision making.
-            //    this.AdvanceTimeForThinking(timeStep)
+               // handle all creature thinking and decision making.
+               this.AdvanceTimeForThinking(timeStep)
 
-            // // handle speech for everything.
-            //    .Union(this.AdvanceTimeForSpeech(timeStep))
+               // handle speech for everything.
+               .Union(this.AdvanceTimeForSpeech(timeStep))
 
-            // // handle all creature moving and actions.
-            //    .Union(this.AdvanceTimeForMoving(timeStep))
+               // handle all creature moving and actions.
+               .Union(this.AdvanceTimeForMoving(timeStep))
 
-            // // handle combat.
-            //    .Union(this.AdvanceTimeForCombat(timeStep))
+               // handle combat.
+               .Union(this.AdvanceTimeForCombat(timeStep))
 
-            // // handle miscellaneous things like day cycle.
-            //    .Union(this.AdvanceTimeForMiscellaneous(timeStep));
+               // handle miscellaneous things like day cycle.
+               .Union(this.AdvanceTimeForMiscellaneous(timeStep));
 
-            // foreach (var (evt, delay) in eventsToSchedule)
-            // {
-            //    this.ScheduleEvent(evt, delay - (DateTimeOffset.UtcNow - this.CurrentTime));
-            // }
+            foreach (var (evt, delay) in eventsToSchedule)
+            {
+                this.scheduler.ScheduleEvent(evt, this.CurrentTime + delay);
+            }
+        }
+
+        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForThinking(TimeSpan stepSize)
+        {
+            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+
+            foreach (var creature in this.CreatureManager.FindAllCreatures())
+            {
+                // TODO: make creatures think here
+                // Schedule any actions that the creature would take here.
+                var decisionsAndActions = creature.Think();
+
+                if (decisionsAndActions != null && decisionsAndActions.Any())
+                {
+                    eventsToSchedule.AddRange(decisionsAndActions);
+                }
+            }
+
+            return eventsToSchedule;
+        }
+
+        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForSpeech(TimeSpan timeStep)
+        {
+            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+
+            return eventsToSchedule;
+        }
+
+        /// <summary>
+        /// Advances time for the movement queues, handling move requests from all sources.
+        /// </summary>
+        /// <param name="timeStep">The size of the time span to calculate with.</param>
+        /// <returns>A collection of events with delay times that should be scheduled.</returns>
+        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMoving(TimeSpan timeStep)
+        {
+            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+
+            // Check the movement requests queue and schedule these applying any corresponding delay/penalties as needed.
+            lock (this.requestedMovementEventsQueueLock)
+            {
+                while (this.requestedMovementEventsQueue.Count > 0)
+                {
+                    var (movementEvent, delay) = this.requestedMovementEventsQueue.Dequeue();
+
+                    eventsToSchedule.Add((movementEvent, delay));
+                }
+            }
+
+            return eventsToSchedule;
+        }
+
+        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForCombat(TimeSpan timeStep)
+        {
+            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+
+            return eventsToSchedule;
+        }
+
+        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMiscellaneous(TimeSpan timeStep)
+        {
+            var events = new List<(IEvent, TimeSpan)>();
+
+            const int NightLightLevel = 30;
+            const int DuskDawnLightLevel = 130;
+            const int DayLightLevel = 255;
+
+            // A day is roughly an hour in real time, and night lasts roughly 1/3 of the day in real time
+            // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
+            var currentMinute = this.CurrentTime.Minute;
+
+            if (currentMinute >= 0 && currentMinute <= 37)
+            {
+                // Day time: [0, 37] minutes on the hour.
+                if (this.WorldLightLevel != DayLightLevel)
+                {
+                    this.WorldLightLevel = DayLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
+
+                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
+                }
+            }
+            else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
+            {
+                // Dusk: [38, 39] minutes on the hour.
+                // Dawn: [58, 59] minutes on the hour.
+                if (this.WorldLightLevel != DuskDawnLightLevel)
+                {
+                    this.WorldLightLevel = DuskDawnLightLevel;
+                    this.WorldLightColor = (byte)LightColors.Orange;
+
+                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
+                }
+            }
+            else if (currentMinute >= 40 && currentMinute <= 57)
+            {
+                // Night time: [40, 57] minutes on the hour.
+                if (this.WorldLightLevel != NightLightLevel)
+                {
+                    this.WorldLightLevel = NightLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
+
+                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
+                }
+            }
+
+            return events;
         }
 
         /// <summary>
@@ -662,12 +816,17 @@ namespace OpenTibia.Server
 
                     if (player.IsLogoutAllowed)
                     {
-                        this.PlayerLogout(player);
+                        this.PlayerRequest_Logout(player);
                     }
                 }
             }
         }
 
+        /// <summary>
+        /// Handles a signal from the scheduler that an event has been fired and begins processing it.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="eventArgs">The arguments of the event.</param>
         private void ProcessSchedulerFiredEvent(object sender, EventFiredEventArgs eventArgs)
         {
             if (sender != this.scheduler || eventArgs?.Event == null)
@@ -691,6 +850,11 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Gets the connections of any players that can see the given locations.
+        /// </summary>
+        /// <param name="locations">The locations to check if players can see.</param>
+        /// <returns>A collection of connections.</returns>
         private IEnumerable<IConnection> GetConnectionsOfPlayersThatCanSee(params Location[] locations)
         {
             var activeConnections = this.ConnectionManager.GetAllActive();

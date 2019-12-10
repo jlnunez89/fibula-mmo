@@ -36,6 +36,11 @@ namespace OpenTibia.Server
         private static uint idCounter = 1;
 
         /// <summary>
+        /// Lock object to semaphore interaction with the exhaustion dictionary.
+        /// </summary>
+        private readonly object exhaustionLock;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
         /// </summary>
         /// <param name="id"></param>
@@ -75,6 +80,7 @@ namespace OpenTibia.Server
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
+            this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
             this.Outfit = new Outfit
@@ -194,19 +200,47 @@ namespace OpenTibia.Server
         /// <returns>The <see cref="TimeSpan"/> result.</returns>
         public TimeSpan CalculateRemainingCooldownTime(ExhaustionType type, DateTimeOffset currentTime)
         {
-            if (!this.ExhaustionInformation.TryGetValue(type, out DateTimeOffset readyAtTime))
+            lock (this.exhaustionLock)
             {
-                return TimeSpan.Zero;
+                if (!this.ExhaustionInformation.TryGetValue(type, out DateTimeOffset readyAtTime))
+                {
+                    return TimeSpan.Zero;
+                }
+
+                var timeLeft = readyAtTime - currentTime;
+
+                if (timeLeft < TimeSpan.Zero)
+                {
+                    this.ExhaustionInformation.Remove(type);
+                }
+
+                return timeLeft;
             }
+        }
 
-            var timeLeft = readyAtTime - currentTime;
-
-            if (timeLeft < TimeSpan.Zero)
+        /// <summary>
+        /// Adds exhaustion of the given type.
+        /// </summary>
+        /// <param name="type">The type of exhaustion to add.</param>
+        /// <param name="fromTime">The reference time from which to add.</param>
+        /// <param name="timeSpan">The amount of time to add exhaustion for.</param>
+        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, TimeSpan timeSpan)
+        {
+            lock (this.exhaustionLock)
             {
-                this.ExhaustionInformation.Remove(type);
+                this.ExhaustionInformation[type] = fromTime + timeSpan;
             }
+        }
 
-            return timeLeft;
+        /// <summary>
+        /// Adds exhaustion of the given type.
+        /// </summary>
+        /// <param name="type">The type of exhaustion to add.</param>
+        /// <param name="fromTime">The reference time from which to add.</param>
+        /// <param name="milliseconds">The amount of time in milliseconds to add exhaustion for.</param>
+        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, uint milliseconds)
+        {
+            this.AddExhaustion(type, fromTime, TimeSpan.FromMilliseconds(milliseconds));
         }
 
         /// <summary>

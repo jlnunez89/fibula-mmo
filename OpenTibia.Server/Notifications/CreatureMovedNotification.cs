@@ -320,16 +320,16 @@ namespace OpenTibia.Server.Notifications
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
             //
             // x = target start of window (~) to refresh.
-            var offset = new Location()
+            var windowStartLocation = new Location()
             {
                 // -8
-                X = -((IMap.DefaultWindowSizeX / 2) - 1),
+                X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
-                // -7
-                Y = -(IMap.DefaultWindowSizeY / 2),
+                // -6
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
+
+                Z = this.Arguments.NewLocation.Z,
             };
-
-            var windowStartLocation = this.Arguments.OldLocation + offset;
 
             return new MapPartialDescriptionPacket(
                 OutgoingGamePacketType.MapSliceNorth,
@@ -366,16 +366,16 @@ namespace OpenTibia.Server.Notifications
             //       x  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~
             //
             // x = target start of window (~) to refresh.
-            var offset = new Location()
+            var windowStartLocation = new Location()
             {
                 // -8
-                X = -((IMap.DefaultWindowSizeX / 2) - 1),
+                X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
                 // +7
-                Y = IMap.DefaultWindowSizeY / 2,
-            };
+                Y = this.Arguments.NewLocation.Y + (IMap.DefaultWindowSizeY / 2),
 
-            var windowStartLocation = this.Arguments.NewLocation + offset;
+                Z = this.Arguments.NewLocation.Z,
+            };
 
             return new MapPartialDescriptionPacket(
                 OutgoingGamePacketType.MapSliceSouth,
@@ -411,16 +411,16 @@ namespace OpenTibia.Server.Notifications
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~  ---
             //
             // x = target start of window (~) to refresh.
-            var offset = new Location()
+            var windowStartLocation = new Location()
             {
                 // +9
-                X = IMap.DefaultWindowSizeX / 2,
+                X = this.Arguments.NewLocation.X + (IMap.DefaultWindowSizeX / 2),
 
                 // -6
-                Y = -((IMap.DefaultWindowSizeY / 2) - 1),
-            };
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
 
-            var windowStartLocation = this.Arguments.NewLocation + offset;
+                Z = this.Arguments.NewLocation.Z,
+            };
 
             return new MapPartialDescriptionPacket(
                 OutgoingGamePacketType.MapSliceEast,
@@ -456,16 +456,18 @@ namespace OpenTibia.Server.Notifications
             //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ---
             //
             // x = target start of window (~) to refresh.
-            var offset = new Location()
+            //
+            // We define the offset always from the old location, since it handles the edge case of moving diagonally.
+            var windowStartLocation = new Location()
             {
-                // -9
-                X = -(IMap.DefaultWindowSizeX / 2),
+                // -8
+                X = this.Arguments.NewLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
                 // -6
-                Y = -((IMap.DefaultWindowSizeY / 2) - 1),
-            };
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
 
-            var windowStartLocation = this.Arguments.OldLocation + offset;
+                Z = this.Arguments.NewLocation.Z,
+            };
 
             return new MapPartialDescriptionPacket(
                 OutgoingGamePacketType.MapSliceWest,

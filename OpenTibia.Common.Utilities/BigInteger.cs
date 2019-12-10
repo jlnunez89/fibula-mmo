@@ -8,38 +8,41 @@
 // See LICENSE file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------
-
+// For BigInteger.cs:
+//
+// Copyright(c) 2002 Chew Keong TAN
+// All rights reserved
+//
+// http://www.codeproject.com/KB/cs/biginteger.aspx
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the "Software"),
+// to deal in the Software without restriction, including without limitation
+// the rights to use, copy, modify, merge, publish, distribute, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, provided that the above copyright notice(s) and this
+// permission notice appear in all copies of the Software and that both the
+// above copyright notice(s) and this permission notice appear in supporting
+// documentation.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
+// IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE
+// LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR
+// ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
+// IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
+// OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
+//
 #pragma warning disable CA1303 // Do not pass literals as localized parameters
 namespace OpenTibia.Common.Utilities
 {
     using System;
     using System.Globalization;
 
-    /**
-        * Copyright (c) 2002 Chew Keong TAN
-        * All rights reserved
-        *
-        * http://www.codeproject.com/KB/cs/biginteger.aspx
-        *
-        * Permission is hereby granted, free of charge, to any person obtaining
-        * a copy of this software and associated documentation files (the "Software"),
-        * to deal in the Software without restriction, including without limitation
-        * the rights to use, copy, modify, merge, publish, distribute, and/or sell
-        * copies of the Software, and to permit persons to whom the Software is
-        * furnished to do so, provided that the above copyright notice(s) and this
-        * permission notice appear in all copies of the Software and that both the
-        * above copyright notice(s) and this permission notice appear in supporting
-        * documentation.
-        *
-        * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-        * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-        * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT OF THIRD PARTY RIGHTS.
-        * IN NO EVENT SHALL THE COPYRIGHT HOLDER OR HOLDERS INCLUDED IN THIS NOTICE BE
-        * LIABLE FOR ANY CLAIM, OR ANY SPECIAL INDIRECT OR CONSEQUENTIAL DAMAGES, OR
-        * ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR PROFITS, WHETHER
-        * IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER TORTIOUS ACTION, ARISING OUT
-        * OF OR IN CONNECTION WITH THE USE OR PERFORMANCE OF THIS SOFTWARE.
-        * */
+    /// <summary>
+    /// Class that represents a big integer.
+    /// </summary>
     public class BigInteger
     {
         /// <summary>
@@ -401,33 +404,48 @@ namespace OpenTibia.Common.Utilities
             }
         }
 
-        // ***********************************************************************
-        // Overloading of the typecast operator.
-        // For BigInteger bi = 10;
-        // ***********************************************************************
+        /// <summary>
+        /// Overloading of the typecast operator.
+        /// </summary>
+        /// <param name="value">The value to initialize with.</param>
         public static implicit operator BigInteger(long value)
         {
             return new BigInteger(value);
         }
 
+        /// <summary>
+        /// Overloading of the typecast operator.
+        /// </summary>
+        /// <param name="value">The value to initialize with.</param>
         public static implicit operator BigInteger(ulong value)
         {
             return new BigInteger(value);
         }
 
+        /// <summary>
+        /// Overloading of the typecast operator.
+        /// </summary>
+        /// <param name="value">The value to initialize with.</param>
         public static implicit operator BigInteger(int value)
         {
             return new BigInteger(value);
         }
 
+        /// <summary>
+        /// Overloading of the typecast operator.
+        /// </summary>
+        /// <param name="value">The value to initialize with.</param>
         public static implicit operator BigInteger(uint value)
         {
             return new BigInteger((ulong)value);
         }
 
-        // ***********************************************************************
-        // Overloading of addition operator
-        // ***********************************************************************
+        /// <summary>
+        /// Overloading of the addition operator.
+        /// </summary>
+        /// <param name="bi1">The first integer to add.</param>
+        /// <param name="bi2">The second integer to add.</param>
+        /// <returns>The addition of both integers.</returns>
         public static BigInteger operator +(BigInteger bi1, BigInteger bi2)
         {
             BigInteger result = new BigInteger
@@ -465,9 +483,11 @@ namespace OpenTibia.Common.Utilities
             return result;
         }
 
-        // ***********************************************************************
-        // Overloading of the unary ++ operator
-        // ***********************************************************************
+        /// <summary>
+        /// Overloading of the unary ++ operator.
+        /// </summary>
+        /// <param name="bi1">The integer to increment.</param>
+        /// <returns>The big integer with it's value incremented.</returns>
         public static BigInteger operator ++(BigInteger bi1)
         {
             BigInteger result = new BigInteger(bi1);
@@ -512,9 +532,12 @@ namespace OpenTibia.Common.Utilities
             return result;
         }
 
-        // ***********************************************************************
-        // Overloading of subtraction operator
-        // ***********************************************************************
+        /// <summary>
+        /// Overloading of the subtraction operator.
+        /// </summary>
+        /// <param name="bi1">The first integer to subtract from.</param>
+        /// <param name="bi2">The second integer to subtract.</param>
+        /// <returns>The result of the subtraction.</returns>
         public static BigInteger operator -(BigInteger bi1, BigInteger bi2)
         {
             bi1.ThrowIfNull(nameof(bi1));
@@ -571,9 +594,11 @@ namespace OpenTibia.Common.Utilities
             return result;
         }
 
-        // ***********************************************************************
-        // Overloading of the unary -- operator
-        // ***********************************************************************
+        /// <summary>
+        /// Overloading of the unary -- operator.
+        /// </summary>
+        /// <param name="bi1">The integer to decrement.</param>
+        /// <returns>The big integer with it's value decremented.</returns>
         public static BigInteger operator --(BigInteger bi1)
         {
             bi1.ThrowIfNull(nameof(bi1));
@@ -760,7 +785,7 @@ namespace OpenTibia.Common.Utilities
 
             BigInteger result = new BigInteger(bi1);
             result.dataLength = ShiftRight(result.data, shiftVal);
-            
+
             // negative
             if ((bi1.data[MaxLength - 1] & 0x80000000) != 0)
             {
@@ -1034,14 +1059,16 @@ namespace OpenTibia.Common.Utilities
             int lastPos = MaxLength - 1;
             bool dividendNeg = false;
 
-            if ((bi1.data[lastPos] & 0x80000000) != 0) // bi1 negative
+            if ((bi1.data[lastPos] & 0x80000000) != 0)
             {
+                // bi1 negative
                 bi1 = -bi1;
                 dividendNeg = true;
             }
 
-            if ((bi2.data[lastPos] & 0x80000000) != 0) // bi2 negative
+            if ((bi2.data[lastPos] & 0x80000000) != 0)
             {
+                // bi2 negative
                 bi2 = -bi2;
             }
 
@@ -1176,301 +1203,6 @@ namespace OpenTibia.Common.Utilities
             }
 
             return true;
-        }
-
-        // least significant bits at lower part of buffer
-        private static int ShiftLeft(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int bufLen = buffer.Length;
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            for (int count = shiftVal; count > 0;)
-            {
-                if (count < shiftAmount)
-                {
-                    shiftAmount = count;
-                }
-
-                ulong carry = 0;
-                for (int i = 0; i < bufLen; i++)
-                {
-                    ulong val = ((ulong)buffer[i]) << shiftAmount;
-                    val |= carry;
-
-                    buffer[i] = (uint)(val & 0xFFFFFFFF);
-                    carry = val >> 32;
-                }
-
-                if (carry != 0)
-                {
-                    if (bufLen + 1 <= buffer.Length)
-                    {
-                        buffer[bufLen] = (uint)carry;
-                        bufLen++;
-                    }
-                }
-
-                count -= shiftAmount;
-            }
-
-            return bufLen;
-        }
-
-        private static int ShiftRight(uint[] buffer, int shiftVal)
-        {
-            int shiftAmount = 32;
-            int invShift = 0;
-            int bufLen = buffer.Length;
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            for (int count = shiftVal; count > 0;)
-            {
-                if (count < shiftAmount)
-                {
-                    shiftAmount = count;
-                    invShift = 32 - shiftAmount;
-                }
-
-                ulong carry = 0;
-                for (int i = bufLen - 1; i >= 0; i--)
-                {
-                    ulong val = ((ulong)buffer[i]) >> shiftAmount;
-                    val |= carry;
-
-                    carry = ((ulong)buffer[i]) << invShift;
-                    buffer[i] = (uint)val;
-                }
-
-                count -= shiftAmount;
-            }
-
-            while (bufLen > 1 && buffer[bufLen - 1] == 0)
-            {
-                bufLen--;
-            }
-
-            return bufLen;
-        }
-
-        // ***********************************************************************
-        // Private function that supports the division of two numbers with
-        // a divisor that has more than 1 digit.
-        //
-        // Algorithm taken from [1]
-        // ***********************************************************************
-        private static void MultiByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
-        {
-            bi1.ThrowIfNull(nameof(bi1));
-            bi2.ThrowIfNull(nameof(bi2));
-
-            outQuotient.ThrowIfNull(nameof(outQuotient));
-            outRemainder.ThrowIfNull(nameof(outRemainder));
-
-            uint[] result = new uint[MaxLength];
-
-            int remainderLen = bi1.dataLength + 1;
-            uint[] remainder = new uint[remainderLen];
-
-            uint mask = 0x80000000;
-            uint val = bi2.data[bi2.dataLength - 1];
-            int shift = 0, resultPos = 0;
-
-            while (mask != 0 && (val & mask) == 0)
-            {
-                shift++;
-                mask >>= 1;
-            }
-
-            for (int i = 0; i < bi1.dataLength; i++)
-            {
-                remainder[i] = bi1.data[i];
-            }
-
-            ShiftLeft(remainder, shift);
-            bi2 <<= shift;
-
-            int j = remainderLen - bi2.dataLength;
-            int pos = remainderLen - 1;
-
-            ulong firstDivisorByte = bi2.data[bi2.dataLength - 1];
-            ulong secondDivisorByte = bi2.data[bi2.dataLength - 2];
-
-            int divisorLen = bi2.dataLength + 1;
-            uint[] dividendPart = new uint[divisorLen];
-
-            while (j > 0)
-            {
-                ulong dividend = ((ulong)remainder[pos] << 32) + remainder[pos - 1];
-
-                ulong qHat = dividend / firstDivisorByte;
-                ulong rHat = dividend % firstDivisorByte;
-
-                bool done = false;
-                while (!done)
-                {
-                    done = true;
-
-                    if (qHat == 0x100000000 ||
-                       (qHat * secondDivisorByte) > ((rHat << 32) + remainder[pos - 2]))
-                    {
-                        qHat--;
-                        rHat += firstDivisorByte;
-
-                        if (rHat < 0x100000000)
-                        {
-                            done = false;
-                        }
-                    }
-                }
-
-                for (int h = 0; h < divisorLen; h++)
-                {
-                    dividendPart[h] = remainder[pos - h];
-                }
-
-                BigInteger kk = new BigInteger(dividendPart);
-                BigInteger ss = bi2 * (long)qHat;
-
-                while (ss > kk)
-                {
-                    qHat--;
-                    ss -= bi2;
-                }
-
-                BigInteger yy = kk - ss;
-
-                for (int h = 0; h < divisorLen; h++)
-                {
-                    remainder[pos - h] = yy.data[bi2.dataLength - h];
-                }
-
-                result[resultPos++] = (uint)qHat;
-
-                pos--;
-                j--;
-            }
-
-            outQuotient.dataLength = resultPos;
-            int y = 0;
-            for (int x = outQuotient.dataLength - 1; x >= 0; x--, y++)
-            {
-                outQuotient.data[y] = result[x];
-            }
-
-            for (; y < MaxLength; y++)
-            {
-                outQuotient.data[y] = 0;
-            }
-
-            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
-            {
-                outQuotient.dataLength--;
-            }
-
-            if (outQuotient.dataLength == 0)
-            {
-                outQuotient.dataLength = 1;
-            }
-
-            outRemainder.dataLength = ShiftRight(remainder, shift);
-
-            for (y = 0; y < outRemainder.dataLength; y++)
-            {
-                outRemainder.data[y] = remainder[y];
-            }
-
-            for (; y < MaxLength; y++)
-            {
-                outRemainder.data[y] = 0;
-            }
-        }
-
-        // ***********************************************************************
-        // Private function that supports the division of two numbers with
-        // a divisor that has only 1 digit.
-        // ***********************************************************************
-        private static void SingleByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
-        {
-            if (outQuotient == null)
-            {
-                throw new ArgumentNullException(nameof(outQuotient));
-            }
-
-            uint[] result = new uint[MaxLength];
-            int resultPos = 0;
-
-            // copy dividend to reminder
-            for (int i = 0; i < MaxLength; i++)
-            {
-                outRemainder.data[i] = bi1.data[i];
-            }
-
-            outRemainder.dataLength = bi1.dataLength;
-
-            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
-            {
-                outRemainder.dataLength--;
-            }
-
-            ulong divisor = bi2.data[0];
-            int pos = outRemainder.dataLength - 1;
-            ulong dividend = outRemainder.data[pos];
-
-            if (dividend >= divisor)
-            {
-                ulong quotient = dividend / divisor;
-                result[resultPos++] = (uint)quotient;
-
-                outRemainder.data[pos] = (uint)(dividend % divisor);
-            }
-
-            pos--;
-
-            while (pos >= 0)
-            {
-                dividend = ((ulong)outRemainder.data[pos + 1] << 32) + outRemainder.data[pos];
-                ulong quotient = dividend / divisor;
-                result[resultPos++] = (uint)quotient;
-
-                outRemainder.data[pos + 1] = 0;
-                outRemainder.data[pos--] = (uint)(dividend % divisor);
-            }
-
-            outQuotient.dataLength = resultPos;
-            int j = 0;
-            for (int i = outQuotient.dataLength - 1; i >= 0; i--, j++)
-            {
-                outQuotient.data[j] = result[i];
-            }
-
-            for (; j < MaxLength; j++)
-            {
-                outQuotient.data[j] = 0;
-            }
-
-            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
-            {
-                outQuotient.dataLength--;
-            }
-
-            if (outQuotient.dataLength == 0)
-            {
-                outQuotient.dataLength = 1;
-            }
-
-            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
-            {
-                outRemainder.dataLength--;
-            }
         }
 
         /// <summary>
@@ -1705,112 +1437,6 @@ namespace OpenTibia.Common.Utilities
             return resultNum;
         }
 
-        // ***********************************************************************
-        // Fast calculation of modular reduction using Barrett's reduction.
-        // Requires x < b^(2k), where b is the base.  In this case, base is
-        // 2^32 (uint).
-        //
-        // Reference [4]
-        // ***********************************************************************
-        private BigInteger BarrettReduction(BigInteger x, BigInteger n, BigInteger constant)
-        {
-            int k = n.dataLength,
-                kPlusOne = k + 1,
-                kMinusOne = k - 1;
-
-            BigInteger q1 = new BigInteger();
-
-            // q1 = x / b^(k-1)
-            for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
-            {
-                q1.data[j] = x.data[i];
-            }
-
-            q1.dataLength = x.dataLength - kMinusOne;
-            if (q1.dataLength <= 0)
-            {
-                q1.dataLength = 1;
-            }
-
-            BigInteger q2 = q1 * constant;
-            BigInteger q3 = new BigInteger();
-
-            // q3 = q2 / b^(k+1)
-            for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
-            {
-                q3.data[j] = q2.data[i];
-            }
-
-            q3.dataLength = q2.dataLength - kPlusOne;
-            if (q3.dataLength <= 0)
-            {
-                q3.dataLength = 1;
-            }
-
-            // r1 = x mod b^(k+1)
-            // i.e. keep the lowest (k+1) words
-            BigInteger r1 = new BigInteger();
-            int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
-            for (int i = 0; i < lengthToCopy; i++)
-            {
-                r1.data[i] = x.data[i];
-            }
-
-            r1.dataLength = lengthToCopy;
-
-            // r2 = (q3 * n) mod b^(k+1)
-            // partial multiplication of q3 and n
-            BigInteger r2 = new BigInteger();
-            for (int i = 0; i < q3.dataLength; i++)
-            {
-                if (q3.data[i] == 0)
-                {
-                    continue;
-                }
-
-                ulong mcarry = 0;
-                int t = i;
-                for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
-                {
-                    // t = i + j
-                    ulong val = (q3.data[i] * (ulong)n.data[j]) +
-                                 r2.data[t] + mcarry;
-
-                    r2.data[t] = (uint)(val & 0xFFFFFFFF);
-                    mcarry = val >> 32;
-                }
-
-                if (t < kPlusOne)
-                {
-                    r2.data[t] = (uint)mcarry;
-                }
-            }
-
-            r2.dataLength = kPlusOne;
-            while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
-            {
-                r2.dataLength--;
-            }
-
-            r1 -= r2;
-
-            // negative
-            if ((r1.data[MaxLength - 1] & 0x80000000) != 0)
-            {
-                BigInteger val = new BigInteger();
-                val.data[kPlusOne] = 0x00000001;
-                val.dataLength = kPlusOne + 1;
-                r1 += val;
-            }
-
-            while (r1 >= n)
-            {
-                r1 -= n;
-            }
-
-            return r1;
-        }
-
         /// <summary>
         /// Returns the greatest common divisor between this and another <see cref="BigInteger"/>.
         /// </summary>
@@ -1955,7 +1581,7 @@ namespace OpenTibia.Common.Utilities
             long val = this.data[0];
 
             try
-            { 
+            {
                 // exception if maxLength = 1
                 val |= (long)this.data[1] << 32;
             }
@@ -2466,6 +2092,407 @@ namespace OpenTibia.Common.Utilities
             result[2] = qK;
 
             return result;
+        }
+
+        // least significant bits at lower part of buffer
+        private static int ShiftLeft(uint[] buffer, int shiftVal)
+        {
+            int shiftAmount = 32;
+            int bufLen = buffer.Length;
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            for (int count = shiftVal; count > 0;)
+            {
+                if (count < shiftAmount)
+                {
+                    shiftAmount = count;
+                }
+
+                ulong carry = 0;
+                for (int i = 0; i < bufLen; i++)
+                {
+                    ulong val = ((ulong)buffer[i]) << shiftAmount;
+                    val |= carry;
+
+                    buffer[i] = (uint)(val & 0xFFFFFFFF);
+                    carry = val >> 32;
+                }
+
+                if (carry != 0)
+                {
+                    if (bufLen + 1 <= buffer.Length)
+                    {
+                        buffer[bufLen] = (uint)carry;
+                        bufLen++;
+                    }
+                }
+
+                count -= shiftAmount;
+            }
+
+            return bufLen;
+        }
+
+        private static int ShiftRight(uint[] buffer, int shiftVal)
+        {
+            int shiftAmount = 32;
+            int invShift = 0;
+            int bufLen = buffer.Length;
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            for (int count = shiftVal; count > 0;)
+            {
+                if (count < shiftAmount)
+                {
+                    shiftAmount = count;
+                    invShift = 32 - shiftAmount;
+                }
+
+                ulong carry = 0;
+                for (int i = bufLen - 1; i >= 0; i--)
+                {
+                    ulong val = ((ulong)buffer[i]) >> shiftAmount;
+                    val |= carry;
+
+                    carry = ((ulong)buffer[i]) << invShift;
+                    buffer[i] = (uint)val;
+                }
+
+                count -= shiftAmount;
+            }
+
+            while (bufLen > 1 && buffer[bufLen - 1] == 0)
+            {
+                bufLen--;
+            }
+
+            return bufLen;
+        }
+
+        // ***********************************************************************
+        // Private function that supports the division of two numbers with
+        // a divisor that has more than 1 digit.
+        //
+        // Algorithm taken from [1]
+        // ***********************************************************************
+        private static void MultiByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
+        {
+            bi1.ThrowIfNull(nameof(bi1));
+            bi2.ThrowIfNull(nameof(bi2));
+
+            outQuotient.ThrowIfNull(nameof(outQuotient));
+            outRemainder.ThrowIfNull(nameof(outRemainder));
+
+            uint[] result = new uint[MaxLength];
+
+            int remainderLen = bi1.dataLength + 1;
+            uint[] remainder = new uint[remainderLen];
+
+            uint mask = 0x80000000;
+            uint val = bi2.data[bi2.dataLength - 1];
+            int shift = 0, resultPos = 0;
+
+            while (mask != 0 && (val & mask) == 0)
+            {
+                shift++;
+                mask >>= 1;
+            }
+
+            for (int i = 0; i < bi1.dataLength; i++)
+            {
+                remainder[i] = bi1.data[i];
+            }
+
+            ShiftLeft(remainder, shift);
+            bi2 <<= shift;
+
+            int j = remainderLen - bi2.dataLength;
+            int pos = remainderLen - 1;
+
+            ulong firstDivisorByte = bi2.data[bi2.dataLength - 1];
+            ulong secondDivisorByte = bi2.data[bi2.dataLength - 2];
+
+            int divisorLen = bi2.dataLength + 1;
+            uint[] dividendPart = new uint[divisorLen];
+
+            while (j > 0)
+            {
+                ulong dividend = ((ulong)remainder[pos] << 32) + remainder[pos - 1];
+
+                ulong qHat = dividend / firstDivisorByte;
+                ulong rHat = dividend % firstDivisorByte;
+
+                bool done = false;
+                while (!done)
+                {
+                    done = true;
+
+                    if (qHat == 0x100000000 ||
+                       (qHat * secondDivisorByte) > ((rHat << 32) + remainder[pos - 2]))
+                    {
+                        qHat--;
+                        rHat += firstDivisorByte;
+
+                        if (rHat < 0x100000000)
+                        {
+                            done = false;
+                        }
+                    }
+                }
+
+                for (int h = 0; h < divisorLen; h++)
+                {
+                    dividendPart[h] = remainder[pos - h];
+                }
+
+                BigInteger kk = new BigInteger(dividendPart);
+                BigInteger ss = bi2 * (long)qHat;
+
+                while (ss > kk)
+                {
+                    qHat--;
+                    ss -= bi2;
+                }
+
+                BigInteger yy = kk - ss;
+
+                for (int h = 0; h < divisorLen; h++)
+                {
+                    remainder[pos - h] = yy.data[bi2.dataLength - h];
+                }
+
+                result[resultPos++] = (uint)qHat;
+
+                pos--;
+                j--;
+            }
+
+            outQuotient.dataLength = resultPos;
+            int y = 0;
+            for (int x = outQuotient.dataLength - 1; x >= 0; x--, y++)
+            {
+                outQuotient.data[y] = result[x];
+            }
+
+            for (; y < MaxLength; y++)
+            {
+                outQuotient.data[y] = 0;
+            }
+
+            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
+            {
+                outQuotient.dataLength--;
+            }
+
+            if (outQuotient.dataLength == 0)
+            {
+                outQuotient.dataLength = 1;
+            }
+
+            outRemainder.dataLength = ShiftRight(remainder, shift);
+
+            for (y = 0; y < outRemainder.dataLength; y++)
+            {
+                outRemainder.data[y] = remainder[y];
+            }
+
+            for (; y < MaxLength; y++)
+            {
+                outRemainder.data[y] = 0;
+            }
+        }
+
+        // ***********************************************************************
+        // Private function that supports the division of two numbers with
+        // a divisor that has only 1 digit.
+        // ***********************************************************************
+        private static void SingleByteDivide(BigInteger bi1, BigInteger bi2, BigInteger outQuotient, BigInteger outRemainder)
+        {
+            if (outQuotient == null)
+            {
+                throw new ArgumentNullException(nameof(outQuotient));
+            }
+
+            uint[] result = new uint[MaxLength];
+            int resultPos = 0;
+
+            // copy dividend to reminder
+            for (int i = 0; i < MaxLength; i++)
+            {
+                outRemainder.data[i] = bi1.data[i];
+            }
+
+            outRemainder.dataLength = bi1.dataLength;
+
+            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
+            {
+                outRemainder.dataLength--;
+            }
+
+            ulong divisor = bi2.data[0];
+            int pos = outRemainder.dataLength - 1;
+            ulong dividend = outRemainder.data[pos];
+
+            if (dividend >= divisor)
+            {
+                ulong quotient = dividend / divisor;
+                result[resultPos++] = (uint)quotient;
+
+                outRemainder.data[pos] = (uint)(dividend % divisor);
+            }
+
+            pos--;
+
+            while (pos >= 0)
+            {
+                dividend = ((ulong)outRemainder.data[pos + 1] << 32) + outRemainder.data[pos];
+                ulong quotient = dividend / divisor;
+                result[resultPos++] = (uint)quotient;
+
+                outRemainder.data[pos + 1] = 0;
+                outRemainder.data[pos--] = (uint)(dividend % divisor);
+            }
+
+            outQuotient.dataLength = resultPos;
+            int j = 0;
+            for (int i = outQuotient.dataLength - 1; i >= 0; i--, j++)
+            {
+                outQuotient.data[j] = result[i];
+            }
+
+            for (; j < MaxLength; j++)
+            {
+                outQuotient.data[j] = 0;
+            }
+
+            while (outQuotient.dataLength > 1 && outQuotient.data[outQuotient.dataLength - 1] == 0)
+            {
+                outQuotient.dataLength--;
+            }
+
+            if (outQuotient.dataLength == 0)
+            {
+                outQuotient.dataLength = 1;
+            }
+
+            while (outRemainder.dataLength > 1 && outRemainder.data[outRemainder.dataLength - 1] == 0)
+            {
+                outRemainder.dataLength--;
+            }
+        }
+
+        // ***********************************************************************
+        // Fast calculation of modular reduction using Barrett's reduction.
+        // Requires x < b^(2k), where b is the base.  In this case, base is
+        // 2^32 (uint).
+        //
+        // Reference [4]
+        // ***********************************************************************
+        private BigInteger BarrettReduction(BigInteger x, BigInteger n, BigInteger constant)
+        {
+            int k = n.dataLength,
+                kPlusOne = k + 1,
+                kMinusOne = k - 1;
+
+            BigInteger q1 = new BigInteger();
+
+            // q1 = x / b^(k-1)
+            for (int i = kMinusOne, j = 0; i < x.dataLength; i++, j++)
+            {
+                q1.data[j] = x.data[i];
+            }
+
+            q1.dataLength = x.dataLength - kMinusOne;
+            if (q1.dataLength <= 0)
+            {
+                q1.dataLength = 1;
+            }
+
+            BigInteger q2 = q1 * constant;
+            BigInteger q3 = new BigInteger();
+
+            // q3 = q2 / b^(k+1)
+            for (int i = kPlusOne, j = 0; i < q2.dataLength; i++, j++)
+            {
+                q3.data[j] = q2.data[i];
+            }
+
+            q3.dataLength = q2.dataLength - kPlusOne;
+            if (q3.dataLength <= 0)
+            {
+                q3.dataLength = 1;
+            }
+
+            // r1 = x mod b^(k+1)
+            // i.e. keep the lowest (k+1) words
+            BigInteger r1 = new BigInteger();
+            int lengthToCopy = (x.dataLength > kPlusOne) ? kPlusOne : x.dataLength;
+            for (int i = 0; i < lengthToCopy; i++)
+            {
+                r1.data[i] = x.data[i];
+            }
+
+            r1.dataLength = lengthToCopy;
+
+            // r2 = (q3 * n) mod b^(k+1)
+            // partial multiplication of q3 and n
+            BigInteger r2 = new BigInteger();
+            for (int i = 0; i < q3.dataLength; i++)
+            {
+                if (q3.data[i] == 0)
+                {
+                    continue;
+                }
+
+                ulong mcarry = 0;
+                int t = i;
+                for (int j = 0; j < n.dataLength && t < kPlusOne; j++, t++)
+                {
+                    // t = i + j
+                    ulong val = (q3.data[i] * (ulong)n.data[j]) +
+                                 r2.data[t] + mcarry;
+
+                    r2.data[t] = (uint)(val & 0xFFFFFFFF);
+                    mcarry = val >> 32;
+                }
+
+                if (t < kPlusOne)
+                {
+                    r2.data[t] = (uint)mcarry;
+                }
+            }
+
+            r2.dataLength = kPlusOne;
+            while (r2.dataLength > 1 && r2.data[r2.dataLength - 1] == 0)
+            {
+                r2.dataLength--;
+            }
+
+            r1 -= r2;
+
+            // negative
+            if ((r1.data[MaxLength - 1] & 0x80000000) != 0)
+            {
+                BigInteger val = new BigInteger();
+                val.data[kPlusOne] = 0x00000001;
+                val.dataLength = kPlusOne + 1;
+                r1 += val;
+            }
+
+            while (r1 >= n)
+            {
+                r1 -= n;
+            }
+
+            return r1;
         }
     }
 }

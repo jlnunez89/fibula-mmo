@@ -62,7 +62,7 @@ namespace OpenTibia.Server
 
                     throw new InvalidCastException($"{nameof(creatureMetadata)} must be castable to {nameof(PlayerCreationMetadata)} when {type} is used.");
 
-                // case CreatureType.Monster:
+                    // case CreatureType.Monster:
 
                     // if (creatureMetadata is MonsterCreationMetadata monsterMetadata)
                     // {

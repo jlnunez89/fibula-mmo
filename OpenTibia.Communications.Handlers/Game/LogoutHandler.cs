@@ -61,7 +61,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            if (this.Game.PlayerLogout(player))
+            if (this.Game.PlayerRequest_Logout(player))
             {
                 connection.Close();
             }

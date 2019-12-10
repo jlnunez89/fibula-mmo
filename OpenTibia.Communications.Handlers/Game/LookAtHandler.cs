@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Handlers.Game
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Communications.Contracts.Abstractions;
@@ -19,9 +18,9 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>
