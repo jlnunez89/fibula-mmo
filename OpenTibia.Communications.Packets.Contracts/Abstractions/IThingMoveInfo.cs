@@ -14,7 +14,7 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Interface for an thing movement information.
+    /// Interface for a thing movement information.
     /// </summary>
     public interface IThingMoveInfo
     {

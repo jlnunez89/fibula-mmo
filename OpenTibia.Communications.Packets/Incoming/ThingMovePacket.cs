@@ -16,7 +16,7 @@ namespace OpenTibia.Communications.Packets.Incoming
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Class that represents an thing movement packet.
+    /// Class that represents a thing movement packet.
     /// </summary>
     public class ThingMovePacket : IIncomingPacket, IThingMoveInfo
     {

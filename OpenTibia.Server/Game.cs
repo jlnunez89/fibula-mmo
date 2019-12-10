@@ -60,8 +60,14 @@ namespace OpenTibia.Server
         /// </summary>
         private readonly IPathFinder pathFinder;
 
+        /// <summary>
+        /// Queue for movement events.
+        /// </summary>
         private readonly Queue<(IEvent, TimeSpan)> requestedMovementEventsQueue;
 
+        /// <summary>
+        /// Lock used for the movement events queue.
+        /// </summary>
         private readonly object requestedMovementEventsQueueLock;
 
         /// <summary>
@@ -755,39 +761,36 @@ namespace OpenTibia.Server
             // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
             var currentMinute = this.CurrentTime.Minute;
 
+            var currentLevel = this.WorldLightLevel;
+            var currentColor = this.WorldLightColor;
+
             if (currentMinute >= 0 && currentMinute <= 37)
             {
                 // Day time: [0, 37] minutes on the hour.
-                if (this.WorldLightLevel != DayLightLevel)
-                {
-                    this.WorldLightLevel = DayLightLevel;
-                    this.WorldLightColor = (byte)LightColors.White;
-
-                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
-                }
+                this.WorldLightLevel = DayLightLevel;
+                this.WorldLightColor = (byte)LightColors.White;
             }
             else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
             {
                 // Dusk: [38, 39] minutes on the hour.
                 // Dawn: [58, 59] minutes on the hour.
-                if (this.WorldLightLevel != DuskDawnLightLevel)
-                {
-                    this.WorldLightLevel = DuskDawnLightLevel;
-                    this.WorldLightColor = (byte)LightColors.Orange;
-
-                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
-                }
+                this.WorldLightLevel = DuskDawnLightLevel;
+                this.WorldLightColor = (byte)LightColors.Orange;
             }
             else if (currentMinute >= 40 && currentMinute <= 57)
             {
                 // Night time: [40, 57] minutes on the hour.
-                if (this.WorldLightLevel != NightLightLevel)
-                {
-                    this.WorldLightLevel = NightLightLevel;
-                    this.WorldLightColor = (byte)LightColors.White;
+                this.WorldLightLevel = NightLightLevel;
+                this.WorldLightColor = (byte)LightColors.White;
+            }
 
-                    //events.Add((this.NotificationFactory.Create(NotificationType.WorldLightChanged, new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
-                }
+            if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
+            {
+                events.Add((
+                    new WorldLightChangedNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.GetAllActive(),
+                        new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
             }
 
             return events;

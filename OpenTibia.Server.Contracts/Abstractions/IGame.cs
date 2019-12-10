@@ -85,7 +85,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
         /// <param name="connection">The connection that the player uses.</param>
-        /// <returns>An instance of the new <see cref="IPlayer"/> in the game, or null if it couldn't be instanciated.</returns>
+        /// <returns>An instance of the new <see cref="IPlayer"/> in the game, or null if it couldn't be instantiated.</returns>
         IPlayer PlayerRequest_Login(CharacterEntity character, IConnection connection);
 
         /// <summary>
