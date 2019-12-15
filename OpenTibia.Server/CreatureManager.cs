@@ -16,6 +16,7 @@ namespace OpenTibia.Server
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a creature manager.
@@ -30,10 +31,20 @@ namespace OpenTibia.Server
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureManager"/> class.
         /// </summary>
-        public CreatureManager()
+        /// <param name="logger">A reference to the logger to use.</param>
+        public CreatureManager(ILogger logger)
         {
+            logger.ThrowIfNull(nameof(logger));
+
             this.creatureMap = new ConcurrentDictionary<uint, ICreature>();
+
+            this.Logger = logger.ForContext<CreatureManager>();
         }
+
+        /// <summary>
+        /// Gets a reference to the logger.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Registers a new creature to the manager.
@@ -45,8 +56,7 @@ namespace OpenTibia.Server
 
             if (!this.creatureMap.TryAdd(creature.Id, creature))
             {
-                // TODO: proper logging
-                Console.WriteLine($"WARNING: Failed to add {creature.Name} ({creature.Id}) to the creatue manager.");
+                this.Logger.Warning($"Failed to add {creature.Name} ({creature.Id}) to the creatue manager.");
             }
         }
 

@@ -18,6 +18,9 @@ namespace OpenTibia.Server.MovementEvents
     using OpenTibia.Server.MovementEvents.EventConditions;
     using Serilog;
 
+    /// <summary>
+    /// Internal class that represents a creature movement event that happens on the map.
+    /// </summary>
     internal class OnMapCreatureMovementEvent : OnMapMovementEvent
     {
         /// <summary>

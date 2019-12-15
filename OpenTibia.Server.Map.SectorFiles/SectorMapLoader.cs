@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Map.SectorFiles
 {
     using System;
     using System.Collections.Generic;
@@ -105,7 +105,7 @@ namespace OpenTibia.Server
         {
             if (x > SectorXMax)
             {
-                return this.sectorsLoaded[(x / 32) - SectorXMin, (y / 32) - SectorYMin, z - SectorZMin];
+                return this.sectorsLoaded[x / 32 - SectorXMin, y / 32 - SectorYMin, z - SectorZMin];
             }
 
             return this.sectorsLoaded[x - SectorXMin, y - SectorYMin, z - SectorZMin];
@@ -135,7 +135,7 @@ namespace OpenTibia.Server
 
             var tuplesAdded = new List<(Location loc, ITile tile)>();
 
-            this.totalTileCount = ((toSectorX - fromSectorX + 1) * 32) * ((toSectorY - fromSectorY + 1) * 32) * (toZ - fromZ + 1);
+            this.totalTileCount = (toSectorX - fromSectorX + 1) * 32 * (toSectorY - fromSectorY + 1) * 32 * (toZ - fromZ + 1);
             this.totalLoadedCount = default;
 
             Parallel.For(fromZ, toZ + 1, sectorZ =>

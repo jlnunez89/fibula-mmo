@@ -9,10 +9,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Factories
 {
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>

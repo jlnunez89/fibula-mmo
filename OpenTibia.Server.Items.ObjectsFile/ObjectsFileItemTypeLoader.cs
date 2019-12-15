@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Items.ObjectsFile
 {
     using System;
     using System.Collections.Generic;
