@@ -20,6 +20,7 @@ namespace OpenTibia.Server
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Data.Entities;
+    using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
@@ -61,21 +62,10 @@ namespace OpenTibia.Server
         private readonly IPathFinder pathFinder;
 
         /// <summary>
-        /// Queue for movement events.
-        /// </summary>
-        private readonly Queue<(IEvent, TimeSpan)> requestedMovementEventsQueue;
-
-        /// <summary>
-        /// Lock used for the movement events queue.
-        /// </summary>
-        private readonly object requestedMovementEventsQueueLock;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
-        /// <param name="scheduler">A reference to the scheduler in use.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
@@ -83,7 +73,6 @@ namespace OpenTibia.Server
         public Game(
             ILogger logger,
             IMap map,
-            IScheduler scheduler,
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             // IItemEventLoader itemEventLoader,
@@ -97,14 +86,9 @@ namespace OpenTibia.Server
             this.CreatureFactory = creatureFactory;
             this.ItemFactory = itemFactory;
 
-            // this.NotificationFactory = notificationFactory;
-
-            // this.CombatQueue = new ConcurrentQueue<ICombatOperation>();
-            this.requestedMovementEventsQueue = new Queue<(IEvent, TimeSpan)>();
-            this.requestedMovementEventsQueueLock = new object();
+            this.scheduler = new Scheduler(logger);
 
             this.map = map;
-            this.scheduler = scheduler;
 
             // this.eventLoader = itemEventLoader;
             // this.itemLoader = itemLoader;
@@ -117,7 +101,7 @@ namespace OpenTibia.Server
 
             // this.eventsCatalog = this.eventLoader.Load(ServerConfiguration.MoveUseFileName);
 
-            this.scheduler.OnEventFired += this.ProcessSchedulerFiredEvent;
+            this.scheduler.OnEventFired += this.ProcessEvent;
         }
 
         /// <summary>
@@ -146,11 +130,6 @@ namespace OpenTibia.Server
         public IItemFactory ItemFactory { get; }
 
         /// <summary>
-        /// Gets the game's current time.
-        /// </summary>
-        public DateTimeOffset CurrentTime { get; private set; }
-
-        /// <summary>
         /// Gets the game world's light color.
         /// </summary>
         public byte WorldLightColor { get; private set; }
@@ -166,6 +145,63 @@ namespace OpenTibia.Server
         public WorldState Status { get; private set; }
 
         /// <summary>
+        /// Gets the game's current time.
+        /// </summary>
+        public DateTimeOffset CurrentTime => this.scheduler.CurrentTime;
+
+        /// <summary>
+        /// Attempts to schedule a player's auto walk movements.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="directions">The directions to walk to.</param>
+        /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_AutoWalk(IPlayer player, Direction[] directions)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            Location fromLoc = player.Location;
+
+            if (!this.map.GetTileAt(fromLoc, out ITile fromTile))
+            {
+                return false;
+            }
+
+            var playerStackPosition = fromTile.GetStackPositionOfThing(player);
+
+            if (playerStackPosition == byte.MaxValue)
+            {
+                return false;
+            }
+
+            TimeSpan delay = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
+            DateTimeOffset eventRequestTime = this.CurrentTime;
+
+            // validate each tile of the suggested locations.
+            for (int i = 0; i < directions.Length; i++)
+            {
+                var toLoc = fromLoc.LocationAt(directions[i]);
+
+                if ((i > 0 && !this.map.GetTileAt(fromLoc, out _)) || !this.map.GetTileAt(toLoc, out ITile toTile))
+                {
+                    return false;
+                }
+
+                this.scheduler.ScheduleEvent(new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, deferEvaluation: true), eventRequestTime + delay);
+
+                var movementPenalty = (toTile.Ground?.MovementPenalty ?? 200) * (directions[i].IsDiagonal() ? 2 : 1);
+
+                // TODO: centralize walk penalty formula.
+                delay = TimeSpan.FromMilliseconds(1000 * movementPenalty / (double)Math.Max(1, (int)player.Speed));
+                eventRequestTime += delay;
+
+                // update last location to this one.
+                fromLoc = toLoc;
+            }
+
+            return true;
+        }
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
@@ -177,7 +213,7 @@ namespace OpenTibia.Server
 
             this.CreatureManager.RegisterCreature(player);
 
-            this.ConnectionManager.Register(connection);
+            this.ConnectionManager.Register(connection, player.Id);
 
             // TODO: check if map.CanAddCreature(playerRecord.location);
             // playerRecord.location
@@ -252,21 +288,23 @@ namespace OpenTibia.Server
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
         public bool PlayerRequest_MoveThing(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
         {
+            player.ThrowIfNull(nameof(player));
+
             if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
             {
                 return false;
             }
 
-            var thingAtStackPos = sourceTile.GetThingAtStackPosition(this.CreatureManager, fromStackPos);
+            var thingAtStackPos = sourceTile.GetTopThingByOrder(this.CreatureManager, fromStackPos);
 
             if (thingAtStackPos == null || thingAtStackPos.ThingId != thingId)
             {
                 return false;
             }
 
+            // At this point it seems like a valid movement, let's enqueue it.
             IEvent movementEvent = null;
 
-            // Seems like a valid movement for now, enqueue it.
             if (thingAtStackPos is ICreature creature)
             {
                 movementEvent = new OnMapCreatureMovementEvent(
@@ -278,8 +316,8 @@ namespace OpenTibia.Server
                     player.Id,
                     creature,
                     fromLocation,
-                    fromStackPos,
-                    toLocation);
+                    toLocation,
+                    fromStackPos);
             }
             else if (thingAtStackPos is IItem item)
             {
@@ -292,16 +330,13 @@ namespace OpenTibia.Server
                     player.Id,
                     item,
                     fromLocation,
-                    fromStackPos,
-                    toLocation);
+                    toLocation,
+                    fromStackPos);
             }
 
             if (movementEvent != null)
             {
-                lock (this.requestedMovementEventsQueueLock)
-                {
-                    this.requestedMovementEventsQueue.Enqueue((movementEvent, TimeSpan.FromMilliseconds(100)));
-                }
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + TimeSpan.FromMilliseconds(100));
             }
 
             return movementEvent != null;
@@ -345,39 +380,6 @@ namespace OpenTibia.Server
             player.ThrowIfNull(nameof(player));
 
             var fromLoc = player.Location;
-            var toLoc = fromLoc;
-
-            switch (direction)
-            {
-                case Direction.North:
-                    toLoc.Y -= 1;
-                    break;
-                case Direction.South:
-                    toLoc.Y += 1;
-                    break;
-                case Direction.East:
-                    toLoc.X += 1;
-                    break;
-                case Direction.West:
-                    toLoc.X -= 1;
-                    break;
-                case Direction.NorthEast:
-                    toLoc.X += 1;
-                    toLoc.Y -= 1;
-                    break;
-                case Direction.NorthWest:
-                    toLoc.X -= 1;
-                    toLoc.Y -= 1;
-                    break;
-                case Direction.SouthEast:
-                    toLoc.X += 1;
-                    toLoc.Y += 1;
-                    break;
-                case Direction.SouthWest:
-                    toLoc.X -= 1;
-                    toLoc.Y += 1;
-                    break;
-            }
 
             if (!this.map.GetTileAt(fromLoc, out ITile fromTile))
             {
@@ -391,14 +393,13 @@ namespace OpenTibia.Server
                 return false;
             }
 
+            var toLoc = fromLoc.LocationAt(direction);
+
             // Seems like a valid movement for now, enqueue it.
-            var movementEvent = new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, playerStackPosition, toLoc);
+            var movementEvent = new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, playerStackPosition);
             var cooldownRemaining = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
 
-            lock (this.requestedMovementEventsQueueLock)
-            {
-                this.requestedMovementEventsQueue.Enqueue((movementEvent, cooldownRemaining > TimeSpan.Zero ? cooldownRemaining : TimeSpan.Zero));
-            }
+            this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + cooldownRemaining);
 
             return true;
         }
@@ -408,17 +409,29 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="thing">The thing being moved.</param>
         /// <param name="fromTileLocation">The tile from which the movement is being performed.</param>
-        /// <param name="fromTileStackPos">The position in the stack of the tile from which the movement is being performed.</param>
         /// <param name="toTileLocation">The tile to which the movement is being performed.</param>
+        /// <param name="fromTileStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false)
+        public bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false)
         {
             if (thing == null || !this.map.GetTileAt(fromTileLocation, out ITile fromTile) || !this.map.GetTileAt(toTileLocation, out ITile toTile))
             {
                 return false;
+            }
+
+            if (fromTileStackPos == byte.MaxValue)
+            {
+                // try to figure it out on our own.
+                fromTileStackPos = fromTile.GetStackPositionOfThing(thing);
+
+                if (fromTileStackPos == byte.MaxValue)
+                {
+                    // couldn't find this thing...
+                    return false;
+                }
             }
 
             // Do the actual move first.
@@ -431,12 +444,21 @@ namespace OpenTibia.Server
 
             thing.Location = toTileLocation;
 
-            var moveDirection = fromTileLocation.DirectionTo(toTileLocation);
+            var clientSafeMoveDirection = fromTileLocation.DirectionTo(toTileLocation);
 
             // Then deal with the consequences of the move.
             if (thing is ICreature creature)
             {
-                creature.TurnToDirection(moveDirection);
+                creature.TurnToDirection(clientSafeMoveDirection);
+
+                var trueMoveDirection = fromTileLocation.DirectionTo(toTileLocation, true);
+
+                var tilePenalty = toTile.Ground?.MovementPenalty;
+                var totalPenalty = (tilePenalty ?? 200) * (trueMoveDirection.IsDiagonal() ? 2 : 1);
+
+                var exhaustionTime = TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)creature.Speed));
+
+                creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, exhaustionTime);
 
                 var thingStackPosition = toTile.GetStackPositionOfThing(thing);
 
@@ -515,23 +537,6 @@ namespace OpenTibia.Server
 
             //        // Execute all actions.
             //        candidate?.Execute();
-            //    }
-            //}
-
-            //if (thing is ICreature creature && !isTeleport)
-            //{
-            //    // update both creature's to face the push direction... a *real* push!
-            //    if (this.Requestor != this.Thing)
-            //    {
-            //        this.Requestor?.TurnToDirection(this.Requestor.Location.DirectionTo(this.Thing.Location));
-            //    }
-
-            //    var attemptedDirection = fromLocation.DirectionTo(toLocation, true);
-            //    ((Creature)this.Thing)?.TurnToDirection(attemptedDirection);
-
-            //    if (this.Requestor != null && this.Requestor == this.Thing)
-            //    {
-            //        this.Requestor.UpdateLastStepInfo(this.Requestor.NextStepId, wasDiagonal: attemptedDirection > Direction.West);
             //    }
             //}
 
@@ -615,29 +620,15 @@ namespace OpenTibia.Server
 
                 var connectionSweepperTask = Task.Factory.StartNew(this.ConnectionSweeper, cancellationToken, TaskCreationOptions.LongRunning);
 
-                // Leave this at the very end, when everything is ready...
+                var miscellaneusEventsTask = Task.Factory.StartNew(this.MiscellaneousEventsLoop, cancellationToken, TaskCreationOptions.LongRunning);
+
+                // start the scheduler.
+                var schedulerTask = this.scheduler.RunAsync(cancellationToken);
+
+                // Open the game world!
                 this.Status = WorldState.Open;
 
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    var timeAtStart = DateTimeOffset.UtcNow;
-
-                    this.AdvanceTime(stepSize);
-
-                    var timeThatCheckTook = DateTimeOffset.UtcNow - timeAtStart;
-                    var actualDelay = stepSize - timeThatCheckTook;
-
-                    if (actualDelay > TimeSpan.Zero)
-                    {
-                        await Task.Delay(actualDelay, cancellationToken);
-                    }
-                    else
-                    {
-                        this.Logger.Warning($"Time is slipping: It took {timeThatCheckTook} to advance time with a step size of {stepSize}.");
-                    }
-                }
-
-                await Task.WhenAll(connectionSweepperTask);
+                await Task.WhenAll(connectionSweepperTask, miscellaneusEventsTask, schedulerTask);
             });
 
             // return this to allow other IHostedService-s to start.
@@ -662,138 +653,57 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Advances Time in the game by the supplied span.
+        /// Handles miscellaneous stuff on the game world, such as world light.
         /// </summary>
-        /// <param name="timeStep">The span of time to advance the game for.</param>
-        private void AdvanceTime(TimeSpan timeStep)
+        /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
+        private void MiscellaneousEventsLoop(object tokenState)
         {
-            // store the current time for global reference and actual calculations.
-            this.CurrentTime = DateTimeOffset.UtcNow;
+            var cancellationToken = (tokenState as CancellationToken?).Value;
 
-            var eventsToSchedule =
-
-               // handle all creature thinking and decision making.
-               this.AdvanceTimeForThinking(timeStep)
-
-               // handle speech for everything.
-               .Union(this.AdvanceTimeForSpeech(timeStep))
-
-               // handle all creature moving and actions.
-               .Union(this.AdvanceTimeForMoving(timeStep))
-
-               // handle combat.
-               .Union(this.AdvanceTimeForCombat(timeStep))
-
-               // handle miscellaneous things like day cycle.
-               .Union(this.AdvanceTimeForMiscellaneous(timeStep));
-
-            foreach (var (evt, delay) in eventsToSchedule)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                this.scheduler.ScheduleEvent(evt, this.CurrentTime + delay);
-            }
-        }
+                Thread.Sleep(TimeSpan.FromMinutes(1));
 
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForThinking(TimeSpan stepSize)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+                const int NightLightLevel = 30;
+                const int DuskDawnLightLevel = 130;
+                const int DayLightLevel = 255;
 
-            foreach (var creature in this.CreatureManager.FindAllCreatures())
-            {
-                // TODO: make creatures think here
-                // Schedule any actions that the creature would take here.
-                var decisionsAndActions = creature.Think();
+                // A day is roughly an hour in real time, and night lasts roughly 1/3 of the day in real time
+                // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
+                var currentMinute = this.CurrentTime.Minute;
 
-                if (decisionsAndActions != null && decisionsAndActions.Any())
+                var currentLevel = this.WorldLightLevel;
+                var currentColor = this.WorldLightColor;
+
+                if (currentMinute >= 0 && currentMinute <= 37)
                 {
-                    eventsToSchedule.AddRange(decisionsAndActions);
+                    // Day time: [0, 37] minutes on the hour.
+                    this.WorldLightLevel = DayLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
+                }
+                else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
+                {
+                    // Dusk: [38, 39] minutes on the hour.
+                    // Dawn: [58, 59] minutes on the hour.
+                    this.WorldLightLevel = DuskDawnLightLevel;
+                    this.WorldLightColor = (byte)LightColors.Orange;
+                }
+                else if (currentMinute >= 40 && currentMinute <= 57)
+                {
+                    // Night time: [40, 57] minutes on the hour.
+                    this.WorldLightLevel = NightLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
+                }
+
+                if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
+                {
+                    this.scheduler.ImmediateEvent(
+                        new WorldLightChangedNotification(
+                            this.Logger,
+                            () => this.ConnectionManager.GetAllActive(),
+                            new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)));
                 }
             }
-
-            return eventsToSchedule;
-        }
-
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForSpeech(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            return eventsToSchedule;
-        }
-
-        /// <summary>
-        /// Advances time for the movement queues, handling move requests from all sources.
-        /// </summary>
-        /// <param name="timeStep">The size of the time span to calculate with.</param>
-        /// <returns>A collection of events with delay times that should be scheduled.</returns>
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMoving(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            // Check the movement requests queue and schedule these applying any corresponding delay/penalties as needed.
-            lock (this.requestedMovementEventsQueueLock)
-            {
-                while (this.requestedMovementEventsQueue.Count > 0)
-                {
-                    var (movementEvent, delay) = this.requestedMovementEventsQueue.Dequeue();
-
-                    eventsToSchedule.Add((movementEvent, delay));
-                }
-            }
-
-            return eventsToSchedule;
-        }
-
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForCombat(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            return eventsToSchedule;
-        }
-
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMiscellaneous(TimeSpan timeStep)
-        {
-            var events = new List<(IEvent, TimeSpan)>();
-
-            const int NightLightLevel = 30;
-            const int DuskDawnLightLevel = 130;
-            const int DayLightLevel = 255;
-
-            // A day is roughly an hour in real time, and night lasts roughly 1/3 of the day in real time
-            // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
-            var currentMinute = this.CurrentTime.Minute;
-
-            var currentLevel = this.WorldLightLevel;
-            var currentColor = this.WorldLightColor;
-
-            if (currentMinute >= 0 && currentMinute <= 37)
-            {
-                // Day time: [0, 37] minutes on the hour.
-                this.WorldLightLevel = DayLightLevel;
-                this.WorldLightColor = (byte)LightColors.White;
-            }
-            else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
-            {
-                // Dusk: [38, 39] minutes on the hour.
-                // Dawn: [58, 59] minutes on the hour.
-                this.WorldLightLevel = DuskDawnLightLevel;
-                this.WorldLightColor = (byte)LightColors.Orange;
-            }
-            else if (currentMinute >= 40 && currentMinute <= 57)
-            {
-                // Night time: [40, 57] minutes on the hour.
-                this.WorldLightLevel = NightLightLevel;
-                this.WorldLightColor = (byte)LightColors.White;
-            }
-
-            if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
-            {
-                events.Add((
-                    new WorldLightChangedNotification(
-                        this.Logger,
-                        () => this.ConnectionManager.GetAllActive(),
-                        new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
-            }
-
-            return events;
         }
 
         /// <summary>
@@ -830,7 +740,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="eventArgs">The arguments of the event.</param>
-        private void ProcessSchedulerFiredEvent(object sender, EventFiredEventArgs eventArgs)
+        private void ProcessEvent(object sender, EventFiredEventArgs eventArgs)
         {
             if (sender != this.scheduler || eventArgs?.Event == null)
             {
@@ -839,16 +749,14 @@ namespace OpenTibia.Server
 
             IEvent evt = eventArgs.Event;
 
-            this.Logger.Verbose($"Processing event {evt.EventId}.");
-
             try
             {
                 evt.Process();
-                this.Logger.Verbose($"Processed event {evt.EventId}.");
+                this.Logger.Debug($"Processed event {evt.EventId}, current game time: {this.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
             catch (Exception ex)
             {
-                this.Logger.Error(ex.Message);
+                this.Logger.Error($"Error in event {evt.EventId}: {ex.Message}.");
                 this.Logger.Error(ex.StackTrace);
             }
         }

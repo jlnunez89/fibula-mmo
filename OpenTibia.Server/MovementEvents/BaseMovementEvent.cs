@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.MovementEvents
 {
+    using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
@@ -30,7 +31,7 @@ namespace OpenTibia.Server.MovementEvents
         /// <summary>
         /// Caches the requestor creature, if defined.
         /// </summary>
-        private ICreature requestor;
+        private ICreature requestor = null;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseMovementEvent"/> class.
@@ -77,9 +78,9 @@ namespace OpenTibia.Server.MovementEvents
         {
             get
             {
-                if (this.requestor == null)
+                if (this.RequestorId > 0 && this.requestor == null)
                 {
-                    this.requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
+                    this.requestor = this.CreatureFinder.FindCreatureById(this.RequestorId);
                 }
 
                 return this.requestor;
@@ -93,11 +94,18 @@ namespace OpenTibia.Server.MovementEvents
         {
             if (this.Requestor is Player player)
             {
-                this.Game.RequestNofitication(
-                    new GenericNotification(
-                        this.Logger,
-                        () => { return this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(); },
-                        new GenericNotificationArguments(new PlayerWalkCancelPacket(player.Direction), new TextMessagePacket(MessageType.StatusSmall, this.ErrorMessage ?? "Sorry, not possible."))));
+                IEnumerable<IConnection> FindPlayerConnectionFunc()
+                {
+                    return this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem();
+                }
+
+                var notificationArgs = new GenericNotificationArguments(
+                            new PlayerWalkCancelPacket(player.Direction),
+                            new TextMessagePacket(MessageType.StatusSmall, this.ErrorMessage ?? "Sorry, not possible."));
+
+                var notification = new GenericNotification(this.Logger, FindPlayerConnectionFunc, notificationArgs);
+
+                this.Game.RequestNofitication(notification);
             }
         }
     }

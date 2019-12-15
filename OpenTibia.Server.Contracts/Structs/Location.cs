@@ -246,5 +246,49 @@ namespace OpenTibia.Server.Contracts.Structs
 
             return locationDiff.Y < 0 ? Direction.North : Direction.South;
         }
+
+        /// <summary>
+        /// Computes the <see cref="Location"/> that is in the <paramref name="targetDirection"/>, as seen from this location.
+        /// </summary>
+        /// <param name="targetDirection">The target direction.</param>
+        /// <returns>The <see cref="Location"/> which is in the <paramref name="targetDirection"/> with respect to this location.</returns>
+        public Location LocationAt(Direction targetDirection)
+        {
+            var toLoc = this;
+
+            switch (targetDirection)
+            {
+                case Direction.North:
+                    toLoc.Y -= 1;
+                    break;
+                case Direction.South:
+                    toLoc.Y += 1;
+                    break;
+                case Direction.East:
+                    toLoc.X += 1;
+                    break;
+                case Direction.West:
+                    toLoc.X -= 1;
+                    break;
+                case Direction.NorthEast:
+                    toLoc.X += 1;
+                    toLoc.Y -= 1;
+                    break;
+                case Direction.NorthWest:
+                    toLoc.X -= 1;
+                    toLoc.Y -= 1;
+                    break;
+                case Direction.SouthEast:
+                    toLoc.X += 1;
+                    toLoc.Y += 1;
+                    break;
+                case Direction.SouthWest:
+                    toLoc.X -= 1;
+                    toLoc.Y += 1;
+                    break;
+            }
+
+            return toLoc;
+        }
     }
 }

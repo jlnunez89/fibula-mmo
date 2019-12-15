@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -24,38 +26,33 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="UnpassItemsInRangeEventCondition"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        /// <param name="moverId">The id of the creature requesting the move.</param>
-        /// <param name="thingMoving">The thing being moved.</param>
-        /// <param name="targetLoc">The location to which it's being moved.</param>
-        public UnpassItemsInRangeEventCondition(ICreatureFinder creatureFinder, uint moverId, IThing thingMoving, Location targetLoc)
+        /// <param name="mover">The creature requesting the move.</param>
+        /// <param name="determineThingMovingFunc">A delegate function to determine the thing that is being moved.</param>
+        /// <param name="determineTargetLocationFunc">A function to determine the target location to check.</param>
+        public UnpassItemsInRangeEventCondition(ICreature mover, Func<IThing> determineThingMovingFunc, Func<Location> determineTargetLocationFunc)
         {
-            this.MoverId = moverId;
-            this.Thing = thingMoving;
-            this.ToLocation = targetLoc;
+            determineThingMovingFunc.ThrowIfNull(nameof(determineThingMovingFunc));
+            determineTargetLocationFunc.ThrowIfNull(nameof(determineTargetLocationFunc));
 
-            this.CreatureFinder = creatureFinder;
+            this.Mover = mover;
+            this.GetThing = determineThingMovingFunc;
+            this.GetTargetLocation = determineTargetLocationFunc;
         }
 
         /// <summary>
-        /// Gets the target location.
+        /// Gets the mover.
         /// </summary>
-        public Location ToLocation { get; }
+        public ICreature Mover { get; }
 
         /// <summary>
-        /// Gets the reference to the creature finder.
+        /// Gets the delegate function to determine the target location.
         /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
+        public Func<Location> GetTargetLocation { get; }
 
         /// <summary>
-        /// Gets the <see cref="IThing"/> being moved.
+        /// Gets the delegate function to determine the <see cref="IThing"/> being moved.
         /// </summary>
-        public IThing Thing { get; }
-
-        /// <summary>
-        /// Gets the id of the mover.
-        /// </summary>
-        public uint MoverId { get; }
+        public Func<IThing> GetThing { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "Sorry, not possible.";
@@ -63,16 +60,16 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var mover = this.MoverId == 0 ? null : this.CreatureFinder.FindCreatureById(this.MoverId);
+            var thing = this.GetThing();
 
-            if (!(this.Thing is IItem item) || mover == null || !item.Type.Flags.Contains(ItemFlag.Unpass))
+            if (this.Mover == null || !(thing is IItem item) || !item.Type.Flags.Contains(ItemFlag.Unpass))
             {
                 // MoverId being null means this is probably a script's action.
                 // Policy does not apply to this thing.
                 return true;
             }
 
-            var locDiff = mover.Location - this.ToLocation;
+            var locDiff = this.Mover.Location - this.GetTargetLocation();
 
             return locDiff.Z == 0 && locDiff.MaxValueIn2D <= 2;
         }

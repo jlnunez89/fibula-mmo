@@ -61,7 +61,7 @@ namespace OpenTibia.Server.Parsing.Grammar
             from functionComparison in Parse.AnyChar.Except(Parse.WhiteSpace).Except(Comma).Many().Text()
             select functionName.Trim() + open + oneOrMoreArguments + close + functionComparison.Trim();
 
-        public static readonly Parser<string> LocationString =
+        private static readonly Parser<string> LocationString =
             from leadingSpaces in Parse.WhiteSpace.Many().Text()
             from open in OpenBracket
             from negX in Parse.Char('-').Optional()

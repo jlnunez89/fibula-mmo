@@ -40,9 +40,14 @@ namespace OpenTibia.Communications
         /// Registers a new connection to the manager.
         /// </summary>
         /// <param name="connection">The connection to register.</param>
-        public void Register(IConnection connection)
+        /// <param name="playerId">The id of the player that this connection is tied to.</param>
+        public void Register(IConnection connection, uint playerId)
         {
             connection.ThrowIfNull(nameof(connection));
+            playerId.ThrowIfDefaultValue(nameof(playerId));
+
+            // Associate the connection to the new player before adding it.
+            connection.AssociateToPlayer(playerId);
 
             this.connectionsMap.TryAdd(connection.PlayerId, connection);
         }

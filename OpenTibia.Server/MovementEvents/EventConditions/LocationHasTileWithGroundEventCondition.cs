@@ -11,9 +11,9 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -26,13 +26,13 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// Initializes a new instance of the <see cref="LocationHasTileWithGroundEventCondition"/> class.
         /// </summary>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
-        /// <param name="location">The location to check.</param>
-        public LocationHasTileWithGroundEventCondition(ITileAccessor tileAccessor, Location location)
+        /// <param name="determineLocationFunc">A delegate function to determine the location to check.</param>
+        public LocationHasTileWithGroundEventCondition(ITileAccessor tileAccessor, Func<Location> determineLocationFunc)
         {
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
 
             this.TileAccessor = tileAccessor;
-            this.Location = location;
+            this.GetLocation = determineLocationFunc;
         }
 
         /// <summary>
@@ -41,9 +41,9 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         public ITileAccessor TileAccessor { get; }
 
         /// <summary>
-        /// Gets the location to check.
+        /// Gets a delegate function to determine the location to check.
         /// </summary>
-        public Location Location { get; }
+        public Func<Location> GetLocation { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "There is not enough room.";
@@ -51,7 +51,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            return this.TileAccessor.GetTileAt(this.Location, out ITile tile) && tile.Ground != null;
+            return this.TileAccessor.GetTileAt(this.GetLocation(), out ITile tile) && tile.Ground != null;
         }
     }
 }

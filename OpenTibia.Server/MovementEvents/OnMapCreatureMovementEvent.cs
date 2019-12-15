@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.MovementEvents
 {
     using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Scheduling.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.MovementEvents.EventConditions;
@@ -31,10 +32,10 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="requestorId"></param>
         /// <param name="creatureMoving"></param>
         /// <param name="fromLocation"></param>
-        /// <param name="fromStackPos"></param>
         /// <param name="toLocation"></param>
+        /// <param name="fromStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
         /// <param name="isTeleport"></param>
-        /// <param name="count"></param>
+        /// <param name="deferEvaluation"></param>
         public OnMapCreatureMovementEvent(
             ILogger logger,
             IGame game,
@@ -44,17 +45,18 @@ namespace OpenTibia.Server.MovementEvents
             uint requestorId,
             ICreature creatureMoving,
             Location fromLocation,
-            byte fromStackPos,
             Location toLocation,
-            bool isTeleport = false)
-            : base(logger, game, connectionManager, tileAccessor, creatureFinder, requestorId, creatureMoving, fromLocation, fromStackPos, toLocation, 1, isTeleport)
+            byte fromStackPos = byte.MaxValue,
+            bool isTeleport = false,
+            bool deferEvaluation = false)
+            : base(logger, game, connectionManager, tileAccessor, creatureFinder, requestorId, creatureMoving, fromLocation, toLocation, fromStackPos, 1, isTeleport, deferEvaluation ? EvaluationTime.OnExecute : EvaluationTime.OnBoth)
         {
             // Don't add any conditions if this wasn't a creature requesting, i.e. if the request comes from a script.
             if (!isTeleport && this.Requestor != null)
             {
-                this.Conditions.Add(new LocationNotAviodEventCondition(creatureFinder, tileAccessor, this.RequestorId, creatureMoving, toLocation));
-                this.Conditions.Add(new LocationsAreDistantByEventCondition(fromLocation, toLocation));
-                this.Conditions.Add(new CreatureThrowBetweenFloorsEventCondition(creatureFinder, this.RequestorId, creatureMoving, toLocation));
+                this.Conditions.Add(new LocationNotAvoidEventCondition(tileAccessor, this.Requestor, () => creatureMoving, () => toLocation));
+                this.Conditions.Add(new LocationsAreDistantByEventCondition(() => fromLocation, () => toLocation));
+                this.Conditions.Add(new CreatureThrowBetweenFloorsEventCondition(this.Requestor, () => creatureMoving, () => toLocation));
             }
         }
     }

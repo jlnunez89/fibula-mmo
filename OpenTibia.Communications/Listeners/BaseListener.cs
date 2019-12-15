@@ -36,27 +36,20 @@ namespace OpenTibia.Communications
         private readonly IDoSDefender defender;
 
         /// <summary>
-        /// The connection manager instance.
-        /// </summary>
-        private readonly IConnectionManager connectionManager;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseListener"/> class.
         /// </summary>
         /// <param name="port">The port to use on this listener.</param>
         /// <param name="protocol">The protocol to use in this listener.</param>
         /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
         /// <param name="connectionManager">A reference to the connection manager service implementation.</param>
-        protected BaseListener(int port, IProtocol protocol, IDoSDefender dosDefender, IConnectionManager connectionManager)
+        protected BaseListener(int port, IProtocol protocol, IDoSDefender dosDefender)
             : base(IPAddress.Any, port)
         {
             protocol.ThrowIfNull(nameof(protocol));
             dosDefender.ThrowIfNull(nameof(dosDefender));
-            connectionManager.ThrowIfNull(nameof(connectionManager));
 
             this.protocol = protocol;
             this.defender = dosDefender;
-            this.connectionManager = connectionManager;
         }
 
         /// <summary>
@@ -93,8 +86,6 @@ namespace OpenTibia.Communications
 
                                 continue;
                             }
-
-                            this.connectionManager.Register(connection);
 
                             connection.ConnectionClosed += this.OnConnectionClose;
                             connection.MessageReady += this.protocol.ProcessMessage;
@@ -150,8 +141,6 @@ namespace OpenTibia.Communications
             connection.ConnectionClosed -= this.OnConnectionClose;
             connection.MessageReady -= this.protocol.ProcessMessage;
             connection.MessageProcessed -= this.protocol.PostProcessMessage;
-
-            this.connectionManager.Unregister(connection);
         }
     }
 }

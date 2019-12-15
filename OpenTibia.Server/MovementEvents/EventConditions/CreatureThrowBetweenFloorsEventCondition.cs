@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -24,39 +25,33 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureThrowBetweenFloorsEventCondition"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        /// <param name="creatureRequestingId">The id of the creature requesting the throw.</param>
-        /// <param name="thingMoving">The thing that it is throwing.</param>
-        /// <param name="toLocation">The location to where it is being thrown.</param>
-        public CreatureThrowBetweenFloorsEventCondition(ICreatureFinder creatureFinder, uint creatureRequestingId, IThing thingMoving, Location toLocation)
+        /// <param name="creatureRequesting">The creature requesting the throw.</param>
+        /// <param name="determineThingMovingFunc">A delegate function to determine the thing that is being thrown.</param>
+        /// <param name="determineDestinationLocationFunc">A delegate function to determine the location to where it is being thrown.</param>
+        public CreatureThrowBetweenFloorsEventCondition(ICreature creatureRequesting, Func<IThing> determineThingMovingFunc, Func<Location> determineDestinationLocationFunc)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+            determineThingMovingFunc.ThrowIfNull(nameof(determineThingMovingFunc));
+            determineDestinationLocationFunc.ThrowIfNull(nameof(determineDestinationLocationFunc));
 
-            this.CreatureFinder = creatureFinder;
-            this.RequestorId = creatureRequestingId;
-            this.Thing = thingMoving;
-            this.ToLocation = toLocation;
+            this.Requestor = creatureRequesting;
+            this.GetThingMoving = determineThingMovingFunc;
+            this.GetDestinationLocation = determineDestinationLocationFunc;
         }
 
         /// <summary>
-        /// Gets the reference to the creature finder.
+        /// Gets the creature requesting the throw.
         /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
+        public ICreature Requestor { get; }
 
         /// <summary>
-        /// Gets the location to where the thing is being thrown.
+        /// Gets a delegate function to determine the <see cref="IThing"/> being thrown.
         /// </summary>
-        public Location ToLocation { get; }
+        public Func<IThing> GetThingMoving { get; }
 
         /// <summary>
-        /// Gets the id of the creature requesting the throw.
+        /// Gets a delegate function to determine the location to where the thing is being thrown.
         /// </summary>
-        public uint RequestorId { get; }
-
-        /// <summary>
-        /// Gets the <see cref="IThing"/> being thrown.
-        /// </summary>
-        public IThing Thing { get; }
+        public Func<Location> GetDestinationLocation { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "You may not throw there.";
@@ -64,16 +59,14 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
-
-            if (requestor == null || !(this.Thing is ICreature thingAsCreature))
+            if (this.Requestor == null || !(this.GetThingMoving() is ICreature thingAsCreature))
             {
                 // Not a creature requesting this one, possibly a script.
                 // Or the thing moving is null, not this policy's job to restrict this...
                 return true;
             }
 
-            var locDiff = thingAsCreature.Location - this.ToLocation;
+            var locDiff = thingAsCreature.Location - this.GetDestinationLocation();
 
             return locDiff.Z == 0;
         }

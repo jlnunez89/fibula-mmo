@@ -15,7 +15,6 @@ namespace OpenTibia.Scheduling
     using System.Collections.Generic;
     using System.Threading;
     using System.Threading.Tasks;
-    using Microsoft.Extensions.Hosting;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
@@ -25,7 +24,7 @@ namespace OpenTibia.Scheduling
     /// <summary>
     /// Class that represents a scheduler for events.
     /// </summary>
-    public class Scheduler : IScheduler, IHostedService
+    public class Scheduler : IScheduler
     {
         /// <summary>
         /// The maximum number of nodes that the internal queue can hold.
@@ -34,17 +33,12 @@ namespace OpenTibia.Scheduling
         private const int MaxQueueNodes = 1000000;
 
         /// <summary>
-        /// The maximum difference time that the referenced time can be off on creaation of the <see cref="Scheduler"/> instance.
-        /// </summary>
-        private static readonly TimeSpan MaximumReferenceTimeDifference = TimeSpan.FromHours(1);
-
-        /// <summary>
         /// The default processing wait time on the processing queue thread.
         /// </summary>
         private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromMinutes(1);
 
         /// <summary>
-        /// The referenced start time.
+        /// The start time of the scheduler.
         /// </summary>
         private readonly DateTimeOffset startTime;
 
@@ -82,25 +76,16 @@ namespace OpenTibia.Scheduling
         /// Initializes a new instance of the <see cref="Scheduler"/> class.
         /// </summary>
         /// <param name="logger">The logger to use.</param>
-        /// <param name="referenceTime">Optional. The time to use as reference. Defaults to <see cref="DateTimeOffset.UtcNow"/>.</param>
-        public Scheduler(ILogger logger, DateTimeOffset? referenceTime = null)
+        public Scheduler(ILogger logger)
         {
             logger.ThrowIfNull(nameof(logger));
 
             this.Logger = logger.ForContext<Scheduler>();
 
-            var startTime = referenceTime ?? DateTimeOffset.UtcNow;
-            var refTimeDifference = DateTimeOffset.UtcNow - startTime;
-
-            if (refTimeDifference >= MaximumReferenceTimeDifference)
-            {
-                throw new ArgumentException($"{nameof(referenceTime)} must be within {MaximumReferenceTimeDifference}.");
-            }
-
             this.eventsPerRequestorLock = new object();
             this.eventsAvailableLock = new object();
             this.queueLock = new object();
-            this.startTime = startTime;
+            this.startTime = this.CurrentTime;
             this.priorityQueue = new FastPriorityQueue<BaseEvent>(MaxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
             this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
@@ -117,13 +102,18 @@ namespace OpenTibia.Scheduling
         public ILogger Logger { get; }
 
         /// <summary>
+        /// Gets the current time.
+        /// </summary>
+        public DateTimeOffset CurrentTime => DateTimeOffset.UtcNow;
+
+        /// <summary>
         /// Begins the scheduler's processing the queue and firing events.
         /// </summary>
         /// <param name="cancellationToken">A token to observe for cancellation.</param>
         /// <returns>A <see cref="Task"/> representing the asynchronous processing operation.</returns>
-        public Task StartAsync(CancellationToken cancellationToken)
+        public Task RunAsync(CancellationToken cancellationToken)
         {
-            Task.Run(() =>
+            return Task.Run(() =>
             {
                 this.Logger.Debug("Scheduler started.");
 
@@ -148,9 +138,7 @@ namespace OpenTibia.Scheduling
                                 continue;
                             }
 
-                            // store a single 'current' time for processing of all items in the queue
-                            // TODO: use 'current' time from Game.Instance
-                            var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(DateTimeOffset.UtcNow);
+                            var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(this.CurrentTime);
 
                             // check the current queue and fire any events that are due.
                             while (this.priorityQueue.Count > 0)
@@ -163,7 +151,7 @@ namespace OpenTibia.Scheduling
                                 {
                                     // dequeue, clean and move next.
                                     this.priorityQueue.Dequeue();
-                                    this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
+                                    this.CleanAllAttributedTo(nextEvent.EventId);
                                     continue;
                                 }
 
@@ -187,20 +175,6 @@ namespace OpenTibia.Scheduling
 
                 this.Logger.Debug("Scheduler finished.");
             });
-
-            // return this to allow other IHostedService-s to start.
-            return Task.CompletedTask;
-        }
-
-        /// <summary>
-        /// Stops the scheduler's processing.
-        /// </summary>
-        /// <param name="cancellationToken">A token to observe for cancellation.</param>
-        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            // Do nothing here.
-            return Task.CompletedTask;
         }
 
         /// <summary>

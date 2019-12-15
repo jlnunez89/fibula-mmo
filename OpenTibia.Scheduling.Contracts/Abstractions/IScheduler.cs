@@ -12,6 +12,8 @@
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
     using System;
+    using System.Threading;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Interface that represents a scheduler.
@@ -22,6 +24,11 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         /// Event fired when an event gets fired by the scheduler.
         /// </summary>
         event EventFired OnEventFired;
+
+        /// <summary>
+        /// Gets the current time.
+        /// </summary>
+        DateTimeOffset CurrentTime { get; }
 
         /// <summary>
         /// Schedules an event to be fired immediately.
@@ -48,5 +55,12 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         /// <param name="requestorId">The id of the requestor.</param>
         /// <param name="specificType">Optional. The type of event to remove. By default, it will remove all.</param>
         void CancelAllFor(uint requestorId, Type specificType = null);
+
+        /// <summary>
+        /// Begins the scheduler's processing the queue and firing events.
+        /// </summary>
+        /// <param name="cancellationToken">A token to observe for cancellation.</param>
+        /// <returns>A <see cref="Task"/> representing the asynchronous processing operation.</returns>
+        Task RunAsync(CancellationToken cancellationToken);
     }
 }

@@ -11,9 +11,9 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -25,33 +25,27 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationNotObstructedEventCondition"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
-        /// <param name="requestingCreatureId">The id of the creature requesting the event.</param>
-        /// <param name="thing">The thing being moved in the event.</param>
-        /// <param name="location">The location being checked.</param>
-        public LocationNotObstructedEventCondition(ICreatureFinder creatureFinder, ITileAccessor tileAccessor, uint requestingCreatureId, IThing thing, Location location)
+        /// <param name="requestingCreature">The creature requesting the event.</param>
+        /// <param name="determineThingMovingFunc">A delegate function to determine the thing that is being moved.</param>
+        /// <param name="determineTargetLocationFunc">A function to determine the target location to check.</param>
+        public LocationNotObstructedEventCondition(ITileAccessor tileAccessor, ICreature requestingCreature, Func<IThing> determineThingMovingFunc, Func<Location> determineTargetLocationFunc)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            determineThingMovingFunc.ThrowIfNull(nameof(determineThingMovingFunc));
+            determineTargetLocationFunc.ThrowIfNull(nameof(determineTargetLocationFunc));
 
-            this.CreatureFinder = creatureFinder;
             this.TileAccessor = tileAccessor;
 
-            this.RequestorId = requestingCreatureId;
-            this.Thing = thing;
-            this.Location = location;
+            this.Requestor = requestingCreature;
+            this.GetThingMoving = determineThingMovingFunc;
+            this.GetLocation = determineTargetLocationFunc;
         }
 
         /// <summary>
-        /// Gets the location being checked.
+        /// Gets the creature requesting the event.
         /// </summary>
-        public Location Location { get; }
-
-        /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
+        public ICreature Requestor { get; }
 
         /// <summary>
         /// Gets the reference to the tile accessor.
@@ -59,14 +53,14 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         public ITileAccessor TileAccessor { get; }
 
         /// <summary>
-        /// Gets the <see cref="IThing"/> being moved.
+        /// Gets the delegate function to determine the <see cref="IThing"/> being moved.
         /// </summary>
-        public IThing Thing { get; }
+        public Func<IThing> GetThingMoving { get; }
 
         /// <summary>
-        /// Gets the id of the creature requesting the event.
+        /// Gets the delegate function to determine the location being checked.
         /// </summary>
-        public uint RequestorId { get; }
+        public Func<Location> GetLocation { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "There is not enough room.";
@@ -74,11 +68,9 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
+            var thingMoving = this.GetThingMoving();
 
-            this.TileAccessor.GetTileAt(this.Location, out ITile destTile);
-
-            if (requestor == null || this.Thing == null)
+            if (this.Requestor == null || thingMoving == null || !this.TileAccessor.GetTileAt(this.GetLocation(), out ITile destTile))
             {
                 // requestor being null means this was probably called from a script.
                 // Not this policy's job to restrict this.
@@ -86,12 +78,12 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
             }
 
             //// creature trying to land on a blocking item.
-            //if (destTile.BlocksPass && this.Thing is ICreature)
+            //if (thingMoving is ICreature && destTile.BlocksPass)
             //{
             //    return false;
             //}
 
-            //if (this.Thing is IItem thingAsItem)
+            //if (thingMoving is IItem thingAsItem)
             //{
             //    if (destTile.BlocksLay || (thingAsItem.BlocksPass && destTile.BlocksPass))
             //    {

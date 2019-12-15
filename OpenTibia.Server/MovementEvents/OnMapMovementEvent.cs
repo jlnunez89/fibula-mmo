@@ -40,6 +40,7 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="toLocation"></param>
         /// <param name="count"></param>
         /// <param name="isTeleport"></param>
+        /// <param name="evaluationTime"></param>
         public OnMapMovementEvent(
             ILogger logger,
             IGame game,
@@ -49,11 +50,12 @@ namespace OpenTibia.Server.MovementEvents
             uint creatureRequestingId,
             IThing thingMoving,
             Location fromLocation,
-            byte fromStackPos,
             Location toLocation,
+            byte fromStackPos = byte.MaxValue,
             byte count = 1,
-            bool isTeleport = false)
-            : base(logger, game, connectionManager, creatureFinder, creatureRequestingId, EvaluationTime.OnBoth)
+            bool isTeleport = false,
+            EvaluationTime evaluationTime = EvaluationTime.OnBoth)
+            : base(logger, game, connectionManager, creatureFinder, creatureRequestingId, evaluationTime)
         {
             if (count == 0)
             {
@@ -62,32 +64,34 @@ namespace OpenTibia.Server.MovementEvents
 
             if (!isTeleport && this.Requestor != null)
             {
-                this.Conditions.Add(new CanThrowBetweenEventCondition(creatureFinder, game, this.RequestorId, fromLocation, toLocation));
+                this.Conditions.Add(new CanThrowBetweenEventCondition(game, this.Requestor, () => fromLocation, () => toLocation));
             }
 
-            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(creatureFinder, this.RequestorId, fromLocation));
-            this.Conditions.Add(new LocationNotObstructedEventCondition(creatureFinder, tileAccessor, this.RequestorId, thingMoving, toLocation));
-            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, toLocation));
-            this.Conditions.Add(new UnpassItemsInRangeEventCondition(creatureFinder, this.RequestorId, thingMoving, toLocation));
-            this.Conditions.Add(new LocationsMatchEventCondition(thingMoving?.Location ?? default, fromLocation));
+            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
+            this.Conditions.Add(new LocationNotObstructedEventCondition(tileAccessor, this.Requestor, () => thingMoving, () => toLocation));
+            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, () => toLocation));
+            this.Conditions.Add(new UnpassItemsInRangeEventCondition(this.Requestor, () => thingMoving, () => toLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, count));
 
-            this.ActionsOnPass.Add(new GenericEventAction(() =>
+            var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, fromStackPos, toLocation, count, isTeleport);
+                bool moveSuccessful = this.Game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, toLocation, fromStackPos, count, isTeleport);
 
                 if (!moveSuccessful)
                 {
                     // handles check for isPlayer.
                     this.NotifyOfFailure();
                 }
-                else if (this.Requestor is IPlayer player && player != thingMoving)
+                else if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
-                    game.PlayerRequest_TurnToDirection(player, directionToDestination);
+                    this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
                 }
-            }));
+            });
+
+            this.ActionsOnPass.Add(onPassAction);
         }
     }
 }

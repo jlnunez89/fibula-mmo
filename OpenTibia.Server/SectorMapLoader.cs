@@ -18,7 +18,6 @@ namespace OpenTibia.Server
     using System.Threading.Tasks;
     using Microsoft.Extensions.Options;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using Serilog;

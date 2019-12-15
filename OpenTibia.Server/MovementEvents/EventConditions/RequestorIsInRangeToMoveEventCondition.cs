@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -24,32 +25,25 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="RequestorIsInRangeToMoveEventCondition"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        /// <param name="requestorId">The id of the requestor creature.</param>
-        /// <param name="movingFrom">The location from where the move is happening.</param>
-        public RequestorIsInRangeToMoveEventCondition(ICreatureFinder creatureFinder, uint requestorId, Location movingFrom)
+        /// <param name="requestor">The requestor creature.</param>
+        /// <param name="determineSourceLocationFunc">A function to determine the source location from where the move is happening.</param>
+        public RequestorIsInRangeToMoveEventCondition(ICreature requestor, Func<Location> determineSourceLocationFunc)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+            determineSourceLocationFunc.ThrowIfNull(nameof(determineSourceLocationFunc));
 
-            this.CreatureFinder = creatureFinder;
-            this.RequestorId = requestorId;
-            this.FromLocation = movingFrom;
+            this.Requestor = requestor;
+            this.GetSourceLocation = determineSourceLocationFunc;
         }
 
         /// <summary>
-        /// Gets the reference to the creature finder.
+        /// Gets the requesting creature.
         /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
+        public ICreature Requestor { get; }
 
         /// <summary>
-        /// Gets the id of the requesting creature.
+        /// Gets the delegate function to determine the location to check.
         /// </summary>
-        public uint RequestorId { get; }
-
-        /// <summary>
-        /// Gets the location to check.
-        /// </summary>
-        public Location FromLocation { get; }
+        public Func<Location> GetSourceLocation { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "You are too far away.";
@@ -57,15 +51,13 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
-
-            if (requestor == null)
+            if (this.Requestor == null)
             {
                 // script called, probably
                 return true;
             }
 
-            return (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
+            return (this.Requestor.Location - this.GetSourceLocation()).MaxValueIn2D <= 1;
         }
     }
 }

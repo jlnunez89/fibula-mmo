@@ -21,7 +21,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerCreationMetadata"/> class.
         /// </summary>
-        /// <param name="characterId"></param>
+        /// <param name="characterId">The id of the character that this player represents.</param>
         /// <param name="name">The name of the player.</param>
         /// <param name="maxHitpoints">The max hitpoints of this player.</param>
         /// <param name="maxManapoints">The max manapoints of this player.</param>
