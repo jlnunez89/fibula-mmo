@@ -33,17 +33,12 @@ namespace OpenTibia.Scheduling
         private const int MaxQueueNodes = 1000000;
 
         /// <summary>
-        /// The maximum difference time that the referenced time can be off on creaation of the <see cref="Scheduler"/> instance.
-        /// </summary>
-        private static readonly TimeSpan MaximumReferenceTimeDifference = TimeSpan.FromHours(1);
-
-        /// <summary>
         /// The default processing wait time on the processing queue thread.
         /// </summary>
         private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromMinutes(1);
 
         /// <summary>
-        /// The referenced start time.
+        /// The start time of the scheduler.
         /// </summary>
         private readonly DateTimeOffset startTime;
 
@@ -81,28 +76,16 @@ namespace OpenTibia.Scheduling
         /// Initializes a new instance of the <see cref="Scheduler"/> class.
         /// </summary>
         /// <param name="logger">The logger to use.</param>
-        /// <param name="currentTimeFunc">A function to get the current time.</param>
-        /// <param name="referenceTime">Optional. The time to use as reference. Defaults to <see cref="DateTimeOffset.UtcNow"/>.</param>
-        public Scheduler(ILogger logger, Func<DateTimeOffset> currentTimeFunc, DateTimeOffset? referenceTime = null)
+        public Scheduler(ILogger logger)
         {
             logger.ThrowIfNull(nameof(logger));
-            currentTimeFunc.ThrowIfNull(nameof(currentTimeFunc));
 
             this.Logger = logger.ForContext<Scheduler>();
-            this.GetCurrentTime = currentTimeFunc;
-
-            var startTime = referenceTime ?? DateTimeOffset.UtcNow;
-            var refTimeDifference = DateTimeOffset.UtcNow - startTime;
-
-            if (refTimeDifference >= MaximumReferenceTimeDifference)
-            {
-                throw new ArgumentException($"{nameof(referenceTime)} must be within {MaximumReferenceTimeDifference}.");
-            }
 
             this.eventsPerRequestorLock = new object();
             this.eventsAvailableLock = new object();
             this.queueLock = new object();
-            this.startTime = startTime;
+            this.startTime = this.CurrentTime;
             this.priorityQueue = new FastPriorityQueue<BaseEvent>(MaxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
             this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
@@ -119,9 +102,9 @@ namespace OpenTibia.Scheduling
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Gets the delegate function that gets the current time for inner calculations.
+        /// Gets the current time.
         /// </summary>
-        public Func<DateTimeOffset> GetCurrentTime { get; }
+        public DateTimeOffset CurrentTime => DateTimeOffset.UtcNow;
 
         /// <summary>
         /// Begins the scheduler's processing the queue and firing events.
@@ -155,8 +138,7 @@ namespace OpenTibia.Scheduling
                                 continue;
                             }
 
-                            // store a single 'current' time for processing of all items in the queue
-                            var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(this.GetCurrentTime());
+                            var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(this.CurrentTime);
 
                             // check the current queue and fire any events that are due.
                             while (this.priorityQueue.Count > 0)

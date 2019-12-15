@@ -40,16 +40,6 @@ namespace OpenTibia.Server
         private readonly object exhaustionLock;
 
         /// <summary>
-        /// Lock used for the movement events queue.
-        /// </summary>
-        private readonly object requestedMovementEventsQueueLock;
-
-        /// <summary>
-        /// Queue for movement events.
-        /// </summary>
-        private readonly Queue<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)> requestedMovementEventsQueue;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
         /// </summary>
         /// <param name="name">The name of this creature.</param>
@@ -90,9 +80,6 @@ namespace OpenTibia.Server
 
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
-
-            this.requestedMovementEventsQueueLock = new object();
-            this.requestedMovementEventsQueue = new Queue<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)>();
 
             this.Outfit = new Outfit
             {
@@ -211,7 +198,7 @@ namespace OpenTibia.Server
         public BloodType Blood { get; protected set; }
 
         /// <summary>
-        /// Gets or sets this creature's skills.
+        /// Gets this creature's skills.
         /// </summary>
         public IDictionary<SkillType, ISkill> Skills { get; }
 
@@ -373,68 +360,6 @@ namespace OpenTibia.Server
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Gets any pending movement events that are due given the current time.
-        /// </summary>
-        /// <param name="currentTime">The current time as reference.</param>
-        /// <returns>A collection of events with requested time and delay.</returns>
-        public IEnumerable<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)> GetMovements(DateTimeOffset currentTime)
-        {
-            var dueEvents = new List<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)>();
-
-            lock (this.requestedMovementEventsQueueLock)
-            {
-                while (this.requestedMovementEventsQueue.Count > 0)
-                {
-                    var (evt, requestedTime, delay) = this.requestedMovementEventsQueue.Peek();
-
-                    if (requestedTime <= currentTime)
-                    {
-                        // this event is due now or soon enough.
-                        dueEvents.Add(this.requestedMovementEventsQueue.Dequeue());
-                        continue;
-                    }
-
-                    // next events are outside the window we care about.
-                    break;
-                }
-            }
-
-            return dueEvents;
-        }
-
-        /// <summary>
-        /// Adds a movment event to this entity to track.
-        /// </summary>
-        /// <param name="evt">The event to add.</param>
-        /// <param name="eventRequestTime">The time at which the event is officially requested.</param>
-        /// <param name="intendedDelay">The delay intended before this movement happens.</param>
-        public void AddMovementEvent(IEvent evt, DateTimeOffset eventRequestTime, TimeSpan intendedDelay)
-        {
-            evt.ThrowIfNull(nameof(evt));
-
-            if (intendedDelay < TimeSpan.Zero)
-            {
-                throw new ArgumentException($"Invalid delay time: must be greater than or equal to zero, but got {intendedDelay}", nameof(intendedDelay));
-            }
-
-            lock (this.requestedMovementEventsQueueLock)
-            {
-                this.requestedMovementEventsQueue.Enqueue((evt, eventRequestTime, intendedDelay));
-            }
-        }
-
-        /// <summary>
-        /// Clears all the movement events from this entity.
-        /// </summary>
-        public void ClearAllMovementEvents()
-        {
-            lock (this.requestedMovementEventsQueueLock)
-            {
-                this.requestedMovementEventsQueue.Clear();
-            }
         }
 
         /// <summary>

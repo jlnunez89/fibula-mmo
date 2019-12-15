@@ -35,20 +35,8 @@ namespace OpenTibia.Scheduling.Tests
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
 
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            DateTimeOffset defaultDateTime = default;
-            DateTimeOffset invalidDateTime = DateTimeOffset.UtcNow - TimeSpan.FromHours(1);
-
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
-
-            // use a default time for the reference time.
-            Assert.ThrowsException<ArgumentException>(() => new Scheduler(loggerMock.Object, getCurrentTimeDelegate, defaultDateTime));
-
-            // use an invalid time for the reference time.
-            Assert.ThrowsException<ArgumentException>(() => new Scheduler(loggerMock.Object, getCurrentTimeDelegate, invalidDateTime));
-
             // use a non default reference time.
-            Scheduler scheduler = new Scheduler(loggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            new Scheduler(loggerMock.Object);
         }
 
         /// <summary>
@@ -59,10 +47,7 @@ namespace OpenTibia.Scheduling.Tests
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
 
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
-
-            Scheduler scheduler = new Scheduler(loggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            Scheduler scheduler = new Scheduler(loggerMock.Object);
 
             Assert.ThrowsException<ArgumentNullException>(() => scheduler.ImmediateEvent(null), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
 
@@ -84,9 +69,8 @@ namespace OpenTibia.Scheduling.Tests
             DateTimeOffset invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
             DateTimeOffset validRunAtDateTime = anyNonDefaultDateTime + TimeSpan.FromMilliseconds(1);
             DateTimeOffset twoSecondsFromNowDateTime = anyNonDefaultDateTime + TimeSpan.FromSeconds(2);
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
 
-            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
             ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, validRunAtDateTime), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
 
@@ -118,7 +102,6 @@ namespace OpenTibia.Scheduling.Tests
             TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
 
             const int ExpectedCounterValueBeforeRun = 0;
             const int ExpectedCounterValueAfterRun = 0;
@@ -127,7 +110,7 @@ namespace OpenTibia.Scheduling.Tests
 
             Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
 
-            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
             scheduler.OnEventFired += (sender, eventArgs) =>
             {
@@ -180,7 +163,6 @@ namespace OpenTibia.Scheduling.Tests
             TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
 
             const uint anyRequestorId = 100u;
             const int ExpectedCounterValueBeforeRun = 0;
@@ -192,7 +174,7 @@ namespace OpenTibia.Scheduling.Tests
             Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
             Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
 
-            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
             scheduler.OnEventFired += (sender, eventArgs) =>
             {
@@ -246,12 +228,11 @@ namespace OpenTibia.Scheduling.Tests
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
-            Func<DateTimeOffset> getCurrentTimeDelegate = () => DateTimeOffset.UtcNow;
 
             Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
             Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
 
-            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object, getCurrentTimeDelegate, anyNonDefaultDateTime);
+            Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
             var inmediateEventFiredCounter = 0;
             var scheduledEventFiredCounter = 0;
 

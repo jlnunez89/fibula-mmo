@@ -26,6 +26,11 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         event EventFired OnEventFired;
 
         /// <summary>
+        /// Gets the current time.
+        /// </summary>
+        DateTimeOffset CurrentTime { get; }
+
+        /// <summary>
         /// Schedules an event to be fired immediately.
         /// </summary>
         /// <param name="eventToSchedule">The event to schedule.</param>

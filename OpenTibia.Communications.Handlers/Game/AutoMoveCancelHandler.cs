@@ -63,7 +63,7 @@ namespace OpenTibia.Communications.Handlers.Game
             var responsePackets = new List<IOutgoingPacket>();
 
             // player?.ClearPendingActions();
-            player.ClearAllMovementEvents();
+            //player.ClearAllMovementEvents();
 
             responsePackets.Add(new PlayerWalkCancelPacket(player.Direction.GetClientSafeDirection()));
 

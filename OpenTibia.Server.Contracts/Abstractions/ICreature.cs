@@ -20,7 +20,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures in the game.
     /// </summary>
-    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, IHasInventory, IManagesMovements
+    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, IHasInventory
     {
         // event OnCreatureStateChange OnZeroHealth;
         // event OnCreatureStateChange OnInventoryChanged;

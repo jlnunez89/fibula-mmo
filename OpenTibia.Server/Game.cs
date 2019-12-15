@@ -86,10 +86,7 @@ namespace OpenTibia.Server
             this.CreatureFactory = creatureFactory;
             this.ItemFactory = itemFactory;
 
-            // store the current time for global reference and actual calculations.
-            this.CurrentTime = DateTimeOffset.UtcNow;
-
-            this.scheduler = new Scheduler(logger, () => this.CurrentTime, this.CurrentTime);
+            this.scheduler = new Scheduler(logger);
 
             this.map = map;
 
@@ -133,11 +130,6 @@ namespace OpenTibia.Server
         public IItemFactory ItemFactory { get; }
 
         /// <summary>
-        /// Gets the game's current time.
-        /// </summary>
-        public DateTimeOffset CurrentTime { get; private set; }
-
-        /// <summary>
         /// Gets the game world's light color.
         /// </summary>
         public byte WorldLightColor { get; private set; }
@@ -151,6 +143,11 @@ namespace OpenTibia.Server
         /// Gets the game world's status.
         /// </summary>
         public WorldState Status { get; private set; }
+
+        /// <summary>
+        /// Gets the game's current time.
+        /// </summary>
+        public DateTimeOffset CurrentTime => this.scheduler.CurrentTime;
 
         /// <summary>
         /// Attempts to schedule a player's auto walk movements.
@@ -189,10 +186,7 @@ namespace OpenTibia.Server
                     return false;
                 }
 
-                player.AddMovementEvent(
-                    new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, deferEvaluation: true),
-                    eventRequestTime,
-                    delay);
+                this.scheduler.ScheduleEvent(new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, deferEvaluation: true), eventRequestTime + delay);
 
                 var movementPenalty = (toTile.Ground?.MovementPenalty ?? 200) * (directions[i].IsDiagonal() ? 2 : 1);
 
@@ -342,7 +336,7 @@ namespace OpenTibia.Server
 
             if (movementEvent != null)
             {
-                player.AddMovementEvent(movementEvent, this.CurrentTime, TimeSpan.FromMilliseconds(100));
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + TimeSpan.FromMilliseconds(100));
             }
 
             return movementEvent != null;
@@ -405,7 +399,7 @@ namespace OpenTibia.Server
             var movementEvent = new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, playerStackPosition);
             var cooldownRemaining = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
 
-            player.AddMovementEvent(movementEvent, this.CurrentTime, cooldownRemaining);
+            this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + cooldownRemaining);
 
             return true;
         }
@@ -626,32 +620,15 @@ namespace OpenTibia.Server
 
                 var connectionSweepperTask = Task.Factory.StartNew(this.ConnectionSweeper, cancellationToken, TaskCreationOptions.LongRunning);
 
+                var miscellaneusEventsTask = Task.Factory.StartNew(this.MiscellaneousEventsLoop, cancellationToken, TaskCreationOptions.LongRunning);
+
                 // start the scheduler.
                 var schedulerTask = this.scheduler.RunAsync(cancellationToken);
 
                 // Open the game world!
                 this.Status = WorldState.Open;
 
-                while (!cancellationToken.IsCancellationRequested)
-                {
-                    var timeAtStart = DateTimeOffset.UtcNow;
-
-                    this.AdvanceTime(stepSize);
-
-                    var timeThatCheckTook = DateTimeOffset.UtcNow - timeAtStart;
-                    var actualDelay = stepSize - timeThatCheckTook;
-
-                    if (actualDelay > TimeSpan.Zero)
-                    {
-                        await Task.Delay(actualDelay, cancellationToken);
-                    }
-                    else
-                    {
-                        this.Logger.Warning($"Time is slipping: It took {timeThatCheckTook} to advance time with a step size of {stepSize}.");
-                    }
-                }
-
-                await Task.WhenAll(connectionSweepperTask, schedulerTask);
+                await Task.WhenAll(connectionSweepperTask, miscellaneusEventsTask, schedulerTask);
             });
 
             // return this to allow other IHostedService-s to start.
@@ -672,151 +649,61 @@ namespace OpenTibia.Server
         {
             notification.ThrowIfNull(nameof(notification));
 
-            // this.ProcessEvent(this.scheduler, new EventFiredEventArgs(notification));
             this.scheduler.ImmediateEvent(notification);
         }
 
         /// <summary>
-        /// Advances Time in the game by the supplied span.
+        /// Handles miscellaneous stuff on the game world, such as world light.
         /// </summary>
-        /// <param name="timeStep">The span of time to advance the game for.</param>
-        private void AdvanceTime(TimeSpan timeStep)
+        /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
+        private void MiscellaneousEventsLoop(object tokenState)
         {
-            // Advance current time.
-            this.CurrentTime += timeStep;
+            var cancellationToken = (tokenState as CancellationToken?).Value;
 
-            // now get all the events that became current, from all queues.
-            var eventsToSchedule =
-
-               // handle all creature thinking and decision making.
-               this.AdvanceTimeForThinking(timeStep)
-
-               // handle speech for everything.
-               .Union(this.AdvanceTimeForSpeech(timeStep))
-
-               // handle all creature moving and actions.
-               .Union(this.AdvanceTimeForMoving(timeStep))
-
-               // handle combat.
-               .Union(this.AdvanceTimeForCombat(timeStep))
-
-               // handle miscellaneous things like day cycle.
-               .Union(this.AdvanceTimeForMiscellaneous(timeStep));
-
-            foreach (var (evt, delay) in eventsToSchedule)
+            while (!cancellationToken.IsCancellationRequested)
             {
-                this.scheduler.ScheduleEvent(evt, this.CurrentTime + delay);
-            }
-        }
+                Thread.Sleep(TimeSpan.FromMinutes(1));
 
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForThinking(TimeSpan stepSize)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
+                const int NightLightLevel = 30;
+                const int DuskDawnLightLevel = 130;
+                const int DayLightLevel = 255;
 
-            foreach (var creature in this.CreatureManager.FindAllCreatures())
-            {
-                // TODO: make creatures think here
-                // Schedule any actions that the creature would take here.
-                var decisionsAndActions = creature.Think();
+                // A day is roughly an hour in real time, and night lasts roughly 1/3 of the day in real time
+                // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
+                var currentMinute = this.CurrentTime.Minute;
 
-                if (decisionsAndActions != null && decisionsAndActions.Any())
+                var currentLevel = this.WorldLightLevel;
+                var currentColor = this.WorldLightColor;
+
+                if (currentMinute >= 0 && currentMinute <= 37)
                 {
-                    eventsToSchedule.AddRange(decisionsAndActions);
+                    // Day time: [0, 37] minutes on the hour.
+                    this.WorldLightLevel = DayLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
                 }
-            }
-
-            return eventsToSchedule;
-        }
-
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForSpeech(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            return eventsToSchedule;
-        }
-
-        /// <summary>
-        /// Advances time for the movement queues, handling move requests from all sources.
-        /// </summary>
-        /// <param name="timeStep">The size of the time span to calculate with.</param>
-        /// <returns>A collection of events with delay times that should be scheduled.</returns>
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMoving(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            // Check the movement queues of all creatures and schedule these applying any corresponding delay/penalties as needed.
-            foreach (var creature in this.CreatureManager.FindAllCreatures())
-            {
-                var creatureDueEvents = creature.GetMovements(this.CurrentTime)?.Select(t => (t.evt, t.requestedTime + t.delay - this.CurrentTime));
-
-                if (creatureDueEvents == null || !creatureDueEvents.Any())
+                else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
                 {
-                    continue;
+                    // Dusk: [38, 39] minutes on the hour.
+                    // Dawn: [58, 59] minutes on the hour.
+                    this.WorldLightLevel = DuskDawnLightLevel;
+                    this.WorldLightColor = (byte)LightColors.Orange;
+                }
+                else if (currentMinute >= 40 && currentMinute <= 57)
+                {
+                    // Night time: [40, 57] minutes on the hour.
+                    this.WorldLightLevel = NightLightLevel;
+                    this.WorldLightColor = (byte)LightColors.White;
                 }
 
-                eventsToSchedule.AddRange(creatureDueEvents);
+                if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
+                {
+                    this.scheduler.ImmediateEvent(
+                        new WorldLightChangedNotification(
+                            this.Logger,
+                            () => this.ConnectionManager.GetAllActive(),
+                            new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)));
+                }
             }
-
-            return eventsToSchedule;
-        }
-
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForCombat(TimeSpan timeStep)
-        {
-            var eventsToSchedule = new List<(IEvent Event, TimeSpan Delay)>();
-
-            return eventsToSchedule;
-        }
-
-        /// <summary>
-        /// Advances time for the miscellaneous stuff on the game world, such as world light.
-        /// </summary>
-        /// <param name="timeStep">The size of the time span to calculate with.</param>
-        /// <returns>A collection of events with delay times that should be scheduled.</returns>
-        private IEnumerable<(IEvent Event, TimeSpan Delay)> AdvanceTimeForMiscellaneous(TimeSpan timeStep)
-        {
-            var events = new List<(IEvent, TimeSpan)>();
-
-            const int NightLightLevel = 30;
-            const int DuskDawnLightLevel = 130;
-            const int DayLightLevel = 255;
-
-            // A day is roughly an hour in real time, and night lasts roughly 1/3 of the day in real time
-            // Dusk and Dawns last for 30 minutes roughly, so les aproximate that to 2 minutes.
-            var currentMinute = this.CurrentTime.Minute;
-
-            var currentLevel = this.WorldLightLevel;
-            var currentColor = this.WorldLightColor;
-
-            if (currentMinute >= 0 && currentMinute <= 37)
-            {
-                // Day time: [0, 37] minutes on the hour.
-                this.WorldLightLevel = DayLightLevel;
-                this.WorldLightColor = (byte)LightColors.White;
-            }
-            else if (currentMinute == 38 || currentMinute == 39 || currentMinute == 58 || currentMinute == 59)
-            {
-                // Dusk: [38, 39] minutes on the hour.
-                // Dawn: [58, 59] minutes on the hour.
-                this.WorldLightLevel = DuskDawnLightLevel;
-                this.WorldLightColor = (byte)LightColors.Orange;
-            }
-            else if (currentMinute >= 40 && currentMinute <= 57)
-            {
-                // Night time: [40, 57] minutes on the hour.
-                this.WorldLightLevel = NightLightLevel;
-                this.WorldLightColor = (byte)LightColors.White;
-            }
-
-            if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
-            {
-                events.Add((
-                    new WorldLightChangedNotification(
-                        this.Logger,
-                        () => this.ConnectionManager.GetAllActive(),
-                        new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)) as IEvent, TimeSpan.Zero));
-            }
-
-            return events;
         }
 
         /// <summary>
