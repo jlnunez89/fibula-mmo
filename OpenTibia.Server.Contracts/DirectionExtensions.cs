@@ -45,5 +45,29 @@ namespace OpenTibia.Server.Contracts
                     return Direction.West;
             }
         }
+
+        /// <summary>
+        /// Determines if this direction is a diagonal one.
+        /// </summary>
+        /// <param name="direction">The direction to evaluate.</param>
+        /// <returns>True if the direction is diagonal, false otherwise.</returns>
+        public static bool IsDiagonal(this Direction direction)
+        {
+            switch (direction)
+            {
+                default:
+                case Direction.South:
+                case Direction.North:
+                case Direction.East:
+                case Direction.West:
+                    return false;
+
+                case Direction.NorthEast:
+                case Direction.SouthEast:
+                case Direction.NorthWest:
+                case Direction.SouthWest:
+                    return true;
+            }
+        }
     }
 }

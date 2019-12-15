@@ -12,6 +12,7 @@
 namespace OpenTibia.Communications.Packets
 {
     using System;
+    using System.IO;
     using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
@@ -70,37 +71,37 @@ namespace OpenTibia.Communications.Packets
             return new AuthenticationPacket(password: message.GetString(), worldName: message.GetString());
         }
 
-        ///// <summary>
-        ///// Reads the automove directions information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The message to read from.</param>
-        ///// <returns>The automovement directions information.</returns>
-        // public static IAutoMovementInfo ReadAutomovementInfo(this INetworkMessage message)
-        // {
-        //    var numberOfMovements = message.GetByte();
+        /// <summary>
+        /// Reads the automove directions information sent in the message.
+        /// </summary>
+        /// <param name="message">The message to read from.</param>
+        /// <returns>The automovement directions information.</returns>
+        public static IAutoMovementInfo ReadAutomovementInfo(this INetworkMessage message)
+        {
+            var numberOfMovements = message.GetByte();
 
-        // var directions = new Direction[numberOfMovements];
+            var directions = new Direction[numberOfMovements];
 
-        // for (var i = 0; i < numberOfMovements; i++)
-        //    {
-        //        var dir = message.GetByte();
+            for (var i = 0; i < numberOfMovements; i++)
+            {
+                var dir = message.GetByte();
 
-        // directions[i] = dir switch
-        //        {
-        //            1 => Direction.East,
-        //            2 => Direction.NorthEast,
-        //            3 => Direction.North,
-        //            4 => Direction.NorthWest,
-        //            5 => Direction.West,
-        //            6 => Direction.SouthWest,
-        //            7 => Direction.South,
-        //            8 => Direction.SouthEast,
-        //            _ => throw new InvalidDataException($"Invalid direction value '{dir}' on message."),
-        //        };
-        //    }
+                directions[i] = dir switch
+                {
+                    1 => Direction.East,
+                    2 => Direction.NorthEast,
+                    3 => Direction.North,
+                    4 => Direction.NorthWest,
+                    5 => Direction.West,
+                    6 => Direction.SouthWest,
+                    7 => Direction.South,
+                    8 => Direction.SouthEast,
+                    _ => throw new InvalidDataException($"Invalid direction value '{dir}' on message."),
+                };
+            }
 
-        // return new AutoMovePacket(directions);
-        // }
+            return new AutoMovePacket(directions);
+        }
 
         ///// <summary>
         ///// Reads the death information sent in the message.

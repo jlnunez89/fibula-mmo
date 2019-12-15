@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -24,28 +25,28 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="CanThrowBetweenEventCondition"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="game">A reference to the game instance.</param>
-        /// <param name="requestorId">The id of the creature requesting the throw.</param>
-        /// <param name="fromLocation">The start location.</param>
-        /// <param name="toLocation">The end location.</param>
+        /// <param name="requestor">The creature requesting the throw.</param>
+        /// <param name="determineSourceLocationFunc">A function delegate to determine the source location of the throw.</param>
+        /// <param name="determineDestinationLocationFunc">A function delegate to determine the destination location of the throw.</param>
         /// <param name="checkLineOfSight">Whether or not to check the line of sight.</param>
-        public CanThrowBetweenEventCondition(ICreatureFinder creatureFinder, IGame game, uint requestorId, Location fromLocation, Location toLocation, bool checkLineOfSight = true)
+        // TODO: probably set a delegate as well for the actual check.
+        public CanThrowBetweenEventCondition(
+            IGame game,
+            ICreature requestor,
+            Func<Location> determineSourceLocationFunc,
+            Func<Location> determineDestinationLocationFunc,
+            bool checkLineOfSight = true)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+            determineSourceLocationFunc.ThrowIfNull(nameof(determineSourceLocationFunc));
+            determineDestinationLocationFunc.ThrowIfNull(nameof(determineDestinationLocationFunc));
 
-            this.CreatureFinder = creatureFinder;
             this.Game = game;
-            this.RequestorId = requestorId;
-            this.FromLocation = fromLocation;
-            this.ToLocation = toLocation;
+            this.Requestor = requestor;
+            this.GetSourceLocation = determineSourceLocationFunc;
+            this.GetDestinationLocation = determineDestinationLocationFunc;
             this.CheckLineOfSight = checkLineOfSight;
         }
-
-        /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
 
         /// <summary>
         /// Gets the reference to the game instance.
@@ -53,14 +54,14 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         public IGame Game { get; }
 
         /// <summary>
-        /// Gets the start location of the throw.
+        /// Gets the delegate function to determine the source location of the throw.
         /// </summary>
-        public Location FromLocation { get; }
+        public Func<Location> GetSourceLocation { get; }
 
         /// <summary>
-        /// Gets the end location of the throw.
+        /// Gets the delegate function to determine the destination location of the throw.
         /// </summary>
-        public Location ToLocation { get; }
+        public Func<Location> GetDestinationLocation { get; }
 
         /// <summary>
         /// Gets a value indicating whether the line of sight should be checked.
@@ -68,9 +69,9 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         public bool CheckLineOfSight { get; }
 
         /// <summary>
-        /// Gets the id of the creature requesting the throw.
+        /// Gets the creature requesting the throw.
         /// </summary>
-        public uint RequestorId { get; }
+        public ICreature Requestor { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "You may not throw there.";
@@ -78,15 +79,13 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var requestor = this.RequestorId == 0 ? null : this.CreatureFinder.FindCreatureById(this.RequestorId);
-
-            if (requestor == null)
+            if (this.Requestor == null)
             {
-                // Empty requestorId means not a creature generated event... possibly a script.
+                // Means not a creature generated event... possibly a script.
                 return true;
             }
 
-            return true; // this.Game.CanThrowBetween(this.FromLocation, this.ToLocation, this.CheckLineOfSight);
+            return true; // this.Game.CanThrowBetween(this.GetSourceLocation(), this.GetDestinationLocation(), this.CheckLineOfSight);
         }
     }
 }

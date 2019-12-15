@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -21,10 +22,10 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationsMatchEventCondition"/> class.
         /// </summary>
-        /// <param name="locationOne">The first location.</param>
-        /// <param name="locationTwo">The second location.</param>
-        public LocationsMatchEventCondition(Location locationOne, Location locationTwo)
-            : base(locationOne, locationTwo, 0, true)
+        /// <param name="determineFirstLocationFunc">A function delegate to determine the first location.</param>
+        /// <param name="determineSecondLocationFunc">A function delegate to determine the second location.</param>
+        public LocationsMatchEventCondition(Func<Location> determineFirstLocationFunc, Func<Location> determineSecondLocationFunc)
+            : base(determineFirstLocationFunc, determineSecondLocationFunc, distance: 0, sameFloorOnly: true)
         {
             // Nothing else...
         }

@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Remove="Abstractions\IAttackInfo.cs" />
     <Compile Remove="Abstractions\IAuctionResult.cs" />
-    <Compile Remove="Abstractions\IAutoMovementInfo.cs" />
     <Compile Remove="Abstractions\ICharacterDeathInfo.cs" />
     <Compile Remove="Abstractions\IContainerInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />

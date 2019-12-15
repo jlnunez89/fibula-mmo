@@ -19,8 +19,6 @@ namespace OpenTibia.Server
 
     public class AllBlankMapLoader : IMapLoader
     {
-        public byte PercentageComplete => 0x64;
-
         private ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
         private bool preloaded;
@@ -32,6 +30,8 @@ namespace OpenTibia.Server
             this.preloaded = false;
             this.tilesAndLocations = new ConcurrentDictionary<Location, ITile>();
         }
+
+        public byte PercentageComplete => 0x64;
 
         public IItemFactory ItemFactory { get; }
 

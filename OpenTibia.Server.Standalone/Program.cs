@@ -29,9 +29,6 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Data.Contracts.Abstractions;
     using OpenTibia.Data.CosmosDB;
     using OpenTibia.Providers.Azure;
-    using OpenTibia.Providers.Contracts;
-    using OpenTibia.Scheduling;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -143,10 +140,6 @@ namespace OpenTibia.Server.Standalone
             services.AddManagementHandlers();
 
             // Those executing should derive from IHostedService and be added using AddHostedService.
-            services.AddSingleton<Scheduler>();
-            services.AddHostedService(s => s.GetService<Scheduler>());
-            services.AddSingleton<IScheduler>(s => s.GetService<Scheduler>());
-
             services.AddSingleton<SimpleDoSDefender>();
             services.AddHostedService(s => s.GetService<SimpleDoSDefender>());
             services.AddSingleton<IDoSDefender>(s => s.GetService<SimpleDoSDefender>());

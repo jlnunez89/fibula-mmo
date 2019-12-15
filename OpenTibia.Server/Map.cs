@@ -41,7 +41,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Holds the cache of bytes for tile descriptions, queried by <see cref="Location"/>.
         /// </summary>
-        private readonly IDictionary<Location, (DateTimeOffset lastUpdated, ReadOnlyMemory<byte> data, int[] lengths)> tilesCache;
+        private readonly IDictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>, int[])> tilesCache;
 
         /// <summary>
         /// A lock object for the <see cref="tilesCache"/>.
@@ -66,7 +66,7 @@ namespace OpenTibia.Server
 
             this.tiles = new ConcurrentDictionary<Location, ITile>();
 
-            this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, int[] lengths)>();
+            this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>, int[])>();
             this.tilesCacheLock = new object();
         }
 
@@ -240,104 +240,115 @@ namespace OpenTibia.Server
 
             lock (this.tilesCacheLock)
             {
-                if (!this.tilesCache.TryGetValue(location, out (DateTimeOffset lastModified, ReadOnlyMemory<byte> value, int[] pointers) cachedTileData) || cachedTileData.lastModified < tile.LastModified)
+                if (!this.tilesCache.TryGetValue(location, out (DateTimeOffset lastModified, ReadOnlyMemory<byte> preCreatureData, ReadOnlyMemory<byte> postCreatureData, int[] dataPointers) cachedTileData) || cachedTileData.lastModified < tile.LastModified)
                 {
-                    this.Logger.Verbose($"Regenerated description for tile at {location}.");
-
                     // This tile's data is not cached or it's cached version is no longer valid, we need to regenerate it.
-                    var tempBytes = new List<byte>();
-                    var count = 0;
-                    var newPointers = new int[IMap.MaximumNumberOfThingsToDescribePerTile];
+                    var preCreatureDataBytes = new List<byte>();
+                    var postCreatureDataBytes = new List<byte>();
+                    var currentPointer = 0;
+                    var currentCount = 0;
+                    var dataPointers = new int[IMap.MaximumNumberOfThingsToDescribePerTile * 2];
 
                     // Add ground and top items.
                     if (tile.Ground != null)
                     {
-                        tempBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
+                        preCreatureDataBytes.AddRange(BitConverter.GetBytes(tile.Ground.Type.ClientId));
 
-                        newPointers[count] = tempBytes.Count;
-                        count++;
+                        dataPointers[currentPointer++] = preCreatureDataBytes.Count;
+                        currentCount++;
                     }
 
                     foreach (var item in tile.TopItems1)
                     {
-                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
 
-                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+                        preCreatureDataBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
 
                         if (item.IsCumulative)
                         {
-                            tempBytes.Add(item.Amount);
+                            preCreatureDataBytes.Add(item.Amount);
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            tempBytes.Add(item.LiquidType);
+                            preCreatureDataBytes.Add(item.LiquidType);
                         }
 
-                        newPointers[count] = tempBytes.Count;
-                        count++;
+                        dataPointers[currentPointer++] = preCreatureDataBytes.Count;
+                        currentCount++;
                     }
 
                     foreach (var item in tile.TopItems2)
                     {
-                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
 
-                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+                        preCreatureDataBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
 
                         if (item.IsCumulative)
                         {
-                            tempBytes.Add(item.Amount);
+                            preCreatureDataBytes.Add(item.Amount);
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            tempBytes.Add(item.LiquidType);
+                            preCreatureDataBytes.Add(item.LiquidType);
                         }
 
-                        newPointers[count] = tempBytes.Count;
-                        count++;
+                        dataPointers[currentPointer++] = preCreatureDataBytes.Count;
+                        currentCount++;
+                    }
+
+                    // fill up the preCreature pointer positions now by copying the value of the last valid pointer into the remaining first half.
+                    var copyFromIndex = Math.Max(0, currentPointer - 1);
+
+                    for (; currentPointer < dataPointers.Length / 2; currentPointer++)
+                    {
+                        dataPointers[currentPointer] = dataPointers[copyFromIndex];
                     }
 
                     foreach (var item in tile.DownItems)
                     {
-                        if (count == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
 
-                        tempBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
+                        postCreatureDataBytes.AddRange(BitConverter.GetBytes(item.Type.ClientId));
 
                         if (item.IsCumulative)
                         {
-                            tempBytes.Add(item.Amount);
+                            postCreatureDataBytes.Add(item.Amount);
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            tempBytes.Add(item.LiquidType);
+                            postCreatureDataBytes.Add(item.LiquidType);
                         }
 
-                        newPointers[count] = tempBytes.Count;
-                        count++;
+                        dataPointers[currentPointer++] = postCreatureDataBytes.Count;
+                        currentCount++;
                     }
 
-                    // copy the value of the last valid pointer into the remaining.
-                    var copyFromIndex = Math.Max(0, count - 1);
+                    // And fill up the postCreature pointer positions now by copying the value of the last valid pointer into the remaining second half.
+                    copyFromIndex = Math.Max(dataPointers.Length / 2, currentPointer - 1);
 
-                    for (int i = copyFromIndex; i < newPointers.Length; i++)
+                    for (; currentPointer < dataPointers.Length; currentPointer++)
                     {
-                        newPointers[i] = newPointers[copyFromIndex];
+                        dataPointers[currentPointer] = dataPointers[copyFromIndex];
                     }
 
-                    cachedTileData = (tile.LastModified, tempBytes.ToArray(), newPointers);
+                    cachedTileData = (tile.LastModified, preCreatureDataBytes.ToArray(), postCreatureDataBytes.ToArray(), dataPointers);
+
                     this.tilesCache[location] = cachedTileData;
+
+                    // this.Logger.Verbose($"Regenerated description for tile at {location}.");
                 }
 
                 // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
-                segments.Add(new MapDescriptionSegment(cachedTileData.value.Slice(0, cachedTileData.pointers[Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
+                segments.Add(new MapDescriptionSegment(cachedTileData.preCreatureData.Slice(0, cachedTileData.dataPointers[Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
 
                 // TODO: The creatures part is more dynamic, figure out how/if we can cache it.
                 // Add creatures in the tile.
@@ -412,6 +423,9 @@ namespace OpenTibia.Server
 
                     segments.Add(new MapDescriptionSegment(creatureBytes.ToArray()));
                 }
+
+                // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
+                segments.Add(new MapDescriptionSegment(cachedTileData.postCreatureData.Slice(0, cachedTileData.dataPointers[(cachedTileData.dataPointers.Length / 2) + Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
 
                 return segments;
             }

@@ -27,10 +27,9 @@ namespace OpenTibia.Communications
         /// </summary>
         /// <param name="protocolFactory">The protocol factory reference to create a protocol that the listerner will follow.</param>
         /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
-        /// <param name="connectionManager">A reference to the connection manager service implementation.</param>
         /// <param name="port">The port where this listener will listen.</param>
-        public ManagementListener(IProtocolFactory protocolFactory, IDoSDefender dosDefender, IConnectionManager connectionManager, int port = DefaultManagementListenerPort)
-            : base(port, protocolFactory?.CreateForType(OpenTibiaProtocolType.ManagementProtocol), dosDefender, connectionManager)
+        public ManagementListener(IProtocolFactory protocolFactory, IDoSDefender dosDefender, int port = DefaultManagementListenerPort)
+            : base(port, protocolFactory?.CreateForType(OpenTibiaProtocolType.ManagementProtocol), dosDefender)
         {
         }
     }

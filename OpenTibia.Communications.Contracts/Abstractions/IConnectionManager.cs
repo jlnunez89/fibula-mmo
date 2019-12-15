@@ -22,7 +22,8 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// Registers a new connection to the manager.
         /// </summary>
         /// <param name="connection">The connection to register.</param>
-        void Register(IConnection connection);
+        /// <param name="playerId">The id of the player that this connection is tied to.</param>
+        void Register(IConnection connection, uint playerId);
 
         /// <summary>
         /// Unregisters a connection from the manager.

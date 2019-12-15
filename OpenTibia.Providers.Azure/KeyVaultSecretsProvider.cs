@@ -17,7 +17,6 @@ namespace OpenTibia.Providers.Azure
     using System.Security;
     using System.Threading.Tasks;
     using Microsoft.Azure.KeyVault;
-    using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.Options;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Providers.Contracts;

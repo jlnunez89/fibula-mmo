@@ -81,6 +81,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location);
 
         /// <summary>
+        /// Attempts to schedule a player's auto walk movements.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="directions">The directions to walk to.</param>
+        /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
+        bool PlayerRequest_AutoWalk(IPlayer player, Direction[] directions);
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
@@ -128,12 +136,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="thing">The thing being moved.</param>
         /// <param name="fromTileLocation">The tile from which the movement is being performed.</param>
-        /// <param name="fromTileStackPos">The position in the stack of the tile from which the movement is being performed.</param>
         /// <param name="toTileLocation">The tile to which the movement is being performed.</param>
+        /// <param name="fromTileStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, byte fromTileStackPos, Location toTileLocation, byte amountToMove = 1, bool isTeleport = false);
+        bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
     }
 }

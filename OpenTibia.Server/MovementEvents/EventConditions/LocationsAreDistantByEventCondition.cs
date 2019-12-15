@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -22,27 +24,31 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Initializes a new instance of the <see cref="LocationsAreDistantByEventCondition"/> class.
         /// </summary>
-        /// <param name="locationOne">The first location.</param>
-        /// <param name="locationTwo">The second location.</param>
+        /// <param name="determineFirstLocationFunc">A function delegate to determine the first location.</param>
+        /// <param name="determineSecondLocationFunc">A function delegate to determine the second location.</param>
         /// <param name="distance">Optional. The minimum distance that the loations must be distant by. Default is 1.</param>
         /// <param name="sameFloorOnly">Optional. Whether or not the locations must be on the same floor. Default is false.</param>
-        public LocationsAreDistantByEventCondition(Location locationOne, Location locationTwo, byte distance = 1, bool sameFloorOnly = false)
+        public LocationsAreDistantByEventCondition(Func<Location> determineFirstLocationFunc, Func<Location> determineSecondLocationFunc, byte distance = 1, bool sameFloorOnly = false)
         {
-            this.FirstLocation = locationOne;
-            this.SecondLocation = locationTwo;
+            determineFirstLocationFunc.ThrowIfNull(nameof(determineFirstLocationFunc));
+            determineSecondLocationFunc.ThrowIfNull(nameof(determineSecondLocationFunc));
+
+            this.GetFirstLocation = determineFirstLocationFunc;
+            this.GetSecondLocation = determineSecondLocationFunc;
+
             this.Distance = distance;
             this.SameFloorOnly = sameFloorOnly;
         }
 
         /// <summary>
-        /// Gets the first location.
+        /// Gets the function to determine the first location.
         /// </summary>
-        public Location FirstLocation { get; }
+        public Func<Location> GetFirstLocation { get; }
 
         /// <summary>
-        /// Gets the second location.
+        /// Gets the function to determine the second location.
         /// </summary>
-        public Location SecondLocation { get; }
+        public Func<Location> GetSecondLocation { get; }
 
         /// <summary>
         /// Gets the distance.
@@ -60,10 +66,10 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var locationDiff = (this.FirstLocation - this.SecondLocation).MaxValueIn2D;
-            var sameFloor = this.FirstLocation.Z == this.SecondLocation.Z;
+            var locationDiff = this.GetFirstLocation() - this.GetSecondLocation();
+            var sameFloor = locationDiff.Z == 0;
 
-            if (locationDiff <= this.Distance && (!this.SameFloorOnly || sameFloor))
+            if (locationDiff.MaxValueIn2D <= this.Distance && (!this.SameFloorOnly || sameFloor))
             {
                 // The thing is no longer in this position.
                 return true;

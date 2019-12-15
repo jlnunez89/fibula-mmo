@@ -166,9 +166,6 @@ namespace OpenTibia.Communications.Handlers.Game
 
                     var player = this.Game.PlayerRequest_Login(character, connection);
 
-                    // Also, associate it to the new player.
-                    connection.AssociateToPlayer(player.Id);
-
                     responsePackets.Add(new SelfAppearPacket(player.Id, true, player));
 
                     // Add MapDescription

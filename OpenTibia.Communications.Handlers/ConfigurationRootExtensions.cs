@@ -39,8 +39,8 @@ namespace OpenTibia.Communications.Handlers
         {
             // Game handlers only
             //services.AddSingleton<IHandler, AttackHandler>();
-            //services.AddSingleton<IHandler, AutoMoveCancelHandler>();
-            //services.AddSingleton<IHandler, AutoMoveHandler>();
+            services.AddSingleton<IHandler, AutoMoveCancelHandler>();
+            services.AddSingleton<IHandler, AutoMoveHandler>();
             //services.AddSingleton<IHandler, ChannelCloseHandler>();
             //services.AddSingleton<IHandler, ChannelCreateOwnHandler>();
             //services.AddSingleton<IHandler, ChannelInviteHandler>();
@@ -90,7 +90,7 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, ReSendContainerRequestHandler>();
             //services.AddSingleton<IHandler, ReSendTileRequestHandler>();
             //services.AddSingleton<IHandler, SpeechHandler>();
-            //services.AddSingleton<IHandler, StopAllActionsHandler>();
+            services.AddSingleton<IHandler, StopAllActionsHandler>();
             //services.AddSingleton<IHandler, TextWindowPostHandler>();
             //services.AddSingleton<IHandler, TradeAcceptHandler>();
             //services.AddSingleton<IHandler, TradeCancelHandler>();

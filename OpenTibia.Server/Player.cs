@@ -53,9 +53,6 @@ namespace OpenTibia.Server
 
             this.CharacterId = characterId;
 
-            // TODO: implement, Temp values
-            this.Speed = 420;
-
             this.Outfit = new Outfit
             {
                 Id = 128,
@@ -81,10 +78,12 @@ namespace OpenTibia.Server
             this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
             this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
 
+            this.Speed = this.GetBaseSpeed();
+
             // this.OpenContainers = new IContainer[MaxContainers];
+            // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);
             this.KnownCreatures = new Dictionary<uint, long>();
-            this.VipList = new Dictionary<string, bool>();
 
             // this.OnThingChanged += this.CheckInventoryContainerProximity;
         }
@@ -115,10 +114,6 @@ namespace OpenTibia.Server
         // public IAction PendingAction { get; private set; }
 
         public bool IsLogoutAllowed => true; // this.AutoAttackTargetId == 0;
-
-        private IDictionary<uint, long> KnownCreatures { get; }
-
-        private IDictionary<string, bool> VipList { get; }
 
         public Location LocationInFront
         {
@@ -162,7 +157,7 @@ namespace OpenTibia.Server
 
         public sealed override IInventory Inventory { get; protected set; }
 
-        // private IContainerItem[] OpenContainers { get; }
+        private IDictionary<uint, long> KnownCreatures { get; }
 
         public bool KnowsCreatureWithId(uint creatureId)
         {
@@ -197,6 +192,13 @@ namespace OpenTibia.Server
             }
 
             return uint.MinValue;
+        }
+
+        private ushort GetBaseSpeed()
+        {
+            var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
+
+            return (ushort)(220 + (2 * (expLevel - 1)));
         }
 
         // public void SetPendingAction(IAction action)

@@ -12,7 +12,6 @@
 namespace OpenTibia.Server
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
@@ -41,16 +40,25 @@ namespace OpenTibia.Server
         private readonly object exhaustionLock;
 
         /// <summary>
+        /// Lock used for the movement events queue.
+        /// </summary>
+        private readonly object requestedMovementEventsQueueLock;
+
+        /// <summary>
+        /// Queue for movement events.
+        /// </summary>
+        private readonly Queue<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)> requestedMovementEventsQueue;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
         /// </summary>
-        /// <param name="id"></param>
-        /// <param name="name"></param>
-        /// <param name="article"></param>
-        /// <param name="maxHitpoints"></param>
-        /// <param name="maxManapoints"></param>
-        /// <param name="corpse"></param>
-        /// <param name="hitpoints"></param>
-        /// <param name="manapoints"></param>
+        /// <param name="name">The name of this creature.</param>
+        /// <param name="article">An article for the name of this creature.</param>
+        /// <param name="maxHitpoints">The maximum hitpoints of the creature.</param>
+        /// <param name="maxManapoints">The maximum manapoints of the creature.</param>
+        /// <param name="corpse">The corpse of the creature.</param>
+        /// <param name="hitpoints">The current hitpoints of the creature.</param>
+        /// <param name="manapoints">The current manapoints of the creature.</param>
         protected Creature(
             string name,
             string article,
@@ -83,6 +91,9 @@ namespace OpenTibia.Server
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
+            this.requestedMovementEventsQueueLock = new object();
+            this.requestedMovementEventsQueue = new Queue<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)>();
+
             this.Outfit = new Outfit
             {
                 Id = 0,
@@ -93,13 +104,11 @@ namespace OpenTibia.Server
 
             this.Skills = new Dictionary<SkillType, ISkill>();
 
-            // this.WalkingQueue = new ConcurrentQueue<Tuple<byte, Direction>>();
-
             // Subscribe any attack-impacting conditions here
-            // this.OnThingChanged += this.CheckAutoAttack;         // Are we in range with our target now/still?
-            // this.OnThingChanged += this.CheckPendingActions;                    // Are we in range with our pending action?
-            // OnTargetChanged += CheckAutoAttack;          // Are we attacking someone new / not attacking anymore?
-            // OnInventoryChanged += Mind.AttackConditionsChanged;        // Equipped / DeEquiped something?
+            // this.OnThingChanged += this.CheckAutoAttack;             // Are we in range with our target now/still?
+            // this.OnThingChanged += this.CheckPendingActions;         // Are we in range with our pending action?
+            // OnTargetChanged += CheckAutoAttack;                      // Are we attacking someone new / not attacking anymore?
+            // OnInventoryChanged += Mind.AttackConditionsChanged;      // Equipped / DeEquiped something?
 
             // this.Hostiles = new HashSet<uint>();
             // this.Friendly = new HashSet<uint>();
@@ -120,7 +129,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the inspection text of the creature.
         /// </summary>
-        public override string InspectionText => this.InspectionText;
+        public override string InspectionText => this.Description;
 
         /// <summary>
         /// Gets the creature's in-game id.
@@ -132,36 +141,78 @@ namespace OpenTibia.Server
         /// </summary>
         public string Article { get; }
 
+        /// <summary>
+        /// Gets the name of the creature.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Gets the corpse of the creature.
+        /// </summary>
         public ushort Corpse { get; }
 
+        /// <summary>
+        /// Gets thre current hitpoints.
+        /// </summary>
         public ushort Hitpoints { get; }
 
+        /// <summary>
+        /// Gets the maximum hitpoints.
+        /// </summary>
         public ushort MaxHitpoints { get; }
 
+        /// <summary>
+        /// Gets the current manapoints.
+        /// </summary>
         public ushort Manapoints { get; }
 
+        /// <summary>
+        /// Gets the maximum manapoints.
+        /// </summary>
         public ushort MaxManapoints { get; }
 
         public decimal CarryStrength { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the outfit of this creature.
+        /// </summary>
         public Outfit Outfit { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets the direction that this creature is facing.
+        /// </summary>
         public Direction Direction { get; protected set; }
 
+        /// <summary>
+        /// Gets the location in front of this creature.
+        /// </summary>
         public Location LocationInFront => this.CalculateLocationInFront();
 
+        /// <summary>
+        /// Gets or sets this creature's light level.
+        /// </summary>
         public byte EmittedLightLevel { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets this creature's light color.
+        /// </summary>
         public byte EmittedLightColor { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets this creature's speed.
+        /// </summary>
         public ushort Speed { get; protected set; }
 
         public uint Flags { get; private set; }
 
+        /// <summary>
+        /// Gets or sets this creature's blood type.
+        /// </summary>
         public BloodType Blood { get; protected set; }
 
+        /// <summary>
+        /// Gets or sets this creature's skills.
+        /// </summary>
         public IDictionary<SkillType, ISkill> Skills { get; }
 
         /// <summary>
@@ -174,6 +225,7 @@ namespace OpenTibia.Server
         public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
 
         // public IList<Condition> Conditions { get; protected set; } // TODO: implement.
+
         public bool IsInvisible { get; protected set; } // TODO: implement.
 
         public bool CanSeeInvisible { get; } // TODO: implement.
@@ -181,14 +233,6 @@ namespace OpenTibia.Server
         public byte Skull { get; protected set; } // TODO: implement.
 
         public byte Shield { get; protected set; } // TODO: implement.
-
-        public ConcurrentQueue<Tuple<byte, Direction>> WalkingQueue { get; }
-
-        public byte NextStepId { get; set; }
-
-        public HashSet<uint> Hostiles { get; }
-
-        public HashSet<uint> Friendly { get; }
 
         public abstract IInventory Inventory { get; protected set; }
 
@@ -212,6 +256,7 @@ namespace OpenTibia.Server
                 if (timeLeft < TimeSpan.Zero)
                 {
                     this.ExhaustionInformation.Remove(type);
+                    return TimeSpan.Zero;
                 }
 
                 return timeLeft;
@@ -282,6 +327,117 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Checks if this creature can see a given creature.
+        /// </summary>
+        /// <param name="otherCreature">The creature to check against.</param>
+        /// <returns>True if this creature can see the given creature, false otherwise.</returns>
+        public bool CanSee(ICreature otherCreature)
+        {
+            otherCreature.ThrowIfNull(nameof(otherCreature));
+
+            return (!otherCreature.IsInvisible || this.CanSeeInvisible) && this.CanSee(otherCreature.Location);
+        }
+
+        /// <summary>
+        /// Checks if this creature can see a given location.
+        /// </summary>
+        /// <param name="location">The location to check against.</param>
+        /// <returns>True if this creature can see the given location, false otherwise.</returns>
+        public bool CanSee(Location location)
+        {
+            if (this.Location.Z <= 7)
+            {
+                // we are on ground level or above (7 -> 0)
+                // view is from 7 -> 0
+                if (location.Z > 7)
+                {
+                    return false;
+                }
+            }
+            else if (this.Location.Z >= 8)
+            {
+                // we are underground (8 -> 15)
+                // view is +/- 2 from the floor we stand on
+                if (Math.Abs(this.Location.Z - location.Z) > 2)
+                {
+                    return false;
+                }
+            }
+
+            var offsetZ = this.Location.Z - location.Z;
+
+            if (location.X >= this.Location.X - 8 + offsetZ && location.X <= this.Location.X + 9 + offsetZ &&
+                location.Y >= this.Location.Y - 6 + offsetZ && location.Y <= this.Location.Y + 7 + offsetZ)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Gets any pending movement events that are due given the current time.
+        /// </summary>
+        /// <param name="currentTime">The current time as reference.</param>
+        /// <returns>A collection of events with requested time and delay.</returns>
+        public IEnumerable<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)> GetMovements(DateTimeOffset currentTime)
+        {
+            var dueEvents = new List<(IEvent evt, DateTimeOffset requestedTime, TimeSpan delay)>();
+
+            lock (this.requestedMovementEventsQueueLock)
+            {
+                while (this.requestedMovementEventsQueue.Count > 0)
+                {
+                    var (evt, requestedTime, delay) = this.requestedMovementEventsQueue.Peek();
+
+                    if (requestedTime <= currentTime)
+                    {
+                        // this event is due now or soon enough.
+                        dueEvents.Add(this.requestedMovementEventsQueue.Dequeue());
+                        continue;
+                    }
+
+                    // next events are outside the window we care about.
+                    break;
+                }
+            }
+
+            return dueEvents;
+        }
+
+        /// <summary>
+        /// Adds a movment event to this entity to track.
+        /// </summary>
+        /// <param name="evt">The event to add.</param>
+        /// <param name="eventRequestTime">The time at which the event is officially requested.</param>
+        /// <param name="intendedDelay">The delay intended before this movement happens.</param>
+        public void AddMovementEvent(IEvent evt, DateTimeOffset eventRequestTime, TimeSpan intendedDelay)
+        {
+            evt.ThrowIfNull(nameof(evt));
+
+            if (intendedDelay < TimeSpan.Zero)
+            {
+                throw new ArgumentException($"Invalid delay time: must be greater than or equal to zero, but got {intendedDelay}", nameof(intendedDelay));
+            }
+
+            lock (this.requestedMovementEventsQueueLock)
+            {
+                this.requestedMovementEventsQueue.Enqueue((evt, eventRequestTime, intendedDelay));
+            }
+        }
+
+        /// <summary>
+        /// Clears all the movement events from this entity.
+        /// </summary>
+        public void ClearAllMovementEvents()
+        {
+            lock (this.requestedMovementEventsQueueLock)
+            {
+                this.requestedMovementEventsQueue.Clear();
+            }
+        }
+
+        /// <summary>
         /// Calculates the <see cref="Location"/> in front of this creature.
         /// </summary>
         /// <returns>The location in front of this creature.</returns>
@@ -307,9 +463,6 @@ namespace OpenTibia.Server
                     return this.Location + new Location() { X = -1, Y = 1, Z = 0 };
             }
         }
-
-
-
 
         // protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }
 
@@ -337,45 +490,6 @@ namespace OpenTibia.Server
         // {
         //    this.Flags &= ~(uint)flag;
         // }
-
-        public bool CanSee(ICreature otherCreature)
-        {
-            otherCreature.ThrowIfNull(nameof(otherCreature));
-
-            return (!otherCreature.IsInvisible || this.CanSeeInvisible) && this.CanSee(otherCreature.Location);
-        }
-
-        public bool CanSee(Location pos)
-        {
-            if (this.Location.Z <= 7)
-            {
-                // we are on ground level or above (7 -> 0)
-                // view is from 7 -> 0
-                if (pos.Z > 7)
-                {
-                    return false;
-                }
-            }
-            else if (this.Location.Z >= 8)
-            {
-                // we are underground (8 -> 15)
-                // view is +/- 2 from the floor we stand on
-                if (Math.Abs(this.Location.Z - pos.Z) > 2)
-                {
-                    return false;
-                }
-            }
-
-            var offsetZ = this.Location.Z - pos.Z;
-
-            if (pos.X >= this.Location.X - 8 + offsetZ && pos.X <= this.Location.X + 9 + offsetZ &&
-                pos.Y >= this.Location.Y - 6 + offsetZ && pos.Y <= this.Location.Y + 7 + offsetZ)
-            {
-                return true;
-            }
-
-            return false;
-        }
 
         // public void SetAttackTarget(uint targetId)
         // {

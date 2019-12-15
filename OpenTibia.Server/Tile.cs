@@ -363,27 +363,70 @@ namespace OpenTibia.Server
                 }
             }
 
-            // ignore the creatures in this tile, we deal with these at the end.
-            currentPos += this.creatureIdsOnTile.Count;
-
-            if (stackPosition > currentPos + this.downItemsOnTile.Count)
+            if (stackPosition > currentPos + this.creatureIdsOnTile.Count)
             {
-                currentPos += this.downItemsOnTile.Count;
+                currentPos += this.creatureIdsOnTile.Count;
             }
             else
             {
-                foreach (var item in this.downItemsOnTile)
+                foreach (var creatureId in this.creatureIdsOnTile)
                 {
                     if (++currentPos == stackPosition)
                     {
-                        return item;
+                        return creatureFinder.FindCreatureById(creatureId);
                     }
                 }
             }
 
-            currentPos -= this.creatureIdsOnTile.Count;
+            return stackPosition <= currentPos + this.downItemsOnTile.Count ? this.downItemsOnTile.Skip(1 - stackPosition - currentPos).First() : null;
+        }
 
-            return stackPosition <= currentPos + this.creatureIdsOnTile.Count ? creatureFinder.FindCreatureById(this.creatureIdsOnTile.Skip(1 - stackPosition - currentPos).First()) : null;
+        /// <summary>
+        /// Attempts to get the tile's top <see cref="IThing"/> depending on the given order.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <param name="order">The order in the stack to return.</param>
+        /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
+        public IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order)
+        {
+            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+
+            var i = 0;
+
+            if (order > i + this.topItems1OnTile.Count)
+            {
+                i += this.topItems1OnTile.Count;
+            }
+            else if (this.topItems1OnTile.Count > 0)
+            {
+                return this.topItems1OnTile.Skip(1 - order - i).First();
+            }
+
+            if (order > i + this.topItems2OnTile.Count)
+            {
+                i += this.topItems2OnTile.Count;
+            }
+            else if (this.topItems2OnTile.Count > 0)
+            {
+                return this.topItems2OnTile.Skip(1 - order - i).First();
+            }
+
+            if (order > i + this.creatureIdsOnTile.Count)
+            {
+                i += this.creatureIdsOnTile.Count;
+            }
+            else if (this.creatureIdsOnTile.Count > 0)
+            {
+                return creatureFinder.FindCreatureById(this.creatureIdsOnTile.Skip(1 - order - i).First());
+            }
+
+            if (order <= i + this.downItemsOnTile.Count && this.downItemsOnTile.Count > 0)
+            {
+                return this.downItemsOnTile.Skip(1 - order - i).First();
+            }
+
+            // when nothing else works, return the ground (if any).
+            return this.Ground;
         }
 
         /// <summary>

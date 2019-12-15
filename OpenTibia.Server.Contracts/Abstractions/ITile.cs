@@ -39,6 +39,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         IThing GetThingAtStackPosition(ICreatureFinder creatureFinder, byte stackPosition);
 
+        /// <summary>
+        /// Attempts to get the tile's top <see cref="IThing"/> depending on the given order.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <param name="order">The order in the stack to return.</param>
+        /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
+        IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order);
+
         bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
 
         void SetFlag(TileFlag flag);
