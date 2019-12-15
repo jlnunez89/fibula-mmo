@@ -749,12 +749,10 @@ namespace OpenTibia.Server
 
             IEvent evt = eventArgs.Event;
 
-            // this.Logger.Verbose($"Processing event {evt.EventId}.");
-
             try
             {
                 evt.Process();
-                this.Logger.Verbose($"Processed event {evt.EventId}, current game time: {this.CurrentTime.ToUnixTimeMilliseconds()}.");
+                this.Logger.Debug($"Processed event {evt.EventId}, current game time: {this.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
             catch (Exception ex)
             {

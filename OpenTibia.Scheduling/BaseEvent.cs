@@ -132,7 +132,7 @@ namespace OpenTibia.Scheduling
 
                     sw.Stop();
 
-                    // this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
+                    this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
                 }
 
                 return;
@@ -146,7 +146,7 @@ namespace OpenTibia.Scheduling
 
                 sw.Stop();
 
-                // this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
+                this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
             }
         }
     }
