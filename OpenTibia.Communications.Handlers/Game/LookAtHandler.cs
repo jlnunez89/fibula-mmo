@@ -85,7 +85,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            this.Logger.Verbose($"Player {player.Name} looking at thing with id: {lookAtInfo.ThingId}. {lookAtInfo.Location}");
+            this.Logger.Debug($"Player {player.Name} looking at thing with id: {lookAtInfo.ThingId}. {lookAtInfo.Location}");
 
             if (lookAtInfo.Location.Type != LocationType.Ground || player.CanSee(lookAtInfo.Location))
             {
