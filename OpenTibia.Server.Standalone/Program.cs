@@ -32,6 +32,10 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Factories;
+    using OpenTibia.Server.Items.ObjectsFile;
+    using OpenTibia.Server.Map;
+    using OpenTibia.Server.Map.SectorFiles;
     using Serilog;
 
     /// <summary>
@@ -112,7 +116,12 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IConnectionManager, ConnectionManager>();
 
             services.AddAzureProviders(hostingContext.Configuration);
+
             services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
+
+            services.AddSectorFilesMapLoader(hostingContext.Configuration);
+
+            services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
 
             // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
             // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
@@ -121,15 +130,9 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IApplicationContext, ApplicationContext>();
 
             services.AddSingleton<IMap, Map>();
-            services.AddSingleton<IMapLoader, SectorMapLoader>();
             services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
 
-            services.Configure<SectorMapLoaderOptions>(hostingContext.Configuration.GetSection(nameof(SectorMapLoaderOptions)));
-
             services.AddSingleton<IItemFactory, ItemFactory>();
-            services.AddSingleton<IItemTypeLoader, ObjectsFileItemTypeLoader>();
-
-            services.Configure<ObjectsFileItemTypeLoaderOptions>(hostingContext.Configuration.GetSection(nameof(ObjectsFileItemTypeLoaderOptions)));
 
             services.AddSingleton<ICreatureFactory, CreatureFactory>();
             services.AddSingleton<ICreatureManager, CreatureManager>();

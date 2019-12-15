@@ -36,6 +36,10 @@ namespace OpenTibia.Server
     /// </summary>
     public class Game : IGame
     {
+        public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
+
+        public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
+
         /// <summary>
         /// The default adavance time step span.
         /// </summary>
@@ -219,7 +223,7 @@ namespace OpenTibia.Server
             // playerRecord.location
             IThing playerThing = player;
 
-            playerThing.Location = Map.VeteranStart;
+            playerThing.Location = Game.VeteranStart;
 
             if (this.map.GetTileAt(player.Location, out ITile targetTile))
             {

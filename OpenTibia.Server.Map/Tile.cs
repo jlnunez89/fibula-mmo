@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Map
 {
     using System;
     using System.Collections.Generic;

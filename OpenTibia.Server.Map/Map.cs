@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Map
 {
     using System;
     using System.Buffers;
@@ -29,10 +29,6 @@ namespace OpenTibia.Server
     /// </summary>
     public class Map : IMap
     {
-        public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
-
-        public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
-
         /// <summary>
         /// Holds the <see cref="ITile"/>s data based on <see cref="Location"/>.
         /// </summary>

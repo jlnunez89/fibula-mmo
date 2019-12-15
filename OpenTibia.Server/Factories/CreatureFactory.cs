@@ -9,9 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Factories
 {
     using System;
+    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
 

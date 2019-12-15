@@ -27,7 +27,7 @@ namespace OpenTibia.Server.Parsing.Grammar
             /// <summary>
             /// Initializes a new instance of the <see cref="MoveUseEvent"/> class.
             /// </summary>
-            /// <param name="rule"></param>
+            /// <param name="rule">The event's conditional rule.</param>
             public MoveUseEvent(ConditionalActionRule rule)
             {
                 rule.ThrowIfNull(nameof(rule));
@@ -35,11 +35,18 @@ namespace OpenTibia.Server.Parsing.Grammar
                 this.Type = rule.ConditionSet.FirstOrDefault();
                 this.Rule = rule;
 
-                rule.ConditionSet.RemoveAt(0); // remove first.
+                // Remove first element since we already parsed it into 'Type'.
+                rule.ConditionSet.RemoveAt(0);
             }
 
+            /// <summary>
+            /// Gets the type of event.
+            /// </summary>
             public string Type { get; }
 
+            /// <summary>
+            /// Gets the event's conditional rule.
+            /// </summary>
             public ConditionalActionRule Rule { get; }
         }
     }

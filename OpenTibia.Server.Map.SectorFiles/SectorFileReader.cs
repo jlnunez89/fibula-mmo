@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Map.SectorFiles
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Map;
     using OpenTibia.Server.Parsing;
     using Serilog;
 

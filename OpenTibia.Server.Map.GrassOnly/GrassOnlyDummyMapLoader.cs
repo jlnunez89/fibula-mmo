@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AllBlankMapLoader.cs" company="2Dudes">
+// <copyright file="GrassOnlyDummyMapLoader.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,21 +9,29 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Map.GrassOnly
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Map;
 
-    public class AllBlankMapLoader : IMapLoader
+    /// <summary>
+    /// Class that represents a dummy map loader that yields all grass tiles.
+    /// </summary>
+    public class GrassOnlyDummyMapLoader : IMapLoader
     {
         private ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
         private bool preloaded;
 
-        public AllBlankMapLoader(IItemFactory itemFactory)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="GrassOnlyDummyMapLoader"/> class.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory.</param>
+        public GrassOnlyDummyMapLoader(IItemFactory itemFactory)
         {
             this.ItemFactory = itemFactory;
 
@@ -31,15 +39,38 @@ namespace OpenTibia.Server
             this.tilesAndLocations = new ConcurrentDictionary<Location, ITile>();
         }
 
+        /// <summary>
+        /// Gets the percentage completed loading the map [0, 100].
+        /// </summary>
         public byte PercentageComplete => 0x64;
 
+        /// <summary>
+        /// Gets the item factory instance.
+        /// </summary>
         public IItemFactory ItemFactory { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this loader has previously loaded the given coordinates.
+        /// </summary>
+        /// <param name="x">The X coordinate.</param>
+        /// <param name="y">The Y coordinate.</param>
+        /// <param name="z">The Z coordinate.</param>
+        /// <returns>True if the loader has previously loaded the given coordinates, false otherwise.</returns>
         public bool HasLoaded(int x, int y, sbyte z)
         {
             return this.tilesAndLocations.ContainsKey(new Location() { X = x, Y = y, Z = z });
         }
 
+        /// <summary>
+        /// Attempts to load all tiles within a 3 dimensional coordinates window.
+        /// </summary>
+        /// <param name="fromX">The start X coordinate for the load window.</param>
+        /// <param name="toX">The end X coordinate for the load window.</param>
+        /// <param name="fromY">The start Y coordinate for the load window.</param>
+        /// <param name="toY">The end Y coordinate for the load window.</param>
+        /// <param name="fromZ">The start Z coordinate for the load window.</param>
+        /// <param name="toZ">The end Z coordinate for the load window.</param>
+        /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="ITile"/>.</returns>
         public IEnumerable<(Location Location, ITile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
             if (fromZ != 7)

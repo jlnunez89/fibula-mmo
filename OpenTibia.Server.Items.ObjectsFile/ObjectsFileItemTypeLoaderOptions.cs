@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SectorMapLoaderOptions.cs" company="2Dudes">
+// <copyright file="ObjectsFileItemTypeLoaderOptions.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,21 +9,16 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace OpenTibia.Server.Items.ObjectsFile
 {
     /// <summary>
-    /// Class that represents options for the <see cref="SectorMapLoader"/>.
+    /// Class that represents options for the <see cref="ObjectsFileItemTypeLoader"/>.
     /// </summary>
-    public class SectorMapLoaderOptions
+    public class ObjectsFileItemTypeLoaderOptions
     {
         /// <summary>
-        /// Gets or sets the directory for the live map.
+        /// Gets or sets the path to the file to load.
         /// </summary>
-        public string LiveMapDirectory { get; set; }
-
-        /// <summary>
-        /// Gets or sets the directory for the original map.
-        /// </summary>
-        public string OriginalMapDirectory { get; set; }
+        public string FilePath { get; set; }
     }
 }
