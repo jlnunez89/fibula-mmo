@@ -205,7 +205,7 @@ namespace OpenTibia.Scheduling
 
                 foreach (var eventId in this.eventsPerRequestor[requestorId])
                 {
-                    // TODO: remove only the specified type.
+                    // if (specificType == null || !eventTypes[eventId].IsAssignableFrom(specificType))
                     this.CancelEvent(eventId);
                 }
 

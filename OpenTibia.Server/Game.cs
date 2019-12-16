@@ -206,6 +206,20 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Attempts to cancel all of a player's pending movements.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_CancelPendingMovements(IPlayer player)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            this.scheduler.CancelAllFor(player.Id, typeof(OnMapCreatureMovementEvent));
+
+            return true;
+        }
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
