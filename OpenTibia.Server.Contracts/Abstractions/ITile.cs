@@ -37,8 +37,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         byte GetStackPositionOfThing(IThing thing);
 
-        IThing GetThingAtStackPosition(ICreatureFinder creatureFinder, byte stackPosition);
-
         /// <summary>
         /// Attempts to get the tile's top <see cref="IThing"/> depending on the given order.
         /// </summary>
