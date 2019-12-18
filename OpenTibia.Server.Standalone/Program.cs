@@ -32,6 +32,7 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Events.MoveUseFile;
     using OpenTibia.Server.Factories;
     using OpenTibia.Server.Items.ObjectsFile;
     using OpenTibia.Server.Map;
@@ -123,6 +124,8 @@ namespace OpenTibia.Server.Standalone
 
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
 
+            services.AddMoveUseItemEventLoader(hostingContext.Configuration);
+
             // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
             // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
             // rather than save an actual copy of the DB context in the app context.
@@ -131,6 +134,8 @@ namespace OpenTibia.Server.Standalone
 
             services.AddSingleton<IMap, Map>();
             services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
+
+            services.AddSingleton<IScriptApi, StandardScriptApi>();
 
             services.AddSingleton<IItemFactory, ItemFactory>();
 

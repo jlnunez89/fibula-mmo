@@ -82,13 +82,20 @@ namespace OpenTibia.Server.MovementEvents
                 {
                     // handles check for isPlayer.
                     this.NotifyOfFailure();
+
+                    return;
                 }
-                else if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
+
+                if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
                     this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
                 }
+
+                this.Game.PerformSeparationEventRules(fromLocation, thingMoving, this.Requestor);
+
+                this.Game.PerformCollisionEventRules(toLocation, thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

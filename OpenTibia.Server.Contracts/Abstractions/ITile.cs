@@ -21,7 +21,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         IEnumerable<uint> CreatureIds { get; }
 
-        IEnumerable<IItem> DownItems { get; }
+        IEnumerable<IItem> Items { get; }
 
         byte Flags { get; }
 
@@ -29,11 +29,23 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         DateTimeOffset LastModified { get; }
 
-        IEnumerable<IItem> TopItems1 { get; }
+        IEnumerable<IItem> StayOnTopItems { get; }
 
-        IEnumerable<IItem> TopItems2 { get; }
+        IEnumerable<IItem> StayOnBottomItems { get; }
+
+        bool HasSeparationEvents { get; }
+
+        IEnumerable<IItem> ItemsWithSeparation { get; }
+
+        bool HasCollisionEvents { get; }
+
+        IEnumerable<IItem> ItemsWithCollision { get; }
 
         void AddThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
+
+        bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
+
+        bool HasItemWithId(ushort itemId);
 
         byte GetStackPositionOfThing(IThing thing);
 
@@ -44,8 +56,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="order">The order in the stack to return.</param>
         /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
         IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order);
-
-        bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
 
         void SetFlag(TileFlag flag);
     }

@@ -115,125 +115,79 @@ namespace OpenTibia.Server.Notifications
                 // floor change down
                 if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z)
                 {
+                    var windowStartLocation = new Location()
+                    {
+                        X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1), // -8
+                        Y = this.Arguments.OldLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1), // -6
+                        Z = this.Arguments.NewLocation.Z,
+                    };
+
+                    ReadOnlySequence<byte> description;
+
                     // going from surface to underground
                     if (this.Arguments.NewLocation.Z == 8)
                     {
-                        //packets.Add(new MapPartialDescriptionPacket(
-                        //    OutgoingGamePacketType.FloorChangeDown,
-                        //    this.Game.GetDescriptionOfMapForPlayer(
-                        //        player,
-                        //        (ushort)(this.Arguments.OldLocation.X - 8),
-                        //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                        //        (ushort)(this.Arguments.OldLocation.Y - 6),
-                        //        (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                        //        (sbyte)(this.Arguments.NewLocation.Z - 1),
-                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 1))));
+                        // Client already has the two floors above (6 and 7), so it needs 8 (new current), and 2 below.
+                        description = this.Game.GetDescriptionOfMapForPlayer(player, (ushort)windowStartLocation.X, (ushort)windowStartLocation.Y, this.Arguments.NewLocation.Z, (sbyte)(this.Arguments.NewLocation.Z + 2), IMap.DefaultWindowSizeX, IMap.DefaultWindowSizeY, -1);
                     }
 
-                    // going further down
-                    else if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z && this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < IMap.DefaultWindowSizeY)
+                    // going further down underground; watch for world's deepest floor (hardcoded for now).
+                    else if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z && this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < 14)
                     {
-                        //packets.Add(new MapPartialDescriptionPacket(
-                        //    OutgoingGamePacketType.FloorChangeDown,
-                        //    this.Game.GetDescriptionOfMapForPlayer(
-                        //        player,
-                        //        (ushort)(this.Arguments.OldLocation.X - 8),
-                        //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                        //        (ushort)(this.Arguments.OldLocation.Y - 6),
-                        //        (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 3),
-                        //        (sbyte)(this.Arguments.NewLocation.Z + 2 - 3))));
+                        // Client already has all floors needed except the new deepest floor, so it needs the 2th floor below the current.
+                        description = this.Game.GetDescriptionOfMapForPlayer(player, (ushort)windowStartLocation.X, (ushort)windowStartLocation.Y, (sbyte)(this.Arguments.NewLocation.Z + 2), (sbyte)(this.Arguments.NewLocation.Z + 2), IMap.DefaultWindowSizeX, IMap.DefaultWindowSizeY, -3);
                     }
+
+                    // going down but still above surface, so client has all floors.
                     else
                     {
-                        packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, new ReadOnlySequence<byte>(new byte[0])));
+                        description = new ReadOnlySequence<byte>(new byte[0]);
                     }
 
-                    //// moving down a floor makes us out of sync, include east and south
-                    //packets.Add(new MapPartialDescriptionPacket(
-                    //    OutgoingGamePacketType.MapSliceEast,
-                    //    this.Game.GetDescriptionOfMapForPlayer(
-                    //        player,
-                    //        (ushort)(this.Arguments.OldLocation.X + 9),
-                    //        (ushort)(this.Arguments.OldLocation.X + 9),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 7),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 7 + IMap.DefaultWindowSizeY - 1),
-                    //        this.Arguments.NewLocation.Z,
-                    //        this.Arguments.NewLocation.Z)));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, description));
 
-                    //// south
-                    //packets.Add(new MapPartialDescriptionPacket(
-                    //    OutgoingGamePacketType.MapSliceSouth,
-                    //    this.Game.GetDescriptionOfMapForPlayer(
-                    //        player,
-                    //        (ushort)(this.Arguments.OldLocation.X - 8),
-                    //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                    //        (ushort)(this.Arguments.OldLocation.Y + 7),
-                    //        (ushort)(this.Arguments.OldLocation.Y + 7),
-                    //        this.Arguments.NewLocation.Z,
-                    //        this.Arguments.NewLocation.Z)));
+                    // moving down a floor makes us out of sync, include east and south
+                    packets.Add(this.EastSliceDescription(player, this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z + this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    packets.Add(this.SouthSliceDescription(player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
                 }
 
                 // floor change up
                 else if (this.Arguments.NewLocation.Z < this.Arguments.OldLocation.Z)
                 {
+                    var windowStartLocation = new Location()
+                    {
+                        X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1), // -8
+                        Y = this.Arguments.OldLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1), // -6
+                        Z = this.Arguments.NewLocation.Z,
+                    };
+
+                    ReadOnlySequence<byte> description;
+
                     // going to surface
-                    //if (this.Arguments.NewLocation.Z == 7)
-                    //{
-                    //    packets.Add(new MapPartialDescriptionPacket(
-                    //        OutgoingGamePacketType.FloorChangeUp,
-                    //        this.Game.GetDescriptionOfMapForPlayer(
-                    //            player,
-                    //            (ushort)(this.Arguments.OldLocation.X - 8),
-                    //            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                    //            (ushort)(this.Arguments.OldLocation.Y - 6),
-                    //            (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                    //            5,
-                    //            0)));
-                    //}
+                    if (this.Arguments.NewLocation.Z == 7)
+                    {
+                        // Client already has the first two above-the-ground floors (6 and 7), so it needs 0-5 above.
+                        description = this.Game.GetDescriptionOfMapForPlayer(player, (ushort)windowStartLocation.X, (ushort)windowStartLocation.Y, 5, 0, IMap.DefaultWindowSizeX, IMap.DefaultWindowSizeY, 3);
+                    }
 
-                    //// underground, going one floor up (still underground)
-                    //else if (this.Arguments.NewLocation.Z > 7)
-                    //{
-                    //    packets.Add(new MapPartialDescriptionPacket(
-                    //        OutgoingGamePacketType.FloorChangeUp,
-                    //        this.Game.GetDescriptionOfMapForPlayer(
-                    //            player,
-                    //            (ushort)(this.Arguments.OldLocation.X - 8),
-                    //            (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                    //            (ushort)(this.Arguments.OldLocation.Y - 6),
-                    //            (ushort)(this.Arguments.OldLocation.Y - 6 + IMap.DefaultWindowSizeY - 1),
-                    //            (sbyte)(this.Arguments.OldLocation.Z - 3),
-                    //            (sbyte)(this.Arguments.OldLocation.Z - 3))));
-                    //}
-                    //else
-                    //{
-                    //    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, new ReadOnlySequence<byte>(ReadOnlyMemory<byte>.Empty)));
-                    //}
+                    // going up but still underground
+                    else if (this.Arguments.NewLocation.Z > 7)
+                    {
+                        // Client already has all floors needed except the new highest floor, so it needs the 2th floor above the current.
+                        description = this.Game.GetDescriptionOfMapForPlayer(player, (ushort)windowStartLocation.X, (ushort)windowStartLocation.Y, (sbyte)(this.Arguments.NewLocation.Z - 2), (sbyte)(this.Arguments.NewLocation.Z - 2), IMap.DefaultWindowSizeX, IMap.DefaultWindowSizeY, 3);
+                    }
 
-                    //// moving up a floor up makes us out of sync, include west and north
-                    //packets.Add(new MapPartialDescriptionPacket(
-                    //    OutgoingGamePacketType.MapSliceWest,
-                    //    this.Game.GetDescriptionOfMapForPlayer(
-                    //        player,
-                    //        (ushort)(this.Arguments.OldLocation.X - 8),
-                    //        (ushort)(this.Arguments.OldLocation.X - 8),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 5),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 5 + IMap.DefaultWindowSizeY - 1),
-                    //        this.Arguments.NewLocation.Z,
-                    //        this.Arguments.NewLocation.Z)));
+                    // already above surface, so client has all floors.
+                    else
+                    {
+                        description = new ReadOnlySequence<byte>(ReadOnlyMemory<byte>.Empty);
+                    }
 
-                    //// north
-                    //packets.Add(new MapPartialDescriptionPacket(
-                    //    OutgoingGamePacketType.MapSliceNorth,
-                    //    this.Game.GetDescriptionOfMapForPlayer(
-                    //        player,
-                    //        (ushort)(this.Arguments.OldLocation.X - 8),
-                    //        (ushort)(this.Arguments.OldLocation.X - 8 + IMap.DefaultWindowSizeX - 1),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 6),
-                    //        (ushort)(this.Arguments.OldLocation.Y - 6),
-                    //        this.Arguments.NewLocation.Z,
-                    //        this.Arguments.NewLocation.Z)));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, description));
+
+                    // moving up a floor up makes us out of sync, include west and north
+                    packets.Add(this.WestSliceDescription(player, this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z + this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    packets.Add(this.NorthSliceDescription(player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
                 }
 
                 if (this.Arguments.OldLocation.Y > this.Arguments.NewLocation.Y)
@@ -297,7 +251,7 @@ namespace OpenTibia.Server.Notifications
             return packets;
         }
 
-        private MapPartialDescriptionPacket NorthSliceDescription(IPlayer player)
+        private MapPartialDescriptionPacket NorthSliceDescription(IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location.
             //
@@ -326,7 +280,7 @@ namespace OpenTibia.Server.Notifications
                 X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1 - floorChangeOffset),
 
                 Z = this.Arguments.NewLocation.Z,
             };
@@ -343,7 +297,7 @@ namespace OpenTibia.Server.Notifications
                     1));
         }
 
-        private IOutgoingPacket SouthSliceDescription(IPlayer player)
+        private IOutgoingPacket SouthSliceDescription(IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location
             //
@@ -372,7 +326,7 @@ namespace OpenTibia.Server.Notifications
                 X = this.Arguments.OldLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
                 // +7
-                Y = this.Arguments.NewLocation.Y + (IMap.DefaultWindowSizeY / 2),
+                Y = this.Arguments.NewLocation.Y + (IMap.DefaultWindowSizeY / 2) + floorChangeOffset,
 
                 Z = this.Arguments.NewLocation.Z,
             };
@@ -389,7 +343,7 @@ namespace OpenTibia.Server.Notifications
                     1));
         }
 
-        private IOutgoingPacket EastSliceDescription(IPlayer player)
+        private IOutgoingPacket EastSliceDescription(IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location
             //
@@ -417,7 +371,7 @@ namespace OpenTibia.Server.Notifications
                 X = this.Arguments.NewLocation.X + (IMap.DefaultWindowSizeX / 2),
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffset,
 
                 Z = this.Arguments.NewLocation.Z,
             };
@@ -434,7 +388,7 @@ namespace OpenTibia.Server.Notifications
                     IMap.DefaultWindowSizeY));
         }
 
-        private IOutgoingPacket WestSliceDescription(IPlayer player)
+        private IOutgoingPacket WestSliceDescription(IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location
             //
@@ -456,15 +410,13 @@ namespace OpenTibia.Server.Notifications
             //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ---
             //
             // x = target start of window (~) to refresh.
-            //
-            // We define the offset always from the old location, since it handles the edge case of moving diagonally.
             var windowStartLocation = new Location()
             {
                 // -8
                 X = this.Arguments.NewLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1),
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffset,
 
                 Z = this.Arguments.NewLocation.Z,
             };

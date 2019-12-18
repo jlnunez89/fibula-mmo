@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="FunctionComparisonType.cs" company="2Dudes">
+// <copyright file="ItemEventType.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,41 +9,38 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Parsing.Contracts.Enumerations
+namespace OpenTibia.Server.Contracts.Enumerations
 {
+    using OpenTibia.Server.Contracts.Abstractions;
+
     /// <summary>
-    /// Enumerates the types of function comparison.
+    /// Enumerates the different types of an <see cref="IEventRule"/>.
     /// </summary>
-    public enum FunctionComparisonType : byte
+    public enum EventRuleType : byte
     {
         /// <summary>
-        /// Undefined.
+        /// Using an item.
         /// </summary>
-        Undefined,
+        Use,
 
         /// <summary>
-        /// Greater than.
+        /// Using an item on something else.
         /// </summary>
-        GreaterThan,
+        MultiUse,
 
         /// <summary>
-        /// Greater than or equal.
+        /// Movement event.
         /// </summary>
-        GreaterThanOrEqual,
+        Movement,
 
         /// <summary>
-        /// Less than.
+        /// Collision event.
         /// </summary>
-        LessThan,
+        Collision,
 
         /// <summary>
-        /// Less than or equal.
+        /// Separation event.
         /// </summary>
-        LessThanOrEqual,
-
-        /// <summary>
-        /// Equal.
-        /// </summary>
-        Equal,
+        Separation,
     }
 }

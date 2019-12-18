@@ -150,5 +150,33 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
+
+        bool PerformSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor);
+
+        bool PerformCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor);
+
+        bool ScriptRequest_AddAnimatedEffectAt(Location location, AnimatedEffect animatedEffect);
+
+        bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect);
+
+        bool ScriptRequest_ChangeItemAt(Location location, ushort fromItemId, ushort toItemId, AnimatedEffect animatedEffect);
+
+        bool ScriptRequest_CreateItemAt(Location location, ushort itemId);
+
+        bool ScriptRequest_DeleteItem(IItem item);
+
+        bool ScriptRequest_DeleteItemAt(Location location, ushort itemId);
+
+        bool ScriptRequest_MoveCreature(ICreature thingAsCreature, Location targetLocation);
+
+        bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation);
+
+        bool ScriptRequest_MoveItemTo(IItem thingAsItem, Location targetLocation);
+
+        bool ScriptRequest_MoveItemByIdTo(ushort itemId, Location fromLocation, Location toLocation);
+
+        bool ScriptRequest_Logout(IPlayer player);
+
+        bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType);
     }
 }

@@ -40,10 +40,7 @@ namespace OpenTibia.Server
 
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
-        /// <summary>
-        /// The default adavance time step span.
-        /// </summary>
-        private const int GameStepSizeInMilliseconds = 100;
+        private static readonly TimeSpan DefaultDelayForFunctions = TimeSpan.FromMilliseconds(100);
 
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
@@ -66,12 +63,18 @@ namespace OpenTibia.Server
         private readonly IPathFinder pathFinder;
 
         /// <summary>
+        /// Gets the <see cref="IDictionary{TKey,TValue}"/> containing the <see cref="IEventRule"/>s of the game.
+        /// </summary>
+        private readonly IDictionary<EventRuleType, ISet<IEventRule>> eventsCatalog;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
+        /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         public Game(
@@ -79,10 +82,11 @@ namespace OpenTibia.Server
             IMap map,
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
-            // IItemEventLoader itemEventLoader,
+            IEventRulesLoader eventRulesLoader,
             // IMonsterLoader monsterLoader,
             IItemFactory itemFactory,
-            ICreatureFactory creatureFactory)
+            ICreatureFactory creatureFactory,
+            IScriptApi scriptApi)
         {
             this.Logger = logger.ForContext<Game>();
             this.ConnectionManager = connectionManager;
@@ -94,16 +98,17 @@ namespace OpenTibia.Server
 
             this.map = map;
 
-            // this.eventLoader = itemEventLoader;
-            // this.itemLoader = itemLoader;
+            // TODO: This is a hack. Need to fix this indirection.
+            scriptApi.Game = this;
+
+            this.eventsCatalog = eventRulesLoader.LoadEventRules();
+
             // this.monsterLoader = monsterLoader;
 
             // Initialize game vars.
             this.Status = WorldState.Loading;
             this.WorldLightColor = (byte)LightColors.White;
             this.WorldLightLevel = (byte)LightLevels.World;
-
-            // this.eventsCatalog = this.eventLoader.Load(ServerConfiguration.MoveUseFileName);
 
             this.scheduler.OnEventFired += this.ProcessEvent;
         }
@@ -532,33 +537,49 @@ namespace OpenTibia.Server
                                 this.GetDescriptionOfTile)));
             }
 
-            //if (fromTile.HasSeparationEvents)
-            //{
-            //    foreach (var itemWithSeparation in fromTile.ItemsWithSeparation)
-            //    {
-            //        var separationEvents = this.EventsCatalog[ItemEventType.Separation].Cast<SeparationItemEvent>();
-
-            //        var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == itemWithSeparation.Type.TypeId && e.Setup(itemWithSeparation, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
-
-            //        // Execute all actions.
-            //        candidate?.Execute();
-            //    }
-            //}
-
-            //if (toTile.HasCollisionEvents)
-            //{
-            //    foreach (var itemWithCollision in toTile.ItemsWithCollision)
-            //    {
-            //        var collisionEvents = this.EventsCatalog[ItemEventType.Collision].Cast<CollisionItemEvent>();
-
-            //        var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == itemWithCollision.Type.TypeId && e.Setup(itemWithCollision, thing, this.Requestor as IPlayer) && e.CanBeExecuted);
-
-            //        // Execute all actions.
-            //        candidate?.Execute();
-            //    }
-            //}
-
             return true;
+        }
+
+        public bool PerformSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor)
+        {
+            if (this.map.GetTileAt(fromLocation, out ITile fromTile) && fromTile.HasSeparationEvents)
+            {
+                foreach (var item in fromTile.ItemsWithSeparation)
+                {
+                    var separationEvents = this.eventsCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
+
+                    // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
+                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+
+                    // Execute all actions.
+                    candidate?.Execute();
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool PerformCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor)
+        {
+            if (this.map.GetTileAt(toLocation, out ITile toTile) && toTile.HasCollisionEvents)
+            {
+                foreach (var item in toTile.ItemsWithCollision)
+                {
+                    var collisionEvents = this.eventsCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
+
+                    // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
+                    var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+
+                    // Execute all actions.
+                    candidate?.Execute();
+
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -590,7 +611,7 @@ namespace OpenTibia.Server
         {
             player.ThrowIfNull(nameof(player));
 
-            return this.map.DescribeForPlayer(player, startX, (ushort)(startX + windowSizeX), startY, (ushort)(startY + windowSizeY), startZ, endZ);
+            return this.map.DescribeForPlayer(player, startX, (ushort)(startX + windowSizeX), startY, (ushort)(startY + windowSizeY), startZ, endZ, startingZOffset);
         }
 
         /// <summary>
@@ -634,8 +655,6 @@ namespace OpenTibia.Server
         {
             Task.Run(async () =>
             {
-                var stepSize = TimeSpan.FromMilliseconds(GameStepSizeInMilliseconds);
-
                 var connectionSweepperTask = Task.Factory.StartNew(this.ConnectionSweeper, cancellationToken, TaskCreationOptions.LongRunning);
 
                 var miscellaneusEventsTask = Task.Factory.StartNew(this.MiscellaneousEventsLoop, cancellationToken, TaskCreationOptions.LongRunning);
@@ -799,6 +818,127 @@ namespace OpenTibia.Server
 
                 yield return connection;
             }
+        }
+
+        public bool ScriptRequest_AddAnimatedEffectAt(Location location, AnimatedEffect animatedEffect)
+        {
+            if (animatedEffect == AnimatedEffect.None)
+            {
+                return false;
+            }
+
+            this.scheduler.ImmediateEvent(
+                new AnimatedEffectNotification(
+                    this.Logger,
+                    () => this.GetConnectionsOfPlayersThatCanSee(location),
+                    new AnimatedEffectNotificationArguments(location, animatedEffect)));
+
+            return true;
+        }
+
+        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_ChangeItemAt(Location location, ushort fromItemId, ushort toItemId, AnimatedEffect animatedEffect)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_CreateItemAt(Location location, ushort itemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_DeleteItem(IItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_DeleteItemAt(Location location, ushort itemId)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_MoveCreature(ICreature thingAsCreature, Location targetLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location toLocation)
+        {
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out ITile toTile))
+            {
+                return false;
+            }
+
+            foreach (var item in fromTile.Items)
+            {
+                var fromStackPos = fromTile.GetStackPositionOfThing(item);
+
+                this.scheduler.ScheduleEvent(
+                    new OnMapMovementEvent(
+                        this.Logger,
+                        this,
+                        this.ConnectionManager,
+                        this.map,
+                        this.CreatureManager,
+                        0,
+                        item,
+                        fromLocation,
+                        toLocation,
+                        fromStackPos),
+                    this.CurrentTime + TimeSpan.FromMilliseconds(100));
+            }
+
+            foreach (var creatureId in fromTile.CreatureIds)
+            {
+                var creature = this.CreatureManager.FindCreatureById(creatureId);
+
+                if (creature == null)
+                {
+                    continue;
+                }
+
+                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
+
+                this.scheduler.ScheduleEvent(
+                    new OnMapCreatureMovementEvent(
+                        this.Logger,
+                        this,
+                        this.ConnectionManager,
+                        this.map,
+                        this.CreatureManager,
+                        0,
+                        creature,
+                        fromLocation,
+                        toLocation,
+                        creatureStackPosition),
+                    this.CurrentTime + TimeSpan.FromMilliseconds(100));
+            }
+
+            return true;
+        }
+
+        public bool ScriptRequest_MoveItemTo(IItem thingAsItem, Location targetLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_MoveItemByIdTo(ushort itemId, Location fromLocation, Location toLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_Logout(IPlayer player)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

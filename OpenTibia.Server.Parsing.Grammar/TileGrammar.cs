@@ -12,7 +12,7 @@
 namespace OpenTibia.Server.Parsing.Grammar
 {
     using System.Linq;
-    using System.Text;
+    using OpenTibia.Server.Parsing.Contracts;
     using Sprache;
 
     public class TileGrammar
@@ -39,35 +39,5 @@ namespace OpenTibia.Server.Parsing.Grammar
             from ws in Parse.WhiteSpace.Many()
             from attrs in KeyValPair.Or(Text).Optional().DelimitedBy(CipGrammar.Comma)
             select new ContentElement(id.IsEmpty ? "0" : id.Get(), attrs.Select(i => i.IsEmpty ? string.Empty : i.Get()).ToArray());
-
-        public class ContentElement
-        {
-            /// <summary>
-            /// Initializes a new instance of the <see cref="ContentElement"/> class.
-            /// </summary>
-            /// <param name="id"></param>
-            /// <param name="attributes"></param>
-            public ContentElement(string id, params object[] attributes)
-            {
-                this.Id = id;
-                this.Attributes = attributes;
-            }
-
-            public string Id { get; }
-
-            public object[] Attributes { get; }
-
-            public override string ToString()
-            {
-                var sb = new StringBuilder();
-
-                foreach (var obj in this.Attributes)
-                {
-                    sb.Append(obj);
-                }
-
-                return $"{this.Id} {sb}";
-            }
-        }
     }
 }

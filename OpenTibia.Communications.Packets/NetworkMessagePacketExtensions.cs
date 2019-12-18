@@ -1044,7 +1044,6 @@ namespace OpenTibia.Communications.Packets
             packet.ThrowIfNull(nameof(packet));
 
             // message.WritePacketType(packet);
-
             var addInventoryItem = new Action<Slot>(slot =>
             {
                 if (packet.Player.Inventory[(byte)slot] == null)
