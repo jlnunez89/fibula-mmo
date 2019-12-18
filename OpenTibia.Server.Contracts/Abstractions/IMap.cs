@@ -66,8 +66,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="toY">The coordinate Y value at which the window of description ends.</param>
         /// <param name="fromZ">The coordinate Z value at which the window of description begins.</param>
         /// <param name="toZ">The coordinate Z value at which the window of description ends.</param>
+        /// <param name="additionalOffsetZ">Optional. An additional Z offset used mainly for partial floor changing windows. Defaults to 0.</param>
         /// <returns>The description bytes.</returns>
-        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ);
+        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ, sbyte additionalOffsetZ = 0);
 
         /// <summary>
         /// Gets the description segments of a tile as seen by the given <paramref name="player"/>.

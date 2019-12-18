@@ -9,13 +9,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Data.Contracts.Enumerations
+namespace OpenTibia.Server.Parsing.Contracts.Enumerations
 {
     /// <summary>
     /// Enumerates the types of function comparison.
     /// </summary>
     public enum FunctionComparisonType : byte
     {
+        /// <summary>
+        /// Undefined.
+        /// </summary>
+        Undefined,
+
         /// <summary>
         /// Greater than.
         /// </summary>

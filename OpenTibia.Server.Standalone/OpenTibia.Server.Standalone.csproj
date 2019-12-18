@@ -47,6 +47,7 @@
     <ProjectReference Include="..\OpenTibia.Providers.Azure\OpenTibia.Providers.Azure.csproj" />
     <ProjectReference Include="..\OpenTibia.Providers.Contracts\OpenTibia.Providers.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Scheduling\OpenTibia.Scheduling.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Events.MoveUseFile\OpenTibia.Server.Events.MoveUseFile.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Items.ObjectsFile\OpenTibia.Server.Items.ObjectsFile.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Map.SectorFiles\OpenTibia.Server.Map.SectorFiles.csproj" />
     <ProjectReference Include="..\OpenTibia.Server\OpenTibia.Server.csproj" />
@@ -54,6 +55,9 @@
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="dat\moveuse.dat">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Update="dat\objects.srv">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

@@ -16,7 +16,6 @@
     <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
     <Compile Remove="Incoming\InsertHousePacket.cs" />
     <Compile Remove="Incoming\ItemUseOnPacket.cs" />
-    <Compile Remove="Incoming\ItemUsePacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLoginPacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLogoutPacket.cs" />
     <Compile Remove="Incoming\OutfitChangedPacket.cs" />

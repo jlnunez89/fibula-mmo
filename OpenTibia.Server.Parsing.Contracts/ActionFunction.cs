@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ScriptFunction.cs" company="2Dudes">
+// <copyright file="ActionFunction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -11,21 +11,30 @@
 
 namespace OpenTibia.Server.Parsing.Contracts
 {
-    public class ScriptFunction
+    /// <summary>
+    /// Class that represents a script function.
+    /// </summary>
+    public class ActionFunction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ScriptFunction"/> class.
+        /// Initializes a new instance of the <see cref="ActionFunction"/> class.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="parameters"></param>
-        public ScriptFunction(string name, params object[] parameters)
+        /// <param name="name">The name of the function.</param>
+        /// <param name="parameters">The function parameters.</param>
+        public ActionFunction(string name, params object[] parameters)
         {
             this.Name = name;
             this.Parameters = parameters;
         }
 
+        /// <summary>
+        /// Gets the name of the function.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Gets the function's parameters.
+        /// </summary>
         public object[] Parameters { get; }
     }
 }

@@ -41,7 +41,6 @@ namespace OpenTibia.Communications
         /// <param name="port">The port to use on this listener.</param>
         /// <param name="protocol">The protocol to use in this listener.</param>
         /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
-        /// <param name="connectionManager">A reference to the connection manager service implementation.</param>
         protected BaseListener(int port, IProtocol protocol, IDoSDefender dosDefender)
             : base(IPAddress.Any, port)
         {

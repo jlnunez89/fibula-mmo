@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="FunctionComparison.cs" company="2Dudes">
+// <copyright file="ComparisonFunction.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -12,21 +12,21 @@
 namespace OpenTibia.Server.Parsing.Contracts
 {
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Data.Contracts.Enumerations;
+    using OpenTibia.Server.Parsing.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents a function comparison to a value or constant.
+    /// Class that represents a function that is a comparison to a value or constant.
     /// </summary>
-    public class FunctionComparison
+    public class ComparisonFunction
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="FunctionComparison"/> class.
+        /// Initializes a new instance of the <see cref="ComparisonFunction"/> class.
         /// </summary>
         /// <param name="name">The name of the function.</param>
         /// <param name="comparisonType">The comparison type.</param>
         /// <param name="constantOrValue">The constant or value being compared against.</param>
         /// <param name="parameters">The parameters of the function.</param>
-        public FunctionComparison(string name, string comparisonType, string constantOrValue, params string[] parameters)
+        public ComparisonFunction(string name, string comparisonType, string constantOrValue, params string[] parameters)
         {
             name.ThrowIfNull(nameof(name));
             comparisonType.ThrowIfNull(nameof(comparisonType));

@@ -126,9 +126,12 @@ namespace OpenTibia.Server.Map
         /// <param name="toY">The coordinate Y value at which the window of description ends.</param>
         /// <param name="fromZ">The coordinate Z value at which the window of description begins.</param>
         /// <param name="toZ">The coordinate Z value at which the window of description ends.</param>
+        /// <param name="customOffsetZ">Optional. A custom Z offset value used mainly for partial floor changing windows. Defaults to 0.</param>
         /// <returns>The description bytes.</returns>
-        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ)
+        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort toX, ushort fromY, ushort toY, sbyte fromZ, sbyte toZ, sbyte customOffsetZ = 0)
         {
+            player.ThrowIfNull(nameof(player));
+
             if (fromX > toX)
             {
                 throw new ArgumentException($"{nameof(fromX)}:{fromX} must be less than or equal to {nameof(toX)}:{toX}.");
@@ -152,6 +155,8 @@ namespace OpenTibia.Server.Map
                 stepZ = -1;
             }
 
+            customOffsetZ = customOffsetZ != 0 ? customOffsetZ : (sbyte)(player.Location.Z - fromZ);
+
             byte windowSizeX = (byte)(toX - fromX);
             byte windowSizeY = (byte)(toY - fromY);
 
@@ -167,7 +172,7 @@ namespace OpenTibia.Server.Map
 
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
             {
-                var zOffset = fromZ - currentZ;
+                var zOffset = fromZ - currentZ + customOffsetZ;
 
                 for (var nx = 0; nx < windowSizeX; nx++)
                 {
@@ -254,7 +259,7 @@ namespace OpenTibia.Server.Map
                         currentCount++;
                     }
 
-                    foreach (var item in tile.TopItems1)
+                    foreach (var item in tile.StayOnTopItems)
                     {
                         if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {
@@ -276,7 +281,7 @@ namespace OpenTibia.Server.Map
                         currentCount++;
                     }
 
-                    foreach (var item in tile.TopItems2)
+                    foreach (var item in tile.StayOnBottomItems)
                     {
                         if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {
@@ -306,7 +311,7 @@ namespace OpenTibia.Server.Map
                         dataPointers[currentPointer] = dataPointers[copyFromIndex];
                     }
 
-                    foreach (var item in tile.DownItems)
+                    foreach (var item in tile.Items)
                     {
                         if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
                         {

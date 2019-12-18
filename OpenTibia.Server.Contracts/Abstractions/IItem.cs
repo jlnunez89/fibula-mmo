@@ -53,9 +53,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         byte MovementPenalty { get; }
 
-        bool IsTop1 { get; }
+        bool StaysOnTop { get; }
 
-        bool IsTop2 { get; }
+        bool StaysOnBottom { get; }
 
         bool ChangesOnUse { get; }
 

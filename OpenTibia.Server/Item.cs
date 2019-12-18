@@ -155,9 +155,9 @@ namespace OpenTibia.Server
             }
         }
 
-        public bool IsTop1 => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip) || this.Type.Flags.Contains(ItemFlag.Hang);
+        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip) || this.Type.Flags.Contains(ItemFlag.Hang);
 
-        public bool IsTop2 => this.Type.Flags.Contains(ItemFlag.Bottom);
+        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.Bottom);
 
         public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
 
