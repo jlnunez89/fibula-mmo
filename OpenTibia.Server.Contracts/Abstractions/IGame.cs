@@ -139,6 +139,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PlayerRequest_MoveThing(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count);
 
         /// <summary>
+        /// Attempts to use an item on behalf of a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="itemClientId">The id of the item attempting to be used.</param>
+        /// <param name="fromLocation">The location from which the item is being used.</param>
+        /// <param name="fromStackPos">The position in the stack of the location from which the item is being used.</param>
+        /// <param name="index">The index of the item being used.</param>
+        /// <returns>True if the use item request was accepted, false otherwise.</returns>
+        bool PlayerRequest_UseItem(IPlayer player, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index);
+
+        /// <summary>
         /// Inmediately attempts to perform a thing movement between two tiles.
         /// </summary>
         /// <param name="thing">The thing being moved.</param>
@@ -150,6 +161,18 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
+
+        /// <summary>
+        /// Inmediately attempts to perform an item use in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="itemId">The id of the item being used.</param>
+        /// <param name="fromLocation">The location from which the use is happening.</param>
+        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
+        /// <param name="index">The index of the item to use.</param>
+        /// <param name="requestor">Optional. The creature requesting the use.</param>
+        /// <returns>True if the item was successfully used, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformItemUse(ushort itemId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null);
 
         bool PerformSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor);
 

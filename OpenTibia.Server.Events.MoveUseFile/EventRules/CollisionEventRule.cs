@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Events.MoveUseFile
+namespace OpenTibia.Server.Events.MoveUseFile.EventRules
 {
     using System;
     using System.Collections.Generic;
@@ -33,11 +33,11 @@ namespace OpenTibia.Server.Events.MoveUseFile
         public CollisionEventRule(ILogger logger, IScriptApi scriptFactory, IList<string> conditionSet, IList<string> actionSet)
             : base(logger, scriptFactory, conditionSet, actionSet)
         {
-            var isTypeCondition = this.Conditions.FirstOrDefault(func => MoveUseEventRule.IsTypeFunctionName.Equals(func.FunctionName));
+            var isTypeCondition = this.Conditions.FirstOrDefault(func => IsTypeFunctionName.Equals(func.FunctionName));
 
             if (isTypeCondition == null)
             {
-                throw new ArgumentNullException($"Unable to find {MoveUseEventRule.IsTypeFunctionName} function.");
+                throw new ArgumentNullException($"Unable to find {IsTypeFunctionName} function.");
             }
 
             this.ThingIdOfCollision = Convert.ToUInt16(isTypeCondition.Parameters[1]);

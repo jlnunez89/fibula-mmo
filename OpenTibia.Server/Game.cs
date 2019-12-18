@@ -40,7 +40,9 @@ namespace OpenTibia.Server
 
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
-        private static readonly TimeSpan DefaultDelayForFunctions = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(100);
+
+        private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(100);
 
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
@@ -359,10 +361,53 @@ namespace OpenTibia.Server
 
             if (movementEvent != null)
             {
-                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + TimeSpan.FromMilliseconds(100));
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
             }
 
             return movementEvent != null;
+        }
+
+        /// <summary>
+        /// Attempts to use an item on behalf of a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="itemClientId">The id of the item attempting to be used.</param>
+        /// <param name="fromLocation">The location from which the item is being used.</param>
+        /// <param name="fromStackPos">The position in the stack of the location from which the item is being used.</param>
+        /// <param name="index">The index of the item being used.</param>
+        /// <returns>True if the use item request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_UseItem(IPlayer player, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
+            {
+                return false;
+            }
+
+            var thingAtStackPos = sourceTile.GetTopThingByOrder(this.CreatureManager, fromStackPos);
+
+            if (thingAtStackPos == null || thingAtStackPos.ThingId != itemClientId)
+            {
+                return false;
+            }
+
+            // At this point it seems like a valid usage request, let's enqueue it.
+            IEvent movementEvent = new UseItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    player.Id,
+                    itemClientId,
+                    fromLocation,
+                    fromStackPos,
+                    index);
+
+            this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -536,6 +581,48 @@ namespace OpenTibia.Server
                                 toTileLocation,
                                 this.GetDescriptionOfTile)));
             }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Inmediately attempts to perform an item use in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="itemId">The id of the item being used.</param>
+        /// <param name="fromLocation">The location from which the use is happening.</param>
+        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
+        /// <param name="index">The index of the item to use.</param>
+        /// <param name="requestor">Optional. The creature requesting the use.</param>
+        /// <returns>True if the item was successfully used, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformItemUse(ushort itemId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
+        {
+            if (fromLocation.Type != LocationType.Ground)
+            {
+                // not supported at the moment.
+                return false;
+            }
+
+            // Using an item from the ground (map).
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile))
+            {
+                return false;
+            }
+
+            var potentialThing = fromTile.GetTopThingByOrder(this.CreatureManager, fromStackPos);
+
+            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != itemId)
+            {
+                return false;
+            }
+
+            var useItemEvents = this.eventsCatalog[EventRuleType.Use].Cast<IUseItemEventRule>();
+
+            // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
+            var candidate = useItemEvents.FirstOrDefault(e => e.ItemToUseId == item.Type.TypeId && e.Setup(item, null, requestor as IPlayer) && e.CanBeExecuted);
+
+            // Execute all actions.
+            candidate?.Execute();
 
             return true;
         }
@@ -861,9 +948,32 @@ namespace OpenTibia.Server
             throw new NotImplementedException();
         }
 
-        public bool ScriptRequest_MoveCreature(ICreature thingAsCreature, Location targetLocation)
+        public bool ScriptRequest_MoveCreature(ICreature creature, Location targetLocation)
         {
-            throw new NotImplementedException();
+            creature.ThrowIfNull(nameof(creature));
+
+            if (!this.map.GetTileAt(creature.Location, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out ITile toTile))
+            {
+                return false;
+            }
+
+            var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
+
+            this.scheduler.ScheduleEvent(
+                new OnMapCreatureMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    creature,
+                    creature.Location,
+                    targetLocation,
+                    creatureStackPosition),
+                this.CurrentTime + DefaultDelayForScripts);
+
+            return true;
         }
 
         public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location toLocation)
@@ -889,7 +999,7 @@ namespace OpenTibia.Server
                         fromLocation,
                         toLocation,
                         fromStackPos),
-                    this.CurrentTime + TimeSpan.FromMilliseconds(100));
+                    this.CurrentTime + DefaultDelayForScripts);
             }
 
             foreach (var creatureId in fromTile.CreatureIds)
@@ -915,7 +1025,7 @@ namespace OpenTibia.Server
                         fromLocation,
                         toLocation,
                         creatureStackPosition),
-                    this.CurrentTime + TimeSpan.FromMilliseconds(100));
+                    this.CurrentTime + DefaultDelayForScripts);
             }
 
             return true;

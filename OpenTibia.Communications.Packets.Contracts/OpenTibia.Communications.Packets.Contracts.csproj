@@ -13,7 +13,6 @@
     <Compile Remove="Abstractions\IContainerInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />
     <Compile Remove="Abstractions\IInsertHouseInfo.cs" />
-    <Compile Remove="Abstractions\IItemUseInfo.cs" />
     <Compile Remove="Abstractions\IItemUseOnInfo.cs" />
     <Compile Remove="Abstractions\IManagementPlayerLoginInfo.cs" />
     <Compile Remove="Abstractions\INamelockInfo.cs" />

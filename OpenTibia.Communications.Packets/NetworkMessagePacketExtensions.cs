@@ -236,24 +236,24 @@ namespace OpenTibia.Communications.Packets
         //        toStackPos: message.GetByte());
         // }
 
-        ///// <summary>
-        ///// Reads the item use information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The item use information.</returns>
-        // public static IItemUseInfo ReadItemUseInfo(this INetworkMessage message)
-        // {
-        //    return new ItemUsePacket(
-        //        fromLocation: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        clientId: message.GetUInt16(),
-        //        fromStackPos: message.GetByte(),
-        //        index: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads the item use information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The item use information.</returns>
+        public static IItemUseInfo ReadItemUseInfo(this INetworkMessage message)
+        {
+            return new ItemUsePacket(
+                fromLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                clientId: message.GetUInt16(),
+                fromStackPos: message.GetByte(),
+                index: message.GetByte());
+        }
 
         /// <summary>
         /// Reads the look at information sent in the message.

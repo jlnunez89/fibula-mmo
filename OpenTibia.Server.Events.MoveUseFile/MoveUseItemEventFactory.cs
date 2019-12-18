@@ -15,7 +15,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Events;
+    using OpenTibia.Server.Events.MoveUseFile.EventRules;
     using OpenTibia.Server.Parsing.Contracts;
     using Serilog;
 
@@ -65,10 +65,10 @@ namespace OpenTibia.Server.Events.MoveUseFile
             return eventType switch
             {
                 EventRuleType.Collision => new CollisionEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
-                EventRuleType.Use => new UseItemEvent(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
-                EventRuleType.MultiUse => new MultiUseEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
+                EventRuleType.Use => new UseItemEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
+                EventRuleType.MultiUse => new UseItemOnEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
                 EventRuleType.Separation => new SeparationEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
-                EventRuleType.Movement => new MovementEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
+                EventRuleType.Movement => new ThingMovementEventRule(this.Logger, this.ScriptFactory, rawEventRule.ConditionSet, rawEventRule.ActionSet),
 
                 _ => throw new InvalidCastException($"Unsupported type of event on {nameof(MoveUseItemEventFactory)}: {rawEventRule.Type}"),
             };

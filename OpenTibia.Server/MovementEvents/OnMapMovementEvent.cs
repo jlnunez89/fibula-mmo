@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.MovementEvents
 {
     using System;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -57,6 +58,8 @@ namespace OpenTibia.Server.MovementEvents
             EvaluationTime evaluationTime = EvaluationTime.OnBoth)
             : base(logger, game, connectionManager, creatureFinder, creatureRequestingId, evaluationTime)
         {
+            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+
             if (count == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(count));

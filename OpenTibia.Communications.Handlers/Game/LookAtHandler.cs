@@ -43,7 +43,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             this.CreatureFinder = creatureFinder;
             this.TileAccessor = tileAccessor;
-            this.Logger = logger.ForContext<PlayerLoginHandler>();
+            this.Logger = logger.ForContext<LookAtHandler>();
         }
 
         /// <summary>

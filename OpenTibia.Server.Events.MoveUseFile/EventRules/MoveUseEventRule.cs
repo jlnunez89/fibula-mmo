@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Events.MoveUseFile
+namespace OpenTibia.Server.Events.MoveUseFile.EventRules
 {
     using System;
     using System.Collections.Generic;
@@ -18,6 +18,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Events.MoveUseFile;
     using OpenTibia.Server.Parsing.Grammar;
     using Serilog;
     using Sprache;
@@ -199,7 +200,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
                     if (actionFunctionParseResult.WasSuccessful)
                     {
-                        functionList.Add(new EventRuleFunction(actionFunctionParseResult.Value.Name, actionFunctionParseResult.Value.Parameters));
+                        functionList.Add(new MoveUseActionFunction(actionFunctionParseResult.Value.Name, actionFunctionParseResult.Value.Parameters));
 
                         continue;
                     }

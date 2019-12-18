@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="MovementEventRule.cs" company="2Dudes">
+// <copyright file="ThingMovementEventRule.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Events.MoveUseFile
+namespace OpenTibia.Server.Events.MoveUseFile.EventRules
 {
     using System.Collections.Generic;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -19,16 +19,16 @@ namespace OpenTibia.Server.Events.MoveUseFile
     /// <summary>
     /// Class that represents an item movement event rule.
     /// </summary>
-    public class MovementEventRule : MoveUseEventRule
+    public class ThingMovementEventRule : MoveUseEventRule, IThingMovementEventRule
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MovementEventRule"/> class.
+        /// Initializes a new instance of the <see cref="ThingMovementEventRule"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="scriptFactory">A reference to the script factory in use.</param>
         /// <param name="conditionSet">The conditions for this event.</param>
         /// <param name="actionSet">The actions of this event.</param>
-        public MovementEventRule(ILogger logger, IScriptApi scriptFactory, IList<string> conditionSet, IList<string> actionSet)
+        public ThingMovementEventRule(ILogger logger, IScriptApi scriptFactory, IList<string> conditionSet, IList<string> actionSet)
             : base(logger, scriptFactory, conditionSet, actionSet)
         {
         }
