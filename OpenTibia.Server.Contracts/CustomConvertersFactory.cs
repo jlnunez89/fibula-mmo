@@ -15,8 +15,16 @@ namespace OpenTibia.Server.Contracts
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Scripting;
 
+    /// <summary>
+    /// Static class that represents a factory for converters.
+    /// </summary>
     public static class CustomConvertersFactory
     {
+        /// <summary>
+        /// Gets a converter for the specified type.
+        /// </summary>
+        /// <param name="newType">The type for which to get a converter.</param>
+        /// <returns>A new implementation of <see cref="IConverter"/>.</returns>
         internal static IConverter GetConverter(Type newType)
         {
             if (newType == typeof(Location))

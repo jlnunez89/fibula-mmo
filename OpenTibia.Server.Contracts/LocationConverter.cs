@@ -16,8 +16,16 @@ namespace OpenTibia.Server.Contracts
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Scripting;
 
+    /// <summary>
+    /// Class that represents a converter for a location.
+    /// </summary>
     internal class LocationConverter : IConverter
     {
+        /// <summary>
+        /// Converts a string into a <see cref="Location"/>.
+        /// </summary>
+        /// <param name="value">The string to convert.</param>
+        /// <returns>The location converted.</returns>
         public object Convert(string value)
         {
             value.ThrowIfNullOrWhiteSpace(nameof(value));

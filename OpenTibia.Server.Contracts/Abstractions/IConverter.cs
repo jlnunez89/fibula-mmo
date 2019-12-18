@@ -11,8 +11,16 @@
 
 namespace OpenTibia.Server.Scripting
 {
+    /// <summary>
+    /// Inteface for a converter.
+    /// </summary>
     internal interface IConverter
     {
+        /// <summary>
+        /// Converts a string into a strong type (boxed into object) implementation.
+        /// </summary>
+        /// <param name="value">The string value to convert.</param>
+        /// <returns>A boxed strongly typed implementation.</returns>
         object Convert(string value);
     }
 }

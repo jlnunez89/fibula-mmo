@@ -39,7 +39,7 @@ namespace OpenTibia.Server.Factories
 
         public ITileAccessor TileAccessor { get; }
 
-        public bool CountOfThingComparison(IThing thing, FunctionComparisonType comparisonType, ushort value)
+        public bool CompareCountOf(IThing thing, FunctionComparisonType comparisonType, ushort value)
         {
             if (thing == null || !this.TileAccessor.GetTileAt(thing.Location, out ITile tile))
             {
@@ -160,9 +160,9 @@ namespace OpenTibia.Server.Factories
             return new Random().Next(100) <= value;
         }
 
-        public void CreateItemAtLocation(Location location, ushort itemId)
+        public void CreateItemAtLocation(Location location, ushort itemId, byte effect)
         {
-            this.Game.ScriptRequest_CreateItemAt(location, itemId);
+            this.Game.ScriptRequest_CreateItemAt(location, itemId, effect);
         }
 
         public void ChangeItem(ref IThing thing, ushort toItemId, byte effect)

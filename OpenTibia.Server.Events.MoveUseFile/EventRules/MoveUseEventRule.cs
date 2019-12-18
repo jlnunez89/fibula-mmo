@@ -73,8 +73,8 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             this.ScriptFactory = scriptApi;
             this.Logger = logger.ForContext(this.GetType());
 
-            this.Conditions = this.ParseFunctions(conditionSet);
-            this.Actions = this.ParseFunctions(actionSet);
+            this.Conditions = this.ParseRules(conditionSet);
+            this.Actions = this.ParseRules(actionSet);
 
             this.Adapter = new MoveUseScriptApiAdapter(logger, scriptApi);
 
@@ -181,7 +181,12 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             }
         }
 
-        private IEnumerable<IEventRuleFunction> ParseFunctions(IList<string> stringSet)
+        /// <summary>
+        /// Parses event rules from a collection of strings.
+        /// </summary>
+        /// <param name="stringSet">The collection of strings to parse.</param>
+        /// <returns>A collection of <see cref="IEventRuleFunction"/>s parsed.</returns>
+        private IEnumerable<IEventRuleFunction> ParseRules(IList<string> stringSet)
         {
             var functionList = new List<IEventRuleFunction>();
 
@@ -224,6 +229,15 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             return functionList;
         }
 
+        /// <summary>
+        /// Invokes a condition function.
+        /// </summary>
+        /// <param name="obj1">The primary thing involved in the condition.</param>
+        /// <param name="obj2">The secondary thing involved in the condition.</param>
+        /// <param name="user">The user involved.</param>
+        /// <param name="methodName">The name of the condition to invoke.</param>
+        /// <param name="parameters">The parameters to invoke with.</param>
+        /// <returns>True if the condition was found and invoked, false otherwise.</returns>
         private bool InvokeCondition(IThing obj1, IThing obj2, IPlayer user, string methodName, params object[] parameters)
         {
             methodName.ThrowIfNullOrWhiteSpace(nameof(methodName));
@@ -279,6 +293,14 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             return false;
         }
 
+        /// <summary>
+        /// Invokes an action function.
+        /// </summary>
+        /// <param name="obj1">The primary thing involved in the action.</param>
+        /// <param name="obj2">The secondary thing involved in the action.</param>
+        /// <param name="user">The user involved.</param>
+        /// <param name="methodName">The name of the action to invoke.</param>
+        /// <param name="parameters">The parameters to invoke with.</param>
         private void InvokeAction(ref IThing obj1, ref IThing obj2, ref IPlayer user, string methodName, params object[] parameters)
         {
             methodName.ThrowIfNullOrWhiteSpace(nameof(methodName));

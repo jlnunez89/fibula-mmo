@@ -23,9 +23,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         void ChangeItemAtLocation(Location location, ushort fromItemId, ushort toItemId, byte effect);
 
-        bool CountOfThingComparison(IThing thingAt, FunctionComparisonType comparisonType, ushort value);
+        bool CompareCountOf(IThing thingAt, FunctionComparisonType comparisonType, ushort value);
 
-        void CreateItemAtLocation(Location location, ushort itemId);
+        void CreateItemAtLocation(Location location, ushort itemId, byte effect);
 
         void ApplyDamage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
 

@@ -110,6 +110,9 @@ namespace OpenTibia.Server.Map
             }
         }
 
+        /// <summary>
+        /// Gets any items in the tile that have a collision event flag.
+        /// </summary>
         public IEnumerable<IItem> ItemsWithCollision
         {
             get
@@ -151,6 +154,9 @@ namespace OpenTibia.Server.Map
             }
         }
 
+        /// <summary>
+        /// Gets any items in the tile that have a separation event flag.
+        /// </summary>
         public IEnumerable<IItem> ItemsWithSeparation
         {
             get
@@ -370,9 +376,14 @@ namespace OpenTibia.Server.Map
             return true;
         }
 
-        public bool HasItemWithId(ushort itemid)
+        /// <summary>
+        /// Checks if the tile has an item with the given type.
+        /// </summary>
+        /// <param name="typeId">The type to check for.</param>
+        /// <returns>True if the tile contains at least one item with such id, false otherwise.</returns>
+        public bool HasItemWithId(ushort typeId)
         {
-            if (this.Ground != null && this.Ground.ThingId == itemid)
+            if (this.Ground != null && this.Ground.ThingId == typeId)
             {
                 return true;
             }
@@ -383,7 +394,7 @@ namespace OpenTibia.Server.Map
                 {
                     foreach (var item in this.stayOnTopItems)
                     {
-                        if (item.ThingId == itemid)
+                        if (item.ThingId == typeId)
                         {
                             return true;
                         }
@@ -397,7 +408,7 @@ namespace OpenTibia.Server.Map
                 {
                     foreach (var item in this.stayOnBottomItems)
                     {
-                        if (item.ThingId == itemid)
+                        if (item.ThingId == typeId)
                         {
                             return true;
                         }
@@ -411,7 +422,7 @@ namespace OpenTibia.Server.Map
                 {
                     foreach (var item in this.itemsOnTile)
                     {
-                        if (item.ThingId == itemid)
+                        if (item.ThingId == typeId)
                         {
                             return true;
                         }
@@ -422,25 +433,30 @@ namespace OpenTibia.Server.Map
             return false;
         }
 
-        public bool RemoveItemWithId(ushort itemid)
+        /// <summary>
+        /// Attempts to remove an item with a given type in this tile.
+        /// </summary>
+        /// <param name="typeId">The type to look for an remove.</param>
+        /// <returns>True if such an item was found and removed, false otherwise.</returns>
+        public bool RemoveItemWithId(ushort typeId)
         {
-            if (this.Ground != null && this.Ground.ThingId == itemid)
+            if (this.Ground != null && this.Ground.ThingId == typeId)
             {
                 this.Ground = null;
                 return true;
             }
 
-            if (this.InternalRemoveStayOnTopItemById(itemid))
+            if (this.InternalRemoveStayOnTopItemById(typeId))
             {
                 return true;
             }
 
-            if (this.InternalRemoveStayOnBottomItemById(itemid))
+            if (this.InternalRemoveStayOnBottomItemById(typeId))
             {
                 return true;
             }
 
-            return this.InternalRemoveItemById(itemid);
+            return this.InternalRemoveItemById(typeId);
         }
 
         /// <summary>
@@ -576,8 +592,18 @@ namespace OpenTibia.Server.Map
             return removedCreatureId != default;
         }
 
-        private bool InternalRemoveStayOnTopItem(IThing item)
+        /// <summary>
+        /// Attempts to remove a specific item of the stay-on-top category in this tile.
+        /// </summary>
+        /// <param name="stayOnTopItem">The item to remove.</param>
+        /// <returns>True if the item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveStayOnTopItem(IThing stayOnTopItem)
         {
+            if (stayOnTopItem == null)
+            {
+                return false;
+            }
+
             var tempStack = new Stack<IItem>();
 
             bool wasRemoved = false;
@@ -588,7 +614,7 @@ namespace OpenTibia.Server.Map
                 {
                     var temp = this.stayOnTopItems.Pop();
 
-                    if (item == temp)
+                    if (stayOnTopItem == temp)
                     {
                         wasRemoved = true;
                         break;
@@ -608,8 +634,18 @@ namespace OpenTibia.Server.Map
             return wasRemoved;
         }
 
-        private bool InternalRemoveStayOnBottomItem(IThing item)
+        /// <summary>
+        /// Attempts to remove a specific item of the stay-on-bottom category in this tile.
+        /// </summary>
+        /// <param name="stayOnBottomItem">The item to remove.</param>
+        /// <returns>True if the item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveStayOnBottomItem(IThing stayOnBottomItem)
         {
+            if (stayOnBottomItem == null)
+            {
+                return false;
+            }
+
             var tempStack = new Stack<IItem>();
 
             bool wasRemoved = false;
@@ -620,7 +656,7 @@ namespace OpenTibia.Server.Map
                 {
                     var temp = this.stayOnBottomItems.Pop();
 
-                    if (item == temp)
+                    if (stayOnBottomItem == temp)
                     {
                         wasRemoved = true;
                         break;
@@ -640,8 +676,18 @@ namespace OpenTibia.Server.Map
             return wasRemoved;
         }
 
-        private bool InternalRemoveStayOnTopItemById(ushort itemId)
+        /// <summary>
+        /// Attempts to remove an item of the stay-on-top category in this tile, by it's type.
+        /// </summary>
+        /// <param name="stayOnTopItemTypeId">The type of the item to remove.</param>
+        /// <returns>True if such an item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveStayOnTopItemById(ushort stayOnTopItemTypeId)
         {
+            if (stayOnTopItemTypeId == default)
+            {
+                return false;
+            }
+
             var tempStack = new Stack<IItem>();
 
             bool wasRemoved = false;
@@ -652,7 +698,7 @@ namespace OpenTibia.Server.Map
                 {
                     var temp = this.stayOnTopItems.Pop();
 
-                    if (itemId == temp.ThingId)
+                    if (stayOnTopItemTypeId == temp.ThingId)
                     {
                         wasRemoved = true;
                         break;
@@ -672,8 +718,18 @@ namespace OpenTibia.Server.Map
             return wasRemoved;
         }
 
-        private bool InternalRemoveStayOnBottomItemById(ushort itemId)
+        /// <summary>
+        /// Attempts to remove an item of the stay-on-bottom category in this tile, by it's type.
+        /// </summary>
+        /// <param name="stayOnBottomItemTypeId">The type of the item to remove.</param>
+        /// <returns>True if such an item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveStayOnBottomItemById(ushort stayOnBottomItemTypeId)
         {
+            if (stayOnBottomItemTypeId == default)
+            {
+                return false;
+            }
+
             var tempStack = new Stack<IItem>();
 
             bool wasRemoved = false;
@@ -684,7 +740,7 @@ namespace OpenTibia.Server.Map
                 {
                     var temp = this.stayOnBottomItems.Pop();
 
-                    if (itemId == temp.ThingId)
+                    if (stayOnBottomItemTypeId == temp.ThingId)
                     {
                         wasRemoved = true;
                         break;
@@ -704,8 +760,18 @@ namespace OpenTibia.Server.Map
             return wasRemoved;
         }
 
-        private bool InternalRemoveItemById(ushort itemId)
+        /// <summary>
+        /// Attempts to remove an item in this tile, by it's type.
+        /// </summary>
+        /// <param name="itemTypeId">The type of the item to remove.</param>
+        /// <returns>True if such an item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveItemById(ushort itemTypeId)
         {
+            if (itemTypeId == default)
+            {
+                return false;
+            }
+
             var tempStack = new Stack<IItem>();
 
             bool wasRemoved = false;
@@ -716,7 +782,7 @@ namespace OpenTibia.Server.Map
                 {
                     var temp = this.itemsOnTile.Pop();
 
-                    if (itemId == temp.ThingId)
+                    if (itemTypeId == temp.ThingId)
                     {
                         wasRemoved = true;
                         break;

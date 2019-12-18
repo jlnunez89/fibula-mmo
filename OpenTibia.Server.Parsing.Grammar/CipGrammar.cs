@@ -19,6 +19,9 @@ namespace OpenTibia.Server.Parsing.Grammar
     /// <summary>
     /// Static class that contains common grammar used to parse CipSoft files.
     /// </summary>
+    /// <remarks>
+    /// NOTE: Members of this class must remain public in order for it to work correctly, because Sprache.
+    /// </remarks>
     public static class CipGrammar
     {
         /// <summary>
@@ -71,35 +74,68 @@ namespace OpenTibia.Server.Parsing.Grammar
         /// </summary>
         public static readonly Parser<char> CloseCurly = Parse.Char('}');
 
+        /// <summary>
+        /// A message enclosed in double quotes.
+        /// </summary>
         public static readonly Parser<string> QuotedMessage =
             from open in DoubleQuote
             from text in Quoted.Or(Escaped).Many().Text()
             from close in DoubleQuote
             select open + text + close;
 
+        /// <summary>
+        /// The separator between a rule's conditions and actions.
+        /// </summary>
         public static readonly Parser<IEnumerable<char>> ConditionsActionsSeparator = Parse.String("->");
 
+        /// <summary>
+        /// The 'greater than' comparison.
+        /// </summary>
         public static readonly Parser<string> GreaterThanComparison = Parse.String(">").Text();
 
+        /// <summary>
+        /// The 'less than' comparison.
+        /// </summary>
         public static readonly Parser<string> LessThanComparison = Parse.String("<").Text();
 
+        /// <summary>
+        /// The 'greater than or equal' comparison.
+        /// </summary>
         public static readonly Parser<string> GreaterThanOrEqualToComparison = Parse.String(">=").Text();
 
+        /// <summary>
+        /// The 'less than or equal' comparison.
+        /// </summary>
         public static readonly Parser<string> LessThanOrEqualToComparison = Parse.String("<=").Text();
 
+        /// <summary>
+        /// The 'equals' comparison.
+        /// </summary>
         public static readonly Parser<string> EqualToComparison = Parse.String("==").Text();
 
+        /// <summary>
+        /// Any character except for double quotes.
+        /// </summary>
         public static readonly Parser<char> Quoted = Parse.AnyChar.Except(DoubleQuote);
 
+        /// <summary>
+        /// An escaped character, preceded by '\'.
+        /// </summary>
         public static readonly Parser<char> Escaped =
             from blackSlash in Backslash
             from c in Parse.AnyChar
             select c;
 
+        /// <summary>
+        /// Any text, except for special characters.
+        /// </summary>
         public static readonly Parser<string> Text =
             from text in Parse.AnyChar.Except(ConditionsActionsSeparator).Except(Comma).Except(EqualSign).AtLeastOnce().Text()
             select text.Trim();
 
+        /// <summary>
+        /// Parses a location string, in the form [x, y, z].
+        /// </summary>
         public static readonly Parser<string> LocationString =
             from leadingSpaces in Parse.WhiteSpace.Many().Text()
             from open in OpenBracket
@@ -114,6 +150,9 @@ namespace OpenTibia.Server.Parsing.Grammar
             from close in CloseBracket
             select $"{open}{(negX.IsEmpty ? string.Empty : "-")}{x},{(negY.IsEmpty ? string.Empty : "-")}{y},{(negZ.IsEmpty ? string.Empty : "-")}{z}{close}";
 
+        /// <summary>
+        /// Parses a function in the form: Func(arg0, arg1, ..., argN).
+        /// </summary>
         public static readonly Parser<string> FunctionOrComparisonString =
             from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
@@ -122,16 +161,28 @@ namespace OpenTibia.Server.Parsing.Grammar
             from functionComparison in Parse.AnyChar.Except(Parse.WhiteSpace).Except(Comma).Many().Text()
             select functionName.Trim() + open + oneOrMoreArguments + close + functionComparison.Trim();
 
+        /// <summary>
+        /// Parses a Key/Value pair in the form: key=value.
+        /// </summary>
         public static readonly Parser<string> KeyValStr =
             from key in Text
             from eq in EqualSign
             from value in Text
-            select key + eq + value; // we want the whole thing .. key=val
+            select key + eq + value;
 
+        /// <summary>
+        /// Parses a collection of condition functions.
+        /// </summary>
         public static readonly Parser<IEnumerable<string>> Conditions = FunctionOrComparisonString.Or(QuotedMessage).Or(KeyValStr).Or(Text).DelimitedBy(Comma);
 
+        /// <summary>
+        /// Parses a collection of action functions.
+        /// </summary>
         public static readonly Parser<IEnumerable<string>> Actions = FunctionOrComparisonString.Or(QuotedMessage).Or(KeyValStr).Or(Text).DelimitedBy(Comma);
 
+        /// <summary>
+        /// Parses the raw event rules.
+        /// </summary>
         public static readonly Parser<RawEventRule> EventRule =
             from conditions in Conditions
             from leading in Parse.WhiteSpace.Optional().Many()
@@ -140,6 +191,9 @@ namespace OpenTibia.Server.Parsing.Grammar
             from actions in Actions
             select new RawEventRule(conditions, actions);
 
+        /// <summary>
+        /// Parses action functions.
+        /// </summary>
         public static readonly Parser<ActionFunction> ActionFunction =
             from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
@@ -147,6 +201,9 @@ namespace OpenTibia.Server.Parsing.Grammar
             from close in CloseParenthesis
             select new ActionFunction(functionName.Trim(), oneOrMoreArguments.ToArray());
 
+        /// <summary>
+        /// Parses comparison functions.
+        /// </summary>
         public static readonly Parser<ComparisonFunction> ComparisonFunction =
             from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis

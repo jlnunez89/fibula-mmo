@@ -40,8 +40,14 @@ namespace OpenTibia.Server
 
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
+        /// <summary>
+        /// Default delay for scripts.
+        /// </summary>
         private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(100);
 
+        /// <summary>
+        /// Default delat for player actions.
+        /// </summary>
         private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(100);
 
         /// <summary>
@@ -627,7 +633,14 @@ namespace OpenTibia.Server
             return true;
         }
 
-        public bool PerformSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor)
+        /// <summary>
+        /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="fromLocation">The location from which the events take place.</param>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        public bool EvaluateSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor)
         {
             if (this.map.GetTileAt(fromLocation, out ITile fromTile) && fromTile.HasSeparationEvents)
             {
@@ -648,7 +661,14 @@ namespace OpenTibia.Server
             return false;
         }
 
-        public bool PerformCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor)
+        /// <summary>
+        /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="toLocation">The location to which the events take place.</param>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        public bool EvaluateCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor)
         {
             if (this.map.GetTileAt(toLocation, out ITile toTile) && toTile.HasCollisionEvents)
             {
@@ -777,6 +797,224 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Attempts to display an animated efect on the given location.
+        /// </summary>
+        /// <param name="location">The location at which to display the effect.</param>
+        /// <param name="animatedEffect">The effect to display.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_AddAnimatedEffectAt(Location location, AnimatedEffect animatedEffect)
+        {
+            if (animatedEffect == AnimatedEffect.None)
+            {
+                return false;
+            }
+
+            this.scheduler.ImmediateEvent(
+                new AnimatedEffectNotification(
+                    this.Logger,
+                    () => this.GetConnectionsOfPlayersThatCanSee(location),
+                    new AnimatedEffectNotificationArguments(location, animatedEffect)));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to change a given item to the supplied id.
+        /// </summary>
+        /// <param name="thing">The thing to change.</param>
+        /// <param name="toItemId">The id of the item type to change to.</param>
+        /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to change a given item to the supplied id at a given location.
+        /// </summary>
+        /// <param name="location">The location at which the change will happen.</param>
+        /// <param name="fromItemId">The id of the item from which the change is happening.</param>
+        /// <param name="toItemId">The id of the item to which the change is happening.</param>
+        /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_ChangeItemAt(Location location, ushort fromItemId, ushort toItemId, AnimatedEffect animatedEffect)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to create an item at a given location.
+        /// </summary>
+        /// <param name="location">The location at which to create the item.</param>
+        /// <param name="itemType">The type of the item to create.</param>
+        /// <param name="effect">An effect to use when the creation takes place.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_CreateItemAt(Location location, ushort itemType, byte effect)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to delete an item.
+        /// </summary>
+        /// <param name="item">The item to delete.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_DeleteItem(IItem item)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to delete an item at a given location.
+        /// </summary>
+        /// <param name="location">The location at which to delete the item.</param>
+        /// <param name="itemType">The type of the item to delete.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_DeleteItemAt(Location location, ushort itemType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to move a creature to a given location.
+        /// </summary>
+        /// <param name="creature">The creature to move.</param>
+        /// <param name="targetLocation">The location to move the creature to.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_MoveCreature(ICreature creature, Location targetLocation)
+        {
+            creature.ThrowIfNull(nameof(creature));
+            if (!this.map.GetTileAt(creature.Location, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
+            {
+                return false;
+            }
+
+            var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
+
+            this.scheduler.ScheduleEvent(
+                new OnMapCreatureMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    creature,
+                    creature.Location,
+                    targetLocation,
+                    creatureStackPosition),
+                this.CurrentTime + DefaultDelayForScripts);
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to move all items and creatures in a location to a given location.
+        /// </summary>
+        /// <param name="fromLocation">The location from which to move everything.</param>
+        /// <param name="targetLocation">The location to move everything to.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation)
+        {
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
+            {
+                return false;
+            }
+
+            foreach (var item in fromTile.Items)
+            {
+                var fromStackPos = fromTile.GetStackPositionOfThing(item);
+
+                this.scheduler.ScheduleEvent(
+                    new OnMapMovementEvent(
+                        this.Logger,
+                        this,
+                        this.ConnectionManager,
+                        this.map,
+                        this.CreatureManager,
+                        0,
+                        item,
+                        fromLocation,
+                        targetLocation,
+                        fromStackPos),
+                    this.CurrentTime + DefaultDelayForScripts);
+            }
+
+            foreach (var creatureId in fromTile.CreatureIds)
+            {
+                var creature = this.CreatureManager.FindCreatureById(creatureId);
+
+                if (creature == null)
+                {
+                    continue;
+                }
+
+                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
+
+                this.scheduler.ScheduleEvent(
+                    new OnMapCreatureMovementEvent(
+                        this.Logger,
+                        this,
+                        this.ConnectionManager,
+                        this.map,
+                        this.CreatureManager,
+                        0,
+                        creature,
+                        fromLocation,
+                        targetLocation,
+                        creatureStackPosition),
+                    this.CurrentTime + DefaultDelayForScripts);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to move an item to a given location.
+        /// </summary>
+        /// <param name="item">The item to move.</param>
+        /// <param name="targetLocation">The location to move the item to.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_MoveItemTo(IItem item, Location targetLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to move an item of the given type from the given location to another location.
+        /// </summary>
+        /// <param name="itemType">The type of the item to move.</param>
+        /// <param name="fromLocation">The location from which to move the item.</param>
+        /// <param name="toLocation">The location to which to move the item.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_MoveItemByIdTo(ushort itemType, Location fromLocation, Location toLocation)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to log out a player.
+        /// </summary>
+        /// <param name="player">The player to log out.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_Logout(IPlayer player)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Attempts to place a new monster at the given location.
+        /// </summary>
+        /// <param name="location">The location at which to place the monster.</param>
+        /// <param name="monsterType">The type of the monster to place.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
         /// Handles miscellaneous stuff on the game world, such as world light.
         /// </summary>
         /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
@@ -849,7 +1087,7 @@ namespace OpenTibia.Server
                         continue;
                     }
 
-                    //player.SetAttackTarget(0);
+                    // player.SetAttackTarget(0);
 
                     if (player.IsLogoutAllowed)
                     {
@@ -905,150 +1143,6 @@ namespace OpenTibia.Server
 
                 yield return connection;
             }
-        }
-
-        public bool ScriptRequest_AddAnimatedEffectAt(Location location, AnimatedEffect animatedEffect)
-        {
-            if (animatedEffect == AnimatedEffect.None)
-            {
-                return false;
-            }
-
-            this.scheduler.ImmediateEvent(
-                new AnimatedEffectNotification(
-                    this.Logger,
-                    () => this.GetConnectionsOfPlayersThatCanSee(location),
-                    new AnimatedEffectNotificationArguments(location, animatedEffect)));
-
-            return true;
-        }
-
-        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_ChangeItemAt(Location location, ushort fromItemId, ushort toItemId, AnimatedEffect animatedEffect)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_CreateItemAt(Location location, ushort itemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_DeleteItem(IItem item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_DeleteItemAt(Location location, ushort itemId)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_MoveCreature(ICreature creature, Location targetLocation)
-        {
-            creature.ThrowIfNull(nameof(creature));
-
-            if (!this.map.GetTileAt(creature.Location, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out ITile toTile))
-            {
-                return false;
-            }
-
-            var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
-
-            this.scheduler.ScheduleEvent(
-                new OnMapCreatureMovementEvent(
-                    this.Logger,
-                    this,
-                    this.ConnectionManager,
-                    this.map,
-                    this.CreatureManager,
-                    0,
-                    creature,
-                    creature.Location,
-                    targetLocation,
-                    creatureStackPosition),
-                this.CurrentTime + DefaultDelayForScripts);
-
-            return true;
-        }
-
-        public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location toLocation)
-        {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out ITile toTile))
-            {
-                return false;
-            }
-
-            foreach (var item in fromTile.Items)
-            {
-                var fromStackPos = fromTile.GetStackPositionOfThing(item);
-
-                this.scheduler.ScheduleEvent(
-                    new OnMapMovementEvent(
-                        this.Logger,
-                        this,
-                        this.ConnectionManager,
-                        this.map,
-                        this.CreatureManager,
-                        0,
-                        item,
-                        fromLocation,
-                        toLocation,
-                        fromStackPos),
-                    this.CurrentTime + DefaultDelayForScripts);
-            }
-
-            foreach (var creatureId in fromTile.CreatureIds)
-            {
-                var creature = this.CreatureManager.FindCreatureById(creatureId);
-
-                if (creature == null)
-                {
-                    continue;
-                }
-
-                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
-
-                this.scheduler.ScheduleEvent(
-                    new OnMapCreatureMovementEvent(
-                        this.Logger,
-                        this,
-                        this.ConnectionManager,
-                        this.map,
-                        this.CreatureManager,
-                        0,
-                        creature,
-                        fromLocation,
-                        toLocation,
-                        creatureStackPosition),
-                    this.CurrentTime + DefaultDelayForScripts);
-            }
-
-            return true;
-        }
-
-        public bool ScriptRequest_MoveItemTo(IItem thingAsItem, Location targetLocation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_MoveItemByIdTo(ushort itemId, Location fromLocation, Location toLocation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_Logout(IPlayer player)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType)
-        {
-            throw new NotImplementedException();
         }
     }
 }

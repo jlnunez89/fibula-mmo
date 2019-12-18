@@ -96,9 +96,9 @@ namespace OpenTibia.Server.MovementEvents
                     this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
                 }
 
-                this.Game.PerformSeparationEventRules(fromLocation, thingMoving, this.Requestor);
+                this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
 
-                this.Game.PerformCollisionEventRules(toLocation, thingMoving, this.Requestor);
+                this.Game.EvaluateCollisionEventRules(toLocation, thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);
