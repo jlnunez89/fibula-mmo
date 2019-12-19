@@ -147,7 +147,12 @@ namespace OpenTibia.Server.Notifications
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, description));
 
                     // moving down a floor makes us out of sync, include east and south
-                    packets.Add(this.EastSliceDescription(player, this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z + this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    packets.Add(
+                        this.EastSliceDescription(
+                            player,
+                            this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
+                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z));
+
                     packets.Add(this.SouthSliceDescription(player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
                 }
 
@@ -186,7 +191,12 @@ namespace OpenTibia.Server.Notifications
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, description));
 
                     // moving up a floor up makes us out of sync, include west and north
-                    packets.Add(this.WestSliceDescription(player, this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z + this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    packets.Add(
+                        this.WestSliceDescription(
+                            player,
+                            this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
+                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z));
+
                     packets.Add(this.NorthSliceDescription(player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
                 }
 
@@ -343,7 +353,7 @@ namespace OpenTibia.Server.Notifications
                     1));
         }
 
-        private IOutgoingPacket EastSliceDescription(IPlayer player, int floorChangeOffset = 0)
+        private IOutgoingPacket EastSliceDescription(IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
         {
             // A = old location, B = new location
             //
@@ -368,10 +378,10 @@ namespace OpenTibia.Server.Notifications
             var windowStartLocation = new Location()
             {
                 // +9
-                X = this.Arguments.NewLocation.X + (IMap.DefaultWindowSizeX / 2),
+                X = this.Arguments.NewLocation.X + (IMap.DefaultWindowSizeX / 2) + floorChangeOffsetX,
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffset,
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
 
                 Z = this.Arguments.NewLocation.Z,
             };
@@ -388,7 +398,7 @@ namespace OpenTibia.Server.Notifications
                     IMap.DefaultWindowSizeY));
         }
 
-        private IOutgoingPacket WestSliceDescription(IPlayer player, int floorChangeOffset = 0)
+        private IOutgoingPacket WestSliceDescription(IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
         {
             // A = old location, B = new location
             //
@@ -413,10 +423,10 @@ namespace OpenTibia.Server.Notifications
             var windowStartLocation = new Location()
             {
                 // -8
-                X = this.Arguments.NewLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1),
+                X = this.Arguments.NewLocation.X - ((IMap.DefaultWindowSizeX / 2) - 1) + floorChangeOffsetX,
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffset,
+                Y = this.Arguments.NewLocation.Y - ((IMap.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
 
                 Z = this.Arguments.NewLocation.Z,
             };

@@ -65,7 +65,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         void MoveThingTo(IThing thingToMove, Location targetLocation);
 
-        void MoveEverythingToLocation(Location fromLocation, Location targetLocation);
+        void MoveEverythingToLocation(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds);
 
         void MoveByIdToLocation(ushort itemId, Location fromLocation, Location toLocation);
 

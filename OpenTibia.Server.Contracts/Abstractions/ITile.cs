@@ -45,7 +45,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
 
-        bool HasItemWithId(ushort itemId);
+        bool HasItemWithId(ushort typeId);
+
+        IItem FindItemWithId(ushort typeId);
 
         byte GetStackPositionOfThing(IThing thing);
 

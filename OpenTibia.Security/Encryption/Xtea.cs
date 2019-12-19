@@ -52,11 +52,11 @@ namespace OpenTibia.Security.Encryption
 
                     while (xCount-- > 0)
                     {
-                        words[pos] += (words[pos + 1] << 4 ^ words[pos + 1] >> 5) + words[pos + 1] ^ xSum + key[xSum & 3];
+                        words[pos] += (((words[pos + 1] << 4) ^ (words[pos + 1] >> 5)) + words[pos + 1]) ^ (xSum + key[xSum & 3]);
 
                         xSum += xDelta;
 
-                        words[pos + 1] += (words[pos] << 4 ^ words[pos] >> 5) + words[pos] ^ xSum + key[xSum >> 11 & 3];
+                        words[pos + 1] += (((words[pos] << 4) ^ (words[pos] >> 5)) + words[pos]) ^ (xSum + key[(xSum >> 11) & 3]);
                     }
                 }
             }
@@ -90,11 +90,11 @@ namespace OpenTibia.Security.Encryption
 
                     while (xCount-- > 0)
                     {
-                        words[pos + 1] -= (words[pos] << 4 ^ words[pos] >> 5) + words[pos] ^ xSum + key[xSum >> 11 & 3];
+                        words[pos + 1] -= (((words[pos] << 4) ^ (words[pos] >> 5)) + words[pos]) ^ (xSum + key[(xSum >> 11) & 3]);
 
                         xSum -= xDelta;
 
-                        words[pos] -= (words[pos + 1] << 4 ^ words[pos + 1] >> 5) + words[pos + 1] ^ xSum + key[xSum & 3];
+                        words[pos] -= (((words[pos + 1] << 4) ^ (words[pos + 1] >> 5)) + words[pos + 1]) ^ (xSum + key[xSum & 3]);
                     }
                 }
             }

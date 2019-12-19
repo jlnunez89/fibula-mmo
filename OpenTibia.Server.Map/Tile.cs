@@ -263,6 +263,8 @@ namespace OpenTibia.Server.Map
 
                                     this.AddThing(itemFactory, ref newThing, (byte)remaining);
 
+                                    newThing.Location = item.Location;
+
                                     thing = newThing;
                                 }
                             }
@@ -434,29 +436,89 @@ namespace OpenTibia.Server.Map
         }
 
         /// <summary>
+        /// Attempts to find an item in the tile with the given type.
+        /// </summary>
+        /// <param name="typeId">The type to look for.</param>
+        /// <returns>The item with such id, null otherwise.</returns>
+        public IItem FindItemWithId(ushort typeId)
+        {
+            if (this.Ground != null && this.Ground.ThingId == typeId)
+            {
+                return this.Ground;
+            }
+
+            lock (this.stayOnTopItems)
+            {
+                if (this.stayOnTopItems.Any())
+                {
+                    foreach (var item in this.stayOnTopItems)
+                    {
+                        if (item.ThingId == typeId)
+                        {
+                            return item;
+                        }
+                    }
+                }
+            }
+
+            lock (this.stayOnBottomItems)
+            {
+                if (this.stayOnBottomItems.Any())
+                {
+                    foreach (var item in this.stayOnBottomItems)
+                    {
+                        if (item.ThingId == typeId)
+                        {
+                            return item;
+                        }
+                    }
+                }
+            }
+
+            lock (this.itemsOnTile)
+            {
+                if (this.itemsOnTile.Any())
+                {
+                    foreach (var item in this.itemsOnTile)
+                    {
+                        if (item.ThingId == typeId)
+                        {
+                            return item;
+                        }
+                    }
+                }
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Attempts to remove an item with a given type in this tile.
         /// </summary>
         /// <param name="typeId">The type to look for an remove.</param>
         /// <returns>True if such an item was found and removed, false otherwise.</returns>
         public bool RemoveItemWithId(ushort typeId)
         {
+            bool itemRemoved = false;
+
             if (this.Ground != null && this.Ground.ThingId == typeId)
             {
                 this.Ground = null;
-                return true;
-            }
 
-            if (this.InternalRemoveStayOnTopItemById(typeId))
+                itemRemoved = true;
+            }
+            else if (this.InternalRemoveStayOnTopItemById(typeId) || this.InternalRemoveStayOnBottomItemById(typeId) || this.InternalRemoveItemById(typeId))
             {
-                return true;
+                itemRemoved = true;
             }
 
-            if (this.InternalRemoveStayOnBottomItemById(typeId))
+            if (itemRemoved)
             {
-                return true;
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
             }
 
-            return this.InternalRemoveItemById(typeId);
+            return itemRemoved;
         }
 
         /// <summary>
@@ -518,38 +580,38 @@ namespace OpenTibia.Server.Map
         /// Attempts to get the tile's top <see cref="IThing"/> depending on the given position.
         /// </summary>
         /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <param name="position">The zero-based position in the full stack to return.</param>
+        /// <param name="stackPos">The zero-based position in the full stack to return.</param>
         /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
-        public IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte position)
+        public IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte stackPos)
         {
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
             var i = this.Ground == null ? 0 : 1;
 
-            if (this.stayOnTopItems.Any() && position < i + this.stayOnTopItems.Count)
+            if (this.stayOnTopItems.Any() && stackPos < i + this.stayOnTopItems.Count)
             {
-                return this.stayOnTopItems.ElementAt(position - i);
+                return this.stayOnTopItems.ElementAt(Math.Max(0, stackPos - i));
             }
 
             i += this.stayOnTopItems.Count;
 
-            if (this.stayOnBottomItems.Any() && position < i + this.stayOnBottomItems.Count)
+            if (this.stayOnBottomItems.Any() && stackPos < i + this.stayOnBottomItems.Count)
             {
-                return this.stayOnBottomItems.ElementAt(position - i);
+                return this.stayOnBottomItems.ElementAt(Math.Max(0, stackPos - i));
             }
 
             i += this.stayOnBottomItems.Count;
 
-            if (this.creatureIdsOnTile.Any() && position < i + this.creatureIdsOnTile.Count)
+            if (this.creatureIdsOnTile.Any() && stackPos < i + this.creatureIdsOnTile.Count)
             {
-                return creatureFinder.FindCreatureById(this.creatureIdsOnTile.ElementAt(position - i));
+                return creatureFinder.FindCreatureById(this.creatureIdsOnTile.ElementAt(Math.Max(0, stackPos - i)));
             }
 
             i += this.creatureIdsOnTile.Count;
 
-            if (this.itemsOnTile.Any() && position < i + this.itemsOnTile.Count)
+            if (this.itemsOnTile.Any() && stackPos < i + this.itemsOnTile.Count)
             {
-                return this.itemsOnTile.ElementAt(position - i);
+                return this.itemsOnTile.ElementAt(Math.Max(0, stackPos - i));
             }
 
             // when nothing else works, return the ground (if any).
@@ -631,6 +693,12 @@ namespace OpenTibia.Server.Map
                 }
             }
 
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
+            }
+
             return wasRemoved;
         }
 
@@ -671,6 +739,12 @@ namespace OpenTibia.Server.Map
                 {
                     this.stayOnBottomItems.Push(tempStack.Pop());
                 }
+            }
+
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
             }
 
             return wasRemoved;
@@ -715,6 +789,12 @@ namespace OpenTibia.Server.Map
                 }
             }
 
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
+            }
+
             return wasRemoved;
         }
 
@@ -757,6 +837,12 @@ namespace OpenTibia.Server.Map
                 }
             }
 
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
+            }
+
             return wasRemoved;
         }
 
@@ -797,6 +883,12 @@ namespace OpenTibia.Server.Map
                 {
                     this.itemsOnTile.Push(tempStack.Pop());
                 }
+            }
+
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
             }
 
             return wasRemoved;

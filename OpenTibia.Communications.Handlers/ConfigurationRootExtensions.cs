@@ -55,7 +55,7 @@ namespace OpenTibia.Communications.Handlers
             services.AddSingleton<IHandler, MoveThingHandler>();
             //services.AddSingleton<IHandler, ItemRotateHandler>();
             //services.AddSingleton<IHandler, ItemUseBattleHandler>();
-            services.AddSingleton<IHandler, ItemUseHandler>();
+            services.AddSingleton<IHandler, UseItemHandler>();
             //services.AddSingleton<IHandler, ItemUseOnHandler>();
             services.AddSingleton<IHandler, LogoutHandler>();
             services.AddSingleton<IHandler, LookAtHandler>();

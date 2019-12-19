@@ -18,16 +18,16 @@ namespace OpenTibia.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents a packet for an item use.
     /// </summary>
-    public class ItemUsePacket : IIncomingPacket, IItemUseInfo
+    public class UseItemPacket : IIncomingPacket, IUseItemInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ItemUsePacket"/> class.
+        /// Initializes a new instance of the <see cref="UseItemPacket"/> class.
         /// </summary>
         /// <param name="fromLocation">The location from which the item is being used.</param>
         /// <param name="clientId">The id of the item as seen by the client.</param>
         /// <param name="fromStackPos">The position in the stack from which the item is being used.</param>
         /// <param name="index">The index of the item being used.</param>
-        public ItemUsePacket(Location fromLocation, ushort clientId, byte fromStackPos, byte index)
+        public UseItemPacket(Location fromLocation, ushort clientId, byte fromStackPos, byte index)
         {
             this.ItemClientId = clientId;
 
