@@ -42,10 +42,10 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        /// <param name="requestorId">The id of the creature requesting the use.</param>
-        /// <param name="typeId">The type id of the item being created.</param>
-        /// <param name="atLocation">The location from which the item is being created.</param>
-        /// <param name="evaluationTime">The time to evaluate the movement.</param>
+        /// <param name="requestorId">The id of the creature requesting the deletion.</param>
+        /// <param name="typeId">The type id of the item being deleted.</param>
+        /// <param name="atLocation">The location from which the item is being deleted.</param>
+        /// <param name="evaluationTime">The time to evaluate the event.</param>
         public DeleteItemEvent(
             ILogger logger,
             IGame game,
