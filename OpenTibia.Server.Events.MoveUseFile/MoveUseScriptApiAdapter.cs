@@ -480,14 +480,14 @@ namespace OpenTibia.Server.Events.MoveUseFile
         }
 
         /// <summary>
-        /// Moves any amount of items of a given type from one location to another.
+        /// Moves any amount of items except a given ground type from one location to another.
         /// </summary>
         /// <param name="fromLocation">The location from which to move.</param>
-        /// <param name="typeId">The item type to move.</param>
+        /// <param name="typeId">The item type to ignore when moving.</param>
         /// <param name="toLocation">The location to move to.</param>
         public void MoveTopOnMap(Location fromLocation, ushort typeId, Location toLocation)
         {
-            this.ScriptApi.MoveByIdToLocation(typeId, fromLocation, toLocation);
+            this.ScriptApi.MoveEverythingToLocation(fromLocation, toLocation, typeId);
         }
 
         /// <summary>

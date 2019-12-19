@@ -241,9 +241,9 @@ namespace OpenTibia.Communications.Packets
         /// </summary>
         /// <param name="message">The mesage to read the information from.</param>
         /// <returns>The item use information.</returns>
-        public static IItemUseInfo ReadItemUseInfo(this INetworkMessage message)
+        public static IUseItemInfo ReadItemUseInfo(this INetworkMessage message)
         {
-            return new ItemUsePacket(
+            return new UseItemPacket(
                 fromLocation: new Location
                 {
                     X = message.GetUInt16(),

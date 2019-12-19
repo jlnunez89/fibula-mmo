@@ -16,7 +16,7 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
     /// <summary>
     /// Interface for an item use information.
     /// </summary>
-    public interface IItemUseInfo
+    public interface IUseItemInfo
     {
         /// <summary>
         /// Gets the location form which the item is being used.

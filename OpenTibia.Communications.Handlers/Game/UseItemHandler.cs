@@ -26,15 +26,15 @@ namespace OpenTibia.Communications.Handlers.Game
     /// <summary>
     /// Class that represents an item use handler for the game server.
     /// </summary>
-    public class ItemUseHandler : GameHandler
+    public class UseItemHandler : GameHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ItemUseHandler"/> class.
+        /// Initializes a new instance of the <see cref="UseItemHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger to use in this handler.</param>
         /// <param name="creatureFinder">A reference to the creature finder.</param>
         /// <param name="gameInstance">A reference to the game instance.</param>
-        public ItemUseHandler(
+        public UseItemHandler(
             ILogger logger,
             ICreatureFinder creatureFinder,
             IGame gameInstance)
@@ -42,7 +42,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
-            this.Logger = logger.ForContext<ItemUseHandler>();
+            this.Logger = logger.ForContext<UseItemHandler>();
             this.CreatureFinder = creatureFinder;
         }
 

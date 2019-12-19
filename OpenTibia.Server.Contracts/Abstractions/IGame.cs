@@ -175,6 +175,39 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PerformItemUse(ushort itemId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null);
 
         /// <summary>
+        /// Inmediately attempts to perform an item creation in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="typeId">The id of the item being being created.</param>
+        /// <param name="atLocation">The location at which the item is being created.</param>
+        /// <param name="requestor">Optional. The creature requesting the creation.</param>
+        /// <returns>True if the item was successfully created, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>>
+        bool PerformItemCreation(ushort typeId, Location atLocation, ICreature requestor);
+
+        /// <summary>
+        /// Inmediately attempts to perform an item deletion in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="typeId">The id of the item being being deleted.</param>
+        /// <param name="atLocation">The location at which the item is being deleted.</param>
+        /// <param name="requestor">Optional. The creature requesting the deletion.</param>
+        /// <returns>True if the item was successfully deleted, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformItemDeletion(ushort typeId, Location atLocation, ICreature requestor);
+
+        /// <summary>
+        /// Inmediately attempts to perform an item change in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="fromTypeId">The type id of the item being changed.</param>
+        /// <param name="toTypeId">The type id of the item being changed to.</param>
+        /// <param name="fromLocation">The location from which the changed is happening.</param>
+        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
+        /// <param name="index">The index of the item to changed.</param>
+        /// <param name="requestor">Optional. The creature requesting the use.</param>
+        /// <returns>True if the item was successfully changed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformItemChange(ushort fromTypeId, ushort toTypeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null);
+
+        /// <summary>
         /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
         /// </summary>
         /// <param name="fromLocation">The location from which the events take place.</param>
@@ -256,8 +289,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="fromLocation">The location from which to move everything.</param>
         /// <param name="targetLocation">The location to move everything to.</param>
+        /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation);
+        bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds);
 
         /// <summary>
         /// Attempts to move an item to a given location.
@@ -274,7 +308,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="fromLocation">The location from which to move the item.</param>
         /// <param name="toLocation">The location to which to move the item.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        bool ScriptRequest_MoveItemByIdTo(ushort itemType, Location fromLocation, Location toLocation);
+        bool ScriptRequest_MoveItemOfTypeTo(ushort itemType, Location fromLocation, Location toLocation);
 
         /// <summary>
         /// Attempts to log out a player.

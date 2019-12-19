@@ -37,7 +37,7 @@
   <ItemGroup>
     <Compile Include="Game\AutoMoveCancelHandler.cs" />
     <Compile Include="Game\AutoMoveHandler.cs" />
-    <Compile Include="Game\ItemUseHandler.cs" />
+    <Compile Include="Game\UseItemHandler.cs" />
     <Compile Include="Game\MoveThingHandler.cs" />
     <Compile Include="Game\LogoutHandler.cs" />
     <Compile Include="Game\LookAtHandler.cs" />

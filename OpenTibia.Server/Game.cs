@@ -73,7 +73,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the <see cref="IDictionary{TKey,TValue}"/> containing the <see cref="IEventRule"/>s of the game.
         /// </summary>
-        private readonly IDictionary<EventRuleType, ISet<IEventRule>> eventsCatalog;
+        private readonly IDictionary<EventRuleType, ISet<IEventRule>> eventRulesCatalog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
@@ -85,6 +85,7 @@ namespace OpenTibia.Server
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
+        /// <param name="scriptApi"></param>
         public Game(
             ILogger logger,
             IMap map,
@@ -109,7 +110,7 @@ namespace OpenTibia.Server
             // TODO: This is a hack. Need to fix this indirection.
             scriptApi.Game = this;
 
-            this.eventsCatalog = eventRulesLoader.LoadEventRules();
+            this.eventRulesCatalog = eventRulesLoader.LoadEventRules();
 
             // this.monsterLoader = monsterLoader;
 
@@ -399,7 +400,7 @@ namespace OpenTibia.Server
             }
 
             // At this point it seems like a valid usage request, let's enqueue it.
-            IEvent movementEvent = new UseItemEvent(
+            IEvent useItemEvent = new UseItemEvent(
                     this.Logger,
                     this,
                     this.ConnectionManager,
@@ -411,7 +412,7 @@ namespace OpenTibia.Server
                     fromStackPos,
                     index);
 
-            this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
+            this.scheduler.ScheduleEvent(useItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
 
             return true;
         }
@@ -615,46 +616,221 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            var potentialThing = fromTile.GetTopThingByOrder(this.CreatureManager, fromStackPos);
+            var item = fromTile.FindItemWithId(itemId);
 
-            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != itemId)
+            if (item == null || item.ThingId != itemId)
             {
                 return false;
             }
 
-            var useItemEvents = this.eventsCatalog[EventRuleType.Use].Cast<IUseItemEventRule>();
+            var useItemEventRules = this.eventRulesCatalog[EventRuleType.Use].Cast<IUseItemEventRule>();
 
             // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
-            var candidate = useItemEvents.FirstOrDefault(e => e.ItemToUseId == item.Type.TypeId && e.Setup(item, null, requestor as IPlayer) && e.CanBeExecuted);
+            var rulesThatCanBeExecuted = useItemEventRules.Where(e => e.ItemToUseId == item.Type.TypeId && e.Setup(item, null, requestor as IPlayer) && e.CanBeExecuted);
 
             // Execute all actions.
-            candidate?.Execute();
+            if (rulesThatCanBeExecuted.Any())
+            {
+                foreach (var rule in rulesThatCanBeExecuted)
+                {
+                    rule.Execute();
+                }
+
+                return true;
+            }
+            else if (item.ChangesOnUse)
+            {
+                var changeToType = item.ChangeOnUseTo;
+
+                // change this item into the target.
+                return this.PerformItemChange(itemId, changeToType, fromLocation, fromStackPos, index, requestor);
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Inmediately attempts to perform an item change in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="fromTypeId">The type id of the item being changed.</param>
+        /// <param name="toTypeId">The type id of the item being changed to.</param>
+        /// <param name="fromLocation">The location from which the changed is happening.</param>
+        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
+        /// <param name="index">The index of the item to changed.</param>
+        /// <param name="requestor">Optional. The creature requesting the use.</param>
+        /// <returns>True if the item was successfully changed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformItemChange(ushort fromTypeId, ushort toTypeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
+        {
+            if (fromLocation.Type != LocationType.Ground)
+            {
+                // not supported at the moment.
+                return false;
+            }
+
+            // Using an item from the ground (map).
+            if (!this.map.GetTileAt(fromLocation, out ITile targetTile))
+            {
+                return false;
+            }
+
+            IThing potentialThing = targetTile.FindItemWithId(fromTypeId);
+
+            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != fromTypeId)
+            {
+                return false;
+            }
+
+            IThing newItemAsThing = this.ItemFactory.Create(toTypeId);
+
+            if (newItemAsThing == null)
+            {
+                return false;
+            }
+
+            // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
+            if (!targetTile.RemoveThing(this.ItemFactory, ref potentialThing, item.Amount))
+            {
+                return false;
+            }
+
+            targetTile.AddThing(this.ItemFactory, ref newItemAsThing, item.Amount);
+
+            newItemAsThing.Location = fromLocation;
+
+            this.RequestNofitication(
+                new TileUpdatedNotification(
+                        this.Logger,
+                        this.CreatureManager,
+                        () => this.GetConnectionsOfPlayersThatCanSee(fromLocation),
+                        new TileUpdatedNotificationArguments(
+                            fromLocation,
+                            this.GetDescriptionOfTile)));
 
             return true;
         }
 
         /// <summary>
+        /// Inmediately attempts to perform an item creation in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="typeId">The id of the item being being created.</param>
+        /// <param name="atLocation">The location at which the item is being created.</param>
+        /// <param name="requestor">Optional. The creature requesting the creation.</param>
+        /// <returns>True if the item was successfully created, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformItemCreation(ushort typeId, Location atLocation, ICreature requestor)
+        {
+            if (atLocation.Type != LocationType.Ground)
+            {
+                // not supported at the moment.
+                return false;
+            }
+
+            // Using an item from the ground (map).
+            if (!this.map.GetTileAt(atLocation, out ITile targetTile))
+            {
+                return false;
+            }
+
+            IThing newItemAsThing = this.ItemFactory.Create(typeId);
+
+            if (newItemAsThing == null)
+            {
+                return false;
+            }
+
+            // At this point, we were able to generate the new one, let's proceed to add it.
+            targetTile.AddThing(this.ItemFactory, ref newItemAsThing);
+
+            newItemAsThing.Location = atLocation;
+
+            this.RequestNofitication(
+                new TileUpdatedNotification(
+                        this.Logger,
+                        this.CreatureManager,
+                        () => this.GetConnectionsOfPlayersThatCanSee(atLocation),
+                        new TileUpdatedNotificationArguments(
+                            atLocation,
+                            this.GetDescriptionOfTile)));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Inmediately attempts to perform an item deletion in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="typeId">The id of the item being being deleted.</param>
+        /// <param name="atLocation">The location at which the item is being deleted.</param>
+        /// <param name="requestor">Optional. The creature requesting the deletion.</param>
+        /// <returns>True if the item was successfully deleted, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformItemDeletion(ushort typeId, Location atLocation, ICreature requestor)
+        {
+            if (atLocation.Type != LocationType.Ground)
+            {
+                // not supported at the moment.
+                return false;
+            }
+
+            // Using an item from the ground (map).
+            if (!this.map.GetTileAt(atLocation, out ITile targetTile))
+            {
+                return false;
+            }
+
+            IThing potentialThing = targetTile.FindItemWithId(typeId);
+
+            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != typeId)
+            {
+                return false;
+            }
+
+            // At this point, we have an item to remove, let's proceed.
+            var successfulRemoval = targetTile.RemoveThing(this.ItemFactory, ref potentialThing, item.Amount);
+
+            if (successfulRemoval)
+            {
+                this.RequestNofitication(
+                    new TileUpdatedNotification(
+                            this.Logger,
+                            this.CreatureManager,
+                            () => this.GetConnectionsOfPlayersThatCanSee(atLocation),
+                            new TileUpdatedNotificationArguments(
+                                atLocation,
+                                this.GetDescriptionOfTile)));
+            }
+
+            return successfulRemoval;
+        }
+
+        /// <summary>
         /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
         /// </summary>
-        /// <param name="fromLocation">The location from which the events take place.</param>
+        /// <param name="location">The location at which the events take place.</param>
         /// <param name="thingMoving">The thing that is moving.</param>
         /// <param name="requestor">The requestor creature, if any.</param>
         /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        public bool EvaluateSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor)
+        public bool EvaluateSeparationEventRules(Location location, IThing thingMoving, ICreature requestor)
         {
-            if (this.map.GetTileAt(fromLocation, out ITile fromTile) && fromTile.HasSeparationEvents)
+            if (this.map.GetTileAt(location, out ITile fromTile) && fromTile.HasSeparationEvents)
             {
                 foreach (var item in fromTile.ItemsWithSeparation)
                 {
-                    var separationEvents = this.eventsCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
+                    var separationEvents = this.eventRulesCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
 
                     // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
-                    var candidate = separationEvents.FirstOrDefault(e => e.ThingIdOfSeparation == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+                    var rulesThatCanBeExecuted = separationEvents.Where(e => e.ThingIdOfSeparation == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
 
                     // Execute all actions.
-                    candidate?.Execute();
+                    if (rulesThatCanBeExecuted.Any())
+                    {
+                        foreach (var rule in rulesThatCanBeExecuted)
+                        {
+                            rule.Execute();
+                        }
 
-                    return true;
+                        return true;
+                    }
                 }
             }
 
@@ -664,25 +840,31 @@ namespace OpenTibia.Server
         /// <summary>
         /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
         /// </summary>
-        /// <param name="toLocation">The location to which the events take place.</param>
+        /// <param name="location">The location at which the events take place.</param>
         /// <param name="thingMoving">The thing that is moving.</param>
         /// <param name="requestor">The requestor creature, if any.</param>
         /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        public bool EvaluateCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor)
+        public bool EvaluateCollisionEventRules(Location location, IThing thingMoving, ICreature requestor)
         {
-            if (this.map.GetTileAt(toLocation, out ITile toTile) && toTile.HasCollisionEvents)
+            if (this.map.GetTileAt(location, out ITile toTile) && toTile.HasCollisionEvents)
             {
                 foreach (var item in toTile.ItemsWithCollision)
                 {
-                    var collisionEvents = this.eventsCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
+                    var collisionEvents = this.eventRulesCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
 
                     // TODO: there is a potential problem here: multiple calls here will Setup different values if this is not thread safe.
-                    var candidate = collisionEvents.FirstOrDefault(e => e.ThingIdOfCollision == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+                    var rulesThatCanBeExecuted = collisionEvents.Where(e => e.ThingIdOfCollision == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
 
                     // Execute all actions.
-                    candidate?.Execute();
+                    if (rulesThatCanBeExecuted.Any())
+                    {
+                        foreach (var rule in rulesThatCanBeExecuted)
+                        {
+                            rule.Execute();
+                        }
 
-                    return true;
+                        return true;
+                    }
                 }
             }
 
@@ -822,25 +1004,62 @@ namespace OpenTibia.Server
         /// Attempts to change a given item to the supplied id.
         /// </summary>
         /// <param name="thing">The thing to change.</param>
-        /// <param name="toItemId">The id of the item type to change to.</param>
+        /// <param name="toTypeId">The id of the item type to change to.</param>
         /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect)
+        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toTypeId, AnimatedEffect animatedEffect)
         {
-            throw new NotImplementedException();
+            if (thing == null)
+            {
+                return false;
+            }
+
+            if (!this.map.GetTileAt(thing.Location, out _))
+            {
+                return false;
+            }
+
+            // At this point it seems like a valid usage request, let's enqueue it.
+            IEvent changeItemEvent = new ChangeItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    thing.ThingId,
+                    thing.Location,
+                    toTypeId);
+
+            this.scheduler.ScheduleEvent(changeItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
         /// Attempts to change a given item to the supplied id at a given location.
         /// </summary>
         /// <param name="location">The location at which the change will happen.</param>
-        /// <param name="fromItemId">The id of the item from which the change is happening.</param>
-        /// <param name="toItemId">The id of the item to which the change is happening.</param>
+        /// <param name="fromTypeId">The id of the item from which the change is happening.</param>
+        /// <param name="toTypeId">The id of the item to which the change is happening.</param>
         /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_ChangeItemAt(Location location, ushort fromItemId, ushort toItemId, AnimatedEffect animatedEffect)
+        public bool ScriptRequest_ChangeItemAt(Location location, ushort fromTypeId, ushort toTypeId, AnimatedEffect animatedEffect)
         {
-            throw new NotImplementedException();
+            IEvent changeItemEvent = new ChangeItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    fromTypeId,
+                    location,
+                    toTypeId);
+
+            this.scheduler.ScheduleEvent(changeItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -852,7 +1071,19 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_CreateItemAt(Location location, ushort itemType, byte effect)
         {
-            throw new NotImplementedException();
+            IEvent createItemEvent = new CreateItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    itemType,
+                    location);
+
+            this.scheduler.ScheduleEvent(createItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -862,7 +1093,24 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_DeleteItem(IItem item)
         {
-            throw new NotImplementedException();
+            if (item == null)
+            {
+                return false;
+            }
+
+            IEvent deleteItemEvent = new DeleteItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    item.ThingId,
+                    item.Location);
+
+            this.scheduler.ScheduleEvent(deleteItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -873,7 +1121,19 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_DeleteItemAt(Location location, ushort itemType)
         {
-            throw new NotImplementedException();
+            IEvent deleteItemEvent = new DeleteItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    itemType,
+                    location);
+
+            this.scheduler.ScheduleEvent(deleteItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -885,6 +1145,7 @@ namespace OpenTibia.Server
         public bool ScriptRequest_MoveCreature(ICreature creature, Location targetLocation)
         {
             creature.ThrowIfNull(nameof(creature));
+
             if (!this.map.GetTileAt(creature.Location, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
             {
                 return false;
@@ -914,8 +1175,9 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="fromLocation">The location from which to move everything.</param>
         /// <param name="targetLocation">The location to move everything to.</param>
+        /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation)
+        public bool ScriptRequest_MoveEverythingTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
         {
             if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
             {
@@ -924,6 +1186,11 @@ namespace OpenTibia.Server
 
             foreach (var item in fromTile.Items)
             {
+                if (exceptTypeIds.Length > 0 && exceptTypeIds.Contains(item.ThingId))
+                {
+                    continue;
+                }
+
                 var fromStackPos = fromTile.GetStackPositionOfThing(item);
 
                 this.scheduler.ScheduleEvent(
@@ -978,7 +1245,30 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_MoveItemTo(IItem item, Location targetLocation)
         {
-            throw new NotImplementedException();
+            item.ThrowIfNull(nameof(item));
+
+            if (!this.map.GetTileAt(item.Location, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
+            {
+                return false;
+            }
+
+            var itemStackPosition = fromTile.GetStackPositionOfThing(item);
+
+            this.scheduler.ScheduleEvent(
+                new OnMapMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    item,
+                    item.Location,
+                    targetLocation,
+                    itemStackPosition),
+                this.CurrentTime + DefaultDelayForScripts);
+
+            return true;
         }
 
         /// <summary>
@@ -988,9 +1278,37 @@ namespace OpenTibia.Server
         /// <param name="fromLocation">The location from which to move the item.</param>
         /// <param name="toLocation">The location to which to move the item.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_MoveItemByIdTo(ushort itemType, Location fromLocation, Location toLocation)
+        public bool ScriptRequest_MoveItemOfTypeTo(ushort itemType, Location fromLocation, Location toLocation)
         {
-            throw new NotImplementedException();
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out _))
+            {
+                return false;
+            }
+
+            var item = fromTile.FindItemWithId(itemType);
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            var itemStackPosition = fromTile.GetStackPositionOfThing(item);
+
+            this.scheduler.ScheduleEvent(
+                new OnMapMovementEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    0,
+                    item,
+                    item.Location,
+                    toLocation,
+                    itemStackPosition),
+                this.CurrentTime + DefaultDelayForScripts);
+
+            return true;
         }
 
         /// <summary>
@@ -1000,7 +1318,8 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_Logout(IPlayer player)
         {
-            throw new NotImplementedException();
+            // TODO: should this one be different pipeline?
+            return this.PlayerRequest_Logout(player);
         }
 
         /// <summary>

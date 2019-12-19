@@ -283,14 +283,14 @@ namespace OpenTibia.Server.Factories
             }
         }
 
-        public void MoveEverythingToLocation(Location fromLocation, Location targetLocation)
+        public void MoveEverythingToLocation(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
         {
-            this.Game.ScriptRequest_MoveEverythingTo(fromLocation, targetLocation);
+            this.Game.ScriptRequest_MoveEverythingTo(fromLocation, targetLocation, exceptTypeIds);
         }
 
         public void MoveByIdToLocation(ushort itemId, Location fromLocation, Location toLocation)
         {
-            this.Game.ScriptRequest_MoveItemByIdTo(itemId, fromLocation, toLocation);
+            this.Game.ScriptRequest_MoveItemOfTypeTo(itemId, fromLocation, toLocation);
         }
 
         public void DisplayAnimatedText(Location location, string text, byte textType)

@@ -105,7 +105,7 @@ namespace OpenTibia.Server.Map.SectorFiles
         {
             if (x > SectorXMax)
             {
-                return this.sectorsLoaded[x / 32 - SectorXMin, y / 32 - SectorYMin, z - SectorZMin];
+                return this.sectorsLoaded[(x / 32) - SectorXMin, (y / 32) - SectorYMin, z - SectorZMin];
             }
 
             return this.sectorsLoaded[x - SectorXMin, y - SectorYMin, z - SectorZMin];

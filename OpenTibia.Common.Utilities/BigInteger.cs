@@ -1754,17 +1754,17 @@ namespace OpenTibia.Common.Utilities
             int pos = 0;
             uint tempVal, val = this.data[this.dataLength - 1];
 
-            if ((tempVal = val >> 24 & 0xFF) != 0)
+            if ((tempVal = (val >> 24) & 0xFF) != 0)
             {
                 result[pos++] = (byte)tempVal;
             }
 
-            if ((tempVal = val >> 16 & 0xFF) != 0)
+            if ((tempVal = (val >> 16) & 0xFF) != 0)
             {
                 result[pos++] = (byte)tempVal;
             }
 
-            if ((tempVal = val >> 8 & 0xFF) != 0)
+            if ((tempVal = (val >> 8) & 0xFF) != 0)
             {
                 result[pos++] = (byte)tempVal;
             }
