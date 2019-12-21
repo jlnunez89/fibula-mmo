@@ -64,8 +64,6 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// </summary>
         public IPlayer Player { get; }
 
-        // public HashSet<string> Privileges { get; }
-
         /// <summary>
         /// Writes the packet to the message provided.
         /// </summary>

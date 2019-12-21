@@ -132,7 +132,7 @@ namespace OpenTibia.Server.Notifications
                     }
 
                     // going further down underground; watch for world's deepest floor (hardcoded for now).
-                    else if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z && this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < 14)
+                    else if (this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < 14)
                     {
                         // Client already has all floors needed except the new deepest floor, so it needs the 2th floor below the current.
                         description = this.Game.GetDescriptionOfMapForPlayer(player, (ushort)windowStartLocation.X, (ushort)windowStartLocation.Y, (sbyte)(this.Arguments.NewLocation.Z + 2), (sbyte)(this.Arguments.NewLocation.Z + 2), IMap.DefaultWindowSizeX, IMap.DefaultWindowSizeY, -3);
@@ -301,8 +301,8 @@ namespace OpenTibia.Server.Notifications
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     IMap.DefaultWindowSizeX,
                     1));
         }
@@ -347,8 +347,8 @@ namespace OpenTibia.Server.Notifications
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     IMap.DefaultWindowSizeX,
                     1));
         }
@@ -392,8 +392,8 @@ namespace OpenTibia.Server.Notifications
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     1,
                     IMap.DefaultWindowSizeY));
         }
@@ -437,8 +437,8 @@ namespace OpenTibia.Server.Notifications
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z - 2 : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? this.Arguments.NewLocation.Z + 2 : 0),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     1,
                     IMap.DefaultWindowSizeY));
         }
