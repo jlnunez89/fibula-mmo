@@ -44,6 +44,12 @@ namespace OpenTibia.Server.Map.SectorFiles
 
         private readonly DirectoryInfo mapDirInfo;
 
+        private readonly int sectorsLengthZ;
+
+        private readonly int sectorsLengthY;
+
+        private readonly int sectorsLengthX;
+
         private readonly bool[,,] sectorsLoaded;
 
         private long totalTileCount;
@@ -71,7 +77,12 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             this.totalTileCount = 1;
             this.totalLoadedCount = default;
-            this.sectorsLoaded = new bool[SectorXMax - SectorXMin, SectorYMax - SectorYMin, SectorZMax - SectorZMin];
+
+            this.sectorsLengthX = 1 + SectorXMax - SectorXMin;
+            this.sectorsLengthY = 1 + SectorYMax - SectorYMin;
+            this.sectorsLengthZ = 1 + SectorZMax - SectorZMin;
+
+            this.sectorsLoaded = new bool[this.sectorsLengthX, this.sectorsLengthY, this.sectorsLengthZ];
         }
 
         /// <summary>
@@ -103,12 +114,18 @@ namespace OpenTibia.Server.Map.SectorFiles
         /// <returns>True if the loader has previously loaded the given coordinates, false otherwise.</returns>
         public bool HasLoaded(int x, int y, sbyte z)
         {
-            if (x > SectorXMax)
+            var convertToSector = x > SectorXMax;
+
+            var probeX = convertToSector ? (x / 32) - SectorXMin : x - SectorXMin;
+            var probeY = convertToSector ? (y / 32) - SectorYMin : y - SectorYMin;
+            var probeZ = z - SectorZMin;
+
+            if (probeX >= 0 && probeX < this.sectorsLengthX && probeY >= 0 && probeY < this.sectorsLengthY && probeZ >= 0 && probeZ < this.sectorsLengthZ)
             {
-                return this.sectorsLoaded[(x / 32) - SectorXMin, (y / 32) - SectorYMin, z - SectorZMin];
+                return this.sectorsLoaded[probeX, probeY, probeZ];
             }
 
-            return this.sectorsLoaded[x - SectorXMin, y - SectorYMin, z - SectorZMin];
+            return false;
         }
 
         /// <summary>
@@ -156,10 +173,10 @@ namespace OpenTibia.Server.Map.SectorFiles
                             var fileContents = streamReader.ReadToEnd();
 
                             tuplesAdded.AddRange(SectorFileReader.ReadSector(this.Logger, this.ItemFactory, sectorFileName, fileContents, (ushort)(sectorX * 32), (ushort)(sectorY * 32), (sbyte)sectorZ));
-                        }
 
-                        Interlocked.Add(ref this.totalLoadedCount, 1024); // 1024 per sector file, regardless if there is a tile or not...
-                        this.sectorsLoaded[sectorX - SectorXMin, sectorY - SectorYMin, sectorZ - SectorZMin] = true;
+                            Interlocked.Add(ref this.totalLoadedCount, 1024); // 1024 per sector file, regardless if there is a tile or not...
+                            this.sectorsLoaded[sectorX - SectorXMin, sectorY - SectorYMin, sectorZ - SectorZMin] = true;
+                        }
                     });
                 });
             });

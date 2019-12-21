@@ -40,6 +40,8 @@ namespace OpenTibia.Server
 
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
 
+        public static Location HellsGate = new Location { X = 32675, Y = 31648, Z = 10 };
+
         /// <summary>
         /// Default delay for scripts.
         /// </summary>
@@ -85,7 +87,7 @@ namespace OpenTibia.Server
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
-        /// <param name="scriptApi"></param>
+        /// <param name="scriptApi">A reference to the script api in use.</param>
         public Game(
             ILogger logger,
             IMap map,
@@ -251,7 +253,7 @@ namespace OpenTibia.Server
             // playerRecord.location
             IThing playerThing = player;
 
-            playerThing.Location = Game.VeteranStart;
+            playerThing.Location = Game.HellsGate;
 
             if (this.map.GetTileAt(player.Location, out ITile targetTile))
             {
