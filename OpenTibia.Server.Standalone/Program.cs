@@ -28,6 +28,7 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Data.Contracts.Abstractions;
     using OpenTibia.Data.CosmosDB;
+    using OpenTibia.Data.InMemoryDatabase;
     using OpenTibia.Providers.Azure;
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
@@ -118,7 +119,8 @@ namespace OpenTibia.Server.Standalone
 
             services.AddAzureProviders(hostingContext.Configuration);
 
-            services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
+            // services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
+            services.AddInMemoryDatabaseContext(hostingContext.Configuration);
 
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
 

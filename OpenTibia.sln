@@ -89,6 +89,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Parsing.Gr
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Events.MoveUseFile", "OpenTibia.Server.Events.MoveUseFile\OpenTibia.Server.Events.MoveUseFile.csproj", "{801BA983-E3CD-4C0C-A7FE-D660ABC8DC69}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Data.InMemoryDatabase", "OpenTibia.Data.InMemoryDatabase\OpenTibia.Data.InMemoryDatabase.csproj", "{3D9930C3-46FB-4267-9044-BDD963CCA6AE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -369,6 +371,14 @@ Global
 		{801BA983-E3CD-4C0C-A7FE-D660ABC8DC69}.Release|Any CPU.Build.0 = Release|Any CPU
 		{801BA983-E3CD-4C0C-A7FE-D660ABC8DC69}.Release|x64.ActiveCfg = Release|Any CPU
 		{801BA983-E3CD-4C0C-A7FE-D660ABC8DC69}.Release|x64.Build.0 = Release|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Debug|x64.Build.0 = Debug|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Release|x64.ActiveCfg = Release|Any CPU
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -409,6 +419,7 @@ Global
 		{36CC2E87-F1CF-41AA-9F57-507B64239AD3} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 		{7418C6A7-51B5-41C5-9230-E29963CAFB31} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 		{801BA983-E3CD-4C0C-A7FE-D660ABC8DC69} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
+		{3D9930C3-46FB-4267-9044-BDD963CCA6AE} = {0A88C2B7-D95C-41E5-89F3-BC87691C5C86}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4198A479-8EF8-4C3D-BCC7-702B747E6EE4}

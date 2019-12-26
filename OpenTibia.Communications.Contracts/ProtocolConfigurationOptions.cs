@@ -31,11 +31,5 @@ namespace OpenTibia.Communications.Contracts
         /// </summary>
         // TODO: move to somewhere else.
         public bool UsingCipsoftRsaKeys { get; set; }
-
-        /// <summary>
-        /// Gets or sets the query manager's password.
-        /// </summary>
-        // TODO: remove?
-        public string QueryManagerPassword { get; set; }
     }
 }
