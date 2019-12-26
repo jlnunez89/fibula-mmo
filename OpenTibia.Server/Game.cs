@@ -36,11 +36,11 @@ namespace OpenTibia.Server
     /// </summary>
     public class Game : IGame
     {
+        private const int DefaultGroundMovementPenalty = 200;
+
         public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
 
         public static Location VeteranStart = new Location { X = 32369, Y = 32241, Z = 7 };
-
-        public static Location HellsGate = new Location { X = 32675, Y = 31648, Z = 10 };
 
         /// <summary>
         /// Default delay for scripts.
@@ -193,26 +193,21 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            TimeSpan delay = player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
-            DateTimeOffset eventRequestTime = this.CurrentTime;
+            DateTimeOffset eventRequestTime = this.CurrentTime + player.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.CurrentTime);
 
             // validate each tile of the suggested locations.
             for (int i = 0; i < directions.Length; i++)
             {
                 var toLoc = fromLoc.LocationAt(directions[i]);
 
-                if ((i > 0 && !this.map.GetTileAt(fromLoc, out _)) || !this.map.GetTileAt(toLoc, out ITile toTile))
+                if ((i > 0 && !this.map.GetTileAt(fromLoc, out fromTile)) || !this.map.GetTileAt(toLoc, out _))
                 {
                     return false;
                 }
 
-                this.scheduler.ScheduleEvent(new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, deferEvaluation: true), eventRequestTime + delay);
+                this.scheduler.ScheduleEvent(new OnMapCreatureMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, player, fromLoc, toLoc, deferEvaluation: true), eventRequestTime);
 
-                var movementPenalty = (toTile.Ground?.MovementPenalty ?? 200) * (directions[i].IsDiagonal() ? 2 : 1);
-
-                // TODO: centralize walk penalty formula.
-                delay = TimeSpan.FromMilliseconds(1000 * movementPenalty / (double)Math.Max(1, (int)player.Speed));
-                eventRequestTime += delay;
+                eventRequestTime += this.CalculateStepDuration(player, directions[i], fromTile);
 
                 // update last location to this one.
                 fromLoc = toLoc;
@@ -253,7 +248,7 @@ namespace OpenTibia.Server
             // playerRecord.location
             IThing playerThing = player;
 
-            playerThing.Location = Game.HellsGate;
+            playerThing.Location = Game.VeteranStart;
 
             if (this.map.GetTileAt(player.Location, out ITile targetTile))
             {
@@ -521,21 +516,16 @@ namespace OpenTibia.Server
 
             thing.Location = toTileLocation;
 
-            var clientSafeMoveDirection = fromTileLocation.DirectionTo(toTileLocation);
-
             // Then deal with the consequences of the move.
             if (thing is ICreature creature)
             {
-                creature.TurnToDirection(clientSafeMoveDirection);
+                var moveDirection = fromTileLocation.DirectionTo(toTileLocation, true);
 
-                var trueMoveDirection = fromTileLocation.DirectionTo(toTileLocation, true);
+                creature.TurnToDirection(moveDirection.GetClientSafeDirection());
 
-                var tilePenalty = toTile.Ground?.MovementPenalty;
-                var totalPenalty = (tilePenalty ?? 200) * (trueMoveDirection.IsDiagonal() ? 2 : 1);
+                var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
-                var exhaustionTime = TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)creature.Speed));
-
-                creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, exhaustionTime);
+                creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, stepDurationTime);
 
                 var thingStackPosition = toTile.GetStackPositionOfThing(thing);
 
@@ -1336,6 +1326,29 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Calculates the step duration of a creature moving from a given tile in the given direction.
+        /// </summary>
+        /// <param name="creature">The creature that's moving.</param>
+        /// <param name="stepDirection">The direction of the step.</param>
+        /// <param name="fromTile">The tile which the creature is moving from.</param>
+        /// <returns>The duration time of the step.</returns>
+        private TimeSpan CalculateStepDuration(ICreature creature, Direction stepDirection, ITile fromTile)
+        {
+            if (creature == null)
+            {
+                return TimeSpan.Zero;
+            }
+
+            var tilePenalty = fromTile?.Ground?.MovementPenalty ?? DefaultGroundMovementPenalty;
+
+            var totalPenalty = tilePenalty * (stepDirection.IsDiagonal() ? 2 : 1);
+
+            var durationInMs = Math.Ceiling(1000 * totalPenalty / (double)Math.Max(1u, creature.Speed) / 50) * 50;
+
+            return TimeSpan.FromMilliseconds(durationInMs);
+        }
+
+        /// <summary>
         /// Handles miscellaneous stuff on the game world, such as world light.
         /// </summary>
         /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
@@ -1435,6 +1448,7 @@ namespace OpenTibia.Server
             try
             {
                 evt.Process();
+
                 this.Logger.Debug($"Processed event {evt.EventId}, current game time: {this.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
             catch (Exception ex)
