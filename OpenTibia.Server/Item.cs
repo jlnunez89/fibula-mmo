@@ -155,7 +155,7 @@ namespace OpenTibia.Server
             }
         }
 
-        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip) || this.Type.Flags.Contains(ItemFlag.Hang);
+        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip);
 
         public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.Bottom);
 
