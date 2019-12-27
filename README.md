@@ -2,13 +2,13 @@
 
 # Repo guidelines and content map:
 
-### If you're looking for the TL;DR trying to check out what this is about, see [how to setup and run the Server](docs/Setup.md).
+If you're looking for the TL;DR trying to check out what this is about, see [how to setup and run the Server](docs/Setup.md).
 
-### For more complex setup and configuration information check out the [server configuration](docs/Configuration.md) section.
+For more complex setup and configuration information check out the [server configuration](docs/Configuration.md) section.
 
-### For some ramblings about me, and why I started this project, visit this [project's motivation](docs/Motivation.md) page.
+For some ramblings about me, and why I started this project, visit this [project's motivation](docs/Motivation.md) page.
 
-### And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](docs/Roadmap.md).
+And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](docs/Roadmap.md).
 
 ###### More docs to (probably) come soon!
 
