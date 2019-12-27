@@ -1,6 +1,6 @@
 ### A C# NetCore OpenTibia server, for client version 7.71.
 
-# F. A. Q
+# Frequently Asked Questions
 
 ## Why C#/NetCore?
 Because it is **awesome**. It is fast, simple and way more maintainable than C++. 
@@ -33,7 +33,7 @@ I'm not however, opposed to develop any other versions of the game later on, but
 
 1) The resulting folder will contain this structure (or similar):
 
-   ![Image of folder structure](/docs/readme/folderstructure.png?raw=true)
+   ![Image of folder structure](docs/readme/folderstructure.png?raw=true)
 
 ### Build the solution
 
@@ -45,7 +45,7 @@ You have several options to do this:
 
 After you build it, the project you want to focus on is `OpenTibia.Server.Standalone`. Go into the bin folder created, and it should look something like this:
 
-   ![Image of Bin folder structure](/docs/readme/standaloneBinFolder.png?raw=true)
+   ![Image of Bin folder structure](docs/readme/standaloneBinFolder.png?raw=true)
 
 ### Extract the Map sector files.
 
@@ -55,7 +55,7 @@ After you build it, the project you want to focus on is `OpenTibia.Server.Standa
 
 2) Decompress the archive into the `OpenTibia.Server.Standalone` folder:
    
-   ![Image of Bin folder structure with Map folder](/docs/readme/standaloneBinFolderWithMap.png?raw=true)
+   ![Image of Bin folder structure with Map folder](docs/readme/standaloneBinFolderWithMap.png?raw=true)
 
 ### Run the binary: 
 
@@ -63,13 +63,13 @@ Running the server is simple. From the `OpenTibia.Server.Standalone`'s bin folde
 
 `dotnet .\OpenTibia.Server.Standalone.dll`
 
-   ![Image of running service](/docs/readme/standaloneExecution.png?raw=true)
+   ![Image of running service](docs/readme/standaloneExecution.png?raw=true)
 
 ### Log in:
 
 Use you favorite `7.7` (soon to be 7.71) client to connnect to `localhost` / `127.0.0.1` (per vanilla configuration). In my case, I use Tibia Loader:
 
-   ![Image of Tibia Loader](/docs/readme/tibiaLoader.png?raw=true)
+   ![Image of Tibia Loader](docs/readme/tibiaLoader.png?raw=true)
 
 Credentials for the In-Memory database are currently:
 
