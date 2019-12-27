@@ -1,7 +1,6 @@
 ### A C# NetCore OpenTibia server, for client version 7.71.
 
-# F. A. Q
-
+# Frequently Asked Questions
 ## Why C#/NetCore?
 Because it is **awesome**. It is fast, simple and way more maintainable than C++. 
 It's easier for newbies to pick up and learn, as it is often taught in schools and bootcamps.
