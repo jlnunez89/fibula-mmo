@@ -17,18 +17,18 @@ namespace OpenTibia.Server.Contracts.Enumerations
     public enum LocationType : byte
     {
         /// <summary>
-        /// Inside a container.
+        /// Inside a specific container.
         /// </summary>
-        Container,
+        InsideContainer,
 
         /// <summary>
-        /// In a player's slot.
+        /// The inventory slot of a player.
         /// </summary>
-        Slot,
+        InventorySlot,
 
         /// <summary>
-        /// On the ground (map).
+        /// On the map.
         /// </summary>
-        Ground,
+        Map,
     }
 }

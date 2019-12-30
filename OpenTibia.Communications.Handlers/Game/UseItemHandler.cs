@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ItemUseHandler.cs" company="2Dudes">
+// <copyright file="UseItemHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -81,7 +81,7 @@ namespace OpenTibia.Communications.Handlers.Game
             // player.ClearPendingActions();
 
             // Before actually using the item, check if we're close enough to use it.
-            if (itemUseInfo.FromLocation.Type == LocationType.Ground)
+            if (itemUseInfo.FromLocation.Type == LocationType.Map)
             {
                 var locationDiff = itemUseInfo.FromLocation - player.Location;
 
@@ -110,7 +110,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
-            if (player.Location != itemUseInfo.FromLocation)
+            if (player.Location != itemUseInfo.FromLocation && itemUseInfo.FromLocation.Type == LocationType.Map)
             {
                 var directionToThing = player.Location.DirectionTo(itemUseInfo.FromLocation);
 

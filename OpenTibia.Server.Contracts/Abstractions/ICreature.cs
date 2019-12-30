@@ -71,7 +71,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ushort MaxManapoints { get; }
 
         /// <summary>
-        /// Gets the creature's carry strength.
+        /// Gets the creature's strength value for carrying stuff.
         /// </summary>
         decimal CarryStrength { get; }
 

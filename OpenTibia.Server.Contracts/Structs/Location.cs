@@ -20,6 +20,16 @@ namespace OpenTibia.Server.Contracts.Structs
     public struct Location
     {
         /// <summary>
+        /// The bit flag for containers encoded in location.
+        /// </summary>
+        private const int ContainerFlag = 0x40;
+
+        /// <summary>
+        /// A value for X that denotes a location type other than <see cref="LocationType.Map"/>.
+        /// </summary>
+        private const int NonMapLocationX = 0xFFFF;
+
+        /// <summary>
         /// Gets or sets the value of this location in the X coordinate.
         /// </summary>
         public int X { get; set; }
@@ -40,49 +50,73 @@ namespace OpenTibia.Server.Contracts.Structs
         public bool IsUnderground => this.Z > 7;
 
         /// <summary>
-        /// Gets this location's type.
+        /// Gets this location's parent cylinder type.
         /// </summary>
         public LocationType Type
         {
             get
             {
-                if (this.X != 0xFFFF)
+                if (this.X != NonMapLocationX)
                 {
-                    return LocationType.Ground;
+                    return LocationType.Map;
                 }
 
-                if ((this.Y & 0x40) != 0)
+                if ((this.Y & ContainerFlag) > 0)
                 {
-                    return LocationType.Container;
+                    return LocationType.InsideContainer;
                 }
 
-                return LocationType.Slot;
+                return LocationType.InventorySlot;
             }
         }
 
         /// <summary>
-        /// Gets the <see cref="Slot"/> value of this location.
+        /// Gets the slot id encoded in this location.
         /// </summary>
-        public Slot Slot => (Slot)Convert.ToByte(this.Y);
-
-        /// <summary>
-        /// Gets the container value of this location.
-        /// </summary>
-        public byte Container => Convert.ToByte(this.Y - 0x40);
-
-        /// <summary>
-        /// Gets or sets the container index of this location.
-        /// </summary>
-        public sbyte ContainerPosition
+        public Slot Slot
         {
             get
             {
-                return Convert.ToSByte(this.Z);
+                var byteValue = (byte)this.Y;
+
+                if (Enum.IsDefined(typeof(Slot), byteValue))
+                {
+                    return (Slot)byteValue;
+                }
+
+                return Slot.UnsetInvalid;
+            }
+        }
+
+        /// <summary>
+        /// Gets the id of the container that's encoded in this location.
+        /// </summary>
+        public byte ContainerId
+        {
+            get
+            {
+                if (this.Type == LocationType.InsideContainer)
+                {
+                    return (byte)(this.Y - ContainerFlag);
+                }
+
+                return byte.MaxValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the index of the container that's encoded in this location.
+        /// </summary>
+        public byte ContainerIndex
+        {
+            get
+            {
+                return (byte)this.Z;
             }
 
             set
             {
-                this.Z = value;
+                this.Z = (sbyte)value;
             }
         }
 

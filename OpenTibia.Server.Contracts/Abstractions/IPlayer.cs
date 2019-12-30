@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using System.Collections.Generic;
+
     /// <summary>
     /// Interface for character players in the game.
     /// </summary>
@@ -24,25 +26,45 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the player's permissions level.
         /// </summary>
-        byte PermissionsLevel { get; } // TODO: implement.
+        // TODO: implement.
+        byte PermissionsLevel { get; }
 
         /// <summary>
         /// Gets the player's soul points.
         /// </summary>
-        byte SoulPoints { get; } // TODO: nobody likes soulpoints... figure out what to do with them.
+        // TODO: nobody likes soulpoints... figure out what to do with them.
+        byte SoulPoints { get; }
 
         /// <summary>
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
         bool IsLogoutAllowed { get; }
 
+        /// <summary>
+        /// Gets the collection of open containers tracked by this player.
+        /// </summary>
+        IEnumerable<IContainerItem> OpenContainers { get; }
+
         // IAction PendingAction { get; }
 
-        uint ChooseToRemoveFromKnownSet();
-
+        /// <summary>
+        /// Checks if this player knows the given creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature to check.</param>
+        /// <returns>True if the player knows the creature, false otherwise.</returns>
         bool KnowsCreatureWithId(uint creatureId);
 
+        /// <summary>
+        /// Adds the given creature to this player's known collection.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature to add to the known creatures collection.</param>
         void AddKnownCreature(uint creatureId);
+
+        /// <summary>
+        /// Chooses a creature to remove from this player's known creatures collection, if it has reached the collection size limit.
+        /// </summary>
+        /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
+        uint ChooseCreatureToRemoveFromKnownSet();
 
         // void SetPendingAction(IAction action);
 
@@ -50,14 +72,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         // void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs);
 
-        // sbyte OpenContainer(IContainerItem thingAsContainer);
+        sbyte OpenContainer(IContainerItem container);
 
-        // sbyte GetContainerId(IContainerItem thingAsContainer);
+        sbyte GetContainerId(IContainerItem container);
 
-        // void CloseContainerWithId(byte openContainerIds);
+        void CloseContainerWithId(byte openContainerId);
 
-        // void OpenContainerAt(IContainerItem thingAsContainer, byte index);
+        void OpenContainerAt(IContainerItem container, byte index);
 
-        // IContainerItem GetContainer(byte container);
+        IContainerItem GetContainer(byte container);
     }
 }

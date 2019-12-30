@@ -85,21 +85,23 @@ namespace OpenTibia.Server.Map.SectorFiles
                                     if (element.IsFlag)
                                     {
                                         // A flag is unexpected in this context.
-                                        logger.Warning($"SectorFileReader.AddContentElements: Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
+                                        logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
 
                                         continue;
                                     }
 
-                                    IThing itemAsThing = itemFactory.Create((ushort)element.Id);
+                                    IItem item = itemFactory.Create((ushort)element.Id);
 
-                                    if (itemAsThing == null)
+                                    if (item == null)
                                     {
-                                        logger.Warning($"SectorFileReader.AddContentElements: Item with id {element.Id} not found in the catalog, skipping.");
+                                        logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
 
                                         continue;
                                     }
 
-                                    thingStack.Push(itemAsThing);
+                                    item.SetAttributes(logger.ForContext<IItem>(), itemFactory, element.Attributes);
+
+                                    thingStack.Push(item);
                                 }
 
                                 // Add them in reversed order.

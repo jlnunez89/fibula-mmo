@@ -127,7 +127,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PlayerRequest_TurnToDirection(IPlayer player, Direction direction);
 
         /// <summary>
-        /// Attempts to move a thing on behalf of a player.
+        /// Attempts to move a thing from the map on behalf of a player.
         /// </summary>
         /// <param name="player">The player making the request.</param>
         /// <param name="thingId">The id of the thing attempting to be moved.</param>
@@ -136,7 +136,30 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="toLocation">The location to which the thing is being moved.</param>
         /// <param name="count">The amount of the thing that is being moved.</param>
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
-        bool PlayerRequest_MoveThing(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count);
+        bool PlayerRequest_MoveThingFromMap(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count);
+
+        /// <summary>
+        /// Attempts to move a thing from a specific container on behalf of a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="thingId">The id of the thing attempting to be moved.</param>
+        /// <param name="container">The id of the container from which the thing is being moved.</param>
+        /// <param name="containerIndex">The index within the container from which the thing is being moved.</param>
+        /// <param name="toLocation">The location to which the thing is being moved.</param>
+        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <returns>True if the thing movement was accepted, false otherwise.</returns>
+        bool PlayerRequest_MoveThingFromContainer(IPlayer player, ushort thingId, byte container, byte containerIndex, Location toLocation, byte count);
+
+        /// <summary>
+        /// Attempts to move a thing from an inventory slot on behalf of a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="thingId">The id of the thing attempting to be moved.</param>
+        /// <param name="slot">The inventory slot from which the thing is being moved.</param>
+        /// <param name="toLocation">The location to which the thing is being moved.</param>
+        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <returns>True if the thing movement was accepted, false otherwise.</returns>
+        bool PlayerRequest_MoveThingFromInventory(IPlayer player, ushort thingId, Slot slot, Location toLocation, byte count);
 
         /// <summary>
         /// Attempts to use an item on behalf of a player.
@@ -324,5 +347,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="monsterType">The type of the monster to place.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
         bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType);
+
+        /// <summary>
+        /// Checks if a throw between two locations is valid.
+        /// </summary>
+        /// <param name="fromLocation">The first location.</param>
+        /// <param name="toLocation">The second location.</param>
+        /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
+        /// <returns>True if the throw is valid, false otherwise.</returns>
+        bool CanThrowBetween(Location fromLocation, Location toLocation, bool checkLineOfSight = true);
     }
 }

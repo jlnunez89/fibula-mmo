@@ -233,7 +233,7 @@ namespace OpenTibia.Server.Notifications
                             packets.Add(new RemoveAtStackposPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                         }
 
-                        packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseToRemoveFromKnownSet()));
+                        packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
                     }
                     else
                     {
@@ -250,7 +250,7 @@ namespace OpenTibia.Server.Notifications
             }
             else if (player.CanSee(this.Arguments.NewLocation) && player.CanSee(creature))
             {
-                packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseToRemoveFromKnownSet()));
+                packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
             }
 
             if (this.Arguments.WasTeleport)
@@ -261,7 +261,7 @@ namespace OpenTibia.Server.Notifications
             return packets;
         }
 
-        private MapPartialDescriptionPacket NorthSliceDescription(IPlayer player, int floorChangeOffset = 0)
+        private IOutgoingPacket NorthSliceDescription(IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location.
             //

@@ -15,6 +15,7 @@ namespace OpenTibia.Server.Factories
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents an <see cref="IItem"/> factory.
@@ -56,10 +57,12 @@ namespace OpenTibia.Server.Factories
                 return null;
             }
 
-            // if (this.ItemCatalog.Value[typeId].Flags.Contains(ItemFlag.Container) || this.ItemCatalog.Value[typeId].Flags.Contains(ItemFlag.Chest))
-            // {
-            //     return new Container(this.ItemCatalog.Value[typeId]);
-            // }
+            // TODO: chest actually means a quest chest...
+            if (this.itemTypesCatalog[typeId].Flags.Contains(ItemFlag.Container) || this.itemTypesCatalog[typeId].Flags.Contains(ItemFlag.Chest))
+            {
+                return new ContainerItem(this.itemTypesCatalog[typeId]);
+            }
+
             return new Item(this.itemTypesCatalog[typeId]);
         }
     }

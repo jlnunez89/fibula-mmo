@@ -30,8 +30,6 @@
     <Compile Remove="Outgoing\BanismentResultPacket.cs" />
     <Compile Remove="Outgoing\ClearOnlinePlayersResultPacket.cs" />
     <Compile Remove="Outgoing\ContainerAddItemPacket.cs" />
-    <Compile Remove="Outgoing\ContainerClosePacket.cs" />
-    <Compile Remove="Outgoing\ContainerOpenPacket.cs" />
     <Compile Remove="Outgoing\ContainerRemoveItemPacket.cs" />
     <Compile Remove="Outgoing\ContainerUpdateItemPacket.cs" />
     <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />

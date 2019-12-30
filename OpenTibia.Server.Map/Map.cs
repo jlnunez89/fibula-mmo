@@ -162,12 +162,12 @@ namespace OpenTibia.Server.Map
 
             if (windowSizeX > IMap.DefaultWindowSizeX)
             {
-                this.Logger.Debug($"DescribeForPlayer {nameof(windowSizeX)} is over {nameof(IMap.DefaultWindowSizeX)} ({IMap.DefaultWindowSizeX}).");
+                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeX)} is over {nameof(IMap.DefaultWindowSizeX)} ({IMap.DefaultWindowSizeX}).");
             }
 
             if (windowSizeY > IMap.DefaultWindowSizeY)
             {
-                this.Logger.Debug($"DescribeForPlayer {nameof(windowSizeY)} is over {nameof(IMap.DefaultWindowSizeY)} ({IMap.DefaultWindowSizeY}).");
+                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeY)} is over {nameof(IMap.DefaultWindowSizeY)} ({IMap.DefaultWindowSizeY}).");
             }
 
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
@@ -376,7 +376,7 @@ namespace OpenTibia.Server.Map
                         {
                             creatureBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
                             creatureBytes.Add(0x00);
-                            creatureBytes.AddRange(BitConverter.GetBytes(player.ChooseToRemoveFromKnownSet()));
+                            creatureBytes.AddRange(BitConverter.GetBytes(player.ChooseCreatureToRemoveFromKnownSet()));
                             creatureBytes.AddRange(BitConverter.GetBytes(creatureId));
 
                             // TODO: is this the best spot for this ?

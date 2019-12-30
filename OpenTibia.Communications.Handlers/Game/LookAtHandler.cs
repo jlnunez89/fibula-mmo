@@ -87,23 +87,24 @@ namespace OpenTibia.Communications.Handlers.Game
 
             this.Logger.Debug($"Player {player.Name} looking at thing with id: {lookAtInfo.ThingId}. {lookAtInfo.Location}");
 
-            if (lookAtInfo.Location.Type != LocationType.Ground || player.CanSee(lookAtInfo.Location))
+            if (lookAtInfo.Location.Type != LocationType.Map || player.CanSee(lookAtInfo.Location))
             {
                 // Get thing at location
                 switch (lookAtInfo.Location.Type)
                 {
-                    case LocationType.Ground:
+                    case LocationType.Map:
                         thing = this.TileAccessor.GetTileAt(lookAtInfo.Location, out ITile targetTile) ? targetTile.GetTopThingByOrder(this.CreatureFinder, lookAtInfo.StackPosition) : null;
                         break;
-                    case LocationType.Container:
-                        // TODO: implement containers.
-                        // Container container = player.Inventory.GetContainer(location.Container);
-                        // if (container != null)
-                        // {
-                        //    return container.GetItem(location.ContainerPosition);
-                        // }
+                    case LocationType.InsideContainer:
+                        var container = player.GetContainer(lookAtInfo.Location.ContainerId);
+
+                        if (container != null)
+                        {
+                            thing = container[lookAtInfo.Location.ContainerIndex];
+                        }
+
                         break;
-                    case LocationType.Slot:
+                    case LocationType.InventorySlot:
                         thing = player.Inventory[(byte)lookAtInfo.Location.Slot];
                         break;
                 }

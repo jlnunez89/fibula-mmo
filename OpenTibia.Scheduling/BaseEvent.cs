@@ -90,14 +90,14 @@ namespace OpenTibia.Scheduling
             {
                 var allPassed = true;
 
-                foreach (var policy in this.Conditions)
+                foreach (var condition in this.Conditions)
                 {
-                    allPassed &= policy.Evaluate();
+                    allPassed &= condition.Evaluate();
 
                     if (!allPassed)
                     {
-                        this.Logger.Debug($"Failed event condition {policy.GetType().Name}.");
-                        this.ErrorMessage = policy.ErrorMessage;
+                        this.Logger.Debug($"Failed event condition {condition.GetType().Name}.");
+                        this.ErrorMessage = condition.ErrorMessage;
                         break;
                     }
                 }
@@ -106,13 +106,19 @@ namespace OpenTibia.Scheduling
             }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the collection of conditional <see cref="IEventCondition"/> that the event must pass on evaluation.
+        /// </summary>
         public IList<IEventCondition> Conditions { get; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check succeeds.
+        /// </summary>
         public IList<IEventAction> ActionsOnPass { get; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check fails.
+        /// </summary>
         public IList<IEventAction> ActionsOnFail { get; }
 
         /// <summary>

@@ -7952,7 +7952,7 @@ Attributes  = {Weight=41000}
 TypeID      = 1781
 Name        = "a small stone"
 Flags       = {Cumulative,Take,Throw}
-Attributes  = {Weight=100,ThrowRange=7,ThrowAttackValue=10,ThrowDefendValue=0,ThrowMissile=10,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=10}
+Attributes  = {Weight=360,ThrowRange=7,ThrowAttackValue=10,ThrowDefendValue=0,ThrowMissile=10,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=7}
 
 TypeID      = 1782
 Name        = "a stone"
@@ -12674,8 +12674,8 @@ Attributes  = {AvoidDamageTypes=0,Weight=3000,Elevation=8}
 TypeID      = 2812
 Name        = "a furniture package"
 Description = "It contains a christmas tree"
-Flags       = {UseEvent,Avoid,Take,Height}
-Attributes  = {AvoidDamageTypes=0,Weight=3500,Elevation=8}
+Flags       = {UseEvent,Avoid,Take,Expire,Height}
+Attributes  = {AvoidDamageTypes=0,Weight=3500,ExpireTarget=0,TotalExpireTime=21600,Elevation=8}
 
 TypeID      = 2813
 Name        = "a blank paper"
@@ -13552,8 +13552,8 @@ Attributes  = {AvoidDamageTypes=0,Weight=2300,DestroyTarget=3144}
 
 TypeID      = 2986
 Name        = "a christmas tree"
-Flags       = {Unpass,Unlay,Destroy,Light}
-Attributes  = {DestroyTarget=3140,Brightness=4,LightColor=204}
+Flags       = {Unpass,Unlay,Destroy,Light,Expire}
+Attributes  = {DestroyTarget=3140,Brightness=4,LightColor=204,ExpireTarget=0,TotalExpireTime=21600}
 
 TypeID      = 2987
 Name        = "a potted flower"
@@ -13736,8 +13736,8 @@ Attributes  = {Weight=820,BodyPosition=1}
 
 TypeID      = 3023
 Name        = "a holy scarab"
-Flags       = {Take,Shield}
-Attributes  = {Weight=870,ShieldDefendValue=33}
+Flags       = {Take}
+Attributes  = {Weight=870}
 
 TypeID      = 3024
 Name        = "a holy falcon"
@@ -13822,7 +13822,6 @@ Attributes  = {Weight=30}
 
 TypeID      = 3040
 Name        = "a gold nugget"
-Description = "thanks to bug abuse this item is now worthless"
 Flags       = {Cumulative,Take}
 Attributes  = {Weight=80}
 
@@ -13849,7 +13848,7 @@ Attributes  = {Weight=1000}
 TypeID      = 3045
 Name        = "a strange talisman"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=290,BodyPosition=2,ProtectionDamageTypes=8,DamageReduction=10,WearoutTarget=0,TotalUses=400}
+Attributes  = {Weight=290,BodyPosition=2,ProtectionDamageTypes=8,DamageReduction=10,WearoutTarget=0,TotalUses=200}
 
 TypeID      = 3046
 Name        = "a magic light wand"
@@ -13895,7 +13894,7 @@ Attributes  = {Weight=90,BodyPosition=9}
 TypeID      = 3054
 Name        = "a silver amulet"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=500,BodyPosition=2,ProtectionDamageTypes=2,DamageReduction=10,WearoutTarget=0,TotalUses=400}
+Attributes  = {Weight=500,BodyPosition=2,ProtectionDamageTypes=2,DamageReduction=10,WearoutTarget=0,TotalUses=200}
 
 TypeID      = 3055
 Name        = "a platinum amulet"
@@ -13906,7 +13905,7 @@ Attributes  = {Weight=600,BodyPosition=2,ArmorValue=2}
 TypeID      = 3056
 Name        = "a bronze amulet"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=500,BodyPosition=2,ProtectionDamageTypes=512,DamageReduction=15,WearoutTarget=0,TotalUses=400}
+Attributes  = {Weight=500,BodyPosition=2,ProtectionDamageTypes=512,DamageReduction=15,WearoutTarget=0,TotalUses=200}
 
 TypeID      = 3057
 Name        = "an amulet of loss"
@@ -13951,19 +13950,19 @@ TypeID      = 3065
 Name        = "a quagmire rod"
 Description = "It emits clouds of poisonous swamp gas"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=26,Professions=16,Weight=2650,Brightness=2,LightColor=67,WandRange=2,WandManaConsumption=8,WandAttackStrength=49,WandAttackVariation=8,WandDamageType=2,WandMissile=15}
+Attributes  = {MinimumLevel=26,Professions=16,Weight=2650,Brightness=2,LightColor=67,WandRange=2,WandManaConsumption=8,WandAttackStrength=45,WandAttackVariation=8,WandDamageType=2,WandMissile=15}
 
 TypeID      = 3066
 Name        = "a snakebite rod"
 Description = "It seems to twitch and quiver as if trying to escape your grip"
 Flags       = {RestrictLevel,RestrictProfession,Take,Wand}
-Attributes  = {MinimumLevel=7,Professions=16,Weight=4300,WandRange=4,WandManaConsumption=2,WandAttackStrength=14,WandAttackVariation=5,WandDamageType=2,WandMissile=15}
+Attributes  = {MinimumLevel=7,Professions=16,Weight=4300,WandRange=4,WandManaConsumption=2,WandAttackStrength=13,WandAttackVariation=5,WandDamageType=2,WandMissile=15}
 
 TypeID      = 3067
 Name        = "a tempest rod"
 Description = "It grants you the power of striking your foes with furious thunderstorms"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=33,Professions=16,Weight=2100,Brightness=3,LightColor=29,WandRange=3,WandManaConsumption=13,WandAttackStrength=71,WandAttackVariation=9,WandDamageType=8,WandMissile=5}
+Attributes  = {MinimumLevel=33,Professions=16,Weight=2100,Brightness=3,LightColor=29,WandRange=1,WandManaConsumption=13,WandAttackStrength=65,WandAttackVariation=9,WandDamageType=8,WandMissile=5}
 
 TypeID      = 3068
 Name        = "a crystal wand"
@@ -13974,19 +13973,19 @@ TypeID      = 3069
 Name        = "a volcanic rod"
 Description = "It erupts powerful bursts of magma upon everything in your path"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=19,Professions=16,Weight=2900,Brightness=2,LightColor=199,WandRange=3,WandManaConsumption=5,WandAttackStrength=33,WandAttackVariation=7,WandDamageType=4,WandMissile=4}
+Attributes  = {MinimumLevel=19,Professions=16,Weight=2900,Brightness=2,LightColor=199,WandRange=3,WandManaConsumption=5,WandAttackStrength=30,WandAttackVariation=7,WandDamageType=4,WandMissile=4}
 
 TypeID      = 3070
 Name        = "a moonlight rod"
 Description = "Shimmering rays of moonlight radiate from its tip"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=13,Professions=16,Weight=1950,Brightness=3,LightColor=143,WandRange=3,WandManaConsumption=3,WandAttackStrength=20,WandAttackVariation=6,WandDamageType=8,WandMissile=5}
+Attributes  = {MinimumLevel=13,Professions=16,Weight=1950,Brightness=3,LightColor=143,WandRange=2,WandManaConsumption=3,WandAttackStrength=19,WandAttackVariation=6,WandDamageType=8,WandMissile=5}
 
 TypeID      = 3071
 Name        = "a wand of inferno"
 Description = "It unleashes the very fires of hell"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=33,Professions=8,Weight=3050,Brightness=3,LightColor=205,WandRange=3,WandManaConsumption=13,WandAttackStrength=65,WandAttackVariation=9,WandDamageType=4,WandMissile=4}
+Attributes  = {MinimumLevel=33,Professions=8,Weight=3050,Brightness=3,LightColor=205,WandRange=2,WandManaConsumption=13,WandAttackStrength=65,WandAttackVariation=9,WandDamageType=4,WandMissile=4}
 
 TypeID      = 3072
 Name        = "a wand of plague"
@@ -13998,7 +13997,7 @@ TypeID      = 3073
 Name        = "a wand of cosmic energy"
 Description = "The energy of a radiant star is trapped inside its globe"
 Flags       = {RestrictLevel,RestrictProfession,Take,Light,Wand}
-Attributes  = {MinimumLevel=26,Professions=8,Weight=2300,Brightness=2,LightColor=205,WandRange=2,WandManaConsumption=8,WandAttackStrength=45,WandAttackVariation=8,WandDamageType=8,WandMissile=5}
+Attributes  = {MinimumLevel=26,Professions=8,Weight=2300,Brightness=2,LightColor=205,WandRange=1,WandManaConsumption=8,WandAttackStrength=45,WandAttackVariation=8,WandDamageType=8,WandMissile=5}
 
 TypeID      = 3074
 Name        = "a wand of vortex"
@@ -14033,9 +14032,9 @@ Flags       = {Take,Clothes,SkillBoost}
 Attributes  = {Weight=750,BodyPosition=8,SkillNumber=4,SkillModification=20}
 
 TypeID      = 3080
-Name        = "the heart of Charlie Root"
-Flags       = {Take,Clothes,Armor}
-Attributes  = {Weight=420,BodyPosition=2,ArmorValue=5}
+Name        = "a broken amulet"
+Flags       = {Take,Clothes}
+Attributes  = {Weight=420,BodyPosition=2}
 
 TypeID      = 3081
 Name        = "a stone skin amulet"
@@ -14045,27 +14044,27 @@ Attributes  = {Weight=700,BodyPosition=2,ProtectionDamageTypes=17,DamageReductio
 TypeID      = 3082
 Name        = "an elven amulet"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=270,BodyPosition=2,ProtectionDamageTypes=287,DamageReduction=10,WearoutTarget=0,TotalUses=100}
+Attributes  = {Weight=270,BodyPosition=2,ProtectionDamageTypes=287,DamageReduction=10,WearoutTarget=0,TotalUses=50}
 
 TypeID      = 3083
 Name        = "a garlic necklace"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=380,BodyPosition=2,ProtectionDamageTypes=256,DamageReduction=20,WearoutTarget=0,TotalUses=300}
+Attributes  = {Weight=380,BodyPosition=2,ProtectionDamageTypes=256,DamageReduction=20,WearoutTarget=0,TotalUses=150}
 
 TypeID      = 3084
 Name        = "a protection amulet"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=550,BodyPosition=2,ProtectionDamageTypes=17,DamageReduction=6,WearoutTarget=0,TotalUses=500}
+Attributes  = {Weight=550,BodyPosition=2,ProtectionDamageTypes=17,DamageReduction=6,WearoutTarget=0,TotalUses=250}
 
 TypeID      = 3085
 Name        = "a dragon necklace"
 Flags       = {Take,Clothes,Protection,WearOut,ShowDetail}
-Attributes  = {Weight=630,BodyPosition=2,ProtectionDamageTypes=4,DamageReduction=8,WearoutTarget=0,TotalUses=400}
+Attributes  = {Weight=630,BodyPosition=2,ProtectionDamageTypes=4,DamageReduction=8,WearoutTarget=0,TotalUses=200}
 
 TypeID      = 3086
 Name        = "a stealth ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=100,BodyPosition=9,SkillNumber=16,SkillModification=1,ExpireTarget=0,TotalExpireTime=900}
+Attributes  = {Weight=100,BodyPosition=9,SkillNumber=16,SkillModification=1,ExpireTarget=0,TotalExpireTime=600}
 
 TypeID      = 3087
 Name        = "a power ring"
@@ -14075,7 +14074,7 @@ Attributes  = {Weight=80,BodyPosition=9,SkillNumber=11,SkillModification=6,Expir
 TypeID      = 3088
 Name        = "an energy ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=80,BodyPosition=9,SkillNumber=21,SkillModification=1,ExpireTarget=0,TotalExpireTime=900}
+Attributes  = {Weight=80,BodyPosition=9,SkillNumber=21,SkillModification=1,ExpireTarget=0,TotalExpireTime=600}
 
 TypeID      = 3089
 Name        = "a life ring"
@@ -14085,7 +14084,7 @@ Attributes  = {Weight=80,BodyPosition=9,SkillNumber=14,SkillModification=3,Expir
 TypeID      = 3090
 Name        = "a time ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=90,BodyPosition=9,SkillNumber=4,SkillModification=30,ExpireTarget=0,TotalExpireTime=900}
+Attributes  = {Weight=90,BodyPosition=9,SkillNumber=4,SkillModification=30,ExpireTarget=0,TotalExpireTime=600}
 
 TypeID      = 3091
 Name        = "a sword ring"
@@ -14105,17 +14104,17 @@ Attributes  = {Weight=90,BodyPosition=9}
 TypeID      = 3094
 Name        = "a sword ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=90,BodyPosition=9,SkillNumber=8,SkillModification=8,ExpireTarget=0,TotalExpireTime=1800}
+Attributes  = {Weight=90,BodyPosition=9,SkillNumber=8,SkillModification=4,ExpireTarget=0,TotalExpireTime=1800}
 
 TypeID      = 3095
 Name        = "an axe ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=90,BodyPosition=9,SkillNumber=10,SkillModification=8,ExpireTarget=0,TotalExpireTime=1800}
+Attributes  = {Weight=90,BodyPosition=9,SkillNumber=10,SkillModification=4,ExpireTarget=0,TotalExpireTime=1800}
 
 TypeID      = 3096
 Name        = "a club ring"
 Flags       = {MovementEvent,Take,Clothes,SkillBoost,Expire,ShowDetail}
-Attributes  = {Weight=90,BodyPosition=9,SkillNumber=9,SkillModification=8,ExpireTarget=0,TotalExpireTime=1800}
+Attributes  = {Weight=90,BodyPosition=9,SkillNumber=9,SkillModification=4,ExpireTarget=0,TotalExpireTime=1800}
 
 TypeID      = 3097
 Name        = "a dwarven ring"
@@ -14800,7 +14799,7 @@ TypeID      = 3230
 Name        = "a helmet of the ancients"
 Description = "The gem is glowing with power"
 Flags       = {Take,Clothes,Expire,Armor}
-Attributes  = {Weight=2760,BodyPosition=1,ExpireTarget=3229,TotalExpireTime=3600,ArmorValue=11}
+Attributes  = {Weight=2760,BodyPosition=1,ExpireTarget=3229,TotalExpireTime=1800,ArmorValue=11}
 
 TypeID      = 3231
 Name        = "a gemmed lamp"
@@ -14885,10 +14884,10 @@ Flags       = {Container,Take,Clothes}
 Attributes  = {Capacity=20,Weight=1800,BodyPosition=3}
 
 TypeID      = 3245
-Name        = "the precious"
-Description = "This is the One Ring that rules them all"
-Flags       = {Take,Light,Protection,Clothes,SkillBoost}
-Attributes  = {Weight=50,Brightness=9,LightColor=29,BodyPosition=9,ProtectionDamageTypes=287,DamageReduction=5,SkillNumber=6,SkillModification=5}
+Name        = "a ring of wishes"
+Description = "(This item has 3 charges left)"
+Flags       = {Take,Clothes}
+Attributes  = {Weight=50,BodyPosition=9}
 
 TypeID      = 3246
 Name        = "boots of waterwalking"
@@ -14909,8 +14908,8 @@ Flags       = {Unmove}
 
 TypeID      = 3249
 Name        = "frozen starlight"
-Flags       = {Take,Light,Expire}
-Attributes  = {Weight=20,Brightness=6,LightColor=29,ExpireTarget=0,TotalExpireTime=10}
+Flags       = {Take,Light}
+Attributes  = {Weight=20,Brightness=6,LightColor=29}
 
 TypeID      = 3250
 Name        = "the carrot of doom"
@@ -14926,14 +14925,14 @@ Attributes  = {Weight=70}
 
 TypeID      = 3252
 Name        = "the horn of sundering"
-Description = "(This item has 2 charges left)"
+Description = "(This items has 2 charges left)"
 Flags       = {Take}
 Attributes  = {Weight=2300}
 
 TypeID      = 3253
-Name        = "a backpack"
-Flags       = {Container,Take,Clothes,Disguise}
-Attributes  = {Capacity=20,Weight=2000,BodyPosition=3,DisguiseTarget=2854}
+Name        = "a backpack of holding"
+Flags       = {Take}
+Attributes  = {Weight=10}
 
 TypeID      = 3254
 Name        = "a roc feather"
@@ -15004,7 +15003,7 @@ Attributes  = {Weight=1800,WeaponType=3,WeaponAttackValue=10,WeaponDefendValue=5
 TypeID      = 3269
 Name        = "a halberd"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=9000,BodyPosition=0,WeaponType=3,WeaponAttackValue=42,WeaponDefendValue=14}
+Attributes  = {Weight=9000,BodyPosition=0,WeaponType=3,WeaponAttackValue=35,WeaponDefendValue=14}
 
 TypeID      = 3270
 Name        = "a club"
@@ -15034,7 +15033,7 @@ Attributes  = {Weight=4000,WeaponType=3,WeaponAttackValue=12,WeaponDefendValue=6
 TypeID      = 3275
 Name        = "a double axe"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=7000,BodyPosition=0,WeaponType=3,WeaponAttackValue=42,WeaponDefendValue=12}
+Attributes  = {Weight=7000,BodyPosition=0,WeaponType=3,WeaponAttackValue=35,WeaponDefendValue=12}
 
 TypeID      = 3276
 Name        = "a hatchet"
@@ -15044,30 +15043,30 @@ Attributes  = {Weight=3500,WeaponType=3,WeaponAttackValue=15,WeaponDefendValue=8
 TypeID      = 3277
 Name        = "a spear"
 Flags       = {Cumulative,Take,Throw}
-Attributes  = {Weight=2000,ThrowRange=7,ThrowAttackValue=25,ThrowDefendValue=0,ThrowMissile=1,ThrowSpecialEffect=0,ThrowEffectStrength=0}
+Attributes  = {Weight=2000,ThrowRange=7,ThrowAttackValue=25,ThrowDefendValue=0,ThrowMissile=1,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=3}
 
 TypeID      = 3278
 Name        = "a magic longsword"
 Description = "It's the magic Cyclopmania Sword"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=4300,BodyPosition=0,WeaponType=1,WeaponAttackValue=66,WeaponDefendValue=40}
+Attributes  = {Weight=4300,BodyPosition=0,WeaponType=1,WeaponAttackValue=55,WeaponDefendValue=40}
 
 TypeID      = 3279
 Name        = "a war hammer"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=8500,BodyPosition=0,WeaponType=2,WeaponAttackValue=54,WeaponDefendValue=10}
+Attributes  = {Weight=8500,BodyPosition=0,WeaponType=2,WeaponAttackValue=45,WeaponDefendValue=10}
 
 TypeID      = 3280
 Name        = "a fire sword"
 Description = "The blade is a magic flame"
 Flags       = {MultiUse,Take,Light,Weapon}
-Attributes  = {Weight=2300,Brightness=3,LightColor=199,WeaponType=1,WeaponAttackValue=42,WeaponDefendValue=20}
+Attributes  = {Weight=2300,Brightness=3,LightColor=199,WeaponType=1,WeaponAttackValue=35,WeaponDefendValue=20}
 
 TypeID      = 3281
 Name        = "a giant sword"
 Description = "This sword has been forged by ancient giants"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=18000,BodyPosition=0,WeaponType=1,WeaponAttackValue=55,WeaponDefendValue=22}
+Attributes  = {Weight=18000,BodyPosition=0,WeaponType=1,WeaponAttackValue=46,WeaponDefendValue=22}
 
 TypeID      = 3282
 Name        = "a morning star"
@@ -15096,15 +15095,15 @@ Flags       = {MultiUse,Take,Weapon}
 Attributes  = {Weight=3800,WeaponType=2,WeaponAttackValue=16,WeaponDefendValue=11}
 
 TypeID      = 3287
-Name        = "a sniper star"
-Flags       = {RestrictLevel,Cumulative,Take,Throw}
-Attributes  = {MinimumLevel=50,Weight=150,ThrowRange=7,ThrowAttackValue=65,ThrowDefendValue=0,ThrowMissile=8,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=100}
+Name        = "a throwing star"
+Flags       = {Cumulative,Take,Throw}
+Attributes  = {Weight=200,ThrowRange=7,ThrowAttackValue=35,ThrowDefendValue=0,ThrowMissile=8,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=10}
 
 TypeID      = 3288
 Name        = "a magic sword"
 Description = "It's the Sword of Valor"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=4200,WeaponType=1,WeaponAttackValue=57,WeaponDefendValue=35}
+Attributes  = {Weight=4200,WeaponType=1,WeaponAttackValue=48,WeaponDefendValue=35}
 
 TypeID      = 3289
 Name        = "a staff"
@@ -15140,13 +15139,13 @@ TypeID      = 3295
 Name        = "a bright sword"
 Description = "The blade shimmers in light blue"
 Flags       = {MultiUse,Take,Light,Weapon}
-Attributes  = {Weight=2900,Brightness=2,LightColor=143,WeaponType=1,WeaponAttackValue=43,WeaponDefendValue=30}
+Attributes  = {Weight=2900,Brightness=2,LightColor=143,WeaponType=1,WeaponAttackValue=36,WeaponDefendValue=30}
 
 TypeID      = 3296
 Name        = "a warlord sword"
 Description = "Strong powers flow in this magic sword"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=6400,BodyPosition=0,WeaponType=1,WeaponAttackValue=63,WeaponDefendValue=38}
+Attributes  = {Weight=6400,BodyPosition=0,WeaponType=1,WeaponAttackValue=53,WeaponDefendValue=38}
 
 TypeID      = 3297
 Name        = "a serpent sword"
@@ -15177,13 +15176,13 @@ TypeID      = 3302
 Name        = "a dragon lance"
 Description = "The extraordinary sharp blade penetrates every armor"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=6700,BodyPosition=0,WeaponType=3,WeaponAttackValue=56,WeaponDefendValue=16}
+Attributes  = {Weight=6700,BodyPosition=0,WeaponType=3,WeaponAttackValue=47,WeaponDefendValue=16}
 
 TypeID      = 3303
 Name        = "a great axe"
 Description = "A masterpiece of a dwarven smith"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=9000,BodyPosition=0,WeaponType=3,WeaponAttackValue=62,WeaponDefendValue=22}
+Attributes  = {Weight=9000,BodyPosition=0,WeaponType=3,WeaponAttackValue=52,WeaponDefendValue=22}
 
 TypeID      = 3304
 Name        = "a crowbar"
@@ -15214,7 +15213,7 @@ TypeID      = 3309
 Name        = "a thunder hammer"
 Description = "It is blessed by the gods of Tibia"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=12500,WeaponType=2,WeaponAttackValue=58,WeaponDefendValue=35}
+Attributes  = {Weight=12500,WeaponType=2,WeaponAttackValue=49,WeaponDefendValue=35}
 
 TypeID      = 3310
 Name        = "an iron hammer"
@@ -15230,22 +15229,22 @@ TypeID      = 3312
 Name        = "a silver mace"
 Description = "You feel an aura of protection"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=6700,WeaponType=2,WeaponAttackValue=48,WeaponDefendValue=30}
+Attributes  = {Weight=6700,WeaponType=2,WeaponAttackValue=40,WeaponDefendValue=30}
 
 TypeID      = 3313
 Name        = "an obsidian lance"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=8000,BodyPosition=0,WeaponType=3,WeaponAttackValue=40,WeaponDefendValue=10}
+Attributes  = {Weight=8000,BodyPosition=0,WeaponType=3,WeaponAttackValue=34,WeaponDefendValue=10}
 
 TypeID      = 3314
 Name        = "a naginata"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=7800,BodyPosition=0,WeaponType=3,WeaponAttackValue=46,WeaponDefendValue=25}
+Attributes  = {Weight=7800,BodyPosition=0,WeaponType=3,WeaponAttackValue=39,WeaponDefendValue=25}
 
 TypeID      = 3315
 Name        = "a guardian halberd"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=11000,BodyPosition=0,WeaponType=3,WeaponAttackValue=55,WeaponDefendValue=15}
+Attributes  = {Weight=11000,BodyPosition=0,WeaponType=3,WeaponAttackValue=46,WeaponDefendValue=15}
 
 TypeID      = 3316
 Name        = "an orcish axe"
@@ -15260,47 +15259,46 @@ Attributes  = {Weight=5100,WeaponType=3,WeaponAttackValue=28,WeaponDefendValue=1
 TypeID      = 3318
 Name        = "a knight axe"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=5900,WeaponType=3,WeaponAttackValue=39,WeaponDefendValue=21}
+Attributes  = {Weight=5900,WeaponType=3,WeaponAttackValue=33,WeaponDefendValue=21}
 
 TypeID      = 3319
 Name        = "a stonecutter axe"
 Description = "You feel the power of this mighty axe"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=9900,WeaponType=3,WeaponAttackValue=60,WeaponDefendValue=30}
+Attributes  = {Weight=9900,WeaponType=3,WeaponAttackValue=50,WeaponDefendValue=30}
 
 TypeID      = 3320
 Name        = "a fire axe"
 Description = "The blade is a magic flame"
 Flags       = {MultiUse,Take,Light,Weapon}
-Attributes  = {Weight=4000,Brightness=3,LightColor=199,WeaponType=3,WeaponAttackValue=45,WeaponDefendValue=16}
+Attributes  = {Weight=4000,Brightness=3,LightColor=199,WeaponType=3,WeaponAttackValue=38,WeaponDefendValue=16}
 
 TypeID      = 3321
 Name        = "an enchanted staff"
 Description = "Temporal magic powers enchant this staff"
 Flags       = {MultiUse,Take,Clothes,Expire,Weapon}
-Attributes  = {Weight=3800,BodyPosition=0,ExpireTarget=3289,TotalExpireTime=60,WeaponType=2,WeaponAttackValue=46,WeaponDefendValue=45}
+Attributes  = {Weight=3800,BodyPosition=0,ExpireTarget=3289,TotalExpireTime=60,WeaponType=2,WeaponAttackValue=39,WeaponDefendValue=45}
 
 TypeID      = 3322
 Name        = "a dragon hammer"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=9700,WeaponType=2,WeaponAttackValue=38,WeaponDefendValue=20}
+Attributes  = {Weight=9700,WeaponType=2,WeaponAttackValue=32,WeaponDefendValue=20}
 
 TypeID      = 3323
 Name        = "a dwarven axe"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=8200,WeaponType=3,WeaponAttackValue=37,WeaponDefendValue=19}
+Attributes  = {Weight=8200,WeaponType=3,WeaponAttackValue=31,WeaponDefendValue=19}
 
 TypeID      = 3324
 Name        = "a skull staff"
 Description = "The staff longs for death"
 Flags       = {MultiUse,Take,Light,Weapon}
-Attributes  = {Weight=1700,Brightness=2,LightColor=180,WeaponType=2,WeaponAttackValue=43,WeaponDefendValue=12}
+Attributes  = {Weight=1700,Brightness=2,LightColor=180,WeaponType=2,WeaponAttackValue=36,WeaponDefendValue=12}
 
 TypeID      = 3325
-Name        = "a rod of divine pleasure"
-Description = "putting a smile on ecstazya's face since 1975"
-Flags       = {UseEvent,Take}
-Attributes  = {Weight=3050}
+Name        = "a light mace"
+Flags       = {MultiUse,Take,Weapon}
+Attributes  = {Weight=4100,WeaponType=2,WeaponAttackValue=14,WeaponDefendValue=9}
 
 TypeID      = 3326
 Name        = "a foil"
@@ -15315,7 +15313,7 @@ Attributes  = {Weight=6800,WeaponType=2,WeaponAttackValue=21,WeaponDefendValue=1
 TypeID      = 3328
 Name        = "a daramanian waraxe"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=5250,BodyPosition=0,WeaponType=3,WeaponAttackValue=46,WeaponDefendValue=15}
+Attributes  = {Weight=5250,BodyPosition=0,WeaponType=3,WeaponAttackValue=39,WeaponDefendValue=15}
 
 TypeID      = 3329
 Name        = "a daramanian axe"
@@ -15330,27 +15328,27 @@ Attributes  = {Weight=1840,WeaponType=1,WeaponAttackValue=16,WeaponDefendValue=1
 TypeID      = 3331
 Name        = "a ravager's axe"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=5250,BodyPosition=0,WeaponType=3,WeaponAttackValue=58,WeaponDefendValue=14}
+Attributes  = {Weight=5250,BodyPosition=0,WeaponType=3,WeaponAttackValue=49,WeaponDefendValue=14}
 
 TypeID      = 3332
 Name        = "a hammer of wrath"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=7000,BodyPosition=0,WeaponType=2,WeaponAttackValue=57,WeaponDefendValue=12}
+Attributes  = {Weight=7000,BodyPosition=0,WeaponType=2,WeaponAttackValue=48,WeaponDefendValue=12}
 
 TypeID      = 3333
 Name        = "a crystal mace"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=8000,WeaponType=2,WeaponAttackValue=45,WeaponDefendValue=16}
+Attributes  = {Weight=8000,WeaponType=2,WeaponAttackValue=38,WeaponDefendValue=16}
 
 TypeID      = 3334
 Name        = "a pharaoh sword"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=15000,WeaponType=1,WeaponAttackValue=49,WeaponDefendValue=23}
+Attributes  = {Weight=15000,WeaponType=1,WeaponAttackValue=41,WeaponDefendValue=23}
 
 TypeID      = 3335
 Name        = "a twin axe"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=6400,BodyPosition=0,WeaponType=3,WeaponAttackValue=54,WeaponDefendValue=24}
+Attributes  = {Weight=6400,BodyPosition=0,WeaponType=3,WeaponAttackValue=45,WeaponDefendValue=24}
 
 TypeID      = 3336
 Name        = "a studded club"
@@ -15370,17 +15368,17 @@ Attributes  = {Weight=1900,WeaponType=1,WeaponAttackValue=14,WeaponDefendValue=1
 TypeID      = 3339
 Name        = "a djinn blade"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=2450,WeaponType=1,WeaponAttackValue=45,WeaponDefendValue=22}
+Attributes  = {Weight=2450,WeaponType=1,WeaponAttackValue=38,WeaponDefendValue=22}
 
 TypeID      = 3340
 Name        = "a heavy mace"
 Flags       = {MultiUse,Take,Clothes,Weapon}
-Attributes  = {Weight=11000,BodyPosition=0,WeaponType=2,WeaponAttackValue=60,WeaponDefendValue=15}
+Attributes  = {Weight=11000,BodyPosition=0,WeaponType=2,WeaponAttackValue=50,WeaponDefendValue=15}
 
 TypeID      = 3341
 Name        = "an arcane staff"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=4000,WeaponType=2,WeaponAttackValue=60,WeaponDefendValue=30}
+Attributes  = {Weight=4000,WeaponType=2,WeaponAttackValue=50,WeaponDefendValue=30}
 
 TypeID      = 3342
 Name        = "a war axe"
@@ -15395,7 +15393,7 @@ Attributes  = {Weight=4100,WeaponType=2,WeaponAttackValue=40,WeaponDefendValue=3
 TypeID      = 3344
 Name        = "a beastslayer axe"
 Flags       = {MultiUse,Take,Weapon}
-Attributes  = {Weight=6150,WeaponType=3,WeaponAttackValue=42,WeaponDefendValue=12}
+Attributes  = {Weight=6150,WeaponType=3,WeaponAttackValue=35,WeaponDefendValue=12}
 
 TypeID      = 3345
 Name        = "a templar scytheblade"
@@ -15674,7 +15672,7 @@ Flags       = {Take,Clothes,Armor}
 Attributes  = {Weight=4900,BodyPosition=7,ArmorValue=6}
 
 TypeID      = 3399
-Name        = "a troll armor"
+Name        = "an elven mail"
 Flags       = {Take,Clothes,Armor}
 Attributes  = {Weight=9000,BodyPosition=4,ArmorValue=9}
 
@@ -15684,9 +15682,9 @@ Flags       = {Take,Clothes,Armor}
 Attributes  = {Weight=3250,BodyPosition=1,ArmorValue=9}
 
 TypeID      = 3401
-Name        = "green legs"
+Name        = "elven legs"
 Flags       = {Take,Clothes,Armor}
-Attributes  = {Weight=1800,BodyPosition=7,ArmorValue=8}
+Attributes  = {Weight=3300,BodyPosition=7,ArmorValue=4}
 
 TypeID      = 3402
 Name        = "a native armor"
@@ -15920,17 +15918,17 @@ Attributes  = {Weight=5900,ShieldDefendValue=26}
 TypeID      = 3446
 Name        = "a bolt"
 Flags       = {Cumulative,Take,Ammo}
-Attributes  = {Weight=80,AmmoType=1,AmmoAttackValue=33,AmmoMissile=2,AmmoSpecialEffect=0,AmmoEffectStrength=0}
+Attributes  = {Weight=80,AmmoType=1,AmmoAttackValue=30,AmmoMissile=2,AmmoSpecialEffect=0,AmmoEffectStrength=0}
 
 TypeID      = 3447
 Name        = "an arrow"
 Flags       = {Cumulative,Take,Ammo}
-Attributes  = {Weight=70,AmmoType=2,AmmoAttackValue=27,AmmoMissile=3,AmmoSpecialEffect=0,AmmoEffectStrength=0}
+Attributes  = {Weight=70,AmmoType=2,AmmoAttackValue=25,AmmoMissile=3,AmmoSpecialEffect=0,AmmoEffectStrength=0}
 
 TypeID      = 3448
 Name        = "a poison arrow"
 Flags       = {Cumulative,Take,Ammo}
-Attributes  = {Weight=80,AmmoType=2,AmmoAttackValue=11,AmmoMissile=6,AmmoSpecialEffect=1,AmmoEffectStrength=50}
+Attributes  = {Weight=80,AmmoType=2,AmmoAttackValue=10,AmmoMissile=6,AmmoSpecialEffect=1,AmmoEffectStrength=50}
 
 TypeID      = 3449
 Name        = "a burst arrow"
@@ -15940,12 +15938,12 @@ Attributes  = {Weight=90,AmmoType=2,AmmoAttackValue=0,AmmoMissile=7,AmmoSpecialE
 TypeID      = 3450
 Name        = "a power bolt"
 Flags       = {Cumulative,Take,Ammo}
-Attributes  = {Weight=90,AmmoType=1,AmmoAttackValue=50,AmmoMissile=14,AmmoSpecialEffect=0,AmmoEffectStrength=0}
+Attributes  = {Weight=90,AmmoType=1,AmmoAttackValue=40,AmmoMissile=14,AmmoSpecialEffect=0,AmmoEffectStrength=0}
 
 TypeID      = 3451
 Name        = "a pitchfork"
-Flags       = {MultiUse,Take,Throw}
-Attributes  = {Weight=2500,ThrowRange=7,ThrowAttackValue=22,ThrowDefendValue=0,ThrowMissile=1,ThrowSpecialEffect=0,ThrowEffectStrength=0,ThrowFragility=3}
+Flags       = {MultiUse,Take}
+Attributes  = {Weight=2500}
 
 TypeID      = 3452
 Name        = "a rake"
@@ -16949,9 +16947,8 @@ Flags       = {Take}
 Attributes  = {Weight=80}
 
 TypeID      = 3660
-Name        = "a premium rose"
-Description = "This is a premium rose, right click on it and gain 30 days of premium"
-Flags       = {UseEvent,Take}
+Name        = "a yellow rose"
+Flags       = {Take}
 Attributes  = {Weight=80}
 
 TypeID      = 3661
@@ -23467,3 +23464,4 @@ TypeID      = 5090
 Name        = "a treasure map"
 Flags       = {Text,Take}
 Attributes  = {FontSize=1,Weight=830}
+

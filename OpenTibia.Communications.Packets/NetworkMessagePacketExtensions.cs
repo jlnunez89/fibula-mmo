@@ -592,105 +592,105 @@ namespace OpenTibia.Communications.Packets
         //    message.AddItem(packet.Item);
         // }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="ContainerClosePacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteContainerClosePacket(this INetworkMessage message, ContainerClosePacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="ContainerClosePacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteContainerClosePacket(this INetworkMessage message, ContainerClosePacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddByte(packet.ContainerId);
-        // }
+            message.AddByte(packet.ContainerId);
+        }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="ContainerOpenPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteContainerOpenPacket(this INetworkMessage message, ContainerOpenPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="ContainerOpenPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteContainerOpenPacket(this INetworkMessage message, ContainerOpenPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddByte(packet.ContainerId);
-        //    message.AddUInt16(packet.ClientItemId);
-        //    message.AddString(packet.Name);
-        //    message.AddByte(packet.Volume);
-        //    message.AddByte(Convert.ToByte(packet.HasParent ? 0x01 : 0x00));
-        //    message.AddByte(Convert.ToByte(packet.Contents.Count));
+            message.AddByte(packet.ContainerId);
+            message.AddUInt16(packet.ClientItemId);
+            message.AddString(packet.Name);
+            message.AddByte(packet.Volume);
+            message.AddByte(Convert.ToByte(packet.HasParent ? 0x01 : 0x00));
+            message.AddByte(Convert.ToByte(packet.Contents.Count));
 
-        // foreach (var item in packet.Contents.Reverse())
-        //    {
-        //        message.AddItem(item);
-        //    }
-        // }
+            foreach (var item in packet.Contents)
+            {
+                message.AddItem(item);
+            }
+        }
 
         ///// <summary>
         ///// Writes the contents of the <see cref="ContainerRemoveItemPacket"/> into the message.
         ///// </summary>
         ///// <param name="message">The message to write to.</param>
         ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteContainerRemoveItemPacket(this INetworkMessage message, ContainerRemoveItemPacket packet)
-        // {
+        //public static void WriteContainerRemoveItemPacket(this INetworkMessage message, ContainerRemoveItemPacket packet)
+        //{
         //    packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+        //    message.WritePacketType(packet);
 
-        // message.AddByte(packet.ContainerId);
+        //    message.AddByte(packet.ContainerId);
         //    message.AddByte(packet.Index);
-        // }
+        //}
 
         ///// <summary>
         ///// Writes the contents of the <see cref="ContainerUpdateItemPacket"/> into the message.
         ///// </summary>
         ///// <param name="message">The message to write to.</param>
         ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteContainerUpdateItemPacket(this INetworkMessage message, ContainerUpdateItemPacket packet)
-        // {
+        //public static void WriteContainerUpdateItemPacket(this INetworkMessage message, ContainerUpdateItemPacket packet)
+        //{
         //    packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+        //    message.WritePacketType(packet);
 
-        // message.AddByte(packet.ContainerId);
+        //    message.AddByte(packet.ContainerId);
         //    message.AddByte(packet.Index);
         //    message.AddItem(packet.Item);
-        // }
+        //}
 
         ///// <summary>
         ///// Writes the contents of the <see cref="CreatePlayerListResultPacket"/> into the message.
         ///// </summary>
         ///// <param name="message">The message to write to.</param>
         ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteCreatePlayerListResultPacket(this INetworkMessage message, CreatePlayerListResultPacket packet)
-        // {
+        //public static void WriteCreatePlayerListResultPacket(this INetworkMessage message, CreatePlayerListResultPacket packet)
+        //{
         //    packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+        //    message.WritePacketType(packet);
 
-        // message.AddByte((byte)(packet.IsNewRecord ? 0xFF : 0x00));
-        // }
+        //    message.AddByte((byte)(packet.IsNewRecord ? 0xFF : 0x00));
+        //}
 
         ///// <summary>
         ///// Writes the contents of the <see cref="CreatureChangedOutfitPacket"/> into the message.
         ///// </summary>
         ///// <param name="message">The message to write to.</param>
         ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteCreatureChangedOutfitPacket(this INetworkMessage message, CreatureChangedOutfitPacket packet)
-        // {
+        //public static void WriteCreatureChangedOutfitPacket(this INetworkMessage message, CreatureChangedOutfitPacket packet)
+        //{
         //    packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+        //    message.WritePacketType(packet);
 
-        // message.AddUInt32(packet.Creature.Id);
+        //    message.AddUInt32(packet.Creature.Id);
 
-        // message.AddUInt16(packet.Creature.Outfit.Id);
+        //    message.AddUInt16(packet.Creature.Outfit.Id);
 
-        // if (packet.Creature.Outfit.Id != 0)
+        //    if (packet.Creature.Outfit.Id != 0)
         //    {
         //        message.AddByte(packet.Creature.Outfit.Head);
         //        message.AddByte(packet.Creature.Outfit.Body);
@@ -701,7 +701,7 @@ namespace OpenTibia.Communications.Packets
         //    {
         //        message.AddUInt16(packet.Creature.Outfit.LikeType);
         //    }
-        // }
+        //}
 
         /// <summary>
         /// Writes the contents of the <see cref="CreatureLightPacket"/> into the message.

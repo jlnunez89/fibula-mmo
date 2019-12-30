@@ -70,26 +70,26 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         {
             var thingMoving = this.GetThingMoving();
 
-            if (this.Requestor == null || thingMoving == null || !this.TileAccessor.GetTileAt(this.GetLocation(), out ITile destTile))
+            if (this.Requestor == null || thingMoving == null || !this.TileAccessor.GetTileAt(this.GetLocation(), out ITile destinationTile))
             {
                 // requestor being null means this was probably called from a script.
                 // Not this policy's job to restrict this.
                 return true;
             }
 
-            //// creature trying to land on a blocking item.
-            //if (thingMoving is ICreature && destTile.BlocksPass)
-            //{
-            //    return false;
-            //}
+            // creature trying to land on a blocking item.
+            if (thingMoving is ICreature && destinationTile.BlocksPass)
+            {
+                return false;
+            }
 
-            //if (thingMoving is IItem thingAsItem)
-            //{
-            //    if (destTile.BlocksLay || (thingAsItem.BlocksPass && destTile.BlocksPass))
-            //    {
-            //        return false;
-            //    }
-            //}
+            if (thingMoving is IItem thingAsItem)
+            {
+                if (destinationTile.BlocksLay || (thingAsItem.BlocksPass && destinationTile.BlocksPass))
+                {
+                    return false;
+                }
+            }
 
             return true;
         }

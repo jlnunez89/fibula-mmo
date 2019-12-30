@@ -10,11 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="MovementEvents\BodyToBodyMovementEvent.cs" />
+    <Compile Remove="MovementEvents\BodyToContainerMovementEvent.cs" />
+    <Compile Remove="MovementEvents\BodyToMapMovementEvent.cs" />
+    <Compile Remove="MovementEvents\ContainerToBodyMovementEvent.cs" />
+    <Compile Remove="MovementEvents\ContainerToContainerMovementEvent.cs" />
+    <Compile Remove="MovementEvents\ContainerToMapMovementEvent.cs" />
     <Compile Remove="MovementEvents\EventConditions\ContainerHasEnoughCapacityEventCondition.cs" />
     <Compile Remove="MovementEvents\EventConditions\ContainerHasItemAndEnoughAmountEventCondition.cs" />
     <Compile Remove="MovementEvents\EventConditions\GrabberHasContainerOpenEventCondition.cs" />
     <Compile Remove="MovementEvents\EventConditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
     <Compile Remove="MovementEvents\EventConditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
+    <Compile Remove="MovementEvents\MapToBodyMovementEvent.cs" />
+    <Compile Remove="MovementEvents\MapToContainerMovementEvent.cs" />
+    <Compile Remove="MovementEvents\OnMapCreatureMovementEvent.cs" />
     <Compile Remove="MovementEvents\ThingMovementContainerToContainer.cs" />
     <Compile Remove="MovementEvents\ThingMovementContainerToGround.cs" />
     <Compile Remove="MovementEvents\ThingMovementContainerToSlot.cs" />
