@@ -1,4 +1,4 @@
-name: .NET Core
+name: Build the repository (.NET Core)
 
 on: [push]
 
