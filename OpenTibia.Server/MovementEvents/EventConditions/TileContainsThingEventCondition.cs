@@ -73,7 +73,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return false;
             }
 
-            if (!this.TileAccessor.GetTileAt(this.Location, out ITile sourceTile) /*|| !sourceTile.HasThing(this.Thing)*/)
+            if (!this.TileAccessor.GetTileAt(this.Location, out ITile sourceTile) || sourceTile.GetStackPositionOfThing(this.Thing) == byte.MaxValue)
             {
                 // This tile no longer has the thing, or it's obstructed (i.e. someone placed something on top of it).
                 return false;

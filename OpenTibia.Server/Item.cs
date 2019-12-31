@@ -13,11 +13,16 @@ namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using Serilog;
 
+    /// <summary>
+    /// Class that represents all items in the game.
+    /// </summary>
     public class Item : Thing, IItem
     {
         // public event ItemHolderChangeEvent OnHolderChanged;
@@ -51,8 +56,6 @@ namespace OpenTibia.Server
         /// </summary>
         public override ushort ThingId => this.Type.ClientId;
 
-        // public override byte Count => this.Amount;
-
         public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangeUse);
 
         public ushort ChangeOnUseTo
@@ -80,10 +83,18 @@ namespace OpenTibia.Server
 
         // public uint HolderId => this.holder;
 
+        /// <summary>
+        /// Gets this item's location.
+        /// </summary>
         public new Location Location
         {
             get
             {
+                if (this.ParentContainer != null)
+                {
+                    return this.ParentContainer.Location;
+                }
+
                 // if (this.HolderId != 0)
                 // {
                 //    return this.CarryLocation;
@@ -93,7 +104,7 @@ namespace OpenTibia.Server
             }
         }
 
-        public Location CarryLocation { get; private set; }
+        //public Location CarryLocation { get; private set; }
 
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
 
@@ -129,12 +140,7 @@ namespace OpenTibia.Server
             return blocking;
         }
 
-        public virtual void AddContent(IEnumerable<object> content)
-        {
-            Console.WriteLine($"Item.AddContent: Item with id {this.Type.TypeId} is not a Container, ignoring content.");
-        }
-
-        public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container) || this.Type.Flags.Contains(ItemFlag.Chest); // TODO: chest actually means a quest chest...
+        public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container);
 
         public bool IsDressable => this.Type.Flags.Contains(ItemFlag.Clothes);
 
@@ -265,7 +271,7 @@ namespace OpenTibia.Server
 
         public decimal Weight => (this.Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(this.Attributes[ItemAttribute.Weight]) / 100 : default) * this.Amount;
 
-        // public IContainer Parent { get; private set; }
+        public IContainerItem ParentContainer { get; protected set; }
 
         public void SetAmount(byte amount)
         {
@@ -276,39 +282,108 @@ namespace OpenTibia.Server
             //this.OnAmountChanged?.Invoke(this, oldAmount);
         }
 
-        public void AddAttributes(IList<IParsedAttribute> attributes)
+        public void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes)
         {
+            logger.ThrowIfNull(nameof(logger));
+
+            if (attributes == null)
+            {
+                return;
+            }
+
             foreach (var attribute in attributes)
             {
                 if ("Content".Equals(attribute.Name))
                 {
-                    // recursive add
-                    this.AddContent(attribute.Value as IEnumerable<IParsedAttribute>);
+                    // Adding here will handle containers via polymorphism.
+                    this.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
+
+                    continue;
                 }
-                else
+
+                // These are safe to add as Attributes of the item.
+                if (!Enum.TryParse(attribute.Name, out ItemAttribute itemAttr))
                 {
-                    // these are safe to add as Attributes of the item.
+                    continue;
+                }
 
-                    if (!Enum.TryParse(attribute.Name, out ItemAttribute itemAttr))
-                    {
-                        // if (!ServerConfiguration.SupressInvalidItemWarnings)
-                        // {
-                        //    Console.WriteLine($"Item.AddContent: Unexpected attribute with name {attribute.Name} on item {this.Type.Name}, igoring.");
-                        // }
-
-                        continue;
-                    }
-
-                    try
-                    {
-                        this.Attributes.Add(itemAttr, attribute.Value as IConvertible);
-                    }
-                    catch
-                    {
-                        Console.WriteLine($"Item.AddContent: Unexpected attribute {attribute.Name} with illegal value {attribute.Value} on item {this.Type.Name}, igoring.");
-                    }
+                try
+                {
+                    this.Attributes[itemAttr] = attribute.Value as IConvertible;
+                }
+                catch
+                {
+                    logger.Warning($"Unexpected attribute {attribute.Name} with illegal value {attribute.Value} on item {this.Type.Name}, ignoring.");
                 }
             }
+        }
+
+        /// <summary>
+        /// Attempts to add the joined item to this container's content at the default index.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="otherItem">The item to add.</param>
+        /// <returns>True if the operation was successful, false otherwise.</returns>
+        public (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem)
+        {
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+            otherItem.ThrowIfNull(nameof(otherItem));
+
+            if (this.Type.TypeId != otherItem.Type.TypeId || !this.IsCumulative)
+            {
+                return (false, null);
+            }
+
+            // We can join these two, figure out if we have any remainder.
+            if (otherItem.Amount + this.Amount < IItem.MaximumAmountOfCummulativeItems)
+            {
+                this.Amount += otherItem.Amount;
+
+                return (true, null);
+            }
+
+            // We've gone over the limit, send back a remainder.
+            otherItem.SetAmount(Convert.ToByte(this.Amount + otherItem.Amount - IItem.MaximumAmountOfCummulativeItems));
+
+            this.Amount = IItem.MaximumAmountOfCummulativeItems;
+
+            return (true, otherItem);
+        }
+
+        public (bool success, IItem remainderItem) SeparateFrom(IItemFactory itemFactory, byte amount)
+        {
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+
+            if (!this.IsCumulative || this.Amount <= amount)
+            {
+                return (false, null);
+            }
+
+            this.Amount -= amount;
+
+            var remainder = itemFactory.Create(this.Type.TypeId);
+
+            remainder.SetAmount(amount);
+
+            return (true, remainder);
+        }
+
+        /// <summary>
+        /// Adds parsed content elements to this container.
+        /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="contentElements">The content elements to add.</param>
+        protected virtual void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
+        {
+            logger.ThrowIfNull(nameof(logger));
+
+            if (contentElements == null)
+            {
+                return;
+            }
+
+            logger.Warning($"Could not add content to item with type id {this.Type.TypeId} since it's not a {typeof(ContainerItem)}, ignoring.");
         }
 
         // public void SetHolder(ICreature holder, Location holdingLoc = default)

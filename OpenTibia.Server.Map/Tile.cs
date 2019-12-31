@@ -188,6 +188,39 @@ namespace OpenTibia.Server.Map
         }
 
         /// <summary>
+        /// Gets a value indicating whether items in this tile block throwing.
+        /// </summary>
+        public bool BlocksThrow
+        {
+            get
+            {
+                return (this.Ground != null && this.Ground.BlocksThrow) || this.StayOnTopItems.Any(i => i.BlocksThrow) || this.StayOnBottomItems.Any(i => i.BlocksThrow) || this.Items.Any(i => i.BlocksThrow);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether items in this tile block passing.
+        /// </summary>
+        public bool BlocksPass
+        {
+            get
+            {
+                return (this.Ground != null && this.Ground.BlocksPass) || this.CreatureIds.Any() || this.StayOnTopItems.Any(i => i.BlocksPass) || this.StayOnBottomItems.Any(i => i.BlocksPass) || this.Items.Any(i => i.BlocksPass);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether items in this tile block laying.
+        /// </summary>
+        public bool BlocksLay
+        {
+            get
+            {
+                return (this.Ground != null && this.Ground.BlocksLay) || this.StayOnTopItems.Any(i => i.BlocksLay) || this.StayOnBottomItems.Any(i => i.BlocksLay) || this.Items.Any(i => i.BlocksLay);
+            }
+        }
+
+        /// <summary>
         /// Sets a flag on this tile.
         /// </summary>
         /// <param name="flag">The flag to set.</param>

@@ -27,7 +27,6 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Data.Contracts.Abstractions;
-    using OpenTibia.Data.CosmosDB;
     using OpenTibia.Data.InMemoryDatabase;
     using OpenTibia.Providers.Azure;
     using OpenTibia.Security;

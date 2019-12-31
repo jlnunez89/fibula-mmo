@@ -37,7 +37,6 @@ Use, IsType (Obj1,2976), Random (1), Random (10) -> Change(Obj1,2975,0)
 Use, IsType (Obj1,2976) -> Effect(Obj1,22)
 Use, IsType (Obj1,3103), Random (95) -> Effect(Obj1,19), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0)
 Use, IsType (Obj1,3103) -> Effect(Obj1,19), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Create(Obj1,3592,0), Change(Obj1,3592,0)
-Use, IsType (Obj1,3660), HasQuestValue (User,334,< ,1) -> Effect(Obj1,15), SetQuestValue(User,334,1), Delete(Obj1)
 Use, IsType (Obj1,3699) -> Change(Obj1,3700,0), Create(Obj1,3588,0), Create(Obj1,3588,0), Create(Obj1,3588,0)
 Use, IsType (Obj1,3481), IsProtectionZone (Obj1) -> Effect(Obj1,3)
 Use, IsType (Obj1,3481) -> Change(Obj1,3482,0)
@@ -126,7 +125,6 @@ Use, IsType (Obj1,5087), IsHouse (Obj1) -> Create(Obj1,5055,0), Effect(Obj1,3), 
 Use, IsType (Obj1,5087) -> Effect(Obj1,4)
 Use, IsType (Obj1,5088), IsHouse (Obj1) -> Create(Obj1,5056,0), Effect(Obj1,3), Delete(Obj1)
 Use, IsType (Obj1,5088) -> Effect(Obj1,4)
-Use, IsType (Obj1,5339) -> Create(Obj1,5340,0), Effect(Obj1,3), Delete(Obj1)
 END
 BEGIN "Instruments"
 Use, IsType (Obj1,2948) -> Effect(Obj1,19)
@@ -415,7 +413,6 @@ Use, IsType (Obj1,3219) -> Effect(Obj1,19)
 Use, IsType (Obj1,3255), HasQuestValue (User,259,= ,0) -> Effect(Obj1,23), SetQuestValue(User,259,1)
 Use, IsType (Obj1,3255) -> Effect(Obj1,23), SetQuestValue(User,259,0)
 Use, IsType (Obj1,3256) -> Effect(Obj1,19), SetQuestValue(User,259,0)
-
 Use, IsType (Obj1,3257), HasQuestValue (User,259,= ,4) -> Effect(Obj1,24), SetQuestValue(User,259,5)
 Use, IsType (Obj1,3257) -> Effect(Obj1,24), SetQuestValue(User,259,0)
 Use, IsType (Obj1,3258), HasQuestValue (User,259,= ,2) -> Effect(Obj1,25), SetQuestValue(User,259,3)
@@ -619,16 +616,6 @@ Movement, IsType (Obj1,3097), IsDressed (Obj1) -> Change(Obj1,3099,0)
 Movement, IsType (Obj1,3098), IsDressed (Obj1) -> Change(Obj1,3100,0)
 Movement, IsType (Obj1,3099), !IsDressed (Obj1) -> Change(Obj1,3097,0)
 Movement, IsType (Obj1,3100), !IsDressed (Obj1) -> Change(Obj1,3098,0)
-Movement, IsType (Obj1,5097), IsDressed (Obj1) -> Change(Obj1,5098,0)
-Movement, IsType (Obj1,5098), !IsDressed (Obj1) -> Change(Obj1,5097,0)
-Movement, IsType (Obj1,5106), IsDressed (Obj1) -> Change(Obj1,5107,0)
-Movement, IsType (Obj1,5107), !IsDressed (Obj1) -> Change(Obj1,5106,0)
-Movement, IsType (Obj1,5108), IsDressed (Obj1) -> Change(Obj1,5109,0)
-Movement, IsType (Obj1,5109), !IsDressed (Obj1) -> Change(Obj1,5108,0)
-
-Movement, IsType (Obj1,5121), IsDressed (Obj1) -> Change(Obj1,5120,0)
-Movement, IsType (Obj1,5120), !IsDressed (Obj1) -> Change(Obj1,5121,0)
-
 END
 Movement, IsType (Obj1,2927) -> Change(Obj1,2912,0)
 Movement, IsType (Obj1,3482) -> Effect(Obj1,3), Change(Obj1,3481,0)
@@ -1124,7 +1111,7 @@ Collision, IsType (Obj1,431), IsPosition (Obj1,[32187,31936,14]), IsPlayer (Obj2
 Collision, IsType (Obj1,431), IsPosition (Obj1,[32187,31936,14]) -> EffectOnMap([32187,31936,14],14)
 Collision, IsType (Obj1,431), IsPosition (Obj1,[32187,31937,14]), IsPlayer (Obj2), HasQuestValue (Obj2,8,= ,0) -> SetQuestValue(Obj2,8,1), EffectOnMap([32187,31937,14],15)
 Collision, IsType (Obj1,431), IsPosition (Obj1,[32187,31937,14]) -> EffectOnMap([32187,31937,14],15)
-Collision, IsType (Obj1,430), IsPosition (Obj1,[32243,31892,14]), IsObjectThere ([32243,31892,14],2886), HasInstanceAttribute (Obj2,PoolLiquidType,= ,5) -> EffectOnMap([32242,31891,14],1), EffectOnMap([32243,31891,14],1), EffectOnMap([32242,31892,14],1), EffectOnMap([32242,31893,14],1), EffectOnMap([32243,31893,14],1)
+Collision, IsType (Obj1,430), IsPosition (Obj1,[32243,31892,14]), IsObjectThere ([32243,31892,14],2886), HasInstanceAttribute (Temp,PoolLiquidType,= ,5) -> EffectOnMap([32242,31891,14],1), EffectOnMap([32243,31891,14],1), EffectOnMap([32242,31892,14],1), EffectOnMap([32242,31893,14],1), EffectOnMap([32243,31893,14],1)
 Collision, IsType (Obj1,430), IsPosition (Obj1,[32243,31892,14]) -> MoveTopOnMap([32243,31892,14],430,[32244,31892,14]), EffectOnMap([32243,31892,14],3)
 END
 BEGIN "Isle of Kings"
@@ -1941,5 +1928,5 @@ Use, IsType (Obj1,2773), IsPosition (Obj1,[32405,32211,09]) -> Change(Obj1,2772,
 Use, IsType (Obj1,2773), IsPosition (Obj1,[32394,32211,09]) -> Change(Obj1,2772,0), DeleteOnMap([32399,32210,09],1282), DeleteOnMap([32398,32210,09],1282) "OUTDATED"
 END
 BEGIN "Test"
-Collision, IsType (Obj1,3351), IsPlayer (Obj2), IsPosition (Obj1,[32283,32848,07]), IsDressed (Obj2) -> Damage(Obj2,Obj1,256,10)
+Collision, IsPlayer (Obj1), IsPosition (Obj1,[32283,32848,07]), IsType (Obj2,3351), IsDressed (Obj2) -> Damage(Obj2,Obj1,256,10)
 END

@@ -41,6 +41,21 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         IEnumerable<IItem> ItemsWithCollision { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether items in this tile block throwing.
+        /// </summary>
+        bool BlocksThrow { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether items in this tile block passing.
+        /// </summary>
+        bool BlocksPass { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether items in this tile block laying.
+        /// </summary>
+        bool BlocksLay { get; }
+
         void AddThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
 
         bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);

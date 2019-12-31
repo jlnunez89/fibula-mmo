@@ -76,5 +76,10 @@ namespace OpenTibia.Server.Contracts.Enumerations
         /// Special slot that is a wildcard.
         /// </summary>
         Anywhere = 0x0B,
+
+        /// <summary>
+        /// Special slot that is an unset or invalid value.
+        /// </summary>
+        UnsetInvalid = 0xFF,
     }
 }

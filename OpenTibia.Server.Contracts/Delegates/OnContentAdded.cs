@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IHasInventory.cs" company="2Dudes">
+// <copyright file="OnContentAdded.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,16 +9,14 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts.Abstractions
+namespace OpenTibia.Server.Contracts
 {
+    using OpenTibia.Server.Contracts.Abstractions;
+
     /// <summary>
-    /// Interface for any entity in the game that keeps an inventory.
+    /// Delegate meant for when content is added to a container.
     /// </summary>
-    public interface IHasInventory
-    {
-        /// <summary>
-        /// Gets the inventory for the entity.
-        /// </summary>
-        IInventory Inventory { get; }
-    }
+    /// <param name="container">The container.</param>
+    /// <param name="addedItem">The added item.</param>
+    public delegate void OnContentAdded(IContainerItem container, IItem addedItem);
 }

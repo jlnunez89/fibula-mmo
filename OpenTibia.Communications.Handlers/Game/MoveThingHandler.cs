@@ -17,6 +17,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
+    using OpenTibia.Communications.Packets.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -64,38 +65,69 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
+            // Stop any player actions.
             // player.ClearPendingActions();
 
-            // Before actually moving the item, check if we're close enough to use it.
-            if (moveThingInfo.FromLocation.Type == LocationType.Ground)
+            switch (moveThingInfo.FromLocation.Type)
             {
-                var locationDiff = moveThingInfo.FromLocation - player.Location;
-
-                if (locationDiff.Z != 0)
-                {
-                    // it's on a different floor...
-                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                }
-                else if (locationDiff.MaxValueIn2D > 1)
-                {
-                    // Too far away to move it.
-                    //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
-
-                    //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
-
-                    //if (directions.Length > 0)
-                    //{
-                    //    player.AutoWalk(directions);
-                    //}
-                    //else // we found no way...
-                    //{
-                    //    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                    //}
-
-                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Too far away, auto walk is not implemented yet."));
-                }
+                case LocationType.Map:
+                    this.HandleMoveFromMap(responsePackets, player, moveThingInfo);
+                    break;
+                case LocationType.InsideContainer:
+                    this.HandleMoveFromContainer(responsePackets, player, moveThingInfo);
+                    break;
+                case LocationType.InventorySlot:
+                    this.HandleMoveFromInventory(responsePackets, player, moveThingInfo);
+                    break;
+                default:
+                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "You may not do this."));
+                    break;
             }
 
+            return (responsePackets.Any(), responsePackets);
+        }
+
+        /// <summary>
+        /// Handles the movement as a thing being moved from the map.
+        /// </summary>
+        /// <param name="responsePackets">A reference to the collection of response packets being sent.</param>
+        /// <param name="player">The player involved in this request.</param>
+        /// <param name="moveThingInfo">The information about the movement.</param>
+        private void HandleMoveFromMap(List<IOutgoingPacket> responsePackets, IPlayer player, IThingMoveInfo moveThingInfo)
+        {
+            if (moveThingInfo.FromLocation.Type != LocationType.Map)
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from map."));
+            }
+
+            // Before actually moving the item, check if we're close enough to use it.
+            var locationDiff = moveThingInfo.FromLocation - player.Location;
+
+            if (locationDiff.Z != 0)
+            {
+                // it's on a different floor...
+                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
+            }
+            else if (locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it.
+                //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
+
+                //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
+
+                //if (directions.Length > 0)
+                //{
+                //    player.AutoWalk(directions);
+                //}
+                //else // we found no way...
+                //{
+                //    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
+                //}
+
+                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "You are far away. Server side auto-walk is not yet supported."));
+            }
+
+            // First we turn towards the thing we're moving.
             if (player.Location != moveThingInfo.FromLocation)
             {
                 var directionToThing = player.Location.DirectionTo(moveThingInfo.FromLocation);
@@ -103,12 +135,49 @@ namespace OpenTibia.Communications.Handlers.Game
                 this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
             }
 
-            if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThing(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation, moveThingInfo.FromStackPos, moveThingInfo.ToLocation, moveThingInfo.Count))
+            // Then we request the actual movement.
+            if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromMap(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation, moveThingInfo.FromStackPos, moveThingInfo.ToLocation, moveThingInfo.Count))
             {
                 responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
             }
+        }
 
-            return (responsePackets.Any(), responsePackets);
+        /// <summary>
+        /// Handles the movement as a thing being moved from a container.
+        /// </summary>
+        /// <param name="responsePackets">A reference to the collection of response packets being sent.</param>
+        /// <param name="player">The player involved in this request.</param>
+        /// <param name="moveThingInfo">The information about the movement.</param>
+        private void HandleMoveFromContainer(List<IOutgoingPacket> responsePackets, IPlayer player, IThingMoveInfo moveThingInfo)
+        {
+            if (moveThingInfo.FromLocation.Type != LocationType.InsideContainer)
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from container."));
+            }
+
+            if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromContainer(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.ContainerId, moveThingInfo.FromLocation.ContainerIndex, moveThingInfo.ToLocation, moveThingInfo.Count))
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
+            }
+        }
+
+        /// <summary>
+        /// Handles the movement as a thing being moved from an inventory slot.
+        /// </summary>
+        /// <param name="responsePackets">A reference to the collection of response packets being sent.</param>
+        /// <param name="player">The player involved in this request.</param>
+        /// <param name="moveThingInfo">The information about the movement.</param>
+        private void HandleMoveFromInventory(List<IOutgoingPacket> responsePackets, IPlayer player, IThingMoveInfo moveThingInfo)
+        {
+            if (moveThingInfo.FromLocation.Type != LocationType.InventorySlot)
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from inventory."));
+            }
+
+            if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromInventory(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.Slot, moveThingInfo.ToLocation, moveThingInfo.Count))
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
+            }
         }
     }
 }

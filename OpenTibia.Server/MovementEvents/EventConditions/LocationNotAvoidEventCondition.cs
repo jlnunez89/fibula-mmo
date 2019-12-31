@@ -76,7 +76,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return true;
             }
 
-            return !(thing is ICreature creature) || this.Requestor == creature /*|| (this.TileAccessor.GetTileAt(this.GetLocation(), out ITile destTile) && destTile.CanBeWalked()) */;
+            return !(thing is ICreature creature) || this.Requestor == creature || (this.TileAccessor.GetTileAt(this.GetLocation(), out ITile destTile) /*&& destTile.CanBeWalked()*/);
         }
     }
 }

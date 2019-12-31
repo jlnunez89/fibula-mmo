@@ -14,6 +14,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
     using System;
     using System.Collections.Generic;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Interface for all items in the game.
@@ -44,7 +46,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ///// </summary>
         // uint HolderId { get; }
 
-        // IContainerItem Parent { get; }
+        IContainerItem ParentContainer { get; }
 
         /// <summary>
         /// Gets a value indicating whether this item is ground floor.
@@ -100,6 +102,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         byte Amount { get; }
 
         void SetAmount(byte remainingCount);
+
+        void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes);
+
+        (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem);
+
+        (bool success, IItem remainderItem) SeparateFrom(IItemFactory itemFactory, byte amount);
 
         // bool IsPathBlocking(byte avoidType = 0);
 
