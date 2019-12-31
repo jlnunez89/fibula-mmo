@@ -13,5 +13,10 @@ namespace OpenTibia.Server.Contracts
 {
     using OpenTibia.Server.Contracts.Abstractions;
 
+    /// <summary>
+    /// Delegate meant for when content is removed from a container.
+    /// </summary>
+    /// <param name="container">The container.</param>
+    /// <param name="indexRemoved">The index of the item removed.</param>
     public delegate void OnContentRemoved(IContainerItem container, byte indexRemoved);
 }

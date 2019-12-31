@@ -72,14 +72,39 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         // void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs);
 
+        /// <summary>
+        /// Opens a container for this player, which tracks it.
+        /// </summary>
+        /// <param name="container">The container being opened.</param>
+        /// <returns>The id of the container as seen by this player.</returns>
         sbyte OpenContainer(IContainerItem container);
 
+        /// <summary>
+        /// Gets the id of the given container as known by this player, if it is.
+        /// </summary>
+        /// <param name="container">The container to check.</param>
+        /// <returns>The id of the container if known by this player.</returns>
         sbyte GetContainerId(IContainerItem container);
 
-        void CloseContainerWithId(byte openContainerId);
+        /// <summary>
+        /// Closes a container for this player, which stops tracking int.
+        /// </summary>
+        /// <param name="containerId">The id of the container being closed.</param>
+        void CloseContainerWithId(byte containerId);
 
+        /// <summary>
+        /// Opens a container by placing it at the given index id.
+        /// If there is a container already open at this index, it is first closed.
+        /// </summary>
+        /// <param name="container">The container to open.</param>
+        /// <param name="index">The index at which to open the container.</param>
         void OpenContainerAt(IContainerItem container, byte index);
 
-        IContainerItem GetContainer(byte container);
+        /// <summary>
+        /// Gets a container by the id known to this player.
+        /// </summary>
+        /// <param name="containerId">The id of the container.</param>
+        /// <returns>The container, if found.</returns>
+        IContainerItem GetContainerById(byte containerId);
     }
 }

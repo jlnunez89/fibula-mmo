@@ -13,5 +13,10 @@ namespace OpenTibia.Server.Contracts
 {
     using OpenTibia.Server.Contracts.Abstractions;
 
+    /// <summary>
+    /// Delegate meant for when content is added to a container.
+    /// </summary>
+    /// <param name="container">The container.</param>
+    /// <param name="addedItem">The added item.</param>
     public delegate void OnContentAdded(IContainerItem container, IItem addedItem);
 }

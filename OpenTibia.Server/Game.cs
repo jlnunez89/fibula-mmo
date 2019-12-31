@@ -1515,7 +1515,14 @@ namespace OpenTibia.Server
             return true;
         }
 
-        private void PerformPlayerContainerOpen(IPlayer player, IContainerItem containerItem, Location fromLocation, byte index)
+        /// <summary>
+        /// Performs a container open action for a player.
+        /// </summary>
+        /// <param name="player">The player for which the container is being opened.</param>
+        /// <param name="containerItem">The container.</param>
+        /// <param name="fromLocation">The location from which the container is being opened.</param>
+        /// <param name="asContainerId">The id as which to open the container.</param>
+        private void PerformPlayerContainerOpen(IPlayer player, IContainerItem containerItem, Location fromLocation, byte asContainerId)
         {
             player.ThrowIfNull(nameof(player));
             containerItem.ThrowIfNull(nameof(containerItem));
@@ -1523,11 +1530,11 @@ namespace OpenTibia.Server
             // Start tracking this container if we're not doing it.
             if (containerItem.OpenedBy.Count == 0)
             {
-                containerItem.OnContentAdded += this.ContainerContentAdded;
-                containerItem.OnContentRemoved += this.ContainerContentRemoved;
-                containerItem.OnContentUpdated += this.ContainerContentUpdated;
+                containerItem.OnContentAdded += this.HandleContainerContentAdded;
+                containerItem.OnContentRemoved += this.HandleContainerContentRemoved;
+                containerItem.OnContentUpdated += this.HandleContainerContentUpdated;
 
-                containerItem.OnThingChanged += this.ObservedContainerChanged;
+                containerItem.OnThingChanged += this.HandleContainerChanged;
             }
 
             switch (fromLocation.Type)
@@ -1536,10 +1543,10 @@ namespace OpenTibia.Server
                     player.OpenContainer(containerItem);
                     break;
                 case LocationType.InsideContainer:
-                    player.OpenContainerAt(containerItem, index);
+                    player.OpenContainerAt(containerItem, asContainerId);
                     break;
                 case LocationType.InventorySlot:
-                    player.OpenContainerAt(containerItem, index);
+                    player.OpenContainerAt(containerItem, asContainerId);
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -1559,33 +1566,44 @@ namespace OpenTibia.Server
                             containerItem.Content))));
         }
 
-        private void PerformPlayerContainerClose(IPlayer player, IContainerItem containerItem, byte containerId)
+        /// <summary>
+        /// Performs a container close action for a player.
+        /// </summary>
+        /// <param name="player">The player for which the container is being opened.</param>
+        /// <param name="containerItem">The container being closed.</param>
+        /// <param name="asContainerId">The id of the container being closed, as seen by the player.</param>
+        private void PerformPlayerContainerClose(IPlayer player, IContainerItem containerItem, byte asContainerId)
         {
             player.ThrowIfNull(nameof(player));
             containerItem.ThrowIfNull(nameof(containerItem));
 
-            player.CloseContainerWithId(containerId);
+            player.CloseContainerWithId(asContainerId);
 
             // clean up events if no one else cares about this container.
             if (containerItem.OpenedBy.Count == 0)
             {
-                containerItem.OnContentAdded -= this.ContainerContentAdded;
-                containerItem.OnContentRemoved -= this.ContainerContentRemoved;
-                containerItem.OnContentUpdated -= this.ContainerContentUpdated;
+                containerItem.OnContentAdded -= this.HandleContainerContentAdded;
+                containerItem.OnContentRemoved -= this.HandleContainerContentRemoved;
+                containerItem.OnContentUpdated -= this.HandleContainerContentUpdated;
 
-                containerItem.OnThingChanged -= this.ObservedContainerChanged;
+                containerItem.OnThingChanged -= this.HandleContainerChanged;
             }
 
             this.RequestNofitication(
                 new GenericNotification(
                     this.Logger,
                     () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                    new GenericNotificationArguments(new ContainerClosePacket(containerId))));
+                    new GenericNotificationArguments(new ContainerClosePacket(asContainerId))));
         }
 
-        private void ObservedContainerChanged(IThing thingThatChanged, ThingStateChangedEventArgs eventArgs)
+        /// <summary>
+        /// Handles a change event from a container.
+        /// </summary>
+        /// <param name="containerThatChangedAsThing">The container that changed.</param>
+        /// <param name="eventArgs">The event arguments of the change.</param>
+        private void HandleContainerChanged(IThing containerThatChangedAsThing, ThingStateChangedEventArgs eventArgs)
         {
-            if (!(thingThatChanged is IContainerItem containerItem) || !eventArgs.PropertyChanged.Equals(nameof(containerItem.Location)))
+            if (!(containerThatChangedAsThing is IContainerItem containerItem) || !eventArgs.PropertyChanged.Equals(nameof(containerItem.Location)))
             {
                 return;
             }
@@ -1615,17 +1633,32 @@ namespace OpenTibia.Server
             }
         }
 
-        private void ContainerContentUpdated(IContainerItem container, int indexOfUpdated)
+        /// <summary>
+        /// Handles an event from a container content added.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="addedItem">The item that was added.</param>
+        private void HandleContainerContentAdded(IContainerItem container, IItem addedItem)
         {
             throw new NotImplementedException();
         }
 
-        private void ContainerContentRemoved(IContainerItem container, byte indexRemoved)
+        /// <summary>
+        /// Handles an event from a container content removed.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="indexRemoved">The index that was removed.</param>
+        private void HandleContainerContentRemoved(IContainerItem container, byte indexRemoved)
         {
             throw new NotImplementedException();
         }
 
-        private void ContainerContentAdded(IContainerItem container, IItem addedItem)
+        /// <summary>
+        /// Handles an event from a container content updated.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="indexOfUpdated">The index that was updated.</param>
+        private void HandleContainerContentUpdated(IContainerItem container, int indexOfUpdated)
         {
             throw new NotImplementedException();
         }

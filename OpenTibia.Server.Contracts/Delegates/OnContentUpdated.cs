@@ -13,5 +13,10 @@ namespace OpenTibia.Server.Contracts
 {
     using OpenTibia.Server.Contracts.Abstractions;
 
+    /// <summary>
+    /// Delegate meant for when content is updated in a container.
+    /// </summary>
+    /// <param name="container">The container.</param>
+    /// <param name="indexOfUpdated">The index of the updated item.</param>
     public delegate void OnContentUpdated(IContainerItem container, int indexOfUpdated);
 }

@@ -148,8 +148,14 @@ namespace OpenTibia.Server
         /// </summary>
         public bool IsLogoutAllowed => true; // this.AutoAttackTargetId == 0;
 
+        /// <summary>
+        /// Gets the inventory for the player.
+        /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
 
+        /// <summary>
+        /// Gets the collection of open containers tracked by this player.
+        /// </summary>
         public IEnumerable<IContainerItem> OpenContainers => this.openContainers;
 
         /// <summary>
@@ -200,11 +206,16 @@ namespace OpenTibia.Server
             return uint.MinValue;
         }
 
-        public sbyte GetContainerId(IContainerItem thingAsContainer)
+        /// <summary>
+        /// Gets the id of the given container as known by this player, if it is.
+        /// </summary>
+        /// <param name="container">The container to check.</param>
+        /// <returns>The id of the container if known by this player.</returns>
+        public sbyte GetContainerId(IContainerItem container)
         {
             for (sbyte i = 0; i < this.openContainers.Length; i++)
             {
-                if (this.openContainers[i] == thingAsContainer)
+                if (this.openContainers[i] == container)
                 {
                     return i;
                 }
@@ -213,12 +224,16 @@ namespace OpenTibia.Server
             return -1;
         }
 
-        public void CloseContainerWithId(byte openContainerId)
+        /// <summary>
+        /// Closes a container for this player, which stops tracking int.
+        /// </summary>
+        /// <param name="containerId">The id of the container being closed.</param>
+        public void CloseContainerWithId(byte containerId)
         {
             try
             {
-                this.openContainers[openContainerId].Close(this.Id);
-                this.openContainers[openContainerId] = null;
+                this.openContainers[containerId].Close(this.Id);
+                this.openContainers[containerId] = null;
             }
             catch
             {
@@ -226,6 +241,11 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Opens a container for this player, which tracks it.
+        /// </summary>
+        /// <param name="container">The container being opened.</param>
+        /// <returns>The id of the container as seen by this player.</returns>
         public sbyte OpenContainer(IContainerItem container)
         {
             container.ThrowIfNull(nameof(container));
@@ -250,20 +270,31 @@ namespace OpenTibia.Server
             return lastIdx;
         }
 
-        public void OpenContainerAt(IContainerItem thingAsContainer, byte index)
+        /// <summary>
+        /// Opens a container and tracks it with the given id.
+        /// If there is a container already open at this index, it is first closed.
+        /// </summary>
+        /// <param name="container">The container to open.</param>
+        /// <param name="openWithId">The id with which to open the container.</param>
+        public void OpenContainerAt(IContainerItem container, byte openWithId)
         {
-            this.openContainers[index]?.Close(this.Id);
-            this.openContainers[index] = thingAsContainer;
-            this.openContainers[index].Open(this.Id, index);
+            this.openContainers[openWithId]?.Close(this.Id);
+            this.openContainers[openWithId] = container;
+            this.openContainers[openWithId].Open(this.Id, openWithId);
         }
 
-        public IContainerItem GetContainer(byte index)
+        /// <summary>
+        /// Gets a container by the id known to this player.
+        /// </summary>
+        /// <param name="containerId">The id of the container.</param>
+        /// <returns>The container, if found.</returns>
+        public IContainerItem GetContainerById(byte containerId)
         {
             try
             {
-                var container = this.openContainers[index];
+                var container = this.openContainers[containerId];
 
-                container.Open(this.Id, index);
+                container.Open(this.Id, containerId);
 
                 return container;
             }
