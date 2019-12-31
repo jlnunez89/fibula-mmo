@@ -14,11 +14,13 @@
 
 ## 2) Build the solution
 
-1) You have several options to do this:
-   - Use Visual Studio (the included solution is for 2019 Community edition)
-   - Using a command line interface (Powershell in this example): 
+1) You have some options to do this, but you'll need to:
+   - Install .NetCore SDK 3.X from https://dotnet.microsoft.com/download.
+   - Use Visual Studio (the included solution is for 2019 Community edition) 
+   OR
+   - Using a command line interface to build: 
 
-        `msbuild .\OpenTibia.sln`
+        `dotnet build --configuration Release`
 
 1) After you build it, the project you want to focus on is `OpenTibia.Server.Standalone`. Go into the bin folder created, and it should look something like this:
 
