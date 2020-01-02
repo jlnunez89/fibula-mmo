@@ -83,27 +83,6 @@ namespace OpenTibia.Server
 
         // public uint HolderId => this.holder;
 
-        /// <summary>
-        /// Gets this item's location.
-        /// </summary>
-        public new Location Location
-        {
-            get
-            {
-                if (this.ParentContainer != null)
-                {
-                    return this.ParentContainer.Location;
-                }
-
-                // if (this.HolderId != 0)
-                // {
-                //    return this.CarryLocation;
-                // }
-
-                return base.Location;
-            }
-        }
-
         //public Location CarryLocation { get; private set; }
 
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
@@ -271,8 +250,6 @@ namespace OpenTibia.Server
 
         public decimal Weight => (this.Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(this.Attributes[ItemAttribute.Weight]) / 100 : default) * this.Amount;
 
-        public IContainerItem ParentContainer { get; protected set; }
-
         public void SetAmount(byte amount)
         {
             var oldAmount = this.Amount;
@@ -293,10 +270,9 @@ namespace OpenTibia.Server
 
             foreach (var attribute in attributes)
             {
-                if ("Content".Equals(attribute.Name))
+                if ("Content".Equals(attribute.Name) && this is IContainerItem containerItem)
                 {
-                    // Adding here will handle containers via polymorphism.
-                    this.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
+                    containerItem.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
 
                     continue;
                 }
@@ -368,24 +344,6 @@ namespace OpenTibia.Server
             return (true, remainder);
         }
 
-        /// <summary>
-        /// Adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        protected virtual void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
-        {
-            logger.ThrowIfNull(nameof(logger));
-
-            if (contentElements == null)
-            {
-                return;
-            }
-
-            logger.Warning($"Could not add content to item with type id {this.Type.TypeId} since it's not a {typeof(ContainerItem)}, ignoring.");
-        }
-
         // public void SetHolder(ICreature holder, Location holdingLoc = default)
         // {
         //    var oldHolder = this.holder;
@@ -393,11 +351,6 @@ namespace OpenTibia.Server
         //    this.CarryLocation = holdingLoc;
 
         // this.OnHolderChanged?.Invoke(this, oldHolder);
-        // }
-
-        // public void SetParent(IContainer parentContainer)
-        // {
-        //    this.Parent = parentContainer;
         // }
 
         // public virtual bool Join(IItem otherItem)

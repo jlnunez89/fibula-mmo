@@ -38,6 +38,8 @@ namespace OpenTibia.Server
     /// </summary>
     public class Game : IGame
     {
+        private const int NoCreatureId = 0;
+
         private const int DefaultGroundMovementPenalty = 200;
 
         public static Location NewbieStart = new Location { X = 32097, Y = 32219, Z = 7 };
@@ -247,14 +249,14 @@ namespace OpenTibia.Server
             this.ConnectionManager.Register(connection, player.Id);
 
             // TODO: check if map.CanAddCreature(playerRecord.location);
-            // playerRecord.location
             IThing playerThing = player;
 
-            playerThing.Location = Game.VeteranStart;
+            // TODO: should be something like character.location
+            var targetLocation = Game.VeteranStart;
 
-            if (this.map.GetTileAt(player.Location, out ITile targetTile))
+            if (this.map.GetTileAt(targetLocation, out ITile targetTile))
             {
-                targetTile.AddThing(this.ItemFactory, ref playerThing);
+                targetTile.AddContent(this.ItemFactory, playerThing);
             }
 
             return player;
@@ -283,7 +285,9 @@ namespace OpenTibia.Server
 
             IThing playerThing = player as IThing;
 
-            if (tile.RemoveThing(this.ItemFactory, ref playerThing))
+            (bool removeSuccessful, IThing remainder) = tile.RemoveContent(this.ItemFactory, playerThing);
+
+            if (removeSuccessful)
             {
                 this.RequestNofitication(
                     new CreatureRemovedNotification(
@@ -344,46 +348,13 @@ namespace OpenTibia.Server
             switch (toLocation.Type)
             {
                 case LocationType.Map:
-                    movementEvent = new MapToMapMovementEvent(
-                        this.Logger,
-                        this,
-                        this.ConnectionManager,
-                        this.map,
-                        this.CreatureManager,
-                        player.Id,
-                        thingAtStackPos,
-                        fromLocation,
-                        toLocation,
-                        fromStackPos);
+                    movementEvent = new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, toLocation, fromStackPos, count);
                     break;
                 case LocationType.InsideContainer:
-                    //movementEvent = new MapToContainerMovementEvent(
-                    //    this.Logger,
-                    //    this,
-                    //    this.ConnectionManager,
-                    //    this.map,
-                    //    this.CreatureManager,
-                    //    player.Id,
-                    //    thingAtStackPos,
-                    //    fromLocation,
-                    //    player.Id,
-                    //    toLocation.ContainerId,
-                    //    toLocation.ContainerIndex,
-                    //    fromStackPos);
+                    movementEvent = new MapToContainerMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, player.Id, toLocation.ContainerId, toLocation.ContainerIndex, count);
                     break;
                 case LocationType.InventorySlot:
-                    //movementEvent = new MapToBodyMovementEvent(
-                    //    this.Logger,
-                    //    this,
-                    //    this.ConnectionManager,
-                    //    this.map,
-                    //    this.CreatureManager,
-                    //    player.Id,
-                    //    thingAtStackPos,
-                    //    fromLocation,
-                    //    player.Id,
-                    //    toLocation.Slot,
-                    //    fromStackPos);
+                    // movementEvent = new MapToBodyMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, player.Id, toLocation.Slot, fromStackPos);
                     break;
             }
 
@@ -545,7 +516,7 @@ namespace OpenTibia.Server
         /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false)
+        public bool PerformThingMovementFromMapToMap(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false)
         {
             if (thing == null || !this.map.GetTileAt(fromTileLocation, out ITile fromTile) || !this.map.GetTileAt(toTileLocation, out ITile toTile))
             {
@@ -565,14 +536,16 @@ namespace OpenTibia.Server
             }
 
             // Do the actual move first.
-            if (!fromTile.RemoveThing(this.ItemFactory, ref thing, amountToMove))
+            (bool removeSuccessful, IThing remainderThing) = fromTile.RemoveContent(this.ItemFactory, thing, amount: amountToMove);
+
+            if (!removeSuccessful)
             {
                 return false;
             }
 
-            toTile.AddThing(this.ItemFactory, ref thing, amountToMove);
+            toTile.AddContent(this.ItemFactory, thing);
 
-            thing.Location = toTileLocation;
+            var thingStackPosition = toTile.GetStackPositionOfThing(thing);
 
             // Then deal with the consequences of the move.
             if (thing is ICreature creature)
@@ -584,8 +557,6 @@ namespace OpenTibia.Server
                 var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
                 creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, stepDurationTime);
-
-                var thingStackPosition = toTile.GetStackPositionOfThing(thing);
 
                 if (thingStackPosition != byte.MaxValue)
                 {
@@ -616,49 +587,117 @@ namespace OpenTibia.Server
 
                         var locationDiff = container.Location - player.Location;
 
-                        if (locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0)
+                        if ((locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0) && container.IsTracking(player.Id, out byte containerId))
                         {
-                            this.PerformPlayerContainerClose(player, container, (byte)container.AsKnownTo(player.Id));
+                            this.PerformPlayerContainerClose(player, container, containerId);
                         }
                     }
                 }
             }
             else
             {
-                // TODO: see if we can save network bandwith here:
-                // this.Game.RequestNofitication(
-                //        new ItemMovedNotification(
-                //            (IItem)this.Thing,
-                //            this.FromLocation,
-                //            oldStackpos,
-                //            this.ToLocation,
-                //            destinationTile.GetStackPosition(this.Thing),
-                //            false
-                //        ),
-                //        this.FromLocation,
-                //        this.ToLocation
-                //    );
+                // TODO: see if we can save network bandwith here by using this notification instead.
+                // this.RequestNofitication(
+                //    new ItemMovedNotification(
+                //        this.Logger,
+                //        this.CreatureManager,
+                //        () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
+                //        new ItemMovedNotificationArguments(
+                //           thing,
+                //           fromTileLocation,
+                //           fromTileStackPos,
+                //           toTileLocation,
+                //           thingStackPosition,
+                //           false)));
+                this.RequestNofitication(new TileUpdatedNotification(this.Logger, this.CreatureManager, () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation), new TileUpdatedNotificationArguments(fromTileLocation, this.GetDescriptionOfTile)));
 
-                this.RequestNofitication(
-                    new TileUpdatedNotification(
-                            this.Logger,
-                            this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation),
-                            new TileUpdatedNotificationArguments(
-                                fromTileLocation,
-                                this.GetDescriptionOfTile)));
-
-                this.RequestNofitication(
-                    new TileUpdatedNotification(
-                            this.Logger,
-                            this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersThatCanSee(toTileLocation),
-                            new TileUpdatedNotificationArguments(
-                                toTileLocation,
-                                this.GetDescriptionOfTile)));
+                this.RequestNofitication(new TileUpdatedNotification(this.Logger, this.CreatureManager, () => this.GetConnectionsOfPlayersThatCanSee(toTileLocation), new TileUpdatedNotificationArguments(toTileLocation, this.GetDescriptionOfTile)));
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Immediately attempts to perform a thing movement from the map to a container.
+        /// </summary>
+        /// <param name="thingMoving">The thing being moved.</param>
+        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
+        /// <param name="toCreatureId">The id of the creature that owns the container into which the thing is being moved to.</param>
+        /// <param name="toCreatureContainerId">The id of the container.</param>
+        /// <param name="toCreatureContainerIndex">The index within the container to move the thing to.</param>
+        /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <returns>True if the movement was successfully performed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformThingMovementFromMapToContainer(IThing thingMoving, Location fromLocation, uint toCreatureId, byte toCreatureContainerId, byte toCreatureContainerIndex, byte amount)
+        {
+            if (thingMoving == null || !this.map.GetTileAt(fromLocation, out ITile fromTile) || !(thingMoving is IItem itemMoving))
+            {
+                return false;
+            }
+
+            var targetCreature = this.CreatureManager.FindCreatureById(toCreatureId);
+
+            if (!(targetCreature is IPlayer targetPlayer) || !this.map.GetTileAt(targetPlayer.Location, out ITile targetPlayerTile))
+            {
+                return false;
+            }
+
+            var targetContainer = targetPlayer.GetContainerById(toCreatureContainerId);
+
+            if (targetContainer == null)
+            {
+                return false;
+            }
+
+            // Do the actual move.
+            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.ItemFactory, thingMoving, amount: amount);
+
+            if (!removeSuccessful)
+            {
+                return false;
+            }
+
+            this.RequestNofitication(
+                new TileUpdatedNotification(
+                        this.Logger,
+                        this.CreatureManager,
+                        () => this.GetConnectionsOfPlayersThatCanSee(fromLocation),
+                        new TileUpdatedNotificationArguments(
+                            fromLocation,
+                            this.GetDescriptionOfTile)));
+
+            var (moveSuccessful, remainder) = targetContainer.AddContent(this.ItemFactory, itemMoving, toCreatureContainerIndex);
+
+            var (fallbackSuccessful, fallbackRemainder) = (moveSuccessful, remainder);
+
+            if (!fallbackSuccessful || fallbackRemainder != null)
+            {
+                foreach (var fallbackParentCylinder in itemMoving.GetParentHierarchy())
+                {
+                    if (!fallbackSuccessful)
+                    {
+                        (fallbackSuccessful, fallbackRemainder) = fallbackParentCylinder.AddContent(this.ItemFactory, itemMoving);
+                    }
+                    else if (fallbackRemainder != null)
+                    {
+                        (fallbackSuccessful, fallbackRemainder) = fallbackParentCylinder.AddContent(this.ItemFactory, fallbackRemainder);
+                    }
+
+                    if (fallbackParentCylinder is ITile tile)
+                    {
+                        this.RequestNofitication(
+                            new TileUpdatedNotification(
+                                    this.Logger,
+                                    this.CreatureManager,
+                                    () => this.GetConnectionsOfPlayersThatCanSee(tile.Location),
+                                    new TileUpdatedNotificationArguments(
+                                        tile.Location,
+                                        this.GetDescriptionOfTile)));
+                    }
+                }
+            }
+
+            return moveSuccessful;
         }
 
         /// <summary>
@@ -673,19 +712,7 @@ namespace OpenTibia.Server
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen. This operation is not thread-safe.</remarks>
         public bool PerformItemUse(ushort typeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
         {
-            if (fromLocation.Type != LocationType.Map)
-            {
-                // not supported at the moment.
-                return false;
-            }
-
-            // Using an item from the ground (map).
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile))
-            {
-                return false;
-            }
-
-            var item = fromTile.FindItemWithId(typeId);
+            IItem item = this.FindItemByIdAtLocation(typeId, fromLocation, fromStackPos, index);
 
             if (item == null || item.ThingId != typeId)
             {
@@ -715,9 +742,9 @@ namespace OpenTibia.Server
             }
             else if (item != null && item.IsContainer && item is IContainerItem containerItem && requestor is IPlayer player)
             {
-                var openContainerId = player.GetContainerId(containerItem);
+                var containerId = player.GetContainerId(containerItem);
 
-                if (openContainerId < 0)
+                if (containerId < 0)
                 {
                     // Player doesn't have this container open, so open.
                     this.PerformPlayerContainerOpen(player, containerItem, fromLocation, index);
@@ -725,7 +752,7 @@ namespace OpenTibia.Server
                 else
                 {
                     // Close the container for this player.
-                    this.PerformPlayerContainerClose(player, containerItem, (byte)openContainerId);
+                    this.PerformPlayerContainerClose(player, containerItem, (byte)containerId);
                 }
 
                 return true;
@@ -747,41 +774,35 @@ namespace OpenTibia.Server
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         public bool PerformItemChange(ushort fromTypeId, ushort toTypeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
         {
-            if (fromLocation.Type != LocationType.Map)
-            {
-                // not supported at the moment.
-                return false;
-            }
-
             // Using an item from the ground (map).
             if (!this.map.GetTileAt(fromLocation, out ITile targetTile))
             {
                 return false;
             }
 
-            IThing potentialThing = targetTile.FindItemWithId(fromTypeId);
+            IThing thing = this.FindItemByIdAtLocation(fromTypeId, fromLocation, fromStackPos, index);
 
-            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != fromTypeId)
+            if (thing == null || !(thing is IItem item) || item.ThingId != fromTypeId)
             {
                 return false;
             }
 
-            IThing newItemAsThing = this.ItemFactory.Create(toTypeId);
+            IThing newItem = this.ItemFactory.Create(toTypeId);
 
-            if (newItemAsThing == null)
+            if (newItem == null)
             {
                 return false;
             }
 
             // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
-            if (!targetTile.RemoveThing(this.ItemFactory, ref potentialThing, item.Amount))
+            (bool removeSuccessful, IThing remainderThing) = targetTile.RemoveContent(this.ItemFactory, item, item.Amount);
+
+            if (!removeSuccessful)
             {
                 return false;
             }
 
-            targetTile.AddThing(this.ItemFactory, ref newItemAsThing, item.Amount);
-
-            newItemAsThing.Location = fromLocation;
+            targetTile.AddContent(this.ItemFactory, newItem);
 
             this.RequestNofitication(
                 new TileUpdatedNotification(
@@ -817,17 +838,15 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            IThing newItemAsThing = this.ItemFactory.Create(typeId);
+            IThing newItem = this.ItemFactory.Create(typeId);
 
-            if (newItemAsThing == null)
+            if (newItem == null)
             {
                 return false;
             }
 
             // At this point, we were able to generate the new one, let's proceed to add it.
-            targetTile.AddThing(this.ItemFactory, ref newItemAsThing);
-
-            newItemAsThing.Location = atLocation;
+            targetTile.AddContent(this.ItemFactory, newItem);
 
             this.RequestNofitication(
                 new TileUpdatedNotification(
@@ -863,15 +882,15 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            IThing potentialThing = targetTile.FindItemWithId(typeId);
+            IThing thing = targetTile.FindItemWithId(typeId);
 
-            if (potentialThing == null || !(potentialThing is IItem item) || item.ThingId != typeId)
+            if (thing == null || !(thing is IItem item))
             {
                 return false;
             }
 
             // At this point, we have an item to remove, let's proceed.
-            var successfulRemoval = targetTile.RemoveThing(this.ItemFactory, ref potentialThing, item.Amount);
+            (bool successfulRemoval, IThing remainderThing) = targetTile.RemoveContent(this.ItemFactory, thing, amount: item.Amount);
 
             if (successfulRemoval)
             {
@@ -1092,33 +1111,14 @@ namespace OpenTibia.Server
         /// <param name="toTypeId">The id of the item type to change to.</param>
         /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_ChangeItem(ref IThing thing, ushort toTypeId, AnimatedEffect animatedEffect)
+        public bool ScriptRequest_ChangeItem(IThing thing, ushort toTypeId, AnimatedEffect animatedEffect)
         {
             if (thing == null)
             {
                 return false;
             }
 
-            if (!this.map.GetTileAt(thing.Location, out _))
-            {
-                return false;
-            }
-
-            // At this point it seems like a valid usage request, let's enqueue it.
-            IEvent changeItemEvent = new ChangeItemEvent(
-                    this.Logger,
-                    this,
-                    this.ConnectionManager,
-                    this.map,
-                    this.CreatureManager,
-                    0,
-                    thing.ThingId,
-                    thing.Location,
-                    toTypeId);
-
-            this.scheduler.ScheduleEvent(changeItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
-
-            return true;
+            return this.ScriptRequest_ChangeItemAt(thing.Location, thing.ThingId, toTypeId, animatedEffect);
         }
 
         /// <summary>
@@ -1137,7 +1137,7 @@ namespace OpenTibia.Server
                     this.ConnectionManager,
                     this.map,
                     this.CreatureManager,
-                    0,
+                    NoCreatureId,
                     fromTypeId,
                     location,
                     toTypeId);
@@ -1162,7 +1162,7 @@ namespace OpenTibia.Server
                     this.ConnectionManager,
                     this.map,
                     this.CreatureManager,
-                    0,
+                    NoCreatureId,
                     itemType,
                     location);
 
@@ -1189,7 +1189,7 @@ namespace OpenTibia.Server
                     this.ConnectionManager,
                     this.map,
                     this.CreatureManager,
-                    0,
+                    NoCreatureId,
                     item.ThingId,
                     item.Location);
 
@@ -1212,7 +1212,7 @@ namespace OpenTibia.Server
                     this.ConnectionManager,
                     this.map,
                     this.CreatureManager,
-                    0,
+                    NoCreatureId,
                     itemType,
                     location);
 
@@ -1239,17 +1239,7 @@ namespace OpenTibia.Server
             var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
 
             this.scheduler.ScheduleEvent(
-                new MapToMapMovementEvent(
-                    this.Logger,
-                    this,
-                    this.ConnectionManager,
-                    this.map,
-                    this.CreatureManager,
-                    0,
-                    creature,
-                    creature.Location,
-                    targetLocation,
-                    creatureStackPosition),
+                new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, NoCreatureId, creature, creature.Location, targetLocation, creatureStackPosition),
                 this.CurrentTime + DefaultDelayForScripts);
 
             return true;
@@ -1279,17 +1269,7 @@ namespace OpenTibia.Server
                 var fromStackPos = fromTile.GetStackPositionOfThing(item);
 
                 this.scheduler.ScheduleEvent(
-                    new MapToMapMovementEvent(
-                        this.Logger,
-                        this,
-                        this.ConnectionManager,
-                        this.map,
-                        this.CreatureManager,
-                        0,
-                        item,
-                        fromLocation,
-                        targetLocation,
-                        fromStackPos),
+                    new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, NoCreatureId, item, fromLocation, targetLocation, fromStackPos, amount: item.Amount),
                     this.CurrentTime + DefaultDelayForScripts);
             }
 
@@ -1305,17 +1285,7 @@ namespace OpenTibia.Server
                 var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
 
                 this.scheduler.ScheduleEvent(
-                    new MapToMapMovementEvent(
-                        this.Logger,
-                        this,
-                        this.ConnectionManager,
-                        this.map,
-                        this.CreatureManager,
-                        0,
-                        creature,
-                        fromLocation,
-                        targetLocation,
-                        creatureStackPosition),
+                    new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, NoCreatureId, creature, fromLocation, targetLocation, creatureStackPosition),
                     this.CurrentTime + DefaultDelayForScripts);
             }
 
@@ -1340,17 +1310,7 @@ namespace OpenTibia.Server
             var itemStackPosition = fromTile.GetStackPositionOfThing(item);
 
             this.scheduler.ScheduleEvent(
-                new MapToMapMovementEvent(
-                    this.Logger,
-                    this,
-                    this.ConnectionManager,
-                    this.map,
-                    this.CreatureManager,
-                    0,
-                    item,
-                    item.Location,
-                    targetLocation,
-                    itemStackPosition),
+                new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, NoCreatureId, item, item.Location, targetLocation, itemStackPosition, amount: item.Amount),
                 this.CurrentTime + DefaultDelayForScripts);
 
             return true;
@@ -1380,17 +1340,7 @@ namespace OpenTibia.Server
             var itemStackPosition = fromTile.GetStackPositionOfThing(item);
 
             this.scheduler.ScheduleEvent(
-                new MapToMapMovementEvent(
-                    this.Logger,
-                    this,
-                    this.ConnectionManager,
-                    this.map,
-                    this.CreatureManager,
-                    0,
-                    item,
-                    item.Location,
-                    toLocation,
-                    itemStackPosition),
+                new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, NoCreatureId, item, item.Location, toLocation, itemStackPosition, amount: item.Amount),
                 this.CurrentTime + DefaultDelayForScripts);
 
             return true;
@@ -1454,6 +1404,27 @@ namespace OpenTibia.Server
             }
 
             return !checkLineOfSight || this.InLineOfSight(fromLocation, toLocation);
+        }
+
+        private IItem FindItemByIdAtLocation(ushort typeId, Location location, byte index, byte subIndex)
+        {
+            switch (location.Type)
+            {
+                case LocationType.Map:
+                    // Using an item from the ground (map).
+                    if (!this.map.GetTileAt(location, out ITile tile))
+                    {
+                        return null;
+                    }
+
+                    return tile.FindItemWithId(typeId);
+                case LocationType.InventorySlot:
+                case LocationType.InsideContainer:
+                    // not supported at the moment.
+                    break;
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -1552,18 +1523,21 @@ namespace OpenTibia.Server
                     throw new ArgumentOutOfRangeException();
             }
 
-            this.RequestNofitication(
-                new GenericNotification(
-                    this.Logger,
-                    () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                    new GenericNotificationArguments(
-                        new ContainerOpenPacket(
-                            (byte)containerItem.AsKnownTo(player.Id),
-                            containerItem.ThingId,
-                            containerItem.Type.Name,
-                            containerItem.Capacity,
-                            containerItem.ParentContainer != null,
-                            containerItem.Content))));
+            if (containerItem.IsTracking(player.Id, out byte containerId))
+            {
+                this.RequestNofitication(
+                    new GenericNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
+                        new GenericNotificationArguments(
+                            new ContainerOpenPacket(
+                                containerId,
+                                containerItem.ThingId,
+                                containerItem.Type.Name,
+                                containerItem.Capacity,
+                                containerItem.ParentCylinder is IContainerItem,
+                                containerItem.Content))));
+            }
         }
 
         /// <summary>
@@ -1640,7 +1614,20 @@ namespace OpenTibia.Server
         /// <param name="addedItem">The item that was added.</param>
         private void HandleContainerContentAdded(IContainerItem container, IItem addedItem)
         {
-            throw new NotImplementedException();
+            // The request has to be sent this way since the container id may be different for each player.
+            foreach (var mapPair in container.OpenedBy.ToList())
+            {
+                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                {
+                    continue;
+                }
+
+                this.RequestNofitication(
+                    new GenericNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
+                        new GenericNotificationArguments(new ContainerAddItemPacket(mapPair.Value, addedItem))));
+            }
         }
 
         /// <summary>
@@ -1650,7 +1637,20 @@ namespace OpenTibia.Server
         /// <param name="indexRemoved">The index that was removed.</param>
         private void HandleContainerContentRemoved(IContainerItem container, byte indexRemoved)
         {
-            throw new NotImplementedException();
+            // The request has to be sent this way since the container id may be different for each player.
+            foreach (var mapPair in container.OpenedBy.ToList())
+            {
+                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                {
+                    continue;
+                }
+
+                this.RequestNofitication(
+                    new GenericNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
+                        new GenericNotificationArguments(new ContainerRemoveItemPacket(indexRemoved, mapPair.Value))));
+            }
         }
 
         /// <summary>
@@ -1660,7 +1660,27 @@ namespace OpenTibia.Server
         /// <param name="indexOfUpdated">The index that was updated.</param>
         private void HandleContainerContentUpdated(IContainerItem container, int indexOfUpdated)
         {
-            throw new NotImplementedException();
+            var itemUpdated = container[indexOfUpdated];
+
+            if (itemUpdated == null)
+            {
+                return;
+            }
+
+            // The request has to be sent this way since the container id may be different for each player.
+            foreach (var mapPair in container.OpenedBy.ToList())
+            {
+                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                {
+                    continue;
+                }
+
+                this.RequestNofitication(
+                    new GenericNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
+                        new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, mapPair.Value, itemUpdated))));
+            }
         }
 
         /// <summary>

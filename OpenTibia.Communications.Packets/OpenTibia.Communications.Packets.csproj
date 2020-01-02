@@ -29,9 +29,6 @@
     <Compile Remove="Outgoing\AuthenticationResultPacket.cs" />
     <Compile Remove="Outgoing\BanismentResultPacket.cs" />
     <Compile Remove="Outgoing\ClearOnlinePlayersResultPacket.cs" />
-    <Compile Remove="Outgoing\ContainerAddItemPacket.cs" />
-    <Compile Remove="Outgoing\ContainerRemoveItemPacket.cs" />
-    <Compile Remove="Outgoing\ContainerUpdateItemPacket.cs" />
     <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
     <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />

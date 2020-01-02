@@ -89,7 +89,7 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = this.Game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, toLocation, fromStackPos, amount, isTeleport);
+                bool moveSuccessful = this.Game.PerformThingMovementFromMapToMap(thingMoving, fromLocation, toLocation, fromStackPos, amount, isTeleport);
 
                 if (!moveSuccessful)
                 {

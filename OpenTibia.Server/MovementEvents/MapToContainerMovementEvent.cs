@@ -54,7 +54,6 @@ namespace OpenTibia.Server.MovementEvents
             uint toCreatureId,
             byte toCreatureContainerId,
             byte toCreatureContainerIndex,
-            byte fromStackPos = byte.MaxValue,
             byte amount = 1,
             EvaluationTime evaluationTime = EvaluationTime.OnBoth)
             : base(logger, game, connectionManager, creatureFinder, creatureRequestingId, evaluationTime)
@@ -66,16 +65,14 @@ namespace OpenTibia.Server.MovementEvents
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
-            this.Conditions.Add(new LocationNotObstructedEventCondition(tileAccessor, this.Requestor, () => thingMoving, () => toLocation));
-            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, () => toLocation));
-            this.Conditions.Add(new UnpassItemsInRangeEventCondition(this.Requestor, () => thingMoving, () => toLocation));
-            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, amount));
+            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
+            this.Conditions.Add(new ContainerIsOpenEventCondition(() => creatureFinder.FindCreatureById(toCreatureId), toCreatureContainerId));
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = this.Game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, toLocation, fromStackPos, amount, isTeleport);
+                bool moveSuccessful = this.Game.PerformThingMovementFromMapToContainer(thingMoving, fromLocation, toCreatureId, toCreatureContainerId, toCreatureContainerIndex, amount);
 
                 if (!moveSuccessful)
                 {
@@ -85,16 +82,7 @@ namespace OpenTibia.Server.MovementEvents
                     return;
                 }
 
-                if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
-                {
-                    var directionToDestination = player.Location.DirectionTo(toLocation);
-
-                    this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
-                }
-
                 this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
-
-                this.Game.EvaluateCollisionEventRules(toLocation, thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

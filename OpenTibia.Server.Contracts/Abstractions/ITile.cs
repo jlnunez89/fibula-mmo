@@ -15,19 +15,19 @@ namespace OpenTibia.Server.Contracts.Abstractions
     using System.Collections.Generic;
     using OpenTibia.Server.Contracts.Enumerations;
 
-    public interface ITile
+    public interface ITile : ICylinder
     {
         int CreatureCount { get; }
 
         IEnumerable<uint> CreatureIds { get; }
 
-        IEnumerable<IItem> Items { get; }
-
         byte Flags { get; }
+
+        DateTimeOffset LastModified { get; }
 
         IItem Ground { get; }
 
-        DateTimeOffset LastModified { get; }
+        IEnumerable<IItem> Items { get; }
 
         IEnumerable<IItem> StayOnTopItems { get; }
 
@@ -55,10 +55,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets a value indicating whether items in this tile block laying.
         /// </summary>
         bool BlocksLay { get; }
-
-        void AddThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
-
-        bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1);
 
         bool HasItemWithId(ushort typeId);
 

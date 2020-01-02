@@ -22,7 +22,6 @@
     <Compile Remove="MovementEvents\EventConditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
     <Compile Remove="MovementEvents\EventConditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
     <Compile Remove="MovementEvents\MapToBodyMovementEvent.cs" />
-    <Compile Remove="MovementEvents\MapToContainerMovementEvent.cs" />
     <Compile Remove="MovementEvents\OnMapCreatureMovementEvent.cs" />
     <Compile Remove="MovementEvents\ThingMovementContainerToContainer.cs" />
     <Compile Remove="MovementEvents\ThingMovementContainerToGround.cs" />

@@ -577,20 +577,20 @@ namespace OpenTibia.Communications.Packets
         // message.AddUInt16(packet.ClearedCount);
         // }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="ContainerAddItemPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteContainerAddItemPacket(this INetworkMessage message, ContainerAddItemPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="ContainerAddItemPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteContainerAddItemPacket(this INetworkMessage message, ContainerAddItemPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddByte(packet.ContainerId);
-        //    message.AddItem(packet.Item);
-        // }
+            message.AddByte(packet.ContainerId);
+            message.AddItem(packet.Item);
+        }
 
         /// <summary>
         /// Writes the contents of the <see cref="ContainerClosePacket"/> into the message.
@@ -630,36 +630,36 @@ namespace OpenTibia.Communications.Packets
             }
         }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="ContainerRemoveItemPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WriteContainerRemoveItemPacket(this INetworkMessage message, ContainerRemoveItemPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="ContainerRemoveItemPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteContainerRemoveItemPacket(this INetworkMessage message, ContainerRemoveItemPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        //    message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        //    message.AddByte(packet.ContainerId);
-        //    message.AddByte(packet.Index);
-        //}
+            message.AddByte(packet.ContainerId);
+            message.AddByte(packet.Index);
+        }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="ContainerUpdateItemPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WriteContainerUpdateItemPacket(this INetworkMessage message, ContainerUpdateItemPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="ContainerUpdateItemPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteContainerUpdateItemPacket(this INetworkMessage message, ContainerUpdateItemPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        //    message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        //    message.AddByte(packet.ContainerId);
-        //    message.AddByte(packet.Index);
-        //    message.AddItem(packet.Item);
-        //}
+            message.AddByte(packet.ContainerId);
+            message.AddByte(packet.Index);
+            message.AddItem(packet.Item);
+        }
 
         ///// <summary>
         ///// Writes the contents of the <see cref="CreatePlayerListResultPacket"/> into the message.

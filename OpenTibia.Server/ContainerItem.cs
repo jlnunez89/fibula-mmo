@@ -18,6 +18,7 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;
 
@@ -26,6 +27,8 @@ namespace OpenTibia.Server
     /// </summary>
     public class ContainerItem : Item, IContainerItem
     {
+        private const int UnsetContainerId = 0xFF;
+
         private readonly object openedByLock;
 
         /// <summary>
@@ -93,16 +96,22 @@ namespace OpenTibia.Server
         /// Attempts to add an item to this container.
         /// </summary>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="originalItem">The item to add.</param>
-        /// <param name="index">Optional. The zero-based index at which to add the item. Defaults to 0xFF, which won't match any item.</param>
+        /// <param name="thing">The thing to add to the cylinder, which must be an <see cref="IItem"/>.</param>
+        /// <param name="index">Optional. The index at which to add the thing. Defaults to 0xFF, which instructs to add the thing at any free index.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public (bool result, IItem remainderItem) AddContent(IItemFactory itemFactory, IItem originalItem, byte index = 0xFF)
+        public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
-            originalItem.ThrowIfNull(nameof(originalItem));
+            thing.ThrowIfNull(nameof(thing));
+
+            if (!(thing is IItem item))
+            {
+                // Containers like this can only add items.
+                return (false, null);
+            }
 
             // Validate that the item being added is not a parent of this item.
-            if (this.IsChildOf(originalItem))
+            if (this.IsChildOf(item))
             {
                 // TODO: error message 'This is impossible'.
                 return (false, null);
@@ -114,8 +123,8 @@ namespace OpenTibia.Server
             // Then get an item if there is one, at that index.
             var existingItemAtIndex = targetIndex == -1 ? null : this.Content[targetIndex];
 
-            (bool success, IItem remainderItem) = (false, null);
-            IItem itemToAdd = existingItemAtIndex == null ? originalItem : null;
+            (bool success, IThing remainderItem) = (false, null);
+            IItem itemToAdd = item;
 
             if (existingItemAtIndex != null)
             {
@@ -132,13 +141,15 @@ namespace OpenTibia.Server
                     {
                         // Regardless if we're done, we've changed an item at this index, so we notify observers.
                         this.OnContentUpdated?.Invoke(this, targetIndex);
+
+                        itemToAdd = null;
                     }
                 }
 
                 if (success)
                 {
                     // update the item to add to be the remainder only, since we've added partially at least.
-                    itemToAdd = remainderItem;
+                    itemToAdd = remainderItem as IItem;
                 }
             }
 
@@ -158,6 +169,8 @@ namespace OpenTibia.Server
 
             this.Content.Insert(0, itemToAdd);
 
+            item.ParentCylinder = this;
+
             this.OnContentAdded?.Invoke(this, itemToAdd);
 
             return (true, null);
@@ -167,23 +180,28 @@ namespace OpenTibia.Server
         /// Attempts to remove an item from this container.
         /// </summary>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="itemId">The id of the item to look for to remove.</param>
-        /// <param name="index">The index at which to look for the item to remove.</param>
-        /// <param name="amount">The amount of the item to remove.</param>
+        /// <param name="thing">The thing to remove from the cylinder, which must be an <see cref="IItem"/>.</param>
+        /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
+        /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public (bool result, IItem remainderItem) RemoveContent(IItemFactory itemFactory, ushort itemId, byte index, byte amount)
+        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
+            thing.ThrowIfNull(nameof(thing));
 
-            if (index >= this.Content.Count)
+            IItem existingItem = null;
+
+            if (index == 0xFF)
             {
-                return (false, null);
+                existingItem = this.Content.FirstOrDefault(i => i.ThingId == thing.ThingId);
+            }
+            else
+            {
+                // Attempt to get the item at that index.
+                existingItem = index >= this.Content.Count ? null : this.Content[index];
             }
 
-            // Get the item at that index.
-            var existingItem = this.Content[index];
-
-            if (existingItem.Type.TypeId != itemId || existingItem.Amount < amount)
+            if (existingItem == null || existingItem.Amount < amount)
             {
                 return (false, null);
             }
@@ -209,38 +227,59 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Marks this container as oppened by a creature.
+        /// Begins tracking this container as opened by a creature.
         /// </summary>
-        /// <param name="creatureOpeningId">The id of the creature that is opening this container.</param>
-        /// <param name="containerId">The id which the creature is proposing to label this container with.</param>
+        /// <param name="creatureId">The id of the creature that is opening this container.</param>
+        /// <param name="asContainerId">The id which the creature is proposing to label this container with.</param>
         /// <returns>The id of the container which this container is or will be known to this creature.</returns>
         /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
-        public byte Open(uint creatureOpeningId, byte containerId)
+        public byte BeginTracking(uint creatureId, byte asContainerId)
         {
             lock (this.openedByLock)
             {
-                if (!this.OpenedBy.ContainsKey(creatureOpeningId))
+                if (!this.OpenedBy.ContainsKey(creatureId))
                 {
-                    this.OpenedBy.Add(creatureOpeningId, containerId);
+                    this.OpenedBy.Add(creatureId, asContainerId);
                 }
 
-                return this.OpenedBy[creatureOpeningId];
+                return this.OpenedBy[creatureId];
             }
         }
 
         /// <summary>
-        /// Marks this container as closed by a creature.
+        /// Stop tracking this container as opened by a creature.
         /// </summary>
-        /// <param name="creatureClosingId">The id of the creature that is closing this container.</param>
-        public void Close(uint creatureClosingId)
+        /// <param name="creatureId">The id of the creature that is closing this container.</param>
+        public void EndTracking(uint creatureId)
         {
             lock (this.openedByLock)
             {
-                if (this.OpenedBy.ContainsKey(creatureClosingId))
+                if (this.OpenedBy.ContainsKey(creatureId))
                 {
-                    this.OpenedBy.Remove(creatureClosingId);
+                    this.OpenedBy.Remove(creatureId);
                 }
             }
+        }
+
+        /// <summary>
+        /// Checks if this container is being tracked as opened a creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="containerId">The id which the creature is tracking this container with.</param>
+        /// <returns>True if this container is being tracked by the creature, false otherwise.</returns>
+        public bool IsTracking(uint creatureId, out byte containerId)
+        {
+            containerId = UnsetContainerId;
+
+            lock (this.openedByLock)
+            {
+                if (this.OpenedBy.ContainsKey(creatureId))
+                {
+                    containerId = this.OpenedBy[creatureId];
+                }
+            }
+
+            return containerId != UnsetContainerId;
         }
 
         /// <summary>
@@ -276,30 +315,12 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Retrieves the id of this container as known to a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
-        /// <returns>The id of this container if it was found for the creature, -1 otherwise.</returns>
-        public sbyte AsKnownTo(uint creatureId)
-        {
-            lock (this.openedByLock)
-            {
-                if (this.OpenedBy.ContainsKey(creatureId))
-                {
-                    return (sbyte)this.OpenedBy[creatureId];
-                }
-            }
-
-            return -1;
-        }
-
-        /// <summary>
         /// Adds parsed content elements to this container.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="contentElements">The content elements to add.</param>
-        protected override void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
+        public void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
         {
             logger.ThrowIfNull(nameof(logger));
             itemFactory.ThrowIfNull(nameof(itemFactory));
@@ -347,7 +368,7 @@ namespace OpenTibia.Server
                         return true;
                     }
 
-                    containerItem = containerItem.ParentContainer;
+                    containerItem = containerItem.ParentCylinder as IContainerItem;
                 }
             }
 

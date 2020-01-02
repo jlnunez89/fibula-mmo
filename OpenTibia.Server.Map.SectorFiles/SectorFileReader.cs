@@ -17,7 +17,6 @@ namespace OpenTibia.Server.Map.SectorFiles
     using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Map;
     using OpenTibia.Server.Parsing;
@@ -67,68 +66,9 @@ namespace OpenTibia.Server.Map.SectorFiles
                 };
 
                 // start off with a tile that has no ground in it.
-                ITile newTile = new Tile(null);
+                ITile newTile = new Tile(location, null);
 
-                // load and add tile flags and contents.
-                foreach (var e in CipFileParser.Parse(tileData))
-                {
-                    foreach (var attribute in e.Attributes)
-                    {
-                        if (attribute.Name.Equals("Content"))
-                        {
-                            if (attribute.Value is IEnumerable<CipElement> elements)
-                            {
-                                var thingStack = new Stack<IThing>();
-
-                                foreach (var element in elements)
-                                {
-                                    if (element.IsFlag)
-                                    {
-                                        // A flag is unexpected in this context.
-                                        logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
-
-                                        continue;
-                                    }
-
-                                    IItem item = itemFactory.Create((ushort)element.Id);
-
-                                    if (item == null)
-                                    {
-                                        logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
-
-                                        continue;
-                                    }
-
-                                    item.SetAttributes(logger.ForContext<IItem>(), itemFactory, element.Attributes);
-
-                                    thingStack.Push(item);
-                                }
-
-                                // Add them in reversed order.
-                                while (thingStack.Count > 0)
-                                {
-                                    var thing = thingStack.Pop();
-
-                                    newTile.AddThing(itemFactory, ref thing);
-
-                                    thing.Location = location;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            // it's a flag
-                            if (Enum.TryParse(attribute.Name, out TileFlag flagMatch))
-                            {
-                                newTile.SetFlag(flagMatch);
-                            }
-                            else
-                            {
-                                logger.Warning($"Unknown flag [{attribute.Name}] found on tile at location {location}.");
-                            }
-                        }
-                    }
-                }
+                newTile.AddContent(logger, itemFactory, CipFileParser.Parse(tileData));
 
                 loadedTilesList.Add((location, newTile));
             }

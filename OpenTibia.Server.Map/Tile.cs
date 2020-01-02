@@ -17,6 +17,9 @@ namespace OpenTibia.Server.Map
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a tile in the map.
@@ -46,9 +49,17 @@ namespace OpenTibia.Server.Map
         /// <summary>
         /// Initializes a new instance of the <see cref="Tile"/> class.
         /// </summary>
+        /// <param name="location">The location of this tile.</param>
         /// <param name="ground">The ground item to initialize the tile with.</param>
-        public Tile(IItem ground)
+        public Tile(Location location, IItem ground)
         {
+            if (location.Type != LocationType.Map)
+            {
+                throw new ArgumentException($"Invalid location {location} for tile. A tile must have a {LocationType.Map} location.");
+            }
+
+            this.Location = location;
+
             this.Ground = ground;
             this.Flags = (byte)TileFlag.None;
             this.LastModified = DateTimeOffset.UtcNow;
@@ -58,6 +69,11 @@ namespace OpenTibia.Server.Map
             this.stayOnBottomItems = new Stack<IItem>();
             this.itemsOnTile = new Stack<IItem>();
         }
+
+        /// <summary>
+        /// Gets this tile's location.
+        /// </summary>
+        public Location Location { get; }
 
         /// <summary>
         /// Gets the single ground item that a tile may have.
@@ -227,188 +243,6 @@ namespace OpenTibia.Server.Map
         public void SetFlag(TileFlag flag)
         {
             this.Flags |= (byte)flag;
-        }
-
-        /// <summary>
-        /// Attempts to add a <see cref="IThing"/> to this tile.
-        /// </summary>
-        /// <param name="itemFactory">The item factory in use.</param>
-        /// <param name="thing">The thing to add.</param>
-        /// <param name="count">The amount of the thing to add.</param>
-        public void AddThing(IItemFactory itemFactory, ref IThing thing, byte count = 1)
-        {
-            itemFactory.ThrowIfNull(nameof(itemFactory));
-
-            if (count == 0)
-            {
-                throw new ArgumentException("Invalid count zero.", nameof(count));
-            }
-
-            if (thing is ICreature creature)
-            {
-                lock (this.creatureIdsOnTile)
-                {
-                    this.creatureIdsOnTile.Push(creature.Id);
-                }
-            }
-            else if (thing is IItem item)
-            {
-                if (item.IsGround)
-                {
-                    this.Ground = item;
-                }
-                else if (item.StaysOnTop)
-                {
-                    lock (this.stayOnTopItems)
-                    {
-                        this.stayOnTopItems.Push(item);
-                    }
-                }
-                else if (item.StaysOnBottom)
-                {
-                    lock (this.stayOnBottomItems)
-                    {
-                        this.stayOnBottomItems.Push(item);
-                    }
-                }
-                else
-                {
-                    lock (this.itemsOnTile)
-                    {
-                        if (item.IsCumulative)
-                        {
-                            var currentItem = this.itemsOnTile.Count > 0 ? this.itemsOnTile.Peek() as IItem : null;
-
-                            if (currentItem != null && currentItem.Type == item.Type && currentItem.Amount < IItem.MaximumAmountOfCummulativeItems)
-                            {
-                                // add these up.
-                                var remaining = currentItem.Amount + count;
-
-                                var newCount = (byte)Math.Min(remaining, IItem.MaximumAmountOfCummulativeItems);
-
-                                currentItem.SetAmount(newCount);
-
-                                remaining -= newCount;
-
-                                if (remaining > 0)
-                                {
-                                    IThing newThing = itemFactory.Create(item.Type.TypeId);
-
-                                    this.AddThing(itemFactory, ref newThing, (byte)remaining);
-
-                                    newThing.Location = item.Location;
-
-                                    thing = newThing;
-                                }
-                            }
-                            else
-                            {
-                                item.SetAmount(count);
-
-                                this.itemsOnTile.Push(item);
-                            }
-                        }
-                        else
-                        {
-                            this.itemsOnTile.Push(item);
-                        }
-                    }
-                }
-
-                // Update the tile's version so that it invalidates the cache.
-                // TOOD: if we start caching creatures, move to outer scope.
-                this.LastModified = DateTimeOffset.UtcNow;
-            }
-        }
-
-        /// <summary>
-        /// Attempts to remove a <see cref="IThing"/> from this tile.
-        /// </summary>
-        /// <param name="itemFactory">The item factory in use.</param>
-        /// <param name="thing">The <see cref="IThing"/> to remove.</param>
-        /// <param name="count">The amount of the <see cref="IThing"/> to remove.</param>
-        /// <returns>True if the thing was found and at least partially removed, false otherwise.</returns>
-        public bool RemoveThing(IItemFactory itemFactory, ref IThing thing, byte count = 1)
-        {
-            if (count == 0)
-            {
-                throw new ArgumentException("Invalid count zero.");
-            }
-
-            if (thing is ICreature creature)
-            {
-                return this.RemoveCreature(creature.Id);
-            }
-            else if (thing is IItem item)
-            {
-                if (item.IsGround)
-                {
-                    this.Ground = null;
-                }
-                else if (item.StaysOnTop)
-                {
-                    if (count > 1)
-                    {
-                        throw new ArgumentException($"Invalid count while removing a stay-on-top item: {count}.");
-                    }
-
-                    return this.InternalRemoveStayOnTopItem(thing);
-                }
-                else if (item.StaysOnBottom)
-                {
-                    if (count > 1)
-                    {
-                        throw new ArgumentException($"Invalid count while removing a stay-on-bottom item: {count}.");
-                    }
-
-                    return this.InternalRemoveStayOnBottomItem(thing);
-                }
-                else
-                {
-                    // TODO: revise this.
-                    lock (this.itemsOnTile)
-                    {
-                        // Down items.
-                        var removeItem = true;
-
-                        if (item.IsCumulative)
-                        {
-                            if (item.Amount < count)
-                            {
-                                return false;
-                            }
-
-                            if (item.Amount > count)
-                            {
-                                // create a new item (it got split...)
-                                var newItem = itemFactory.Create(item.Type.TypeId);
-
-                                newItem.SetAmount(count);
-
-                                item.SetAmount((byte)(item.Amount - count));
-
-                                thing = newItem;
-
-                                removeItem = false;
-                            }
-                        }
-
-                        if (removeItem)
-                        {
-                            this.itemsOnTile.Pop();
-                        }
-                    }
-                }
-            }
-            else
-            {
-                throw new InvalidCastException($"Thing did not cast to either a {nameof(ICreature)} or {nameof(IItem)}.");
-            }
-
-            // Update the tile's version so that it invalidates the cache.
-            this.LastModified = DateTimeOffset.UtcNow;
-
-            return true;
         }
 
         /// <summary>
@@ -649,6 +483,264 @@ namespace OpenTibia.Server.Map
 
             // when nothing else works, return the ground (if any).
             return this.Ground;
+        }
+
+        /// <summary>
+        /// Adds parsed content elements to this tile.
+        /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="contentElements">The content elements to add.</param>
+        public void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
+        {
+            logger.ThrowIfNull(nameof(logger));
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+            contentElements.ThrowIfNull(nameof(contentElements));
+
+            // load and add tile flags and contents.
+            foreach (var e in contentElements)
+            {
+                foreach (var attribute in e.Attributes)
+                {
+                    if (attribute.Name.Equals("Content"))
+                    {
+                        if (attribute.Value is IEnumerable<IParsedElement> elements)
+                        {
+                            var thingStack = new Stack<IThing>();
+
+                            foreach (var element in elements)
+                            {
+                                if (element.IsFlag)
+                                {
+                                    // A flag is unexpected in this context.
+                                    logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
+
+                                    continue;
+                                }
+
+                                IItem item = itemFactory.Create((ushort)element.Id);
+
+                                if (item == null)
+                                {
+                                    logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
+
+                                    continue;
+                                }
+
+                                item.SetAttributes(logger.ForContext<IItem>(), itemFactory, element.Attributes);
+
+                                thingStack.Push(item);
+                            }
+
+                            // Add them in reversed order.
+                            while (thingStack.Count > 0)
+                            {
+                                var thing = thingStack.Pop();
+
+                                this.AddContent(itemFactory, thing);
+
+                                thing.ParentCylinder = this;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // it's a flag
+                        if (Enum.TryParse(attribute.Name, out TileFlag flagMatch))
+                        {
+                            this.SetFlag(flagMatch);
+                        }
+                        else
+                        {
+                            logger.Warning($"Unknown flag [{attribute.Name}] found on tile at location {this.Location}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attempts to add an item to this tile.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="thing">The thing to add to the tile.</param>
+        /// <param name="index">Optional. The index at which to add the thing. Defaults to 0xFF, which instructs to add the thing at any index.</param>
+        /// <returns>A tuple with a value indicating whether the attempt was successful, and false otherwise. The remainder part of the result is not in use for this implementation, as any cummulative remainder is recursively added to the tile.</returns>
+        public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF)
+        {
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+
+            if (thing is ICreature creature)
+            {
+                lock (this.creatureIdsOnTile)
+                {
+                    this.creatureIdsOnTile.Push(creature.Id);
+                }
+            }
+            else if (thing is IItem item)
+            {
+                if (item.IsGround)
+                {
+                    this.Ground = item;
+                }
+                else if (item.StaysOnTop)
+                {
+                    lock (this.stayOnTopItems)
+                    {
+                        this.stayOnTopItems.Push(item);
+                    }
+                }
+                else if (item.StaysOnBottom)
+                {
+                    lock (this.stayOnBottomItems)
+                    {
+                        this.stayOnBottomItems.Push(item);
+                    }
+                }
+                else
+                {
+                    lock (this.itemsOnTile)
+                    {
+                        var remainingAmountToAdd = item.Amount;
+
+                        while (remainingAmountToAdd > 0)
+                        {
+                            if (!item.IsCumulative)
+                            {
+                                this.itemsOnTile.Push(item);
+                                break;
+                            }
+
+                            var existingItem = this.itemsOnTile.Count > 0 ? this.itemsOnTile.Peek() as IItem : null;
+
+                            // Check if there is an existing top item and if it is of the same type.
+                            if (existingItem == null || existingItem.Type != item.Type || existingItem.Amount >= IItem.MaximumAmountOfCummulativeItems)
+                            {
+                                this.itemsOnTile.Push(item);
+                                break;
+                            }
+
+                            remainingAmountToAdd += existingItem.Amount;
+
+                            // Modify the existing item with the new amount, or the maximum permitted.
+                            var newExistingAmount = Math.Min(remainingAmountToAdd, IItem.MaximumAmountOfCummulativeItems);
+
+                            existingItem.SetAmount(newExistingAmount);
+
+                            remainingAmountToAdd -= newExistingAmount;
+
+                            if (remainingAmountToAdd == 0)
+                            {
+                                break;
+                            }
+
+                            item = itemFactory.Create(item.Type.TypeId);
+
+                            item.SetAmount(remainingAmountToAdd);
+
+                            item.ParentCylinder = this;
+                        }
+                    }
+                }
+
+                // Update the tile's version so that it invalidates the cache.
+                // TOOD: if we start caching creatures, move to outer scope.
+                this.LastModified = DateTimeOffset.UtcNow;
+            }
+
+            thing.ParentCylinder = this;
+
+            return (true, null);
+        }
+
+        /// <summary>
+        /// Attempts to remove an item from this tile.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="thing">The thing to remove from the tile.</param>
+        /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
+        /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
+        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
+        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
+        {
+            if (amount == 0)
+            {
+                throw new ArgumentException($"Invalid {nameof(amount)} zero.");
+            }
+
+            IItem remainder = null;
+
+            if (thing is ICreature creature)
+            {
+                return (this.RemoveCreature(creature.Id), null);
+            }
+            else if (thing is IItem item)
+            {
+                if (item.IsGround)
+                {
+                    this.Ground = null;
+                }
+                else if (item.StaysOnTop)
+                {
+                    if (amount > 1)
+                    {
+                        throw new ArgumentException($"Invalid {nameof(amount)} while removing a stay-on-top item: {amount}.");
+                    }
+
+                    return (this.InternalRemoveStayOnTopItem(thing), null);
+                }
+                else if (item.StaysOnBottom)
+                {
+                    if (amount > 1)
+                    {
+                        throw new ArgumentException($"Invalid {nameof(amount)} while removing a stay-on-bottom item: {amount}.");
+                    }
+
+                    return (this.InternalRemoveStayOnBottomItem(thing), null);
+                }
+                else
+                {
+                    lock (this.itemsOnTile)
+                    {
+                        if ((!item.IsCumulative && amount > 1) || (item.IsCumulative && item.Amount < amount))
+                        {
+                            return (false, null);
+                        }
+
+                        // At this point we know we have enough amount in the current item to remove.
+                        // Remove the item from the tile.
+                        this.itemsOnTile.Pop();
+
+                        if (item.IsCumulative && item.Amount > amount)
+                        {
+                            // We're removing less than the entire amount, so we need to calculate the remainder to add back.
+                            var newExistingAmount = (byte)(item.Amount - amount);
+
+                            item.SetAmount(amount);
+
+                            // Create a new item as the remainder.
+                            remainder = itemFactory.Create(item.Type.TypeId);
+
+                            remainder.SetAmount(newExistingAmount);
+                        }
+                    }
+
+                    // Add any remainder back to the tile.
+                    if (remainder != null)
+                    {
+                        this.AddContent(itemFactory, remainder);
+                    }
+                }
+            }
+            else
+            {
+                throw new InvalidCastException($"Thing did not cast to either a {nameof(ICreature)} or {nameof(IItem)}.");
+            }
+
+            // Update the tile's version so that it invalidates the cache.
+            this.LastModified = DateTimeOffset.UtcNow;
+
+            return (true, remainder);
         }
 
         /// <summary>

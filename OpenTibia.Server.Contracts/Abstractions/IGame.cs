@@ -176,14 +176,27 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Inmediately attempts to perform a thing movement between two tiles.
         /// </summary>
         /// <param name="thing">The thing being moved.</param>
-        /// <param name="fromTileLocation">The tile from which the movement is being performed.</param>
-        /// <param name="toTileLocation">The tile to which the movement is being performed.</param>
+        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
+        /// <param name="toLocation">The tile to which the movement is being performed.</param>
         /// <param name="fromTileStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformThingMovementBetweenTiles(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
+        bool PerformThingMovementFromMapToMap(IThing thing, Location fromLocation, Location toLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
+
+        /// <summary>
+        /// Immediately attempts to perform a thing movement from the map to a container.
+        /// </summary>
+        /// <param name="thing">The thing being moved.</param>
+        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
+        /// <param name="toCreatureId">The id of the creature that owns the container into which the thing is being moved to.</param>
+        /// <param name="toCreatureContainerId">The id of the container.</param>
+        /// <param name="toCreatureContainerIndex">The index within the container to move the thing to.</param>
+        /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <returns>True if the movement was successfully performed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformThingMovementFromMapToContainer(IThing thing, Location fromLocation, uint toCreatureId, byte toCreatureContainerId, byte toCreatureContainerIndex, byte amount);
 
         /// <summary>
         /// Inmediately attempts to perform an item use in behalf of the requesting creature, if any.
@@ -263,7 +276,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="toItemId">The id of the item type to change to.</param>
         /// <param name="animatedEffect">An optional effect to send as part of the change.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        bool ScriptRequest_ChangeItem(ref IThing thing, ushort toItemId, AnimatedEffect animatedEffect);
+        bool ScriptRequest_ChangeItem(IThing thing, ushort toItemId, AnimatedEffect animatedEffect);
 
         /// <summary>
         /// Attempts to change a given item to the supplied id at a given location.

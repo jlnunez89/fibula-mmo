@@ -39,16 +39,16 @@ namespace OpenTibia.Server.Factories
 
         public ITileAccessor TileAccessor { get; }
 
-        public bool CompareCountOf(IThing thing, FunctionComparisonType comparisonType, ushort value)
+        public bool CompareCountItemsAt(Location location, FunctionComparisonType comparisonType, ushort value)
         {
-            if (thing == null || !this.TileAccessor.GetTileAt(thing.Location, out ITile tile))
+            if (!this.TileAccessor.GetTileAt(location, out ITile tile))
             {
                 return false;
             }
 
-            var count = tile.Ground != null && tile.Ground.ThingId == thing.ThingId ? 1 : 0;
+            var count = tile.Ground != null ? 1 : 0;
 
-            count += tile.Items.Count(i => i.ThingId == thing.ThingId);
+            count += tile.Items.Count();
 
             return comparisonType switch
             {
@@ -165,7 +165,7 @@ namespace OpenTibia.Server.Factories
             this.Game.ScriptRequest_CreateItemAt(location, itemId, effect);
         }
 
-        public void ChangeItem(ref IThing thing, ushort toItemId, byte effect)
+        public void ChangeItem(IThing thing, ushort toItemId, byte effect)
         {
             if (thing == null)
             {
@@ -179,7 +179,7 @@ namespace OpenTibia.Server.Factories
                 animatedEffect = (AnimatedEffect)effect;
             }
 
-            this.Game.ScriptRequest_ChangeItem(ref thing, toItemId, animatedEffect);
+            this.Game.ScriptRequest_ChangeItem(thing, toItemId, animatedEffect);
         }
 
         public void ChangeItemAtLocation(Location location, ushort fromItemId, ushort toItemId, byte effect)

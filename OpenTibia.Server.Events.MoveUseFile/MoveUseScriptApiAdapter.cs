@@ -62,11 +62,23 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the count passes the comparison and value provided, false otherwise.</returns>
         public bool CountObjects(IThing thingToCount, string comparer, ushort value)
         {
-            if (thingToCount == null || string.IsNullOrWhiteSpace(comparer))
+            if (thingToCount == null)
             {
                 return false;
             }
 
+            return this.CountObjectsOnMap(thingToCount.Location, comparer, value);
+        }
+
+        /// <summary>
+        /// Counts the at the given location.
+        /// </summary>
+        /// <param name="location">The location at which to count.</param>
+        /// <param name="comparer">The comparison to make.</param>
+        /// <param name="value">The value to compare against.</param>
+        /// <returns>True if the count passes the comparison and value provided, false otherwise.</returns>
+        public bool CountObjectsOnMap(Location location, string comparer, ushort value)
+        {
             FunctionComparisonType comparison = FunctionComparisonType.Undefined;
 
             switch (comparer.Trim())
@@ -94,7 +106,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 throw new ArgumentException($"{nameof(this.CountObjects)}: Invalid {nameof(comparer)} value '{comparer}'.", nameof(comparer));
             }
 
-            return this.ScriptApi.CompareCountOf(thingToCount, comparison, value);
+            return this.ScriptApi.CompareCountItemsAt(location, comparison, value);
         }
 
         /// <summary>
@@ -373,9 +385,9 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="thing">The thing to change.</param>
         /// <param name="toTypeId">The type to change to.</param>
         /// <param name="effect">The effect to display as part of the change.</param>
-        public void Change(ref IThing thing, ushort toTypeId, byte effect)
+        public void Change(IThing thing, ushort toTypeId, byte effect)
         {
-            this.ScriptApi.ChangeItem(ref thing, toTypeId, effect);
+            this.ScriptApi.ChangeItem(thing, toTypeId, effect);
         }
 
         /// <summary>
