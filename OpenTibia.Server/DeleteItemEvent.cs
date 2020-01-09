@@ -76,9 +76,9 @@ namespace OpenTibia.Server.MovementEvents
                 var fromCylinder = this.Game.GetCyclinder(atLocation, ref index, ref subIndex, this.Requestor);
                 var item = this.Game.FindItemByIdAtLocation(typeId, atLocation, this.Requestor);
 
-                bool successfulCreation = this.Game.PerformItemDeletion(item, fromCylinder, subIndex, this.Requestor);
+                bool successfulDeletion = this.Game.PerformItemDeletion(item, fromCylinder, subIndex, this.Requestor);
 
-                if (!successfulCreation)
+                if (!successfulDeletion)
                 {
                     // handles check for isPlayer.
                     this.NotifyOfFailure();

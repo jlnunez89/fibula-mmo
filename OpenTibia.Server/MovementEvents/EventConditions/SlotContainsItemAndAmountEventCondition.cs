@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SlotContainsItemAndCountEventCondition.cs" company="2Dudes">
+// <copyright file="SlotContainsItemAndAmountEventCondition.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -20,17 +20,17 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
     /// <summary>
     /// Class that represents an event condition that evaluates whether a slot contains an item and enough amount of it.
     /// </summary>
-    internal class SlotContainsItemAndCountEventCondition : IEventCondition
+    internal class SlotContainsItemAndAmountEventCondition : IEventCondition
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SlotContainsItemAndCountEventCondition"/> class.
+        /// Initializes a new instance of the <see cref="SlotContainsItemAndAmountEventCondition"/> class.
         /// </summary>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="requestorId">The id of the requesting creature.</param>
         /// <param name="movingItem">The item to check.</param>
         /// <param name="slot">The slot to check.</param>
-        /// <param name="count">The amount to check for.</param>
-        public SlotContainsItemAndCountEventCondition(ICreatureFinder creatureFinder, uint requestorId, IItem movingItem, byte slot, byte count = 1)
+        /// <param name="amount">The amount to check for.</param>
+        public SlotContainsItemAndAmountEventCondition(ICreatureFinder creatureFinder, uint requestorId, IItem movingItem, byte slot, byte amount = 1)
         {
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
@@ -38,7 +38,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
             this.RequestorId = requestorId;
             this.ItemMoving = movingItem;
             this.Slot = (Slot)slot;
-            this.Count = count;
+            this.Amount = amount;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Gets the amount expected.
         /// </summary>
-        public byte Count { get; }
+        public byte Amount { get; }
 
         /// <inheritdoc/>
         public string ErrorMessage => "You are too far away.";
@@ -82,7 +82,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
             var containerAtSlot = requestor.Inventory?[this.Slot] as IContainerItem;
             var itemAtSlot = containerAtSlot?.Content.FirstOrDefault();
 
-            return itemAtSlot != null && this.ItemMoving.Type.TypeId == itemAtSlot.Type.TypeId && itemAtSlot.Amount >= this.Count;
+            return itemAtSlot != null && this.ItemMoving.Type.TypeId == itemAtSlot.Type.TypeId && itemAtSlot.Amount >= this.Amount;
         }
     }
 }

@@ -287,6 +287,9 @@ namespace OpenTibia.Server
             return null;
         }
 
+        /// <summary>
+        /// Sets up all body containers in the invetory slots.
+        /// </summary>
         private void SetupBodyContainers()
         {
             foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
@@ -306,37 +309,51 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Handles an item being added to the given container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="addedItem">The item added.</param>
         private void HandleContentAdded(IContainerItem container, IItem addedItem)
         {
-            this.InvokeSlotChanged(container, addedItem);
+            this.InvokeSlotChanged(container as BodyContainerItem, addedItem);
         }
 
+        /// <summary>
+        /// Handles an item being removed from the given container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="indexRemoved">The index of the removed item.</param>
         private void HandleContentRemoved(IContainerItem container, byte indexRemoved)
         {
-            this.InvokeSlotChanged(container, null);
+            this.InvokeSlotChanged(container as BodyContainerItem, null);
         }
 
+        /// <summary>
+        /// Handles an item being updated in the given container.
+        /// </summary>
+        /// <param name="container">The container.</param>
+        /// <param name="indexOfUpdated">The index of the updated item.</param>
+        /// <param name="updatedItem">The item that was updated.</param>
         private void HandleContentUpdated(IContainerItem container, byte indexOfUpdated, IItem updatedItem)
         {
-            this.InvokeSlotChanged(container, container.Content.FirstOrDefault());
+            this.InvokeSlotChanged(container as BodyContainerItem, container.Content.FirstOrDefault());
         }
 
-        private void InvokeSlotChanged(IContainerItem container, IItem item)
+        /// <summary>
+        /// Invokes the <see cref="OnSlotChanged"/> event on this inventory.
+        /// </summary>
+        /// <param name="container">The container that changed.</param>
+        /// <param name="item">The item that changed. </param>
+        private void InvokeSlotChanged(BodyContainerItem container, IItem item)
         {
-            container.ThrowIfNull(nameof(container));
-
-            foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
+            if (container == null)
             {
-                if (slot >= Slot.Anywhere)
-                {
-                    continue;
-                }
-
-                if (container == this.inventory[slot])
-                {
-                    this.OnSlotChanged?.Invoke(this, slot, item);
-                }
+                return;
             }
+
+            // TODO: are all container.Slot values valid here?
+            this.OnSlotChanged?.Invoke(this, container.Slot, item);
         }
     }
 }
