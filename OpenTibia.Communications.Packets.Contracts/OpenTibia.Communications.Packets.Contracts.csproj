@@ -10,7 +10,6 @@
     <Compile Remove="Abstractions\IAttackInfo.cs" />
     <Compile Remove="Abstractions\IAuctionResult.cs" />
     <Compile Remove="Abstractions\ICharacterDeathInfo.cs" />
-    <Compile Remove="Abstractions\IContainerInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />
     <Compile Remove="Abstractions\IInsertHouseInfo.cs" />
     <Compile Remove="Abstractions\IItemUseOnInfo.cs" />

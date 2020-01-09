@@ -96,6 +96,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PlayerRequest_CancelPendingMovements(IPlayer player);
 
         /// <summary>
+        /// Attempts to close a player's container.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="containerId">The id of the container to close.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        bool PlayerRequest_CloseContainer(IPlayer player, byte containerId);
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
@@ -143,12 +151,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="player">The player making the request.</param>
         /// <param name="thingId">The id of the thing attempting to be moved.</param>
-        /// <param name="container">The id of the container from which the thing is being moved.</param>
+        /// <param name="containerId">The id of the container from which the thing is being moved.</param>
         /// <param name="containerIndex">The index within the container from which the thing is being moved.</param>
         /// <param name="toLocation">The location to which the thing is being moved.</param>
-        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <param name="amount">The amount of the thing that is being moved.</param>
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
-        bool PlayerRequest_MoveThingFromContainer(IPlayer player, ushort thingId, byte container, byte containerIndex, Location toLocation, byte count);
+        bool PlayerRequest_MoveThingFromContainer(IPlayer player, ushort thingId, byte containerId, byte containerIndex, Location toLocation, byte amount);
 
         /// <summary>
         /// Attempts to move a thing from an inventory slot on behalf of a player.
@@ -172,76 +180,76 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the use item request was accepted, false otherwise.</returns>
         bool PlayerRequest_UseItem(IPlayer player, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index);
 
+        ICylinder GetCyclinder(Location fromLocation, ref byte index, ref byte subIndex, ICreature creature = null);
+
+        IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null);
+
         /// <summary>
-        /// Inmediately attempts to perform a thing movement between two tiles.
+        /// Immediately attempts to perform a creature movement to a given tile on the map.
         /// </summary>
-        /// <param name="thing">The thing being moved.</param>
-        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
+        /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
-        /// <param name="fromTileStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
+        /// <returns>True if the movement was successfully performed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformCreatureMovement(ICreature creature, Location toLocation);
+
+        /// <summary>
+        /// Immediately attempts to perform an item movement between two cylinders.
+        /// </summary>
+        /// <param name="item">The item being moved.</param>
+        /// <param name="fromCylinder">The cylinder from which the movement is being performed.</param>
+        /// <param name="toCylinder">The cylinder to which the movement is being performed.</param>
+        /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
+        /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
-        /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformThingMovementFromMapToMap(IThing thing, Location fromLocation, Location toLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false);
+        bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1);
 
         /// <summary>
-        /// Immediately attempts to perform a thing movement from the map to a container.
+        /// Immediately attempts to perform an item use in behalf of the requesting creature, if any.
         /// </summary>
-        /// <param name="thing">The thing being moved.</param>
-        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
-        /// <param name="toCreatureId">The id of the creature that owns the container into which the thing is being moved to.</param>
-        /// <param name="toCreatureContainerId">The id of the container.</param>
-        /// <param name="toCreatureContainerIndex">The index within the container to move the thing to.</param>
-        /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
-        /// <returns>True if the movement was successfully performed, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformThingMovementFromMapToContainer(IThing thing, Location fromLocation, uint toCreatureId, byte toCreatureContainerId, byte toCreatureContainerIndex, byte amount);
-
-        /// <summary>
-        /// Inmediately attempts to perform an item use in behalf of the requesting creature, if any.
-        /// </summary>
-        /// <param name="itemId">The id of the item being used.</param>
-        /// <param name="fromLocation">The location from which the use is happening.</param>
-        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
-        /// <param name="index">The index of the item to use.</param>
+        /// <param name="item">The item being used.</param>
+        /// <param name="fromCylinder">The cylinder from which the use is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to use the item.</param>
         /// <param name="requestor">Optional. The creature requesting the use.</param>
         /// <returns>True if the item was successfully used, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformItemUse(ushort itemId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null);
+        bool PerformItemUse(IItem item, ICylinder fromCylinder, byte index = 0xFF, ICreature requestor = null);
 
         /// <summary>
-        /// Inmediately attempts to perform an item creation in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item change in behalf of the requesting creature, if any.
+        /// </summary>
+        /// <param name="item">The item being changed.</param>
+        /// <param name="toTypeId">The type id of the item being changed to.</param>
+        /// <param name="atCylinder">The cylinder at which the change is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to change the item.</param>
+        /// <param name="requestor">Optional. The creature requesting the change.</param>
+        /// <returns>True if the item was successfully changed, false otherwise.</returns>
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        bool PerformItemChange(IItem item, ushort toTypeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null);
+
+        /// <summary>
+        /// Immediately attempts to perform an item creation in behalf of the requesting creature, if any.
         /// </summary>
         /// <param name="typeId">The id of the item being being created.</param>
-        /// <param name="atLocation">The location at which the item is being created.</param>
+        /// <param name="atCylinder">The cylinder from which the use is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to use the item.</param>
         /// <param name="requestor">Optional. The creature requesting the creation.</param>
         /// <returns>True if the item was successfully created, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>>
-        bool PerformItemCreation(ushort typeId, Location atLocation, ICreature requestor);
+        bool PerformItemCreation(ushort typeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null);
 
         /// <summary>
-        /// Inmediately attempts to perform an item deletion in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item deletion in behalf of the requesting creature, if any.
         /// </summary>
-        /// <param name="typeId">The id of the item being being deleted.</param>
-        /// <param name="atLocation">The location at which the item is being deleted.</param>
+        /// <param name="item">The item being deleted.</param>
+        /// <param name="fromCylinder">The cylinder from which the deletion is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to delete the item.</param>
         /// <param name="requestor">Optional. The creature requesting the deletion.</param>
         /// <returns>True if the item was successfully deleted, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformItemDeletion(ushort typeId, Location atLocation, ICreature requestor);
-
-        /// <summary>
-        /// Inmediately attempts to perform an item change in behalf of the requesting creature, if any.
-        /// </summary>
-        /// <param name="fromTypeId">The type id of the item being changed.</param>
-        /// <param name="toTypeId">The type id of the item being changed to.</param>
-        /// <param name="fromLocation">The location from which the changed is happening.</param>
-        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
-        /// <param name="index">The index of the item to changed.</param>
-        /// <param name="requestor">Optional. The creature requesting the use.</param>
-        /// <returns>True if the item was successfully changed, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformItemChange(ushort fromTypeId, ushort toTypeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null);
+        bool PerformItemDeletion(IItem item, ICylinder fromCylinder, byte index = 0xFF, ICreature requestor = null);
 
         /// <summary>
         /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
@@ -260,6 +268,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="requestor">The requestor creature, if any.</param>
         /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
         bool EvaluateCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor);
+
+        /// <summary>
+        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor);
 
         /// <summary>
         /// Attempts to display an animated efect on the given location.
@@ -368,6 +384,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="toLocation">The second location.</param>
         /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
         /// <returns>True if the throw is valid, false otherwise.</returns>
-        bool CanThrowBetween(Location fromLocation, Location toLocation, bool checkLineOfSight = true);
+        bool CanThrowBetweenMapLocations(Location fromLocation, Location toLocation, bool checkLineOfSight = true);
     }
 }

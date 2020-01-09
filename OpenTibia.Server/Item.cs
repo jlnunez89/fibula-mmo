@@ -16,7 +16,6 @@ namespace OpenTibia.Server
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;
 
@@ -252,11 +251,7 @@ namespace OpenTibia.Server
 
         public void SetAmount(byte amount)
         {
-            var oldAmount = this.Amount;
-
             this.Amount = Math.Min((byte)IItem.MaximumAmountOfCummulativeItems, amount);
-
-            //this.OnAmountChanged?.Invoke(this, oldAmount);
         }
 
         public void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes)
@@ -295,10 +290,10 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Attempts to add the joined item to this container's content at the default index.
+        /// Attempts to join an item to this item's content at the default index.
         /// </summary>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="otherItem">The item to add.</param>
+        /// <param name="otherItem">The item to join with.</param>
         /// <returns>True if the operation was successful, false otherwise.</returns>
         public (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem)
         {
@@ -307,11 +302,11 @@ namespace OpenTibia.Server
 
             if (this.Type.TypeId != otherItem.Type.TypeId || !this.IsCumulative)
             {
-                return (false, null);
+                return (false, otherItem);
             }
 
             // We can join these two, figure out if we have any remainder.
-            if (otherItem.Amount + this.Amount < IItem.MaximumAmountOfCummulativeItems)
+            if (otherItem.Amount + this.Amount <= IItem.MaximumAmountOfCummulativeItems)
             {
                 this.Amount += otherItem.Amount;
 

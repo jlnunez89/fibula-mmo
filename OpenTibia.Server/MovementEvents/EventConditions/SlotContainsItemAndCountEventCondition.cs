@@ -11,9 +11,11 @@
 
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents an event condition that evaluates whether a slot contains an item and enough amount of it.
@@ -35,7 +37,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
             this.CreatureFinder = creatureFinder;
             this.RequestorId = requestorId;
             this.ItemMoving = movingItem;
-            this.Slot = slot;
+            this.Slot = (Slot)slot;
             this.Count = count;
         }
 
@@ -57,7 +59,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <summary>
         /// Gets the slot being checked.
         /// </summary>
-        public byte Slot { get; }
+        public Slot Slot { get; }
 
         /// <summary>
         /// Gets the amount expected.
@@ -77,9 +79,10 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return false;
             }
 
-            var itemAtSlot = requestor.Inventory?[this.Slot];
+            var containerAtSlot = requestor.Inventory?[this.Slot] as IContainerItem;
+            var itemAtSlot = containerAtSlot?.Content.FirstOrDefault();
 
-            return itemAtSlot != null && this.ItemMoving.Type.TypeId == itemAtSlot.Type.TypeId /*&& itemAtSlot.Count >= this.Count*/;
+            return itemAtSlot != null && this.ItemMoving.Type.TypeId == itemAtSlot.Type.TypeId && itemAtSlot.Amount >= this.Count;
         }
     }
 }

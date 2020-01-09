@@ -400,7 +400,7 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Closes a container for this player, which stops tracking int.
+        /// Closes a container for this player, which stops tracking it.
         /// </summary>
         /// <param name="containerId">The id of the container being closed.</param>
         public void CloseContainerWithId(byte containerId)
@@ -446,16 +446,23 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Opens a container and tracks it with the given id.
+        /// Opens a container by placing it at the given index id.
         /// If there is a container already open at this index, it is first closed.
         /// </summary>
         /// <param name="container">The container to open.</param>
-        /// <param name="openWithId">The id with which to open the container.</param>
-        public void OpenContainerAt(IContainerItem container, byte openWithId)
+        /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
+        public void OpenContainerAt(IContainerItem container, byte containerId = 0xFF)
         {
-            this.openContainers[openWithId]?.EndTracking(this.Id);
-            this.openContainers[openWithId] = container;
-            this.openContainers[openWithId].BeginTracking(this.Id, openWithId);
+            if (containerId == 0xFF)
+            {
+                this.OpenContainer(container);
+
+                return;
+            }
+
+            this.openContainers[containerId]?.EndTracking(this.Id);
+            this.openContainers[containerId] = container;
+            this.openContainers[containerId].BeginTracking(this.Id, containerId);
         }
 
         /// <summary>
@@ -488,10 +495,15 @@ namespace OpenTibia.Server
 
         public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 255)
         {
-            throw new NotImplementedException();
+            return (false, thing);
         }
 
         public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 255, byte amount = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
         {
             throw new NotImplementedException();
         }

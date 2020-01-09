@@ -193,8 +193,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// If there is a container already open at this index, it is first closed.
         /// </summary>
         /// <param name="container">The container to open.</param>
-        /// <param name="containerId">The index at which to open the container.</param>
-        void OpenContainerAt(IContainerItem container, byte containerId);
+        /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
+        void OpenContainerAt(IContainerItem container, byte containerId = 0xFF);
 
         /// <summary>
         /// Gets the id of the given container as known by this player, if it is.
@@ -204,7 +204,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         sbyte GetContainerId(IContainerItem container);
 
         /// <summary>
-        /// Closes a container for this player, which stops tracking int.
+        /// Closes a container for this player, which stops tracking it.
         /// </summary>
         /// <param name="containerId">The id of the container being closed.</param>
         void CloseContainerWithId(byte containerId);

@@ -71,7 +71,11 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool successfulCreation = this.Game.PerformItemCreation(typeId, atLocation, this.Requestor);
+                byte index = 0, subIndex = 0;
+
+                var fromCylinder = this.Game.GetCyclinder(atLocation, ref index, ref subIndex, this.Requestor);
+
+                bool successfulCreation = this.Game.PerformItemCreation(typeId, fromCylinder, subIndex, this.Requestor);
 
                 if (!successfulCreation)
                 {

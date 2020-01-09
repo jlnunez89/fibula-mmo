@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Remove="Incoming\AttackPacket.cs" />
     <Compile Remove="Incoming\CharacterDeathPacket.cs" />
-    <Compile Remove="Incoming\ContainerCloseRequestPacket.cs" />
     <Compile Remove="Incoming\ContainerMoveUpPacket.cs" />
     <Compile Remove="Incoming\CreatePlayerListPacket.cs" />
     <Compile Remove="Incoming\DebugAssertionPacket.cs" />
@@ -32,8 +31,6 @@
     <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
     <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />
-    <Compile Remove="Outgoing\InventoryClearSlotPacket.cs" />
-    <Compile Remove="Outgoing\InventorySetSlotPacket.cs" />
     <Compile Remove="Outgoing\LoadPlayersResultPacket.cs" />
     <Compile Remove="Outgoing\NotationResultPacket.cs" />
     <Compile Remove="Outgoing\PlayerChooseOutfitPacket.cs" />

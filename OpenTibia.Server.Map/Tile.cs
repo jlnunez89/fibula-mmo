@@ -237,6 +237,22 @@ namespace OpenTibia.Server.Map
         }
 
         /// <summary>
+        /// Gets or sets the parent cylinder of this tile.
+        /// </summary>
+        public ICylinder ParentCylinder
+        {
+            get
+            {
+                return null;
+            }
+
+            set
+            {
+                throw new InvalidOperationException($"{nameof(Tile)}s cannot have a parent cylinder.");
+            }
+        }
+
+        /// <summary>
         /// Sets a flag on this tile.
         /// </summary>
         /// <param name="flag">The flag to set.</param>
@@ -648,7 +664,10 @@ namespace OpenTibia.Server.Map
                 this.LastModified = DateTimeOffset.UtcNow;
             }
 
-            thing.ParentCylinder = this;
+            if (thing != null)
+            {
+                thing.ParentCylinder = this;
+            }
 
             return (true, null);
         }
@@ -741,6 +760,46 @@ namespace OpenTibia.Server.Map
             this.LastModified = DateTimeOffset.UtcNow;
 
             return (true, remainder);
+        }
+
+        /// <summary>
+        /// Attempts to replace a thing from this tile with another.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="fromThing">The thing to remove from the cylinder.</param>
+        /// <param name="toThing">The thing to add to the cylinder.</param>
+        /// <param name="index">Optional. The index from which to replace the thing. Defaults to 0xFF, which instructs to replace the thing if found at any index.</param>
+        /// <param name="amount">Optional. The amount of the <paramref name="fromThing"/> to replace.</param>
+        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
+        public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 0xFF, byte amount = 1)
+        {
+            (bool removeSuccessful, IThing removeRemainder) = this.RemoveContent(itemFactory, fromThing, index, amount);
+
+            if (!removeSuccessful)
+            {
+                return (false, removeRemainder);
+            }
+
+            if (removeRemainder != null)
+            {
+                (bool addedRemainder, IThing remainderOfRemainder) = this.AddContent(itemFactory, removeRemainder, 0xFF);
+
+                if (!addedRemainder)
+                {
+                    return (false, remainderOfRemainder);
+                }
+            }
+
+            return this.AddContent(itemFactory, toThing, index);
+        }
+
+        /// <summary>
+        /// Gets this tile's cylinder hierarchy.
+        /// </summary>
+        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this tile's cylinder hierarchy.</returns>
+        public IEnumerable<ICylinder> GetCylinderHierarchy()
+        {
+            return this.YieldSingleItem();
         }
 
         /// <summary>

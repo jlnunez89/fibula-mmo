@@ -235,6 +235,28 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Attempts to close a player's container.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="containerId">The id of the container to close.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_CloseContainer(IPlayer player, byte containerId)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            var item = player.GetContainerById(containerId);
+
+            if (item == null)
+            {
+                return false;
+            }
+
+            this.PerformPlayerContainerClose(player, item, containerId);
+
+            return true;
+        }
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
@@ -258,6 +280,8 @@ namespace OpenTibia.Server
             {
                 targetTile.AddContent(this.ItemFactory, playerThing);
             }
+
+            player.Inventory.OnSlotChanged += this.HandlePlayerInventoryChanged;
 
             return player;
         }
@@ -304,6 +328,8 @@ namespace OpenTibia.Server
                 {
                     this.ConnectionManager.Unregister(currentConnection);
                 }
+
+                player.Inventory.OnSlotChanged -= this.HandlePlayerInventoryChanged;
 
                 return true;
             }
@@ -354,7 +380,7 @@ namespace OpenTibia.Server
                     movementEvent = new MapToContainerMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, player.Id, toLocation.ContainerId, toLocation.ContainerIndex, count);
                     break;
                 case LocationType.InventorySlot:
-                    // movementEvent = new MapToBodyMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, player.Id, toLocation.Slot, fromStackPos);
+                    movementEvent = new MapToBodyMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, player.Id, toLocation.Slot, count);
                     break;
             }
 
@@ -372,17 +398,47 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="player">The player making the request.</param>
         /// <param name="thingId">The id of the thing attempting to be moved.</param>
-        /// <param name="container">The id of the container from which the thing is being moved.</param>
+        /// <param name="containerId">The id of the container from which the thing is being moved.</param>
         /// <param name="containerIndex">The index within the container from which the thing is being moved.</param>
         /// <param name="toLocation">The location to which the thing is being moved.</param>
-        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <param name="amount">The amount of the thing that is being moved.</param>
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
-        public bool PlayerRequest_MoveThingFromContainer(IPlayer player, ushort thingId, byte container, byte containerIndex, Location toLocation, byte count)
+        public bool PlayerRequest_MoveThingFromContainer(IPlayer player, ushort thingId, byte containerId, byte containerIndex, Location toLocation, byte amount)
         {
             player.ThrowIfNull(nameof(player));
 
-            // TODO: implement.
-            return false;
+            var sourceContainer = player.GetContainerById(containerId);
+
+            var thingMoving = sourceContainer?[containerIndex];
+
+            if (thingMoving == null || thingMoving.ThingId != thingId)
+            {
+                return false;
+            }
+
+            IEvent movementEvent = null;
+
+            // We know the source location is good, now let's figure out the destination to create the appropriate movement event.
+            switch (toLocation.Type)
+            {
+                case LocationType.Map:
+                    movementEvent = new ContainerToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, containerId, containerIndex, toLocation, amount);
+                    break;
+                case LocationType.InsideContainer:
+                    movementEvent = new ContainerToContainerMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, containerId, containerIndex, toLocation.ContainerId, toLocation.ContainerIndex, amount);
+                    break;
+                case LocationType.InventorySlot:
+                    movementEvent = new ContainerToBodyMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, containerId, containerIndex, toLocation.Slot, amount);
+                    break;
+            }
+
+            // At this point we proabbly have enough information, let's enqueue it.
+            if (movementEvent != null)
+            {
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
+            }
+
+            return movementEvent != null;
         }
 
         /// <summary>
@@ -392,12 +448,44 @@ namespace OpenTibia.Server
         /// <param name="thingId">The id of the thing attempting to be moved.</param>
         /// <param name="slot">The inventory slot from which the thing is being moved.</param>
         /// <param name="toLocation">The location to which the thing is being moved.</param>
-        /// <param name="count">The amount of the thing that is being moved.</param>
+        /// <param name="amount">The amount of the thing that is being moved.</param>
         /// <returns>True if the thing movement was accepted, false otherwise.</returns>
-        public bool PlayerRequest_MoveThingFromInventory(IPlayer player, ushort thingId, Slot slot, Location toLocation, byte count)
+        public bool PlayerRequest_MoveThingFromInventory(IPlayer player, ushort thingId, Slot slot, Location toLocation, byte amount)
         {
-            // TODO: implement.
-            return false;
+            player.ThrowIfNull(nameof(player));
+
+            var sourceContainer = player.Inventory[slot] as IContainerItem;
+
+            var thingMoving = sourceContainer?.Content.FirstOrDefault();
+
+            if (thingMoving == null || thingMoving.ThingId != thingId)
+            {
+                return false;
+            }
+
+            IEvent movementEvent = null;
+
+            // We know the source location is good, now let's figure out the destination to create the appropriate movement event.
+            switch (toLocation.Type)
+            {
+                case LocationType.Map:
+                    movementEvent = new BodyToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, slot, toLocation, amount: amount);
+                    break;
+                case LocationType.InsideContainer:
+                    movementEvent = new BodyToContainerMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, slot, toLocation.ContainerId, toLocation.ContainerIndex, amount);
+                    break;
+                case LocationType.InventorySlot:
+                    movementEvent = new BodyToBodyMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingMoving, player.Id, slot, toLocation.Slot, amount);
+                    break;
+            }
+
+            // At this point we proabbly have enough information, let's enqueue it.
+            if (movementEvent != null)
+            {
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
+            }
+
+            return movementEvent != null;
         }
 
         /// <summary>
@@ -412,18 +500,6 @@ namespace OpenTibia.Server
         public bool PlayerRequest_UseItem(IPlayer player, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index)
         {
             player.ThrowIfNull(nameof(player));
-
-            if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
-            {
-                return false;
-            }
-
-            var thingAtStackPos = sourceTile.GetTopThingByOrder(this.CreatureManager, fromStackPos);
-
-            if (thingAtStackPos == null || thingAtStackPos.ThingId != itemClientId)
-            {
-                return false;
-            }
 
             // At this point it seems like a valid usage request, let's enqueue it.
             IEvent useItemEvent = new UseItemEvent(
@@ -506,215 +582,193 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Inmediately attempts to perform a thing movement between two tiles.
+        /// Immediately attempts to perform a creature movement to a tile on the map.
         /// </summary>
-        /// <param name="thing">The thing being moved.</param>
-        /// <param name="fromTileLocation">The tile from which the movement is being performed.</param>
-        /// <param name="toTileLocation">The tile to which the movement is being performed.</param>
-        /// <param name="fromTileStackPos">Optional. The position in the stack of the tile from which the movement is being performed. Defaults to <see cref="byte.MaxValue"/> which signals to attempt to find the thing from the source location.</param>
-        /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
-        /// <param name="isTeleport">Optional. A value indicating whether the move is considered a teleportation. Defaults to false.</param>
+        /// <param name="creature">The creature being moved.</param>
+        /// <param name="toLocation">The tile to which the movement is being performed.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformThingMovementFromMapToMap(IThing thing, Location fromTileLocation, Location toTileLocation, byte fromTileStackPos = byte.MaxValue, byte amountToMove = 1, bool isTeleport = false)
+        public bool PerformCreatureMovement(ICreature creature, Location toLocation)
         {
-            if (thing == null || !this.map.GetTileAt(fromTileLocation, out ITile fromTile) || !this.map.GetTileAt(toTileLocation, out ITile toTile))
+            if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !this.map.GetTileAt(toLocation, out ITile toTile))
             {
                 return false;
             }
 
+            var moveDirection = fromTile.Location.DirectionTo(toLocation, true);
+
+            // Try to figure out the position in the stack of the creature.
+            var fromTileStackPos = fromTile.GetStackPositionOfThing(creature);
+
             if (fromTileStackPos == byte.MaxValue)
             {
-                // try to figure it out on our own.
-                fromTileStackPos = fromTile.GetStackPositionOfThing(thing);
-
-                if (fromTileStackPos == byte.MaxValue)
-                {
-                    // couldn't find this thing...
-                    return false;
-                }
+                // couldn't find this creature in this tile...
+                return false;
             }
 
             // Do the actual move first.
-            (bool removeSuccessful, IThing remainderThing) = fromTile.RemoveContent(this.ItemFactory, thing, amount: amountToMove);
+            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.ItemFactory, creature);
 
             if (!removeSuccessful)
             {
                 return false;
             }
 
-            toTile.AddContent(this.ItemFactory, thing);
+            (bool addSuccessful, IThing addRemainder) = toTile.AddContent(this.ItemFactory, creature);
 
-            var thingStackPosition = toTile.GetStackPositionOfThing(thing);
-
-            // Then deal with the consequences of the move.
-            if (thing is ICreature creature)
+            if (!addSuccessful)
             {
-                var moveDirection = fromTileLocation.DirectionTo(toTileLocation, true);
+                // attempt to rollback state.
+                (bool rollbackSuccessful, IThing rollbackRemainder) = fromTile.RemoveContent(this.ItemFactory, creature);
 
-                creature.TurnToDirection(moveDirection.GetClientSafeDirection());
-
-                var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
-
-                creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, stepDurationTime);
-
-                if (thingStackPosition != byte.MaxValue)
+                if (!rollbackSuccessful)
                 {
-                    this.RequestNofitication(
-                        new CreatureMovedNotification(
-                            this.Logger,
-                            this,
-                            this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
-                            new CreatureMovedNotificationArguments(
-                                (thing as ICreature).Id,
-                                fromTileLocation,
-                                fromTileStackPos,
-                                toTileLocation,
-                                thingStackPosition,
-                                isTeleport)));
-                }
-
-                if (creature is IPlayer player)
-                {
-                    // If the creature is a player, we must check if the movement caused it to walk away from any open containers.
-                    foreach (var container in player.OpenContainers)
-                    {
-                        if (container == null)
-                        {
-                            continue;
-                        }
-
-                        var locationDiff = container.Location - player.Location;
-
-                        if ((locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0) && container.IsTracking(player.Id, out byte containerId))
-                        {
-                            this.PerformPlayerContainerClose(player, container, containerId);
-                        }
-                    }
+                    // Leaves us in a really bad spot.
+                    throw new ApplicationException("Unable to rollback state after filing to move creature. Game state is altered and inconsistent now.");
                 }
             }
-            else
-            {
-                // TODO: see if we can save network bandwith here by using this notification instead.
-                // this.RequestNofitication(
-                //    new ItemMovedNotification(
-                //        this.Logger,
-                //        this.CreatureManager,
-                //        () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
-                //        new ItemMovedNotificationArguments(
-                //           thing,
-                //           fromTileLocation,
-                //           fromTileStackPos,
-                //           toTileLocation,
-                //           thingStackPosition,
-                //           false)));
-                this.RequestNofitication(new TileUpdatedNotification(this.Logger, this.CreatureManager, () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation), new TileUpdatedNotificationArguments(fromTileLocation, this.GetDescriptionOfTile)));
 
-                this.RequestNofitication(new TileUpdatedNotification(this.Logger, this.CreatureManager, () => this.GetConnectionsOfPlayersThatCanSee(toTileLocation), new TileUpdatedNotificationArguments(toTileLocation, this.GetDescriptionOfTile)));
+            var toStackPosition = toTile.GetStackPositionOfThing(creature);
+
+            // Then deal with the consequences of the move.
+            creature.TurnToDirection(moveDirection.GetClientSafeDirection());
+
+            var tileLocationDiff = fromTile.Location - toTile.Location;
+            var isTeleport = tileLocationDiff.MaxValueIn2D > 1 || tileLocationDiff.Z != 0;
+
+            var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
+
+            creature.AddExhaustion(ExhaustionType.Movement, this.CurrentTime, stepDurationTime);
+
+            if (toStackPosition != byte.MaxValue)
+            {
+                this.RequestNofitication(
+                    new CreatureMovedNotification(
+                        this.Logger,
+                        this,
+                        this.CreatureManager,
+                        () => this.GetConnectionsOfPlayersThatCanSee(fromTile.Location, toLocation),
+                        new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport)));
+            }
+
+            if (creature is IPlayer player)
+            {
+                // If the creature is a player, we must check if the movement caused it to walk away from any open containers.
+                foreach (var container in player.OpenContainers)
+                {
+                    if (container == null)
+                    {
+                        continue;
+                    }
+
+                    var locationDiff = container.Location - player.Location;
+
+                    if ((locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0) && container.IsTracking(player.Id, out byte containerId))
+                    {
+                        this.PerformPlayerContainerClose(player, container, containerId);
+                    }
+                }
             }
 
             return true;
         }
 
         /// <summary>
-        /// Immediately attempts to perform a thing movement from the map to a container.
+        /// Immediately attempts to perform an item movement between two cylinders.
         /// </summary>
-        /// <param name="thingMoving">The thing being moved.</param>
-        /// <param name="fromLocation">The tile from which the movement is being performed.</param>
-        /// <param name="toCreatureId">The id of the creature that owns the container into which the thing is being moved to.</param>
-        /// <param name="toCreatureContainerId">The id of the container.</param>
-        /// <param name="toCreatureContainerIndex">The index within the container to move the thing to.</param>
-        /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <param name="item">The item being moved.</param>
+        /// <param name="fromCylinder">The cylinder from which the movement is being performed.</param>
+        /// <param name="toCylinder">The cylinder to which the movement is being performed.</param>
+        /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
+        /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
+        /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformThingMovementFromMapToContainer(IThing thingMoving, Location fromLocation, uint toCreatureId, byte toCreatureContainerId, byte toCreatureContainerIndex, byte amount)
+        public bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1)
         {
-            if (thingMoving == null || !this.map.GetTileAt(fromLocation, out ITile fromTile) || !(thingMoving is IItem itemMoving))
+            const byte FallbackIndex = 0xFF;
+
+            if (item == null || fromCylinder == null || toCylinder == null)
             {
                 return false;
             }
 
-            var targetCreature = this.CreatureManager.FindCreatureById(toCreatureId);
+            var sameCylinder = fromCylinder == toCylinder;
 
-            if (!(targetCreature is IPlayer targetPlayer) || !this.map.GetTileAt(targetPlayer.Location, out ITile targetPlayerTile))
+            if (sameCylinder && fromIndex == toIndex)
+            {
+                // no point in moving.
+                return true;
+            }
+
+            // Edge case, check if the moving item is the target container.
+            if (item is IContainerItem containerItem && toCylinder is IContainerItem targetContainer && targetContainer.IsChildOf(containerItem))
             {
                 return false;
             }
 
-            var targetContainer = targetPlayer.GetContainerById(toCreatureContainerId);
-
-            if (targetContainer == null)
-            {
-                return false;
-            }
-
-            // Do the actual move.
-            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.ItemFactory, thingMoving, amount: amount);
+            (bool removeSuccessful, IThing removedItem) = fromCylinder.RemoveContent(this.ItemFactory, item, fromIndex, amount: amountToMove);
 
             if (!removeSuccessful)
             {
+                // Failing to remove the item from the original cylinder stops the entire operation.
                 return false;
             }
 
-            this.RequestNofitication(
-                new TileUpdatedNotification(
+            if (fromCylinder is ITile fromTile)
+            {
+                this.RequestNofitication(
+                    new TileUpdatedNotification(
                         this.Logger,
                         this.CreatureManager,
-                        () => this.GetConnectionsOfPlayersThatCanSee(fromLocation),
-                        new TileUpdatedNotificationArguments(
-                            fromLocation,
-                            this.GetDescriptionOfTile)));
-
-            var (moveSuccessful, remainder) = targetContainer.AddContent(this.ItemFactory, itemMoving, toCreatureContainerIndex);
-
-            var (fallbackSuccessful, fallbackRemainder) = (moveSuccessful, remainder);
-
-            if (!fallbackSuccessful || fallbackRemainder != null)
-            {
-                foreach (var fallbackParentCylinder in itemMoving.GetParentHierarchy())
-                {
-                    if (!fallbackSuccessful)
-                    {
-                        (fallbackSuccessful, fallbackRemainder) = fallbackParentCylinder.AddContent(this.ItemFactory, itemMoving);
-                    }
-                    else if (fallbackRemainder != null)
-                    {
-                        (fallbackSuccessful, fallbackRemainder) = fallbackParentCylinder.AddContent(this.ItemFactory, fallbackRemainder);
-                    }
-
-                    if (fallbackParentCylinder is ITile tile)
-                    {
-                        this.RequestNofitication(
-                            new TileUpdatedNotification(
-                                    this.Logger,
-                                    this.CreatureManager,
-                                    () => this.GetConnectionsOfPlayersThatCanSee(tile.Location),
-                                    new TileUpdatedNotificationArguments(
-                                        tile.Location,
-                                        this.GetDescriptionOfTile)));
-                    }
-                }
+                        () => this.GetConnectionsOfPlayersThatCanSee(fromTile.Location),
+                        new TileUpdatedNotificationArguments(fromTile.Location, this.GetDescriptionOfTile)));
             }
 
-            return moveSuccessful;
+            IThing addRemainder = removedItem ?? item;
+
+            if (sameCylinder && removedItem == null && fromIndex < toIndex)
+            {
+                // If the move happens within the same cylinder, we need to adjust the index of where we're adding, depending if it is before or after.
+                toIndex--;
+            }
+
+            if (!this.AddContentToCylinderChain(toCylinder.GetCylinderHierarchy(), toIndex, ref addRemainder) || addRemainder != null)
+            {
+                // There is some rollback to do, as we failed to add the entire thing.
+                IThing rollbackRemainder = addRemainder ?? item;
+
+                return this.AddContentToCylinderChain(fromCylinder.GetCylinderHierarchy(), FallbackIndex, ref rollbackRemainder) && rollbackRemainder == null;
+            }
+
+            // TODO: see if we can save network bandwith here by using this notification instead.
+            // this.RequestNofitication(
+            //    new ItemMovedNotification(
+            //        this.Logger,
+            //        this.CreatureManager,
+            //        () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
+            //        new ItemMovedNotificationArguments(
+            //           thing,
+            //           fromTileLocation,
+            //           fromTileStackPos,
+            //           toTileLocation,
+            //           thingStackPosition,
+            //           false)));
+            return true;
         }
 
         /// <summary>
-        /// Inmediately attempts to perform an item use in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item use in behalf of the requesting creature, if any.
         /// </summary>
-        /// <param name="typeId">The type id of the item being used.</param>
-        /// <param name="fromLocation">The location from which the use is happening.</param>
-        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
-        /// <param name="index">The index of the item to use.</param>
+        /// <param name="item">The item being used.</param>
+        /// <param name="fromCylinder">The cylinder from which the use is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to use the item.</param>
         /// <param name="requestor">Optional. The creature requesting the use.</param>
         /// <returns>True if the item was successfully used, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen. This operation is not thread-safe.</remarks>
-        public bool PerformItemUse(ushort typeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
+        public bool PerformItemUse(IItem item, ICylinder fromCylinder, byte index = 0xFF, ICreature requestor = null)
         {
-            IItem item = this.FindItemByIdAtLocation(typeId, fromLocation, fromStackPos, index);
-
-            if (item == null || item.ThingId != typeId)
+            if (item == null || fromCylinder == null)
             {
                 return false;
             }
@@ -735,24 +789,22 @@ namespace OpenTibia.Server
             }
             else if (item.ChangesOnUse)
             {
-                var changeToType = item.ChangeOnUseTo;
-
                 // change this item into the target.
-                return this.PerformItemChange(typeId, changeToType, fromLocation, fromStackPos, index, requestor);
+                return this.PerformItemChange(item, item.ChangeOnUseTo, fromCylinder, index, requestor);
             }
-            else if (item != null && item.IsContainer && item is IContainerItem containerItem && requestor is IPlayer player)
+            else if (item is IContainerItem container && requestor is IPlayer player)
             {
-                var containerId = player.GetContainerId(containerItem);
+                var containerId = player.GetContainerId(container);
 
                 if (containerId < 0)
                 {
                     // Player doesn't have this container open, so open.
-                    this.PerformPlayerContainerOpen(player, containerItem, fromLocation, index);
+                    this.PerformPlayerContainerOpen(player, container, index);
                 }
                 else
                 {
                     // Close the container for this player.
-                    this.PerformPlayerContainerClose(player, containerItem, (byte)containerId);
+                    this.PerformPlayerContainerClose(player, container, (byte)containerId);
                 }
 
                 return true;
@@ -762,27 +814,20 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Inmediately attempts to perform an item change in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item change in behalf of the requesting creature, if any.
         /// </summary>
-        /// <param name="fromTypeId">The type id of the item being changed.</param>
+        /// <param name="item">The item being changed.</param>
         /// <param name="toTypeId">The type id of the item being changed to.</param>
-        /// <param name="fromLocation">The location from which the changed is happening.</param>
-        /// <param name="fromStackPos">The position in the stack of the item at the location.</param>
-        /// <param name="index">The index of the item to changed.</param>
-        /// <param name="requestor">Optional. The creature requesting the use.</param>
+        /// <param name="atCylinder">The cylinder at which the change is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to change the item.</param>
+        /// <param name="requestor">Optional. The creature requesting the change.</param>
         /// <returns>True if the item was successfully changed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformItemChange(ushort fromTypeId, ushort toTypeId, Location fromLocation, byte fromStackPos, byte index, ICreature requestor = null)
+        public bool PerformItemChange(IItem item, ushort toTypeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null)
         {
-            // Using an item from the ground (map).
-            if (!this.map.GetTileAt(fromLocation, out ITile targetTile))
-            {
-                return false;
-            }
+            const byte FallbackIndex = 0xFF;
 
-            IThing thing = this.FindItemByIdAtLocation(fromTypeId, fromLocation, fromStackPos, index);
-
-            if (thing == null || !(thing is IItem item) || item.ThingId != fromTypeId)
+            if (item == null || atCylinder == null)
             {
                 return false;
             }
@@ -795,45 +840,38 @@ namespace OpenTibia.Server
             }
 
             // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
-            (bool removeSuccessful, IThing remainderThing) = targetTile.RemoveContent(this.ItemFactory, item, item.Amount);
+            (bool replaceSuccessful, IThing replaceRemainder) = atCylinder.ReplaceContent(this.ItemFactory, item, newItem, index, item.Amount);
 
-            if (!removeSuccessful)
+            if (!replaceSuccessful || replaceRemainder != null)
             {
-                return false;
+                this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), FallbackIndex, ref replaceRemainder);
             }
 
-            targetTile.AddContent(this.ItemFactory, newItem);
-
-            this.RequestNofitication(
-                new TileUpdatedNotification(
+            if (replaceSuccessful && atCylinder is ITile atTile)
+            {
+                this.RequestNofitication(
+                    new TileUpdatedNotification(
                         this.Logger,
                         this.CreatureManager,
-                        () => this.GetConnectionsOfPlayersThatCanSee(fromLocation),
-                        new TileUpdatedNotificationArguments(
-                            fromLocation,
-                            this.GetDescriptionOfTile)));
+                        () => this.GetConnectionsOfPlayersThatCanSee(atTile.Location),
+                        new TileUpdatedNotificationArguments(atTile.Location, this.GetDescriptionOfTile)));
+            }
 
             return true;
         }
 
         /// <summary>
-        /// Inmediately attempts to perform an item creation in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item creation in behalf of the requesting creature, if any.
         /// </summary>
         /// <param name="typeId">The id of the item being being created.</param>
-        /// <param name="atLocation">The location at which the item is being created.</param>
+        /// <param name="atCylinder">The cylinder from which the use is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to use the item.</param>
         /// <param name="requestor">Optional. The creature requesting the creation.</param>
         /// <returns>True if the item was successfully created, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformItemCreation(ushort typeId, Location atLocation, ICreature requestor)
+        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>>
+        public bool PerformItemCreation(ushort typeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null)
         {
-            if (atLocation.Type != LocationType.Map)
-            {
-                // not supported at the moment.
-                return false;
-            }
-
-            // Using an item from the ground (map).
-            if (!this.map.GetTileAt(atLocation, out ITile targetTile))
+            if (atCylinder == null)
             {
                 return false;
             }
@@ -846,65 +884,47 @@ namespace OpenTibia.Server
             }
 
             // At this point, we were able to generate the new one, let's proceed to add it.
-            targetTile.AddContent(this.ItemFactory, newItem);
-
-            this.RequestNofitication(
-                new TileUpdatedNotification(
-                        this.Logger,
-                        this.CreatureManager,
-                        () => this.GetConnectionsOfPlayersThatCanSee(atLocation),
-                        new TileUpdatedNotificationArguments(
-                            atLocation,
-                            this.GetDescriptionOfTile)));
-
-            return true;
+            return this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), index, ref newItem);
         }
 
         /// <summary>
-        /// Inmediately attempts to perform an item deletion in behalf of the requesting creature, if any.
+        /// Immediately attempts to perform an item deletion in behalf of the requesting creature, if any.
         /// </summary>
-        /// <param name="typeId">The id of the item being being deleted.</param>
-        /// <param name="atLocation">The location at which the item is being deleted.</param>
+        /// <param name="item">The item being deleted.</param>
+        /// <param name="fromCylinder">The cylinder from which the deletion is happening.</param>
+        /// <param name="index">Optional. The index within the cylinder from which to delete the item.</param>
         /// <param name="requestor">Optional. The creature requesting the deletion.</param>
         /// <returns>True if the item was successfully deleted, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformItemDeletion(ushort typeId, Location atLocation, ICreature requestor)
+        public bool PerformItemDeletion(IItem item, ICylinder fromCylinder, byte index = 0xFF, ICreature requestor = null)
         {
-            if (atLocation.Type != LocationType.Map)
-            {
-                // not supported at the moment.
-                return false;
-            }
-
-            // Using an item from the ground (map).
-            if (!this.map.GetTileAt(atLocation, out ITile targetTile))
-            {
-                return false;
-            }
-
-            IThing thing = targetTile.FindItemWithId(typeId);
-
-            if (thing == null || !(thing is IItem item))
+            if (item == null || fromCylinder == null)
             {
                 return false;
             }
 
             // At this point, we have an item to remove, let's proceed.
-            (bool successfulRemoval, IThing remainderThing) = targetTile.RemoveContent(this.ItemFactory, thing, amount: item.Amount);
+            (bool removeSuccessful, IThing remainder) = fromCylinder.RemoveContent(this.ItemFactory, item, index, amount: item.Amount);
 
-            if (successfulRemoval)
+            if (!removeSuccessful)
+            {
+                // Failing to remove the item from the original cylinder stops the entire operation.
+                return false;
+            }
+
+            if (fromCylinder is ITile fromTile)
             {
                 this.RequestNofitication(
                     new TileUpdatedNotification(
                             this.Logger,
                             this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersThatCanSee(atLocation),
+                            () => this.GetConnectionsOfPlayersThatCanSee(fromTile.Location),
                             new TileUpdatedNotificationArguments(
-                                atLocation,
+                                fromTile.Location,
                                 this.GetDescriptionOfTile)));
             }
 
-            return successfulRemoval;
+            return true;
         }
 
         /// <summary>
@@ -976,6 +996,32 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        public bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor)
+        {
+            var movementEventRules = this.eventRulesCatalog[EventRuleType.Movement].Cast<IThingMovementEventRule>();
+
+            var rulesThatCanBeExecuted = movementEventRules.Where(e => e.Setup(thingMoving, null, requestor as IPlayer) && e.CanBeExecuted);
+
+            // Execute all actions.
+            if (rulesThatCanBeExecuted.Any())
+            {
+                foreach (var rule in rulesThatCanBeExecuted)
+                {
+                    rule.Execute();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Gets the description bytes of the map in behalf of a given player at a given location.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
@@ -1016,6 +1062,11 @@ namespace OpenTibia.Server
         public ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
+
+            if (location.Type != LocationType.Map)
+            {
+                throw new ArgumentException($"Invalid location {location}.", nameof(location));
+            }
 
             var firstSegment = new MapDescriptionSegment(ReadOnlyMemory<byte>.Empty);
 
@@ -1068,6 +1119,7 @@ namespace OpenTibia.Server
         /// <inheritdoc/>
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            // TODO: probably save game state here.
             return Task.CompletedTask;
         }
 
@@ -1368,45 +1420,31 @@ namespace OpenTibia.Server
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Checks if a throw between two locations is valid.
-        /// </summary>
-        /// <param name="fromLocation">The first location.</param>
-        /// <param name="toLocation">The second location.</param>
-        /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
-        /// <returns>True if the throw is valid, false otherwise.</returns>
-        public bool CanThrowBetween(Location fromLocation, Location toLocation, bool checkLineOfSight = true)
+        public ICylinder GetCyclinder(Location fromLocation, ref byte index, ref byte subIndex, ICreature creature = null)
         {
-            if (fromLocation == toLocation)
+            if (fromLocation.Type == LocationType.Map && this.map.GetTileAt(fromLocation, out ITile fromTile))
             {
-                return true;
+                return fromTile;
+            }
+            else if (fromLocation.Type == LocationType.InsideContainer)
+            {
+                index = fromLocation.ContainerId;
+                subIndex = fromLocation.ContainerIndex;
+
+                return creature?.GetContainerById(fromLocation.ContainerId);
+            }
+            else if (fromLocation.Type == LocationType.InventorySlot)
+            {
+                index = 0;
+                subIndex = 0;
+
+                return creature?.Inventory[fromLocation.Slot] as IContainerItem;
             }
 
-            if ((fromLocation.Z >= 8 && toLocation.Z < 8) || (toLocation.Z >= 8 && fromLocation.Z < 8))
-            {
-                return false;
-            }
-
-            var deltaZ = Math.Abs(fromLocation.Z - toLocation.Z);
-
-            if (deltaZ > 2)
-            {
-                return false;
-            }
-
-            var deltaX = Math.Abs(fromLocation.X - toLocation.X);
-            var deltaY = Math.Abs(fromLocation.Y - toLocation.Y);
-
-            // distance checks
-            if (deltaX - deltaZ > 8 || deltaY - deltaZ > 6)
-            {
-                return false;
-            }
-
-            return !checkLineOfSight || this.InLineOfSight(fromLocation, toLocation);
+            return null;
         }
 
-        private IItem FindItemByIdAtLocation(ushort typeId, Location location, byte index, byte subIndex)
+        public IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null)
         {
             switch (location.Type)
             {
@@ -1419,71 +1457,161 @@ namespace OpenTibia.Server
 
                     return tile.FindItemWithId(typeId);
                 case LocationType.InventorySlot:
+                    var fromBodyContainer = creature?.Inventory[location.Slot] as IContainerItem;
+
+                    return fromBodyContainer?.Content.FirstOrDefault();
                 case LocationType.InsideContainer:
-                    // not supported at the moment.
-                    break;
+                    var fromContainer = creature.GetContainerById(location.ContainerId);
+
+                    return fromContainer?[location.ContainerIndex];
             }
 
             return null;
         }
 
         /// <summary>
-        /// Checks if a location is in the line of sight of another.
+        /// Checks if a throw between two map locations is valid.
+        /// </summary>
+        /// <param name="fromLocation">The first location.</param>
+        /// <param name="toLocation">The second location.</param>
+        /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
+        /// <returns>True if the throw is valid, false otherwise.</returns>
+        public bool CanThrowBetweenMapLocations(Location fromLocation, Location toLocation, bool checkLineOfSight = true)
+        {
+            if (fromLocation.Type != LocationType.Map || toLocation.Type != LocationType.Map)
+            {
+                return false;
+            }
+
+            if (fromLocation == toLocation)
+            {
+                return true;
+            }
+
+            // Cannot throw across the surface boundary (floor 7).
+            if ((fromLocation.Z >= 8 && toLocation.Z <= 7) || (toLocation.Z >= 8 && fromLocation.Z <= 7))
+            {
+                return false;
+            }
+
+            var deltaX = Math.Abs(fromLocation.X - toLocation.X);
+            var deltaY = Math.Abs(fromLocation.Y - toLocation.Y);
+            var deltaZ = Math.Abs(fromLocation.Z - toLocation.Z);
+
+            // distance checks
+            if (deltaX - deltaZ >= (IMap.DefaultWindowSizeX / 2) || deltaY - deltaZ >= (IMap.DefaultWindowSizeY / 2))
+            {
+                return false;
+            }
+
+            return !checkLineOfSight || this.InLineOfSight(fromLocation, toLocation);
+        }
+
+        /// <summary>
+        /// Checks if a map location is in the line of sight of another map location.
         /// </summary>
         /// <param name="firstLocation">The first location.</param>
         /// <param name="secondLocation">The second location.</param>
         /// <returns>True if the second location is considered within the line of sight of the first location, false otherwise.</returns>
         private bool InLineOfSight(Location firstLocation, Location secondLocation)
         {
+            if (firstLocation.Type != LocationType.Map || secondLocation.Type != LocationType.Map)
+            {
+                return false;
+            }
+
             if (firstLocation == secondLocation)
             {
                 return true;
             }
 
-            var start = firstLocation.Z > secondLocation.Z ? secondLocation : firstLocation;
-            var destination = firstLocation.Z > secondLocation.Z ? firstLocation : secondLocation;
+            // Normalize so that the check always happens from 'high to low' floors.
+            var origin = firstLocation.Z > secondLocation.Z ? secondLocation : firstLocation;
+            var target = firstLocation.Z > secondLocation.Z ? firstLocation : secondLocation;
 
-            var mx = (sbyte)(start.X < destination.X ? 1 : start.X == destination.X ? 0 : -1);
-            var my = (sbyte)(start.Y < destination.Y ? 1 : start.Y == destination.Y ? 0 : -1);
+            // Define positive or negative steps, depending on where the target location is wrt the origin location.
+            var stepX = (sbyte)(origin.X < target.X ? 1 : origin.X == target.X ? 0 : -1);
+            var stepY = (sbyte)(origin.Y < target.Y ? 1 : origin.Y == target.Y ? 0 : -1);
 
-            var a = destination.Y - start.Y;
-            var b = start.X - destination.X;
-            var c = -((a * destination.X) + (b * destination.Y));
+            var a = target.Y - origin.Y;
+            var b = origin.X - target.X;
+            var c = -((a * target.X) + (b * target.Y));
 
-            while ((start - destination).MaxValueIn2D != 0)
+            while ((origin - target).MaxValueIn2D != 0)
             {
-                var moveHor = Math.Abs((a * (start.X + mx)) + (b * start.Y) + c);
-                var moveVer = Math.Abs((a * start.X) + (b * (start.Y + my)) + c);
-                var moveCross = Math.Abs((a * (start.X + mx)) + (b * (start.Y + my)) + c);
+                var moveHorizontal = Math.Abs((a * (origin.X + stepX)) + (b * origin.Y) + c);
+                var moveVertical = Math.Abs((a * origin.X) + (b * (origin.Y + stepY)) + c);
+                var moveCross = Math.Abs((a * (origin.X + stepX)) + (b * (origin.Y + stepY)) + c);
 
-                if (start.Y != destination.Y && (start.X == destination.X || moveHor > moveVer || moveHor > moveCross))
+                if (origin.Y != target.Y && (origin.X == target.X || moveHorizontal > moveVertical || moveHorizontal > moveCross))
                 {
-                    start.Y += my;
+                    origin.Y += stepY;
                 }
 
-                if (start.X != destination.X && (start.Y == destination.Y || moveVer > moveHor || moveVer > moveCross))
+                if (origin.X != target.X && (origin.Y == target.Y || moveVertical > moveHorizontal || moveVertical > moveCross))
                 {
-                    start.X += mx;
+                    origin.X += stepX;
                 }
 
-                if (!this.map.GetTileAt(start, out ITile tile) || tile.BlocksThrow)
+                if (!this.map.GetTileAt(origin, out ITile tile) || tile.BlocksThrow)
                 {
                     return false;
                 }
             }
 
-            while (start.Z != destination.Z)
+            while (origin.Z != target.Z)
             {
                 // now we need to perform a jump between floors to see if everything is clear (literally)
-                if (this.map.GetTileAt(start, out ITile tile) && tile.Ground != null)
+                if (this.map.GetTileAt(origin, out ITile tile) && tile.Ground != null)
                 {
                     return false;
                 }
 
-                start.Z++;
+                origin.Z++;
             }
 
             return true;
+        }
+
+        private bool AddContentToCylinderChain(IEnumerable<ICylinder> cylinderChain, byte firstAttemptIndex, ref IThing remainder)
+        {
+            cylinderChain.ThrowIfNull(nameof(cylinderChain));
+
+            const byte FallbackIndex = 0xFF;
+
+            bool success = false;
+            bool firstAttempt = true;
+
+            foreach (var targetCylinder in cylinderChain)
+            {
+                if (!success)
+                {
+                    (success, remainder) = targetCylinder.AddContent(this.ItemFactory, remainder, firstAttempt ? firstAttemptIndex : FallbackIndex);
+                }
+                else if (remainder != null)
+                {
+                    (success, remainder) = targetCylinder.AddContent(this.ItemFactory, remainder);
+                }
+
+                firstAttempt = false;
+
+                if (success && targetCylinder is ITile targetTile)
+                {
+                    this.RequestNofitication(
+                        new TileUpdatedNotification(
+                            this.Logger,
+                            this.CreatureManager,
+                            () => this.GetConnectionsOfPlayersThatCanSee(targetTile.Location),
+                            new TileUpdatedNotificationArguments(targetTile.Location, this.GetDescriptionOfTile)));
+                }
+
+                if (success && remainder == null)
+                {
+                    break;
+                }
+            }
+
+            return success;
         }
 
         /// <summary>
@@ -1491,15 +1619,16 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="player">The player for which the container is being opened.</param>
         /// <param name="containerItem">The container.</param>
-        /// <param name="fromLocation">The location from which the container is being opened.</param>
         /// <param name="asContainerId">The id as which to open the container.</param>
-        private void PerformPlayerContainerOpen(IPlayer player, IContainerItem containerItem, Location fromLocation, byte asContainerId)
+        private void PerformPlayerContainerOpen(IPlayer player, IContainerItem containerItem, byte asContainerId = 0xFF)
         {
             player.ThrowIfNull(nameof(player));
             containerItem.ThrowIfNull(nameof(containerItem));
 
+            var currentContainer = player.GetContainerById(asContainerId);
+
             // Start tracking this container if we're not doing it.
-            if (containerItem.OpenedBy.Count == 0)
+            if (currentContainer != containerItem && containerItem.OpenedBy.Count == 0)
             {
                 containerItem.OnContentAdded += this.HandleContainerContentAdded;
                 containerItem.OnContentRemoved += this.HandleContainerContentRemoved;
@@ -1508,19 +1637,16 @@ namespace OpenTibia.Server
                 containerItem.OnThingChanged += this.HandleContainerChanged;
             }
 
-            switch (fromLocation.Type)
+            player.OpenContainerAt(containerItem, asContainerId);
+
+            // Close the event listeners on the container that was closed, if any.
+            if (currentContainer != null && currentContainer.OpenedBy.Count == 0)
             {
-                case LocationType.Map:
-                    player.OpenContainer(containerItem);
-                    break;
-                case LocationType.InsideContainer:
-                    player.OpenContainerAt(containerItem, asContainerId);
-                    break;
-                case LocationType.InventorySlot:
-                    player.OpenContainerAt(containerItem, asContainerId);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
+                currentContainer.OnContentAdded -= this.HandleContainerContentAdded;
+                currentContainer.OnContentRemoved -= this.HandleContainerContentRemoved;
+                currentContainer.OnContentUpdated -= this.HandleContainerContentUpdated;
+
+                currentContainer.OnThingChanged -= this.HandleContainerChanged;
             }
 
             if (containerItem.IsTracking(player.Id, out byte containerId))
@@ -1535,7 +1661,7 @@ namespace OpenTibia.Server
                                 containerItem.ThingId,
                                 containerItem.Type.Name,
                                 containerItem.Capacity,
-                                containerItem.ParentCylinder is IContainerItem,
+                                (containerItem.ParentCylinder is IContainerItem parentContainer) && parentContainer.Type.TypeId != 0,
                                 containerItem.Content))));
             }
         }
@@ -1658,11 +1784,10 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="container">The container.</param>
         /// <param name="indexOfUpdated">The index that was updated.</param>
-        private void HandleContainerContentUpdated(IContainerItem container, int indexOfUpdated)
+        /// <param name="updatedItem">The updated item.</param>
+        private void HandleContainerContentUpdated(IContainerItem container, byte indexOfUpdated, IItem updatedItem)
         {
-            var itemUpdated = container[indexOfUpdated];
-
-            if (itemUpdated == null)
+            if (updatedItem == null)
             {
                 return;
             }
@@ -1679,8 +1804,27 @@ namespace OpenTibia.Server
                     new GenericNotification(
                         this.Logger,
                         () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                        new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, mapPair.Value, itemUpdated))));
+                        new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, mapPair.Value, updatedItem))));
             }
+        }
+
+        private void HandlePlayerInventoryChanged(IInventory inventory, Slot slot, IItem item)
+        {
+            if (!(inventory.Owner is IPlayer player))
+            {
+                return;
+            }
+
+            this.Logger.Information($"{player.Name}'s inventory slot {slot} changed to {item?.Type.Name ?? "empty"}.");
+
+            var notificationArgs = item == null ?
+                new GenericNotificationArguments(new PlayerInventoryClearSlotPacket(slot))
+                :
+                new GenericNotificationArguments(new PlayerInventorySetSlotPacket(slot, item));
+
+            var notification = new GenericNotification(this.Logger, () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(), notificationArgs);
+
+            this.RequestNofitication(notification);
         }
 
         /// <summary>

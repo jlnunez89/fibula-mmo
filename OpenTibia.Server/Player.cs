@@ -89,14 +89,7 @@ namespace OpenTibia.Server
 
             // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);
-
-            // this.OnThingChanged += this.CheckInventoryContainerProximity;
         }
-
-        // ~PlayerId()
-        // {
-        //    OnLocationChanged -= CheckInventoryContainerProximity;
-        // }
 
         /// <summary>
         /// Gets the player's character id.
@@ -138,7 +131,7 @@ namespace OpenTibia.Server
         public bool IsLogoutAllowed => true; // this.AutoAttackTargetId == 0;
 
         /// <summary>
-        /// Gets the inventory for the player.
+        /// Gets or sets the inventory for the player.
         /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
 
@@ -223,44 +216,6 @@ namespace OpenTibia.Server
         //            {
         //                this.PendingAction.Perform();
         //            });
-        //    }
-        // }
-
-        // public void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs)
-        // {
-        //    for (byte i = 0; i < this.OpenContainers.Length; i++)
-        //    {
-        //        if (this.OpenContainers[i] == null)
-        //        {
-        //            continue;
-        //        }
-
-        // var containerSourceLoc = this.OpenContainers[i].Location;
-
-        // switch (containerSourceLoc.Type)
-        //        {
-        //            case LocationType.Ground:
-        //                var locDiff = this.Location - containerSourceLoc;
-
-        // if (locDiff.MaxValueIn2D > 1)
-        //                {
-        //                    var container = this.GetContainer(i);
-        //                    this.CloseContainerWithId(i);
-
-        // if (container != null)
-        //                    {
-        //                        container.OnThingChanged -= this.CheckInventoryContainerProximity;
-        //                    }
-
-        // this.Game.NotifySinglePlayer(this, conn => new GenericNotification(conn, new ContainerClosePacket { ContainerId = i }));
-        //                }
-
-        // break;
-        //            case LocationType.Container:
-        //                break;
-        //            case LocationType.Slot:
-        //                break;
-        //        }
         //    }
         // }
     }

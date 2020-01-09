@@ -86,7 +86,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this thing's location.
         /// </summary>
-        public Location Location
+        public virtual Location Location
         {
             get
             {
@@ -97,27 +97,16 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this thing's cylinder hierarchy.
         /// </summary>
-        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's parent hierarchy.</returns>
-        public IEnumerable<ICylinder> GetParentHierarchy()
+        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's cylinder hierarchy.</returns>
+        public IEnumerable<ICylinder> GetCylinderHierarchy()
         {
-            ICylinder current = this.ParentCylinder;
+            ICylinder current = (this is ICylinder thisAsCylinder) ? thisAsCylinder : this.ParentCylinder;
 
             while (current != null)
             {
                 yield return current;
 
-                if (current is ITile)
-                {
-                    current = null;
-                }
-                else if (current is IContainerItem containerCylinder)
-                {
-                    current = containerCylinder.ParentCylinder;
-                }
-                else if (current is ICreature creatureCylinder)
-                {
-                    current = creatureCylinder.ParentCylinder;
-                }
+                current = current.ParentCylinder;
             }
         }
 

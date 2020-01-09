@@ -62,7 +62,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
         // void SetPendingAction(IAction action);
 
         // void ClearPendingActions();
-
-        // void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs);
     }
 }

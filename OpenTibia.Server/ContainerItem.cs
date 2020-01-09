@@ -18,7 +18,6 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;
 
@@ -72,7 +71,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the capacity of this container.
         /// </summary>
-        public byte Capacity => Convert.ToByte(this.Attributes.ContainsKey(ItemAttribute.Capacity) ? this.Attributes[ItemAttribute.Capacity] : IContainerItem.DefaultContainerCapacity);
+        public virtual byte Capacity => Convert.ToByte(this.Attributes.ContainsKey(ItemAttribute.Capacity) ? this.Attributes[ItemAttribute.Capacity] : IContainerItem.DefaultContainerCapacity);
 
         /// <summary>
         /// Attempts to retrieve an item from the contents of this container based on a given index.
@@ -99,7 +98,7 @@ namespace OpenTibia.Server
         /// <param name="thing">The thing to add to the cylinder, which must be an <see cref="IItem"/>.</param>
         /// <param name="index">Optional. The index at which to add the thing. Defaults to 0xFF, which instructs to add the thing at any free index.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF)
+        public virtual (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
             thing.ThrowIfNull(nameof(thing));
@@ -110,68 +109,64 @@ namespace OpenTibia.Server
                 return (false, null);
             }
 
-            // Validate that the item being added is not a parent of this item.
-            if (this.IsChildOf(item))
+            // Validate that the item being added is not itself, or a parent of this item.
+            if (thing == this || this.IsChildOf(item))
             {
                 // TODO: error message 'This is impossible'.
-                return (false, null);
+                return (false, thing);
             }
 
             // Find an index which falls in within the actual content boundaries.
             var targetIndex = index < this.Content.Count ? index : -1;
+            var atCapacity = this.Capacity == this.Content.Count;
 
             // Then get an item if there is one, at that index.
             var existingItemAtIndex = targetIndex == -1 ? null : this.Content[targetIndex];
 
-            (bool success, IThing remainderItem) = (false, null);
-            IItem itemToAdd = item;
+            (bool success, IThing remainderToAdd) = (false, item);
 
             if (existingItemAtIndex != null)
             {
                 // We matched with an item, let's attempt to add or join with it first.
                 if (existingItemAtIndex.IsContainer && existingItemAtIndex is IContainerItem existingContainer)
                 {
-                    (success, remainderItem) = existingContainer.AddContent(itemFactory, itemToAdd);
+                    (success, remainderToAdd) = existingContainer.AddContent(itemFactory, remainderToAdd);
                 }
                 else
                 {
-                    (success, remainderItem) = existingItemAtIndex.JoinWith(itemFactory, itemToAdd);
+                    (success, remainderToAdd) = existingItemAtIndex.JoinWith(itemFactory, remainderToAdd as IItem);
 
                     if (success)
                     {
                         // Regardless if we're done, we've changed an item at this index, so we notify observers.
-                        this.OnContentUpdated?.Invoke(this, targetIndex);
+                        if (remainderToAdd != null && !atCapacity)
+                        {
+                            targetIndex++;
+                        }
 
-                        itemToAdd = null;
+                        this.InvokeContentUpdated((byte)targetIndex, existingItemAtIndex);
                     }
-                }
-
-                if (success)
-                {
-                    // update the item to add to be the remainder only, since we've added partially at least.
-                    itemToAdd = remainderItem as IItem;
                 }
             }
 
-            if (itemToAdd == null)
+            if (remainderToAdd == null)
             {
                 // If there's nothing still waiting to be added, we're done.
                 return (true, null);
             }
 
             // Now we need to add whatever is remaining to this container.
-            // Is there capacity left?
-            if (this.Capacity <= this.Content.Count)
+            if (atCapacity)
             {
                 // This is full.
-                return (success, itemToAdd);
+                return (success, remainderToAdd);
             }
 
-            this.Content.Insert(0, itemToAdd);
+            remainderToAdd.ParentCylinder = this;
 
-            item.ParentCylinder = this;
+            this.Content.Insert(0, remainderToAdd as IItem);
 
-            this.OnContentAdded?.Invoke(this, itemToAdd);
+            this.InvokeContentAdded(remainderToAdd as IItem);
 
             return (true, null);
         }
@@ -184,7 +179,7 @@ namespace OpenTibia.Server
         /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
+        public virtual (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
             thing.ThrowIfNull(nameof(thing));
@@ -201,7 +196,7 @@ namespace OpenTibia.Server
                 existingItem = index >= this.Content.Count ? null : this.Content[index];
             }
 
-            if (existingItem == null || existingItem.Amount < amount)
+            if (existingItem == null || thing.ThingId != existingItem.ThingId || existingItem.Amount < amount)
             {
                 return (false, null);
             }
@@ -210,20 +205,63 @@ namespace OpenTibia.Server
             {
                 // Item has the exact amount we're looking for, just remove it.
                 this.Content.RemoveAt(index);
-                this.OnContentRemoved?.Invoke(this, index);
+                this.InvokeContentRemoved(index);
 
                 return (true, null);
             }
 
-            (bool success, IItem remainderItem) = existingItem.SeparateFrom(itemFactory,  amount);
+            (bool success, IItem remainderItem) = existingItem.SeparateFrom(itemFactory, amount);
 
             if (success)
             {
                 // We've changed an item at this index, so we notify observers.
-                this.OnContentUpdated?.Invoke(this, index);
+                this.InvokeContentUpdated(index, existingItem);
             }
 
             return (success, remainderItem);
+        }
+
+        /// <summary>
+        /// Attempts to replace a thing from this cylinder with another.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="fromThing">The thing to remove from the cylinder.</param>
+        /// <param name="toThing">The thing to add to the cylinder.</param>
+        /// <param name="index">Optional. The index from which to replace the thing. Defaults to 0xFF, which instructs to replace the thing if found at any index.</param>
+        /// <param name="amount">Optional. The amount of the <paramref name="fromThing"/> to replace.</param>
+        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
+        public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
+        {
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+            fromThing.ThrowIfNull(nameof(fromThing));
+            toThing.ThrowIfNull(nameof(toThing));
+
+            IItem existingItem = null;
+
+            if (index == 0xFF)
+            {
+                existingItem = this.Content.FirstOrDefault(i => i.ThingId == fromThing.ThingId);
+            }
+            else
+            {
+                // Attempt to get the item at that index.
+                existingItem = index >= this.Content.Count ? null : this.Content[index];
+            }
+
+            if (existingItem == null || fromThing.ThingId != existingItem.ThingId || existingItem.Amount < amount)
+            {
+                return (false, null);
+            }
+
+            this.Content.RemoveAt(index);
+            this.Content.Insert(index, toThing as IItem);
+
+            toThing.ParentCylinder = this;
+
+            // We've changed an item at this index, so we notify observers.
+            this.InvokeContentUpdated(index, toThing as IItem);
+
+            return (true, null);
         }
 
         /// <summary>
@@ -356,23 +394,50 @@ namespace OpenTibia.Server
         /// Checks that this item's parents are not this same item.
         /// </summary>
         /// <param name="item">The parent item to check.</param>
-        /// <returns>True if this item is child of any item in the parent hierarchy, false otherwise.</returns>
-        private bool IsChildOf(IItem item)
+        /// <returns>True if the given item is a parent of this item, at any level of the parent hierarchy, false otherwise.</returns>
+        public bool IsChildOf(IItem item)
         {
-            if (item != null && item is IContainerItem containerItem)
-            {
-                while (containerItem != null)
-                {
-                    if (this == containerItem)
-                    {
-                        return true;
-                    }
+            var current = this.ParentCylinder;
 
-                    containerItem = containerItem.ParentCylinder as IContainerItem;
+            while (current != null)
+            {
+                if (item == current)
+                {
+                    return true;
                 }
+
+                current = current.ParentCylinder;
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="OnContentAdded"/> event on this container.
+        /// </summary>
+        /// <param name="itemAdded">The item added.</param>
+        protected void InvokeContentAdded(IItem itemAdded)
+        {
+            this.OnContentAdded?.Invoke(this, itemAdded);
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="OnContentRemoved"/> event on this container.
+        /// </summary>
+        /// <param name="index">The index within the container from where the item was removed.</param>
+        protected void InvokeContentRemoved(byte index)
+        {
+            this.OnContentRemoved?.Invoke(this, index);
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="OnContentUpdated"/> event on this container.
+        /// </summary>
+        /// <param name="index">The index within the container from where the item was updated.</param>
+        /// <param name="updatedItem">The item that was updated.</param>
+        protected void InvokeContentUpdated(byte index, IItem updatedItem)
+        {
+            this.OnContentUpdated?.Invoke(this, index, updatedItem);
         }
     }
 }

@@ -45,6 +45,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsCreature(IThing thing);
 
+        bool IsDressed(IThing thing);
+
         bool IsHouse(IThing thing);
 
         bool IsHouseOwner(IThing thing, IPlayer user);

@@ -67,6 +67,17 @@ namespace OpenTibia.Server.Factories
             return thing is ICreature;
         }
 
+        public bool IsDressed(IThing thing)
+        {
+            if (!(thing is IItem item))
+            {
+                return false;
+            }
+
+            // TODO: is this good enough?
+            return item.ParentCylinder is BodyContainerItem;
+        }
+
         public bool IsType(IThing thing, ushort typeId)
         {
             return thing is IItem item && item.Type.TypeId == typeId;

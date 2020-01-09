@@ -39,7 +39,6 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="toCreatureId">The id of the creature that should known the container to which the movement is happening.</param>
         /// <param name="toCreatureContainerId">The id of the container to which the movement is happening.</param>
         /// <param name="toCreatureContainerIndex">The index in the container to which the movement is happening.</param>
-        /// <param name="fromStackPos">Optional. The position in the stack of the location from which the movement is happening. Defaults to <see cref="byte.MaxValue"/>, which makes the system take the top thing at the location.</param>
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         /// <param name="evaluationTime">Optional. The evaluation time policy for this event. Defaults to <see cref="EvaluationTime.OnBoth"/>.</param>
         public MapToContainerMovementEvent(
@@ -72,7 +71,10 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = this.Game.PerformThingMovementFromMapToContainer(thingMoving, fromLocation, toCreatureId, toCreatureContainerId, toCreatureContainerIndex, amount);
+                bool moveSuccessful = thingMoving is IItem item &&
+                                      creatureFinder.FindCreatureById(toCreatureId) is IPlayer targetPlayer &&
+                                      tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
+                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.GetContainerById(toCreatureContainerId), toIndex: toCreatureContainerIndex, amountToMove: amount);
 
                 if (!moveSuccessful)
                 {
@@ -83,6 +85,8 @@ namespace OpenTibia.Server.MovementEvents
                 }
 
                 this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
+
+                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

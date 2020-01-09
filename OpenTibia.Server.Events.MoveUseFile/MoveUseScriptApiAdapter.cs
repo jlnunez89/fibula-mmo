@@ -125,6 +125,21 @@ namespace OpenTibia.Server.Events.MoveUseFile
         }
 
         /// <summary>
+        /// Checks if the thing passed is dressed by a creature.
+        /// </summary>
+        /// <param name="thing">The thing to check.</param>
+        /// <returns>True if the thing is dressed by an <see cref="ICreature"/>, false otherwise.</returns>
+        public bool IsDressed(IThing thing)
+        {
+            if (thing == null)
+            {
+                return false;
+            }
+
+            return this.ScriptApi.IsDressed(thing);
+        }
+
+        /// <summary>
         /// Checks if the given thing is of the type passed.
         /// </summary>
         /// <param name="thing">The thing to check.</param>

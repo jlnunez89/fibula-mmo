@@ -90,5 +90,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="typeIdExpected">Optional. The type id of the content item expected to be found.</param>
         /// <returns>The count of the item at the index. If <paramref name="typeIdExpected"/> is specified, the value returned will only count if the type matches, otherwise -1 will be returned.</returns>
         sbyte CountAmountAt(byte index, ushort typeIdExpected = 0);
+
+        /// <summary>
+        /// Checks that this item's parents are not this same item.
+        /// </summary>
+        /// <param name="item">The parent item to check.</param>
+        /// <returns>True if this item is child of any item in the parent hierarchy, false otherwise.</returns>
+        bool IsChildOf(IItem item);
     }
 }

@@ -43,7 +43,7 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="requestorId">The id of the creature requesting the use.</param>
-        /// <param name="itemId">The id of the item being used.</param>
+        /// <param name="typeId">The id of the item being used.</param>
         /// <param name="fromLocation">The location from which the item is being used.</param>
         /// <param name="fromStackPos">The position in the stack from which the item is being used.</param>
         /// <param name="index">The index of the item being used.</param>
@@ -55,7 +55,7 @@ namespace OpenTibia.Server.MovementEvents
             ITileAccessor tileAccessor,
             ICreatureFinder creatureFinder,
             uint requestorId,
-            ushort itemId,
+            ushort typeId,
             Location fromLocation,
             byte fromStackPos = byte.MaxValue,
             byte index = 1,
@@ -75,7 +75,10 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool successfulUse = this.Game.PerformItemUse(itemId, fromLocation, fromStackPos, index, this.Requestor);
+                var fromCylinder = this.Game.GetCyclinder(fromLocation, ref fromStackPos, ref index, this.Requestor);
+                var item = this.Game.FindItemByIdAtLocation(typeId, fromLocation, this.Requestor);
+
+                bool successfulUse = this.Game.PerformItemUse(item, fromCylinder, (byte)(fromLocation.Type == LocationType.InventorySlot ? 0xFF : index), this.Requestor);
 
                 if (!successfulUse)
                 {

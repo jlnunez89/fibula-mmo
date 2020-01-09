@@ -20,6 +20,7 @@ namespace OpenTibia.Communications.Packets
     using OpenTibia.Communications.Packets.Incoming;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
+    using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -119,15 +120,15 @@ namespace OpenTibia.Communications.Packets
         //        timestamp: DateTimeOffset.FromUnixTimeSeconds(message.GetUInt32()));
         // }
 
-        ///// <summary>
-        ///// Reads the container close information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The container close information.</returns>
-        // public static IContainerInfo ReadContainerCloseInfo(this INetworkMessage message)
-        // {
-        //    return new ContainerCloseRequestPacket(containerId: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads the container close information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The container close information.</returns>
+        public static IContainerInfo ReadContainerCloseInfo(this INetworkMessage message)
+        {
+            return new ContainerCloseRequestPacket(containerId: message.GetByte());
+        }
 
         ///// <summary>
         ///// Reads the container move up information sent in the message.
@@ -854,34 +855,34 @@ namespace OpenTibia.Communications.Packets
             message.AddString(packet.Reason);
         }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="InventoryClearSlotPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteInventoryClearSlotPacket(this INetworkMessage message, InventoryClearSlotPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="PlayerInventoryClearSlotPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteInventoryClearSlotPacket(this INetworkMessage message, PlayerInventoryClearSlotPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddByte((byte)packet.Slot);
-        // }
+            message.AddByte((byte)packet.Slot);
+        }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="InventorySetSlotPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteInventorySetSlotPacket(this INetworkMessage message, InventorySetSlotPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="PlayerInventorySetSlotPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteInventorySetSlotPacket(this INetworkMessage message, PlayerInventorySetSlotPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddByte((byte)packet.Slot);
-        //    message.AddItem(packet.Item);
-        // }
+            message.AddByte((byte)packet.Slot);
+            message.AddItem(packet.Item);
+        }
 
         ///// <summary>
         ///// Writes the contents of the <see cref="LoadPlayersResultPacket"/> into the message.
@@ -1046,7 +1047,11 @@ namespace OpenTibia.Communications.Packets
             // message.WritePacketType(packet);
             var addInventoryItem = new Action<Slot>(slot =>
             {
-                if (packet.Player.Inventory[(byte)slot] == null)
+                var slotContainer = packet.Player.Inventory[slot] as IContainerItem;
+
+                var itemInContainer = slotContainer?.Content.FirstOrDefault();
+
+                if (itemInContainer == null)
                 {
                     message.AddByte((byte)Communications.Contracts.Enumerations.OutgoingGamePacketType.InventoryEmpty);
                     message.AddByte((byte)slot);
@@ -1055,7 +1060,7 @@ namespace OpenTibia.Communications.Packets
                 {
                     message.AddByte((byte)Communications.Contracts.Enumerations.OutgoingGamePacketType.InventoryItem);
                     message.AddByte((byte)slot);
-                    message.AddItem(packet.Player.Inventory[(byte)slot]);
+                    message.AddItem(itemInContainer);
                 }
             });
 

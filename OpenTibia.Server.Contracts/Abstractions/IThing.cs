@@ -9,14 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-using System.Collections.Generic;
-
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for all things in the game.
     /// </summary>
-    public interface IThing : ILocatable
+    public interface IThing : ILocatable, IHasParentCylinder
     {
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
@@ -42,16 +40,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets a value indicating whether this thing can be moved.
         /// </summary>
         bool CanBeMoved { get; }
-
-        /// <summary>
-        /// Gets or sets the parent cylinder of this thing.
-        /// </summary>
-        ICylinder ParentCylinder { get; set; }
-
-        /// <summary>
-        /// Gets this thing's cylinder hierarchy.
-        /// </summary>
-        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's parent hierarchy.</returns>
-        IEnumerable<ICylinder> GetParentHierarchy();
     }
 }

@@ -84,7 +84,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return true;
             }
 
-            return this.Game.CanThrowBetween(this.GetSourceLocation(), this.GetDestinationLocation(), this.CheckLineOfSight);
+            return this.Game.CanThrowBetweenMapLocations(this.GetSourceLocation(), this.GetDestinationLocation(), this.CheckLineOfSight);
         }
     }
 }

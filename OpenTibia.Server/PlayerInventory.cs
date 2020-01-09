@@ -13,12 +13,11 @@ namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-
-    // public delegate void OnSetInventoryItem(Slot slot, IItem item);
-    // public delegate void OnUnsetInventoryItem(Slot slot);
 
     /// <summary>
     /// Class that represents an inventory for players.
@@ -28,7 +27,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Holds the inventory.
         /// </summary>
-        private readonly Dictionary<Slot, (IItem, ushort)> inventory;
+        private readonly Dictionary<Slot, IContainerItem> inventory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PlayerInventory"/> class.
@@ -39,8 +38,31 @@ namespace OpenTibia.Server
             owner.ThrowIfNull(nameof(owner));
 
             this.Owner = owner;
-            this.inventory = new Dictionary<Slot, (IItem, ushort)>();
+
+            this.inventory = new Dictionary<Slot, IContainerItem>(); ;
+
+            this.SetupBodyContainers();
         }
+
+        /// <summary>
+        /// Finalizes an instance of the <see cref="PlayerInventory"/> class.
+        /// </summary>
+        ~PlayerInventory()
+        {
+            foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
+            {
+                this.inventory[slot].ParentCylinder = null;
+
+                this.inventory[slot].OnContentAdded -= this.HandleContentAdded;
+                this.inventory[slot].OnContentRemoved -= this.HandleContentRemoved;
+                this.inventory[slot].OnContentUpdated -= this.HandleContentUpdated;
+            }
+        }
+
+        /// <summary>
+        /// A delegate to invoke when a slot in the inventory changes.
+        /// </summary>
+        public event OnInventorySlotChanged OnSlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.
@@ -48,17 +70,17 @@ namespace OpenTibia.Server
         public ICreature Owner { get; }
 
         /// <summary>
-        /// Gets the <see cref="IItem"/> at a given position of this inventory.
+        /// Gets the <see cref="IContainerItem"/> at a given position of this inventory.
         /// </summary>
-        /// <param name="idx">The index or position where to get the item from.</param>
-        /// <returns>The <see cref="IItem"/>, if any was found.</returns>
-        public IItem this[byte idx]
+        /// <param name="slot">The slot where to get the item from.</param>
+        /// <returns>The <see cref="IContainerItem"/>, if any was found.</returns>
+        public IItem this[Slot slot]
         {
             get
             {
-                if (this.inventory.TryGetValue((Slot)idx, out ValueTuple<IItem, ushort> tuple))
+                if (this.inventory.TryGetValue(slot, out IContainerItem container))
                 {
-                    return tuple.Item1;
+                    return container;
                 }
 
                 return null;
@@ -263,6 +285,58 @@ namespace OpenTibia.Server
 
             // TODO: exhaustive search of container items here.
             return null;
+        }
+
+        private void SetupBodyContainers()
+        {
+            foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
+            {
+                if (slot >= Slot.Anywhere)
+                {
+                    continue;
+                }
+
+                this.inventory.Add(slot, new BodyContainerItem(slot));
+
+                this.inventory[slot].ParentCylinder = this.Owner;
+
+                this.inventory[slot].OnContentAdded += this.HandleContentAdded;
+                this.inventory[slot].OnContentRemoved += this.HandleContentRemoved;
+                this.inventory[slot].OnContentUpdated += this.HandleContentUpdated;
+            }
+        }
+
+        private void HandleContentAdded(IContainerItem container, IItem addedItem)
+        {
+            this.InvokeSlotChanged(container, addedItem);
+        }
+
+        private void HandleContentRemoved(IContainerItem container, byte indexRemoved)
+        {
+            this.InvokeSlotChanged(container, null);
+        }
+
+        private void HandleContentUpdated(IContainerItem container, byte indexOfUpdated, IItem updatedItem)
+        {
+            this.InvokeSlotChanged(container, container.Content.FirstOrDefault());
+        }
+
+        private void InvokeSlotChanged(IContainerItem container, IItem item)
+        {
+            container.ThrowIfNull(nameof(container));
+
+            foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
+            {
+                if (slot >= Slot.Anywhere)
+                {
+                    continue;
+                }
+
+                if (container == this.inventory[slot])
+                {
+                    this.OnSlotChanged?.Invoke(this, slot, item);
+                }
+            }
         }
     }
 }

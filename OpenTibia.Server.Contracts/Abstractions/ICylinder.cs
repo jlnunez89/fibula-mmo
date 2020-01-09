@@ -18,7 +18,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for all cylinders.
     /// </summary>
-    public interface ICylinder : ILocatable
+    public interface ICylinder : ILocatable, IHasParentCylinder
     {
         /// <summary>
         /// Forcefully adds parsed content elements to this cylinder.
@@ -46,5 +46,16 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
         (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1);
+
+        /// <summary>
+        /// Attempts to replace a thing from this cylinder with another.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="fromThing">The thing to remove from the cylinder.</param>
+        /// <param name="toThing">The thing to add to the cylinder.</param>
+        /// <param name="index">Optional. The index from which to replace the thing. Defaults to 0xFF, which instructs to replace the thing if found at any index.</param>
+        /// <param name="amount">Optional. The amount of the <paramref name="fromThing"/> to replace.</param>
+        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
+        (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 0xFF, byte amount = 1);
     }
 }

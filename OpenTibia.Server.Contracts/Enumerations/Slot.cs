@@ -12,7 +12,7 @@
 namespace OpenTibia.Server.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumeration of the possible slots.
+    /// Enumeration of the possible inventory slots.
     /// </summary>
     public enum Slot : byte
     {

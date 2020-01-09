@@ -17,6 +17,11 @@ namespace OpenTibia.Server.Contracts.Enumerations
     public enum LocationType : byte
     {
         /// <summary>
+        /// Unset and generally invalid location.
+        /// </summary>
+        NotSet,
+
+        /// <summary>
         /// Inside a specific container.
         /// </summary>
         InsideContainer,
