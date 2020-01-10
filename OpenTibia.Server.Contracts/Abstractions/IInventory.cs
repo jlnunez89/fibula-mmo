@@ -11,22 +11,29 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Server.Contracts.Enumerations;
+
     /// <summary>
     /// Interface for a creature that keeps an inventory of <see cref="IItem"/>s in itself, and the properties it imbues the owner <see cref="ICreature"/> with.
     /// </summary>
     public interface IInventory
     {
         /// <summary>
+        /// A delegate to invoke when a slot in the inventory is changed.
+        /// </summary>
+        event OnInventorySlotChanged OnSlotChanged;
+
+        /// <summary>
         /// Gets a reference to the owner of this inventory.
         /// </summary>
         ICreature Owner { get; }
 
         /// <summary>
-        /// Gets the <see cref="IItem"/> at a given position of this inventory.
+        /// Gets the <see cref="IItem"/> at a given slot of this inventory.
         /// </summary>
-        /// <param name="idx">The index or position where to get the item from.</param>
+        /// <param name="slot">The slot where to get the item from.</param>
         /// <returns>The <see cref="IItem"/>, if any was found.</returns>
-        IItem this[byte idx] { get; }
+        IItem this[Slot slot] { get; }
 
         /// <summary>
         /// Adds an item to the inventory.

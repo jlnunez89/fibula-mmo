@@ -18,12 +18,19 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that represents all creatures in the game.
     /// </summary>
     public abstract class Creature : Thing, ICreature
     {
+        /// <summary>
+        /// The maximum number of containers to maintain.
+        /// </summary>
+        private const int MaxContainers = 16;
+
         /// <summary>
         /// Lock used when assigning creature ids.
         /// </summary>
@@ -38,6 +45,11 @@ namespace OpenTibia.Server
         /// Lock object to semaphore interaction with the exhaustion dictionary.
         /// </summary>
         private readonly object exhaustionLock;
+
+        /// <summary>
+        /// Stores the open containers of this creature.
+        /// </summary>
+        private readonly IContainerItem[] openContainers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -69,6 +81,8 @@ namespace OpenTibia.Server
             {
                 this.Id = idCounter++;
             }
+
+            this.openContainers = new IContainerItem[MaxContainers];
 
             this.Name = name;
             this.Article = article;
@@ -224,6 +238,11 @@ namespace OpenTibia.Server
         public abstract IInventory Inventory { get; protected set; }
 
         /// <summary>
+        /// Gets the collection of open containers tracked by this player.
+        /// </summary>
+        public IEnumerable<IContainerItem> OpenContainers => this.openContainers;
+
+        /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
         /// </summary>
         /// <param name="type">The type of exhaustion.</param>
@@ -360,6 +379,133 @@ namespace OpenTibia.Server
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Gets the id of the given container as known by this player, if it is.
+        /// </summary>
+        /// <param name="container">The container to check.</param>
+        /// <returns>The id of the container if known by this player.</returns>
+        public sbyte GetContainerId(IContainerItem container)
+        {
+            for (sbyte i = 0; i < this.openContainers.Length; i++)
+            {
+                if (this.openContainers[i] == container)
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        /// <summary>
+        /// Closes a container for this player, which stops tracking it.
+        /// </summary>
+        /// <param name="containerId">The id of the container being closed.</param>
+        public void CloseContainerWithId(byte containerId)
+        {
+            try
+            {
+                this.openContainers[containerId].EndTracking(this.Id);
+                this.openContainers[containerId] = null;
+            }
+            catch
+            {
+                // ignored
+            }
+        }
+
+        /// <summary>
+        /// Opens a container for this player, which tracks it.
+        /// </summary>
+        /// <param name="container">The container being opened.</param>
+        /// <returns>The id of the container as seen by this player.</returns>
+        public byte OpenContainer(IContainerItem container)
+        {
+            container.ThrowIfNull(nameof(container));
+
+            for (byte i = 0; i < this.openContainers.Length; i++)
+            {
+                if (this.openContainers[i] != null)
+                {
+                    continue;
+                }
+
+                this.openContainers[i] = container;
+                this.openContainers[i].BeginTracking(this.Id, i);
+
+                return i;
+            }
+
+            var lastIdx = (byte)(this.openContainers.Length - 1);
+
+            this.openContainers[lastIdx] = container;
+
+            return lastIdx;
+        }
+
+        /// <summary>
+        /// Opens a container by placing it at the given index id.
+        /// If there is a container already open at this index, it is first closed.
+        /// </summary>
+        /// <param name="container">The container to open.</param>
+        /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
+        public void OpenContainerAt(IContainerItem container, byte containerId = 0xFF)
+        {
+            if (containerId == 0xFF)
+            {
+                this.OpenContainer(container);
+
+                return;
+            }
+
+            this.openContainers[containerId]?.EndTracking(this.Id);
+            this.openContainers[containerId] = container;
+            this.openContainers[containerId].BeginTracking(this.Id, containerId);
+        }
+
+        /// <summary>
+        /// Gets a container by the id known to this player.
+        /// </summary>
+        /// <param name="containerId">The id of the container.</param>
+        /// <returns>The container, if found.</returns>
+        public IContainerItem GetContainerById(byte containerId)
+        {
+            try
+            {
+                var container = this.openContainers[containerId];
+
+                container.BeginTracking(this.Id, containerId);
+
+                return container;
+            }
+            catch
+            {
+                // ignored
+            }
+
+            return null;
+        }
+
+        public void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 255)
+        {
+            return (false, thing);
+        }
+
+        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 255, byte amount = 1)
+        {
+            throw new NotImplementedException();
+        }
+
+        public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

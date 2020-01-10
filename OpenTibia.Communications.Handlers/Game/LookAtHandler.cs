@@ -89,6 +89,8 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (lookAtInfo.Location.Type != LocationType.Map || player.CanSee(lookAtInfo.Location))
             {
+                IContainerItem container;
+
                 // Get thing at location
                 switch (lookAtInfo.Location.Type)
                 {
@@ -96,16 +98,14 @@ namespace OpenTibia.Communications.Handlers.Game
                         thing = this.TileAccessor.GetTileAt(lookAtInfo.Location, out ITile targetTile) ? targetTile.GetTopThingByOrder(this.CreatureFinder, lookAtInfo.StackPosition) : null;
                         break;
                     case LocationType.InsideContainer:
-                        var container = player.GetContainerById(lookAtInfo.Location.ContainerId);
+                        container = player.GetContainerById(lookAtInfo.Location.ContainerId);
 
-                        if (container != null)
-                        {
-                            thing = container[lookAtInfo.Location.ContainerIndex];
-                        }
-
+                        thing = container?[lookAtInfo.Location.ContainerIndex];
                         break;
                     case LocationType.InventorySlot:
-                        thing = player.Inventory[(byte)lookAtInfo.Location.Slot];
+                        container = player.Inventory[lookAtInfo.Location.Slot] as IContainerItem;
+
+                        thing = container?.Content.FirstOrDefault();
                         break;
                 }
 

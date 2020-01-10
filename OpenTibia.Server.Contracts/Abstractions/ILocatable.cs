@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IContainerInfo.cs" company="2Dudes">
+// <copyright file="ILocatable.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,16 +9,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Communications.Packets.Contracts.Abstractions
+namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Server.Contracts.Structs;
+
     /// <summary>
-    /// Interface that represents a container request information.
+    /// Interface for all entities with a location.
     /// </summary>
-    public interface IContainerInfo
+    public interface ILocatable
     {
         /// <summary>
-        /// Gets the id of the container.
+        /// Gets this cylinder's location.
         /// </summary>
-        byte ContainerId { get; }
+        Location Location { get; }
     }
 }

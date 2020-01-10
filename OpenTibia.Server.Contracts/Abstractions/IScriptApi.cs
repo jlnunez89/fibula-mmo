@@ -19,11 +19,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
     {
         IGame Game { get; set; }
 
-        void ChangeItem(ref IThing thing, ushort toItemId, byte effect);
+        void ChangeItem(IThing thing, ushort toItemId, byte effect);
 
         void ChangeItemAtLocation(Location location, ushort fromItemId, ushort toItemId, byte effect);
 
-        bool CompareCountOf(IThing thingAt, FunctionComparisonType comparisonType, ushort value);
+        bool CompareCountItemsAt(Location location, FunctionComparisonType comparisonType, ushort value);
 
         void CreateItemAtLocation(Location location, ushort itemId, byte effect);
 
@@ -44,6 +44,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool HasRight(IPlayer user, string rightStr);
 
         bool IsCreature(IThing thing);
+
+        bool IsDressed(IThing thing);
 
         bool IsHouse(IThing thing);
 

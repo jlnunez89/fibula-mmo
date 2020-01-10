@@ -48,7 +48,7 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, ChannelListRequestHandler>();
             //services.AddSingleton<IHandler, ChannelOpenPrivateHandler>();
             //services.AddSingleton<IHandler, ChannelOpenPublicHandler>();
-            //services.AddSingleton<IHandler, ContainerCloseHandler>();
+            services.AddSingleton<IHandler, ContainerCloseHandler>();
             //services.AddSingleton<IHandler, ContainerUpHandler>();
             //services.AddSingleton<IHandler, FollowHandler>();
             //services.AddSingleton<IHandler, HouseWindowPostHandler>();

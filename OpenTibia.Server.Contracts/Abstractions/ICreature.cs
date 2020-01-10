@@ -20,7 +20,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures in the game.
     /// </summary>
-    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, IHasInventory
+    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, ICylinder, IHasInventory
     {
         // event OnCreatureStateChange OnZeroHealth;
         // event OnCreatureStateChange OnInventoryChanged;
@@ -134,6 +134,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         // TODO: implement or decide what to do with this.
         byte Shield { get; } // TODO: implement.
 
+        /// <summary>
+        /// Gets the collection of open containers tracked by this player.
+        /// </summary>
+        IEnumerable<IContainerItem> OpenContainers { get; }
+
         // ConcurrentQueue<Tuple<byte, Direction>> WalkingQueue { get; }
 
         // byte NextStepId { get; set; }
@@ -175,5 +180,40 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <returns>A collection of events with delays, representing decisions made after thinking.</returns>
         IEnumerable<(IEvent Event, TimeSpan Delay)> Think();
+
+        /// <summary>
+        /// Opens a container for this player, which tracks it.
+        /// </summary>
+        /// <param name="container">The container being opened.</param>
+        /// <returns>The id of the container as seen by this player.</returns>
+        byte OpenContainer(IContainerItem container);
+
+        /// <summary>
+        /// Opens a container by placing it at the given index id.
+        /// If there is a container already open at this index, it is first closed.
+        /// </summary>
+        /// <param name="container">The container to open.</param>
+        /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
+        void OpenContainerAt(IContainerItem container, byte containerId = 0xFF);
+
+        /// <summary>
+        /// Gets the id of the given container as known by this player, if it is.
+        /// </summary>
+        /// <param name="container">The container to check.</param>
+        /// <returns>The id of the container if known by this player.</returns>
+        sbyte GetContainerId(IContainerItem container);
+
+        /// <summary>
+        /// Closes a container for this player, which stops tracking it.
+        /// </summary>
+        /// <param name="containerId">The id of the container being closed.</param>
+        void CloseContainerWithId(byte containerId);
+
+        /// <summary>
+        /// Gets a container by the id known to this player.
+        /// </summary>
+        /// <param name="containerId">The id of the container.</param>
+        /// <returns>The container, if found.</returns>
+        IContainerItem GetContainerById(byte containerId);
     }
 }

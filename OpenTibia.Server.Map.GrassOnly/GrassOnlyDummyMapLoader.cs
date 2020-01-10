@@ -100,7 +100,8 @@ namespace OpenTibia.Server.Map.GrassOnly
                 {
                     var groundItem = this.ItemFactory.Create(102);
 
-                    var newTuple = (new Location() { X = x, Y = y, Z = fromZ }, new Tile(groundItem));
+                    var location = new Location() { X = x, Y = y, Z = fromZ };
+                    var newTuple = (location, new Tile(location, groundItem));
 
                     tuplesAdded.Add(newTuple);
                 }

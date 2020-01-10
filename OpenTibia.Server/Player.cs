@@ -30,19 +30,9 @@ namespace OpenTibia.Server
         private const int KnownCreatureLimit = 150;
 
         /// <summary>
-        /// The maximum number of containers to maintain.
-        /// </summary>
-        private const int MaxContainers = 16;
-
-        /// <summary>
         /// Stores the set of creatures that are known to this player.
         /// </summary>
         private readonly IDictionary<uint, long> knownCreatures;
-
-        /// <summary>
-        /// Stores the open containers of this player.
-        /// </summary>
-        private readonly IContainerItem[] openContainers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
@@ -67,7 +57,6 @@ namespace OpenTibia.Server
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
 
             this.knownCreatures = new Dictionary<uint, long>();
-            this.openContainers = new IContainerItem[MaxContainers];
 
             this.CharacterId = characterId;
 
@@ -100,14 +89,7 @@ namespace OpenTibia.Server
 
             // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);
-
-            // this.OnThingChanged += this.CheckInventoryContainerProximity;
         }
-
-        // ~PlayerId()
-        // {
-        //    OnLocationChanged -= CheckInventoryContainerProximity;
-        // }
 
         /// <summary>
         /// Gets the player's character id.
@@ -149,14 +131,9 @@ namespace OpenTibia.Server
         public bool IsLogoutAllowed => true; // this.AutoAttackTargetId == 0;
 
         /// <summary>
-        /// Gets the inventory for the player.
+        /// Gets or sets the inventory for the player.
         /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
-
-        /// <summary>
-        /// Gets the collection of open containers tracked by this player.
-        /// </summary>
-        public IEnumerable<IContainerItem> OpenContainers => this.openContainers;
 
         /// <summary>
         /// Checks if this player knows the given creature.
@@ -206,106 +183,6 @@ namespace OpenTibia.Server
             return uint.MinValue;
         }
 
-        /// <summary>
-        /// Gets the id of the given container as known by this player, if it is.
-        /// </summary>
-        /// <param name="container">The container to check.</param>
-        /// <returns>The id of the container if known by this player.</returns>
-        public sbyte GetContainerId(IContainerItem container)
-        {
-            for (sbyte i = 0; i < this.openContainers.Length; i++)
-            {
-                if (this.openContainers[i] == container)
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        /// <summary>
-        /// Closes a container for this player, which stops tracking int.
-        /// </summary>
-        /// <param name="containerId">The id of the container being closed.</param>
-        public void CloseContainerWithId(byte containerId)
-        {
-            try
-            {
-                this.openContainers[containerId].Close(this.Id);
-                this.openContainers[containerId] = null;
-            }
-            catch
-            {
-                // ignored
-            }
-        }
-
-        /// <summary>
-        /// Opens a container for this player, which tracks it.
-        /// </summary>
-        /// <param name="container">The container being opened.</param>
-        /// <returns>The id of the container as seen by this player.</returns>
-        public sbyte OpenContainer(IContainerItem container)
-        {
-            container.ThrowIfNull(nameof(container));
-
-            for (byte i = 0; i < this.openContainers.Length; i++)
-            {
-                if (this.openContainers[i] != null)
-                {
-                    continue;
-                }
-
-                this.openContainers[i] = container;
-                this.openContainers[i].Open(this.Id, i);
-
-                return (sbyte)i;
-            }
-
-            var lastIdx = (sbyte)(this.openContainers.Length - 1);
-
-            this.openContainers[lastIdx] = container;
-
-            return lastIdx;
-        }
-
-        /// <summary>
-        /// Opens a container and tracks it with the given id.
-        /// If there is a container already open at this index, it is first closed.
-        /// </summary>
-        /// <param name="container">The container to open.</param>
-        /// <param name="openWithId">The id with which to open the container.</param>
-        public void OpenContainerAt(IContainerItem container, byte openWithId)
-        {
-            this.openContainers[openWithId]?.Close(this.Id);
-            this.openContainers[openWithId] = container;
-            this.openContainers[openWithId].Open(this.Id, openWithId);
-        }
-
-        /// <summary>
-        /// Gets a container by the id known to this player.
-        /// </summary>
-        /// <param name="containerId">The id of the container.</param>
-        /// <returns>The container, if found.</returns>
-        public IContainerItem GetContainerById(byte containerId)
-        {
-            try
-            {
-                var container = this.openContainers[containerId];
-
-                container.Open(this.Id, containerId);
-
-                return container;
-            }
-            catch
-            {
-                // ignored
-            }
-
-            return null;
-        }
-
         private ushort GetBaseSpeed()
         {
             var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
@@ -339,44 +216,6 @@ namespace OpenTibia.Server
         //            {
         //                this.PendingAction.Perform();
         //            });
-        //    }
-        // }
-
-        // public void CheckInventoryContainerProximity(IThing thingChanging, ThingStateChangedEventArgs eventArgs)
-        // {
-        //    for (byte i = 0; i < this.OpenContainers.Length; i++)
-        //    {
-        //        if (this.OpenContainers[i] == null)
-        //        {
-        //            continue;
-        //        }
-
-        // var containerSourceLoc = this.OpenContainers[i].Location;
-
-        // switch (containerSourceLoc.Type)
-        //        {
-        //            case LocationType.Ground:
-        //                var locDiff = this.Location - containerSourceLoc;
-
-        // if (locDiff.MaxValueIn2D > 1)
-        //                {
-        //                    var container = this.GetContainer(i);
-        //                    this.CloseContainerWithId(i);
-
-        // if (container != null)
-        //                    {
-        //                        container.OnThingChanged -= this.CheckInventoryContainerProximity;
-        //                    }
-
-        // this.Game.NotifySinglePlayer(this, conn => new GenericNotification(conn, new ContainerClosePacket { ContainerId = i }));
-        //                }
-
-        // break;
-        //            case LocationType.Container:
-        //                break;
-        //            case LocationType.Slot:
-        //                break;
-        //        }
         //    }
         // }
     }

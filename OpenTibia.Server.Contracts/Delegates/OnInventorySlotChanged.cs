@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OnContentUpdated.cs" company="2Dudes">
+// <copyright file="OnInventorySlotChanged.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -12,12 +12,13 @@
 namespace OpenTibia.Server.Contracts
 {
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
-    /// Delegate meant for when content is updated in a container.
+    /// Delegate meant for when content changes in a slot within an inventory.
     /// </summary>
-    /// <param name="container">The container.</param>
-    /// <param name="updatedIndex">The index of the updated item.</param>
-    /// <param name="updatedItem">The updated item.</param>
-    public delegate void OnContentUpdated(IContainerItem container, byte updatedIndex, IItem updatedItem);
+    /// <param name="inventory">The inventory that changed.</param>
+    /// <param name="slot">The slot that changed.</param>
+    /// <param name="item">The item in the slot, if any.</param>
+    public delegate void OnInventorySlotChanged(IInventory inventory, Slot slot, IItem item);
 }

@@ -11,12 +11,10 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
-    using OpenTibia.Server.Contracts.Structs;
-
     /// <summary>
     /// Interface for all things in the game.
     /// </summary>
-    public interface IThing
+    public interface IThing : ILocatable, IHasParentCylinder
     {
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
@@ -27,11 +25,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets the id of this thing.
         /// </summary>
         ushort ThingId { get; }
-
-        /// <summary>
-        /// Gets or sets this thing's location.
-        /// </summary>
-        Location Location { get; set; }
 
         /// <summary>
         /// Gets the description of the thing.

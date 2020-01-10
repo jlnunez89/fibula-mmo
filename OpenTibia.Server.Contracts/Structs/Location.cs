@@ -22,12 +22,12 @@ namespace OpenTibia.Server.Contracts.Structs
         /// <summary>
         /// The bit flag for containers encoded in location.
         /// </summary>
-        private const int ContainerFlag = 0x40;
+        public const int ContainerFlag = 0x40;
 
         /// <summary>
         /// A value for X that denotes a location type other than <see cref="LocationType.Map"/>.
         /// </summary>
-        private const int NonMapLocationX = 0xFFFF;
+        public const int NonMapLocationX = 0xFFFF;
 
         /// <summary>
         /// Gets or sets the value of this location in the X coordinate.
@@ -56,6 +56,11 @@ namespace OpenTibia.Server.Contracts.Structs
         {
             get
             {
+                if (this == default)
+                {
+                    return LocationType.NotSet;
+                }
+
                 if (this.X != NonMapLocationX)
                 {
                     return LocationType.Map;
@@ -245,17 +250,12 @@ namespace OpenTibia.Server.Contracts.Structs
 
             if (!returnDiagonals)
             {
-                if (locationDiff.X < 0)
+                if (Math.Abs(locationDiff.X) < Math.Abs(locationDiff.Y))
                 {
-                    return Direction.West;
+                    return locationDiff.Y < 0 ? Direction.North : Direction.South;
                 }
 
-                if (locationDiff.X > 0)
-                {
-                    return Direction.East;
-                }
-
-                return locationDiff.Y < 0 ? Direction.North : Direction.South;
+                return locationDiff.X < 0 ? Direction.West : Direction.East;
             }
 
             if (locationDiff.X < 0)

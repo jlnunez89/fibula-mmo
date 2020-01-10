@@ -83,6 +83,14 @@ namespace OpenTibia.Communications.Handlers.Game
             // Before actually using the item, check if we're close enough to use it.
             if (itemUseInfo.FromLocation.Type == LocationType.Map)
             {
+                // Turn to the item if it's not exactly the location.
+                if (player.Location != itemUseInfo.FromLocation)
+                {
+                    var directionToThing = player.Location.DirectionTo(itemUseInfo.FromLocation);
+
+                    this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
+                }
+
                 var locationDiff = itemUseInfo.FromLocation - player.Location;
 
                 if (locationDiff.Z != 0)
@@ -108,13 +116,6 @@ namespace OpenTibia.Communications.Handlers.Game
 
                     responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Too far away, auto walk is not implemented yet."));
                 }
-            }
-
-            if (player.Location != itemUseInfo.FromLocation && itemUseInfo.FromLocation.Type == LocationType.Map)
-            {
-                var directionToThing = player.Location.DirectionTo(itemUseInfo.FromLocation);
-
-                this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
             }
 
             if (!responsePackets.Any() && !this.Game.PlayerRequest_UseItem(player, itemUseInfo.ItemClientId, itemUseInfo.FromLocation, itemUseInfo.FromStackPos, itemUseInfo.Index))

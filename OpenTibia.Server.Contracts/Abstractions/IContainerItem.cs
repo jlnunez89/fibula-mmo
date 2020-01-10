@@ -16,7 +16,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for items that are containers for other items.
     /// </summary>
-    public interface IContainerItem : IItem
+    public interface IContainerItem : IItem, ICylinder
     {
         /// <summary>
         /// The default container capacity value.
@@ -49,6 +49,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IList<IItem> Content { get; }
 
         /// <summary>
+        /// Gets the capacity of this container.
+        /// </summary>
+        byte Capacity { get; }
+
+        /// <summary>
         /// Attempts to retrieve an item from the contents of this container based on a given index.
         /// </summary>
         /// <param name="index">The index to retrieve.</param>
@@ -56,43 +61,27 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IItem this[int index] { get; }
 
         /// <summary>
-        /// Gets the capacity of this container.
-        /// </summary>
-        byte Capacity { get; }
-
-        /// <summary>
-        /// Attempts to add an item to this container.
-        /// </summary>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="originalItem">The item to add.</param>
-        /// <param name="index">Optional. The zero-based index at which to add the item. Defaults to 0xFF, which won't match any item.</param>
-        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        (bool result, IItem remainderItem) AddContent(IItemFactory itemFactory, IItem originalItem, byte index = 0xFF);
-
-        /// <summary>
-        /// Attempts to remove an item from this container.
-        /// </summary>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="itemId">The id of the item to look for to remove.</param>
-        /// <param name="index">The index at which to look for the item to remove.</param>
-        /// <param name="amount">The amount of the item to remove.</param>
-        /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        (bool result, IItem remainderItem) RemoveContent(IItemFactory itemFactory, ushort itemId, byte index, byte amount);
-
-        /// <summary>
         /// Marks this container as oppened by a creature.
         /// </summary>
-        /// <param name="creatureOpeningId">The id of the creature that is opening this container.</param>
+        /// <param name="creatureId">The id of the creature that is opening this container.</param>
         /// <param name="containerId">The id which the creature is proposing to label this container with.</param>
         /// <returns>The id of the container which this container is or will be known to this creature.</returns>
         /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
-        byte Open(uint creatureOpeningId, byte containerId);
+        byte BeginTracking(uint creatureId, byte containerId);
 
         /// <summary>
         /// Marks this container as closed by a creature.
         /// </summary>
-        /// <param name="creatureClosingId">The id of the creature that is closing this container.</param>
-        void Close(uint creatureClosingId);
+        /// <param name="creatureId">The id of the creature that is closing this container.</param>
+        void EndTracking(uint creatureId);
+
+        /// <summary>
+        /// Checks if this container is being tracked as opened a creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="containerId">The id which the creature is tracking this container with.</param>
+        /// <returns>True if this container is being tracked by the creature, false otherwise.</returns>
+        bool IsTracking(uint creatureId, out byte containerId);
 
         /// <summary>
         /// Counts the amount of the specified content item at a given index within this container.
@@ -103,10 +92,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         sbyte CountAmountAt(byte index, ushort typeIdExpected = 0);
 
         /// <summary>
-        /// Retrieves the id of this container as known to a creature.
+        /// Checks that this item's parents are not this same item.
         /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
-        /// <returns>The id of this container if it was found for the creature, -1 otherwise.</returns>
-        sbyte AsKnownTo(uint creatureId);
+        /// <param name="item">The parent item to check.</param>
+        /// <returns>True if this item is child of any item in the parent hierarchy, false otherwise.</returns>
+        bool IsChildOf(IItem item);
     }
 }

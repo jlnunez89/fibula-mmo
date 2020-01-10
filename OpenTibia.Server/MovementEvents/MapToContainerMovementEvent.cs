@@ -39,7 +39,6 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="toCreatureId">The id of the creature that should known the container to which the movement is happening.</param>
         /// <param name="toCreatureContainerId">The id of the container to which the movement is happening.</param>
         /// <param name="toCreatureContainerIndex">The index in the container to which the movement is happening.</param>
-        /// <param name="fromStackPos">Optional. The position in the stack of the location from which the movement is happening. Defaults to <see cref="byte.MaxValue"/>, which makes the system take the top thing at the location.</param>
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         /// <param name="evaluationTime">Optional. The evaluation time policy for this event. Defaults to <see cref="EvaluationTime.OnBoth"/>.</param>
         public MapToContainerMovementEvent(
@@ -54,7 +53,6 @@ namespace OpenTibia.Server.MovementEvents
             uint toCreatureId,
             byte toCreatureContainerId,
             byte toCreatureContainerIndex,
-            byte fromStackPos = byte.MaxValue,
             byte amount = 1,
             EvaluationTime evaluationTime = EvaluationTime.OnBoth)
             : base(logger, game, connectionManager, creatureFinder, creatureRequestingId, evaluationTime)
@@ -66,16 +64,17 @@ namespace OpenTibia.Server.MovementEvents
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
-            this.Conditions.Add(new LocationNotObstructedEventCondition(tileAccessor, this.Requestor, () => thingMoving, () => toLocation));
-            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, () => toLocation));
-            this.Conditions.Add(new UnpassItemsInRangeEventCondition(this.Requestor, () => thingMoving, () => toLocation));
-            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, amount));
+            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
+            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
+            this.Conditions.Add(new ContainerIsOpenEventCondition(() => creatureFinder.FindCreatureById(toCreatureId), toCreatureContainerId));
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = this.Game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, toLocation, fromStackPos, amount, isTeleport);
+                bool moveSuccessful = thingMoving is IItem item &&
+                                      creatureFinder.FindCreatureById(toCreatureId) is IPlayer targetPlayer &&
+                                      tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
+                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.GetContainerById(toCreatureContainerId), toIndex: toCreatureContainerIndex, amountToMove: amount);
 
                 if (!moveSuccessful)
                 {
@@ -85,16 +84,9 @@ namespace OpenTibia.Server.MovementEvents
                     return;
                 }
 
-                if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
-                {
-                    var directionToDestination = player.Location.DirectionTo(toLocation);
-
-                    this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
-                }
-
                 this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
 
-                this.Game.EvaluateCollisionEventRules(toLocation, thingMoving, this.Requestor);
+                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server
 {
+    using System.Collections.Generic;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
@@ -26,9 +28,9 @@ namespace OpenTibia.Server
         public const ushort CreatureThingId = 0x63;
 
         /// <summary>
-        /// Holds this thing's location.
+        /// Holds this thing's parent cylinder.
         /// </summary>
-        private Location location;
+        private ICylinder parentCylinder;
 
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
@@ -56,26 +58,67 @@ namespace OpenTibia.Server
         public abstract bool CanBeMoved { get; }
 
         /// <summary>
-        /// Gets or sets this thing's location.
+        /// Gets or sets the parent cylinder of this thing.
         /// </summary>
-        public Location Location
+        public ICylinder ParentCylinder
         {
             get
             {
-                return this.location;
+                return this.parentCylinder;
             }
 
             set
             {
-                var oldValue = this.location;
+                value.ThrowIfNull(nameof(value));
 
-                this.location = value;
+                var oldLocation = this.Location;
 
-                if (oldValue != this.location)
+                this.parentCylinder = value;
+
+                if (oldLocation != this.Location)
                 {
-                    this.OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(this.Location) });
+                    // The things's location changed since the parent changed.
+                    this.InvokePropertyChanged(nameof(this.Location));
                 }
             }
+        }
+
+        /// <summary>
+        /// Gets this thing's location.
+        /// </summary>
+        public virtual Location Location
+        {
+            get
+            {
+                return this.ParentCylinder?.Location ?? default;
+            }
+        }
+
+        /// <summary>
+        /// Gets this thing's cylinder hierarchy.
+        /// </summary>
+        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's cylinder hierarchy.</returns>
+        public IEnumerable<ICylinder> GetCylinderHierarchy()
+        {
+            ICylinder current = (this is ICylinder thisAsCylinder) ? thisAsCylinder : this.ParentCylinder;
+
+            while (current != null)
+            {
+                yield return current;
+
+                current = current.ParentCylinder;
+            }
+        }
+
+        /// <summary>
+        /// Invokes the <see cref="OnThingChanged"/> event on this thing.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        public void InvokePropertyChanged(string propertyName)
+        {
+            propertyName.ThrowIfNullOrWhiteSpace(propertyName);
+
+            this.OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
         }
     }
 }

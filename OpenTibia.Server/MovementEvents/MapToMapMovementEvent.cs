@@ -89,7 +89,18 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool moveSuccessful = this.Game.PerformThingMovementBetweenTiles(thingMoving, fromLocation, toLocation, fromStackPos, amount, isTeleport);
+                bool moveSuccessful = false;
+
+                if (thingMoving is ICreature creatureMoving)
+                {
+                    moveSuccessful = this.Game.PerformCreatureMovement(creatureMoving, toLocation);
+                }
+                else if (thingMoving is IItem item)
+                {
+                    moveSuccessful = tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
+                                     tileAccessor.GetTileAt(toLocation, out ITile toTile) &&
+                                     this.Game.PerformItemMovement(item, fromTile, toTile, fromStackPos, amountToMove: amount);
+                }
 
                 if (!moveSuccessful)
                 {
@@ -109,6 +120,8 @@ namespace OpenTibia.Server.MovementEvents
                 this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
 
                 this.Game.EvaluateCollisionEventRules(toLocation, thingMoving, this.Requestor);
+
+                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

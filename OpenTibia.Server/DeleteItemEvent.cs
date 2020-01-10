@@ -71,9 +71,14 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                bool successfulCreation = this.Game.PerformItemDeletion(typeId, atLocation, this.Requestor);
+                byte index = 0, subIndex = 0;
 
-                if (!successfulCreation)
+                var fromCylinder = this.Game.GetCyclinder(atLocation, ref index, ref subIndex, this.Requestor);
+                var item = this.Game.FindItemByIdAtLocation(typeId, atLocation, this.Requestor);
+
+                bool successfulDeletion = this.Game.PerformItemDeletion(item, fromCylinder, subIndex, this.Requestor);
+
+                if (!successfulDeletion)
                 {
                     // handles check for isPlayer.
                     this.NotifyOfFailure();

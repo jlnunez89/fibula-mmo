@@ -16,7 +16,6 @@ namespace OpenTibia.Server
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;
 
@@ -41,9 +40,6 @@ namespace OpenTibia.Server
             // this.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
 
             // make a copy of the type we are based on...
-            // this.Name = this.Type.Name;
-            // this.Description = this.Type.Description;
-            // this.Flags = new HashSet<ItemFlag>(this.Type.Flags);
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
         }
 
@@ -80,31 +76,6 @@ namespace OpenTibia.Server
         public override string Description => $"{this.Type.Name}{(string.IsNullOrWhiteSpace(this.Type.Description) ? string.Empty : "\n" + this.Type.Description)}";
 
         public override string InspectionText => this.Description;
-
-        // public uint HolderId => this.holder;
-
-        /// <summary>
-        /// Gets this item's location.
-        /// </summary>
-        public new Location Location
-        {
-            get
-            {
-                if (this.ParentContainer != null)
-                {
-                    return this.ParentContainer.Location;
-                }
-
-                // if (this.HolderId != 0)
-                // {
-                //    return this.CarryLocation;
-                // }
-
-                return base.Location;
-            }
-        }
-
-        //public Location CarryLocation { get; private set; }
 
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
 
@@ -271,15 +242,9 @@ namespace OpenTibia.Server
 
         public decimal Weight => (this.Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(this.Attributes[ItemAttribute.Weight]) / 100 : default) * this.Amount;
 
-        public IContainerItem ParentContainer { get; protected set; }
-
         public void SetAmount(byte amount)
         {
-            var oldAmount = this.Amount;
-
             this.Amount = Math.Min((byte)IItem.MaximumAmountOfCummulativeItems, amount);
-
-            //this.OnAmountChanged?.Invoke(this, oldAmount);
         }
 
         public void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes)
@@ -293,10 +258,9 @@ namespace OpenTibia.Server
 
             foreach (var attribute in attributes)
             {
-                if ("Content".Equals(attribute.Name))
+                if ("Content".Equals(attribute.Name) && this is IContainerItem containerItem)
                 {
-                    // Adding here will handle containers via polymorphism.
-                    this.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
+                    containerItem.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
 
                     continue;
                 }
@@ -319,10 +283,10 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Attempts to add the joined item to this container's content at the default index.
+        /// Attempts to join an item to this item's content at the default index.
         /// </summary>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="otherItem">The item to add.</param>
+        /// <param name="otherItem">The item to join with.</param>
         /// <returns>True if the operation was successful, false otherwise.</returns>
         public (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem)
         {
@@ -331,11 +295,11 @@ namespace OpenTibia.Server
 
             if (this.Type.TypeId != otherItem.Type.TypeId || !this.IsCumulative)
             {
-                return (false, null);
+                return (false, otherItem);
             }
 
             // We can join these two, figure out if we have any remainder.
-            if (otherItem.Amount + this.Amount < IItem.MaximumAmountOfCummulativeItems)
+            if (otherItem.Amount + this.Amount <= IItem.MaximumAmountOfCummulativeItems)
             {
                 this.Amount += otherItem.Amount;
 
@@ -367,72 +331,5 @@ namespace OpenTibia.Server
 
             return (true, remainder);
         }
-
-        /// <summary>
-        /// Adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        protected virtual void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
-        {
-            logger.ThrowIfNull(nameof(logger));
-
-            if (contentElements == null)
-            {
-                return;
-            }
-
-            logger.Warning($"Could not add content to item with type id {this.Type.TypeId} since it's not a {typeof(ContainerItem)}, ignoring.");
-        }
-
-        // public void SetHolder(ICreature holder, Location holdingLoc = default)
-        // {
-        //    var oldHolder = this.holder;
-        //    this.holder = holder?.Id ?? 0;
-        //    this.CarryLocation = holdingLoc;
-
-        // this.OnHolderChanged?.Invoke(this, oldHolder);
-        // }
-
-        // public void SetParent(IContainer parentContainer)
-        // {
-        //    this.Parent = parentContainer;
-        // }
-
-        // public virtual bool Join(IItem otherItem)
-        // {
-        //    if (!this.IsCumulative || otherItem?.Type.TypeId != this.Type.TypeId)
-        //    {
-        //        return false;
-        //    }
-
-        // var totalAmount = this.Amount + otherItem.Amount;
-
-        // this.SetAmount((byte)Math.Min(totalAmount, 100));
-        //    otherItem.SetAmount((byte)Math.Max(totalAmount - 100, 0));
-
-        // return otherItem.Amount == 0;
-        // }
-
-        // public virtual bool Separate(byte amount, out IItem splitItem)
-        // {
-        //    splitItem = null;
-
-        // if (amount > this.Amount)
-        //    {
-        //        return false;
-        //    }
-
-        // this.SetAmount((byte)Math.Max(this.Amount - amount, 0));
-
-        // if (this.Amount > 0)
-        //    {
-        //        splitItem = ItemFactory.Create(this.Type.TypeId);
-        //        splitItem.SetAmount(amount);
-        //    }
-
-        // return true;
-        // }
     }
 }

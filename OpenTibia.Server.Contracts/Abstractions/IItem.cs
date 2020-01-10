@@ -46,8 +46,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ///// </summary>
         // uint HolderId { get; }
 
-        IContainerItem ParentContainer { get; }
-
         /// <summary>
         /// Gets a value indicating whether this item is ground floor.
         /// </summary>
