@@ -20,7 +20,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Parsing.Grammar;
+    using OpenTibia.Server.Parsing.CipFiles;
     using Serilog;
     using Sprache;
 
@@ -86,8 +86,6 @@ namespace OpenTibia.Server.Events.MoveUseFile
         public IDictionary<EventRuleType, ISet<IEventRule>> LoadEventRules()
         {
             var moveUseFilePath = Path.Combine(Environment.CurrentDirectory, this.LoaderOptions.FilePath);
-
-            var assembly = Assembly.GetExecutingAssembly();
 
             var eventDictionary = new Dictionary<EventRuleType, ISet<IEventRule>>
             {

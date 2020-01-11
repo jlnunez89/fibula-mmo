@@ -82,6 +82,11 @@ namespace OpenTibia.Server
         private readonly IDictionary<EventRuleType, ISet<IEventRule>> eventRulesCatalog;
 
         /// <summary>
+        /// Gets the monster spawns in the game.
+        /// </summary>
+        private readonly IEnumerable<Spawn> monsterSpawns;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
@@ -89,6 +94,7 @@ namespace OpenTibia.Server
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
+        /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="scriptApi">A reference to the script api in use.</param>
@@ -98,7 +104,7 @@ namespace OpenTibia.Server
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             IEventRulesLoader eventRulesLoader,
-            // IMonsterLoader monsterLoader,
+            IMonsterSpawnLoader monsterSpawnsLoader,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IScriptApi scriptApi)
@@ -118,7 +124,7 @@ namespace OpenTibia.Server
 
             this.eventRulesCatalog = eventRulesLoader.LoadEventRules();
 
-            // this.monsterLoader = monsterLoader;
+            this.monsterSpawns = monsterSpawnsLoader.LoadSpawns();
 
             // Initialize game vars.
             this.Status = WorldState.Loading;
@@ -1106,6 +1112,9 @@ namespace OpenTibia.Server
                 // start the scheduler.
                 var schedulerTask = this.scheduler.RunAsync(cancellationToken);
 
+                // TODO: move this? spawn monsters
+                this.SpawnAllMonsters();
+
                 // Open the game world!
                 this.Status = WorldState.Open;
 
@@ -1114,6 +1123,14 @@ namespace OpenTibia.Server
 
             // return this to allow other IHostedService-s to start.
             return Task.CompletedTask;
+        }
+
+        private void SpawnAllMonsters()
+        {
+            foreach (var monsterSpawn in this.monsterSpawns)
+            {
+                this.ScriptRequest_PlaceMonsterAt(monsterSpawn.Location, monsterSpawn.Id);
+            }
         }
 
         /// <inheritdoc/>
@@ -1413,13 +1430,42 @@ namespace OpenTibia.Server
         /// Attempts to place a new monster at the given location.
         /// </summary>
         /// <param name="location">The location at which to place the monster.</param>
-        /// <param name="monsterType">The type of the monster to place.</param>
+        /// <param name="monsterRace">The race of the monster to place.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterType)
+        public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterRace)
         {
-            throw new NotImplementedException();
+            if (location.Type != LocationType.Map)
+            {
+                return false;
+            }
+
+            var newMonster = this.CreatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterRace));
+
+            if (this.map.GetTileAt(location, out ITile targetTile))
+            {
+                var (addResult, _) = targetTile.AddContent(this.ItemFactory, newMonster);
+
+                if (addResult)
+                {
+                    this.CreatureManager.RegisterCreature(newMonster);
+
+                    this.Logger.Debug($"Placed monster {newMonster.Name} at {location}.");
+                }
+
+                return addResult;
+            }
+
+            return false;
         }
 
+        /// <summary>
+        /// Gets a cylinder from a location.
+        /// </summary>
+        /// <param name="fromLocation">The location from which to decode the cylinder information.</param>
+        /// <param name="index">The index within the cyclinder to target.</param>
+        /// <param name="subIndex">The sub-index within the cylinder to target.</param>
+        /// <param name="creature">Optional. The creature that owns the target cylinder to target.</param>
+        /// <returns>An instance of the target <see cref="ICylinder"/> of the location.</returns>
         public ICylinder GetCyclinder(Location fromLocation, ref byte index, ref byte subIndex, ICreature creature = null)
         {
             if (fromLocation.Type == LocationType.Map && this.map.GetTileAt(fromLocation, out ITile fromTile))
@@ -1444,6 +1490,13 @@ namespace OpenTibia.Server
             return null;
         }
 
+        /// <summary>
+        /// Attempts to find an item at the given location.
+        /// </summary>
+        /// <param name="typeId">The type id of the item to look for.</param>
+        /// <param name="location">The location at which to look for the item.</param>
+        /// <param name="creature">Optional. The creature that the location's cyclinder targets, if any.</param>
+        /// <returns>An item instance, if found at the location.</returns>
         public IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null)
         {
             switch (location.Type)
@@ -1711,9 +1764,9 @@ namespace OpenTibia.Server
             if (containerItem.Location.Type == LocationType.Map)
             {
                 // Container was dropped or placed in a container that ultimately sits on the map, figure out which creatures are still in range.
-                foreach (var mapPair in containerItem.OpenedBy.ToList())
+                foreach (var (creatureId, containerId) in containerItem.OpenedBy.ToList())
                 {
-                    if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                    if (!(this.CreatureManager.FindCreatureById(creatureId) is IPlayer player))
                     {
                         continue;
                     }
@@ -1722,7 +1775,7 @@ namespace OpenTibia.Server
 
                     if (locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0)
                     {
-                        this.PerformPlayerContainerClose(player, containerItem, mapPair.Value);
+                        this.PerformPlayerContainerClose(player, containerItem, containerId);
                     }
                 }
             }
@@ -1741,9 +1794,9 @@ namespace OpenTibia.Server
         private void HandleContainerContentAdded(IContainerItem container, IItem addedItem)
         {
             // The request has to be sent this way since the container id may be different for each player.
-            foreach (var mapPair in container.OpenedBy.ToList())
+            foreach (var (creatureId, containerId) in container.OpenedBy.ToList())
             {
-                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                if (!(this.CreatureManager.FindCreatureById(creatureId) is IPlayer player))
                 {
                     continue;
                 }
@@ -1752,7 +1805,7 @@ namespace OpenTibia.Server
                     new GenericNotification(
                         this.Logger,
                         () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                        new GenericNotificationArguments(new ContainerAddItemPacket(mapPair.Value, addedItem))));
+                        new GenericNotificationArguments(new ContainerAddItemPacket(containerId, addedItem))));
             }
         }
 
@@ -1764,9 +1817,9 @@ namespace OpenTibia.Server
         private void HandleContainerContentRemoved(IContainerItem container, byte indexRemoved)
         {
             // The request has to be sent this way since the container id may be different for each player.
-            foreach (var mapPair in container.OpenedBy.ToList())
+            foreach (var (creatureId, containerId) in container.OpenedBy.ToList())
             {
-                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                if (!(this.CreatureManager.FindCreatureById(creatureId) is IPlayer player))
                 {
                     continue;
                 }
@@ -1775,7 +1828,7 @@ namespace OpenTibia.Server
                     new GenericNotification(
                         this.Logger,
                         () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                        new GenericNotificationArguments(new ContainerRemoveItemPacket(indexRemoved, mapPair.Value))));
+                        new GenericNotificationArguments(new ContainerRemoveItemPacket(indexRemoved, containerId))));
             }
         }
 
@@ -1793,9 +1846,9 @@ namespace OpenTibia.Server
             }
 
             // The request has to be sent this way since the container id may be different for each player.
-            foreach (var mapPair in container.OpenedBy.ToList())
+            foreach (var (creatureId, containerId) in container.OpenedBy.ToList())
             {
-                if (!(this.CreatureManager.FindCreatureById(mapPair.Key) is IPlayer player))
+                if (!(this.CreatureManager.FindCreatureById(creatureId) is IPlayer player))
                 {
                     continue;
                 }
@@ -1804,7 +1857,7 @@ namespace OpenTibia.Server
                     new GenericNotification(
                         this.Logger,
                         () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                        new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, mapPair.Value, updatedItem))));
+                        new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, containerId, updatedItem))));
             }
         }
 

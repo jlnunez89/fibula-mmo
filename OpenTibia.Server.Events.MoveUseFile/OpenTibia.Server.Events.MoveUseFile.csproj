@@ -47,8 +47,7 @@
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Items\OpenTibia.Server.Items.csproj" />
-    <ProjectReference Include="..\OpenTibia.Server.Parsing.Grammar\OpenTibia.Server.Parsing.Grammar.csproj" />
-    <ProjectReference Include="..\OpenTibia.Server.Parsing\OpenTibia.Server.Parsing.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Parsing.CipFiles\OpenTibia.Server.Parsing.CipFiles.csproj" />
   </ItemGroup>
 
 </Project>

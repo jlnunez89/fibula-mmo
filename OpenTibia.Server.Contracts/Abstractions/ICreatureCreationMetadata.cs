@@ -17,9 +17,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
     public interface ICreatureCreationMetadata
     {
         /// <summary>
-        /// Gets the article to use for the creature.
+        /// Gets the identifier to use when creating the creature.
         /// </summary>
-        string Article { get; }
+        string Identifier { get; }
 
         /// <summary>
         /// Gets the name to use for the creature.

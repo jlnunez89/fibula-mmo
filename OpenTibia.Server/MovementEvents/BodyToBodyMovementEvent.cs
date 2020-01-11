@@ -17,7 +17,6 @@ namespace OpenTibia.Server.MovementEvents
     using OpenTibia.Scheduling.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.MovementEvents.EventConditions;
     using Serilog;
 
     /// <summary>

@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Items.ObjectsFile
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Parsing;
+    using OpenTibia.Server.Parsing.CipFiles;
     using Serilog;
 
     /// <summary>
