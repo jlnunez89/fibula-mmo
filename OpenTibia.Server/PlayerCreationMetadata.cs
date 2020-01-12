@@ -37,7 +37,7 @@ namespace OpenTibia.Server
             ushort manapoints = 0,
             ushort corpse = 0)
         {
-            this.CharacterId = characterId;
+            this.Identifier = characterId;
             this.Name = name;
             this.MaxHitpoints = maxHitpoints;
             this.MaxManapoints = maxManapoints;
@@ -47,14 +47,9 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Gets the id of the character that the player will represent in game.
+        /// Gets the player's id.
         /// </summary>
-        public string CharacterId { get; }
-
-        /// <summary>
-        /// Gets the player name's article.
-        /// </summary>
-        public string Article { get; }
+        public string Identifier { get; }
 
         /// <summary>
         /// Gets the player's name.

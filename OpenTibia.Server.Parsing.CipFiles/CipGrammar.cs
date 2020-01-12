@@ -9,8 +9,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Parsing.Grammar
+namespace OpenTibia.Server.Parsing.CipFiles
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Server.Parsing.Contracts;
@@ -73,6 +74,11 @@ namespace OpenTibia.Server.Parsing.Grammar
         /// The close curly brace character.
         /// </summary>
         public static readonly Parser<char> CloseCurly = Parse.Char('}');
+
+        /// <summary>
+        /// The colon character.
+        /// </summary>
+        public static readonly Parser<char> Colon = Parse.Char(':');
 
         /// <summary>
         /// A message enclosed in double quotes.
@@ -156,10 +162,51 @@ namespace OpenTibia.Server.Parsing.Grammar
         public static readonly Parser<string> FunctionOrComparisonString =
             from functionName in Parse.AnyChar.Except(OpenParenthesis).Except(Comma).Except(EqualSign).Many().Text()
             from open in OpenParenthesis
-            from oneOrMoreArguments in Parse.AnyChar.Except(CloseParenthesis).Many().Text().Or(QuotedMessage)
+            from oneOrMoreArguments in Arguments
             from close in CloseParenthesis
             from functionComparison in Parse.AnyChar.Except(Parse.WhiteSpace).Except(Comma).Many().Text()
-            select functionName.Trim() + open + oneOrMoreArguments + close + functionComparison.Trim();
+            select functionName.Trim() + open + oneOrMoreArguments.Aggregate((e, str) => str = $"{e},{str}") + close + functionComparison.Trim();
+
+        /// <summary>
+        /// Parses a function arguments that are only text and numbers.
+        /// </summary>
+        public static readonly Parser<string> Argument =
+            QuotedMessage.Or(
+                Parse.AnyChar.Except(Comma)
+                             .Except(Colon)
+                             .Except(OpenParenthesis)
+                             .Except(CloseParenthesis)
+                             .Except(OpenBracket)
+                             .Except(CloseBracket)
+                             .AtLeastOnce().Text());
+
+        /// <summary>
+        /// Parses a multiple arguments separated by a comma: val0, val1, .. valN.
+        /// </summary>
+        public static readonly Parser<IEnumerable<string>> OneOrMoreArguments = Argument.DelimitedBy(Comma);
+
+        /// <summary>
+        /// Parses a parenthesis tuple argument in the form: (val0, val1, .. valN).
+        /// </summary>
+        public static readonly Parser<string> ParenthesizedTupleArgument =
+            from open in OpenParenthesis
+            from oneOrMoreArguments in OneOrMoreArguments
+            from close in CloseParenthesis
+            select open + oneOrMoreArguments.Aggregate((e, str) => str = $"{e},{str}") + close;
+
+        /// <summary>
+        /// Parses a bracket tuple argument in the form: [val0, val1, .. valN].
+        /// </summary>
+        public static readonly Parser<string> BracketedTupleArgument =
+            from open in OpenBracket
+            from oneOrMoreArguments in OneOrMoreArguments
+            from close in CloseBracket
+            select open + oneOrMoreArguments.Aggregate((e, str) => str = $"{e},{str}") + close;
+
+        /// <summary>
+        /// Parses multiple arguments.
+        /// </summary>
+        public static readonly Parser<IEnumerable<string>> Arguments = Argument.Or(ParenthesizedTupleArgument).Or(BracketedTupleArgument).DelimitedBy(Comma);
 
         /// <summary>
         /// Parses a Key/Value pair in the form: key=value.
@@ -192,6 +239,30 @@ namespace OpenTibia.Server.Parsing.Grammar
             select new RawEventRule(conditions, actions);
 
         /// <summary>
+        /// Parses monster spells.
+        /// </summary>
+        public static readonly Parser<(IEnumerable<string> conditions, IEnumerable<string> effects, string chance)> MonsterSpellRule =
+            from spellCondition in Conditions
+            from lws in Parse.WhiteSpace.Optional().Many()
+            from separator in ConditionsActionsSeparator
+            from tws in Parse.WhiteSpace.Optional().Many()
+            from spellEffect in Actions
+            from lws2 in Parse.WhiteSpace.Optional().Many()
+            from chanceSeparator in Colon
+            from tws2 in Parse.WhiteSpace.Optional().Many()
+            from chance in Parse.Number
+            select (spellCondition, spellEffect, chance);
+
+        /// <summary>
+        /// Parses monster spells.
+        /// </summary>
+        public static readonly Parser<IEnumerable<(IEnumerable<string> conditions, IEnumerable<string> effects, string chance)>> MonsterSpellRules =
+            from open in OpenCurly
+            from spells in MonsterSpellRule.DelimitedBy(Comma)
+            from close in CloseCurly
+            select spells;
+
+        /// <summary>
         /// Parses action functions.
         /// </summary>
         public static readonly Parser<ActionFunction> ActionFunction =
@@ -212,5 +283,65 @@ namespace OpenTibia.Server.Parsing.Grammar
             from functionComparison in GreaterThanComparison.Or(GreaterThanOrEqualToComparison).Or(LessThanComparison).Or(LessThanOrEqualToComparison).Or(EqualToComparison)
             from identifier in Parse.AnyChar.Except(Comma).Many().Text()
             select new ComparisonFunction(functionName.Trim(), functionComparison, identifier, oneOrMoreArguments.ToArray());
+
+        /// <summary>
+        /// Parses monster inventory entries.
+        /// </summary>
+        public static readonly Parser<(ushort, byte, ushort)> MonsterInventoryEntry =
+            from open in OpenParenthesis
+            from content in OneOrMoreArguments
+            from close in CloseParenthesis
+            select (Convert.ToUInt16(content.ElementAt(0)), Convert.ToByte(content.ElementAt(1)), Convert.ToUInt16(content.ElementAt(2)));
+
+        /// <summary>
+        /// Parses a monster inventory.
+        /// </summary>
+        public static readonly Parser<IEnumerable<(ushort, byte, ushort)>> MonsterInventory =
+            from open in OpenCurly
+            from inventoryItems in MonsterInventoryEntry.DelimitedBy(Comma)
+            from close in CloseCurly
+            select inventoryItems;
+
+        /// <summary>
+        /// Parses monster skill entries, in the form (skillName, currentLevel, minimumLevel, maximumLevel, currentCount, countForNextLevel, addOnLevel).
+        /// </summary>
+        public static readonly Parser<(string, int, int, int, uint, uint, byte)> MonsterSkillEntry =
+            from open in OpenParenthesis
+            from content in OneOrMoreArguments
+            from close in CloseParenthesis
+            select (content.ElementAt(0),
+                Convert.ToInt32(content.ElementAt(1)),
+                Convert.ToInt32(content.ElementAt(2)),
+                Convert.ToInt32(content.ElementAt(3)),
+                Convert.ToUInt32(content.ElementAt(4)),
+                Convert.ToUInt32(content.ElementAt(5)),
+                Convert.ToByte(content.ElementAt(6)));
+
+        /// <summary>
+        /// Parses a monster's skills.
+        /// </summary>
+        public static readonly Parser<IEnumerable<(string, int, int, int, uint, uint, byte)>> MonsterSkills =
+            from open in OpenCurly
+            from skillEntries in MonsterSkillEntry.DelimitedBy(Comma)
+            from close in CloseCurly
+            select skillEntries;
+
+        /// <summary>
+        /// Parses a monster strategy.
+        /// </summary>
+        public static readonly Parser<(byte, byte, byte, byte)> MonsterStrategy =
+            from open in OpenParenthesis
+            from content in OneOrMoreArguments
+            from close in CloseParenthesis
+            select (Convert.ToByte(content.ElementAt(0)), Convert.ToByte(content.ElementAt(1)), Convert.ToByte(content.ElementAt(2)), Convert.ToByte(content.ElementAt(3)));
+
+        /// <summary>
+        /// Parses a creature phrases in the form { "phrase0", "phrase1", .. "phraseN" }.
+        /// </summary>
+        public static readonly Parser<IEnumerable<string>> CreaturePhrases =
+            from open in OpenCurly
+            from phrases in QuotedMessage.DelimitedBy(Comma)
+            from close in CloseCurly
+            select phrases;
     }
 }

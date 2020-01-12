@@ -180,8 +180,23 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the use item request was accepted, false otherwise.</returns>
         bool PlayerRequest_UseItem(IPlayer player, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index);
 
+        /// <summary>
+        /// Gets a cylinder from a location.
+        /// </summary>
+        /// <param name="fromLocation">The location from which to decode the cylinder information.</param>
+        /// <param name="index">The index within the cyclinder to target.</param>
+        /// <param name="subIndex">The sub-index within the cylinder to target.</param>
+        /// <param name="creature">Optional. The creature that owns the target cylinder to target.</param>
+        /// <returns>An instance of the target <see cref="ICylinder"/> of the location.</returns>
         ICylinder GetCyclinder(Location fromLocation, ref byte index, ref byte subIndex, ICreature creature = null);
 
+        /// <summary>
+        /// Attempts to find an item at the given location.
+        /// </summary>
+        /// <param name="typeId">The type id of the item to look for.</param>
+        /// <param name="location">The location at which to look for the item.</param>
+        /// <param name="creature">Optional. The creature that the location's cyclinder targets, if any.</param>
+        /// <returns>An item instance, if found at the location.</returns>
         IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null);
 
         /// <summary>

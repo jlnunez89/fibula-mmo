@@ -144,7 +144,7 @@ namespace OpenTibia.Common.Utilities
 
             for (var i = 0; i < str.Length; i++)
             {
-                if (str[i] == DoubleQuote && (i > 0 && str[i - 1] != Backslash))
+                if (str[i] == DoubleQuote && (i == 0 || str[i - 1] != Backslash))
                 {
                     inQuote = !inQuote;
                 }

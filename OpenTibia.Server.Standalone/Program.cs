@@ -37,6 +37,8 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Server.Items.ObjectsFile;
     using OpenTibia.Server.Map;
     using OpenTibia.Server.Map.SectorFiles;
+    using OpenTibia.Server.Monsters.MonFiles;
+    using OpenTibia.Server.Spawns.MonstersDbFile;
     using Serilog;
 
     /// <summary>
@@ -124,6 +126,10 @@ namespace OpenTibia.Server.Standalone
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
 
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
+
+            services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
+
+            services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
 
             services.AddMoveUseItemEventLoader(hostingContext.Configuration);
 

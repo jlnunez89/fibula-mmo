@@ -28,7 +28,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Items\OpenTibia.Server.Items.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Monsters\OpenTibia.Server.Monsters.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Parsing.CipFiles\OpenTibia.Server.Parsing.CipFiles.csproj" />
   </ItemGroup>
 
 </Project>

@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Parsing
+namespace OpenTibia.Server.Parsing.CipFiles.Models
 {
     using System.Collections.Generic;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;

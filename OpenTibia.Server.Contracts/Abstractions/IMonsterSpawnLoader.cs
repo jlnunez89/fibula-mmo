@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CipAttribute.cs" company="2Dudes">
+// <copyright file="IMonsterSpawnLoader.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,23 +9,20 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Parsing
+namespace OpenTibia.Server.Contracts.Abstractions
 {
-    using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using System.Collections.Generic;
+    using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Class that represents an attribute.
+    /// Interface for an <see cref="IMonsterSpawnLoader"/> loader.
     /// </summary>
-    public class CipAttribute : IParsedAttribute
+    public interface IMonsterSpawnLoader
     {
         /// <summary>
-        /// Gets or sets the attribute's name.
+        /// Attempts to load the monster spawns.
         /// </summary>
-        public string Name { get; set; }
-
-        /// <summary>
-        /// Gets or sets the attribute's value.
-        /// </summary>
-        public object Value { get; set; }
+        /// <returns>The collection of loaded monster spawns.</returns>
+        IEnumerable<Spawn> LoadSpawns();
     }
 }

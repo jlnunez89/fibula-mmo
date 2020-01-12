@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Events.MoveUseFile;
-    using OpenTibia.Server.Parsing.Grammar;
+    using OpenTibia.Server.Parsing.CipFiles;
     using Serilog;
     using Sprache;
 

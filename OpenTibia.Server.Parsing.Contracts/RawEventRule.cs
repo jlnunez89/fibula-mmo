@@ -15,7 +15,7 @@ namespace OpenTibia.Server.Parsing.Contracts
     using System.Linq;
 
     /// <summary>
-    /// Class that represents a raw event rule.
+    /// Class that represents a raw rule.
     /// </summary>
     public class RawEventRule
     {

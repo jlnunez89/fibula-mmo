@@ -51,17 +51,22 @@
     <ProjectReference Include="..\OpenTibia.Server.Events.MoveUseFile\OpenTibia.Server.Events.MoveUseFile.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Items.ObjectsFile\OpenTibia.Server.Items.ObjectsFile.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Map.SectorFiles\OpenTibia.Server.Map.SectorFiles.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Monsters.MonFiles\OpenTibia.Server.Monsters.MonFiles.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Spawns.MonstersDbFile\OpenTibia.Server.Spawns.MonstersDbFile.csproj" />
     <ProjectReference Include="..\OpenTibia.Server\OpenTibia.Server.csproj" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="dat\moveuse.dat">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="config\monster.db">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="dat\objects.srv">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    <None Update="config\moveuse.dat">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="config\objects.srv">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="hostsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

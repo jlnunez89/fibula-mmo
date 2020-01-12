@@ -19,7 +19,7 @@ namespace OpenTibia.Server.Map.SectorFiles
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Map;
-    using OpenTibia.Server.Parsing;
+    using OpenTibia.Server.Parsing.CipFiles;
     using Serilog;
 
     public class SectorFileReader
