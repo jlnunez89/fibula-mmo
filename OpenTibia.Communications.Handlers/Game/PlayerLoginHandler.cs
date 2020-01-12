@@ -157,14 +157,20 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
+            var player = this.Game.PlayerRequest_Login(character, connection);
+
+            if (player == null)
+            {
+                // Unable to place the player in the map.
+                failureReason = "Your character could not be placed on the map.\nTry again later or contact an administrator.";
+            }
+
             if (failureReason == string.Empty)
             {
                 try
                 {
                     // Set player status to online.
                     character.IsOnline = true;
-
-                    var player = this.Game.PlayerRequest_Login(character, connection);
 
                     responsePackets.Add(new SelfAppearPacket(player.Id, true, player));
 

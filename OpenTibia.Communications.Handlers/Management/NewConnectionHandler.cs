@@ -26,6 +26,7 @@ namespace OpenTibia.Communications.Handlers.Management
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Data;
     using OpenTibia.Server.Messaging.Packets;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a new connection request handler for the login server.
@@ -39,14 +40,17 @@ namespace OpenTibia.Communications.Handlers.Management
         /// <param name="gameConfigOptions">The game configuration options.</param>
         /// <param name="protocolConfigOptions">The protocol configuration options.</param>
         public NewConnectionHandler(
+            ILogger logger,
             IApplicationContext applicationContext,
             IOptions<GameConfigurationOptions> gameConfigOptions,
             IOptions<ProtocolConfigurationOptions> protocolConfigOptions)
         {
+            logger.ThrowIfNull(nameof(logger));
             applicationContext.ThrowIfNull(nameof(applicationContext));
             gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
 
+            this.Logger = logger;
             this.ApplicationContext = applicationContext;
             this.GameConfiguration = gameConfigOptions.Value;
             this.ProtocolConfiguration = protocolConfigOptions.Value;
@@ -56,6 +60,11 @@ namespace OpenTibia.Communications.Handlers.Management
         /// Gets the type of packet that this handler is for.
         /// </summary>
         public override byte ForPacketType => (byte)IncomingManagementPacketType.LoginServerRequest;
+
+        /// <summary>
+        /// Gets the reference to the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets a reference to the application context.
@@ -91,6 +100,8 @@ namespace OpenTibia.Communications.Handlers.Management
                 // TODO: hardcoded messages.
                 responsePackets.Add(new LoginServerDisconnectPacket($"You need client version {this.ProtocolConfiguration.ClientVersion.Description} to connect to this server."));
 
+                this.Logger.Information($"Client attempted to connect with version: {newConnectionInfo.Version}, OS: {newConnectionInfo.Os}. Expected version: {this.ProtocolConfiguration.ClientVersion.Numeric}.");
+
                 return (true, responsePackets);
             }
 
@@ -108,6 +119,8 @@ namespace OpenTibia.Communications.Handlers.Management
 
                 if (message.GetByte() != 0)
                 {
+                    this.Logger.Information($"Unable to decrypt and communicate with client. RSA keys don't match either CiP's or OTServ's, giving up.");
+
                     // These RSA keys are also unsuccessful... give up.
                     // loginPacket = new AccountLoginPacket(inboundMessage);
 

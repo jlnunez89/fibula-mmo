@@ -40,6 +40,9 @@ namespace OpenTibia.Server.Monsters
             //}
         }
 
+        /// <summary>
+        /// Gets the type of this monster.
+        /// </summary>
         public IMonsterType Type { get; }
 
         public uint Experience { get; }
