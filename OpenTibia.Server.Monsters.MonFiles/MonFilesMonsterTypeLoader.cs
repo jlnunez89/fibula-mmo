@@ -103,6 +103,11 @@ namespace OpenTibia.Server.Monsters.MonFiles
             return monsterTypesDictionary;
         }
 
+        /// <summary>
+        /// Reads a <see cref="IMonsterType"/> out of a monster file.
+        /// </summary>
+        /// <param name="monsterFileInfo">The information about the monster file.</param>
+        /// <returns>The <see cref="IMonsterType"/> instance.</returns>
         private IMonsterType ReadMonsterFile(FileInfo monsterFileInfo)
         {
             monsterFileInfo.ThrowIfNull(nameof(monsterFileInfo));
@@ -186,6 +191,12 @@ namespace OpenTibia.Server.Monsters.MonFiles
             return monsterType;
         }
 
+        /// <summary>
+        /// Reads data out of multiple lines in the input files.
+        /// </summary>
+        /// <param name="fileLines">The file's lines.</param>
+        /// <param name="monsterFileName">The current monster file name, for logging purposes.</param>
+        /// <returns>A collection of mappings of properties names to values.</returns>
         private IEnumerable<(string propName, string propValue)> ReadInDataTuples(IEnumerable<string> fileLines, string monsterFileName)
         {
             fileLines.ThrowIfNull(nameof(fileLines));

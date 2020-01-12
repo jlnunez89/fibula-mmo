@@ -29,7 +29,6 @@
     <Compile Remove="Statement.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="StyleCop.Cache" />
     <None Remove="stylecop.json" />
   </ItemGroup>
   <ItemGroup>

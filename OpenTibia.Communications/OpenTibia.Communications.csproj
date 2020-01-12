@@ -7,7 +7,6 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <None Remove="StyleCop.Cache" />
     <None Remove="stylecop.json" />
   </ItemGroup>
   <ItemGroup>

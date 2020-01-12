@@ -109,26 +109,51 @@ namespace OpenTibia.Server.Parsing.CipFiles
             return root.Attributes.First().Value as IEnumerable<CipElement>;
         }
 
+        /// <summary>
+        /// Parses monster spells out of a string.
+        /// </summary>
+        /// <param name="spellsStr">The string to parse.</param>
+        /// <returns>A collection of data containing the spell conditions, effects and an asociated chance.</returns>
         public static IEnumerable<(IEnumerable<string> conditions, IEnumerable<string> effects, string chance)> ParseMonsterSpells(string spellsStr)
         {
             return CipGrammar.MonsterSpellRules.Parse(spellsStr);
         }
 
+        /// <summary>
+        /// Parses a monster's possible inventory items out of a string.
+        /// </summary>
+        /// <param name="inventoryStr">The string to parse.</param>
+        /// <returns>A collection of tuples containing the possible inventory items of the monster.</returns>
         public static IEnumerable<(ushort typeId, byte maxAmount, ushort dropChance)> ParseMonsterInventory(string inventoryStr)
         {
             return CipGrammar.MonsterInventory.Parse(inventoryStr);
         }
 
+        /// <summary>
+        /// Parses a monster's skills out of a string.
+        /// </summary>
+        /// <param name="skillsStr">The string to parse.</param>
+        /// <returns>A collection of tuples containing the skills information.</returns>
         public static IEnumerable<(string, int, int, int, uint, uint, byte)> ParseMonsterSkills(string skillsStr)
         {
             return CipGrammar.MonsterSkills.Parse(skillsStr);
         }
 
+        /// <summary>
+        /// Parses a monster's strategy values out of a string.
+        /// </summary>
+        /// <param name="strategyStr">The string to parse.</param>
+        /// <returns>A tuple containing the monster strategy chances.</returns>
         public static (byte, byte, byte, byte) ParseMonsterStrategy(string strategyStr)
         {
             return CipGrammar.MonsterStrategy.Parse(strategyStr);
         }
 
+        /// <summary>
+        /// Parses a creature's phrases out of a string.
+        /// </summary>
+        /// <param name="phrasesStr">The string to parse.</param>
+        /// <returns>A collection of strings, the phrases of the creature.</returns>
         public static IEnumerable<string> ParsePhrases(string phrasesStr)
         {
             return CipGrammar.CreaturePhrases.Parse(phrasesStr);
