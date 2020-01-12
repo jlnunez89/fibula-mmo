@@ -71,6 +71,8 @@ namespace OpenTibia.Communications
 
                 if (packetType != (byte)IncomingGamePacketType.LogIn)
                 {
+                    this.Logger.Warning($"Unexpected packet {packetType} routed to game protocol, closing connection.");
+
                     // but this is not the packet we were expecting for a new connection.
                     connection.Close();
                     return;
@@ -90,6 +92,8 @@ namespace OpenTibia.Communications
 
                     if (inboundMessage.GetByte() != 0)
                     {
+                        this.Logger.Warning($"Unable to decrypt and communicate with client. RSA keys don't match either CiP's or OTServ's, giving up.");
+
                         // These RSA keys are also usuccessful... so give up.
                         connection.Close();
                         return;

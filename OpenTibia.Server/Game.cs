@@ -91,7 +91,6 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
-        /// <param name="mapLoader">A reference to the map loader in use.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
@@ -144,7 +143,7 @@ namespace OpenTibia.Server
 
             this.scheduler.OnEventFired += this.ProcessEvent;
 
-            map.WindowLoaded += this.HandleMapWindowLoaded;
+            this.map.WindowLoaded += this.HandleMapWindowLoaded;
         }
 
         /// <summary>
@@ -283,22 +282,17 @@ namespace OpenTibia.Server
         /// <returns>An instance of the new <see cref="IPlayer"/> in the game.</returns>
         public IPlayer PlayerRequest_Login(CharacterEntity character, IConnection connection)
         {
-            var player = this.CreatureFactory.Create(CreatureType.Player, new PlayerCreationMetadata(character.Id, character.Name, 100, 100, 100, 100, 4240)) as Player;
-
-            this.CreatureManager.RegisterCreature(player);
-
-            this.ConnectionManager.Register(connection, player.Id);
-
-            // TODO: check if map.CanAddCreature(playerRecord.location);
-            IThing playerThing = player;
-
             // TODO: should be something like character.location
             var targetLocation = Game.VeteranStart;
 
-            if (this.map.GetTileAt(targetLocation, out ITile targetTile))
+            var player = this.CreatureFactory.Create(CreatureType.Player, new PlayerCreationMetadata(character.Id, character.Name, 100, 100, 100, 100, 4240)) as Player;
+
+            if (!this.PlaceCreatureOnMap(targetLocation, player))
             {
-                targetTile.AddContent(this.ItemFactory, playerThing);
+                return null;
             }
+
+            this.ConnectionManager.Register(connection, player.Id);
 
             player.Inventory.OnSlotChanged += this.HandlePlayerInventoryChanged;
 
@@ -388,11 +382,18 @@ namespace OpenTibia.Server
             }
 
             IEvent movementEvent = null;
+            var movementDelay = DefaultPlayerActionDelay;
 
             // We know the source location is good, now let's figure out the destination to create the appropriate movement event.
             switch (toLocation.Type)
             {
                 case LocationType.Map:
+                    if (thingAtStackPos is ICreature)
+                    {
+                        // Override delay moving a creature in the map.
+                        movementDelay = TimeSpan.FromSeconds(1);
+                    }
+
                     movementEvent = new MapToMapMovementEvent(this.Logger, this, this.ConnectionManager, this.map, this.CreatureManager, player.Id, thingAtStackPos, fromLocation, toLocation, fromStackPos, count);
                     break;
                 case LocationType.InsideContainer:
@@ -406,7 +407,7 @@ namespace OpenTibia.Server
             // At this point we proabbly have enough information, let's enqueue it.
             if (movementEvent != null)
             {
-                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + DefaultPlayerActionDelay);
+                this.scheduler.ScheduleEvent(movementEvent, this.CurrentTime + movementDelay);
             }
 
             return movementEvent != null;
@@ -1436,28 +1437,9 @@ namespace OpenTibia.Server
         /// <returns>True if the request was accepted, false otherwise.</returns>
         public bool ScriptRequest_PlaceMonsterAt(Location location, ushort monsterRace)
         {
-            if (location.Type != LocationType.Map)
-            {
-                return false;
-            }
-
             var newMonster = this.CreatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterRace));
 
-            if (this.map.GetTileAt(location, out ITile targetTile))
-            {
-                var (addResult, _) = targetTile.AddContent(this.ItemFactory, newMonster);
-
-                if (addResult)
-                {
-                    this.CreatureManager.RegisterCreature(newMonster);
-
-                    this.Logger.Debug($"Placed monster {newMonster.Name} at {location}.");
-                }
-
-                return addResult;
-            }
-
-            return false;
+            return this.PlaceCreatureOnMap(location, newMonster);
         }
 
         /// <summary>
@@ -1749,6 +1731,36 @@ namespace OpenTibia.Server
                     this.Logger,
                     () => this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
                     new GenericNotificationArguments(new ContainerClosePacket(asContainerId))));
+        }
+
+        /// <summary>
+        /// Attempts to place a creature on the map.
+        /// </summary>
+        /// <param name="location">The location to place the creature at.</param>
+        /// <param name="creature">The creature to place.</param>
+        /// <returns>True if the creature is successfully added to the map, false otherwise.</returns>
+        private bool PlaceCreatureOnMap(Location location, ICreature creature)
+        {
+            if (location.Type != LocationType.Map)
+            {
+                return false;
+            }
+
+            if (this.map.GetTileAt(location, out ITile targetTile))
+            {
+                var (addResult, _) = targetTile.AddContent(this.ItemFactory, creature);
+
+                if (addResult)
+                {
+                    this.CreatureManager.RegisterCreature(creature);
+
+                    this.Logger.Debug($"Placed {creature.Name} at {location}.");
+                }
+
+                return addResult;
+            }
+
+            return false;
         }
 
         /// <summary>
