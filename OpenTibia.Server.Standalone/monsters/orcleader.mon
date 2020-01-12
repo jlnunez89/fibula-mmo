@@ -1,0 +1,50 @@
+# Tibia - graphical Multi-User-Dungeon
+# MonsterRace File
+# 2005/10/12 - 16:37:51
+
+RaceNumber    = 59
+Name          = "orc leader"
+Article       = "an"
+Outfit        = (59, 0-0-0-0)
+Corpse        = 4119
+Blood         = Blood
+Experience    = 270
+SummonCost    = 640
+FleeThreshold = 0
+Attack        = 48
+Defend        = 45
+Armor         = 20
+Poison        = 0
+LoseTarget    = 5
+Strategy      = (70, 15, 15, 0)
+
+Flags         = {KickBoxes,
+                 KickCreatures,
+                 SeeInvisible,
+                 Unpushable,
+                 NoBurning}
+
+Skills        = {(HitPoints, 450, 0, 450, 0, 0, 0),
+                 (GoStrength, 75, 0, 75, 0, 0, 0),
+                 (CarryStrength, 600, 0, 600, 0, 0, 0),
+                 (FistFighting, 52, 52, 52, 100, 1500, 1)}
+
+Spells        = {Victim (7, 9, 0) -> Damage (1, 60, 10) : 6}
+
+Inventory     = {(2854, 1, 200),
+                 (3372, 1, 25),
+                 (3301, 1, 8),
+                 (3267, 1, 230),
+                 (3578, 1, 300),
+                 (3031, 35, 280),
+                 (3285, 1, 80),
+                 (3577, 2, 150),
+                 (3357, 1, 15),
+                 (3557, 1, 4),
+                 (3410, 1, 100),
+                 (3307, 1, 120),
+                 (3091, 1, 40),
+                 (3298, 4, 100),
+                 (3369, 1, 1)}
+
+Talk          = {"Ulderek futgyr human!"}
