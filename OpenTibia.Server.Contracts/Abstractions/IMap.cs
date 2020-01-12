@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     using System.Buffers;
     using System.Collections.Generic;
     using OpenTibia.Server.Contracts;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -35,6 +36,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// The default window size in the Y coordinate.
         /// </summary>
         public const byte DefaultWindowSizeY = 14;
+
+        /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        event OnMapWindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the description of the map as seen by the given <paramref name="player"/>.

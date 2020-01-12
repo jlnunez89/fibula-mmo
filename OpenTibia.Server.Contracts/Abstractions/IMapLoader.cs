@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -19,6 +20,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IMapLoader
     {
+        /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        event OnMapWindowLoaded MapWindowLoaded;
+
         /// <summary>
         /// Gets the percentage completed loading the map [0, 100].
         /// </summary>
