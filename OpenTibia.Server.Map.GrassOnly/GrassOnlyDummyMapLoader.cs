@@ -15,6 +15,7 @@ namespace OpenTibia.Server.Map.GrassOnly
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Map;
 
@@ -38,6 +39,11 @@ namespace OpenTibia.Server.Map.GrassOnly
             this.preloaded = false;
             this.tilesAndLocations = new ConcurrentDictionary<Location, ITile>();
         }
+
+        /// <summary>
+        /// Event not in use for this loader.
+        /// </summary>
+        public event OnMapWindowLoaded MapWindowLoaded;
 
         /// <summary>
         /// Gets the percentage completed loading the map [0, 100].

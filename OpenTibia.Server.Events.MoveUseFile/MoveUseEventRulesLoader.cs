@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Events.MoveUseFile
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
-    using System.Reflection;
     using Microsoft.Extensions.Options;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;

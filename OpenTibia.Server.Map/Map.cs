@@ -21,6 +21,7 @@ namespace OpenTibia.Server.Map
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
@@ -65,6 +66,11 @@ namespace OpenTibia.Server.Map
             this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>, int[])>();
             this.tilesCacheLock = new object();
         }
+
+        /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        public event OnMapWindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the reference to the current logger.
@@ -442,9 +448,30 @@ namespace OpenTibia.Server.Map
         {
             if (!this.Loader.HasLoaded(location.X, location.Y, location.Z))
             {
+                int minXLoaded = int.MaxValue;
+                int maxXLoaded = int.MinValue;
+                int minYLoaded = int.MaxValue;
+                int maxYLoaded = int.MinValue;
+                sbyte minZLoaded = sbyte.MaxValue;
+                sbyte maxZLoaded = sbyte.MinValue;
+
                 foreach (var (loc, t) in this.Loader.Load(location.X, location.X, location.Y, location.Y, location.Z, location.Z))
                 {
                     this.tiles[loc] = t;
+
+                    minXLoaded = Math.Min(loc.X, minXLoaded);
+                    maxXLoaded = Math.Max(loc.X, maxXLoaded);
+
+                    minYLoaded = Math.Min(loc.Y, minYLoaded);
+                    maxYLoaded = Math.Max(loc.Y, maxYLoaded);
+
+                    minZLoaded = Math.Min(loc.Z, minZLoaded);
+                    maxZLoaded = Math.Max(loc.Z, maxZLoaded);
+                }
+
+                if (minXLoaded < int.MaxValue)
+                {
+                    this.WindowLoaded?.Invoke(minXLoaded, maxXLoaded, minYLoaded, maxYLoaded, minZLoaded, maxZLoaded);
                 }
             }
 

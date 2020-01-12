@@ -19,6 +19,7 @@ namespace OpenTibia.Server.Map.SectorFiles
     using Microsoft.Extensions.Options;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
@@ -84,6 +85,11 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             this.sectorsLoaded = new bool[this.sectorsLengthX, this.sectorsLengthY, this.sectorsLengthZ];
         }
+
+        /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        public event OnMapWindowLoaded MapWindowLoaded;
 
         /// <summary>
         /// Gets the logger to use.
@@ -182,6 +188,8 @@ namespace OpenTibia.Server.Map.SectorFiles
             });
 
             this.totalLoadedCount = this.totalTileCount;
+
+            this.MapWindowLoaded?.Invoke(fromSectorX * 32, (toSectorX * 32) + 32, fromSectorY * 32, (toSectorY * 32) + 32, fromZ, toZ);
 
             return tuplesAdded;
         }

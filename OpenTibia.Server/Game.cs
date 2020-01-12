@@ -91,6 +91,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
+        /// <param name="mapLoader">A reference to the map loader in use.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
@@ -109,6 +110,16 @@ namespace OpenTibia.Server
             ICreatureFactory creatureFactory,
             IScriptApi scriptApi)
         {
+            logger.ThrowIfNull(nameof(logger));
+            map.ThrowIfNull(nameof(map));
+            connectionManager.ThrowIfNull(nameof(connectionManager));
+            creatureManager.ThrowIfNull(nameof(creatureManager));
+            eventRulesLoader.ThrowIfNull(nameof(eventRulesLoader));
+            monsterSpawnsLoader.ThrowIfNull(nameof(monsterSpawnsLoader));
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+            creatureFactory.ThrowIfNull(nameof(creatureFactory));
+            scriptApi.ThrowIfNull(nameof(scriptApi));
+
             this.Logger = logger.ForContext<Game>();
             this.ConnectionManager = connectionManager;
             this.CreatureManager = creatureManager;
@@ -132,6 +143,8 @@ namespace OpenTibia.Server
             this.WorldLightLevel = (byte)LightLevels.World;
 
             this.scheduler.OnEventFired += this.ProcessEvent;
+
+            map.WindowLoaded += this.HandleMapWindowLoaded;
         }
 
         /// <summary>
@@ -1112,9 +1125,6 @@ namespace OpenTibia.Server
                 // start the scheduler.
                 var schedulerTask = this.scheduler.RunAsync(cancellationToken);
 
-                // TODO: move this? spawn monsters
-                this.SpawnAllMonsters();
-
                 // Open the game world!
                 this.Status = WorldState.Open;
 
@@ -1123,14 +1133,6 @@ namespace OpenTibia.Server
 
             // return this to allow other IHostedService-s to start.
             return Task.CompletedTask;
-        }
-
-        private void SpawnAllMonsters()
-        {
-            foreach (var monsterSpawn in this.monsterSpawns)
-            {
-                this.ScriptRequest_PlaceMonsterAt(monsterSpawn.Location, monsterSpawn.Id);
-            }
         }
 
         /// <inheritdoc/>
@@ -2032,6 +2034,32 @@ namespace OpenTibia.Server
                 }
 
                 yield return connection;
+            }
+        }
+
+        /// <summary>
+        /// Handles a window loaded event from the map loader.
+        /// </summary>
+        /// <param name="fromX">The start X coordinate for the loaded window.</param>
+        /// <param name="toX">The end X coordinate for the loaded window.</param>
+        /// <param name="fromY">The start Y coordinate for the loaded window.</param>
+        /// <param name="toY">The end Y coordinate for the loaded window.</param>
+        /// <param name="fromZ">The start Z coordinate for the loaded window.</param>
+        /// <param name="toZ">The end Z coordinate for the loaded window.</param>
+        private void HandleMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
+        {
+            // For spawns, check which fall within this window:
+            var spawnsInWindow = this.monsterSpawns
+                .Where(s => s.Location.X >= fromX && s.Location.X <= toX &&
+                            s.Location.Y >= fromY && s.Location.Y <= toY &&
+                            s.Location.Z >= fromZ && s.Location.Z <= toZ);
+
+            if (spawnsInWindow != null)
+            {
+                foreach (var spawn in spawnsInWindow)
+                {
+                    this.ScriptRequest_PlaceMonsterAt(spawn.Location, spawn.Id);
+                }
             }
         }
     }
