@@ -78,6 +78,20 @@ namespace OpenTibia.Communications
                     return;
                 }
 
+                if (this.ProtocolConfiguration.ClientVersion.Numeric > 770)
+                {
+                    // OS and Version were included in plain in this packet after version 7.70
+                    var os = inboundMessage.GetUInt16();
+                    var version = inboundMessage.GetUInt16();
+
+                    if (version != this.ProtocolConfiguration.ClientVersion.Numeric)
+                    {
+                        this.Logger.Information($"Client attempted to connect with version: {version}, OS: {os}. Expected version: {this.ProtocolConfiguration.ClientVersion.Numeric}.");
+
+                        connection.Close();
+                    }
+                }
+
                 // Make a copy of the message in case we fail to decrypt using the first set of keys.
                 var messageCopy = inboundMessage.Copy();
 
@@ -85,14 +99,20 @@ namespace OpenTibia.Communications
 
                 if (inboundMessage.GetByte() != 0)
                 {
+                    this.Logger.Information($"Failed to decrypt client connection data using {(this.ProtocolConfiguration.UsingCipsoftRsaKeys ? "CipSoft" : "OTServ")} RSA keys, attempting the other set...");
+
                     // means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
                     inboundMessage = messageCopy;
 
                     inboundMessage.RsaDecrypt(useCipKeys: !this.ProtocolConfiguration.UsingCipsoftRsaKeys);
 
+                    var messageBytes = inboundMessage.Buffer.Take(inboundMessage.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
+
+                    this.Logger.Debug($"Message decrypted bytes: {messageBytes}");
+
                     if (inboundMessage.GetByte() != 0)
                     {
-                        this.Logger.Warning($"Unable to decrypt and communicate with client. RSA keys don't match either CiP's or OTServ's, giving up.");
+                        this.Logger.Warning($"Unable to decrypt and communicate with client. Neither CipSoft or OTServ RSA keys matched... giving up.");
 
                         // These RSA keys are also usuccessful... so give up.
                         connection.Close();
