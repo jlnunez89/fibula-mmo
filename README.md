@@ -1,4 +1,4 @@
-### A C# NetCore OpenTibia server, for client version 7.71.
+### A C# NetCore OpenTibia server, for client version 7.72.
 
 # Repo guidelines and content map:
 
@@ -9,6 +9,8 @@ For more complex setup and configuration information check out the [server confi
 For some ramblings about me, and why I started this project, visit this [project's motivation](docs/Motivation.md) page.
 
 And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](docs/Roadmap.md).
+
+Amiroslo was kind enough to set up a channel on his Discord server: so join the conversation there: https://discord.gg/GpMJt9
 
 ###### More docs to (probably) come soon!
 
@@ -21,7 +23,7 @@ It's also what half the industry uses and, well, I happen to be part of that hal
 
 _And lastly, yeah- generally whoever starts coding something from scratch gets to pick..._
 
-## Why choose version 7.71?
+## Why choose version 7.72?
 There was an infamous CipSoft breach back on 2007 in which all files and assets required to run the original game at the time were leaked, and those files were finally released to the public about 10 years later on OTLand.
 
 Having access to the original game files and assets simplifies our goal to mimic and reverse engineer the original game, leaving us with an implementation that is as closest to the real game as it gets. 
