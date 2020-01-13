@@ -83,11 +83,11 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
         public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
         {
-            var loginInfo = message.ReadCharacterLoginInfo();
+            var loginInfo = message.ReadCharacterLoginInfo(this.ProtocolConfiguration.ClientVersion.Numeric);
 
             var responsePackets = new List<IOutgoingPacket>();
 
-            if (loginInfo.Version != this.ProtocolConfiguration.ClientVersion.Numeric)
+            if (loginInfo.Version != default && loginInfo.Version != this.ProtocolConfiguration.ClientVersion.Numeric)
             {
                 responsePackets.Add(new GameServerDisconnectPacket($"You need client version {this.ProtocolConfiguration.ClientVersion.Description} to connect to this server."));
 

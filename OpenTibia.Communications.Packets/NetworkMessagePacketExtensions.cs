@@ -356,8 +356,9 @@ namespace OpenTibia.Communications.Packets
         /// Reads login information sent in the message.
         /// </summary>
         /// <param name="message">The mesage to read the information from.</param>
+        /// <param name="numericProtocolVersion">The numeric value of the protocol version in use.</param>
         /// <returns>The login information.</returns>
-        public static ICharacterLoginInfo ReadCharacterLoginInfo(this INetworkMessage message)
+        public static ICharacterLoginInfo ReadCharacterLoginInfo(this INetworkMessage message, int numericProtocolVersion)
         {
             return new CharacterLoginPacket(
                 xteaKey: new uint[]
@@ -367,8 +368,8 @@ namespace OpenTibia.Communications.Packets
                     message.GetUInt32(),
                     message.GetUInt32(),
                 },
-                operatingSystem: message.GetUInt16(),
-                version: message.GetUInt16(),
+                operatingSystem: numericProtocolVersion <= 770 ? message.GetUInt16() : default,     // OS was only included in this packet before version 7.71
+                version: numericProtocolVersion <= 770 ? message.GetUInt16() : default,             // Version was only included in this packet before version 7.71
                 isGamemaster: message.GetByte() > 0,
                 accountNumber: message.GetUInt32(),
                 characterName: message.GetString(),

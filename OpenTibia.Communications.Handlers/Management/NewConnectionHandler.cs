@@ -101,8 +101,6 @@ namespace OpenTibia.Communications.Handlers.Management
                 responsePackets.Add(new LoginServerDisconnectPacket($"You need client version {this.ProtocolConfiguration.ClientVersion.Description} to connect to this server."));
 
                 this.Logger.Information($"Client attempted to connect with version: {newConnectionInfo.Version}, OS: {newConnectionInfo.Os}. Expected version: {this.ProtocolConfiguration.ClientVersion.Numeric}.");
-
-                return (true, responsePackets);
             }
 
             // Make a copy of the message in case we fail to decrypt using the first set of keys.
@@ -113,13 +111,15 @@ namespace OpenTibia.Communications.Handlers.Management
             // If GetByte() here is not Zero, it means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
             if (message.GetByte() != 0)
             {
+                this.Logger.Information($"Failed to decrypt client connection data using {(this.ProtocolConfiguration.UsingCipsoftRsaKeys ? "CipSoft" : "OTServ")} RSA keys, attempting the other set...");
+
                 message = messageCopy;
 
                 message.RsaDecrypt(useCipKeys: !this.ProtocolConfiguration.UsingCipsoftRsaKeys);
 
                 if (message.GetByte() != 0)
                 {
-                    this.Logger.Information($"Unable to decrypt and communicate with client. RSA keys don't match either CiP's or OTServ's, giving up.");
+                    this.Logger.Warning($"Unable to decrypt and communicate with client. Neither CipSoft or OTServ RSA keys matched... giving up.");
 
                     // These RSA keys are also unsuccessful... give up.
                     // loginPacket = new AccountLoginPacket(inboundMessage);
@@ -143,6 +143,12 @@ namespace OpenTibia.Communications.Handlers.Management
 
             // Associate the xTea key to allow future validate packets from this connection.
             connection.SetupAuthenticationKey(accLoginInfo.XteaKey);
+
+            if (responsePackets.Any())
+            {
+                // Something went wrong, but we held up this far just to be able to send a message back to the client, as up until this point we didn't set the XTea keys.
+                return (true, responsePackets);
+            }
 
             using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
 
