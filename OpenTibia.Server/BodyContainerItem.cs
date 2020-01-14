@@ -61,7 +61,7 @@ namespace OpenTibia.Server
         {
             get
             {
-                return this.location;
+                return this.ParentCylinder?.Location ?? this.location;
             }
         }
 

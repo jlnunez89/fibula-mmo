@@ -69,8 +69,6 @@ namespace OpenTibia.Server
 
             set
             {
-                value.ThrowIfNull(nameof(value));
-
                 var oldLocation = this.Location;
 
                 this.parentCylinder = value;

@@ -93,7 +93,7 @@ namespace OpenTibia.Server.MovementEvents
 
                 if (thingMoving is ICreature creatureMoving)
                 {
-                    moveSuccessful = this.Game.PerformCreatureMovement(creatureMoving, toLocation);
+                    moveSuccessful = this.Game.PerformCreatureMovement(creatureMoving, toLocation, isTeleport);
                 }
                 else if (thingMoving is IItem item)
                 {

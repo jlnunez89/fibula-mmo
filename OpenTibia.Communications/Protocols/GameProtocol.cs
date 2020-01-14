@@ -106,10 +106,6 @@ namespace OpenTibia.Communications
 
                     inboundMessage.RsaDecrypt(useCipKeys: !this.ProtocolConfiguration.UsingCipsoftRsaKeys);
 
-                    var messageBytes = inboundMessage.Buffer.Take(inboundMessage.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
-
-                    this.Logger.Debug($"Message decrypted bytes: {messageBytes}");
-
                     if (inboundMessage.GetByte() != 0)
                     {
                         this.Logger.Warning($"Unable to decrypt and communicate with client. Neither CipSoft or OTServ RSA keys matched... giving up.");
