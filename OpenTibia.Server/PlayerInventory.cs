@@ -51,6 +51,11 @@ namespace OpenTibia.Server
         {
             foreach (Slot slot in Enum.GetValues(typeof(Slot)).Cast<Slot>())
             {
+                if (slot >= Slot.Anywhere)
+                {
+                    continue;
+                }
+
                 this.inventory[slot].ParentCylinder = null;
 
                 this.inventory[slot].OnContentAdded -= this.HandleContentAdded;
