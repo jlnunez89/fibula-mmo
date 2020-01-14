@@ -241,7 +241,7 @@ namespace OpenTibia.Server.Notifications
                     }
                 }
             }
-            else if (player.CanSee(this.Arguments.OldLocation) && player.CanSee(creature))
+            else if (player.CanSee(this.Arguments.OldLocation) && !player.CanSee(creature))
             {
                 if (this.Arguments.OldStackPosition <= IMap.MaximumNumberOfThingsToDescribePerTile)
                 {
@@ -250,7 +250,10 @@ namespace OpenTibia.Server.Notifications
             }
             else if (player.CanSee(this.Arguments.NewLocation) && player.CanSee(creature))
             {
-                packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
+                if (this.Arguments.NewStackPosition <= IMap.MaximumNumberOfThingsToDescribePerTile)
+                {
+                    packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
+                }
             }
 
             if (this.Arguments.WasTeleport)

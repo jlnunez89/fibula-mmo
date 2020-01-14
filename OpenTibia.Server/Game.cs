@@ -606,9 +606,10 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
+        /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformCreatureMovement(ICreature creature, Location toLocation)
+        public bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false)
         {
             if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !this.map.GetTileAt(toLocation, out ITile toTile))
             {
@@ -652,9 +653,6 @@ namespace OpenTibia.Server
 
             // Then deal with the consequences of the move.
             creature.TurnToDirection(moveDirection.GetClientSafeDirection());
-
-            var tileLocationDiff = fromTile.Location - toTile.Location;
-            var isTeleport = tileLocationDiff.MaxValueIn2D > 1 || tileLocationDiff.Z != 0;
 
             var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
@@ -1755,6 +1753,26 @@ namespace OpenTibia.Server
                     this.CreatureManager.RegisterCreature(creature);
 
                     this.Logger.Debug($"Placed {creature.Name} at {location}.");
+
+                    IEnumerable<IConnection> TargetConnectionsFunc()
+                    {
+                        if (creature is IPlayer player)
+                        {
+                            return this.GetConnectionsOfPlayersThatCanSee(location).Except(this.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem());
+                        }
+
+                        return this.GetConnectionsOfPlayersThatCanSee(location);
+                    }
+
+                    var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
+
+                    this.RequestNofitication(
+                        new CreatureMovedNotification(
+                            this.Logger,
+                            this,
+                            this.CreatureManager,
+                            TargetConnectionsFunc,
+                            new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, location, placedAtStackPos, wasTeleport: true)));
                 }
 
                 return addResult;

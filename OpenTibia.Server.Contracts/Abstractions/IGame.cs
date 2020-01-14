@@ -200,13 +200,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null);
 
         /// <summary>
-        /// Immediately attempts to perform a creature movement to a given tile on the map.
+        /// Immediately attempts to perform a creature movement to a tile on the map.
         /// </summary>
         /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
+        /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformCreatureMovement(ICreature creature, Location toLocation);
+        bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false);
 
         /// <summary>
         /// Immediately attempts to perform an item movement between two cylinders.
