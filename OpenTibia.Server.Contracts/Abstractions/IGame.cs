@@ -127,6 +127,16 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PlayerRequest_WalkToDirection(IPlayer player, Direction direction);
 
         /// <summary>
+        /// Attempts to rotate an item.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="atLocation">The location at which the item to rotate is.</param>
+        /// <param name="index">The index where the item to rotate is.</param>
+        /// <param name="typeId">The type id of the item to rotate.</param>
+        /// <returns>True if the turn request was accepted, false otherwise.</returns>
+        bool PlayerRequest_RotateItemAt(IPlayer player, Location atLocation, byte index, ushort typeId);
+
+        /// <summary>
         /// Attempts to turn a player to the requested direction.
         /// </summary>
         /// <param name="player">The player making the request.</param>

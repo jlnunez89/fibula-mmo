@@ -85,7 +85,7 @@ namespace OpenTibia.Server
             this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
             this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
 
-            this.Speed = (ushort)(this.GetBaseSpeed() * 3);
+            this.Speed = (ushort)(this.GetBaseSpeed() * 2);
 
             // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);

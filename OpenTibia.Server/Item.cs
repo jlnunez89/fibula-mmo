@@ -62,6 +62,21 @@ namespace OpenTibia.Server
             }
         }
 
+        public bool CanBeRotated => this.Type.Flags.Contains(ItemFlag.Rotate);
+
+        public ushort RotateTo
+        {
+            get
+            {
+                if (!this.Type.Flags.Contains(ItemFlag.Rotate))
+                {
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.RotateTo)} on an item which doesn't have a target: {this.ThingId}");
+                }
+
+                return Convert.ToUInt16(this.Attributes[ItemAttribute.RotateTarget]);
+            }
+        }
+
         public override bool CanBeMoved => !this.Type.Flags.Contains(ItemFlag.Unmove);
 
         public bool HasCollision => this.Type.Flags.Contains(ItemFlag.CollisionEvent);

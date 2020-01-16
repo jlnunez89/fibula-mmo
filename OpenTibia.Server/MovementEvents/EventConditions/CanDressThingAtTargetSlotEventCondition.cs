@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.MovementEvents.EventConditions
 {
     using System;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -58,9 +59,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
         /// <inheritdoc/>
         public bool Evaluate()
         {
-            var targetCreature = this.GetTargetCreature();
-
-            if (targetCreature == null || !(targetCreature is IPlayer player) || this.Thing == null || !(this.Thing is IItem item))
+            if (!(this.GetTargetCreature() is IPlayer player) || this.Thing == null || !(this.Thing is IItem item))
             {
                 return false;
             }
@@ -89,10 +88,24 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
 
                 // Valid target, special slots
                 case Slot.LeftHand:
+                    if (!(player.Inventory[Slot.RightHand] is IContainerItem rightHandContainer))
+                    {
+                        return false;
+                    }
+
+                    var rightHandItem = rightHandContainer.Content.FirstOrDefault();
+
+                    return rightHandItem == null || (item.DressPosition != Slot.TwoHanded && rightHandItem.DressPosition != Slot.TwoHanded);
+
                 case Slot.RightHand:
-                    return item.DressPosition != Slot.TwoHanded ||
-                        (this.TargetSlot == Slot.LeftHand && targetCreature.Inventory[Slot.RightHand] == null) ||
-                        (this.TargetSlot == Slot.RightHand && targetCreature.Inventory[Slot.LeftHand] == null);
+                    if (!(player.Inventory[Slot.LeftHand] is IContainerItem leftHandContainer))
+                    {
+                        return false;
+                    }
+
+                    var leftHandItem = leftHandContainer.Content.FirstOrDefault();
+
+                    return leftHandItem == null || (item.DressPosition != Slot.TwoHanded && leftHandItem.DressPosition != Slot.TwoHanded);
             }
         }
     }
