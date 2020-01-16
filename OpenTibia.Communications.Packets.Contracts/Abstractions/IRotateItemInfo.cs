@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IUseItemInfo.cs" company="2Dudes">
+// <copyright file="IRotateItemInfo.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -14,19 +14,14 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Interface for an item use information.
+    /// Interface for an item rotation information.
     /// </summary>
-    public interface IUseItemInfo
+    public interface IRotateItemInfo
     {
         /// <summary>
-        /// Gets the location form which the item is being used.
+        /// Gets the location form which the item is being rotated.
         /// </summary>
-        Location FromLocation { get; }
-
-        /// <summary>
-        /// Gets the position in the stack from which the item is being used.
-        /// </summary>
-        byte FromStackPos { get; }
+        Location AtLocation { get; }
 
         /// <summary>
         /// Gets the id of the item as seen by the client.
@@ -34,7 +29,7 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
         ushort ItemClientId { get; }
 
         /// <summary>
-        /// Gets the index of the item being used.
+        /// Gets the index of the item being rotated.
         /// </summary>
         byte Index { get; }
     }

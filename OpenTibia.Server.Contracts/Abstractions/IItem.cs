@@ -61,6 +61,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         ushort ChangeOnUseTo { get; }
 
+        bool CanBeRotated { get; }
+
+        ushort RotateTo { get; }
+
         bool IsLiquidPool { get; }
 
         bool IsLiquidSource { get; }

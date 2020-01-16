@@ -257,6 +257,24 @@ namespace OpenTibia.Communications.Packets
         }
 
         /// <summary>
+        /// Reads the item rotation information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The item use information.</returns>
+        public static IRotateItemInfo ReadItemRotationInfo(this INetworkMessage message)
+        {
+            return new RotateItemPacket(
+                fromLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                clientId: message.GetUInt16(),
+                index: message.GetByte());
+        }
+
+        /// <summary>
         /// Reads the look at information sent in the message.
         /// </summary>
         /// <param name="message">The mesage to read the information from.</param>

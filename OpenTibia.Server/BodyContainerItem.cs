@@ -196,10 +196,24 @@ namespace OpenTibia.Server
 
                 // Valid target, special slots
                 case Slot.LeftHand:
+                    if (!(player.Inventory[Slot.RightHand] is IContainerItem rightHandContainer))
+                    {
+                        return false;
+                    }
+
+                    var rightHandItem = rightHandContainer.Content.FirstOrDefault();
+
+                    return rightHandItem == null || (item.DressPosition != Slot.TwoHanded && rightHandItem.DressPosition != Slot.TwoHanded);
+
                 case Slot.RightHand:
-                    return item.DressPosition != Slot.TwoHanded ||
-                        (this.Slot == Slot.LeftHand && player.Inventory[Slot.RightHand] == null) ||
-                        (this.Slot == Slot.RightHand && player.Inventory[Slot.LeftHand] == null);
+                    if (!(player.Inventory[Slot.LeftHand] is IContainerItem leftHandContainer))
+                    {
+                        return false;
+                    }
+
+                    var leftHandItem = leftHandContainer.Content.FirstOrDefault();
+
+                    return leftHandItem == null || (item.DressPosition != Slot.TwoHanded && leftHandItem.DressPosition != Slot.TwoHanded);
             }
         }
     }
