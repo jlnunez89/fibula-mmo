@@ -130,15 +130,15 @@ namespace OpenTibia.Communications.Packets
             return new ContainerCloseRequestPacket(containerId: message.GetByte());
         }
 
-        ///// <summary>
-        ///// Reads the container move up information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The container move up information.</returns>
-        // public static IContainerInfo ReadContainerMoveUpInfo(this INetworkMessage message)
-        // {
-        //    return new ContainerMoveUpPacket(containerId: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads the container move up information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The container move up information.</returns>
+        public static IContainerInfo ReadContainerMoveUpInfo(this INetworkMessage message)
+        {
+            return new ContainerMoveUpPacket(containerId: message.GetByte());
+        }
 
         ///// <summary>
         ///// Reads the player list information sent in the message.
@@ -1196,7 +1196,7 @@ namespace OpenTibia.Communications.Packets
             message.AddUInt16(Convert.ToUInt16(packet.Player.CarryStrength));
 
             // Experience: 7.7x Client debugs after 0x7FFFFFFF (2,147,483,647) exp
-            message.AddUInt32(Math.Min(0x7FFFFFFF, Convert.ToUInt32(packet.Player.Skills[SkillType.Experience].Count))); 
+            message.AddUInt32(Math.Min(0x7FFFFFFF, Convert.ToUInt32(packet.Player.Skills[SkillType.Experience].Count)));
 
             message.AddUInt16(packet.Player.Skills[SkillType.Experience].Level);
             message.AddByte(packet.Player.CalculateSkillPercent(SkillType.Experience));

@@ -49,7 +49,7 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, ChannelOpenPrivateHandler>();
             //services.AddSingleton<IHandler, ChannelOpenPublicHandler>();
             services.AddSingleton<IHandler, ContainerCloseHandler>();
-            //services.AddSingleton<IHandler, ContainerUpHandler>();
+            services.AddSingleton<IHandler, ContainerUpHandler>();
             //services.AddSingleton<IHandler, FollowHandler>();
             //services.AddSingleton<IHandler, HouseWindowPostHandler>();
             services.AddSingleton<IHandler, MoveThingHandler>();

@@ -52,11 +52,11 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
         public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
         {
-            var packet = message.ReadContainerCloseInfo();
+            var containerInfo = message.ReadContainerCloseInfo();
 
             if (this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                this.Game.PlayerRequest_CloseContainer(player, packet.ContainerId);
+                this.Game.PlayerRequest_CloseContainer(player, containerInfo.ContainerId);
             }
 
             return (false, null);
