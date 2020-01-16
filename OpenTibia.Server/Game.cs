@@ -275,6 +275,28 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Attempts to move up a container opened by a player.
+        /// </summary>
+        /// <param name="player">The player making the request.</param>
+        /// <param name="containerId">The id of the container to move up from.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        public bool PlayerRequest_MoveUpContainer(IPlayer player, byte containerId)
+        {
+            player.ThrowIfNull(nameof(player));
+
+            var container = player.GetContainerById(containerId);
+
+            if (container == null || !(container.ParentCylinder is IContainerItem parentContainer))
+            {
+                return false;
+            }
+
+            this.PerformPlayerContainerOpen(player, parentContainer, containerId);
+
+            return true;
+        }
+
+        /// <summary>
         /// Attempts to log a player in to the game.
         /// </summary>
         /// <param name="character">The character that the player is logging in to.</param>
@@ -1852,7 +1874,25 @@ namespace OpenTibia.Server
                 return;
             }
 
-            if (containerItem.Location.Type == LocationType.Map)
+            if (containerItem.CarryLocation != null)
+            {
+                // Container is held by a creature, which is the only one that should have access now.
+                var creatureHoldingTheContainer = containerItem.Carrier;
+
+                if (creatureHoldingTheContainer != null)
+                {
+                    foreach (var (creatureId, containerId) in containerItem.OpenedBy.ToList())
+                    {
+                        if (creatureHoldingTheContainer.Id == creatureId || !(this.CreatureManager.FindCreatureById(creatureId) is IPlayer player))
+                        {
+                            continue;
+                        }
+
+                        this.PerformPlayerContainerClose(player, containerItem, containerId);
+                    }
+                }
+            }
+            else if (containerItem.Location.Type == LocationType.Map)
             {
                 // Container was dropped or placed in a container that ultimately sits on the map, figure out which creatures are still in range.
                 foreach (var (creatureId, containerId) in containerItem.OpenedBy.ToList())
@@ -1869,11 +1909,6 @@ namespace OpenTibia.Server
                         this.PerformPlayerContainerClose(player, containerItem, containerId);
                     }
                 }
-            }
-            else
-            {
-                // Container is held by a creature, which is the only one that has access now.
-                // TODO: implement 'holders' ?
             }
         }
 

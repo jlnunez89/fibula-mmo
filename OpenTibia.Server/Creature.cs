@@ -196,11 +196,6 @@ namespace OpenTibia.Server
         public Direction Direction { get; protected set; }
 
         /// <summary>
-        /// Gets the location in front of this creature.
-        /// </summary>
-        public Location LocationInFront => this.CalculateLocationInFront();
-
-        /// <summary>
         /// Gets or sets this creature's light level.
         /// </summary>
         public byte EmittedLightLevel { get; protected set; }
@@ -526,33 +521,6 @@ namespace OpenTibia.Server
         public override string DescribeForLogger()
         {
             return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
-        }
-
-        /// <summary>
-        /// Calculates the <see cref="Location"/> in front of this creature.
-        /// </summary>
-        /// <returns>The location in front of this creature.</returns>
-        private Location CalculateLocationInFront()
-        {
-            switch (this.Direction)
-            {
-                default:
-                case Direction.South:
-                    return this.Location + new Location() { X = 0, Y = 1, Z = 0 };
-
-                case Direction.North:
-                    return this.Location + new Location() { X = 0, Y = -1, Z = 0 };
-
-                case Direction.East:
-                case Direction.NorthEast:
-                case Direction.SouthEast:
-                    return this.Location + new Location() { X = 1, Y = 0, Z = 0 };
-
-                case Direction.West:
-                case Direction.NorthWest:
-                case Direction.SouthWest:
-                    return this.Location + new Location() { X = -1, Y = 1, Z = 0 };
-            }
         }
 
         // protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }

@@ -86,11 +86,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         Direction Direction { get; }
 
         /// <summary>
-        /// Gets the value of the location in front of this creature.
-        /// </summary>
-        Location LocationInFront { get; }
-
-        /// <summary>
         /// Gets this creature's emitted light level.
         /// </summary>
         byte EmittedLightLevel { get; }

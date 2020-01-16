@@ -9,7 +9,6 @@
   <ItemGroup>
     <Compile Remove="Incoming\AttackPacket.cs" />
     <Compile Remove="Incoming\CharacterDeathPacket.cs" />
-    <Compile Remove="Incoming\ContainerMoveUpPacket.cs" />
     <Compile Remove="Incoming\CreatePlayerListPacket.cs" />
     <Compile Remove="Incoming\DebugAssertionPacket.cs" />
     <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
