@@ -40,5 +40,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets a value indicating whether this thing can be moved.
         /// </summary>
         bool CanBeMoved { get; }
+
+        /// <summary>
+        /// Provides a string describing the current thing for logging purposes.
+        /// </summary>
+        /// <returns>The string to log.</returns>
+        string DescribeForLogger();
     }
 }

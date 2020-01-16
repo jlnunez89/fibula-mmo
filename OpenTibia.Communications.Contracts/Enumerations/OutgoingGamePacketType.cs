@@ -195,5 +195,10 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         /// Show the outfit window.
         /// </summary>
         OutfitWindow = 0xC8,
+
+        /// <summary>
+        /// Response for a ping.
+        /// </summary>
+        Pong = 0x1E,
     }
 }

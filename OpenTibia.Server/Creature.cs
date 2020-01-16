@@ -172,6 +172,17 @@ namespace OpenTibia.Server
         /// </summary>
         public ushort MaxManapoints { get; }
 
+        /// <summary>
+        /// Gets the location where this thing is being carried at, which is null for creatures.
+        /// </summary>
+        public override Location? CarryLocation
+        {
+            get
+            {
+                return null;
+            }
+        }
+
         public decimal CarryStrength { get; protected set; }
 
         /// <summary>
@@ -498,7 +509,7 @@ namespace OpenTibia.Server
             return (false, thing);
         }
 
-        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 255, byte amount = 1)
+        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, ref IThing thing, byte index = 255, byte amount = 1)
         {
             throw new NotImplementedException();
         }
@@ -506,6 +517,15 @@ namespace OpenTibia.Server
         public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Provides a string describing the current creature for logging purposes.
+        /// </summary>
+        /// <returns>The string to log.</returns>
+        public override string DescribeForLogger()
+        {
+            return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
         }
 
         /// <summary>

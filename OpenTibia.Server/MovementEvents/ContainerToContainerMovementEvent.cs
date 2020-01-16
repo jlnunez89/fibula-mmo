@@ -72,7 +72,7 @@ namespace OpenTibia.Server.MovementEvents
             {
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(targetCreatureId) is IPlayer targetPlayer &&
-                                      this.Game.PerformItemMovement(item, targetPlayer.GetContainerById(fromCreatureContainerId), targetPlayer.GetContainerById(toCreatureContainerId), fromCreatureContainerIndex, toCreatureContainerIndex, amount);
+                                      this.Game.PerformItemMovement(item, targetPlayer.GetContainerById(fromCreatureContainerId), targetPlayer.GetContainerById(toCreatureContainerId), fromCreatureContainerIndex, toCreatureContainerIndex, amount, this.Requestor);
 
                 if (!moveSuccessful)
                 {
@@ -81,8 +81,6 @@ namespace OpenTibia.Server.MovementEvents
 
                     return;
                 }
-
-                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

@@ -205,9 +205,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
+        /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false);
+        bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null);
 
         /// <summary>
         /// Immediately attempts to perform an item movement between two cylinders.
@@ -218,9 +219,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
         /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1);
+        bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null);
 
         /// <summary>
         /// Immediately attempts to perform an item use in behalf of the requesting creature, if any.
@@ -266,32 +268,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the item was successfully deleted, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         bool PerformItemDeletion(IItem item, ICylinder fromCylinder, byte index = 0xFF, ICreature requestor = null);
-
-        /// <summary>
-        /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="fromLocation">The location from which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        bool EvaluateSeparationEventRules(Location fromLocation, IThing thingMoving, ICreature requestor);
-
-        /// <summary>
-        /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="toLocation">The location to which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        bool EvaluateCollisionEventRules(Location toLocation, IThing thingMoving, ICreature requestor);
-
-        /// <summary>
-        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor);
 
         /// <summary>
         /// Attempts to display an animated efect on the given location.

@@ -93,10 +93,16 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Gets this thing's cylinder hierarchy.
+        /// Gets the location where this thing is being carried at, if any.
         /// </summary>
+        public abstract Location? CarryLocation { get; }
+
+        /// <summary>
+        /// Gets this entity's cylinder hierarchy.
+        /// </summary>
+        /// <param name="includeTiles">Optional. A value indicating whether to include <see cref="ITile"/>s in the hierarchy. Defaults to true.</param>
         /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's cylinder hierarchy.</returns>
-        public IEnumerable<ICylinder> GetCylinderHierarchy()
+        public IEnumerable<ICylinder> GetCylinderHierarchy(bool includeTiles = true)
         {
             ICylinder current = (this is ICylinder thisAsCylinder) ? thisAsCylinder : this.ParentCylinder;
 
@@ -104,7 +110,7 @@ namespace OpenTibia.Server
             {
                 yield return current;
 
-                current = current.ParentCylinder;
+                current = (includeTiles || !(current.ParentCylinder is ITile)) ? current.ParentCylinder : null;
             }
         }
 
@@ -118,5 +124,17 @@ namespace OpenTibia.Server
 
             this.OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
         }
+
+        /// <inheritdoc/>
+        public override string ToString()
+        {
+            return this.DescribeForLogger();
+        }
+
+        /// <summary>
+        /// Provides a string describing the current thing for logging purposes.
+        /// </summary>
+        /// <returns>The string to log.</returns>
+        public abstract string DescribeForLogger();
     }
 }

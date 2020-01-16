@@ -1221,6 +1221,18 @@ namespace OpenTibia.Communications.Packets
         // }
 
         /// <summary>
+        /// Writes the contents of the <see cref="PongPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WritePongPacket(this INetworkMessage message, PongPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
+
+            message.WritePacketType(packet);
+        }
+
+        /// <summary>
         /// Writes the contents of the <see cref="RemoveAtStackposPacket"/> into the message.
         /// </summary>
         /// <param name="message">The message to write to.</param>

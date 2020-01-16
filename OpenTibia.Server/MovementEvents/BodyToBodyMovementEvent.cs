@@ -17,6 +17,7 @@ namespace OpenTibia.Server.MovementEvents
     using OpenTibia.Scheduling.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.MovementEvents.EventConditions;
     using Serilog;
 
     /// <summary>
@@ -61,11 +62,13 @@ namespace OpenTibia.Server.MovementEvents
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
+            this.Conditions.Add(new CanDressThingAtTargetSlotEventCondition(() => creatureFinder.FindCreatureById(targetCreatureId), thingMoving, toCreatureSlot));
+
             var onPassAction = new GenericEventAction(() =>
             {
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(targetCreatureId) is IPlayer targetPlayer &&
-                                      this.Game.PerformItemMovement(item, targetPlayer.Inventory[fromCreatureSlot] as IContainerItem, targetPlayer.Inventory[toCreatureSlot] as IContainerItem, 0, 0, amount);
+                                      this.Game.PerformItemMovement(item, targetPlayer.Inventory[fromCreatureSlot] as IContainerItem, targetPlayer.Inventory[toCreatureSlot] as IContainerItem, 0, 0, amount, this.Requestor);
 
                 if (!moveSuccessful)
                 {
@@ -74,8 +77,6 @@ namespace OpenTibia.Server.MovementEvents
 
                     return;
                 }
-
-                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

@@ -66,6 +66,17 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Gets the location where this thing is being carried at, which is none for creatures.
+        /// </summary>
+        public override Location? CarryLocation
+        {
+            get
+            {
+                return this.location;
+            }
+        }
+
+        /// <summary>
         /// Attempts to add an item to this container.
         /// </summary>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
@@ -84,7 +95,7 @@ namespace OpenTibia.Server
             }
 
             // Validate that the item being added is not a parent of this item.
-            if (this.IsChildOf(item))
+            if (this.IsChildOf(item) || !this.CanDressItemHere(item))
             {
                 // TODO: error message 'This is impossible'.
                 return (false, thing);
@@ -107,7 +118,7 @@ namespace OpenTibia.Server
                 }
                 else
                 {
-                    (success, remainderItem) = existingItemAtIndex.JoinWith(itemFactory, remainderItem as IItem);
+                    (success, remainderItem) = existingItemAtIndex.Merge(remainderItem as IItem);
 
                     if (success)
                     {
@@ -147,6 +158,49 @@ namespace OpenTibia.Server
             }
 
             return (true, remainderItem);
+        }
+
+        /// <summary>
+        /// Checks if the given thing can be dressed in this body container.
+        /// </summary>
+        /// <param name="item">The item to check.</param>
+        /// <returns>True if the thing can be dressed in this container, false otherwise.</returns>
+        private bool CanDressItemHere(IItem item)
+        {
+            if (item == null || !(this.ParentCylinder is IPlayer player))
+            {
+                return false;
+            }
+
+            switch (this.Slot)
+            {
+                // Not valid targets
+                default:
+                case Slot.UnsetInvalid:
+                case Slot.Anywhere:
+                    return false;
+
+                // Valid target, wildcard slot
+                case Slot.Ammo:
+                    return true;
+
+                // Valid target, straightforward slots
+                case Slot.Head:
+                case Slot.Neck:
+                case Slot.Back:
+                case Slot.Body:
+                case Slot.Legs:
+                case Slot.Ring:
+                case Slot.Feet:
+                    return item.IsDressable && item.DressPosition == this.Slot;
+
+                // Valid target, special slots
+                case Slot.LeftHand:
+                case Slot.RightHand:
+                    return item.DressPosition != Slot.TwoHanded ||
+                        (this.Slot == Slot.LeftHand && player.Inventory[Slot.RightHand] == null) ||
+                        (this.Slot == Slot.RightHand && player.Inventory[Slot.LeftHand] == null);
+            }
         }
     }
 }

@@ -1,0 +1,99 @@
+﻿// -----------------------------------------------------------------
+// <copyright file="CanDressThingAtTargetSlotEventCondition.cs" company="2Dudes">
+// Copyright (c) 2018 2Dudes. All rights reserved.
+// Author: Jose L. Nunez de Caceres
+// http://linkedin.com/in/jlnunez89
+//
+// Licensed under the MIT license.
+// See LICENSE file in the project root for full license information.
+// </copyright>
+// -----------------------------------------------------------------
+
+namespace OpenTibia.Server.MovementEvents.EventConditions
+{
+    using System;
+    using OpenTibia.Common.Utilities;
+    using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
+
+    /// <summary>
+    /// Class that represents an event condition that evaluates whether a thing can be dressed at the target slot.
+    /// </summary>
+    internal class CanDressThingAtTargetSlotEventCondition : IEventCondition
+    {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CanDressThingAtTargetSlotEventCondition"/> class.
+        /// </summary>
+        /// <param name="determineTargetCreatureFunc">A function delegate to determine the target creature.</param>
+        /// <param name="movingThing">The thing to check.</param>
+        /// <param name="slot">The slot to check.</param>
+        public CanDressThingAtTargetSlotEventCondition(Func<ICreature> determineTargetCreatureFunc, IThing movingThing, Slot slot)
+        {
+            determineTargetCreatureFunc.ThrowIfNull(nameof(determineTargetCreatureFunc));
+
+            this.GetTargetCreature = determineTargetCreatureFunc;
+            this.Thing = movingThing;
+            this.TargetSlot = slot;
+        }
+
+        /// <summary>
+        /// Gets a delegate function to determine the <see cref="ICreature"/> to check.
+        /// </summary>
+        public Func<ICreature> GetTargetCreature { get; }
+
+        /// <summary>
+        /// Gets the <see cref="IThing"/> being checked.
+        /// </summary>
+        public IThing Thing { get; }
+
+        /// <summary>
+        /// Gets the slot being checked.
+        /// </summary>
+        public Slot TargetSlot { get; }
+
+        /// <inheritdoc/>
+        public string ErrorMessage => "You cannot dress this in that way.";
+
+        /// <inheritdoc/>
+        public bool Evaluate()
+        {
+            var targetCreature = this.GetTargetCreature();
+
+            if (targetCreature == null || !(targetCreature is IPlayer player) || this.Thing == null || !(this.Thing is IItem item))
+            {
+                return false;
+            }
+
+            switch (this.TargetSlot)
+            {
+                // Not valid targets
+                default:
+                case Slot.UnsetInvalid:
+                case Slot.Anywhere:
+                    return false;
+
+                // Valid target, wildcard slot
+                case Slot.Ammo:
+                    return true;
+
+                // Valid target, straightforward slots
+                case Slot.Head:
+                case Slot.Neck:
+                case Slot.Back:
+                case Slot.Body:
+                case Slot.Legs:
+                case Slot.Ring:
+                case Slot.Feet:
+                    return item.IsDressable && item.DressPosition == this.TargetSlot;
+
+                // Valid target, special slots
+                case Slot.LeftHand:
+                case Slot.RightHand:
+                    return item.DressPosition != Slot.TwoHanded ||
+                        (this.TargetSlot == Slot.LeftHand && targetCreature.Inventory[Slot.RightHand] == null) ||
+                        (this.TargetSlot == Slot.RightHand && targetCreature.Inventory[Slot.LeftHand] == null);
+            }
+        }
+    }
+}

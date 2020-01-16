@@ -19,8 +19,13 @@ namespace OpenTibia.Server.Contracts.Abstractions
     public interface ILocatable
     {
         /// <summary>
-        /// Gets this cylinder's location.
+        /// Gets this entity's location.
         /// </summary>
         Location Location { get; }
+
+        /// <summary>
+        /// Gets the location where this entity is being carried at, if any.
+        /// </summary>
+        Location? CarryLocation { get; }
     }
 }

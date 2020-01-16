@@ -134,7 +134,7 @@ namespace OpenTibia.Server
                 }
                 else
                 {
-                    (success, remainderToAdd) = existingItemAtIndex.JoinWith(itemFactory, remainderToAdd as IItem);
+                    (success, remainderToAdd) = existingItemAtIndex.Merge(remainderToAdd as IItem);
 
                     if (success)
                     {
@@ -179,16 +179,17 @@ namespace OpenTibia.Server
         /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public virtual (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
+        public virtual (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, ref IThing thing, byte index = 0xFF, byte amount = 1)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
             thing.ThrowIfNull(nameof(thing));
 
             IItem existingItem = null;
+            ushort thingId = thing.ThingId;
 
             if (index == 0xFF)
             {
-                existingItem = this.Content.FirstOrDefault(i => i.ThingId == thing.ThingId);
+                existingItem = this.Content.FirstOrDefault(i => i.ThingId == thingId);
             }
             else
             {
@@ -210,15 +211,20 @@ namespace OpenTibia.Server
                 return (true, null);
             }
 
-            (bool success, IItem remainderItem) = existingItem.SeparateFrom(itemFactory, amount);
+            (bool success, IItem itemProduced) = existingItem.Split(itemFactory, amount);
 
             if (success)
             {
+                if (itemProduced != null)
+                {
+                    thing = itemProduced;
+                }
+
                 // We've changed an item at this index, so we notify observers.
                 this.InvokeContentUpdated(index, existingItem);
             }
 
-            return (success, remainderItem);
+            return (success, existingItem);
         }
 
         /// <summary>

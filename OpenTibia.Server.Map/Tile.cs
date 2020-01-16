@@ -76,6 +76,17 @@ namespace OpenTibia.Server.Map
         public Location Location { get; }
 
         /// <summary>
+        /// Gets the location where this entity is being carried at, which is null for tiles.
+        /// </summary>
+        public Location? CarryLocation
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+        /// <summary>
         /// Gets the single ground item that a tile may have.
         /// </summary>
         public IItem Ground { get; private set; }
@@ -680,7 +691,7 @@ namespace OpenTibia.Server.Map
         /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1)
+        public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, ref IThing thing, byte index = 0xFF, byte amount = 1)
         {
             if (amount == 0)
             {
@@ -726,28 +737,28 @@ namespace OpenTibia.Server.Map
                             return (false, null);
                         }
 
-                        // At this point we know we have enough amount in the current item to remove.
-                        // Remove the item from the tile.
-                        this.itemsOnTile.Pop();
-
-                        if (item.IsCumulative && item.Amount > amount)
+                        if (!item.IsCumulative || item.Amount == amount)
+                        {
+                            // Since we have the exact amount, we can remove the item instance from the tile.
+                            this.itemsOnTile.Pop();
+                        }
+                        else
                         {
                             // We're removing less than the entire amount, so we need to calculate the remainder to add back.
                             var newExistingAmount = (byte)(item.Amount - amount);
 
-                            item.SetAmount(amount);
+                            item.SetAmount(newExistingAmount);
+
+                            // item amount is left wrong.
 
                             // Create a new item as the remainder.
                             remainder = itemFactory.Create(item.Type.TypeId);
 
-                            remainder.SetAmount(newExistingAmount);
-                        }
-                    }
+                            remainder.SetAmount(amount);
 
-                    // Add any remainder back to the tile.
-                    if (remainder != null)
-                    {
-                        this.AddContent(itemFactory, remainder);
+                            thing = remainder;
+                            remainder = item;
+                        }
                     }
                 }
             }
@@ -773,7 +784,7 @@ namespace OpenTibia.Server.Map
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
         public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 0xFF, byte amount = 1)
         {
-            (bool removeSuccessful, IThing removeRemainder) = this.RemoveContent(itemFactory, fromThing, index, amount);
+            (bool removeSuccessful, IThing removeRemainder) = this.RemoveContent(itemFactory, ref fromThing, index, amount);
 
             if (!removeSuccessful)
             {
@@ -796,8 +807,9 @@ namespace OpenTibia.Server.Map
         /// <summary>
         /// Gets this tile's cylinder hierarchy.
         /// </summary>
+        /// <param name="includeTile">The parameter is not used.</param>
         /// <returns>The ordered collection of <see cref="ICylinder"/>s in this tile's cylinder hierarchy.</returns>
-        public IEnumerable<ICylinder> GetCylinderHierarchy()
+        public IEnumerable<ICylinder> GetCylinderHierarchy(bool includeTile = true)
         {
             return this.YieldSingleItem();
         }

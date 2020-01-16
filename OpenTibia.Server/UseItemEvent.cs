@@ -78,7 +78,7 @@ namespace OpenTibia.Server.MovementEvents
                 var fromCylinder = this.Game.GetCyclinder(fromLocation, ref fromStackPos, ref index, this.Requestor);
                 var item = this.Game.FindItemByIdAtLocation(typeId, fromLocation, this.Requestor);
 
-                bool successfulUse = this.Game.PerformItemUse(item, fromCylinder, (byte)(fromLocation.Type == LocationType.InventorySlot ? 0xFF : index), this.Requestor);
+                bool successfulUse = this.Game.PerformItemUse(item, fromCylinder, index, this.Requestor);
 
                 if (!successfulUse)
                 {

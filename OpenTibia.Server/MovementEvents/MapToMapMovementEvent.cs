@@ -80,6 +80,7 @@ namespace OpenTibia.Server.MovementEvents
                 }
             }
 
+            this.Conditions.Add(new ThingCanBeMovedCondition(this.Requestor, thingMoving));
             this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
             this.Conditions.Add(new LocationNotObstructedEventCondition(tileAccessor, this.Requestor, () => thingMoving, () => toLocation));
             this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, () => toLocation));
@@ -93,13 +94,13 @@ namespace OpenTibia.Server.MovementEvents
 
                 if (thingMoving is ICreature creatureMoving)
                 {
-                    moveSuccessful = this.Game.PerformCreatureMovement(creatureMoving, toLocation, isTeleport);
+                    moveSuccessful = this.Game.PerformCreatureMovement(creatureMoving, toLocation, isTeleport, requestorCreature: this.Requestor);
                 }
                 else if (thingMoving is IItem item)
                 {
                     moveSuccessful = tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
                                      tileAccessor.GetTileAt(toLocation, out ITile toTile) &&
-                                     this.Game.PerformItemMovement(item, fromTile, toTile, fromStackPos, amountToMove: amount);
+                                     this.Game.PerformItemMovement(item, fromTile, toTile, fromStackPos, amountToMove: amount, requestorCreature: this.Requestor);
                 }
 
                 if (!moveSuccessful)
@@ -116,12 +117,6 @@ namespace OpenTibia.Server.MovementEvents
 
                     this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
                 }
-
-                this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
-
-                this.Game.EvaluateCollisionEventRules(toLocation, thingMoving, this.Requestor);
-
-                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);
