@@ -48,6 +48,7 @@ namespace OpenTibia.Server.MovementEvents
         /// <param name="toTypeId">The type id of the item to change to.</param>
         /// <param name="fromStackPos">The position in the stack from which the item is being used.</param>
         /// <param name="index">The index of the item being used.</param>
+        /// <param name="carrierCreature">The creature who is carrying the thing, if any.</param>
         /// <param name="evaluationTime">The time to evaluate the movement.</param>
         public ChangeItemEvent(
             ILogger logger,
@@ -61,6 +62,7 @@ namespace OpenTibia.Server.MovementEvents
             ushort toTypeId,
             byte fromStackPos = byte.MaxValue,
             byte index = 1,
+            ICreature carrierCreature = null,
             EvaluationTime evaluationTime = EvaluationTime.OnBoth)
             : base(logger, requestorId, evaluationTime)
         {
@@ -77,8 +79,8 @@ namespace OpenTibia.Server.MovementEvents
 
             var onPassAction = new GenericEventAction(() =>
             {
-                var fromCylinder = this.Game.GetCyclinder(fromLocation, ref fromStackPos, ref index, this.Requestor);
-                var item = this.Game.FindItemByIdAtLocation(typeId, fromLocation, this.Requestor);
+                var fromCylinder = this.Game.GetCyclinder(fromLocation, ref fromStackPos, ref index, carrierCreature);
+                var item = this.Game.FindItemByIdAtLocation(typeId, fromLocation, carrierCreature);
 
                 bool successfulUse = this.Game.PerformItemChange(item, toTypeId, fromCylinder, index, this.Requestor);
 

@@ -16,6 +16,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Communications.Handlers;
+    using OpenTibia.Communications.Packets.Outgoing;
     using Serilog;
 
     /// <summary>
@@ -52,9 +53,14 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
         public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
         {
-            this.Logger.Debug($"Recieved ping from {connection.SocketIp}");
+            this.Logger.Debug($"Recieved ping from {connection.SocketIp}, sending pong!");
 
-            return (false, null);
+            var responsePackets = new List<IOutgoingPacket>
+            {
+                new PongPacket(),
+            };
+
+            return (true, responsePackets);
         }
     }
 }

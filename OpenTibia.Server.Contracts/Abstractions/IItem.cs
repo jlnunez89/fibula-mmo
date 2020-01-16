@@ -85,6 +85,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsDressable { get; }
 
+        Slot DressPosition { get; }
+
         // byte DressPosition { get; }
 
         // byte Attack { get; }
@@ -97,15 +99,31 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         // decimal Weight { get; }
 
+        /// <summary>
+        /// Gets the creature carrying this item, if any.
+        /// </summary>
+        ICreature Carrier { get; }
+
         byte Amount { get; }
 
         void SetAmount(byte remainingCount);
 
         void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes);
 
-        (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem);
+        /// <summary>
+        /// Attempts to join an item to this item's content at the default index.
+        /// </summary>
+        /// <param name="otherItem">The item to join with.</param>
+        /// <returns>True if the operation was successful, false otherwise. Along with any surplus of the item after merge.</returns>
+        (bool success, IItem surplusItem) Merge(IItem otherItem);
 
-        (bool success, IItem remainderItem) SeparateFrom(IItemFactory itemFactory, byte amount);
+        /// <summary>
+        /// Attempts to split this item into two based on the amount provided.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="amount">The amount of the item to split.</param>
+        /// <returns>True if the operation was successful, false otherwise, along with the item produced, if any.</returns>
+        (bool success, IItem itemProduced) Split(IItemFactory itemFactory, byte amount);
 
         // bool IsPathBlocking(byte avoidType = 0);
 

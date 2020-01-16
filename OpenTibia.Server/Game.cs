@@ -322,7 +322,7 @@ namespace OpenTibia.Server
 
             IThing playerThing = player as IThing;
 
-            (bool removeSuccessful, IThing remainder) = tile.RemoveContent(this.ItemFactory, playerThing);
+            (bool removeSuccessful, IThing remainder) = tile.RemoveContent(this.ItemFactory, ref playerThing);
 
             if (removeSuccessful)
             {
@@ -607,9 +607,10 @@ namespace OpenTibia.Server
         /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
+        /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false)
+        public bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null)
         {
             if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !this.map.GetTileAt(toLocation, out ITile toTile))
             {
@@ -627,8 +628,10 @@ namespace OpenTibia.Server
                 return false;
             }
 
+            IThing creatureAsThing = creature as IThing;
+
             // Do the actual move first.
-            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.ItemFactory, creature);
+            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.ItemFactory, ref creatureAsThing);
 
             if (!removeSuccessful)
             {
@@ -640,7 +643,7 @@ namespace OpenTibia.Server
             if (!addSuccessful)
             {
                 // attempt to rollback state.
-                (bool rollbackSuccessful, IThing rollbackRemainder) = fromTile.RemoveContent(this.ItemFactory, creature);
+                (bool rollbackSuccessful, IThing rollbackRemainder) = fromTile.RemoveContent(this.ItemFactory, ref creatureAsThing);
 
                 if (!rollbackSuccessful)
                 {
@@ -688,6 +691,9 @@ namespace OpenTibia.Server
                 }
             }
 
+            this.EvaluateSeparationEventRules(fromTile.Location, creature, requestorCreature);
+            this.EvaluateCollisionEventRules(toTile.Location, creature, requestorCreature);
+
             return true;
         }
 
@@ -700,9 +706,10 @@ namespace OpenTibia.Server
         /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
         /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
+        /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        public bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1)
+        public bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
         {
             const byte FallbackIndex = 0xFF;
 
@@ -715,7 +722,7 @@ namespace OpenTibia.Server
 
             if (sameCylinder && fromIndex == toIndex)
             {
-                // no point in moving.
+                // no change at all.
                 return true;
             }
 
@@ -725,7 +732,9 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            (bool removeSuccessful, IThing removedItem) = fromCylinder.RemoveContent(this.ItemFactory, item, fromIndex, amount: amountToMove);
+            IThing itemAsThing = item as IThing;
+
+            (bool removeSuccessful, IThing removeRemainder) = fromCylinder.RemoveContent(this.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
 
             if (!removeSuccessful)
             {
@@ -743,35 +752,27 @@ namespace OpenTibia.Server
                         new TileUpdatedNotificationArguments(fromTile.Location, this.GetDescriptionOfTile)));
             }
 
-            IThing addRemainder = removedItem ?? item;
+            this.EvaluateSeparationEventRules(fromCylinder.Location, item, requestorCreature);
 
-            if (sameCylinder && removedItem == null && fromIndex < toIndex)
+            IThing addRemainder = itemAsThing;
+
+            if (sameCylinder && removeRemainder == null && fromIndex < toIndex)
             {
                 // If the move happens within the same cylinder, we need to adjust the index of where we're adding, depending if it is before or after.
                 toIndex--;
             }
 
-            if (!this.AddContentToCylinderChain(toCylinder.GetCylinderHierarchy(), toIndex, ref addRemainder) || addRemainder != null)
+            if (!this.AddContentToCylinderChain(toCylinder.GetCylinderHierarchy(includeTiles: false), toIndex, ref addRemainder, requestorCreature) || addRemainder != null)
             {
                 // There is some rollback to do, as we failed to add the entire thing.
                 IThing rollbackRemainder = addRemainder ?? item;
 
-                return this.AddContentToCylinderChain(fromCylinder.GetCylinderHierarchy(), FallbackIndex, ref rollbackRemainder) && rollbackRemainder == null;
+                if (!this.AddContentToCylinderChain(fromCylinder.GetCylinderHierarchy(), FallbackIndex, ref rollbackRemainder, requestorCreature))
+                {
+                    this.Logger.Error($"Rollback failed on {nameof(this.PerformItemMovement)}. Thing: {rollbackRemainder.DescribeForLogger()}");
+                }
             }
 
-            // TODO: see if we can save network bandwith here by using this notification instead.
-            // this.RequestNofitication(
-            //    new ItemMovedNotification(
-            //        this.Logger,
-            //        this.CreatureManager,
-            //        () => this.GetConnectionsOfPlayersThatCanSee(fromTileLocation, toTileLocation),
-            //        new ItemMovedNotificationArguments(
-            //           thing,
-            //           fromTileLocation,
-            //           fromTileStackPos,
-            //           toTileLocation,
-            //           thingStackPosition,
-            //           false)));
             return true;
         }
 
@@ -862,17 +863,23 @@ namespace OpenTibia.Server
 
             if (!replaceSuccessful || replaceRemainder != null)
             {
-                this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), FallbackIndex, ref replaceRemainder);
+                this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), FallbackIndex, ref replaceRemainder, requestor);
             }
 
-            if (replaceSuccessful && atCylinder is ITile atTile)
+            if (replaceSuccessful)
             {
-                this.RequestNofitication(
-                    new TileUpdatedNotification(
-                        this.Logger,
-                        this.CreatureManager,
-                        () => this.GetConnectionsOfPlayersThatCanSee(atTile.Location),
-                        new TileUpdatedNotificationArguments(atTile.Location, this.GetDescriptionOfTile)));
+                if (atCylinder is ITile atTile)
+                {
+                    this.RequestNofitication(
+                        new TileUpdatedNotification(
+                            this.Logger,
+                            this.CreatureManager,
+                            () => this.GetConnectionsOfPlayersThatCanSee(atTile.Location),
+                            new TileUpdatedNotificationArguments(atTile.Location, this.GetDescriptionOfTile)));
+                }
+
+                this.EvaluateCollisionEventRules(atCylinder.Location, item, requestor);
+                this.EvaluateMovementEventRules(item, requestor);
             }
 
             return true;
@@ -902,7 +909,7 @@ namespace OpenTibia.Server
             }
 
             // At this point, we were able to generate the new one, let's proceed to add it.
-            return this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), index, ref newItem);
+            return this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), index, ref newItem, requestor);
         }
 
         /// <summary>
@@ -921,8 +928,10 @@ namespace OpenTibia.Server
                 return false;
             }
 
+            IThing itemAsThing = item as IThing;
+
             // At this point, we have an item to remove, let's proceed.
-            (bool removeSuccessful, IThing remainder) = fromCylinder.RemoveContent(this.ItemFactory, item, index, amount: item.Amount);
+            (bool removeSuccessful, IThing remainder) = fromCylinder.RemoveContent(this.ItemFactory, ref itemAsThing, index, amount: item.Amount);
 
             if (!removeSuccessful)
             {
@@ -942,101 +951,9 @@ namespace OpenTibia.Server
                                 this.GetDescriptionOfTile)));
             }
 
+            this.EvaluateSeparationEventRules(fromCylinder.Location, item, requestor);
+
             return true;
-        }
-
-        /// <summary>
-        /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="location">The location at which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        /// <remarks>This operation is not thread-safe.</remarks>
-        public bool EvaluateSeparationEventRules(Location location, IThing thingMoving, ICreature requestor)
-        {
-            if (this.map.GetTileAt(location, out ITile fromTile) && fromTile.HasSeparationEvents)
-            {
-                foreach (var item in fromTile.ItemsWithSeparation)
-                {
-                    var separationEvents = this.eventRulesCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
-
-                    var rulesThatCanBeExecuted = separationEvents.Where(e => e.ThingIdOfSeparation == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
-
-                    // Execute all actions.
-                    if (rulesThatCanBeExecuted.Any())
-                    {
-                        foreach (var rule in rulesThatCanBeExecuted)
-                        {
-                            rule.Execute();
-                        }
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="location">The location at which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        /// <remarks>This operation is not thread-safe.</remarks>
-        public bool EvaluateCollisionEventRules(Location location, IThing thingMoving, ICreature requestor)
-        {
-            if (this.map.GetTileAt(location, out ITile toTile) && toTile.HasCollisionEvents)
-            {
-                foreach (var item in toTile.ItemsWithCollision)
-                {
-                    var collisionEvents = this.eventRulesCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
-
-                    var rulesThatCanBeExecuted = collisionEvents.Where(e => e.ThingIdOfCollision == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
-
-                    // Execute all actions.
-                    if (rulesThatCanBeExecuted.Any())
-                    {
-                        foreach (var rule in rulesThatCanBeExecuted)
-                        {
-                            rule.Execute();
-                        }
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        public bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor)
-        {
-            var movementEventRules = this.eventRulesCatalog[EventRuleType.Movement].Cast<IThingMovementEventRule>();
-
-            var rulesThatCanBeExecuted = movementEventRules.Where(e => e.Setup(thingMoving, null, requestor as IPlayer) && e.CanBeExecuted);
-
-            // Execute all actions.
-            if (rulesThatCanBeExecuted.Any())
-            {
-                foreach (var rule in rulesThatCanBeExecuted)
-                {
-                    rule.Execute();
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -1188,7 +1105,21 @@ namespace OpenTibia.Server
                 return false;
             }
 
-            return this.ScriptRequest_ChangeItemAt(thing.Location, thing.ThingId, toTypeId, animatedEffect);
+            IEvent changeItemEvent = new ChangeItemEvent(
+                    this.Logger,
+                    this,
+                    this.ConnectionManager,
+                    this.map,
+                    this.CreatureManager,
+                    NoCreatureId,
+                    thing.ThingId,
+                    thing.CarryLocation ?? thing.Location,
+                    toTypeId,
+                    carrierCreature: (thing is IItem item) ? item.Carrier : null);
+
+            this.scheduler.ScheduleEvent(changeItemEvent, this.CurrentTime + DefaultPlayerActionDelay);
+
+            return true;
         }
 
         /// <summary>
@@ -1608,7 +1539,101 @@ namespace OpenTibia.Server
             return true;
         }
 
-        private bool AddContentToCylinderChain(IEnumerable<ICylinder> cylinderChain, byte firstAttemptIndex, ref IThing remainder)
+        /// <summary>
+        /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="location">The location at which the events take place.</param>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        /// <remarks>This operation is not thread-safe.</remarks>
+        private bool EvaluateSeparationEventRules(Location location, IThing thingMoving, ICreature requestor)
+        {
+            if (this.map.GetTileAt(location, out ITile fromTile) && fromTile.HasSeparationEvents)
+            {
+                foreach (var item in fromTile.ItemsWithSeparation)
+                {
+                    var separationEvents = this.eventRulesCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
+
+                    var rulesThatCanBeExecuted = separationEvents.Where(e => e.ThingIdOfSeparation == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+
+                    // Execute all actions.
+                    if (rulesThatCanBeExecuted.Any())
+                    {
+                        foreach (var rule in rulesThatCanBeExecuted)
+                        {
+                            rule.Execute();
+                        }
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="location">The location at which the events take place.</param>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        /// <remarks>This operation is not thread-safe.</remarks>
+        private bool EvaluateCollisionEventRules(Location location, IThing thingMoving, ICreature requestor)
+        {
+            if (this.map.GetTileAt(location, out ITile toTile) && toTile.HasCollisionEvents)
+            {
+                foreach (var item in toTile.ItemsWithCollision)
+                {
+                    var collisionEvents = this.eventRulesCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
+
+                    var rulesThatCanBeExecuted = collisionEvents.Where(e => e.ThingIdOfCollision == item.Type.TypeId && e.Setup(item, thingMoving, requestor as IPlayer) && e.CanBeExecuted);
+
+                    // Execute all actions.
+                    if (rulesThatCanBeExecuted.Any())
+                    {
+                        foreach (var rule in rulesThatCanBeExecuted)
+                        {
+                            rule.Execute();
+                        }
+
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
+        /// </summary>
+        /// <param name="thingMoving">The thing that is moving.</param>
+        /// <param name="requestor">The requestor creature, if any.</param>
+        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
+        private bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor)
+        {
+            var movementEventRules = this.eventRulesCatalog[EventRuleType.Movement].Cast<IThingMovementEventRule>();
+
+            var rulesThatCanBeExecuted = movementEventRules.Where(e => e.Setup(thingMoving, null, requestor as IPlayer) && e.CanBeExecuted);
+
+            // Execute all actions.
+            if (rulesThatCanBeExecuted.Any())
+            {
+                foreach (var rule in rulesThatCanBeExecuted)
+                {
+                    rule.Execute();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool AddContentToCylinderChain(IEnumerable<ICylinder> cylinderChain, byte firstAttemptIndex, ref IThing remainder, ICreature requestorCreature = null)
         {
             cylinderChain.ThrowIfNull(nameof(cylinderChain));
 
@@ -1619,6 +1644,8 @@ namespace OpenTibia.Server
 
             foreach (var targetCylinder in cylinderChain)
             {
+                IThing lastAddedThing = remainder;
+
                 if (!success)
                 {
                     (success, remainder) = targetCylinder.AddContent(this.ItemFactory, remainder, firstAttempt ? firstAttemptIndex : FallbackIndex);
@@ -1630,14 +1657,20 @@ namespace OpenTibia.Server
 
                 firstAttempt = false;
 
-                if (success && targetCylinder is ITile targetTile)
+                if (success)
                 {
-                    this.RequestNofitication(
-                        new TileUpdatedNotification(
-                            this.Logger,
-                            this.CreatureManager,
-                            () => this.GetConnectionsOfPlayersThatCanSee(targetTile.Location),
-                            new TileUpdatedNotificationArguments(targetTile.Location, this.GetDescriptionOfTile)));
+                    if (targetCylinder is ITile targetTile)
+                    {
+                        this.RequestNofitication(
+                            new TileUpdatedNotification(
+                                this.Logger,
+                                this.CreatureManager,
+                                () => this.GetConnectionsOfPlayersThatCanSee(targetTile.Location),
+                                new TileUpdatedNotificationArguments(targetTile.Location, this.GetDescriptionOfTile)));
+                    }
+
+                    this.EvaluateCollisionEventRules(targetCylinder.Location, lastAddedThing, requestorCreature);
+                    this.EvaluateMovementEventRules(lastAddedThing, requestorCreature);
                 }
 
                 if (success && remainder == null)

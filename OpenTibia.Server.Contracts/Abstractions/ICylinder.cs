@@ -45,7 +45,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="index">Optional. The index from which to remove the thing. Defaults to 0xFF, which instructs to remove the thing if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the item may be returned.</returns>
-        (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, IThing thing, byte index = 0xFF, byte amount = 1);
+        (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, ref IThing thing, byte index = 0xFF, byte amount = 1);
 
         /// <summary>
         /// Attempts to replace a thing from this cylinder with another.

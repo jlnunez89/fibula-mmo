@@ -64,6 +64,7 @@ namespace OpenTibia.Server.MovementEvents
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
+            this.Conditions.Add(new ThingCanBeMovedCondition(this.Requestor, thingMoving));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, amount));
             this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
             this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
@@ -74,7 +75,7 @@ namespace OpenTibia.Server.MovementEvents
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(toCreatureId) is IPlayer targetPlayer &&
                                       tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
-                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.GetContainerById(toCreatureContainerId), toIndex: toCreatureContainerIndex, amountToMove: amount);
+                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.GetContainerById(toCreatureContainerId), toIndex: toCreatureContainerIndex, amountToMove: amount, requestorCreature: this.Requestor);
 
                 if (!moveSuccessful)
                 {
@@ -83,10 +84,6 @@ namespace OpenTibia.Server.MovementEvents
 
                     return;
                 }
-
-                this.Game.EvaluateSeparationEventRules(fromLocation, thingMoving, this.Requestor);
-
-                this.Game.EvaluateMovementEventRules(thingMoving, this.Requestor);
             });
 
             this.ActionsOnPass.Add(onPassAction);

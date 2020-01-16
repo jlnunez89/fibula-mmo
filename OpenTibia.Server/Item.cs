@@ -16,6 +16,7 @@ namespace OpenTibia.Server
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;
 
@@ -24,12 +25,6 @@ namespace OpenTibia.Server
     /// </summary>
     public class Item : Thing, IItem
     {
-        // public event ItemHolderChangeEvent OnHolderChanged;
-
-        // public event ItemAmountChangeEvent OnAmountChanged;
-
-        // private uint holder;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Item"/> class.
         /// </summary>
@@ -115,7 +110,7 @@ namespace OpenTibia.Server
 
         public bool IsDressable => this.Type.Flags.Contains(ItemFlag.Clothes);
 
-        public byte DressPosition => this.Attributes.ContainsKey(ItemAttribute.BodyPosition) ? Convert.ToByte(this.Attributes[ItemAttribute.BodyPosition]) : (byte)Slot.Anywhere;
+        public Slot DressPosition => this.Attributes.ContainsKey(ItemAttribute.BodyPosition) && Enum.TryParse(this.Attributes[ItemAttribute.BodyPosition].ToString(), out Slot parsedSlot) ? parsedSlot : Slot.Anywhere;
 
         public bool IsGround => this.Type.Flags.Contains(ItemFlag.Bank);
 
@@ -129,6 +124,41 @@ namespace OpenTibia.Server
                 }
 
                 return Convert.ToByte(this.Attributes[ItemAttribute.Waypoints]);
+            }
+        }
+
+        /// <summary>
+        /// Gets the location where this thing is being carried at, if any.
+        /// </summary>
+        public override Location? CarryLocation
+        {
+            get
+            {
+                return this.ParentCylinder?.CarryLocation;
+            }
+        }
+
+        /// <summary>
+        /// Gets the creature carrying this item, if any.
+        /// </summary>
+        public ICreature Carrier
+        {
+            get
+            {
+                // Find if there is a parent cylinder that is a creature.
+                ICylinder cylinder = this.ParentCylinder;
+
+                while (cylinder != null)
+                {
+                    if (cylinder is ICreature creatureCylinder)
+                    {
+                        return creatureCylinder;
+                    }
+
+                    cylinder = cylinder.ParentCylinder;
+                }
+
+                return null;
             }
         }
 
@@ -285,12 +315,10 @@ namespace OpenTibia.Server
         /// <summary>
         /// Attempts to join an item to this item's content at the default index.
         /// </summary>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="otherItem">The item to join with.</param>
-        /// <returns>True if the operation was successful, false otherwise.</returns>
-        public (bool success, IItem remainderItem) JoinWith(IItemFactory itemFactory, IItem otherItem)
+        /// <returns>True if the operation was successful, false otherwise. Along with any surplus of the item after merge.</returns>
+        public (bool success, IItem surplusItem) Merge(IItem otherItem)
         {
-            itemFactory.ThrowIfNull(nameof(itemFactory));
             otherItem.ThrowIfNull(nameof(otherItem));
 
             if (this.Type.TypeId != otherItem.Type.TypeId || !this.IsCumulative)
@@ -314,7 +342,13 @@ namespace OpenTibia.Server
             return (true, otherItem);
         }
 
-        public (bool success, IItem remainderItem) SeparateFrom(IItemFactory itemFactory, byte amount)
+        /// <summary>
+        /// Attempts to split this item into two based on the amount provided.
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="amount">The amount of the item to split.</param>
+        /// <returns>True if the operation was successful, false otherwise, along with the item produced, if any.</returns>
+        public (bool success, IItem itemProduced) Split(IItemFactory itemFactory, byte amount)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
 
@@ -330,6 +364,15 @@ namespace OpenTibia.Server
             remainder.SetAmount(amount);
 
             return (true, remainder);
+        }
+
+        /// <summary>
+        /// Provides a string describing the current thing for logging purposes.
+        /// </summary>
+        /// <returns>The string to log.</returns>
+        public override string DescribeForLogger()
+        {
+            return $"[{this.Type.TypeId}] {this.GetType().Name}: {this.Amount} {this.Type.Name}";
         }
     }
 }

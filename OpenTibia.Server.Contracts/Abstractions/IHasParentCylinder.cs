@@ -26,7 +26,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets this entity's cylinder hierarchy.
         /// </summary>
-        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this entity's cylinder hierarchy.</returns>
-        IEnumerable<ICylinder> GetCylinderHierarchy();
+        /// <param name="includeTiles">Optional. A value indicating whether to include <see cref="ITile"/>s in the hierarchy. Defaults to true.</param>
+        /// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's cylinder hierarchy.</returns>
+        IEnumerable<ICylinder> GetCylinderHierarchy(bool includeTiles = true);
     }
 }

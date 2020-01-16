@@ -74,8 +74,7 @@ namespace OpenTibia.Server.Factories
                 return false;
             }
 
-            // TODO: is this good enough?
-            return item.ParentCylinder is BodyContainerItem;
+            return (item.ParentCylinder is BodyContainerItem bodyContainer) && (item.DressPosition == Slot.Anywhere || item.DressPosition == bodyContainer.Slot);
         }
 
         public bool IsType(IThing thing, ushort typeId)

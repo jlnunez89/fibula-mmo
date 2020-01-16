@@ -11,8 +11,8 @@
 
 namespace OpenTibia.Server
 {
-    using OpenTibia.Server.Contracts.Abstractions;
     using System;
+    using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents the creation metadata for monsters.
