@@ -13,23 +13,40 @@ namespace OpenTibia.Server.Monsters
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents an inventory for monsters.
+    /// </summary>
     public class MonsterInventory : IInventory
     {
-        private readonly object[] recalcLocks;
+        /// <summary>
+        /// The factor to use to calculate drop chance.
+        /// </summary>
+        private const int DropChanceFactor = 1000;
 
-        private Dictionary<byte, (IItem, ushort)> inventory;
+        /// <summary>
+        /// The default maximum capacity for this inventory.
+        /// </summary>
+        private const int DefaultMaximumCapacity = 20;
+
+        /// <summary>
+        /// The default drop probability for an item in the inventory.
+        /// </summary>
+        private const int DefaultLossProbability = 1000;
+
+        /// <summary>
+        /// Internal store for the inventory.
+        /// </summary>
+        private readonly Dictionary<byte, (IItem, ushort)> inventory;
+
+        /// <summary>
+        /// Stores the last position byte in use for this inventory.
+        /// </summary>
         private byte lastPosByte;
-
-        public event OnInventorySlotChanged OnSlotChanged;
-
-        //private byte totalArmor;
-        //private byte totalAttack;
-        //private byte totalDefense;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MonsterInventory"/> class.
@@ -38,208 +55,55 @@ namespace OpenTibia.Server.Monsters
         /// <param name="owner">The owner of this inventory.</param>
         /// <param name="inventoryComposition">A collection of monster inventory posibilities, composed of typeId, maximumAmount, and chance.</param>
         /// <param name="maxCapacity">The maximum capacity of the monster's inventory.</param>
-        public MonsterInventory(IItemFactory itemFactory, ICreature owner, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryComposition, ushort maxCapacity = 20)
+        public MonsterInventory(IItemFactory itemFactory, ICreature owner, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryComposition, ushort maxCapacity = DefaultMaximumCapacity)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
             owner.ThrowIfNull(nameof(owner));
 
-            this.Owner = owner;
+            this.lastPosByte = 0;
             this.inventory = new Dictionary<byte, (IItem, ushort)>();
 
-            this.recalcLocks = new object[3];
-            this.lastPosByte = 0;
-
-            //this.totalAttack = 0xFF;
-            //this.totalArmor = 0xFF;
-            //this.totalDefense = 0xFF;
+            this.Owner = owner;
 
             this.DetermineLoot(itemFactory, inventoryComposition, maxCapacity);
         }
 
+        /// <summary>
+        /// A delegate to invoke when a slot in the inventory changes.
+        /// </summary>
+        public event OnInventorySlotChanged OnSlotChanged;
+
+        /// <summary>
+        /// Gets a reference to the owner of this inventory.
+        /// </summary>
         public ICreature Owner { get; }
 
-        public IItem this[Slot slot] => throw new NotImplementedException();
+        /// <summary>
+        /// Gets the <see cref="IItem"/> at a given position of this inventory.
+        /// </summary>
+        /// <param name="position">The position where to get the item from.</param>
+        /// <returns>The <see cref="IItem"/>, if any was found.</returns>
+        public IItem this[byte position] => this.inventory.ContainsKey(position) ? this.inventory[position].Item1 : null;
 
-        public IItem this[byte idx] => this.inventory.ContainsKey(idx) ? this.inventory[idx].Item1 : null;
-
-        //public byte TotalArmor
-        //{
-        //    get
-        //    {
-        //        if (this.totalArmor == 0xFF)
-        //        {
-        //            lock (this.recalcLocks[0])
-        //            {
-        //                if (this.totalArmor == 0xFF)
-        //                {
-        //                    var total = default(byte);
-
-        //                    foreach (var tuple in this.inventory.Values)
-        //                    {
-        //                        total += tuple.Item1.Armor;
-        //                    }
-
-        //                    this.totalArmor = total;
-        //                }
-        //            }
-        //        }
-
-        //        return this.totalArmor;
-        //    }
-        //}
-
-        //public byte TotalAttack
-        //{
-        //    get
-        //    {
-        //        if (this.totalAttack != 0xFF)
-        //        {
-        //            return this.totalAttack;
-        //        }
-
-        //        lock (this.recalcLocks[1])
-        //        {
-        //            if (this.totalAttack != 0xFF)
-        //            {
-        //                return this.totalAttack;
-        //            }
-
-        //            var total = this.inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Attack));
-
-        //            this.totalAttack = total;
-        //        }
-
-        //        return this.totalAttack;
-        //    }
-        //}
-
-        //public byte TotalDefense
-        //{
-        //    get
-        //    {
-        //        if (this.totalDefense != 0xFF)
-        //        {
-        //            return this.totalDefense;
-        //        }
-
-        //        lock (this.recalcLocks[2])
-        //        {
-        //            if (this.totalDefense != 0xFF)
-        //            {
-        //                return this.totalDefense;
-        //            }
-
-        //            var total = this.inventory.Values.Aggregate(default(byte), (current, tuple) => Math.Max(current, tuple.Item1.Defense));
-
-        //            this.totalDefense = total;
-        //        }
-
-        //        return this.totalDefense;
-        //    }
-        //}
-
-        //public byte AttackRange => 0x01;
-
-        public bool Add(IItem item, out IItem extraItem, byte positionByte = 0xFF, byte count = 1, ushort lossProbability = 300)
-        {
-            extraItem = null;
-
-            this.inventory[this.lastPosByte++] = (item, lossProbability);
-
-            return true;
-        }
-
-        public IItem Remove(byte positionByte, byte count, out bool wasPartial)
-        {
-            wasPartial = false;
-
-            //if (this.inventory.ContainsKey(positionByte))
-            //{
-            //    var found = this.inventory[positionByte].Item1;
-
-            //    if (found.Count < count)
-            //    {
-            //        return null;
-            //    }
-
-            //    // remove the whole item
-            //    if (found.Count == count)
-            //    {
-            //        this.inventory.Remove(positionByte);
-            //        found.SetHolder(null, default);
-
-            //        return found;
-            //    }
-
-            //    IItem newItem = ItemFactory.Create(found.Type.TypeId);
-
-            //    newItem.SetAmount(count);
-            //    found.SetAmount((byte)(found.Amount - count));
-
-            //    wasPartial = true;
-            //    return newItem;
-            //}
-
-            //this.inventory = new Dictionary<byte, (IItem, ushort)>(this.inventory);
-
-            return null;
-        }
-
-        public IItem Remove(ushort itemId, byte count, out bool wasPartial)
-        {
-            wasPartial = false;
-            //bool removed = false;
-            //var slot = this.inventory.Keys.FirstOrDefault(k => this.inventory[k].Item1.Type.TypeId == itemId);
-
-            //try
-            //{
-            //    var found = this.inventory[slot].Item1;
-
-            //    if (found.Count < count)
-            //    {
-            //        return null;
-            //    }
-
-            //    // remove the whole item
-            //    if (found.Count == count)
-            //    {
-            //        this.inventory.Remove(slot);
-            //        found.SetHolder(null, default);
-
-            //        removed = true;
-            //        return found;
-            //    }
-
-            //    IItem newItem = ItemFactory.Create(found.Type.TypeId);
-
-            //    newItem.SetAmount(count);
-            //    found.SetAmount((byte)(found.Amount - count));
-
-            //    wasPartial = true;
-            //    removed = true;
-            //    return newItem;
-            //}
-            //catch
-            //{
-            //    return null;
-            //}
-            //finally
-            //{
-            //    if (removed)
-            //    {
-            //        this.inventory = new Dictionary<byte, Tuple<IItem, ushort>>(this.inventory);
-            //    }
-            //}
-            return null;
-        }
-
-        private void DetermineLoot(IItemFactory itemFactory, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryComposition, ushort maxCapacity)
+        /// <summary>
+        /// Determines and sets this inventory's content (which is the loot).
+        /// </summary>
+        /// <param name="itemFactory">A reference to the item factory, to create the items.</param>
+        /// <param name="inventoryPossibilities">The possible inventory contents.</param>
+        /// <param name="maxCapacity">A limit to the maximum number of items to create.</param>
+        private void DetermineLoot(IItemFactory itemFactory, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryPossibilities, ushort maxCapacity)
         {
             var rng = new Random();
 
-            foreach (var (typeId, maxAmount, chance) in inventoryComposition)
+            foreach (var (typeId, maxAmount, chance) in inventoryPossibilities.OrderBy(i => i.chance))
             {
-                if (rng.Next(1000) > chance)
+                if (maxCapacity > ushort.MinValue && this.inventory.Count == maxCapacity)
+                {
+                    // Reached the maximum.
+                    break;
+                }
+
+                if (rng.Next(DropChanceFactor) > chance)
                 {
                     continue;
                 }
@@ -258,7 +122,9 @@ namespace OpenTibia.Server.Monsters
                     newItem.SetAmount(amount);
                 }
 
-                this.Add(newItem, out IItem unused);
+                Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
+
+                this.inventory[this.lastPosByte++] = (newItem, DefaultLossProbability);
             }
         }
     }

@@ -16,6 +16,7 @@ namespace OpenTibia.Communications
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Delegates;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a connection.
@@ -41,9 +42,11 @@ namespace OpenTibia.Communications
         /// <summary>
         /// Initializes a new instance of the <see cref="Connection"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="socket">The socket that this connection is for.</param>
-        public Connection(Socket socket)
+        public Connection(ILogger logger, Socket socket)
         {
+            logger.ThrowIfNull(nameof(logger));
             socket.ThrowIfNull(nameof(socket));
 
             this.writeLock = new object();
@@ -53,6 +56,8 @@ namespace OpenTibia.Communications
             this.InboundMessage = new NetworkMessage(isOutbound: false);
             this.XTeaKey = new uint[4];
             this.IsAuthenticated = false;
+
+            this.Logger = logger.ForContext<Connection>();
         }
 
         /// <summary>
@@ -89,6 +94,11 @@ namespace OpenTibia.Communications
         /// Gets a value indicating whether this connection has been authenticated.
         /// </summary>
         public bool IsAuthenticated { get; private set; }
+
+        /// <summary>
+        /// Gets a reference to the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the Socket IP address of this connection, if it is open.
@@ -196,12 +206,11 @@ namespace OpenTibia.Communications
             catch (Exception e)
             {
                 // Invalid data from the client
-                // TODO: I must not swallow exceptions.
-                Console.WriteLine(e.Message);
-                Console.WriteLine(e.StackTrace);
+                this.Logger.Warning(e.Message);
+                this.Logger.Warning(e.StackTrace);
 
                 // TODO: is closing the connection really necesary?
-                // Close();
+                this.Close();
             }
         }
 
@@ -236,9 +245,9 @@ namespace OpenTibia.Communications
             }
             catch (Exception e)
             {
-                // TODO: I must not swallow exceptions.
+                this.Logger.Error(e.ToString());
+
                 // TODO: is closing the connection really necesary?
-                Console.WriteLine(e.ToString());
                 this.Close();
             }
 

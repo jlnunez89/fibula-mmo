@@ -74,7 +74,7 @@ namespace OpenTibia.Server.MovementEvents
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(toCreatureId) is IPlayer targetPlayer &&
                                       tileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
-                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.Inventory[toCreatureSlot] as IContainerItem, toIndex: 0, amountToMove: amount, requestorCreature: this.Requestor);
+                                      this.Game.PerformItemMovement(item, fromTile, targetPlayer.Inventory[(byte)toCreatureSlot] as IContainerItem, toIndex: 0, amountToMove: amount, requestorCreature: this.Requestor);
 
                 if (!moveSuccessful)
                 {

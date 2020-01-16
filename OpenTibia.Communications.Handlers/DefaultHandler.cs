@@ -11,11 +11,11 @@
 
 namespace OpenTibia.Communications.Handlers
 {
-    using System;
     using System.Collections.Generic;
     using System.Text;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets;
+    using Serilog;
 
     /// <summary>
     /// Special kind of handler that is used as a fall back when no other handler is picked.
@@ -25,11 +25,18 @@ namespace OpenTibia.Communications.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultHandler"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="packetType">The type of the packet.</param>
-        public DefaultHandler(byte packetType)
+        public DefaultHandler(ILogger logger, byte packetType)
         {
+            this.Logger = logger.ForContext<DefaultHandler>();
             this.IncomingPacketType = packetType;
         }
+
+        /// <summary>
+        /// Gets a reference to the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the packet type that resulted in this handler being picked.
@@ -58,9 +65,7 @@ namespace OpenTibia.Communications.Handlers
                 sb.AppendFormat("{0:x2} ", b);
             }
 
-            Console.WriteLine($"Default handler received the following packet type: {this.IncomingPacketType.ToString("X2")}");
-            Console.WriteLine(sb.ToString());
-            Console.WriteLine();
+            this.Logger.Information($"Default handler received the following packet type: {this.IncomingPacketType.ToString("X2")}\n\n{sb.ToString()}");
 
             return (false, null);
         }

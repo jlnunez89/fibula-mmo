@@ -101,6 +101,7 @@ namespace OpenTibia.Server
         public Game(
             ILogger logger,
             IMap map,
+            IPathFinder pathFinder,
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             IEventRulesLoader eventRulesLoader,
@@ -111,6 +112,7 @@ namespace OpenTibia.Server
         {
             logger.ThrowIfNull(nameof(logger));
             map.ThrowIfNull(nameof(map));
+            pathFinder.ThrowIfNull(nameof(pathFinder));
             connectionManager.ThrowIfNull(nameof(connectionManager));
             creatureManager.ThrowIfNull(nameof(creatureManager));
             eventRulesLoader.ThrowIfNull(nameof(eventRulesLoader));
@@ -128,6 +130,7 @@ namespace OpenTibia.Server
             this.scheduler = new Scheduler(logger);
 
             this.map = map;
+            this.pathFinder = pathFinder;
 
             // TODO: This is a hack. Need to fix this indirection.
             scriptApi.Game = this;
@@ -496,7 +499,7 @@ namespace OpenTibia.Server
         {
             player.ThrowIfNull(nameof(player));
 
-            var sourceContainer = player.Inventory[slot] as IContainerItem;
+            var sourceContainer = player.Inventory[(byte)slot] as IContainerItem;
 
             var thingMoving = sourceContainer?.Content.FirstOrDefault();
 
@@ -1445,7 +1448,7 @@ namespace OpenTibia.Server
                 index = 0;
                 subIndex = 0;
 
-                return creature?.Inventory[fromLocation.Slot] as IContainerItem;
+                return creature?.Inventory[(byte)fromLocation.Slot] as IContainerItem;
             }
 
             return null;
@@ -1471,7 +1474,7 @@ namespace OpenTibia.Server
 
                     return tile.FindItemWithId(typeId);
                 case LocationType.InventorySlot:
-                    var fromBodyContainer = creature?.Inventory[location.Slot] as IContainerItem;
+                    var fromBodyContainer = creature?.Inventory[(byte)location.Slot] as IContainerItem;
 
                     return fromBodyContainer?.Content.FirstOrDefault();
                 case LocationType.InsideContainer:
@@ -2172,6 +2175,8 @@ namespace OpenTibia.Server
         /// <param name="toZ">The end Z coordinate for the loaded window.</param>
         private void HandleMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
+            var rng = new Random();
+
             // For spawns, check which fall within this window:
             var spawnsInWindow = this.monsterSpawns
                 .Where(s => s.Location.X >= fromX && s.Location.X <= toX &&
@@ -2182,7 +2187,36 @@ namespace OpenTibia.Server
             {
                 foreach (var spawn in spawnsInWindow)
                 {
-                    this.ScriptRequest_PlaceMonsterAt(spawn.Location, spawn.Id);
+                    for (int i = 0; i < spawn.Count; i++)
+                    {
+                        var placed = false;
+                        var r = Math.Max(1, spawn.Radius / 4);
+
+                        byte tries = 1;
+                        do
+                        {
+                            var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+
+                            if (!this.map.GetTileAt(randomLoc, out ITile randomTile))
+                            {
+                                continue;
+                            }
+
+                            // Need to actually pathfind to avoid placing a monster in unreachable places.
+                            this.pathFinder.FindBetween(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 10);
+
+                            if (this.map.GetTileAt(foundLocation, out ITile foundTile) && !foundTile.BlocksPass)
+                            {
+                                placed = this.ScriptRequest_PlaceMonsterAt(foundTile.Location, spawn.Id);
+                            }
+                        }
+                        while (++tries != 0 && !placed);
+
+                        if (!placed)
+                        {
+                            this.Logger.Warning($"Gave up on placing monster with type {spawn.Id} around {spawn.Location}, no suitable tile found.");
+                        }
+                    }
                 }
             }
         }

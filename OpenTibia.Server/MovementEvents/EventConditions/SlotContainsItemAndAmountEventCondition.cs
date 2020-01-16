@@ -79,7 +79,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 return false;
             }
 
-            var containerAtSlot = requestor.Inventory?[this.Slot] as IContainerItem;
+            var containerAtSlot = requestor.Inventory?[(byte)this.Slot] as IContainerItem;
             var itemAtSlot = containerAtSlot?.Content.FirstOrDefault();
 
             return itemAtSlot != null && this.ItemMoving.Type.TypeId == itemAtSlot.Type.TypeId && itemAtSlot.Amount >= this.Amount;

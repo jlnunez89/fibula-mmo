@@ -19,6 +19,7 @@ namespace OpenTibia.Communications
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Security.Contracts;
+    using Serilog;
 
     /// <summary>
     /// Class that is the base implementation for all listeners.
@@ -36,19 +37,28 @@ namespace OpenTibia.Communications
         private readonly IDoSDefender defender;
 
         /// <summary>
+        /// The logger instance in use.
+        /// </summary>
+        private readonly ILogger logger;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="BaseListener"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="port">The port to use on this listener.</param>
         /// <param name="protocol">The protocol to use in this listener.</param>
         /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
-        protected BaseListener(int port, IProtocol protocol, IDoSDefender dosDefender)
+        protected BaseListener(ILogger logger, int port, IProtocol protocol, IDoSDefender dosDefender)
             : base(IPAddress.Any, port)
         {
+            logger.ThrowIfNull(nameof(logger));
             protocol.ThrowIfNull(nameof(protocol));
             dosDefender.ThrowIfNull(nameof(dosDefender));
 
             this.protocol = protocol;
             this.defender = dosDefender;
+
+            this.logger = logger.ForContext(this.GetType());
         }
 
         /// <summary>
@@ -75,7 +85,7 @@ namespace OpenTibia.Communications
                         {
                             var socket = await this.AcceptSocketAsync().ConfigureAwait(false);
 
-                            Connection connection = new Connection(socket);
+                            Connection connection = new Connection(this.logger, socket);
 
                             if (this.defender.IsBlocked(connection.SocketIp))
                             {
@@ -103,8 +113,7 @@ namespace OpenTibia.Communications
                 }
                 catch (SocketException socEx)
                 {
-                    // TODO: proper logging.
-                    Console.WriteLine(socEx.ToString());
+                    this.logger.Error(socEx.ToString());
                 }
             });
 

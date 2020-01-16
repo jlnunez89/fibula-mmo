@@ -97,7 +97,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.Map)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from map."));
+                return;
             }
 
             // Before actually moving the item, check if we're close enough to use it.
@@ -105,7 +105,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (locationDiff.Z != 0)
             {
-                // it's on a different floor...
+                // It's on a different floor...
                 responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
             }
             else if (locationDiff.MaxValueIn2D > 1)
@@ -152,7 +152,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.InsideContainer)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from container."));
+                return;
             }
 
             if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromContainer(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.ContainerId, moveThingInfo.FromLocation.ContainerIndex, moveThingInfo.ToLocation, moveThingInfo.Count))
@@ -171,7 +171,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.InventorySlot)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from inventory."));
+                return;
             }
 
             if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromInventory(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.Slot, moveThingInfo.ToLocation, moveThingInfo.Count))

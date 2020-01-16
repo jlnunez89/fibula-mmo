@@ -95,6 +95,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Parsing.Ci
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.Spawns.MonstersDbFile", "OpenTibia.Server.Spawns.MonstersDbFile\OpenTibia.Server.Spawns.MonstersDbFile.csproj", "{23E61528-7F0A-47A4-AF3C-4BAF3D57C052}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OpenTibia.Server.PathFinding.AStar", "OpenTibia.Server.PathFinding.AStar\OpenTibia.Server.PathFinding.AStar.csproj", "{8681C089-47EC-4D97-A011-5EF56EFB1886}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -399,6 +401,14 @@ Global
 		{23E61528-7F0A-47A4-AF3C-4BAF3D57C052}.Release|Any CPU.Build.0 = Release|Any CPU
 		{23E61528-7F0A-47A4-AF3C-4BAF3D57C052}.Release|x64.ActiveCfg = Release|Any CPU
 		{23E61528-7F0A-47A4-AF3C-4BAF3D57C052}.Release|x64.Build.0 = Release|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Debug|x64.Build.0 = Debug|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Release|x64.ActiveCfg = Release|Any CPU
+		{8681C089-47EC-4D97-A011-5EF56EFB1886}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -442,6 +452,7 @@ Global
 		{94EC480B-8286-4BEC-B291-11E8E2F05A0D} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 		{64896D28-6DF8-416C-8C00-9964DD7D7F19} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 		{23E61528-7F0A-47A4-AF3C-4BAF3D57C052} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
+		{8681C089-47EC-4D97-A011-5EF56EFB1886} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4198A479-8EF8-4C3D-BCC7-702B747E6EE4}

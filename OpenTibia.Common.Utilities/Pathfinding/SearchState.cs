@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities
+namespace OpenTibia.Common.Utilities.Pathfinding
 {
     /// <summary>
     /// Enumerates the possible A* algorithm states.

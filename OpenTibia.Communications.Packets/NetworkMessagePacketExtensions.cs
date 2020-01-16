@@ -1066,7 +1066,7 @@ namespace OpenTibia.Communications.Packets
             // message.WritePacketType(packet);
             var addInventoryItem = new Action<Slot>(slot =>
             {
-                var slotContainer = packet.Player.Inventory[slot] as IContainerItem;
+                var slotContainer = packet.Player.Inventory[(byte)slot] as IContainerItem;
 
                 var itemInContainer = slotContainer?.Content.FirstOrDefault();
 

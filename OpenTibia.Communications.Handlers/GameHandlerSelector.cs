@@ -16,12 +16,18 @@ namespace OpenTibia.Communications.Handlers
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a handler selector for incoming game packet types.
     /// </summary>
     public class GameHandlerSelector : IHandlerSelector
     {
+        /// <summary>
+        /// Stores a reference to the logger in use.
+        /// </summary>
+        private readonly ILogger logger;
+
         /// <summary>
         /// The known handlers to pick from.
         /// </summary>
@@ -30,11 +36,14 @@ namespace OpenTibia.Communications.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="GameHandlerSelector"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="handlersRegistered">The collection of handlers registered in the configuration root of the service.</param>
-        public GameHandlerSelector(IEnumerable<IHandler> handlersRegistered)
+        public GameHandlerSelector(ILogger logger, IEnumerable<IHandler> handlersRegistered)
         {
+            logger.ThrowIfNull(nameof(logger));
             handlersRegistered.ThrowIfNull(nameof(handlersRegistered));
 
+            this.logger = logger.ForContext<GameHandlerSelector>();
             this.handlersKnown = handlersRegistered.ToList();
         }
 
@@ -54,7 +63,7 @@ namespace OpenTibia.Communications.Handlers
 
             if (handler == null)
             {
-                handler = new DefaultHandler(forType);
+                handler = new DefaultHandler(this.logger, forType);
             }
 
             return handler;

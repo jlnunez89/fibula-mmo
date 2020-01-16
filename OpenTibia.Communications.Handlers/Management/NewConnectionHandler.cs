@@ -36,6 +36,7 @@ namespace OpenTibia.Communications.Handlers.Management
         /// <summary>
         /// Initializes a new instance of the <see cref="NewConnectionHandler"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="applicationContext">A reference to the application context.</param>
         /// <param name="gameConfigOptions">The game configuration options.</param>
         /// <param name="protocolConfigOptions">The protocol configuration options.</param>
@@ -50,7 +51,7 @@ namespace OpenTibia.Communications.Handlers.Management
             gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
 
-            this.Logger = logger;
+            this.Logger = logger.ForContext<NewConnectionHandler>();
             this.ApplicationContext = applicationContext;
             this.GameConfiguration = gameConfigOptions.Value;
             this.ProtocolConfiguration = protocolConfigOptions.Value;

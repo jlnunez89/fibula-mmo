@@ -30,9 +30,9 @@ namespace OpenTibia.Server
         /// <param name="level">This skill's current level.</param>
         /// <param name="maxLevel">This skill's maximum level.</param>
         /// <param name="count">This skill's current count.</param>
-        /// <param name="targetCount"></param>
         /// <param name="baseIncrease">This skill's target base increase level over level.</param>
-        public MonsterSkill(SkillType type, ushort defaultLevel, double rate, ushort level, ushort maxLevel, uint count, uint targetCount, byte baseIncrease)
+        /// <param name="skillIncrease">This skill's value increase level over level.</param>
+        public MonsterSkill(SkillType type, ushort defaultLevel, double rate, ushort level, ushort maxLevel, uint count, uint baseIncrease, byte skillIncrease)
         {
             if (defaultLevel < 1)
             {
@@ -73,6 +73,7 @@ namespace OpenTibia.Server
 
             this.Target = this.CalculateNextTarget();
             this.Count = Math.Min(count, this.Target);
+            this.PerLevelIncrease = skillIncrease;
         }
 
         /// <summary>
@@ -106,6 +107,11 @@ namespace OpenTibia.Server
         public double Count { get; private set; }
 
         /// <summary>
+        /// Gets the value by which to advance on skill level increase.
+        /// </summary>
+        public byte PerLevelIncrease { get; }
+
+        /// <summary>
         /// Gets this skill's rate of target count increase.
         /// </summary>
         public double Rate { get; }
@@ -131,7 +137,7 @@ namespace OpenTibia.Server
             // Skill level advance
             if (Math.Abs(this.Count - this.Target) < 0.001)
             {
-                this.Level++;
+                this.Level += this.PerLevelIncrease;
                 this.Target = this.CalculateNextTarget();
 
                 // Invoke any subscribers to the level advance.

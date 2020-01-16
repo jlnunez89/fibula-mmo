@@ -103,7 +103,7 @@ namespace OpenTibia.Communications.Handlers.Game
                         thing = container?[lookAtInfo.Location.ContainerIndex];
                         break;
                     case LocationType.InventorySlot:
-                        container = player.Inventory[lookAtInfo.Location.Slot] as IContainerItem;
+                        container = player.Inventory[(byte)lookAtInfo.Location.Slot] as IContainerItem;
 
                         thing = container?.Content.FirstOrDefault();
                         break;

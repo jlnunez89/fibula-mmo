@@ -16,21 +16,30 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
+    /// <summary>
+    /// Class that represents arguments for the <see cref="TileUpdatedNotification"/>.
+    /// </summary>
     internal class TileUpdatedNotificationArguments : INotificationArguments
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TileUpdatedNotificationArguments"/> class.
         /// </summary>
-        /// <param name="location"></param>
-        /// <param name="descriptionFunction"></param>
+        /// <param name="location">The location of the updated tile.</param>
+        /// <param name="descriptionFunction">The function used to get the description of the updated tile.</param>
         public TileUpdatedNotificationArguments(Location location, Func<IPlayer, Location, ReadOnlySequence<byte>> descriptionFunction)
         {
             this.Location = location;
             this.TileDescriptionFunction = descriptionFunction;
         }
 
+        /// <summary>
+        /// Gets the location of the updated tile.
+        /// </summary>
         public Location Location { get; }
 
+        /// <summary>
+        /// Gets the function that decribes the tile.
+        /// </summary>
         public Func<IPlayer, Location, ReadOnlySequence<byte>> TileDescriptionFunction { get; }
     }
 }
