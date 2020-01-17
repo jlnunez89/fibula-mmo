@@ -66,7 +66,10 @@ namespace OpenTibia.Communications.Handlers.Game
             }
 
             // A new request overrides and cancels any "auto" actions waiting to be retried.
-            player.ClearAllLocationActions();
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
             switch (moveThingInfo.FromLocation.Type)
             {
@@ -107,24 +110,6 @@ namespace OpenTibia.Communications.Handlers.Game
             {
                 // It's on a different floor...
                 responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-            }
-            else if (locationDiff.MaxValueIn2D > 1)
-            {
-                // Too far away to move it.
-                //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
-
-                //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
-
-                //if (directions.Length > 0)
-                //{
-                //    player.AutoWalk(directions);
-                //}
-                //else // we found no way...
-                //{
-                //    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                //}
-
-                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "You are far away. Server side auto-walk is not yet supported."));
             }
 
             // First we turn towards the thing we're moving.

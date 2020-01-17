@@ -395,6 +395,26 @@ namespace OpenTibia.Server
                 return false;
             }
 
+            var locationDiff = fromLocation - player.Location;
+
+            if (locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_MoveThingFromMap(player, thingId, fromLocation, fromStackPos, toLocation, count));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
+
             if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
             {
                 return false;
@@ -549,7 +569,7 @@ namespace OpenTibia.Server
 
             var locationDiff = fromLocation - player.Location;
 
-            if (locationDiff.MaxValueIn2D > 1)
+            if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
                 var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc);
@@ -596,6 +616,26 @@ namespace OpenTibia.Server
         public bool PlayerRequest_RotateItemAt(IPlayer player, Location atLocation, byte index, ushort typeId)
         {
             player.ThrowIfNull(nameof(player));
+
+            var locationDiff = atLocation - player.Location;
+
+            if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.FindPathBetween(player.Location, atLocation, out Location retryLoc);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_RotateItemAt(player, atLocation, index, typeId));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
 
             // TODO: should this be scheduled too?
             if (this.map.GetTileAt(atLocation, out ITile targetTile))

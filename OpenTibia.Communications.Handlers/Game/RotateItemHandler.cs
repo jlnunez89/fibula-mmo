@@ -12,11 +12,14 @@
 namespace OpenTibia.Communications.Handlers.Game
 {
     using System.Collections.Generic;
+    using System.Linq;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
+    using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents an item rotation handler for the game server.
@@ -54,17 +57,45 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             var itemRotationInfo = message.ReadItemRotationInfo();
 
+            var responsePackets = new List<IOutgoingPacket>();
+
             if (!(this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
             {
                 return (false, null);
             }
 
             // A new request overrides and cancels any "auto" actions waiting to be retried.
-            player.ClearAllLocationActions();
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
-            this.Game.PlayerRequest_RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId);
+            // Before actually using the item, check if we're close enough to use it.
+            if (itemRotationInfo.AtLocation.Type == LocationType.Map)
+            {
+                // Turn to the item if it's not exactly the location.
+                if (player.Location != itemRotationInfo.AtLocation)
+                {
+                    var directionToThing = player.Location.DirectionTo(itemRotationInfo.AtLocation);
 
-            return (false, null);
+                    this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
+                }
+
+                var locationDiff = itemRotationInfo.AtLocation - player.Location;
+
+                if (locationDiff.Z != 0)
+                {
+                    // it's on a different floor...
+                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
+                }
+            }
+
+            if (!responsePackets.Any() && !this.Game.PlayerRequest_RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId))
+            {
+                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
+            }
+
+            return (responsePackets.Any(), responsePackets);
         }
     }
 }

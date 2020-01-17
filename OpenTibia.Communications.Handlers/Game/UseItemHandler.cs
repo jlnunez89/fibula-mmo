@@ -79,7 +79,10 @@ namespace OpenTibia.Communications.Handlers.Game
             }
 
             // A new request overrides and cancels any "auto" actions waiting to be retried.
-            player.ClearAllLocationActions();
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
             // Before actually using the item, check if we're close enough to use it.
             if (itemUseInfo.FromLocation.Type == LocationType.Map)

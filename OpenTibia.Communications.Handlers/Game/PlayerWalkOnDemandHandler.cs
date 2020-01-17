@@ -62,7 +62,10 @@ namespace OpenTibia.Communications.Handlers.Game
             var responsePackets = new List<IOutgoingPacket>();
 
             // A new request overrides and cancels any "auto" actions waiting to be retried.
-            player.ClearAllLocationActions();
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
             if (!this.Game.PlayerRequest_WalkToDirection(player, this.Direction))
             {
