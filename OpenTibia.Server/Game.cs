@@ -91,6 +91,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
+        /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
@@ -546,6 +547,26 @@ namespace OpenTibia.Server
         {
             player.ThrowIfNull(nameof(player));
 
+            var locationDiff = fromLocation - player.Location;
+
+            if (locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_UseItem(player, itemClientId, fromLocation, fromStackPos, index));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
+
             // At this point it seems like a valid usage request, let's enqueue it.
             IEvent useItemEvent = new UseItemEvent(
                     this.Logger,
@@ -744,6 +765,7 @@ namespace OpenTibia.Server
 
             this.EvaluateSeparationEventRules(fromTile.Location, creature, requestorCreature);
             this.EvaluateCollisionEventRules(toTile.Location, creature, requestorCreature);
+            this.EvaluateCreatureLocationBasedActions(creature);
 
             return true;
         }
@@ -1487,6 +1509,20 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Attempts to find a set of directions from the <paramref name="sourceLocation"/> that lead to the <paramref name="desiredLocation"/>.
+        /// </summary>
+        /// <param name="sourceLocation">The source location.</param>
+        /// <param name="desiredLocation">The target location.</param>
+        /// <param name="finalPathLocation">Gets the closest final location of the path found, which may differ from the target location.</param>
+        /// <param name="forCreature">The creature as which the path search is being performed, if any.</param>
+        /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
+        /// <returns>A collection of <see cref="Direction"/>s, leading from the source location to the final location.</returns>
+        public IEnumerable<Direction> FindPathBetween(Location sourceLocation, Location desiredLocation, out Location finalPathLocation, ICreature forCreature = null, bool considerAvoidsAsBlock = true)
+        {
+            return this.pathFinder.FindBetween(sourceLocation, desiredLocation, out finalPathLocation, onBehalfOfCreature: forCreature);
+        }
+
+        /// <summary>
         /// Checks if a throw between two map locations is valid.
         /// </summary>
         /// <param name="fromLocation">The first location.</param>
@@ -1682,6 +1718,37 @@ namespace OpenTibia.Server
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <param name="creature">The creature to check actions for.</param>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        private bool EvaluateCreatureLocationBasedActions(ICreature creature)
+        {
+            if (creature == null)
+            {
+                return false;
+            }
+
+            bool anyExecuted = false;
+
+            foreach (var (loc, action) in creature.LocationBasedActions)
+            {
+                // Check if locations match.
+                if (creature.Location != loc)
+                {
+                    continue;
+                }
+
+                anyExecuted = true;
+                action();
+
+                creature.DequeueActionAtLocation(loc);
+            }
+
+            return anyExecuted;
         }
 
         private bool AddContentToCylinderChain(IEnumerable<ICylinder> cylinderChain, byte firstAttemptIndex, ref IThing remainder, ICreature requestorCreature = null)

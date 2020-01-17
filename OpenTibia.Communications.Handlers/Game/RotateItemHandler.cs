@@ -59,6 +59,9 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
+            // A new request overrides and cancels any "auto" actions waiting to be retried.
+            player.ClearAllLocationActions();
+
             this.Game.PlayerRequest_RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId);
 
             return (false, null);

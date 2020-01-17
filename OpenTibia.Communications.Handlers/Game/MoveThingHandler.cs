@@ -65,8 +65,8 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            // Stop any player actions.
-            // player.ClearPendingActions();
+            // A new request overrides and cancels any "auto" actions waiting to be retried.
+            player.ClearAllLocationActions();
 
             switch (moveThingInfo.FromLocation.Type)
             {

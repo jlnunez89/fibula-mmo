@@ -52,6 +52,16 @@ namespace OpenTibia.Server
         private readonly IContainerItem[] openContainers;
 
         /// <summary>
+        /// Lock object to semaphore interaction with the actions queue.
+        /// </summary>
+        private readonly object actionsLock;
+
+        /// <summary>
+        /// The queue of current location-based actions to retry.
+        /// </summary>
+        private readonly Queue<(Location atLoc, Action action)> locationBasedRetryActions;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
         /// </summary>
         /// <param name="name">The name of this creature.</param>
@@ -94,6 +104,9 @@ namespace OpenTibia.Server
 
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
+
+            this.actionsLock = new object();
+            this.locationBasedRetryActions = new Queue<(Location atLoc, Action action)>();
 
             this.Outfit = new Outfit
             {
@@ -247,6 +260,20 @@ namespace OpenTibia.Server
         /// Gets the collection of open containers tracked by this player.
         /// </summary>
         public IEnumerable<IContainerItem> OpenContainers => this.openContainers;
+
+        /// <summary>
+        /// Gets the collection of current location-based actions to retry.
+        /// </summary>
+        public IEnumerable<(Location atLocation, Action action)> LocationBasedActions
+        {
+            get
+            {
+                lock (this.actionsLock)
+                {
+                    return this.locationBasedRetryActions.ToArray();
+                }
+            }
+        }
 
         /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
@@ -521,6 +548,61 @@ namespace OpenTibia.Server
         public override string DescribeForLogger()
         {
             return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
+        }
+
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps at this particular location.
+        /// </summary>
+        /// <param name="retryLoc">The location at which the retry happens.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        public void EnqueueActionAtLocation(Location retryLoc, Action action)
+        {
+            if (action == null || retryLoc == default)
+            {
+                return;
+            }
+
+            lock (this.actionsLock)
+            {
+                this.locationBasedRetryActions.Enqueue((retryLoc, action));
+            }
+        }
+
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
+        public void DequeueActionAtLocation(Location loc)
+        {
+            lock (this.actionsLock)
+            {
+                int count = this.locationBasedRetryActions.Count;
+
+                for (int i = 0; i < count; i++)
+                {
+                    var tuple = this.locationBasedRetryActions.Dequeue();
+
+                    if (tuple.atLoc != loc)
+                    {
+                        this.locationBasedRetryActions.Enqueue(tuple);
+                        continue;
+                    }
+
+                    // we already removed it, just exit.
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        public void ClearAllLocationActions()
+        {
+            lock (this.actionsLock)
+            {
+                this.locationBasedRetryActions.Clear();
+            }
         }
 
         // protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }
