@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="PongPacket.cs" company="2Dudes">
+// <copyright file="PingPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -15,14 +15,14 @@ namespace OpenTibia.Communications.Packets.Outgoing
     using OpenTibia.Communications.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents pong packet.
+    /// Class that represents ping packet.
     /// </summary>
-    public class PongPacket : IOutgoingPacket
+    public class PingPacket : IOutgoingPacket
     {
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.Pong;
+        public byte PacketType => (byte)OutgoingGamePacketType.Ping;
 
         /// <summary>
         /// Writes the packet to the message provided.

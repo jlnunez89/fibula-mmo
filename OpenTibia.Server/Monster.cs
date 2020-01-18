@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.Monsters
 {
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
 
@@ -49,7 +50,7 @@ namespace OpenTibia.Server.Monsters
 
         public sealed override IInventory Inventory { get; protected set; }
 
-        public override bool CanBeMoved => !this.Type.Flags.Contains(CreatureFlag.Unpushable);
+        public override bool CanBeMoved => !this.Type.Flags.HasFlag((uint)CreatureFlag.Unpushable);
 
         //public override ushort AttackPower => Math.Max(this.Type.Attack, this.Inventory.TotalAttack);
 

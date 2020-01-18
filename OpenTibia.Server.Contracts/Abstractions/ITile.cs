@@ -71,5 +71,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order);
 
         void SetFlag(TileFlag flag);
+
+        bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All);
     }
 }

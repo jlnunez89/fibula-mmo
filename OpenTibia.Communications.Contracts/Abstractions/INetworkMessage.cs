@@ -107,6 +107,11 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <returns>True if the message could be prepared, false otherwise.</returns>
         bool PrepareToSend(uint[] xteaKey);
 
+        /// <summary>
+        /// Prepares the message to send it, without encrypting it.
+        /// </summary>
+        /// <param name="insertOnlyOneLength">A value indicating whether to insert a single, total length.</param>
+        /// <returns>True if the message could be prepared, false otherwise.</returns>
         bool PrepareToSendWithoutEncryption(bool insertOnlyOneLength = false);
 
         /// <summary>

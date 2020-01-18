@@ -12,6 +12,7 @@
 namespace OpenTibia.Common.Utilities
 {
     using System.Collections.Generic;
+    using OpenTibia.Common.Utilities.Pathfinding;
 
     /// <summary>
     /// Extension methods to make the System.Collections.Generic.SortedList easier to use.

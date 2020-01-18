@@ -65,8 +65,11 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            // Stop any player actions.
-            // player.ClearPendingActions();
+            // A new request overrides and cancels any "auto" actions waiting to be retried.
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
             switch (moveThingInfo.FromLocation.Type)
             {
@@ -97,7 +100,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.Map)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from map."));
+                return;
             }
 
             // Before actually moving the item, check if we're close enough to use it.
@@ -105,26 +108,8 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (locationDiff.Z != 0)
             {
-                // it's on a different floor...
+                // It's on a different floor...
                 responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-            }
-            else if (locationDiff.MaxValueIn2D > 1)
-            {
-                // Too far away to move it.
-                //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
-
-                //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
-
-                //if (directions.Length > 0)
-                //{
-                //    player.AutoWalk(directions);
-                //}
-                //else // we found no way...
-                //{
-                //    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                //}
-
-                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "You are far away. Server side auto-walk is not yet supported."));
             }
 
             // First we turn towards the thing we're moving.
@@ -152,7 +137,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.InsideContainer)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from container."));
+                return;
             }
 
             if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromContainer(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.ContainerId, moveThingInfo.FromLocation.ContainerIndex, moveThingInfo.ToLocation, moveThingInfo.Count))
@@ -171,7 +156,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             if (moveThingInfo.FromLocation.Type != LocationType.InventorySlot)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.ConsoleOrange, "Internal server error handling move from inventory."));
+                return;
             }
 
             if (!responsePackets.Any() && !this.Game.PlayerRequest_MoveThingFromInventory(player, moveThingInfo.ThingClientId, moveThingInfo.FromLocation.Slot, moveThingInfo.ToLocation, moveThingInfo.Count))

@@ -29,7 +29,7 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         /// <summary>
         /// Keep alive packet.
         /// </summary>
-        Ping = 0x1E,
+        KeepAlive = 0x1E,
 
         /// <summary>
         /// Move with autowalk.

@@ -32,6 +32,16 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         Disconnect = 0x14,
 
         /// <summary>
+        /// A server initiated ping.
+        /// </summary>
+        Ping = 0x1D,
+
+        /// <summary>
+        /// Response for a ping.
+        /// </summary>
+        Pong = 0x1E,
+
+        /// <summary>
         /// Adding an unknown creature description.
         /// </summary>
         AddUnknownCreature = 0x61,
@@ -195,10 +205,5 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         /// Show the outfit window.
         /// </summary>
         OutfitWindow = 0xC8,
-
-        /// <summary>
-        /// Response for a ping.
-        /// </summary>
-        Pong = 0x1E,
     }
 }

@@ -49,17 +49,17 @@ namespace OpenTibia.Server
         /// <summary>
         /// Default delay for scripts.
         /// </summary>
-        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(0);
 
         /// <summary>
         /// Default delat for player actions.
         /// </summary>
-        private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(200);
 
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
         /// </summary>
-        private static readonly TimeSpan CheckOrphanConnectionsDelay = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan CheckConnectionsDelay = TimeSpan.FromMinutes(1);
 
         /// <summary>
         /// Gets the current <see cref="IMap"/> instance.
@@ -91,6 +91,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="map">A reference to the map to use.</param>
+        /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
@@ -101,6 +102,7 @@ namespace OpenTibia.Server
         public Game(
             ILogger logger,
             IMap map,
+            IPathFinder pathFinder,
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             IEventRulesLoader eventRulesLoader,
@@ -111,6 +113,7 @@ namespace OpenTibia.Server
         {
             logger.ThrowIfNull(nameof(logger));
             map.ThrowIfNull(nameof(map));
+            pathFinder.ThrowIfNull(nameof(pathFinder));
             connectionManager.ThrowIfNull(nameof(connectionManager));
             creatureManager.ThrowIfNull(nameof(creatureManager));
             eventRulesLoader.ThrowIfNull(nameof(eventRulesLoader));
@@ -128,6 +131,7 @@ namespace OpenTibia.Server
             this.scheduler = new Scheduler(logger);
 
             this.map = map;
+            this.pathFinder = pathFinder;
 
             // TODO: This is a hack. Need to fix this indirection.
             scriptApi.Game = this;
@@ -391,6 +395,26 @@ namespace OpenTibia.Server
                 return false;
             }
 
+            var locationDiff = fromLocation - player.Location;
+
+            if (locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.pathFinder.FindBetween(player.Location, fromLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_MoveThingFromMap(player, thingId, fromLocation, fromStackPos, toLocation, count));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
+
             if (!this.map.GetTileAt(fromLocation, out ITile sourceTile))
             {
                 return false;
@@ -496,7 +520,7 @@ namespace OpenTibia.Server
         {
             player.ThrowIfNull(nameof(player));
 
-            var sourceContainer = player.Inventory[slot] as IContainerItem;
+            var sourceContainer = player.Inventory[(byte)slot] as IContainerItem;
 
             var thingMoving = sourceContainer?.Content.FirstOrDefault();
 
@@ -543,6 +567,26 @@ namespace OpenTibia.Server
         {
             player.ThrowIfNull(nameof(player));
 
+            var locationDiff = fromLocation - player.Location;
+
+            if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.pathFinder.FindBetween(player.Location, fromLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_UseItem(player, itemClientId, fromLocation, fromStackPos, index));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
+
             // At this point it seems like a valid usage request, let's enqueue it.
             IEvent useItemEvent = new UseItemEvent(
                     this.Logger,
@@ -572,6 +616,26 @@ namespace OpenTibia.Server
         public bool PlayerRequest_RotateItemAt(IPlayer player, Location atLocation, byte index, ushort typeId)
         {
             player.ThrowIfNull(nameof(player));
+
+            var locationDiff = atLocation - player.Location;
+
+            if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
+            {
+                // Too far away to move it, we need to move closer first.
+                var directions = this.pathFinder.FindBetween(player.Location, atLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
+
+                if (directions == null || !directions.Any())
+                {
+                    return false;
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    player.EnqueueActionAtLocation(retryLoc, () => this.PlayerRequest_RotateItemAt(player, atLocation, index, typeId));
+
+                    return this.PlayerRequest_AutoWalk(player, directions.ToArray());
+                }
+            }
 
             // TODO: should this be scheduled too?
             if (this.map.GetTileAt(atLocation, out ITile targetTile))
@@ -741,6 +805,7 @@ namespace OpenTibia.Server
 
             this.EvaluateSeparationEventRules(fromTile.Location, creature, requestorCreature);
             this.EvaluateCollisionEventRules(toTile.Location, creature, requestorCreature);
+            this.EvaluateCreatureLocationBasedActions(creature);
 
             return true;
         }
@@ -1445,7 +1510,7 @@ namespace OpenTibia.Server
                 index = 0;
                 subIndex = 0;
 
-                return creature?.Inventory[fromLocation.Slot] as IContainerItem;
+                return creature?.Inventory[(byte)fromLocation.Slot] as IContainerItem;
             }
 
             return null;
@@ -1471,7 +1536,7 @@ namespace OpenTibia.Server
 
                     return tile.FindItemWithId(typeId);
                 case LocationType.InventorySlot:
-                    var fromBodyContainer = creature?.Inventory[location.Slot] as IContainerItem;
+                    var fromBodyContainer = creature?.Inventory[(byte)location.Slot] as IContainerItem;
 
                     return fromBodyContainer?.Content.FirstOrDefault();
                 case LocationType.InsideContainer:
@@ -1679,6 +1744,37 @@ namespace OpenTibia.Server
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <param name="creature">The creature to check actions for.</param>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        private bool EvaluateCreatureLocationBasedActions(ICreature creature)
+        {
+            if (creature == null)
+            {
+                return false;
+            }
+
+            bool anyExecuted = false;
+
+            foreach (var (loc, action) in creature.LocationBasedActions)
+            {
+                // Check if locations match.
+                if (creature.Location != loc)
+                {
+                    continue;
+                }
+
+                anyExecuted = true;
+                action();
+
+                creature.DequeueActionAtLocation(loc);
+            }
+
+            return anyExecuted;
         }
 
         private bool AddContentToCylinderChain(IEnumerable<ICylinder> cylinderChain, byte firstAttemptIndex, ref IThing remainder, ICreature requestorCreature = null)
@@ -2093,8 +2189,9 @@ namespace OpenTibia.Server
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                Thread.Sleep(CheckOrphanConnectionsDelay);
+                Thread.Sleep(CheckConnectionsDelay);
 
+                // Now let's clean up and try to log out all orphaned ones.
                 foreach (var orphanedConnection in this.ConnectionManager.GetAllOrphaned())
                 {
                     if (!(this.CreatureManager.FindCreatureById(orphanedConnection.PlayerId) is IPlayer player))
@@ -2172,6 +2269,8 @@ namespace OpenTibia.Server
         /// <param name="toZ">The end Z coordinate for the loaded window.</param>
         private void HandleMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
+            var rng = new Random();
+
             // For spawns, check which fall within this window:
             var spawnsInWindow = this.monsterSpawns
                 .Where(s => s.Location.X >= fromX && s.Location.X <= toX &&
@@ -2182,7 +2281,36 @@ namespace OpenTibia.Server
             {
                 foreach (var spawn in spawnsInWindow)
                 {
-                    this.ScriptRequest_PlaceMonsterAt(spawn.Location, spawn.Id);
+                    for (int i = 0; i < spawn.Count; i++)
+                    {
+                        var placed = false;
+                        var r = Math.Max(1, spawn.Radius / 4);
+
+                        byte tries = 1;
+                        do
+                        {
+                            var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+
+                            if (!this.map.GetTileAt(randomLoc, out ITile randomTile))
+                            {
+                                continue;
+                            }
+
+                            // Need to actually pathfind to avoid placing a monster in unreachable places.
+                            this.pathFinder.FindBetween(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 10);
+
+                            if (this.map.GetTileAt(foundLocation, out ITile foundTile) && !foundTile.BlocksPass)
+                            {
+                                placed = this.ScriptRequest_PlaceMonsterAt(foundTile.Location, spawn.Id);
+                            }
+                        }
+                        while (++tries != 0 && !placed);
+
+                        if (!placed)
+                        {
+                            this.Logger.Warning($"Gave up on placing monster with type {spawn.Id} around {spawn.Location}, no suitable tile found.");
+                        }
+                    }
                 }
             }
         }

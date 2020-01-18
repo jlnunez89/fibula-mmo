@@ -9,13 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities
+namespace OpenTibia.Common.Utilities.Pathfinding
 {
     using System.Collections.Generic;
 
     /// <summary>
-    /// The A* algorithm takes a starting node and a goal node and searchings from
-    /// start to the goal.
+    /// The A* algorithm takes a starting node and a goal node and searches from the start to the goal.
     ///
     /// The nodes can be setup in a graph ahead of running the algorithm or the children
     /// nodes can be generated on the fly when the A* algorithm requests the Children property.
@@ -28,17 +27,17 @@ namespace OpenTibia.Common.Utilities
         /// <summary>
         /// Gets or sets a value indicating whether this node is part of the open list.
         /// </summary>
-        bool IsInOpenList { get; set; }
+        bool ShouldBeVisited { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this node is part of the closed list.
         /// </summary>
-        bool IsInClosedList { get; set; }
+        bool HasBeenVisited { get; set; }
 
         /// <summary>
         /// Gets the total cost for this node.
-        /// f = g + h
-        /// TotalCost = MovementCost + EstimatedCost.
+        /// This is the sum of the cost from this node to the starting node, or g, plus
+        /// the heuristic cost from this node to the goal node, or h. [t = g + h].
         /// </summary>
         int TotalCost { get; }
 
@@ -60,12 +59,11 @@ namespace OpenTibia.Common.Utilities
         INode Parent { get; set; }
 
         /// <summary>
-        /// Gets this node's children.
+        /// Gets this node's adjacent nodes.
         /// </summary>
-        /// <remarks>The children can be setup in a graph before starting the
-        /// A* algorithm or they can be dynamically generated the first time
-        /// the A* algorithm calls this property.</remarks>
-        IEnumerable<INode> Children { get; }
+        /// <param name="nodeFactory">A reference to the factory to create new nodes.</param>
+        /// <returns>The collection of adjacent nodes.</returns>
+        IEnumerable<INode> FindAdjacent(INodeFactory nodeFactory);
 
         /// <summary>
         /// Returns true if this node is the goal, false if it is not the goal.

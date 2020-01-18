@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="PingRequestHandler.cs" company="2Dudes">
+// <copyright file="KeepAliveRequestHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -22,23 +22,23 @@ namespace OpenTibia.Communications.Handlers.Game
     /// <summary>
     /// Class that represents a ping request handler for the game server.
     /// </summary>
-    public class PingRequestHandler : BaseHandler
+    public class KeepAliveRequestHandler : BaseHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PingRequestHandler"/> class.
+        /// Initializes a new instance of the <see cref="KeepAliveRequestHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger instance.</param>
-        public PingRequestHandler(ILogger logger)
+        public KeepAliveRequestHandler(ILogger logger)
         {
             logger.ThrowIfNull(nameof(logger));
 
-            this.Logger = logger.ForContext<PingRequestHandler>();
+            this.Logger = logger.ForContext<KeepAliveRequestHandler>();
         }
 
         /// <summary>
         /// Gets the type of packet that this handler is for.
         /// </summary>
-        public override byte ForPacketType => (byte)IncomingGamePacketType.Ping;
+        public override byte ForPacketType => (byte)IncomingGamePacketType.KeepAlive;
 
         /// <summary>
         /// Gets the reference to the logger in use.
@@ -53,7 +53,7 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
         public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
         {
-            this.Logger.Debug($"Recieved ping from {connection.SocketIp}, sending pong!");
+            this.Logger.Debug($"Recieved ping back from {connection.SocketIp}.");
 
             var responsePackets = new List<IOutgoingPacket>
             {

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SearchState.cs" company="2Dudes">
+// <copyright file="AvoidDamageType.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,26 +9,36 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities.Pathfinding
+namespace OpenTibia.Server.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the possible A* algorithm states.
+    /// Enumerates the possible blood types.
     /// </summary>
-    public enum SearchState
+    public enum AvoidDamageType : byte
     {
         /// <summary>
-        /// The algorithm is running, searching for the goal.
+        /// Avoids special.
         /// </summary>
-        Searching,
+        Special = 0,
 
         /// <summary>
-        /// The algorithm has found the goal.
+        /// Avoid poison.
         /// </summary>
-        GoalFound,
+        Poison = 1 << 1,
 
         /// <summary>
-        /// The algorithm has failed to find a solution.
+        /// Avoid fire.
         /// </summary>
-        Failed,
+        Fire = 1 << 2,
+
+        /// <summary>
+        /// Avoid energy.
+        /// </summary>
+        Energy = 1 << 3,
+
+        /// <summary>
+        /// Avoid all types.
+        /// </summary>
+        All = Poison | Fire | Energy,
     }
 }

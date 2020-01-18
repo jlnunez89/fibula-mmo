@@ -78,7 +78,11 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            // player.ClearPendingActions();
+            // A new request overrides and cancels any "auto" actions waiting to be retried.
+            if (this.Game.PlayerRequest_CancelPendingMovements(player))
+            {
+                player.ClearAllLocationActions();
+            }
 
             // Before actually using the item, check if we're close enough to use it.
             if (itemUseInfo.FromLocation.Type == LocationType.Map)
@@ -97,24 +101,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 {
                     // it's on a different floor...
                     responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                }
-                else if (locationDiff.MaxValueIn2D > 1)
-                {
-                    // Too far away to move it.
-                    //var directions = this.Game.Pathfind(player.Location, itemMoveInfo.FromLocation, out Location retryLoc).ToArray();
-
-                    //player.SetPendingAction(new MoveItemPlayerAction(player, itemMoveInfo, retryLoc));
-
-                    //if (directions.Length > 0)
-                    //{
-                    //    player.AutoWalk(directions);
-                    //}
-                    //else // we found no way...
-                    //{
-                    //    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
-                    //}
-
-                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Too far away, auto walk is not implemented yet."));
                 }
             }
 

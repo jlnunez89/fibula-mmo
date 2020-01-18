@@ -134,15 +134,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         IEnumerable<IContainerItem> OpenContainers { get; }
 
-        // ConcurrentQueue<Tuple<byte, Direction>> WalkingQueue { get; }
-
-        // byte NextStepId { get; set; }
-
-        // void StopWalking();
-
-        // void AutoWalk(params Direction[] directions);
-
-        // void UpdateLastStepInfo(byte lastStepId, bool wasDiagonal = true);
+        /// <summary>
+        /// Gets the collection of current location-based actions to retry.
+        /// </summary>
+        IEnumerable<(Location atLocation, Action action)> LocationBasedActions { get; }
 
         /// <summary>
         /// Checks if this creature can see a given creature.
@@ -210,5 +205,23 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="containerId">The id of the container.</param>
         /// <returns>The container, if found.</returns>
         IContainerItem GetContainerById(byte containerId);
+
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps at this particular location.
+        /// </summary>
+        /// <param name="retryLoc">The location at which the retry happens.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        void EnqueueActionAtLocation(Location retryLoc, Action action);
+
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
+        void DequeueActionAtLocation(Location loc);
+
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        void ClearAllLocationActions();
     }
 }

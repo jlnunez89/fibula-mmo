@@ -71,7 +71,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsLiquidContainer { get; }
 
-        byte LiquidType { get; }
+        LiquidType LiquidType { get; }
 
         bool HasCollision { get; }
 
@@ -87,7 +87,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsContainer { get; }
 
-        bool IsDressable { get; }
+        bool CanBeDressed { get; }
 
         Slot DressPosition { get; }
 
@@ -129,16 +129,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>True if the operation was successful, false otherwise, along with the item produced, if any.</returns>
         (bool success, IItem itemProduced) Split(IItemFactory itemFactory, byte amount);
 
-        // bool IsPathBlocking(byte avoidType = 0);
-
-        // void AddContent(IEnumerable<object> content);
-
-        // void SetHolder(ICreature creature, Location fromLocation);
-
-        // void SetParent(IContainerItem parentContainer);
-
-        // bool Join(IItem otherItem);
-
-        // bool Separate(byte amount, out IItem splitItem);
+        bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All);
     }
 }

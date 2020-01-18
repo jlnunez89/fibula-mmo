@@ -15,6 +15,7 @@ namespace OpenTibia.Server.Contracts
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -125,7 +126,41 @@ namespace OpenTibia.Server.Contracts
             }
             else if (item.IsLiquidPool || item.IsLiquidSource || item.IsLiquidContainer)
             {
-                message.AddByte(item.LiquidType);
+                message.AddByte((byte)item.LiquidType.ToLiquidColor());
+            }
+        }
+
+        /// <summary>
+        /// Converts a <see cref="LiquidType"/> to the client supported <see cref="LiquidColor"/>.
+        /// </summary>
+        /// <param name="liquidType">The type of liquid.</param>
+        /// <returns>The color supported by the client.</returns>
+        public static LiquidColor ToLiquidColor(this LiquidType liquidType)
+        {
+            switch (liquidType)
+            {
+                default:
+                case LiquidType.None:
+                    return LiquidColor.None;
+                case LiquidType.Water:
+                    return LiquidColor.Blue;
+                case LiquidType.Wine:
+                case LiquidType.ManaFluid:
+                    return LiquidColor.Purple;
+                case LiquidType.Beer:
+                case LiquidType.Mud:
+                case LiquidType.Oil:
+                    return LiquidColor.Brown;
+                case LiquidType.Blood:
+                case LiquidType.LifeFluid:
+                    return LiquidColor.Red;
+                case LiquidType.Slime:
+                case LiquidType.Lemonade:
+                    return LiquidColor.Green;
+                case LiquidType.Urine:
+                    return LiquidColor.Yellow;
+                case LiquidType.Milk:
+                    return LiquidColor.White;
             }
         }
     }

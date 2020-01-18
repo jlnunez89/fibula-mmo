@@ -43,7 +43,7 @@
     <Compile Include="Game\MoveThingHandler.cs" />
     <Compile Include="Game\LogoutHandler.cs" />
     <Compile Include="Game\LookAtHandler.cs" />
-    <Compile Include="Game\PingRequestHandler.cs" />
+    <Compile Include="Game\KeepAliveRequestHandler.cs" />
     <Compile Include="Game\PlayerLoginHandler.cs" />
     <Compile Include="Game\PlayerTurnEastHandler.cs" />
     <Compile Include="Game\PlayerTurnNorthHandler.cs" />

@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities
+namespace OpenTibia.Common.Utilities.Pathfinding
 {
     using System.Collections.Generic;
 
@@ -21,55 +21,72 @@ namespace OpenTibia.Common.Utilities
         /// <summary>
         /// The open list.
         /// </summary>
-        private readonly SortedList<int, INode> openList;
+        private readonly SortedList<int, INode> nextToVisit;
 
         /// <summary>
         /// The closed list.
         /// </summary>
-        private readonly SortedList<int, INode> closedList;
+        private readonly SortedList<int, INode> visited;
+
+        /// <summary>
+        /// The reference to the node factory in use.
+        /// </summary>
+        private readonly INodeFactory nodeFactory;
+
+        /// <summary>
+        /// The maximum number of steps to perform in the search before giving up.
+        /// </summary>
+        private readonly int maxSteps;
 
         /// <summary>
         /// The goal node.
         /// </summary>
-        private INode goal;
+        private readonly INode goal;
+
+        /// <summary>
+        /// The current amount of steps that the algorithm has performed.
+        /// </summary>
+        private int currentStepCount;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AStar"/> class.
         /// </summary>
+        /// <param name="nodeFactory">A reference to the node factory in use.</param>
         /// <param name="start">The starting node for the AStar algorithm.</param>
         /// <param name="goal">The goal node for the AStar algorithm.</param>
         /// <param name="maxSearchSteps">Optional. The maximum number of Step operations to perform on the search.</param>
-        public AStar(INode start, INode goal, int maxSearchSteps = 100)
+        public AStar(INodeFactory nodeFactory, INode start, INode goal, int maxSearchSteps = 100)
         {
+            nodeFactory.ThrowIfNull(nameof(nodeFactory));
             start.ThrowIfNull(nameof(start));
             goal.ThrowIfNull(nameof(goal));
 
             var duplicateComparer = new DuplicateIntegerComparer();
-            this.openList = new SortedList<int, INode>(duplicateComparer);
-            this.closedList = new SortedList<int, INode>(duplicateComparer);
-            this.Reset(start, goal);
-            this.MaxSteps = maxSearchSteps;
+            this.nextToVisit = new SortedList<int, INode>(duplicateComparer);
+            this.visited = new SortedList<int, INode>(duplicateComparer);
+
+            this.nodeFactory = nodeFactory;
+
+            this.goal = goal;
+            this.maxSteps = maxSearchSteps;
+
+            this.currentStepCount = 0;
+
+            this.CurrentNode = start;
+            this.CurrentNode.ShouldBeVisited = true;
+
+            this.nextToVisit.Add(this.CurrentNode);
         }
-
-        /// <summary>
-        /// Gets the current amount of steps that the algorithm has performed.
-        /// </summary>
-        public int Steps { get; private set; }
-
-        /// <summary>
-        /// Gets the number of maximum steps to perform in the search before giving up.
-        /// </summary>
-        public int MaxSteps { get; }
 
         /// <summary>
         /// Gets the current state of the open list.
         /// </summary>
-        public IEnumerable<INode> OpenList => this.openList.Values;
+        public IEnumerable<INode> OpenList => this.nextToVisit.Values;
 
         /// <summary>
         /// Gets the current state of the closed list.
         /// </summary>
-        public IEnumerable<INode> ClosedList => this.closedList.Values;
+        public IEnumerable<INode> ClosedList => this.visited.Values;
 
         /// <summary>
         /// Gets the current node that the AStar algorithm is at.
@@ -77,38 +94,20 @@ namespace OpenTibia.Common.Utilities
         public INode CurrentNode { get; private set; }
 
         /// <summary>
-        /// Resets the AStar algorithm with the newly specified start node and goal node.
-        /// </summary>
-        /// <param name="start">The starting node for the AStar algorithm.</param>
-        /// <param name="goal">The goal node for the AStar algorithm.</param>
-        public void Reset(INode start, INode goal)
-        {
-            start.ThrowIfNull(nameof(start));
-            goal.ThrowIfNull(nameof(goal));
-
-            this.openList.Clear();
-            this.closedList.Clear();
-            this.CurrentNode = start;
-            this.goal = goal;
-            this.openList.Add(this.CurrentNode);
-            this.CurrentNode.IsInOpenList = true;
-        }
-
-        /// <summary>
         /// Steps the AStar algorithm forward until it either fails or finds the goal node.
         /// </summary>
         /// <returns>Returns the state the algorithm finished in, Failed or GoalFound.</returns>
         public SearchState Run()
         {
+            var state = SearchState.Searching;
+
             // Continue searching until either failure or the goal node has been found.
-            while (true)
+            while (state == SearchState.Searching)
             {
-                var s = this.Step();
-                if (s != SearchState.Searching)
-                {
-                    return s;
-                }
+                state = this.Step();
             }
+
+            return state;
         }
 
         /// <summary>
@@ -117,26 +116,26 @@ namespace OpenTibia.Common.Utilities
         /// <returns>Returns the state the alorithm is in after the step, either Failed, GoalFound or still Searching.</returns>
         public SearchState Step()
         {
-            if (this.MaxSteps > 0 && this.Steps == this.MaxSteps)
+            if (this.maxSteps > 0 && this.currentStepCount >= this.maxSteps)
             {
                 return SearchState.Failed;
             }
 
-            this.Steps++;
+            this.currentStepCount++;
 
             while (true)
             {
                 // There are no more nodes to search, return failure.
-                if (this.openList.IsEmpty())
+                if (this.nextToVisit.IsEmpty())
                 {
                     return SearchState.Failed;
                 }
 
-                // Check the next best node in the graph by TotalCost.
-                this.CurrentNode = this.openList.Pop();
+                // Pick the next best node in the graph by lowest total cost.
+                this.CurrentNode = this.nextToVisit.Pop();
 
-                // This node has already been searched, check the next one.
-                if (this.CurrentNode.IsInClosedList)
+                // This node has already been visited, skip.
+                if (this.CurrentNode.HasBeenVisited)
                 {
                     continue;
                 }
@@ -145,48 +144,49 @@ namespace OpenTibia.Common.Utilities
                 break;
             }
 
-            // Remove from the open list and place on the closed list
-            // since this node is now being searched.
-            this.CurrentNode.IsInOpenList = false;
-            this.closedList.Add(this.CurrentNode);
-            this.CurrentNode.IsInClosedList = true;
+            // First of all, flag this node to not be visited again.
+            this.visited.Add(this.CurrentNode);
+            this.CurrentNode.ShouldBeVisited = false;
+            this.CurrentNode.HasBeenVisited = true;
 
-            // Found the goal, stop searching.
+            // Check if this node is the goal.
             if (this.CurrentNode.IsGoal(this.goal))
             {
+                // Found the goal, stop searching.
                 return SearchState.GoalFound;
             }
 
-            // Node was not the goal so add all children nodes to the open list.
-            // Each child needs to have its movement cost set and estimated cost.
-            foreach (var child in this.CurrentNode.Children)
+            // Node was not the goal. Add all the adjacent nodes to the next-to-visit list.
+            // But before adding them, we need to estimate and set their movement and estimated costs.
+            foreach (var adjacent in this.CurrentNode.FindAdjacent(this.nodeFactory))
             {
-                // If the child has already been searched (closed list) just ignore.
-                if (child.IsInClosedList)
+                // If the node has already been visited, ignore it.
+                if (adjacent.HasBeenVisited)
                 {
                     continue;
                 }
 
-                // If the child has already beem searched, lets see if we get a better MovementCost by setting this parent instead.
-                if (child.IsInOpenList)
+                // If the node is waiting to be visited, check if we get a better cost by setting this as it's parent instead.
+                if (adjacent.ShouldBeVisited)
                 {
-                    var oldCost = child.MovementCost;
-                    child.SetMovementCost(this.CurrentNode);
+                    var oldCost = adjacent.MovementCost;
 
-                    if (oldCost != child.MovementCost)
+                    adjacent.SetMovementCost(parent: this.CurrentNode);
+
+                    if (oldCost != adjacent.MovementCost)
                     {
                         // it's better with this parent.
-                        child.Parent = this.CurrentNode;
+                        adjacent.Parent = this.CurrentNode;
                     }
 
                     continue;
                 }
 
-                child.Parent = this.CurrentNode;
-                child.SetMovementCost(this.CurrentNode);
-                child.SetEstimatedCost(this.goal);
-                this.openList.Add(child);
-                child.IsInOpenList = true;
+                adjacent.Parent = this.CurrentNode;
+                adjacent.SetMovementCost(this.CurrentNode);
+                adjacent.SetEstimatedCost(this.goal);
+                this.nextToVisit.Add(adjacent);
+                adjacent.ShouldBeVisited = true;
             }
 
             // This step did not find the goal so return status of still searching.
@@ -198,19 +198,21 @@ namespace OpenTibia.Common.Utilities
         /// Will return a partial path if the algorithm has not finished yet.
         /// </summary>
         /// <returns>Returns null if the algorithm has never been run.</returns>
-        public IEnumerable<INode> GetPath()
+        public IEnumerable<INode> GetLastPath()
         {
             if (this.CurrentNode != null)
             {
-                var next = this.CurrentNode;
-                var path = new List<INode>();
-                while (next != null)
+                var path = new Stack<INode>();
+
+                var current = this.CurrentNode;
+
+                while (current != null)
                 {
-                    path.Add(next);
-                    next = next.Parent;
+                    path.Push(current);
+
+                    current = current.Parent;
                 }
 
-                path.Reverse();
                 return path.ToArray();
             }
 

@@ -43,16 +43,6 @@ namespace OpenTibia.Server
         public abstract ushort ThingId { get; }
 
         /// <summary>
-        /// Gets the description of the thing.
-        /// </summary>
-        public abstract string Description { get; }
-
-        /// <summary>
-        /// Gets the inspection text of the thing.
-        /// </summary>
-        public abstract string InspectionText { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this thing can be moved.
         /// </summary>
         public abstract bool CanBeMoved { get; }
@@ -130,6 +120,13 @@ namespace OpenTibia.Server
         {
             return this.DescribeForLogger();
         }
+
+        /// <summary>
+        /// Gets the description of the thing as seen by the given player.
+        /// </summary>
+        /// <param name="forPlayer">The player as which to get the description.</param>
+        /// <returns>The description string.</returns>
+        public abstract string GetDescription(IPlayer forPlayer);
 
         /// <summary>
         /// Provides a string describing the current thing for logging purposes.

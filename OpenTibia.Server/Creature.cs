@@ -52,6 +52,16 @@ namespace OpenTibia.Server
         private readonly IContainerItem[] openContainers;
 
         /// <summary>
+        /// Lock object to semaphore interaction with the actions queue.
+        /// </summary>
+        private readonly object actionsLock;
+
+        /// <summary>
+        /// The queue of current location-based actions to retry.
+        /// </summary>
+        private readonly Queue<(Location atLoc, Action action)> locationBasedRetryActions;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
         /// </summary>
         /// <param name="name">The name of this creature.</param>
@@ -95,6 +105,9 @@ namespace OpenTibia.Server
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
+            this.actionsLock = new object();
+            this.locationBasedRetryActions = new Queue<(Location atLoc, Action action)>();
+
             this.Outfit = new Outfit
             {
                 Id = 0,
@@ -121,16 +134,6 @@ namespace OpenTibia.Server
         /// Gets the id of this creature.
         /// </summary>
         public override ushort ThingId => CreatureThingId;
-
-        /// <summary>
-        /// Gets the description of the creature.
-        /// </summary>
-        public override string Description => $"{this.Article} {this.Name}";
-
-        /// <summary>
-        /// Gets the inspection text of the creature.
-        /// </summary>
-        public override string InspectionText => this.Description;
 
         /// <summary>
         /// Gets the creature's in-game id.
@@ -247,6 +250,20 @@ namespace OpenTibia.Server
         /// Gets the collection of open containers tracked by this player.
         /// </summary>
         public IEnumerable<IContainerItem> OpenContainers => this.openContainers;
+
+        /// <summary>
+        /// Gets the collection of current location-based actions to retry.
+        /// </summary>
+        public IEnumerable<(Location atLocation, Action action)> LocationBasedActions
+        {
+            get
+            {
+                lock (this.actionsLock)
+                {
+                    return this.locationBasedRetryActions.ToArray();
+                }
+            }
+        }
 
         /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
@@ -515,6 +532,16 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Gets the description of this creature as seen by the given player.
+        /// </summary>
+        /// <param name="forPlayer">The player as which to get the description.</param>
+        /// <returns>The description string.</returns>
+        public override string GetDescription(IPlayer forPlayer)
+        {
+            return $"{this.Article} {this.Name}.";
+        }
+
+        /// <summary>
         /// Provides a string describing the current creature for logging purposes.
         /// </summary>
         /// <returns>The string to log.</returns>
@@ -523,32 +550,60 @@ namespace OpenTibia.Server
             return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
         }
 
-        // protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps at this particular location.
+        /// </summary>
+        /// <param name="retryLoc">The location at which the retry happens.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        public void EnqueueActionAtLocation(Location retryLoc, Action action)
+        {
+            if (action == null || retryLoc == default)
+            {
+                return;
+            }
 
-        // ~Creature()
-        // {
-        //    OnLocationChanged -= CheckAutoAttack;         // Are we in range with our target now/still?
-        //    OnLocationChanged -= CheckPendingActions;                  // Are we in range with any of our pending actions?
-        //    //OnTargetChanged -= CheckAutoAttack;           // Are we attacking someone new / not attacking anymore?
-        //    //OnInventoryChanged -= Mind.AttackConditionsChanged;      // Equipped / DeEquiped something?
-        // }
+            lock (this.actionsLock)
+            {
+                this.locationBasedRetryActions.Enqueue((retryLoc, action));
+            }
+        }
 
-        // public bool HasFlag(CreatureFlag flag)
-        // {
-        //    var flagValue = (uint)flag;
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
+        public void DequeueActionAtLocation(Location loc)
+        {
+            lock (this.actionsLock)
+            {
+                int count = this.locationBasedRetryActions.Count;
 
-        // return (this.Flags & flagValue) == flagValue;
-        // }
+                for (int i = 0; i < count; i++)
+                {
+                    var tuple = this.locationBasedRetryActions.Dequeue();
 
-        // public void SetFlag(CreatureFlag flag)
-        // {
-        //    this.Flags |= (uint)flag;
-        // }
+                    if (tuple.atLoc != loc)
+                    {
+                        this.locationBasedRetryActions.Enqueue(tuple);
+                        continue;
+                    }
 
-        // public void UnsetFlag(CreatureFlag flag)
-        // {
-        //    this.Flags &= ~(uint)flag;
-        // }
+                    // we already removed it, just exit.
+                    break;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        public void ClearAllLocationActions()
+        {
+            lock (this.actionsLock)
+            {
+                this.locationBasedRetryActions.Clear();
+            }
+        }
 
         // public void SetAttackTarget(uint targetId)
         // {
@@ -623,45 +678,6 @@ namespace OpenTibia.Server
         //    {
         //        this.Game.SignalAttackReady();
         //    }
-        // }
-
-        // public void StopWalking()
-        // {
-        //    lock (this.enqueueWalkLock)
-        //    {
-        //        this.WalkingQueue.Clear(); // reset the actual queue
-        //        this.UpdateLastStepInfo(0);
-        //    }
-        // }
-
-        // public void AutoWalk(params Direction[] directions)
-        // {
-        //    lock (this.enqueueWalkLock)
-        //    {
-        //        if (this.WalkingQueue.Count > 0)
-        //        {
-        //            this.StopWalking();
-        //        }
-
-        // var nextStepId = this.NextStepId;
-
-        // foreach (var direction in directions)
-        //        {
-        //            this.WalkingQueue.Enqueue(new Tuple<byte, Direction>((byte)(nextStepId++ % byte.MaxValue), direction));
-        //        }
-
-        // this.Game.SignalWalkAvailable();
-        //    }
-        // }
-
-        // public void UpdateLastStepInfo(byte lastStepId, bool wasDiagonal = true)
-        // {
-        //    var tilePenalty = this.Tile?.Ground?.MovementPenalty;
-        //    var totalPenalty = (tilePenalty ?? 200) * (wasDiagonal ? 2 : 1);
-
-        // this.Cooldowns[ExhaustionType.Movement] = new Tuple<DateTimeOffset, TimeSpan>(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)this.Speed)));
-
-        // this.NextStepId = (byte)(lastStepId + 1);
         // }
     }
 }

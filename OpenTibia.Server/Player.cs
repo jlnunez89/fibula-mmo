@@ -107,17 +107,6 @@ namespace OpenTibia.Server
         public override bool CanBeMoved => this.PermissionsLevel == 0;
 
         /// <summary>
-        /// Gets the description of this player.
-        /// </summary>
-        public override string Description => this.Name;
-
-        /// <summary>
-        /// Gets the inspection text of this player.
-        /// </summary>
-        // TODO: rework this.
-        public override string InspectionText => this.Description;
-
-        /// <summary>
         /// Gets the player's soul points.
         /// </summary>
         // TODO: nobody likes soulpoints... figure out what to do with them :)

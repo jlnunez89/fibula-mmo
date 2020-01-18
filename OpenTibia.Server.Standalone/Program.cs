@@ -38,6 +38,7 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Server.Map;
     using OpenTibia.Server.Map.SectorFiles;
     using OpenTibia.Server.Monsters.MonFiles;
+    using OpenTibia.Server.PathFinding.AStar;
     using OpenTibia.Server.Spawns.MonstersDbFile;
     using Serilog;
 
@@ -132,6 +133,8 @@ namespace OpenTibia.Server.Standalone
             services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
 
             services.AddMoveUseItemEventLoader(hostingContext.Configuration);
+
+            services.AddAStarPathFinder(hostingContext.Configuration);
 
             // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
             // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,

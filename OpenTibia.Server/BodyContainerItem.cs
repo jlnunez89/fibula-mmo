@@ -192,11 +192,11 @@ namespace OpenTibia.Server
                 case Slot.Legs:
                 case Slot.Ring:
                 case Slot.Feet:
-                    return item.IsDressable && item.DressPosition == this.Slot;
+                    return item.CanBeDressed && item.DressPosition == this.Slot;
 
                 // Valid target, special slots
                 case Slot.LeftHand:
-                    if (!(player.Inventory[Slot.RightHand] is IContainerItem rightHandContainer))
+                    if (!(player.Inventory[(byte)Slot.RightHand] is IContainerItem rightHandContainer))
                     {
                         return false;
                     }
@@ -206,7 +206,7 @@ namespace OpenTibia.Server
                     return rightHandItem == null || (item.DressPosition != Slot.TwoHanded && rightHandItem.DressPosition != Slot.TwoHanded);
 
                 case Slot.RightHand:
-                    if (!(player.Inventory[Slot.LeftHand] is IContainerItem leftHandContainer))
+                    if (!(player.Inventory[(byte)Slot.LeftHand] is IContainerItem leftHandContainer))
                     {
                         return false;
                     }

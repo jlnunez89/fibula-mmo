@@ -27,19 +27,16 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ushort ThingId { get; }
 
         /// <summary>
-        /// Gets the description of the thing.
-        /// </summary>
-        string Description { get; }
-
-        /// <summary>
-        /// Gets the inspection text of the thing.
-        /// </summary>
-        string InspectionText { get; }
-
-        /// <summary>
         /// Gets a value indicating whether this thing can be moved.
         /// </summary>
         bool CanBeMoved { get; }
+
+        /// <summary>
+        /// Gets the description of the thing as seen by the given player.
+        /// </summary>
+        /// <param name="forPlayer">The player as which to get the description.</param>
+        /// <returns>The description string.</returns>
+        string GetDescription(IPlayer forPlayer);
 
         /// <summary>
         /// Provides a string describing the current thing for logging purposes.

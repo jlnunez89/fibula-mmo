@@ -13,6 +13,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
     using System.Buffers;
+    using System.Collections.Generic;
     using Microsoft.Extensions.Hosting;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Data.Entities;
