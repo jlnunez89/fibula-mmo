@@ -814,6 +814,24 @@ namespace OpenTibia.Server.Map
             return this.YieldSingleItem();
         }
 
+        public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
+        {
+            var blocking = this.BlocksPass;
+
+            if (blocking)
+            {
+                return true;
+            }
+
+            blocking |= (this.Ground != null && this.Ground.IsPathBlocking(avoidTypes)) ||
+                        this.CreatureIds.Any() ||
+                        this.StayOnTopItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
+                        this.StayOnBottomItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
+                        this.Items.Any(i => i.IsPathBlocking(avoidTypes));
+
+            return blocking;
+        }
+
         /// <summary>
         /// Attempts to remove the given creature id from the stack of this tile.
         /// </summary>

@@ -30,7 +30,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <param name="message">The message to write this packet to.</param>
         public void WriteToMessage(INetworkMessage message)
         {
-            message.WriteNoContentPacket(this);
+            message.WriteContentlessPacket(this);
         }
     }
 }

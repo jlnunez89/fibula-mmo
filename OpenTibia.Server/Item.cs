@@ -104,16 +104,16 @@ namespace OpenTibia.Server
             }
         }
 
-        public bool IsPathBlocking(byte avoidType = 0)
+        public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
         {
-            var blocking = this.Type.Flags.Contains(ItemFlag.Unpass);
+            var blocking = this.BlocksPass;
 
             if (blocking)
             {
                 return true;
             }
 
-            blocking |= this.Type.Flags.Contains(ItemFlag.Avoid) && (avoidType == 0 || Convert.ToByte(this.Attributes[ItemAttribute.AvoidDamageTypes]) == avoidType);
+            blocking |= this.Type.Flags.Contains(ItemFlag.Avoid) && (Convert.ToByte(this.Attributes[ItemAttribute.AvoidDamageTypes]) ^ avoidTypes) > 0;
 
             return blocking;
         }
@@ -387,7 +387,7 @@ namespace OpenTibia.Server
             if (this.Amount > 1)
             {
                 // TODO: naive solution, add S to pluralize will produce some spelling errors.
-                description = $"{this.Amount} {description.Replace("a ", string.Empty)}";
+                description = $"{this.Amount}{description.TrimStart('a').TrimEnd('.')}s.";
             }
 
             if (!string.IsNullOrWhiteSpace(this.Type.Description))

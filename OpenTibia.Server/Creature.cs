@@ -605,33 +605,6 @@ namespace OpenTibia.Server
             }
         }
 
-        // protected virtual void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventAgrs) { }
-
-        // ~Creature()
-        // {
-        //    OnLocationChanged -= CheckAutoAttack;         // Are we in range with our target now/still?
-        //    OnLocationChanged -= CheckPendingActions;                  // Are we in range with any of our pending actions?
-        //    //OnTargetChanged -= CheckAutoAttack;           // Are we attacking someone new / not attacking anymore?
-        //    //OnInventoryChanged -= Mind.AttackConditionsChanged;      // Equipped / DeEquiped something?
-        // }
-
-        // public bool HasFlag(CreatureFlag flag)
-        // {
-        //    var flagValue = (uint)flag;
-
-        // return (this.Flags & flagValue) == flagValue;
-        // }
-
-        // public void SetFlag(CreatureFlag flag)
-        // {
-        //    this.Flags |= (uint)flag;
-        // }
-
-        // public void UnsetFlag(CreatureFlag flag)
-        // {
-        //    this.Flags &= ~(uint)flag;
-        // }
-
         // public void SetAttackTarget(uint targetId)
         // {
         //    if (targetId == this.Id || this.AutoAttackTargetId == targetId)
@@ -705,45 +678,6 @@ namespace OpenTibia.Server
         //    {
         //        this.Game.SignalAttackReady();
         //    }
-        // }
-
-        // public void StopWalking()
-        // {
-        //    lock (this.enqueueWalkLock)
-        //    {
-        //        this.WalkingQueue.Clear(); // reset the actual queue
-        //        this.UpdateLastStepInfo(0);
-        //    }
-        // }
-
-        // public void AutoWalk(params Direction[] directions)
-        // {
-        //    lock (this.enqueueWalkLock)
-        //    {
-        //        if (this.WalkingQueue.Count > 0)
-        //        {
-        //            this.StopWalking();
-        //        }
-
-        // var nextStepId = this.NextStepId;
-
-        // foreach (var direction in directions)
-        //        {
-        //            this.WalkingQueue.Enqueue(new Tuple<byte, Direction>((byte)(nextStepId++ % byte.MaxValue), direction));
-        //        }
-
-        // this.Game.SignalWalkAvailable();
-        //    }
-        // }
-
-        // public void UpdateLastStepInfo(byte lastStepId, bool wasDiagonal = true)
-        // {
-        //    var tilePenalty = this.Tile?.Ground?.MovementPenalty;
-        //    var totalPenalty = (tilePenalty ?? 200) * (wasDiagonal ? 2 : 1);
-
-        // this.Cooldowns[ExhaustionType.Movement] = new Tuple<DateTimeOffset, TimeSpan>(DateTimeOffset.UtcNow, TimeSpan.FromMilliseconds(1000 * totalPenalty / (double)Math.Max(1, (int)this.Speed)));
-
-        // this.NextStepId = (byte)(lastStepId + 1);
         // }
     }
 }

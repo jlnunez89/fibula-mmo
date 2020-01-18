@@ -23,5 +23,11 @@ namespace OpenTibia.Common.Utilities.Pathfinding
         /// <param name="nodeCreationData">The node creation data.</param>
         /// <returns>An instance of a <see cref="INode"/>.</returns>
         INode Create(string searchId, INodeCreationArguments nodeCreationData);
+
+        /// <summary>
+        /// Method called when a search is completed, whatever the result is.
+        /// </summary>
+        /// <param name="searchId">The search id.</param>
+        void OnSearchCompleted(string searchId);
     }
 }

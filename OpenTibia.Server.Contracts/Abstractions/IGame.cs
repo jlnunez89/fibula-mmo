@@ -90,17 +90,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         bool PlayerRequest_AutoWalk(IPlayer player, Direction[] directions);
 
         /// <summary>
-        /// Attempts to find a set of directions from the <paramref name="sourceLocation"/> that lead to the <paramref name="desiredLocation"/>.
-        /// </summary>
-        /// <param name="sourceLocation">The source location.</param>
-        /// <param name="desiredLocation">The target location.</param>
-        /// <param name="finalPathLocation">Gets the closest final location of the path found, which may differ from the target location.</param>
-        /// <param name="forCreature">The creature as which the path search is being performed, if any.</param>
-        /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
-        /// <returns>A collection of <see cref="Direction"/>s, leading from the source location to the final location.</returns>
-        IEnumerable<Direction> FindPathBetween(Location sourceLocation, Location desiredLocation, out Location finalPathLocation, ICreature forCreature = null, bool considerAvoidsAsBlock = true);
-
-        /// <summary>
         /// Attempts to cancel all of a player's pending movements.
         /// </summary>
         /// <param name="player">The player making the request.</param>

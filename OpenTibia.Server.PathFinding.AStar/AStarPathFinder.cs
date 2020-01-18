@@ -66,8 +66,9 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// <param name="endLocation">The last searched location before returning.</param>
         /// <param name="maxStepsCount">Optional. The maximum number of search steps to perform before giving up on finding the target location. Default is 100.</param>
         /// <param name="onBehalfOfCreature">Optional. The creature on behalf of which the search is being performed.</param>
+        /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Direction"/>s leading to the end location. The <paramref name="endLocation"/> and <paramref name="targetLocation"/> may or may not be the same.</returns>
-        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null)
+        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null, bool considerAvoidsAsBlock = true)
         {
             endLocation = startLocation;
             maxStepsCount = maxStepsCount == default ? this.Options.DefaultMaximumSteps : maxStepsCount;
@@ -110,6 +111,8 @@ namespace OpenTibia.Server.PathFinding.AStar
             }
 
             endLocation = lastLoc;
+
+            this.NodeFactory.OnSearchCompleted(searchId);
 
             return dirList;
         }

@@ -130,6 +130,11 @@ namespace OpenTibia.Server.Contracts
             }
         }
 
+        /// <summary>
+        /// Converts a <see cref="LiquidType"/> to the client supported <see cref="LiquidColor"/>.
+        /// </summary>
+        /// <param name="liquidType">The type of liquid.</param>
+        /// <returns>The color supported by the client.</returns>
         public static LiquidColor ToLiquidColor(this LiquidType liquidType)
         {
             switch (liquidType)

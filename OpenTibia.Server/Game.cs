@@ -49,7 +49,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Default delay for scripts.
         /// </summary>
-        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(200);
+        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(0);
 
         /// <summary>
         /// Default delat for player actions.
@@ -400,7 +400,7 @@ namespace OpenTibia.Server
             if (locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
+                var directions = this.pathFinder.FindBetween(player.Location, fromLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -572,7 +572,7 @@ namespace OpenTibia.Server
             if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
+                var directions = this.pathFinder.FindBetween(player.Location, fromLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -622,7 +622,7 @@ namespace OpenTibia.Server
             if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, atLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
+                var directions = this.pathFinder.FindBetween(player.Location, atLocation, out Location retryLoc, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -1549,20 +1549,6 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Attempts to find a set of directions from the <paramref name="sourceLocation"/> that lead to the <paramref name="desiredLocation"/>.
-        /// </summary>
-        /// <param name="sourceLocation">The source location.</param>
-        /// <param name="desiredLocation">The target location.</param>
-        /// <param name="finalPathLocation">Gets the closest final location of the path found, which may differ from the target location.</param>
-        /// <param name="forCreature">The creature as which the path search is being performed, if any.</param>
-        /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
-        /// <returns>A collection of <see cref="Direction"/>s, leading from the source location to the final location.</returns>
-        public IEnumerable<Direction> FindPathBetween(Location sourceLocation, Location desiredLocation, out Location finalPathLocation, ICreature forCreature = null, bool considerAvoidsAsBlock = true)
-        {
-            return this.pathFinder.FindBetween(sourceLocation, desiredLocation, out finalPathLocation, onBehalfOfCreature: forCreature);
-        }
-
-        /// <summary>
         /// Checks if a throw between two map locations is valid.
         /// </summary>
         /// <param name="fromLocation">The first location.</param>
@@ -2204,13 +2190,6 @@ namespace OpenTibia.Server
             while (!cancellationToken.IsCancellationRequested)
             {
                 Thread.Sleep(CheckConnectionsDelay);
-
-                // Send a ping to all active connections, so that OTClient users don't get disconnected.
-                this.RequestNofitication(
-                    new GenericNotification(
-                        this.Logger,
-                        () => this.ConnectionManager.GetAllActive(),
-                        new GenericNotificationArguments(new PingPacket())));
 
                 // Now let's clean up and try to log out all orphaned ones.
                 foreach (var orphanedConnection in this.ConnectionManager.GetAllOrphaned())

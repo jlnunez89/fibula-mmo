@@ -80,5 +80,17 @@ namespace OpenTibia.Server.PathFinding.AStar
                 return this.nodesDictionary[searchId].TryGetValue(locToSearch, out TileNode node) ? node : null;
             }
         }
+
+        /// <summary>
+        /// Method called when a search is completed, whatever the result is.
+        /// </summary>
+        /// <param name="searchId">The search id.</param>
+        public void OnSearchCompleted(string searchId)
+        {
+            lock (this.nodesDictionaryLock)
+            {
+                this.nodesDictionary.Remove(searchId);
+            }
+        }
     }
 }

@@ -125,7 +125,7 @@ namespace OpenTibia.Server.PathFinding.AStar
 
             foreach (var locOffset in offsets)
             {
-                if (nodeFactory.Create(this.SearchId, new TileNodeCreationArguments(currentLoc + locOffset, this.OnBehalfOfCreature)) is TileNode tileNode && !tileNode.Tile.BlocksPass)
+                if (nodeFactory.Create(this.SearchId, new TileNodeCreationArguments(currentLoc + locOffset, this.OnBehalfOfCreature)) is TileNode tileNode && !tileNode.Tile.IsPathBlocking())
                 {
                     adjacent.Add(tileNode);
                 }

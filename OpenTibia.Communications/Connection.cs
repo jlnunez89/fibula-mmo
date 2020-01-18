@@ -208,9 +208,6 @@ namespace OpenTibia.Communications
                 // Invalid data from the client
                 this.Logger.Warning(e.Message);
                 this.Logger.Warning(e.StackTrace);
-
-                // TODO: is closing the connection really necesary?
-                this.Close();
             }
         }
 

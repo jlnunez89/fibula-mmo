@@ -22,7 +22,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.Pong;
+        public byte PacketType => (byte)OutgoingGamePacketType.Ping;
 
         /// <summary>
         /// Writes the packet to the message provided.
@@ -30,7 +30,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <param name="message">The message to write this packet to.</param>
         public void WriteToMessage(INetworkMessage message)
         {
-            message.WriteNoContentPacket(this);
+            message.WriteContentlessPacket(this);
         }
     }
 }
