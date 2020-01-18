@@ -61,8 +61,9 @@ namespace OpenTibia.Common.Utilities.Pathfinding
         /// <summary>
         /// Gets this node's adjacent nodes.
         /// </summary>
+        /// <param name="nodeFactory">A reference to the factory to create new nodes.</param>
         /// <returns>The collection of adjacent nodes.</returns>
-        IEnumerable<INode> FindAdjacent();
+        IEnumerable<INode> FindAdjacent(INodeFactory nodeFactory);
 
         /// <summary>
         /// Returns true if this node is the goal, false if it is not the goal.

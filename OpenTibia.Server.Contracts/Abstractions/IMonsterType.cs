@@ -74,7 +74,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the flags set for this type of monster.
         /// </summary>
-        ISet<CreatureFlag> Flags { get; }
+        uint Flags { get; }
 
         /// <summary>
         /// Gets the skills that this type of monster starts with.

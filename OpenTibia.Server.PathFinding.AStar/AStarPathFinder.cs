@@ -29,16 +29,24 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// <summary>
         /// Initializes a new instance of the <see cref="AStarPathFinder"/> class.
         /// </summary>
+        /// <param name="nodeFactory">A reference to the node factory in use.</param>
         /// <param name="tileAccessor">A refernce to the file accessor.</param>
         /// <param name="pathfinderOptions">The options for this pathfinder.</param>
-        public AStarPathFinder(ITileAccessor tileAccessor, IOptions<AStarPathFinderOptions> pathfinderOptions)
+        public AStarPathFinder(INodeFactory nodeFactory, ITileAccessor tileAccessor, IOptions<AStarPathFinderOptions> pathfinderOptions)
         {
+            nodeFactory.ThrowIfNull(nameof(nodeFactory));
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
             pathfinderOptions?.Value.ThrowIfNull(nameof(pathfinderOptions));
 
+            this.NodeFactory = nodeFactory;
             this.TileAccessor = tileAccessor;
             this.Options = pathfinderOptions.Value;
         }
+
+        /// <summary>
+        /// Gets a reference to the node factory in use.
+        /// </summary>
+        public INodeFactory NodeFactory { get; }
 
         /// <summary>
         /// Gets the tile accessor in use.
@@ -64,17 +72,21 @@ namespace OpenTibia.Server.PathFinding.AStar
             endLocation = startLocation;
             maxStepsCount = maxStepsCount == default ? this.Options.DefaultMaximumSteps : maxStepsCount;
 
-            if (!this.TileAccessor.GetTileAt(startLocation, out ITile fromTile) || !this.TileAccessor.GetTileAt(targetLocation, out ITile toTile))
+            var searchId = Guid.NewGuid().ToString();
+
+            var startNode = this.NodeFactory.Create(searchId, new TileNodeCreationArguments(startLocation, onBehalfOfCreature));
+            var targetNode = this.NodeFactory.Create(searchId, new TileNodeCreationArguments(targetLocation, onBehalfOfCreature));
+
+            if (startLocation == targetLocation || startNode == null || targetNode == null)
             {
                 return Enumerable.Empty<Direction>();
             }
 
             var dirList = new List<Direction>();
-            var searchId = Guid.NewGuid().ToString();
-            var algo = new AStar(new TileNode(searchId, this.TileAccessor, fromTile, onBehalfOfCreature), new TileNode(searchId, this.TileAccessor, toTile, onBehalfOfCreature), maxStepsCount);
-            var result = algo.Run();
 
-            if (result == SearchState.Failed)
+            var algo = new AStar(this.NodeFactory, startNode, targetNode, maxStepsCount);
+
+            if (algo.Run() == SearchState.Failed)
             {
                 var lastTile = algo.GetLastPath()?.LastOrDefault() as TileNode;
 

@@ -29,6 +29,11 @@ namespace OpenTibia.Common.Utilities.Pathfinding
         private readonly SortedList<int, INode> visited;
 
         /// <summary>
+        /// The reference to the node factory in use.
+        /// </summary>
+        private readonly INodeFactory nodeFactory;
+
+        /// <summary>
         /// The maximum number of steps to perform in the search before giving up.
         /// </summary>
         private readonly int maxSteps;
@@ -46,17 +51,21 @@ namespace OpenTibia.Common.Utilities.Pathfinding
         /// <summary>
         /// Initializes a new instance of the <see cref="AStar"/> class.
         /// </summary>
+        /// <param name="nodeFactory">A reference to the node factory in use.</param>
         /// <param name="start">The starting node for the AStar algorithm.</param>
         /// <param name="goal">The goal node for the AStar algorithm.</param>
         /// <param name="maxSearchSteps">Optional. The maximum number of Step operations to perform on the search.</param>
-        public AStar(INode start, INode goal, int maxSearchSteps = 100)
+        public AStar(INodeFactory nodeFactory, INode start, INode goal, int maxSearchSteps = 100)
         {
+            nodeFactory.ThrowIfNull(nameof(nodeFactory));
             start.ThrowIfNull(nameof(start));
             goal.ThrowIfNull(nameof(goal));
 
             var duplicateComparer = new DuplicateIntegerComparer();
             this.nextToVisit = new SortedList<int, INode>(duplicateComparer);
             this.visited = new SortedList<int, INode>(duplicateComparer);
+
+            this.nodeFactory = nodeFactory;
 
             this.goal = goal;
             this.maxSteps = maxSearchSteps;
@@ -149,7 +158,7 @@ namespace OpenTibia.Common.Utilities.Pathfinding
 
             // Node was not the goal. Add all the adjacent nodes to the next-to-visit list.
             // But before adding them, we need to estimate and set their movement and estimated costs.
-            foreach (var adjacent in this.CurrentNode.FindAdjacent())
+            foreach (var adjacent in this.CurrentNode.FindAdjacent(this.nodeFactory))
             {
                 // If the node has already been visited, ignore it.
                 if (adjacent.HasBeenVisited)

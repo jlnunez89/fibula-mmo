@@ -85,8 +85,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            this.Logger.Debug($"Player {player.Name} looking at thing with id: {lookAtInfo.ThingId}. {lookAtInfo.Location}");
-
             if (lookAtInfo.Location.Type != LocationType.Map || player.CanSee(lookAtInfo.Location))
             {
                 IContainerItem container;
@@ -111,7 +109,9 @@ namespace OpenTibia.Communications.Handlers.Game
 
                 if (thing != null)
                 {
-                    responsePackets.Add(new TextMessagePacket(MessageType.DescriptionGreen, $"You see {thing.InspectionText}."));
+                    this.Logger.Debug($"Player {player.Name} looking at {thing}. {lookAtInfo.Location} sector: {lookAtInfo.Location.X / 32}-{lookAtInfo.Location.Y / 32}-{lookAtInfo.Location.Z:00}");
+
+                    responsePackets.Add(new TextMessagePacket(MessageType.DescriptionGreen, $"You see {thing.GetDescription(player)}"));
                 }
             }
 

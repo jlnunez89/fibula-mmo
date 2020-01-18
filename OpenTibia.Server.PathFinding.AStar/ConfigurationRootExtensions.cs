@@ -14,6 +14,7 @@ namespace OpenTibia.Server.PathFinding.AStar
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Common.Utilities.Pathfinding;
     using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>
@@ -35,6 +36,7 @@ namespace OpenTibia.Server.PathFinding.AStar
             // configure options
             services.Configure<AStarPathFinderOptions>(configuration.GetSection(nameof(AStarPathFinderOptions)));
 
+            services.AddSingleton<INodeFactory, TileNodeCachingFactory>();
             services.AddSingleton<IPathFinder, AStarPathFinder>();
         }
     }

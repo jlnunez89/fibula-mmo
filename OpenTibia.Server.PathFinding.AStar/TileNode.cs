@@ -32,17 +32,14 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// Initializes a new instance of the <see cref="TileNode"/> class.
         /// </summary>
         /// <param name="searchId">The id of the search in progress.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor.</param>
         /// <param name="tile">The tile to reference in this node.</param>
         /// <param name="onBehalfOfCreature">Optional. The creature on behalf of which the search is being performed.</param>
-        public TileNode(string searchId, ITileAccessor tileAccessor, ITile tile, ICreature onBehalfOfCreature = null)
+        public TileNode(string searchId, ITile tile, ICreature onBehalfOfCreature = null)
         {
             searchId.ThrowIfNullOrWhiteSpace(nameof(searchId));
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
             tile.ThrowIfNull(nameof(tile));
 
             this.SearchId = searchId;
-            this.TileAccessor = tileAccessor;
             this.Tile = tile;
             this.OnBehalfOfCreature = onBehalfOfCreature;
 
@@ -53,11 +50,6 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// Gets the id of the search this node belongs to.
         /// </summary>
         public string SearchId { get; }
-
-        /// <summary>
-        /// Gets the reference to the tile accessor.
-        /// </summary>
-        public ITileAccessor TileAccessor { get; }
 
         /// <summary>
         /// Gets the tile referenced by this node.
@@ -106,8 +98,9 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// <summary>
         /// Gets this node's adjacent nodes.
         /// </summary>
+        /// <param name="nodeFactory">A reference to the factory to create new nodes.</param>
         /// <returns>The collection of adjacent nodes.</returns>
-        public IEnumerable<INode> FindAdjacent()
+        public IEnumerable<INode> FindAdjacent(INodeFactory nodeFactory)
         {
             var adjacent = new List<INode>();
 
@@ -132,12 +125,10 @@ namespace OpenTibia.Server.PathFinding.AStar
 
             foreach (var locOffset in offsets)
             {
-                if (!this.TileAccessor.GetTileAt(currentLoc + locOffset, out ITile tile) || tile.BlocksPass)
+                if (nodeFactory.Create(this.SearchId, new TileNodeCreationArguments(currentLoc + locOffset, this.OnBehalfOfCreature)) is TileNode tileNode && !tileNode.Tile.BlocksPass)
                 {
-                    continue;
+                    adjacent.Add(tileNode);
                 }
-
-                adjacent.Add(new TileNode(this.SearchId, this.TileAccessor, tile, this.OnBehalfOfCreature));
             }
 
             return adjacent;

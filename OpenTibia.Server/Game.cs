@@ -49,17 +49,17 @@ namespace OpenTibia.Server
         /// <summary>
         /// Default delay for scripts.
         /// </summary>
-        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan DefaultDelayForScripts = TimeSpan.FromMilliseconds(200);
 
         /// <summary>
         /// Default delat for player actions.
         /// </summary>
-        private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(100);
+        private static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(200);
 
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
         /// </summary>
-        private static readonly TimeSpan CheckOrphanConnectionsDelay = TimeSpan.FromSeconds(1);
+        private static readonly TimeSpan CheckConnectionsDelay = TimeSpan.FromMinutes(1);
 
         /// <summary>
         /// Gets the current <see cref="IMap"/> instance.
@@ -400,7 +400,7 @@ namespace OpenTibia.Server
             if (locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc);
+                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -572,7 +572,7 @@ namespace OpenTibia.Server
             if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc);
+                var directions = this.FindPathBetween(player.Location, fromLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -622,7 +622,7 @@ namespace OpenTibia.Server
             if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away to move it, we need to move closer first.
-                var directions = this.FindPathBetween(player.Location, atLocation, out Location retryLoc);
+                var directions = this.FindPathBetween(player.Location, atLocation, out Location retryLoc, player, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -2203,8 +2203,16 @@ namespace OpenTibia.Server
 
             while (!cancellationToken.IsCancellationRequested)
             {
-                Thread.Sleep(CheckOrphanConnectionsDelay);
+                Thread.Sleep(CheckConnectionsDelay);
 
+                // Send a ping to all active connections, so that OTClient users don't get disconnected.
+                this.RequestNofitication(
+                    new GenericNotification(
+                        this.Logger,
+                        () => this.ConnectionManager.GetAllActive(),
+                        new GenericNotificationArguments(new PingPacket())));
+
+                // Now let's clean up and try to log out all orphaned ones.
                 foreach (var orphanedConnection in this.ConnectionManager.GetAllOrphaned())
                 {
                     if (!(this.CreatureManager.FindCreatureById(orphanedConnection.PlayerId) is IPlayer player))

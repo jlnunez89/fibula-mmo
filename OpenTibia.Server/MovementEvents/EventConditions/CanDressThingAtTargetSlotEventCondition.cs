@@ -84,7 +84,7 @@ namespace OpenTibia.Server.MovementEvents.EventConditions
                 case Slot.Legs:
                 case Slot.Ring:
                 case Slot.Feet:
-                    return item.IsDressable && item.DressPosition == this.TargetSlot;
+                    return item.CanBeDressed && item.DressPosition == this.TargetSlot;
 
                 // Valid target, special slots
                 case Slot.LeftHand:

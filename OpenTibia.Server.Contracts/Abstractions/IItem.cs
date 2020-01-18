@@ -71,7 +71,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsLiquidContainer { get; }
 
-        byte LiquidType { get; }
+        LiquidType LiquidType { get; }
 
         bool HasCollision { get; }
 
@@ -87,7 +87,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsContainer { get; }
 
-        bool IsDressable { get; }
+        bool CanBeDressed { get; }
 
         Slot DressPosition { get; }
 

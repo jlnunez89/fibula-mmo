@@ -1239,11 +1239,11 @@ namespace OpenTibia.Communications.Packets
         // }
 
         /// <summary>
-        /// Writes the contents of the <see cref="PongPacket"/> into the message.
+        /// Writes a packet type with no content into the message.
         /// </summary>
         /// <param name="message">The message to write to.</param>
         /// <param name="packet">The packet to write in the message.</param>
-        public static void WritePongPacket(this INetworkMessage message, PongPacket packet)
+        public static void WriteNoContentPacket(this INetworkMessage message, IOutgoingPacket packet)
         {
             packet.ThrowIfNull(nameof(packet));
 

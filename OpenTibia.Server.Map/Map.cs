@@ -280,7 +280,7 @@ namespace OpenTibia.Server.Map
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            preCreatureDataBytes.Add(item.LiquidType);
+                            preCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = preCreatureDataBytes.Count;
@@ -302,7 +302,7 @@ namespace OpenTibia.Server.Map
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            preCreatureDataBytes.Add(item.LiquidType);
+                            preCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = preCreatureDataBytes.Count;
@@ -332,7 +332,7 @@ namespace OpenTibia.Server.Map
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            postCreatureDataBytes.Add(item.LiquidType);
+                            postCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = postCreatureDataBytes.Count;

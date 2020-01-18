@@ -136,16 +136,6 @@ namespace OpenTibia.Server
         public override ushort ThingId => CreatureThingId;
 
         /// <summary>
-        /// Gets the description of the creature.
-        /// </summary>
-        public override string Description => $"{this.Article} {this.Name}";
-
-        /// <summary>
-        /// Gets the inspection text of the creature.
-        /// </summary>
-        public override string InspectionText => this.Description;
-
-        /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>
         public uint Id { get; }
@@ -539,6 +529,16 @@ namespace OpenTibia.Server
         public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
         {
             throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the description of this creature as seen by the given player.
+        /// </summary>
+        /// <param name="forPlayer">The player as which to get the description.</param>
+        /// <returns>The description string.</returns>
+        public override string GetDescription(IPlayer forPlayer)
+        {
+            return $"{this.Article} {this.Name}.";
         }
 
         /// <summary>

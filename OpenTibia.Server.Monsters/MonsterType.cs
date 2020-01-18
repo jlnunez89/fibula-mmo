@@ -45,7 +45,7 @@ namespace OpenTibia.Server.Monsters
             this.ConditionInfect = 0;
 
             // this.KnownSpells = new HashSet<KnownSpell>();
-            this.Flags = new HashSet<CreatureFlag>();
+            this.Flags = (uint)CreatureFlag.None;
             this.Phrases = new List<string>();
             this.Skills = new Dictionary<SkillType, (int CurrentLevel, int DefaultLevel, int MaximumLevel, uint CurrentCount, uint CountForNextLevel, byte AddOnLevel)>();
             this.InventoryComposition = new List<(ushort, byte, ushort)>();
@@ -107,7 +107,7 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// Gets the flags set for this type of monster.
         /// </summary>
-        public ISet<CreatureFlag> Flags { get; private set; }
+        public uint Flags { get; private set; }
 
         /// <summary>
         /// Gets the skills that this type of monster starts with.
@@ -437,7 +437,7 @@ namespace OpenTibia.Server.Monsters
 
                 if (Enum.TryParse(element.Attributes.First().Name, out CreatureFlag creatureFlag))
                 {
-                    this.Flags.Add(creatureFlag);
+                    this.Flags.SetFlag((uint)creatureFlag);
                 }
             }
         }

@@ -13,6 +13,7 @@ namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;
+    using System.Text.RegularExpressions;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -83,10 +84,6 @@ namespace OpenTibia.Server
 
         public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.SeparationEvent);
 
-        public override string Description => $"{this.Type.Name}{(string.IsNullOrWhiteSpace(this.Type.Description) ? string.Empty : "\n" + this.Type.Description)}";
-
-        public override string InspectionText => this.Description;
-
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
 
         public byte Amount
@@ -123,7 +120,7 @@ namespace OpenTibia.Server
 
         public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container);
 
-        public bool IsDressable => this.Type.Flags.Contains(ItemFlag.Clothes);
+        public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
 
         public Slot DressPosition => this.Attributes.ContainsKey(ItemAttribute.BodyPosition) && Enum.TryParse(this.Attributes[ItemAttribute.BodyPosition].ToString(), out Slot parsedSlot) ? parsedSlot : Slot.Anywhere;
 
@@ -181,29 +178,25 @@ namespace OpenTibia.Server
 
         public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.Bottom);
 
-        public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
-
         public bool IsLiquidPool => this.Type.Flags.Contains(ItemFlag.LiquidPool);
 
         public bool IsLiquidSource => this.Type.Flags.Contains(ItemFlag.LiquidSource);
 
         public bool IsLiquidContainer => this.Type.Flags.Contains(ItemFlag.LiquidContainer);
 
-        public byte LiquidType
+        public LiquidType LiquidType
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.LiquidSource))
+                if (((this.Type.Flags.Contains(ItemFlag.LiquidSource) && this.Attributes.TryGetValue(ItemAttribute.SourceLiquidType, out IConvertible typeValue)) ||
+                     (this.Type.Flags.Contains(ItemFlag.LiquidContainer) && this.Attributes.TryGetValue(ItemAttribute.ContainerLiquidType, out typeValue)) ||
+                     (this.Type.Flags.Contains(ItemFlag.LiquidPool) && this.Attributes.TryGetValue(ItemAttribute.PoolLiquidType, out typeValue))) &&
+                     Enum.IsDefined(typeof(LiquidType), typeValue))
                 {
-                    return 0;
+                    return (LiquidType)typeValue;
                 }
 
-                return Convert.ToByte(this.Attributes[ItemAttribute.SourceLiquidType]);
-            }
-
-            set
-            {
-                this.Attributes[ItemAttribute.SourceLiquidType] = value;
+                return LiquidType.None;
             }
         }
 
@@ -313,6 +306,7 @@ namespace OpenTibia.Server
                 // These are safe to add as Attributes of the item.
                 if (!Enum.TryParse(attribute.Name, out ItemAttribute itemAttr))
                 {
+                    logger.Warning($"Unsupported attribute {attribute.Name} on {this.Type.Name}, ignoring.");
                     continue;
                 }
 
@@ -379,6 +373,52 @@ namespace OpenTibia.Server
             remainder.SetAmount(amount);
 
             return (true, remainder);
+        }
+
+        /// <summary>
+        /// Gets the description of this item as seen by the given player.
+        /// </summary>
+        /// <param name="forPlayer">The player as which to get the description.</param>
+        /// <returns>The description string.</returns>
+        public override string GetDescription(IPlayer forPlayer)
+        {
+            string description = $"{this.Type.Name}.";
+
+            if (this.Amount > 1)
+            {
+                // TODO: naive solution, add S to pluralize will produce some spelling errors.
+                description = $"{this.Amount} {description.Replace("a ", string.Empty)}";
+            }
+
+            if (!string.IsNullOrWhiteSpace(this.Type.Description))
+            {
+                description += $"\n{this.Type.Description}.";
+            }
+
+            if (this.Type.Flags.Contains(ItemFlag.Text) && this.Attributes.ContainsKey(ItemAttribute.String) && this.Attributes.ContainsKey(ItemAttribute.FontSize))
+            {
+                var text = this.Attributes[ItemAttribute.String] as string;
+                var fontSize = this.Attributes[ItemAttribute.FontSize] as int? ?? 0;
+
+                var locationDiff = this.Location - forPlayer.Location;
+                var readingDistance = this.CarryLocation != null ? 0 : this.Location.Type != LocationType.Map ? 0 : locationDiff.MaxValueIn2D + Math.Abs(locationDiff.Z * 10);
+
+                switch (fontSize)
+                {
+                    case 0:
+                        description += readingDistance <= 1 ? $"\n{Regex.Unescape(text).Trim('"')}." : string.Empty;
+                        break;
+                    case 1:
+                        // Only on use, so nothing to add here.
+                        break;
+                    default:
+                        // Distance calculation.
+                        description += readingDistance <= fontSize ? $" It reads:\n{Regex.Unescape(text).Trim('"')}" : " You are too far away to read it.";
+                        break;
+                }
+            }
+
+            return description;
         }
 
         /// <summary>
