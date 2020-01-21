@@ -24,6 +24,7 @@
     <Compile Remove="MovementEvents\ThingMovementSlotToContainer.cs" />
     <Compile Remove="MovementEvents\ThingMovementSlotToGround.cs" />
     <Compile Remove="MovementEvents\ThingMovementSlotToSlot.cs" />
+    <Compile Remove="StandardAttackOperation.cs" />
   </ItemGroup>
 
   <ItemGroup>
