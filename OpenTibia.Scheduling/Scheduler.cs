@@ -58,6 +58,11 @@ namespace OpenTibia.Scheduling
         private readonly IDictionary<uint, ISet<string>> eventsPerRequestor;
 
         /// <summary>
+        /// A dictionary to keep track of the type of events.
+        /// </summary>
+        private readonly IDictionary<string, Type> eventTypes;
+
+        /// <summary>
         /// A lock object to semaphore queue modifications.
         /// </summary>
         private readonly object queueLock;
@@ -89,6 +94,7 @@ namespace OpenTibia.Scheduling
             this.priorityQueue = new FastPriorityQueue<BaseEvent>(MaxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
             this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
+            this.eventTypes = new Dictionary<string, Type>();
         }
 
         /// <summary>
@@ -205,8 +211,12 @@ namespace OpenTibia.Scheduling
 
                 foreach (var eventId in this.eventsPerRequestor[requestorId])
                 {
-                    // if (specificType == null || !eventTypes[eventId].IsAssignableFrom(specificType))
-                    this.CancelEvent(eventId);
+                    if (!this.eventTypes.TryGetValue(eventId, out Type evetType) || evetType.IsAssignableFrom(specificType))
+                    {
+                        this.CancelEvent(eventId);
+
+                        this.Logger.Debug($"Cancelled event {eventId} of type {specificType.Name}.");
+                    }
                 }
 
                 this.eventsPerRequestor.Remove(requestorId);
@@ -264,6 +274,11 @@ namespace OpenTibia.Scheduling
                         }
 
                         this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
+
+                        if (!this.eventTypes.ContainsKey(castedEvent.EventId))
+                        {
+                            this.eventTypes[castedEvent.EventId] = eventToSchedule.GetType();
+                        }
                     }
                 }
 
@@ -309,6 +324,11 @@ namespace OpenTibia.Scheduling
                         }
 
                         this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
+
+                        if (!this.eventTypes.ContainsKey(castedEvent.EventId))
+                        {
+                            this.eventTypes[castedEvent.EventId] = eventToSchedule.GetType();
+                        }
                     }
                 }
 
@@ -358,6 +378,8 @@ namespace OpenTibia.Scheduling
                     {
                         this.eventsPerRequestor.Remove(eventRequestor);
                     }
+
+                    this.eventTypes.Remove(eventId);
                 }
             }
             catch
