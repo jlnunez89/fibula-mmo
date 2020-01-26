@@ -56,7 +56,7 @@ namespace OpenTibia.Server
             ushort corpse,
             ushort hitpoints = 0,
             ushort manapoints = 0)
-            : base(name, string.Empty, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints, baseAttackSpeed: 2.5m)
+            : base(name, string.Empty, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
         {
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
 
