@@ -9,12 +9,14 @@
 // </copyright>
 // -----------------------------------------------------------------
 
+using OpenTibia.Server.Contracts.Enumerations;
+
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for character players in the game.
     /// </summary>
-    public interface IPlayer : ICreature
+    public interface IPlayer : ICombatant
     {
         /// <summary>
         /// Gets the player's character id.
@@ -24,7 +26,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the player's permissions level.
         /// </summary>
-        // TODO: implement.
         byte PermissionsLevel { get; }
 
         /// <summary>
@@ -37,8 +38,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
         bool IsLogoutAllowed { get; }
-
-        // IAction PendingAction { get; }
 
         /// <summary>
         /// Checks if this player knows the given creature.
@@ -59,8 +58,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
         uint ChooseCreatureToRemoveFromKnownSet();
 
-        // void SetPendingAction(IAction action);
+        void SetFightMode(FightMode fightMode);
 
-        // void ClearPendingActions();
+        void SetChaseMode(ChaseMode chaseMode);
     }
 }

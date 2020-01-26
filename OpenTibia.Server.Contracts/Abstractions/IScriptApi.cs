@@ -78,5 +78,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         void DisplayAnimatedText(Location location, string text, byte textType);
 
         void WritePlayerNameOnThing(IPlayer player, string format, IThing targetThing);
+
+        void DescribeThingFor(IThing thingToDescribe, ICreature user);
     }
 }

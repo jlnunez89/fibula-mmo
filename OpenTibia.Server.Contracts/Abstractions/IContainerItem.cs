@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using OpenTibia.Server.Contracts.Delegates;
 
     /// <summary>
     /// Interface for items that are containers for other items.

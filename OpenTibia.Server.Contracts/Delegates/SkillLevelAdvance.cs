@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts
+namespace OpenTibia.Server.Contracts.Delegates
 {
     using OpenTibia.Server.Contracts.Enumerations;
 

@@ -47,7 +47,7 @@ namespace OpenTibia.Server.Monsters
             // this.KnownSpells = new HashSet<KnownSpell>();
             this.Flags = (uint)CreatureFlag.None;
             this.Phrases = new List<string>();
-            this.Skills = new Dictionary<SkillType, (int CurrentLevel, int DefaultLevel, int MaximumLevel, uint CurrentCount, uint CountForNextLevel, byte AddOnLevel)>();
+            this.Skills = new Dictionary<SkillType, (int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)>();
             this.InventoryComposition = new List<(ushort, byte, ushort)>();
 
             this.Locked = false;
@@ -112,7 +112,7 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// Gets the skills that this type of monster starts with.
         /// </summary>
-        public IDictionary<SkillType, (int CurrentLevel, int DefaultLevel, int MaximumLevel, uint CurrentCount, uint CountForNextLevel, byte AddOnLevel)> Skills { get; private set; }
+        public IDictionary<SkillType, (int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)> Skills { get; private set; }
 
         /// <summary>
         /// Gets the phrases that this monster type uses.
@@ -437,7 +437,7 @@ namespace OpenTibia.Server.Monsters
 
                 if (Enum.TryParse(element.Attributes.First().Name, out CreatureFlag creatureFlag))
                 {
-                    this.Flags.SetFlag((uint)creatureFlag);
+                    this.Flags |= (uint)creatureFlag;
                 }
             }
         }
@@ -460,7 +460,7 @@ namespace OpenTibia.Server.Monsters
         /// Sets the type's skills.
         /// </summary>
         /// <param name="skillParsed">The skills of the monster type.</param>
-        public void SetSkills(IEnumerable<(string Name, int CurrentLevel, int DefaultLevel, int MaximumLevel, uint CurrentCount, uint CountForNextLevel, byte AddOnLevel)> skillParsed)
+        public void SetSkills(IEnumerable<(string Name, int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)> skillParsed)
         {
             skillParsed.ThrowIfNull(nameof(skillParsed));
 
@@ -484,18 +484,18 @@ namespace OpenTibia.Server.Monsters
                 switch (mSkill)
                 {
                     case MonsterSkillType.Hitpoints:
-                        this.MaxHitPoints = skill.CurrentLevel < 0 ? ushort.MaxValue : (ushort)skill.CurrentLevel;
+                        this.MaxHitPoints = skill.CurrentLevel < 0 ? ushort.MaxValue : (ushort)skill.DefaultLevel;
                         break;
                     case MonsterSkillType.GoStrength:
-                        this.Speed = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.CurrentLevel;
+                        this.Speed = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.DefaultLevel;
                         break;
                     case MonsterSkillType.CarryStrength:
-                        this.Capacity = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.CurrentLevel;
+                        this.Capacity = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.DefaultLevel;
                         break;
                     case MonsterSkillType.FistFighting:
                         if (skill.CurrentLevel > 0)
                         {
-                            this.Skills[SkillType.NoWeapon] = (skill.CurrentLevel, skill.DefaultLevel, skill.MaximumLevel, skill.CurrentCount, skill.CountForNextLevel, skill.AddOnLevel);
+                            this.Skills[SkillType.NoWeapon] = (skill.CurrentLevel, skill.DefaultLevel, skill.MaximumLevel, skill.TargetCount, skill.CountIncreaseFactor, skill.IncreaserPerLevel);
                         }
 
                         break;

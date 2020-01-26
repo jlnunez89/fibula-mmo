@@ -438,6 +438,16 @@ namespace OpenTibia.Server.Events.MoveUseFile
         }
 
         /// <summary>
+        /// Gets the description of the thing on behalf of the given player.
+        /// </summary>
+        /// <param name="thingToDescribe">The thing to describe.</param>
+        /// <param name="user">The player as which to get the description.</param>
+        public void Description(IThing thingToDescribe, ICreature user)
+        {
+            this.ScriptApi.DescribeThingFor(thingToDescribe, user);
+        }
+
+        /// <summary>
         /// Logs a player out.
         /// </summary>
         /// <param name="player">The player.</param>

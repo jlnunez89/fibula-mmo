@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -31,17 +32,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets this skill's level.
         /// </summary>
-        ushort Level { get; }
+        uint Level { get; }
 
         /// <summary>
         /// Gets this skill's maximum level.
         /// </summary>
-        ushort MaxLevel { get; }
+        uint MaxLevel { get; }
 
         /// <summary>
         /// Gets this skill's default level.
         /// </summary>
-        ushort DefaultLevel { get; }
+        uint DefaultLevel { get; }
 
         /// <summary>
         /// Gets this skill's current count.

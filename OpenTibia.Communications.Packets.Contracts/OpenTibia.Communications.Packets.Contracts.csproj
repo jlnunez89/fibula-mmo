@@ -7,7 +7,6 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Abstractions\IAttackInfo.cs" />
     <Compile Remove="Abstractions\IAuctionResult.cs" />
     <Compile Remove="Abstractions\ICharacterDeathInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />

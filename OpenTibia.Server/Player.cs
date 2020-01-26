@@ -22,7 +22,7 @@ namespace OpenTibia.Server
     /// <summary>
     /// Class that represents all players in the game.
     /// </summary>
-    public class Player : Creature, IPlayer
+    public class Player : CombatantCreature, IPlayer
     {
         /// <summary>
         /// The limit of creatures that a player's client can keep track of.
@@ -33,6 +33,10 @@ namespace OpenTibia.Server
         /// Stores the set of creatures that are known to this player.
         /// </summary>
         private readonly IDictionary<uint, long> knownCreatures;
+
+        private ChaseMode chaseMode;
+
+        private FightMode fightMode;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
@@ -52,7 +56,7 @@ namespace OpenTibia.Server
             ushort corpse,
             ushort hitpoints = 0,
             ushort manapoints = 0)
-            : base(name, string.Empty, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
+            : base(name, string.Empty, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints, baseAttackSpeed: 2.5m)
         {
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
 
@@ -85,7 +89,7 @@ namespace OpenTibia.Server
             this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
             this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
 
-            this.Speed = (ushort)(this.GetBaseSpeed() * 2);
+            this.Speed = (ushort)(this.CalculateMovementBaseSpeed() * 2);
 
             // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);
@@ -102,7 +106,7 @@ namespace OpenTibia.Server
         public byte PermissionsLevel { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this player can be moved.
+        /// Gets a value indicating whether this player can be moved by others.
         /// </summary>
         public override bool CanBeMoved => this.PermissionsLevel == 0;
 
@@ -112,17 +116,45 @@ namespace OpenTibia.Server
         // TODO: nobody likes soulpoints... figure out what to do with them :)
         public byte SoulPoints { get; }
 
-        // public IAction PendingAction { get; private set; }
-
         /// <summary>
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
-        public bool IsLogoutAllowed => true; // this.AutoAttackTargetId == 0;
+        public bool IsLogoutAllowed => this.AutoAttackTarget == null;
 
         /// <summary>
         /// Gets or sets the inventory for the player.
         /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
+
+        /// <summary>
+        /// Gets the range that the auto attack has.
+        /// </summary>
+        public override byte AutoAttackRange => this.Inventory.EquipmentAttackRange;
+
+        /// <summary>
+        /// Gets the attack power of this combatant.
+        /// </summary>
+        public override ushort AttackPower => this.Inventory.EquipmentAttackPower;
+
+        /// <summary>
+        /// Gets the defense power of this combatant.
+        /// </summary>
+        public override ushort DefensePower => this.Inventory.EquipmentDefensePower;
+
+        /// <summary>
+        /// Gets the armor rating of this combatant.
+        /// </summary>
+        public override ushort ArmorRating => this.Inventory.EquipmentArmorRating;
+
+        /// <summary>
+        /// Gets the chase mode selected by this combatant.
+        /// </summary>
+        public override ChaseMode ChaseMode => this.chaseMode;
+
+        /// <summary>
+        /// Gets the fight mode selected by this combatant.
+        /// </summary>
+        public override FightMode FightMode => this.fightMode;
 
         /// <summary>
         /// Checks if this player knows the given creature.
@@ -172,40 +204,21 @@ namespace OpenTibia.Server
             return uint.MinValue;
         }
 
-        private ushort GetBaseSpeed()
+        public void SetFightMode(FightMode fightMode)
+        {
+            this.fightMode = fightMode;
+        }
+
+        public void SetChaseMode(ChaseMode chaseMode)
+        {
+            this.chaseMode = chaseMode;
+        }
+
+        private ushort CalculateMovementBaseSpeed()
         {
             var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 
             return (ushort)(220 + (2 * (expLevel - 1)));
         }
-
-        // public void SetPendingAction(IAction action)
-        // {
-        //    action.ThrowIfNull(nameof(action));
-
-        // this.PendingAction = action;
-        // }
-
-        // public void ClearPendingActions()
-        // {
-        //    this.PendingAction = null;
-        // }
-
-        // protected override void CheckPendingActions(IThing thingChanged, ThingStateChangedEventArgs eventArgs)
-        // {
-        //    if (this.PendingAction == null || thingChanged != this || eventArgs.PropertyChanged != nameof(this.Location))
-        //    {
-        //        return;
-        //    }
-
-        // if (this.Location == this.PendingAction.RetryLocation)
-        //    {
-        //        Task.Delay(this.CalculateRemainingCooldownTime(ExhaustionType.Action, DateTimeOffset.UtcNow) + TimeSpan.FromMilliseconds(500))
-        //            .ContinueWith(previous =>
-        //            {
-        //                this.PendingAction.Perform();
-        //            });
-        //    }
-        // }
     }
 }

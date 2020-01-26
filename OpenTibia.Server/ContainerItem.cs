@@ -15,8 +15,8 @@ namespace OpenTibia.Server
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Parsing.Contracts.Abstractions;
     using Serilog;

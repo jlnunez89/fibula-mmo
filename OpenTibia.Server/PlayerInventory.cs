@@ -15,8 +15,8 @@ namespace OpenTibia.Server
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -73,6 +73,98 @@ namespace OpenTibia.Server
         /// Gets a reference to the owner of this inventory.
         /// </summary>
         public ICreature Owner { get; }
+
+        /// <summary>
+        /// Gets the attack range suggested by equiped weapons in this inventory.
+        /// </summary>
+        public byte EquipmentAttackRange => 1;
+
+        /// <summary>
+        /// Gets the attack power suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentAttackPower
+        {
+            get
+            {
+                var leftHandContainer = this[(byte)Slot.LeftHand] as IContainerItem;
+                var rightHandContainer = this[(byte)Slot.RightHand] as IContainerItem;
+
+                var leftHandItem = leftHandContainer[0];
+                var rightHandItem = rightHandContainer[0];
+
+                ushort weaponAttackValue = 0;
+
+                if (leftHandItem != null && leftHandItem.Attributes.ContainsKey(ItemAttribute.WeaponAttackValue))
+                {
+                    weaponAttackValue = Convert.ToByte(leftHandItem.Attributes[ItemAttribute.WeaponAttackValue]);
+                }
+
+                if (rightHandItem != null && rightHandItem.Attributes.ContainsKey(ItemAttribute.WeaponAttackValue))
+                {
+                    weaponAttackValue = Math.Max(weaponAttackValue, Convert.ToByte(rightHandItem.Attributes[ItemAttribute.WeaponAttackValue]));
+                }
+
+                return weaponAttackValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets the defense power suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentDefensePower
+        {
+            get
+            {
+                var leftHandContainer = this[(byte)Slot.LeftHand] as IContainerItem;
+                var rightHandContainer = this[(byte)Slot.RightHand] as IContainerItem;
+
+                var leftHandItem = leftHandContainer[0];
+                var rightHandItem = rightHandContainer[0];
+
+                ushort weaponDefenseValue = 0;
+
+                if (leftHandItem != null && leftHandItem.Attributes.ContainsKey(ItemAttribute.WeaponDefendValue))
+                {
+                    weaponDefenseValue = Convert.ToByte(leftHandItem.Attributes[ItemAttribute.WeaponDefendValue]);
+                }
+
+                if (rightHandItem != null && rightHandItem.Attributes.ContainsKey(ItemAttribute.WeaponDefendValue))
+                {
+                    weaponDefenseValue = Math.Max(weaponDefenseValue, Convert.ToByte(rightHandItem.Attributes[ItemAttribute.WeaponDefendValue]));
+                }
+
+                return weaponDefenseValue;
+            }
+        }
+
+        /// <summary>
+        /// Gets the armor rating suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentArmorRating
+        {
+            get
+            {
+                ushort armorRating = 0;
+
+                for (byte i = 1; i < (byte)Slot.Ammo; i++)
+                {
+                    if ((Slot)i == Slot.LeftHand || (Slot)i == Slot.RightHand || (Slot)i == Slot.Ammo)
+                    {
+                        continue;
+                    }
+
+                    var bodyContainer = this[i] as IContainerItem;
+                    var equippedItem = bodyContainer[0];
+
+                    if (equippedItem != null && equippedItem.Attributes.ContainsKey(ItemAttribute.ArmorValue))
+                    {
+                        armorRating = Convert.ToByte(equippedItem.Attributes[ItemAttribute.ArmorValue]);
+                    }
+                }
+
+                return armorRating;
+            }
+        }
 
         /// <summary>
         /// Gets the <see cref="IContainerItem"/> at a given position of this inventory.

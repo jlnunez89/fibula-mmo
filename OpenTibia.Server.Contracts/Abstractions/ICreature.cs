@@ -140,6 +140,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IEnumerable<(Location atLocation, Action action)> LocationBasedActions { get; }
 
         /// <summary>
+        /// Gets the collection of current range-based actions to retry.
+        /// </summary>
+        IEnumerable<(byte range, uint creatureId, Action action)> RangeBasedActions { get; }
+
+        /// <summary>
         /// Checks if this creature can see a given creature.
         /// </summary>
         /// <param name="creature">The creature to check against.</param>
@@ -211,7 +216,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="retryLoc">The location at which the retry happens.</param>
         /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        void EnqueueActionAtLocation(Location retryLoc, Action action);
+        void EnqueueRetryActionAtLocation(Location retryLoc, Action action);
 
         /// <summary>
         /// Removes a single action from the queue given its particular location.
@@ -223,5 +228,25 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Removes all actions from the location-based actions queue.
         /// </summary>
         void ClearAllLocationActions();
+
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps within a given range of another.
+        /// </summary>
+        /// <param name="range">The range withing which the retry happens.</param>
+        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        void EnqueueRetryActionWithinRangeToCreature(byte range, uint creatureId, Action action);
+
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
+        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        void DequeueRetryActionWithinRangeToCreature(byte withinRange, uint creatureId);
+
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        void ClearAllRangeBasedActions();
     }
 }

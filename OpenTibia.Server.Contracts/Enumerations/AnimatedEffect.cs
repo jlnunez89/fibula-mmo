@@ -117,7 +117,7 @@ namespace OpenTibia.Server.Contracts.Enumerations
         SoundRed = 0x14,
 
         /// <summary>
-        /// Venom missile  impact animation.
+        /// Venom missile impact animation.
         /// </summary>
         DamageVenomMissile = 0x15,
 

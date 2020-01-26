@@ -1,8 +1,13 @@
-﻿// <copyright file="AnimatedTextPacket.cs" company="2Dudes">
+﻿// -----------------------------------------------------------------
+// <copyright file="AnimatedTextPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
+// Author: Jose L. Nunez de Caceres
+// http://linkedin.com/in/jlnunez89
+//
 // Licensed under the MIT license.
 // See LICENSE file in the project root for full license information.
 // </copyright>
+// -----------------------------------------------------------------
 
 namespace OpenTibia.Communications.Packets.Outgoing
 {
@@ -12,7 +17,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
-    /// Class that represents a packet with information about animated text that should be displayed to the user.
+    /// Class that represents a packet with information about animated text that should be displayed to the player.
     /// </summary>
     public class AnimatedTextPacket : IOutgoingPacket
     {

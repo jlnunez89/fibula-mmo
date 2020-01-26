@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Server.Contracts.Delegates;
+
     /// <summary>
     /// Interface for all things in the game.
     /// </summary>

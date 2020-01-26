@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
     using System.Buffers;
-    using System.Collections.Generic;
     using Microsoft.Extensions.Hosting;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Data.Entities;
@@ -25,6 +24,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IGame : IHostedService
     {
+        /// <summary>
+        /// The default combat rount time in milliseconds.
+        /// </summary>
+        const int DefaultCombatRoundTimeInMs = 2000;
+
         /// <summary>
         /// Gets the game's current time.
         /// </summary>
@@ -59,6 +63,10 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>A sequence of bytes representing the description.</returns>
         ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location);
 
+        void ApplyDamage(ICombatant attacker, ICombatant target, AttackType attackType, int damageToApply, bool wasBlockedByArmor, bool wasShielded, TimeSpan exhaustion);
+
+        void Request_AutoAttack(ICombatant combatant, ICombatant targetCombatant);
+
         /// <summary>
         /// Gets the description bytes of the map in behalf of a given player for the specified window.
         /// </summary>
@@ -82,12 +90,20 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location);
 
         /// <summary>
-        /// Attempts to schedule a player's auto walk movements.
+        /// Attempts to schedule a creature's auto walk movements.
+        /// </summary>
+        /// <param name="creature">The creature making the request.</param>
+        /// <param name="directions">The directions to walk to.</param>
+        /// <param name="stepIndex">Optional. The index in the directions array at which to start moving. Defaults to zero.</param>
+        /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
+        bool CreatureRequest_AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0);
+
+        /// <summary>
+        /// Attempts to cancel a player's auto attack operations.
         /// </summary>
         /// <param name="player">The player making the request.</param>
-        /// <param name="directions">The directions to walk to.</param>
-        /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
-        bool PlayerRequest_AutoWalk(IPlayer player, Direction[] directions);
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        bool PlayerRequest_CancelAutoAttacks(IPlayer player);
 
         /// <summary>
         /// Attempts to cancel all of a player's pending movements.
@@ -338,6 +354,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="itemType">The type of the item to delete.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
         bool ScriptRequest_DeleteItemAt(Location location, ushort itemType);
+
+        /// <summary>
+        /// Attempts to get the description (attribute only) of the item.
+        /// </summary>
+        /// <param name="itemToDescribe">The item to get the description of.</param>
+        /// <param name="player">The player who the description is for.</param>
+        /// <returns>True if the request was accepted, false otherwise.</returns>
+        bool ScriptRequest_DescriptionOf(IItem itemToDescribe, IPlayer player);
 
         /// <summary>
         /// Attempts to move a creature to a given location.

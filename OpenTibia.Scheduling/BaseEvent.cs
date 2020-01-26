@@ -96,7 +96,7 @@ namespace OpenTibia.Scheduling
 
                     if (!allPassed)
                     {
-                        this.Logger.Debug($"Failed event condition {condition.GetType().Name}.");
+                        this.Logger.Verbose($"Failed event condition {condition.GetType().Name}.");
                         this.ErrorMessage = condition.ErrorMessage;
                         break;
                     }

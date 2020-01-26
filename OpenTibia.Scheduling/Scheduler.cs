@@ -157,7 +157,8 @@ namespace OpenTibia.Scheduling
                                 {
                                     // dequeue, clean and move next.
                                     this.priorityQueue.Dequeue();
-                                    this.CleanAllAttributedTo(nextEvent.EventId);
+                                    this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
+
                                     continue;
                                 }
 
@@ -166,6 +167,9 @@ namespace OpenTibia.Scheduling
                                 {
                                     // actually dequeue this item.
                                     this.priorityQueue.Dequeue();
+                                    this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
+
+                                    this.Logger.Verbose($"Firing event {nextEvent.GetType().Name} with id {nextEvent.EventId}, at {currentTimeInMilliseconds}.");
 
                                     this.OnEventFired?.Invoke(this, new EventFiredEventArgs(nextEvent));
                                     continue;
@@ -215,7 +219,7 @@ namespace OpenTibia.Scheduling
                     {
                         this.CancelEvent(eventId);
 
-                        this.Logger.Debug($"Cancelled event {eventId} of type {specificType.Name}.");
+                        this.Logger.Verbose($"Cancelled event {eventId} of type {specificType.Name}.");
                     }
                 }
 
@@ -244,46 +248,7 @@ namespace OpenTibia.Scheduling
         /// <inheritdoc/>
         public void ImmediateEvent(IEvent eventToSchedule)
         {
-            eventToSchedule.ThrowIfNull(nameof(eventToSchedule));
-
-            if (!(eventToSchedule is BaseEvent castedEvent))
-            {
-                throw new ArgumentException($"Argument must be of type {nameof(BaseEvent)}.", nameof(eventToSchedule));
-            }
-
-            lock (this.eventsAvailableLock)
-            {
-                lock (this.queueLock)
-                {
-                    if (this.priorityQueue.Contains(castedEvent))
-                    {
-                        throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
-                    }
-
-                    this.priorityQueue.Enqueue(castedEvent, 0);
-                }
-
-                // check and add event attribution to the requestor
-                if (castedEvent.RequestorId > 0)
-                {
-                    lock (this.eventsPerRequestorLock)
-                    {
-                        if (!this.eventsPerRequestor.ContainsKey(castedEvent.RequestorId))
-                        {
-                            this.eventsPerRequestor.Add(castedEvent.RequestorId, new HashSet<string>());
-                        }
-
-                        this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
-
-                        if (!this.eventTypes.ContainsKey(castedEvent.EventId))
-                        {
-                            this.eventTypes[castedEvent.EventId] = eventToSchedule.GetType();
-                        }
-                    }
-                }
-
-                Monitor.Pulse(this.eventsAvailableLock);
-            }
+            this.ScheduleEvent(eventToSchedule, this.startTime);
         }
 
         /// <inheritdoc/>
@@ -310,7 +275,11 @@ namespace OpenTibia.Scheduling
                         throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
                     }
 
-                    this.priorityQueue.Enqueue(castedEvent, this.GetMillisecondsAfterReferenceTime(runAt));
+                    var milliseconds = this.GetMillisecondsAfterReferenceTime(runAt);
+
+                    this.priorityQueue.Enqueue(castedEvent, milliseconds);
+
+                    this.Logger.Verbose($"Scheduled event {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due at {milliseconds}.");
                 }
 
                 // check and add event attribution to the requestor
@@ -356,6 +325,8 @@ namespace OpenTibia.Scheduling
             try
             {
                 this.cancelledEvents.Remove(eventId);
+
+                this.eventTypes.Remove(eventId);
             }
             catch
             {
@@ -378,8 +349,6 @@ namespace OpenTibia.Scheduling
                     {
                         this.eventsPerRequestor.Remove(eventRequestor);
                     }
-
-                    this.eventTypes.Remove(eventId);
                 }
             }
             catch

@@ -12,8 +12,8 @@
 namespace OpenTibia.Server
 {
     using System;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace OpenTibia.Server
         /// <param name="level">This skill's current level.</param>
         /// <param name="maxLevel">This skill's maximum level.</param>
         /// <param name="count">This skill's current count.</param>
-        public Skill(SkillType type, ushort defaultLevel, double rate, double baseIncrease, ushort level = 0, ushort maxLevel = 1, double count = 0)
+        public Skill(SkillType type, uint defaultLevel, double rate, double baseIncrease, uint level = 0, uint maxLevel = 1, double count = 0)
         {
             if (defaultLevel < 1)
             {
@@ -87,17 +87,17 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this skill's level.
         /// </summary>
-        public ushort Level { get; private set; }
+        public uint Level { get; private set; }
 
         /// <summary>
         /// Gets this skill's maximum level.
         /// </summary>
-        public ushort MaxLevel { get; }
+        public uint MaxLevel { get; }
 
         /// <summary>
         /// Gets this skill's default level.
         /// </summary>
-        public ushort DefaultLevel { get; }
+        public uint DefaultLevel { get; }
 
         /// <summary>
         /// Gets this skill's current count.

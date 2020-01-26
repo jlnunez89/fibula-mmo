@@ -52,14 +52,24 @@ namespace OpenTibia.Server
         private readonly IContainerItem[] openContainers;
 
         /// <summary>
-        /// Lock object to semaphore interaction with the actions queue.
+        /// Lock object to semaphore interaction with the location-based actions queue.
         /// </summary>
-        private readonly object actionsLock;
+        private readonly object actionsAtLocationLock;
 
         /// <summary>
         /// The queue of current location-based actions to retry.
         /// </summary>
         private readonly Queue<(Location atLoc, Action action)> locationBasedRetryActions;
+
+        /// <summary>
+        /// Lock object to semaphore interaction with the range-based actions queue.
+        /// </summary>
+        private readonly object actionsWithinRangeLock;
+
+        /// <summary>
+        /// The queue of current range-based actions to retry.
+        /// </summary>
+        private readonly Queue<(byte range, uint creatureId, Action action)> rangeToCreatureBasedRetryActions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -105,8 +115,11 @@ namespace OpenTibia.Server
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
-            this.actionsLock = new object();
+            this.actionsAtLocationLock = new object();
             this.locationBasedRetryActions = new Queue<(Location atLoc, Action action)>();
+
+            this.actionsWithinRangeLock = new object();
+            this.rangeToCreatureBasedRetryActions = new Queue<(byte range, uint creatureId, Action action)>();
 
             this.Outfit = new Outfit
             {
@@ -213,6 +226,9 @@ namespace OpenTibia.Server
         /// </summary>
         public ushort Speed { get; protected set; }
 
+        /// <summary>
+        /// Gets this creature's flags.
+        /// </summary>
         public uint Flags { get; private set; }
 
         /// <summary>
@@ -244,6 +260,9 @@ namespace OpenTibia.Server
 
         public byte Shield { get; protected set; } // TODO: implement.
 
+        /// <summary>
+        /// Gets or sets the inventory for the creature.
+        /// </summary>
         public abstract IInventory Inventory { get; protected set; }
 
         /// <summary>
@@ -258,9 +277,23 @@ namespace OpenTibia.Server
         {
             get
             {
-                lock (this.actionsLock)
+                lock (this.actionsAtLocationLock)
                 {
                     return this.locationBasedRetryActions.ToArray();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Gets the collection of current range-based actions to retry.
+        /// </summary>
+        public IEnumerable<(byte range, uint creatureId, Action action)> RangeBasedActions
+        {
+            get
+            {
+                lock (this.actionsWithinRangeLock)
+                {
+                    return this.rangeToCreatureBasedRetryActions.ToArray();
                 }
             }
         }
@@ -555,14 +588,14 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="retryLoc">The location at which the retry happens.</param>
         /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        public void EnqueueActionAtLocation(Location retryLoc, Action action)
+        public void EnqueueRetryActionAtLocation(Location retryLoc, Action action)
         {
             if (action == null || retryLoc == default)
             {
                 return;
             }
 
-            lock (this.actionsLock)
+            lock (this.actionsAtLocationLock)
             {
                 this.locationBasedRetryActions.Enqueue((retryLoc, action));
             }
@@ -574,7 +607,7 @@ namespace OpenTibia.Server
         /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
         public void DequeueActionAtLocation(Location loc)
         {
-            lock (this.actionsLock)
+            lock (this.actionsAtLocationLock)
             {
                 int count = this.locationBasedRetryActions.Count;
 
@@ -599,85 +632,67 @@ namespace OpenTibia.Server
         /// </summary>
         public void ClearAllLocationActions()
         {
-            lock (this.actionsLock)
+            lock (this.actionsAtLocationLock)
             {
                 this.locationBasedRetryActions.Clear();
             }
         }
 
-        // public void SetAttackTarget(uint targetId)
-        // {
-        //    if (targetId == this.Id || this.AutoAttackTargetId == targetId)
-        //    {
-        //        // if we want to attack ourselves or if the current target is already the one we want... no change needed.
-        //        return;
-        //    }
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps within a given range of another.
+        /// </summary>
+        /// <param name="range">The range withing which the retry happens.</param>
+        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        public void EnqueueRetryActionWithinRangeToCreature(byte range, uint creatureId, Action action)
+        {
+            if (action == null || creatureId == 0)
+            {
+                return;
+            }
 
-        // // save the previus target to report
-        //    var oldTargetId = this.AutoAttackTargetId;
+            lock (this.actionsWithinRangeLock)
+            {
+                this.rangeToCreatureBasedRetryActions.Enqueue((range, creatureId, action));
+            }
+        }
 
-        // if (targetId == 0)
-        //    {
-        //        // clearing our target.
-        //        if (this.AutoAttackTargetId != 0)
-        //        {
-        //            var attackTarget = this.Game.GetCreatureWithId(this.AutoAttackTargetId);
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
+        /// <param name="creatureId">The location to which to calculate the range.</param>
+        public void DequeueRetryActionWithinRangeToCreature(byte withinRange, uint creatureId)
+        {
+            lock (this.actionsWithinRangeLock)
+            {
+                int count = this.rangeToCreatureBasedRetryActions.Count;
 
-        // if (attackTarget != null)
-        //            {
-        //                attackTarget.OnThingChanged -= this.CheckAutoAttack;
-        //            }
+                for (int i = 0; i < count; i++)
+                {
+                    var tuple = this.rangeToCreatureBasedRetryActions.Dequeue();
 
-        // this.AutoAttackTargetId = 0;
-        //        }
-        //    }
-        //    else
-        //    {
-        //        // TODO: verify against this.Hostiles.Union(this.Friendly).
-        //        // if (creature != null)
-        //        // {
-        //        this.AutoAttackTargetId = targetId;
+                    if (tuple.range > withinRange || tuple.creatureId != creatureId)
+                    {
+                        this.rangeToCreatureBasedRetryActions.Enqueue(tuple);
+                        continue;
+                    }
 
-        // var attackTarget = this.Game.GetCreatureWithId(this.AutoAttackTargetId);
+                    // we already removed it, just exit.
+                    break;
+                }
+            }
+        }
 
-        // if (attackTarget != null)
-        //        {
-        //            attackTarget.OnThingChanged += this.CheckAutoAttack;
-        //        }
-
-        // // }
-        //        // else
-        //        // {
-        //        //    Console.WriteLine("Taget creature not found in attacker\'s view.");
-        //        // }
-        //    }
-
-        // // report the change to our subscribers.
-        //    //this.OnTargetChanged?.Invoke(oldTargetId, targetId);
-        //    //this.CheckAutoAttack(this, new ThingStateChangedEventArgs() { PropertyChanged = nameof(this.location) });
-        // }
-
-        // public void CheckAutoAttack(IThing thingChanged, ThingStateChangedEventArgs eventAgrs)
-        // {
-        //    if (this.AutoAttackTargetId == 0)
-        //    {
-        //        return;
-        //    }
-
-        // var attackTarget = this.Game.GetCreatureWithId(this.AutoAttackTargetId);
-
-        // if (attackTarget == null || (thingChanged != this && thingChanged != attackTarget) || eventAgrs.PropertyChanged != nameof(this.Location))
-        //    {
-        //        return;
-        //    }
-
-        // var locationDiff = this.Location - attackTarget.Location;
-        //    var inRange = this.CanSee(attackTarget) && locationDiff.Z == 0 && locationDiff.MaxValueIn2D <= this.AutoAttackRange;
-
-        // if (inRange)
-        //    {
-        //        this.Game.SignalAttackReady();
-        //    }
-        // }
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        public void ClearAllRangeBasedActions()
+        {
+            lock (this.actionsWithinRangeLock)
+            {
+                this.rangeToCreatureBasedRetryActions.Clear();
+            }
+        }
     }
 }

@@ -16,10 +16,14 @@ namespace OpenTibia.Server.Monsters
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents all players in the game.
+    /// Class that represents all monsters in the game.
     /// </summary>
-    public class Monster : Creature
+    public class Monster : CombatantCreature, ICombatant
     {
+        private const int MeleeFightingMonsterAttackRange = 1;
+
+        private const int DistanceFightingMonsterAttackRange = 5;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Monster"/> class.
         /// </summary>
@@ -33,12 +37,18 @@ namespace OpenTibia.Server.Monsters
             this.Speed += monsterType.Speed;
             this.Outfit = monsterType.Outfit;
 
+            this.Blood = monsterType.Blood;
+            this.ChaseMode = this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
-            //foreach (var kvp in this.Type.Skills.ToList())
-            //{
-            //    this.Type.Skills[kvp.Key] = kvp.Value;
-            //}
+            // make a copy of the type we are based on...
+            foreach (var kvp in this.Type.Skills)
+            {
+                (int defaultLevel, int currentLevel, int maximumLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel) = kvp.Value;
+
+                this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
+            }
         }
 
         /// <summary>
@@ -48,16 +58,38 @@ namespace OpenTibia.Server.Monsters
 
         public uint Experience { get; }
 
+        /// <summary>
+        /// Gets or sets the inventory for the monster.
+        /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this monster can be moved by others.
+        /// </summary>
         public override bool CanBeMoved => !this.Type.Flags.HasFlag((uint)CreatureFlag.Unpushable);
 
-        //public override ushort AttackPower => Math.Max(this.Type.Attack, this.Inventory.TotalAttack);
+        /// <summary>
+        /// Gets the range that the auto attack has.
+        /// </summary>
+        public override byte AutoAttackRange => (byte)(this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? DistanceFightingMonsterAttackRange : MeleeFightingMonsterAttackRange);
 
-        //public override ushort ArmorRating => Math.Max(this.Type.Armor, this.Inventory.TotalArmor);
+        /// <summary>
+        /// Gets the attack power of this combatant.
+        /// </summary>
+        public override ushort AttackPower => (ushort)(this.Type.Attack + this.Inventory.EquipmentAttackPower);
 
-        //public override ushort DefensePower => Math.Max(this.Type.Defense, this.Inventory.TotalDefense);
+        /// <summary>
+        /// Gets the defense power of this combatant.
+        /// </summary>
+        public override ushort DefensePower => (ushort)(this.Type.Defense + this.Inventory.EquipmentDefensePower);
 
-        //public override byte AutoAttackRange => (byte)(this.Type.Flags.Contains(CreatureFlag.DistanceFighting) ? 5 : 1);
+        /// <summary>
+        /// Gets the armor rating of this combatant.
+        /// </summary>
+        public override ushort ArmorRating => (ushort)(this.Type.Armor + this.Inventory.EquipmentArmorRating);
+
+        public override ChaseMode ChaseMode { get; }
+
+        public override FightMode FightMode => FightMode.FullAttack;
     }
 }

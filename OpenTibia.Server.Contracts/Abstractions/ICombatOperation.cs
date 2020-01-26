@@ -36,7 +36,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ICombatant Target { get; }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        ExhaustionType ExhaustionType { get; }
+
+        /// <summary>
+        /// Gets the exhaustion cost of this operation.
         /// </summary>
         TimeSpan ExhaustionCost { get; }
 

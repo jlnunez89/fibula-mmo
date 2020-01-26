@@ -49,15 +49,15 @@ namespace OpenTibia.Communications.Packets
                 password: message.GetString());
         }
 
-        ///// <summary>
-        ///// Reads the attack information from the network message.
-        ///// </summary>
-        ///// <param name="message">The message to read from.</param>
-        ///// <returns>The attack information.</returns>
-        // public static IAttackInfo ReadAttackInfo(this INetworkMessage message)
-        // {
-        //    return new AttackPacket(targetCreatureId: message.GetUInt32());
-        // }
+        /// <summary>
+        /// Reads the attack information from the network message.
+        /// </summary>
+        /// <param name="message">The message to read from.</param>
+        /// <returns>The attack information.</returns>
+        public static IAttackInfo ReadAttackInfo(this INetworkMessage message)
+        {
+            return new AttackPacket(targetCreatureId: message.GetUInt32());
+        }
 
         /// <summary>
         /// Reads authentication info from the network message.
@@ -209,6 +209,38 @@ namespace OpenTibia.Communications.Packets
                     Z = (sbyte)message.GetByte(),
                 },
                 count: message.GetByte());
+        }
+
+        /// <summary>
+        /// Reads fight and chase modes information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The fight and chase modes information.</returns>
+        public static IModesInfo ReadModesInfo(this INetworkMessage message)
+        {
+            // 1 - offensive, 2 - balanced, 3 - defensive
+            var rawFightMode = message.GetByte();
+
+            // 0 - stand while fightning, 1 - chase opponent
+            var rawChaseMode = message.GetByte();
+
+            // 0 - safe mode, 1 - free mode
+            var rawSafeMode = message.GetByte();
+
+            FightMode fightMode = FightMode.Balanced;
+            ChaseMode chaseMode = ChaseMode.Stand;
+
+            if (Enum.IsDefined(typeof(FightMode), rawFightMode))
+            {
+                fightMode = (FightMode)rawFightMode;
+            }
+
+            if (Enum.IsDefined(typeof(ChaseMode), rawChaseMode))
+            {
+                chaseMode = (ChaseMode)rawChaseMode;
+            }
+
+            return new ModesPacket(fightMode, chaseMode, isSafetyEnabled: rawSafeMode > 0);
         }
 
         ///// <summary>
@@ -513,21 +545,21 @@ namespace OpenTibia.Communications.Packets
         //    message.AddItem(packet.Item);
         // }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="AnimatedTextPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteAnimatedTextPacket(this INetworkMessage message, AnimatedTextPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="AnimatedTextPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteAnimatedTextPacket(this INetworkMessage message, AnimatedTextPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddLocation(packet.Location);
-        //    message.AddByte((byte)packet.Color);
-        //    message.AddString(packet.Text);
-        // }
+            message.AddLocation(packet.Location);
+            message.AddByte((byte)packet.Color);
+            message.AddString(packet.Text);
+        }
 
         ///// <summary>
         ///// Writes the contents of the <see cref="AuthenticationResultPacket"/> into the message.
@@ -1198,7 +1230,7 @@ namespace OpenTibia.Communications.Packets
             // Experience: 7.7x Client debugs after 0x7FFFFFFF (2,147,483,647) exp
             message.AddUInt32(Math.Min(0x7FFFFFFF, Convert.ToUInt32(packet.Player.Skills[SkillType.Experience].Count)));
 
-            message.AddUInt16(packet.Player.Skills[SkillType.Experience].Level);
+            message.AddUInt16((ushort)Math.Min(1, Math.Min(ushort.MaxValue, packet.Player.Skills[SkillType.Experience].Level)));
             message.AddByte(packet.Player.CalculateSkillPercent(SkillType.Experience));
             message.AddUInt16(Math.Min(ushort.MaxValue, packet.Player.Manapoints));
             message.AddUInt16(Math.Min(ushort.MaxValue, packet.Player.MaxManapoints));

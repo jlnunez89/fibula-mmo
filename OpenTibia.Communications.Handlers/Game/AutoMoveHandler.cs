@@ -71,7 +71,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 player.ClearAllLocationActions();
             }
 
-            if (!this.Game.PlayerRequest_AutoWalk(player, automovementInfo.Directions))
+            if (!this.Game.CreatureRequest_AutoWalk(player, automovementInfo.Directions))
             {
                 responsePackets.Add(new PlayerWalkCancelPacket(automovementInfo.Directions[0]));
 

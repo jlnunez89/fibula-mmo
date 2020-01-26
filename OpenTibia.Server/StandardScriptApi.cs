@@ -234,6 +234,11 @@ namespace OpenTibia.Server.Factories
             this.Game.ScriptRequest_DeleteItemAt(location, itemId);
         }
 
+        public void DescribeThingFor(IThing thingToDescribe, ICreature user)
+        {
+            this.Game.ScriptRequest_DescriptionOf(thingToDescribe as IItem, user as IPlayer);
+        }
+
         public void PlaceMonsterAt(Location location, ushort monsterType)
         {
             this.Game.ScriptRequest_PlaceMonsterAt(location, monsterType);
@@ -242,33 +247,33 @@ namespace OpenTibia.Server.Factories
         public void ApplyDamage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue)
         {
             // TODO: implement correctly when combat is...
-            //if (!(damagedThing is ICreature damagedCreature))
-            //{
-            //    return;
-            //}
+            if (!(damagedThing is ICreature damagedCreature))
+            {
+                return;
+            }
 
-            //switch (damageSourceType)
-            //{
-            //    default: // physical
-            //        break;
-            //    case 2: // magic? or mana?
-            //        break;
-            //    case 4: // fire instant
-            //        this.CreateAnimatedEffectAt(damagedThing, (byte)AnimatedEffect.Flame);
-            //        break;
-            //    case 8: // energy instant
-            //        this.CreateAnimatedEffectAt(damagedThing, (byte)AnimatedEffect.DamageEnergy);
-            //        break;
-            //    case 16: // poison instant?
-            //        this.CreateAnimatedEffectAt(damagedThing, (byte)AnimatedEffect.RingsGreen);
-            //        break;
-            //    case 32: // poison over time (poisoned condition)
-            //        break;
-            //    case 64: // fire over time (burned condition)
-            //        break;
-            //    case 128: // energy over time (electrified condition)
-            //        break;
-            //}
+            switch (damageSourceType)
+            {
+                default: // physical
+                    break;
+                case 2: // magic? or mana?
+                    break;
+                case 4: // fire instant
+                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.Flame);
+                    break;
+                case 8: // energy instant
+                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.DamageEnergy);
+                    break;
+                case 16: // poison instant?
+                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.RingsGreen);
+                    break;
+                case 32: // poison over time (poisoned condition)
+                    break;
+                case 64: // fire over time (burned condition)
+                    break;
+                case 128: // energy over time (electrified condition)
+                    break;
+            }
         }
 
         public void LogPlayerOut(IPlayer player)

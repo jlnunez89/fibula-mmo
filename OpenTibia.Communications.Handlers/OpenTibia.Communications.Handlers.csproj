@@ -34,10 +34,12 @@
     <AdditionalFiles Include="stylecop.json" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Game\AttackHandler.cs" />
     <Compile Include="Game\AutoMoveCancelHandler.cs" />
     <Compile Include="Game\AutoMoveHandler.cs" />
     <Compile Include="Game\ContainerCloseHandler.cs" />
     <Compile Include="Game\ContainerUpHandler.cs" />
+    <Compile Include="Game\SetModeHandler.cs" />
     <Compile Include="Game\RotateItemHandler.cs" />
     <Compile Include="Game\UseItemHandler.cs" />
     <Compile Include="Game\MoveThingHandler.cs" />

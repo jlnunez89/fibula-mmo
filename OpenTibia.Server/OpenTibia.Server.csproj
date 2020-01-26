@@ -10,21 +10,20 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="MovementEvents\EventConditions\ContainerHasEnoughCapacityEventCondition.cs" />
-    <Compile Remove="MovementEvents\EventConditions\ContainerHasItemAndEnoughAmountEventCondition.cs" />
-    <Compile Remove="MovementEvents\EventConditions\GrabberHasContainerOpenEventCondition.cs" />
-    <Compile Remove="MovementEvents\EventConditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
-    <Compile Remove="MovementEvents\EventConditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
-    <Compile Remove="MovementEvents\OnMapCreatureMovementEvent.cs" />
-    <Compile Remove="MovementEvents\ThingMovementContainerToContainer.cs" />
-    <Compile Remove="MovementEvents\ThingMovementContainerToGround.cs" />
-    <Compile Remove="MovementEvents\ThingMovementContainerToSlot.cs" />
-    <Compile Remove="MovementEvents\ThingMovementGroundToContainer.cs" />
-    <Compile Remove="MovementEvents\ThingMovementGroundToSlot.cs" />
-    <Compile Remove="MovementEvents\ThingMovementSlotToContainer.cs" />
-    <Compile Remove="MovementEvents\ThingMovementSlotToGround.cs" />
-    <Compile Remove="MovementEvents\ThingMovementSlotToSlot.cs" />
-    <Compile Remove="StandardAttackOperation.cs" />
+    <Compile Remove="EventConditions\ContainerHasEnoughCapacityEventCondition.cs" />
+    <Compile Remove="EventConditions\ContainerHasItemAndEnoughAmountEventCondition.cs" />
+    <Compile Remove="EventConditions\GrabberHasContainerOpenEventCondition.cs" />
+    <Compile Remove="EventConditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
+    <Compile Remove="EventConditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
+    <Compile Remove="Events\OnMapCreatureMovementEvent.cs" />
+    <Compile Remove="Events\ThingMovementContainerToContainer.cs" />
+    <Compile Remove="Events\ThingMovementContainerToGround.cs" />
+    <Compile Remove="Events\ThingMovementContainerToSlot.cs" />
+    <Compile Remove="Events\ThingMovementGroundToContainer.cs" />
+    <Compile Remove="Events\ThingMovementGroundToSlot.cs" />
+    <Compile Remove="Events\ThingMovementSlotToContainer.cs" />
+    <Compile Remove="Events\ThingMovementSlotToGround.cs" />
+    <Compile Remove="Events\ThingMovementSlotToSlot.cs" />
   </ItemGroup>
 
   <ItemGroup>

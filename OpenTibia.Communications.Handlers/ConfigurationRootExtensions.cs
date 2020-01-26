@@ -38,6 +38,7 @@ namespace OpenTibia.Communications.Handlers
         public static void AddGameHandlers(this IServiceCollection services)
         {
             // Game handlers only
+            services.AddSingleton<IHandler, AttackHandler>();
             services.AddSingleton<IHandler, AutoMoveCancelHandler>();
             services.AddSingleton<IHandler, AutoMoveHandler>();
             services.AddSingleton<IHandler, ContainerCloseHandler>();
@@ -60,10 +61,10 @@ namespace OpenTibia.Communications.Handlers
             services.AddSingleton<IHandler, PlayerWalkSouthwestHandler>();
             services.AddSingleton<IHandler, PlayerWalkWestHandler>();
             services.AddSingleton<IHandler, RotateItemHandler>();
+            services.AddSingleton<IHandler, SetModeHandler>();
             services.AddSingleton<IHandler, StopAllActionsHandler>();
             services.AddSingleton<IHandler, UseItemHandler>();
 
-            //services.AddSingleton<IHandler, AttackHandler>();
             //services.AddSingleton<IHandler, ChannelCloseHandler>();
             //services.AddSingleton<IHandler, ChannelCreateOwnHandler>();
             //services.AddSingleton<IHandler, ChannelInviteHandler>();
@@ -82,7 +83,6 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, PartyPassLeadershipHandler>();
             //services.AddSingleton<IHandler, PartyRejectHandler>();
             //services.AddSingleton<IHandler, PartyRequestHandler>();
-            //services.AddSingleton<IHandler, PlayerSetModeHandler>();
             //services.AddSingleton<IHandler, ReportBugHandler>();
             //services.AddSingleton<IHandler, ReportCancelHandler>();
             //services.AddSingleton<IHandler, ReportCloseHandler>();

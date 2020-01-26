@@ -79,7 +79,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the skills that this type of monster starts with.
         /// </summary>
-        IDictionary<SkillType, (int CurrentLevel, int DefaultLevel, int MaximumLevel, uint CurrentCount, uint CountForNextLevel, byte AddOnLevel)> Skills { get; }
+        IDictionary<SkillType, (int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)> Skills { get; }
 
         /// <summary>
         /// Gets the phrases that this monster type uses.

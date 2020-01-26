@@ -17,7 +17,6 @@ namespace OpenTibia.Server.Contracts.Delegates
     /// Delegate meant for when a combatant changes attack targets.
     /// </summary>
     /// <param name="combatant">The combatant that changed target.</param>
-    /// <param name="oldTargetId">The id of the old target.</param>
-    /// <param name="newTargetId">The id of the new target.</param>
-    public delegate void OnAttackTargetChange(ICombatant combatant, uint oldTargetId, uint newTargetId);
+    /// <param name="oldTarget">The old target, if any.</param>
+    public delegate void OnAttackTargetChange(ICombatant combatant, ICombatant oldTarget);
 }
