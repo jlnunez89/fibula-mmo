@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
+    using System;
     using System.Collections.Generic;
     using OpenTibia.Scheduling.Contracts.Enumerations;
 
@@ -50,18 +51,13 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         IList<IEventCondition> Conditions { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check succeeds.
+        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check succeeds.
         /// </summary>
-        IList<IEventAction> ActionsOnPass { get; }
+        IList<Action> ActionsOnPass { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check fails.
+        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check fails.
         /// </summary>
-        IList<IEventAction> ActionsOnFail { get; }
-
-        /// <summary>
-        /// Processes the event.
-        /// </summary>
-        void Process();
+        IList<Action> ActionsOnFail { get; }
     }
 }

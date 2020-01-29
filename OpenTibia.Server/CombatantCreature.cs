@@ -75,6 +75,16 @@ namespace OpenTibia.Server
         public event OnAttackTargetChange OnTargetChanged;
 
         /// <summary>
+        /// Event to call when the fight mode changes.
+        /// </summary>
+        public event FightModeChanged OnFightModeChanged;
+
+        /// <summary>
+        /// Event to call when the chase mode changes.
+        /// </summary>
+        public event ChaseModeChanged OnChaseModeChanged;
+
+        /// <summary>
         /// Event to call when a combat credit is consumed.
         /// </summary>
         public event CombatCreditConsumed OnCombatCreditsConsumed;
@@ -115,14 +125,14 @@ namespace OpenTibia.Server
         public decimal BaseDefenseSpeed { get; }
 
         /// <summary>
-        /// Gets the chase mode selected by this combatant.
+        /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
-        public abstract ChaseMode ChaseMode { get; }
+        public abstract ChaseMode ChaseMode { get; set; }
 
         /// <summary>
-        /// Gets the fight mode selected by this combatant.
+        /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
-        public abstract FightMode FightMode { get; }
+        public abstract FightMode FightMode { get; set; }
 
         /// <summary>
         /// Gets the range that the auto attack has.
@@ -274,6 +284,24 @@ namespace OpenTibia.Server
 
                 this.OnTargetChanged?.Invoke(this, oldTarget);
             }
+        }
+
+        /// <summary>
+        /// Invokes the fight mode changed event.
+        /// </summary>
+        /// <param name="oldMode">The mode from which the combatant changed.</param>
+        public void InvokeFightModeChanged(FightMode oldMode)
+        {
+            this.OnFightModeChanged?.Invoke(this, oldMode);
+        }
+
+        /// <summary>
+        /// Invokes the chase mode changed event.
+        /// </summary>
+        /// <param name="oldMode">The mode from which the combatant changed.</param>
+        public void InvokeChaseModeChanged(ChaseMode oldMode)
+        {
+            this.OnChaseModeChanged?.Invoke(this, oldMode);
         }
     }
 }

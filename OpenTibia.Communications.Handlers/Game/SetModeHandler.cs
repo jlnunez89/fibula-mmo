@@ -63,9 +63,9 @@ namespace OpenTibia.Communications.Handlers.Game
             // TODO: correctly implement.
             Console.WriteLine($"{player.Name} changed modes to {fightModesInfo.FightMode} and {fightModesInfo.ChaseMode}, safety: {fightModesInfo.SafeModeOn}.");
 
-            player.SetFightMode(fightModesInfo.FightMode);
-            player.SetChaseMode(fightModesInfo.ChaseMode);
-            // player.SetSafetyMode(fightModesInfo.ChaseMode);
+            player.FightMode = fightModesInfo.FightMode;
+            player.ChaseMode = fightModesInfo.ChaseMode;
+            // player.SafetyMode = fightModesInfo.ChaseMode;
 
             return (false, null);
         }

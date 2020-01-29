@@ -71,9 +71,7 @@ namespace OpenTibia.Server.Events
             this.CreatureFinder = creatureFinder;
             this.Game = game;
 
-            this.ActionsOnFail.Add(new GenericEventAction(this.NotifyOfFailure));
-
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 var fromCylinder = this.Game.GetCyclinder(fromLocation, ref fromStackPos, ref index, this.Requestor);
                 var item = this.Game.FindItemByIdAtLocation(typeId, fromLocation, this.Requestor);
@@ -88,8 +86,6 @@ namespace OpenTibia.Server.Events
                     return;
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
 
         /// <summary>

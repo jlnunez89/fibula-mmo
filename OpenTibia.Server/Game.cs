@@ -14,13 +14,14 @@ namespace OpenTibia.Server
     using System;
     using System.Buffers;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Data.Entities;
+    using OpenTibia.Data.Entities.Contracts.Abstractions;
     using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
@@ -113,7 +114,8 @@ namespace OpenTibia.Server
             IMonsterSpawnLoader monsterSpawnsLoader,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
-            IScriptApi scriptApi)
+            IScriptApi scriptApi,
+            IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
             map.ThrowIfNull(nameof(map));
@@ -132,7 +134,7 @@ namespace OpenTibia.Server
             this.CreatureFactory = creatureFactory;
             this.ItemFactory = itemFactory;
 
-            this.scheduler = new Scheduler(logger);
+            this.scheduler = scheduler;
 
             this.map = map;
             this.pathFinder = pathFinder;
@@ -199,6 +201,39 @@ namespace OpenTibia.Server
         /// </summary>
         public DateTimeOffset CurrentTime => this.scheduler.CurrentTime;
 
+        public bool Request_AutoAttack(ICombatant attacker, ICombatant target)
+        {
+            attacker.ThrowIfNull(nameof(attacker));
+            target.ThrowIfNull(nameof(target));
+
+            var locationDiff = attacker.Location - target.Location;
+
+            if (locationDiff.MaxValueIn2D > attacker.AutoAttackRange)
+            {
+                if (attacker.ChaseMode == ChaseMode.Chase)
+                {
+                    // Too far away to attack, we need to move closer first.
+                    this.RequestCreatureWalkToLocation(attacker, target.Location);
+                }
+
+                // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                attacker.EnqueueRetryActionWithinRangeToCreature(attacker.AutoAttackRange, target.Id, () => this.Request_AutoAttack(attacker, target));
+
+                return false;
+            }
+
+            var normalizedAttackSpeed = Math.Min(MaximumCombatSpeed, Math.Max(MinimumCombatSpeed, attacker.BaseAttackSpeed));
+            var attackCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(IGame.DefaultCombatRoundTimeInMs / normalizedAttackSpeed));
+
+            IEvent attackOperation = new AutoAttackCombatOperation(this.Logger, this, attacker, target, attackCost);
+
+            var cooldownRemaining = attacker.CalculateRemainingCooldownTime(ExhaustionType.PhysicalCombat, this.CurrentTime);
+
+            this.scheduler.ScheduleEvent(attackOperation, this.CurrentTime + cooldownRemaining);
+
+            return true;
+        }
+
         /// <summary>
         /// Attempts to schedule a creature's auto walk movements.
         /// </summary>
@@ -206,7 +241,7 @@ namespace OpenTibia.Server
         /// <param name="directions">The directions to walk to.</param>
         /// <param name="stepIndex">Optional. The index in the directions array at which to start moving. Defaults to zero.</param>
         /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
-        public bool CreatureRequest_AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0)
+        public bool Request_AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0)
         {
             creature.ThrowIfNull(nameof(creature));
 
@@ -214,6 +249,9 @@ namespace OpenTibia.Server
             {
                 return true;
             }
+
+            // A new request overrides and cancels any "auto" actions waiting to be retried.
+            this.Request_CancelMovements(creature);
 
             var nextLocation = creature.Location.LocationAt(directions[stepIndex]);
 
@@ -236,36 +274,63 @@ namespace OpenTibia.Server
             if (directions.Length > 1)
             {
                 // Add this request as the retry action, so that the request gets repeated when the player hits this location.
-                creature.EnqueueRetryActionAtLocation(nextLocation, () => this.CreatureRequest_AutoWalk(creature, directions, stepIndex + 1));
+                creature.EnqueueRetryActionAtLocation(nextLocation, () => this.Request_AutoWalk(creature, directions, stepIndex + 1));
             }
 
             return true;
         }
 
         /// <summary>
-        /// Attempts to cancel a player's auto attack operations.
+        /// Attempts to cancel a creature's auto attack operations.
         /// </summary>
-        /// <param name="player">The player making the request.</param>
+        /// <param name="creature">The creature making the request.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool PlayerRequest_CancelAutoAttacks(IPlayer player)
+        public bool Request_CancelAutoAttacks(ICreature creature)
         {
-            player.ThrowIfNull(nameof(player));
+            creature.ThrowIfNull(nameof(creature));
 
-            this.scheduler.CancelAllFor(player.Id, typeof(BaseCombatOperation));
+            this.scheduler.CancelAllFor(creature.Id, typeof(BaseCombatOperation));
 
             return true;
         }
 
         /// <summary>
-        /// Attempts to cancel all of a player's pending movements.
+        /// Attempts to cancel all of a creature's pending movements.
         /// </summary>
-        /// <param name="player">The player making the request.</param>
+        /// <param name="creature">The creature making the request.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        public bool PlayerRequest_CancelPendingMovements(IPlayer player)
+        public bool Request_CancelMovements(ICreature creature)
         {
-            player.ThrowIfNull(nameof(player));
+            creature.ThrowIfNull(nameof(creature));
 
-            this.scheduler.CancelAllFor(player.Id, typeof(BaseMovementEvent));
+            this.scheduler.CancelAllFor(creature.Id, typeof(BaseMovementEvent));
+
+            return true;
+        }
+
+        /// <summary>
+        /// Attempts to turn a creature to the requested direction.
+        /// </summary>
+        /// <param name="creature">The creature making the request.</param>
+        /// <param name="direction">The direction to turn to.</param>
+        /// <returns>True if the turn request was accepted, false otherwise.</returns>
+        public bool Request_TurnToDirection(ICreature creature, Direction direction)
+        {
+            creature.ThrowIfNull(nameof(creature));
+
+            // TODO: should this be scheduled too?
+            creature.TurnToDirection(direction);
+
+            if (this.map.GetTileAt(creature.Location, out ITile playerTile))
+            {
+                var playerStackPos = playerTile.GetStackPositionOfThing(creature);
+
+                this.RequestNofitication(
+                    new CreatureTurnedNotification(
+                        this.Logger,
+                        () => this.GetConnectionsOfPlayersThatCanSee(creature.Location),
+                        new CreatureTurnedNotificationArguments(creature, playerStackPos)));
+            }
 
             return true;
         }
@@ -320,7 +385,7 @@ namespace OpenTibia.Server
         /// <param name="character">The character that the player is logging in to.</param>
         /// <param name="connection">The connection that the player uses.</param>
         /// <returns>An instance of the new <see cref="IPlayer"/> in the game.</returns>
-        public IPlayer PlayerRequest_Login(CharacterEntity character, IConnection connection)
+        public IPlayer PlayerRequest_Login(ICharacterEntity character, IConnection connection)
         {
             // TODO: should be something like character.location
             var targetLocation = Game.VeteranStart;
@@ -383,6 +448,7 @@ namespace OpenTibia.Server
                 }
 
                 player.OnTargetChanged -= this.HandleCombatantTargetChanged;
+                player.OnChaseModeChanged -= this.HandleCombatantChaseModeChanged;
                 player.Inventory.OnSlotChanged -= this.HandlePlayerInventoryChanged;
                 player.OnCombatCreditsConsumed -= this.HandleCombatCreditsConsumed;
 
@@ -427,7 +493,7 @@ namespace OpenTibia.Server
                     // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
                     player.EnqueueRetryActionAtLocation(retryLoc, () => this.PlayerRequest_MoveThingFromMap(player, thingId, fromLocation, fromStackPos, toLocation, count));
 
-                    return this.CreatureRequest_AutoWalk(player, directions.ToArray());
+                    return this.Request_AutoWalk(player, directions.ToArray());
                 }
             }
 
@@ -599,7 +665,7 @@ namespace OpenTibia.Server
                     // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
                     player.EnqueueRetryActionAtLocation(retryLoc, () => this.PlayerRequest_UseItem(player, itemClientId, fromLocation, fromStackPos, index));
 
-                    return this.CreatureRequest_AutoWalk(player, directions.ToArray());
+                    return this.Request_AutoWalk(player, directions.ToArray());
                 }
             }
 
@@ -651,7 +717,7 @@ namespace OpenTibia.Server
                     // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
                     player.EnqueueRetryActionAtLocation(retryLoc, () => this.PlayerRequest_RotateItemAt(player, atLocation, index, typeId));
 
-                    return this.CreatureRequest_AutoWalk(player, directions.ToArray());
+                    return this.Request_AutoWalk(player, directions.ToArray());
                 }
             }
 
@@ -667,33 +733,6 @@ namespace OpenTibia.Server
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Attempts to turn a player to the requested direction.
-        /// </summary>
-        /// <param name="player">The player making the request.</param>
-        /// <param name="direction">The direction to turn to.</param>
-        /// <returns>True if the turn request was accepted, false otherwise.</returns>
-        public bool PlayerRequest_TurnToDirection(IPlayer player, Direction direction)
-        {
-            player.ThrowIfNull(nameof(player));
-
-            // TODO: should this be scheduled too?
-            player.TurnToDirection(direction);
-
-            if (this.map.GetTileAt(player.Location, out ITile playerTile))
-            {
-                var playerStackPos = playerTile.GetStackPositionOfThing(player);
-
-                this.RequestNofitication(
-                    new CreatureTurnedNotification(
-                        this.Logger,
-                        () => this.GetConnectionsOfPlayersThatCanSee(player.Location),
-                        new CreatureTurnedNotificationArguments(player, playerStackPos)));
-            }
-
-            return true;
         }
 
         /// <summary>
@@ -1218,20 +1257,45 @@ namespace OpenTibia.Server
             return Task.CompletedTask;
         }
 
-        public void ApplyDamage(ICombatant attacker, ICombatant target, AttackType attackType, int damageToApply, bool wasBlockedByArmor, bool wasShielded, TimeSpan exhaustion)
+        public void PerformCombatOperation(ICombatOperation combatOperation)
         {
-            AnimatedEffect GetEffect()
+            int CalculateInflictedDamage(out bool armorBlock, out bool wasShielded)
             {
-                if (damageToApply < 0)
+                armorBlock = false;
+                wasShielded = false;
+
+                if (combatOperation.Target.AutoDefenseCredits > 0)
+                {
+                    wasShielded = true;
+
+                    return 0;
+                }
+
+                var rng = new Random();
+
+                // Coin toss 25% chance to hit the armor...
+                if (rng.Next(4) > 0)
+                {
+                    return rng.Next(10) + 1;
+                }
+
+                armorBlock = true;
+
+                return 0;
+            }
+
+            AnimatedEffect GetEffect(int damage, bool wasBlockedByArmor)
+            {
+                if (damage < 0)
                 {
                     return AnimatedEffect.GlitterBlue;
                 }
-                else if (damageToApply == 0)
+                else if (damage == 0)
                 {
                     return wasBlockedByArmor ? AnimatedEffect.SparkYellow : AnimatedEffect.Puff;
                 }
 
-                switch (target.Blood)
+                switch (combatOperation.Target.Blood)
                 {
                     default:
                     case BloodType.Fire:
@@ -1244,14 +1308,14 @@ namespace OpenTibia.Server
                 }
             }
 
-            TextColor GetTextColor()
+            TextColor GetTextColor(int damage)
             {
-                if (damageToApply < 0)
+                if (damage < 0)
                 {
                     return TextColor.Blue;
                 }
 
-                switch (target.Blood)
+                switch (combatOperation.Target.Blood)
                 {
                     default:
                     case BloodType.Blood:
@@ -1265,31 +1329,33 @@ namespace OpenTibia.Server
                 }
             }
 
+            var damageToApply = CalculateInflictedDamage(out bool wasArmorBlock, out bool wasShielded);
+
             var packetsToSend = new List<IOutgoingPacket>()
             {
-                new MagicEffectPacket(target.Location, GetEffect()),
+                new MagicEffectPacket(combatOperation.Target.Location, GetEffect(damageToApply, wasArmorBlock)),
             };
 
             if (damageToApply != 0)
             {
-                packetsToSend.Add(new AnimatedTextPacket(target.Location, GetTextColor(), Math.Abs(damageToApply).ToString()));
+                packetsToSend.Add(new AnimatedTextPacket(combatOperation.Target.Location, GetTextColor(damageToApply), Math.Abs(damageToApply).ToString()));
             }
 
             this.RequestNofitication(
                 new GenericNotification(
                     this.Logger,
-                    () => this.GetConnectionsOfPlayersThatCanSee(target.Location),
+                    () => this.GetConnectionsOfPlayersThatCanSee(combatOperation.Target.Location),
                     new GenericNotificationArguments(packetsToSend.ToArray())));
 
-            target.ConsumeCredits(CombatCreditType.Defense, 1);
+            combatOperation.Target.ConsumeCredits(CombatCreditType.Defense, 1);
 
-            if (attacker != null)
+            if (combatOperation.Attacker != null)
             {
-                target.RecordDamageTaken(attacker.Id, damageToApply);
+                combatOperation.Target.RecordDamageTaken(combatOperation.Attacker.Id, damageToApply);
 
-                attacker.ConsumeCredits(CombatCreditType.Attack, 1);
+                combatOperation.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
-                attacker.AddExhaustion(ExhaustionType.PhysicalCombat, this.CurrentTime, exhaustion);
+                combatOperation.Attacker.AddExhaustion(ExhaustionType.PhysicalCombat, this.CurrentTime, combatOperation.ExhaustionCost);
             }
         }
 
@@ -1302,42 +1368,6 @@ namespace OpenTibia.Server
             notification.ThrowIfNull(nameof(notification));
 
             this.scheduler.ImmediateEvent(notification);
-        }
-
-        public void Request_AutoAttack(ICombatant combatant, ICombatant targetCombatant)
-        {
-            combatant.ThrowIfNull(nameof(combatant));
-            targetCombatant.ThrowIfNull(nameof(targetCombatant));
-
-            var locationDiff = combatant.Location - targetCombatant.Location;
-
-            if (locationDiff.MaxValueIn2D > combatant.AutoAttackRange)
-            {
-                if (combatant.ChaseMode == ChaseMode.Chase)
-                {
-                    // Too far away to attack, we need to move closer first.
-                    var directions = this.pathFinder.FindBetween(combatant.Location, targetCombatant.Location, out Location retryLoc, onBehalfOfCreature: combatant, considerAvoidsAsBlock: true);
-
-                    if (directions != null && directions.Any())
-                    {
-                        this.CreatureRequest_AutoWalk(combatant, directions.ToArray());
-                    }
-                }
-
-                // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
-                combatant.EnqueueRetryActionWithinRangeToCreature(combatant.AutoAttackRange, targetCombatant.Id, () => this.Request_AutoAttack(combatant, targetCombatant));
-
-                return;
-            }
-
-            var normalizedAttackSpeed = Math.Min(MaximumCombatSpeed, Math.Max(MinimumCombatSpeed, combatant.BaseAttackSpeed));
-            var attackCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(IGame.DefaultCombatRoundTimeInMs / normalizedAttackSpeed));
-
-            IEvent attackOperation = new AutoAttackCombatOperation(this.Logger, this, combatant, targetCombatant, attackCost);
-
-            var cooldownRemaining = combatant.CalculateRemainingCooldownTime(ExhaustionType.PhysicalCombat, this.CurrentTime);
-
-            this.scheduler.ScheduleEvent(attackOperation, this.CurrentTime + cooldownRemaining);
         }
 
         /// <summary>
@@ -2149,6 +2179,7 @@ namespace OpenTibia.Server
                     if (creature is ICombatant combatant)
                     {
                         combatant.OnTargetChanged += this.HandleCombatantTargetChanged;
+                        combatant.OnChaseModeChanged += this.HandleCombatantChaseModeChanged;
                         combatant.OnCombatCreditsConsumed += this.HandleCombatCreditsConsumed;
                     }
 
@@ -2369,6 +2400,26 @@ namespace OpenTibia.Server
             }
         }
 
+        private void HandleCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode)
+        {
+            if (combatant == null || combatant.ChaseMode == oldMode)
+            {
+                return;
+            }
+
+            if (combatant.ChaseMode == ChaseMode.Chase && combatant.AutoAttackTarget != null)
+            {
+                var locationDiff = combatant.Location - combatant.AutoAttackTarget.Location;
+
+                if (locationDiff.MaxValueIn2D > 1)
+                {
+                    this.Request_CancelMovements(combatant);
+
+                    this.RequestCreatureWalkToLocation(combatant, combatant.AutoAttackTarget.Location);
+                }
+            }
+        }
+
         /// <summary>
         /// Calculates the step duration of a creature moving from a given tile in the given direction.
         /// </summary>
@@ -2509,7 +2560,34 @@ namespace OpenTibia.Server
 
             try
             {
-                evt.Process();
+                Stopwatch sw = new Stopwatch();
+
+                if (evt.EvaluateAt == EvaluationTime.OnSchedule || evt.CanBeExecuted)
+                {
+                    for (int i = 0; i < evt.ActionsOnPass.Count; i++)
+                    {
+                        sw.Restart();
+
+                        evt.ActionsOnPass[i].Invoke();
+
+                        sw.Stop();
+
+                        this.Logger.Verbose($"Executed ({i + 1} of {evt.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
+                    }
+
+                    return;
+                }
+
+                for (int i = 0; i < evt.ActionsOnFail.Count; i++)
+                {
+                    sw.Restart();
+
+                    evt.ActionsOnFail[i].Invoke();
+
+                    sw.Stop();
+
+                    this.Logger.Verbose($"Executed ({i + 1} of {evt.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
+                }
 
                 this.Logger.Verbose($"Processed event {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
@@ -2597,6 +2675,25 @@ namespace OpenTibia.Server
                     }
                 }
             }
+        }
+
+        private bool RequestCreatureWalkToLocation(ICreature creature, Location targetLocation)
+        {
+            creature.ThrowIfNull(nameof(creature));
+
+            if (targetLocation.Type != LocationType.Map)
+            {
+                return false;
+            }
+
+            var directions = this.pathFinder.FindBetween(creature.Location, targetLocation, out _, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+
+            if (directions != null && directions.Any())
+            {
+                return this.Request_AutoWalk(creature, directions.ToArray());
+            }
+
+            return false;
         }
     }
 }

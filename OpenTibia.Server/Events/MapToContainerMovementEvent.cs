@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
-    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.EventConditions;
@@ -71,7 +70,7 @@ namespace OpenTibia.Server.Events
             this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
             this.Conditions.Add(new ContainerIsOpenEventCondition(() => creatureFinder.FindCreatureById(toCreatureId), toCreatureContainerId));
 
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(toCreatureId) is IPlayer targetPlayer &&
@@ -86,8 +85,6 @@ namespace OpenTibia.Server.Events
                     return;
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
     }
 }

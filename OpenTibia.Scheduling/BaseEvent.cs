@@ -13,7 +13,6 @@ namespace OpenTibia.Scheduling
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
@@ -40,8 +39,8 @@ namespace OpenTibia.Scheduling
             this.Logger = logger.ForContext(this.GetType());
 
             this.Conditions = new List<IEventCondition>();
-            this.ActionsOnPass = new List<IEventAction>();
-            this.ActionsOnFail = new List<IEventAction>();
+            this.ActionsOnPass = new List<Action>();
+            this.ActionsOnFail = new List<Action>();
         }
 
         /// <summary>
@@ -112,48 +111,13 @@ namespace OpenTibia.Scheduling
         public IList<IEventCondition> Conditions { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check succeeds.
+        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check succeeds.
         /// </summary>
-        public IList<IEventAction> ActionsOnPass { get; }
+        public IList<Action> ActionsOnPass { get; }
 
         /// <summary>
-        /// Gets the collection of <see cref="IEventAction"/> that will be executed if the conditions check fails.
+        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check fails.
         /// </summary>
-        public IList<IEventAction> ActionsOnFail { get; }
-
-        /// <summary>
-        /// Executes the event. Performs the <see cref="ActionsOnPass"/> on the <see cref="ActionsOnFail"/> depending if the conditions were met.
-        /// </summary>
-        public void Process()
-        {
-            Stopwatch sw = new Stopwatch();
-
-            if (this.EvaluateAt == EvaluationTime.OnSchedule || this.CanBeExecuted)
-            {
-                for (int i = 0; i < this.ActionsOnPass.Count; i++)
-                {
-                    sw.Restart();
-
-                    this.ActionsOnPass[i].Execute();
-
-                    sw.Stop();
-
-                    this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
-                }
-
-                return;
-            }
-
-            for (int i = 0; i < this.ActionsOnFail.Count; i++)
-            {
-                sw.Restart();
-
-                this.ActionsOnFail[i].Execute();
-
-                sw.Stop();
-
-                this.Logger.Verbose($"Executed ({i + 1} of {this.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
-            }
-        }
+        public IList<Action> ActionsOnFail { get; }
     }
 }

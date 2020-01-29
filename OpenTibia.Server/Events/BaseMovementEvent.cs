@@ -53,7 +53,7 @@ namespace OpenTibia.Server.Events
             this.CreatureFinder = creatureFinder;
             this.Game = game;
 
-            this.ActionsOnFail.Add(new GenericEventAction(this.NotifyOfFailure));
+            this.ActionsOnFail.Add(this.NotifyOfFailure);
         }
 
         /// <summary>

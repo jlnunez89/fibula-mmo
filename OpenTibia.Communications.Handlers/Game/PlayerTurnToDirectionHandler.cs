@@ -56,13 +56,11 @@ namespace OpenTibia.Communications.Handlers.Game
             // No other content in message.
             if (this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                // A new request overrides and cancels any "auto" actions waiting to be retried.
-                if (this.Game.PlayerRequest_CancelPendingMovements(player))
-                {
-                    player.ClearAllLocationActions();
-                }
+                player.ClearAllLocationActions();
 
-                this.Game.PlayerRequest_TurnToDirection(player, this.Direction);
+                this.Game.Request_CancelMovements(player);
+
+                this.Game.Request_TurnToDirection(player, this.Direction);
             }
 
             return (false, null);

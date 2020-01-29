@@ -67,9 +67,7 @@ namespace OpenTibia.Server.Events
             this.CreatureFinder = creatureFinder;
             this.Game = game;
 
-            this.ActionsOnFail.Add(new GenericEventAction(this.NotifyOfFailure));
-
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 byte index = 0, subIndex = 0;
 
@@ -85,8 +83,6 @@ namespace OpenTibia.Server.Events
                     return;
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
 
         /// <summary>

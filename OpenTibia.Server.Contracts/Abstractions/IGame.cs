@@ -15,7 +15,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     using System.Buffers;
     using Microsoft.Extensions.Hosting;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Data.Entities;
+    using OpenTibia.Data.Entities.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
 
@@ -63,10 +63,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>A sequence of bytes representing the description.</returns>
         ReadOnlySequence<byte> GetDescriptionOfMapForPlayer(IPlayer player, Location location);
 
-        void ApplyDamage(ICombatant attacker, ICombatant target, AttackType attackType, int damageToApply, bool wasBlockedByArmor, bool wasShielded, TimeSpan exhaustion);
-
-        void Request_AutoAttack(ICombatant combatant, ICombatant targetCombatant);
-
         /// <summary>
         /// Gets the description bytes of the map in behalf of a given player for the specified window.
         /// </summary>
@@ -89,6 +85,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>A sequence of bytes representing the tile's description.</returns>
         ReadOnlySequence<byte> GetDescriptionOfTile(IPlayer player, Location location);
 
+        bool Request_AutoAttack(ICombatant attacker, ICombatant target);
+
         /// <summary>
         /// Attempts to schedule a creature's auto walk movements.
         /// </summary>
@@ -96,21 +94,29 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="directions">The directions to walk to.</param>
         /// <param name="stepIndex">Optional. The index in the directions array at which to start moving. Defaults to zero.</param>
         /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
-        bool CreatureRequest_AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0);
+        bool Request_AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0);
 
         /// <summary>
-        /// Attempts to cancel a player's auto attack operations.
+        /// Attempts to cancel a creature's auto attack operations.
         /// </summary>
-        /// <param name="player">The player making the request.</param>
+        /// <param name="creature">The creature making the request.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        bool PlayerRequest_CancelAutoAttacks(IPlayer player);
+        bool Request_CancelAutoAttacks(ICreature creature);
 
         /// <summary>
-        /// Attempts to cancel all of a player's pending movements.
+        /// Attempts to cancel all of a creature's pending movements.
         /// </summary>
-        /// <param name="player">The player making the request.</param>
+        /// <param name="creature">The creature making the request.</param>
         /// <returns>True if the request was accepted, false otherwise.</returns>
-        bool PlayerRequest_CancelPendingMovements(IPlayer player);
+        bool Request_CancelMovements(ICreature creature);
+
+        /// <summary>
+        /// Attempts to turn a creature to the requested direction.
+        /// </summary>
+        /// <param name="creature">The creature making the request.</param>
+        /// <param name="direction">The direction to turn to.</param>
+        /// <returns>True if the turn request was accepted, false otherwise.</returns>
+        bool Request_TurnToDirection(ICreature creature, Direction direction);
 
         /// <summary>
         /// Attempts to close a player's container.
@@ -134,7 +140,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="character">The character that the player is logging in to.</param>
         /// <param name="connection">The connection that the player uses.</param>
         /// <returns>An instance of the new <see cref="IPlayer"/> in the game, or null if it couldn't be instantiated.</returns>
-        IPlayer PlayerRequest_Login(CharacterEntity character, IConnection connection);
+        IPlayer PlayerRequest_Login(ICharacterEntity character, IConnection connection);
 
         /// <summary>
         /// Attempts to log a player out of the game.
@@ -160,14 +166,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="typeId">The type id of the item to rotate.</param>
         /// <returns>True if the turn request was accepted, false otherwise.</returns>
         bool PlayerRequest_RotateItemAt(IPlayer player, Location atLocation, byte index, ushort typeId);
-
-        /// <summary>
-        /// Attempts to turn a player to the requested direction.
-        /// </summary>
-        /// <param name="player">The player making the request.</param>
-        /// <param name="direction">The direction to turn to.</param>
-        /// <returns>True if the turn request was accepted, false otherwise.</returns>
-        bool PlayerRequest_TurnToDirection(IPlayer player, Direction direction);
 
         /// <summary>
         /// Attempts to move a thing from the map on behalf of a player.
@@ -233,6 +231,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="creature">Optional. The creature that the location's cyclinder targets, if any.</param>
         /// <returns>An item instance, if found at the location.</returns>
         IItem FindItemByIdAtLocation(ushort typeId, Location location, ICreature creature = null);
+
+        void PerformCombatOperation(ICombatOperation operation);
 
         /// <summary>
         /// Immediately attempts to perform a creature movement to a tile on the map.

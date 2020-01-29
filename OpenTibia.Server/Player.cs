@@ -147,14 +147,50 @@ namespace OpenTibia.Server
         public override ushort ArmorRating => this.Inventory.EquipmentArmorRating;
 
         /// <summary>
-        /// Gets the chase mode selected by this combatant.
+        /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
-        public override ChaseMode ChaseMode => this.chaseMode;
+        public override ChaseMode ChaseMode
+        {
+            get
+            {
+                return this.chaseMode;
+            }
+
+            set
+            {
+                var oldMode = this.chaseMode;
+
+                this.chaseMode = value;
+
+                if (oldMode != this.chaseMode)
+                {
+                    this.InvokeChaseModeChanged(oldMode);
+                }
+            }
+        }
 
         /// <summary>
-        /// Gets the fight mode selected by this combatant.
+        /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
-        public override FightMode FightMode => this.fightMode;
+        public override FightMode FightMode
+        {
+            get
+            {
+                return this.fightMode;
+            }
+
+            set
+            {
+                var oldMode = this.fightMode;
+
+                this.fightMode = value;
+
+                if (oldMode != this.fightMode)
+                {
+                    this.InvokeFightModeChanged(oldMode);
+                }
+            }
+        }
 
         /// <summary>
         /// Checks if this player knows the given creature.
@@ -202,16 +238,6 @@ namespace OpenTibia.Server
             }
 
             return uint.MinValue;
-        }
-
-        public void SetFightMode(FightMode fightMode)
-        {
-            this.fightMode = fightMode;
-        }
-
-        public void SetChaseMode(ChaseMode chaseMode)
-        {
-            this.chaseMode = chaseMode;
         }
 
         private ushort CalculateMovementBaseSpeed()

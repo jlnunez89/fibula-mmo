@@ -56,7 +56,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                this.Game.PlayerRequest_CancelAutoAttacks(player);
+                this.Game.Request_CancelAutoAttacks(player);
 
                 var combatantTarget = this.CreatureFinder.FindCreatureById(attackInfo.TargetCreatureId) as ICombatant;
 

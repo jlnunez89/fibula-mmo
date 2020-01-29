@@ -39,6 +39,7 @@ namespace OpenTibia.Server.Monsters
 
             this.Blood = monsterType.Blood;
             this.ChaseMode = this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+            this.FightMode = FightMode.FullAttack;
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
@@ -88,8 +89,14 @@ namespace OpenTibia.Server.Monsters
         /// </summary>
         public override ushort ArmorRating => (ushort)(this.Type.Armor + this.Inventory.EquipmentArmorRating);
 
-        public override ChaseMode ChaseMode { get; }
+        /// <summary>
+        /// Gets or sets the chase mode selected by this combatant.
+        /// </summary>
+        public override ChaseMode ChaseMode { get; set; }
 
-        public override FightMode FightMode => FightMode.FullAttack;
+        /// <summary>
+        /// Gets or sets the fight mode selected by this combatant.
+        /// </summary>
+        public override FightMode FightMode { get; set; }
     }
 }

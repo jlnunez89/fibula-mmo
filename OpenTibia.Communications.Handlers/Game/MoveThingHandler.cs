@@ -65,11 +65,8 @@ namespace OpenTibia.Communications.Handlers.Game
                 return (false, null);
             }
 
-            // A new request overrides and cancels any "auto" actions waiting to be retried.
-            if (this.Game.PlayerRequest_CancelPendingMovements(player))
-            {
-                player.ClearAllLocationActions();
-            }
+            player.ClearAllLocationActions();
+            this.Game.Request_CancelMovements(player);
 
             switch (moveThingInfo.FromLocation.Type)
             {
@@ -117,7 +114,7 @@ namespace OpenTibia.Communications.Handlers.Game
             {
                 var directionToThing = player.Location.DirectionTo(moveThingInfo.FromLocation);
 
-                this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
+                this.Game.Request_TurnToDirection(player, directionToThing);
             }
 
             // Then we request the actual movement.

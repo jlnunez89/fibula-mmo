@@ -9,8 +9,6 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-using OpenTibia.Server.Contracts.Enumerations;
-
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     /// <summary>
@@ -57,9 +55,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
         uint ChooseCreatureToRemoveFromKnownSet();
-
-        void SetFightMode(FightMode fightMode);
-
-        void SetChaseMode(ChaseMode chaseMode);
     }
 }

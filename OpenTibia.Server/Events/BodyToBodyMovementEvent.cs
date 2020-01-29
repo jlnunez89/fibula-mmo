@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
-    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.EventConditions;
@@ -65,7 +64,7 @@ namespace OpenTibia.Server.Events
 
             this.Conditions.Add(new CanDressThingAtTargetSlotEventCondition(() => creatureFinder.FindCreatureById(targetCreatureId), thingMoving, toCreatureSlot));
 
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(targetCreatureId) is IPlayer targetPlayer &&
@@ -79,8 +78,6 @@ namespace OpenTibia.Server.Events
                     return;
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
     }
 }

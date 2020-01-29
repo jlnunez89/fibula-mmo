@@ -26,6 +26,16 @@ namespace OpenTibia.Server.Contracts.Abstractions
         event OnAttackTargetChange OnTargetChanged;
 
         /// <summary>
+        /// Event to call when the fight mode changes.
+        /// </summary>
+        event FightModeChanged OnFightModeChanged;
+
+        /// <summary>
+        /// Event to call when the chase mode changes.
+        /// </summary>
+        event ChaseModeChanged OnChaseModeChanged;
+
+        /// <summary>
         /// Event to call when a combat credit is consumed.
         /// </summary>
         event CombatCreditConsumed OnCombatCreditsConsumed;
@@ -96,14 +106,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IEnumerable<uint> AttackedBy { get; }
 
         /// <summary>
-        /// Gets the chase mode selected by this combatant.
+        /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
-        ChaseMode ChaseMode { get; }
+        ChaseMode ChaseMode { get; set; }
 
         /// <summary>
-        /// Gets the fight mode selected by this combatant.
+        /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
-        FightMode FightMode { get; }
+        FightMode FightMode { get; set; }
 
         /// <summary>
         /// Sets the attack target of this combatant.

@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
-    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.EventConditions;
@@ -89,7 +88,7 @@ namespace OpenTibia.Server.Events
             this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
             this.Conditions.Add(new TileContainsThingEventCondition(tileAccessor, thingMoving, fromLocation, amount));
 
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 bool moveSuccessful = false;
 
@@ -116,11 +115,9 @@ namespace OpenTibia.Server.Events
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
-                    this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
+                    this.Game.Request_TurnToDirection(player, directionToDestination);
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
     }
 }

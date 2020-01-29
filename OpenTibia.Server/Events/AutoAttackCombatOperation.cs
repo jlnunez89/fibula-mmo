@@ -44,25 +44,25 @@ namespace OpenTibia.Server.Events
             this.Conditions.Add(new LocationsAreDistantByEventCondition(() => attacker?.Location ?? target.Location, () => target.Location, attacker?.AutoAttackRange ?? DefaultAttackRangeDistance, sameFloorOnly: true));
 
             // Add this next attack action to both scenarios.
-            this.ActionsOnFail.Add(new GenericEventAction(() =>
+            this.ActionsOnFail.Add(() =>
             {
                 // Do we need to continue attacking?
                 if (this.Attacker.AutoAttackTarget != null)
                 {
                     this.Game.Request_AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
                 }
-            }));
+            });
 
-            this.ActionsOnPass.Add(new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
-                this.Game.ApplyDamage(this.Attacker, this.Target, this.AttackType, this.CalculateInflictedDamage(out bool wasBlockedByArmor, out bool wasShielded), wasBlockedByArmor, wasShielded, this.ExhaustionCost);
+                this.Game.PerformCombatOperation(this);
 
                 // Do we need to continue attacking?
                 if (this.Attacker.AutoAttackTarget != null)
                 {
                     this.Game.Request_AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
                 }
-            }));
+            });
         }
 
         /// <summary>
@@ -89,30 +89,5 @@ namespace OpenTibia.Server.Events
         /// Gets the absolute maximum damage that the combat operation can result in.
         /// </summary>
         public override int MaximumDamage { get; }
-
-        private int CalculateInflictedDamage(out bool armorBlock, out bool wasShielded)
-        {
-            armorBlock = false;
-            wasShielded = false;
-
-            if (this.Target.AutoDefenseCredits > 0)
-            {
-                wasShielded = true;
-
-                return 0;
-            }
-
-            var rng = new Random();
-
-            // Coin toss 25% chance to hit the armor...
-            if (rng.Next(4) > 0)
-            {
-                return rng.Next(10) + 1;
-            }
-
-            armorBlock = true;
-
-            return 0;
-        }
     }
 }

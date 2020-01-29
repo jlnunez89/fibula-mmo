@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Events
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling.Contracts.Enumerations;
-    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -67,7 +66,7 @@ namespace OpenTibia.Server.Events
             this.Conditions.Add(new LocationNotObstructedEventCondition(tileAccessor, this.Requestor, () => thingMoving, () => toLocation));
             this.Conditions.Add(new LocationHasTileWithGroundEventCondition(tileAccessor, () => toLocation));
 
-            var onPassAction = new GenericEventAction(() =>
+            this.ActionsOnPass.Add(() =>
             {
                 bool moveSuccessful = thingMoving is IItem item &&
                                       creatureFinder.FindCreatureById(fromCreatureId) is IPlayer targetPlayer &&
@@ -86,11 +85,9 @@ namespace OpenTibia.Server.Events
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
-                    this.Game.PlayerRequest_TurnToDirection(player, directionToDestination);
+                    this.Game.Request_TurnToDirection(player, directionToDestination);
                 }
             });
-
-            this.ActionsOnPass.Add(onPassAction);
         }
     }
 }

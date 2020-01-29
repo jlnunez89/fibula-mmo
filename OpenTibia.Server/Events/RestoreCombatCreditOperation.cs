@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Events
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling;
-    using OpenTibia.Server;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using Serilog;
@@ -41,11 +40,11 @@ namespace OpenTibia.Server.Events
             switch (creditType)
             {
                 case CombatCreditType.Attack:
-                    this.ActionsOnPass.Add(new GenericEventAction(() => this.Combatant.RestoreCredits(CombatCreditType.Attack, AmountToRestore)));
+                    this.ActionsOnPass.Add(() => this.Combatant.RestoreCredits(CombatCreditType.Attack, AmountToRestore));
                     break;
 
                 case CombatCreditType.Defense:
-                    this.ActionsOnPass.Add(new GenericEventAction(() => this.Combatant.RestoreCredits(CombatCreditType.Defense, AmountToRestore)));
+                    this.ActionsOnPass.Add(() => this.Combatant.RestoreCredits(CombatCreditType.Defense, AmountToRestore));
                     break;
             }
         }

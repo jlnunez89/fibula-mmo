@@ -29,6 +29,8 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Data.Contracts.Abstractions;
     using OpenTibia.Data.InMemoryDatabase;
     using OpenTibia.Providers.Azure;
+    using OpenTibia.Scheduling;
+    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Security;
     using OpenTibia.Security.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -118,6 +120,8 @@ namespace OpenTibia.Server.Standalone
             // Add service implementations here.
             services.AddSingleton<IProtocolFactory, ProtocolFactory>();
             services.AddSingleton<IConnectionManager, ConnectionManager>();
+
+            services.AddSingleton<IScheduler, Scheduler>();
 
             services.AddAzureProviders(hostingContext.Configuration);
 

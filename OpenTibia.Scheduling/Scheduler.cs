@@ -30,12 +30,12 @@ namespace OpenTibia.Scheduling
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
         /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
-        private const int MaxQueueNodes = 1000000;
+        private const int MaxQueueNodes = 1000;
 
         /// <summary>
         /// The default processing wait time on the processing queue thread.
         /// </summary>
-        private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// The start time of the scheduler.
@@ -127,6 +127,8 @@ namespace OpenTibia.Scheduling
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    var processed = new List<BaseEvent>();
+
                     lock (this.eventsAvailableLock)
                     {
                         // wait until we're flagged that there are events available.
@@ -146,40 +148,45 @@ namespace OpenTibia.Scheduling
 
                             var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(this.CurrentTime);
 
-                            // check the current queue and fire any events that are due.
+                            // Check the current queue and fire any events that are due.
                             while (this.priorityQueue.Count > 0)
                             {
-                                // the first item always points to the next-in-time event available.
+                                if (this.priorityQueue.Count > (int)(MaxQueueNodes * 0.80))
+                                {
+                                    this.Logger.Warning($"Queue is over 80% capacity, consider growing the {nameof(MaxQueueNodes)} value.");
+                                }
+
+                                // The first item always points to the next-in-time event available.
                                 var nextEvent = this.priorityQueue.First;
+                                var isDue = nextEvent.Priority <= currentTimeInMilliseconds;
+                                var isCancelled = this.cancelledEvents.Contains(nextEvent.EventId);
 
-                                // check if this event has been cancelled.
-                                if (this.cancelledEvents.Contains(nextEvent.EventId))
+                                // Check if this event has been cancelled or is due.
+                                if (isDue || isCancelled)
                                 {
-                                    // dequeue, clean and move next.
-                                    this.priorityQueue.Dequeue();
-                                    this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
+                                    processed.Add(this.priorityQueue.Dequeue());
 
-                                    continue;
+                                    if (!isCancelled)
+                                    {
+                                        this.Logger.Verbose($"Firing event {nextEvent.GetType().Name} with id {nextEvent.EventId}, at {currentTimeInMilliseconds}.");
+
+                                        this.OnEventFired?.Invoke(this, new EventFiredEventArgs(nextEvent));
+                                    }
                                 }
-
-                                // check if the event is due
-                                if (nextEvent.Priority <= currentTimeInMilliseconds)
+                                else
                                 {
-                                    // actually dequeue this item.
-                                    this.priorityQueue.Dequeue();
-                                    this.CleanAllAttributedTo(nextEvent.EventId, nextEvent.RequestorId);
-
-                                    this.Logger.Verbose($"Firing event {nextEvent.GetType().Name} with id {nextEvent.EventId}, at {currentTimeInMilliseconds}.");
-
-                                    this.OnEventFired?.Invoke(this, new EventFiredEventArgs(nextEvent));
-                                    continue;
+                                    // The next item is in the future, so figure out how long to wait, update and break.
+                                    waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < currentTimeInMilliseconds ? 0 : nextEvent.Priority - currentTimeInMilliseconds);
+                                    break;
                                 }
-
-                                // else the next item is in the future, so figure out how long to wait, update and break.
-                                waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < currentTimeInMilliseconds ? 0 : nextEvent.Priority - currentTimeInMilliseconds);
-                                break;
                             }
                         }
+                    }
+
+                    // Clean up the processed events.
+                    foreach (var evt in processed)
+                    {
+                        this.CleanUp(evt.EventId, evt.RequestorId);
                     }
                 }
 
@@ -235,23 +242,27 @@ namespace OpenTibia.Scheduling
         {
             eventId.ThrowIfNullOrWhiteSpace();
 
-            try
+            // Lock on the queue itself to prevent race conditions on cancel vs firing.
+            lock (this.queueLock)
             {
                 this.cancelledEvents.Add(eventId);
             }
-            catch
-            {
-                // just ignore any collisions.
-            }
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Schedules an event to be fired immediately.
+        /// </summary>
+        /// <param name="eventToSchedule">The event to schedule.</param>
         public void ImmediateEvent(IEvent eventToSchedule)
         {
             this.ScheduleEvent(eventToSchedule, this.startTime);
         }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// Schedules an event to be fired at the specified time.
+        /// </summary>
+        /// <param name="eventToSchedule">The event to schedule.</param>
+        /// <param name="runAt">The time at which the event should be fired.</param>
         public void ScheduleEvent(IEvent eventToSchedule, DateTimeOffset runAt)
         {
             eventToSchedule.ThrowIfNull(nameof(eventToSchedule));
@@ -320,18 +331,11 @@ namespace OpenTibia.Scheduling
         /// </summary>
         /// <param name="eventId">The id of the event to cancel.</param>
         /// <param name="eventRequestor">The id of the requestor.</param>
-        private void CleanAllAttributedTo(string eventId, uint eventRequestor = 0)
+        private void CleanUp(string eventId, uint eventRequestor = 0)
         {
-            try
-            {
-                this.cancelledEvents.Remove(eventId);
+            this.cancelledEvents.Remove(eventId);
 
-                this.eventTypes.Remove(eventId);
-            }
-            catch
-            {
-                // ignore, as if this fails then the value is not there.
-            }
+            this.eventTypes.Remove(eventId);
 
             if (eventRequestor == 0)
             {
@@ -339,21 +343,19 @@ namespace OpenTibia.Scheduling
                 return;
             }
 
-            try
+            lock (this.eventsPerRequestorLock)
             {
-                lock (this.eventsPerRequestorLock)
+                if (!this.eventsPerRequestor.ContainsKey(eventRequestor))
                 {
-                    this.eventsPerRequestor[eventRequestor].Remove(eventId);
-
-                    if (this.eventsPerRequestor[eventRequestor].Count == 0)
-                    {
-                        this.eventsPerRequestor.Remove(eventRequestor);
-                    }
+                    return;
                 }
-            }
-            catch
-            {
-                // ignore, as if this fails then the value is not there.
+
+                this.eventsPerRequestor[eventRequestor].Remove(eventId);
+
+                if (this.eventsPerRequestor[eventRequestor].Count == 0)
+                {
+                    this.eventsPerRequestor.Remove(eventRequestor);
+                }
             }
         }
     }

@@ -33,7 +33,7 @@ namespace OpenTibia.Server.Notifications
         protected Notification(ILogger logger)
             : base(logger, EvaluationTime.OnSchedule)
         {
-            this.ActionsOnPass.Add(new GenericEventAction(this.Send));
+            this.ActionsOnPass.Add(this.Send);
         }
 
         /// <summary>
