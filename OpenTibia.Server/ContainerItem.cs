@@ -46,17 +46,17 @@ namespace OpenTibia.Server
         /// <summary>
         /// A delegate to invoke when new content is added to this container.
         /// </summary>
-        public event OnContentAdded OnContentAdded;
+        public event OnContentAdded ContentAdded;
 
         /// <summary>
         /// A delegate to invoke when content is updated in this container.
         /// </summary>
-        public event OnContentUpdated OnContentUpdated;
+        public event OnContentUpdated ContentUpdated;
 
         /// <summary>
         /// A delegate to invoke when content is removed from this container.
         /// </summary>
-        public event OnContentRemoved OnContentRemoved;
+        public event OnContentRemoved ContentRemoved;
 
         /// <summary>
         /// Gets the collection of items contained in this container.
@@ -419,31 +419,31 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnContentAdded"/> event on this container.
+        /// Invokes the <see cref="ContentAdded"/> event on this container.
         /// </summary>
         /// <param name="itemAdded">The item added.</param>
         protected void InvokeContentAdded(IItem itemAdded)
         {
-            this.OnContentAdded?.Invoke(this, itemAdded);
+            this.ContentAdded?.Invoke(this, itemAdded);
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnContentRemoved"/> event on this container.
+        /// Invokes the <see cref="ContentRemoved"/> event on this container.
         /// </summary>
         /// <param name="index">The index within the container from where the item was removed.</param>
         protected void InvokeContentRemoved(byte index)
         {
-            this.OnContentRemoved?.Invoke(this, index);
+            this.ContentRemoved?.Invoke(this, index);
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnContentUpdated"/> event on this container.
+        /// Invokes the <see cref="ContentUpdated"/> event on this container.
         /// </summary>
         /// <param name="index">The index within the container from where the item was updated.</param>
         /// <param name="updatedItem">The item that was updated.</param>
         protected void InvokeContentUpdated(byte index, IItem updatedItem)
         {
-            this.OnContentUpdated?.Invoke(this, index, updatedItem);
+            this.ContentUpdated?.Invoke(this, index, updatedItem);
         }
     }
 }

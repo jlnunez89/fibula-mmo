@@ -21,7 +21,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
         /// </summary>
-        event OnThingStateChanged OnThingChanged;
+        event OnThingStateChanged ThingChanged;
 
         /// <summary>
         /// Gets the id of this thing.

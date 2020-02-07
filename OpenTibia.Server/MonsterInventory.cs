@@ -71,7 +71,7 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// A delegate to invoke when a slot in the inventory changes.
         /// </summary>
-        public event OnInventorySlotChanged OnSlotChanged;
+        public event OnInventorySlotChanged SlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.

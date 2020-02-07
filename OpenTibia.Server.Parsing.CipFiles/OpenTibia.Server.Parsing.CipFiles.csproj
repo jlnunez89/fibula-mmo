@@ -27,6 +27,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
     <ProjectReference Include="..\OpenTibia.Data.Entities.Contracts\OpenTibia.Data.Entities.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Parsing.Contracts\OpenTibia.Server.Parsing.Contracts.csproj" />
   </ItemGroup>
 

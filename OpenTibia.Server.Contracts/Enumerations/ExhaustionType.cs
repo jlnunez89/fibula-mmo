@@ -17,6 +17,11 @@ namespace OpenTibia.Server.Contracts.Enumerations
     public enum ExhaustionType
     {
         /// <summary>
+        /// No exhaustion.
+        /// </summary>
+        None,
+
+        /// <summary>
         /// Moving around.
         /// </summary>
         Movement,

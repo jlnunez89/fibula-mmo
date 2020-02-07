@@ -29,10 +29,8 @@ namespace OpenTibia.Communications.Handlers.Game
         /// </summary>
         /// <param name="logger">A reference to the logger instance.</param>
         public KeepAliveRequestHandler(ILogger logger)
+            : base(logger)
         {
-            logger.ThrowIfNull(nameof(logger));
-
-            this.Logger = logger.ForContext<KeepAliveRequestHandler>();
         }
 
         /// <summary>
@@ -41,26 +39,16 @@ namespace OpenTibia.Communications.Handlers.Game
         public override byte ForPacketType => (byte)IncomingGamePacketType.KeepAlive;
 
         /// <summary>
-        /// Gets the reference to the logger in use.
-        /// </summary>
-        public ILogger Logger { get; }
-
-        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             this.Logger.Debug($"Recieved ping back from {connection.SocketIp}.");
 
-            var responsePackets = new List<IOutgoingPacket>
-            {
-                new PongPacket(),
-            };
-
-            return (true, responsePackets);
+            return new PongPacket().YieldSingleItem();
         }
     }
 }

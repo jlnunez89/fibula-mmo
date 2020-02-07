@@ -38,29 +38,29 @@
     <Compile Include="Game\AutoMoveCancelHandler.cs" />
     <Compile Include="Game\AutoMoveHandler.cs" />
     <Compile Include="Game\ContainerCloseHandler.cs" />
-    <Compile Include="Game\ContainerUpHandler.cs" />
+    <Compile Include="Game\ContainerMoveUpHandler.cs" />
     <Compile Include="Game\SetModeHandler.cs" />
     <Compile Include="Game\RotateItemHandler.cs" />
     <Compile Include="Game\UseItemHandler.cs" />
     <Compile Include="Game\MoveThingHandler.cs" />
-    <Compile Include="Game\LogoutHandler.cs" />
+    <Compile Include="Game\LogOutHandler.cs" />
     <Compile Include="Game\LookAtHandler.cs" />
     <Compile Include="Game\KeepAliveRequestHandler.cs" />
-    <Compile Include="Game\PlayerLoginHandler.cs" />
-    <Compile Include="Game\PlayerTurnEastHandler.cs" />
-    <Compile Include="Game\PlayerTurnNorthHandler.cs" />
-    <Compile Include="Game\PlayerTurnSouthHandler.cs" />
-    <Compile Include="Game\PlayerTurnToDirectionHandler.cs" />
-    <Compile Include="Game\PlayerTurnWestHandler.cs" />
-    <Compile Include="Game\PlayerWalkEastHandler.cs" />
-    <Compile Include="Game\PlayerWalkNortheastHandler.cs" />
-    <Compile Include="Game\PlayerWalkNorthHandler.cs" />
-    <Compile Include="Game\PlayerWalkNorthWestHandler.cs" />
-    <Compile Include="Game\PlayerWalkOnDemandHandler.cs" />
-    <Compile Include="Game\PlayerWalkSoutheastHandler.cs" />
-    <Compile Include="Game\PlayerWalkSouthHandler.cs" />
-    <Compile Include="Game\PlayerWalkSouthwestHandler.cs" />
-    <Compile Include="Game\PlayerWalkWestHandler.cs" />
+    <Compile Include="Game\LogInHandler.cs" />
+    <Compile Include="Game\TurnEastHandler.cs" />
+    <Compile Include="Game\TurnNorthHandler.cs" />
+    <Compile Include="Game\TurnSouthHandler.cs" />
+    <Compile Include="Game\TurnToDirectionHandler.cs" />
+    <Compile Include="Game\TurnWestHandler.cs" />
+    <Compile Include="Game\WalkEastHandler.cs" />
+    <Compile Include="Game\WalkNortheastHandler.cs" />
+    <Compile Include="Game\WalkNorthHandler.cs" />
+    <Compile Include="Game\WalkNorthWestHandler.cs" />
+    <Compile Include="Game\WalkOnDemandHandler.cs" />
+    <Compile Include="Game\WalkSoutheastHandler.cs" />
+    <Compile Include="Game\WalkSouthHandler.cs" />
+    <Compile Include="Game\WalkSouthwestHandler.cs" />
+    <Compile Include="Game\WalkWestHandler.cs" />
     <Compile Include="Game\StopAllActionsHandler.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -78,5 +78,6 @@
     <ProjectReference Include="..\OpenTibia.Data\OpenTibia.Data.csproj" />
     <ProjectReference Include="..\OpenTibia.Security\OpenTibia.Security.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Operations\OpenTibia.Server.Operations.csproj" />
   </ItemGroup>
 </Project>

@@ -35,7 +35,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
         /// </summary>
-        public event OnThingStateChanged OnThingChanged;
+        public event OnThingStateChanged ThingChanged;
 
         /// <summary>
         /// Gets the id of this thing.
@@ -105,14 +105,14 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnThingChanged"/> event on this thing.
+        /// Invokes the <see cref="ThingChanged"/> event on this thing.
         /// </summary>
         /// <param name="propertyName">The name of the property.</param>
         public void InvokePropertyChanged(string propertyName)
         {
             propertyName.ThrowIfNullOrWhiteSpace(propertyName);
 
-            this.OnThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
+            this.ThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
         }
 
         /// <inheritdoc/>

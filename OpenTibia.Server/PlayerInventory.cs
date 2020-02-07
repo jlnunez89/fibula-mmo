@@ -58,16 +58,16 @@ namespace OpenTibia.Server
 
                 this.inventory[slot].ParentCylinder = null;
 
-                this.inventory[slot].OnContentAdded -= this.HandleContentAdded;
-                this.inventory[slot].OnContentRemoved -= this.HandleContentRemoved;
-                this.inventory[slot].OnContentUpdated -= this.HandleContentUpdated;
+                this.inventory[slot].ContentAdded -= this.HandleContentAdded;
+                this.inventory[slot].ContentRemoved -= this.HandleContentRemoved;
+                this.inventory[slot].ContentUpdated -= this.HandleContentUpdated;
             }
         }
 
         /// <summary>
         /// A delegate to invoke when a slot in the inventory changes.
         /// </summary>
-        public event OnInventorySlotChanged OnSlotChanged;
+        public event OnInventorySlotChanged SlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.
@@ -200,9 +200,9 @@ namespace OpenTibia.Server
 
                 this.inventory[slot].ParentCylinder = this.Owner;
 
-                this.inventory[slot].OnContentAdded += this.HandleContentAdded;
-                this.inventory[slot].OnContentRemoved += this.HandleContentRemoved;
-                this.inventory[slot].OnContentUpdated += this.HandleContentUpdated;
+                this.inventory[slot].ContentAdded += this.HandleContentAdded;
+                this.inventory[slot].ContentRemoved += this.HandleContentRemoved;
+                this.inventory[slot].ContentUpdated += this.HandleContentUpdated;
             }
         }
 
@@ -238,7 +238,7 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Invokes the <see cref="OnSlotChanged"/> event on this inventory.
+        /// Invokes the <see cref="SlotChanged"/> event on this inventory.
         /// </summary>
         /// <param name="container">The container that changed.</param>
         /// <param name="item">The item that changed. </param>
@@ -250,7 +250,7 @@ namespace OpenTibia.Server
             }
 
             // TODO: are all container.Slot values valid here?
-            this.OnSlotChanged?.Invoke(this, container.Slot, item);
+            this.SlotChanged?.Invoke(this, container.Slot, item);
         }
     }
 }

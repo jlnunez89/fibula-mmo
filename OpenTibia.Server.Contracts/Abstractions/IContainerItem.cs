@@ -27,17 +27,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// A delegate to invoke when new content is added to this container.
         /// </summary>
-        event OnContentAdded OnContentAdded;
+        event OnContentAdded ContentAdded;
 
         /// <summary>
         /// A delegate to invoke when content is updated in this container.
         /// </summary>
-        event OnContentUpdated OnContentUpdated;
+        event OnContentUpdated ContentUpdated;
 
         /// <summary>
         /// A delegate to invoke when content is removed from this container.
         /// </summary>
-        event OnContentRemoved OnContentRemoved;
+        event OnContentRemoved ContentRemoved;
 
         /// <summary>
         /// Gets the mapping of player ids to container ids for which this container is known to be opened.

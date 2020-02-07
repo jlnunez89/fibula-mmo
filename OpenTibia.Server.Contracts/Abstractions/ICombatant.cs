@@ -23,22 +23,22 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Event to call when the attack target changes.
         /// </summary>
-        event OnAttackTargetChange OnTargetChanged;
+        event OnAttackTargetChange TargetChanged;
 
         /// <summary>
         /// Event to call when the fight mode changes.
         /// </summary>
-        event FightModeChanged OnFightModeChanged;
+        event FightModeChanged FightModeChanged;
 
         /// <summary>
         /// Event to call when the chase mode changes.
         /// </summary>
-        event ChaseModeChanged OnChaseModeChanged;
+        event ChaseModeChanged ChaseModeChanged;
 
         /// <summary>
         /// Event to call when a combat credit is consumed.
         /// </summary>
-        event CombatCreditConsumed OnCombatCreditsConsumed;
+        event CombatCreditConsumed CombatCreditsConsumed;
 
         /// <summary>
         /// Gets the auto attack target combatant.

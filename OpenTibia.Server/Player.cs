@@ -119,7 +119,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
-        public bool IsLogoutAllowed => this.AutoAttackTarget == null;
+        public bool IsAllowedToLogOut => this.AutoAttackTarget == null;
 
         /// <summary>
         /// Gets or sets the inventory for the player.

@@ -13,7 +13,9 @@ namespace OpenTibia.Communications.Handlers
 {
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that serves as the base implementation for all packet handlers in the service.
@@ -23,8 +25,12 @@ namespace OpenTibia.Communications.Handlers
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseHandler"/> class.
         /// </summary>
-        protected BaseHandler()
+        /// <param name="logger">A reference to the logger in use.</param>
+        protected BaseHandler(ILogger logger)
         {
+            logger.ThrowIfNull(nameof(logger));
+
+            this.Logger = logger.ForContext(this.GetType());
         }
 
         /// <summary>
@@ -33,12 +39,17 @@ namespace OpenTibia.Communications.Handlers
         public abstract byte ForPacketType { get; }
 
         /// <summary>
+        /// Gets the reference to the logger in use.
+        /// </summary>
+        protected ILogger Logger { get; }
+
+        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public abstract (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection);
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public abstract IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection);
 
         /// <summary>
         /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.

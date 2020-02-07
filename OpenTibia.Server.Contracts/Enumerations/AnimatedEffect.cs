@@ -17,6 +17,11 @@ namespace OpenTibia.Server.Contracts.Enumerations
     public enum AnimatedEffect : byte
     {
         /// <summary>
+        /// A pointer to the first valid value in this enumeration.
+        /// </summary>
+        First = XBlood,
+
+        /// <summary>
         /// The bleeding animation.
         /// </summary>
         XBlood = 0x01,
@@ -140,6 +145,11 @@ namespace OpenTibia.Server.Contracts.Enumerations
         /// White notes of sound animation.
         /// </summary>
         SoundWhite = 0x19,
+
+        /// <summary>
+        /// A pointer to the last valid value in this enumeration.
+        /// </summary>
+        Last = SoundWhite,
 
         /// <summary>
         /// No animation.

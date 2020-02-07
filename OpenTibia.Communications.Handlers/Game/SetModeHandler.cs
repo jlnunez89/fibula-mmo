@@ -18,6 +18,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Server.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a set mode handler for the game server.
@@ -27,12 +28,12 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <summary>
         /// Initializes a new instance of the <see cref="SetModeHandler"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <param name="gameInstance">A reference to the game instance.</param>
-        public SetModeHandler(ICreatureFinder creatureFinder, IGame gameInstance)
-            : base(gameInstance)
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="operationFactory">A reference to the operation factory in use.</param>
+        /// <param name="gameContext"></param>
+        public SetModeHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
+            : base(logger, operationFactory, gameContext)
         {
-            this.CreatureFinder = creatureFinder;
         }
 
         /// <summary>
@@ -41,23 +42,18 @@ namespace OpenTibia.Communications.Handlers.Game
         public override byte ForPacketType => (byte)IncomingGamePacketType.ChangeModes;
 
         /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
-
-        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             var fightModesInfo = message.ReadModesInfo();
 
-            if (!(this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
+            if (!(this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
             {
-                return (false, null);
+                return null;
             }
 
             // TODO: correctly implement.
@@ -67,7 +63,7 @@ namespace OpenTibia.Communications.Handlers.Game
             player.ChaseMode = fightModesInfo.ChaseMode;
             // player.SafetyMode = fightModesInfo.ChaseMode;
 
-            return (false, null);
+            return null;
         }
     }
 }

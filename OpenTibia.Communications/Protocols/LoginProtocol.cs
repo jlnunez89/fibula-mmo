@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Communications
 {
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
@@ -87,9 +88,9 @@ namespace OpenTibia.Communications
                 return;
             }
 
-            var (intendsToRespond, responsePackets) = handler.HandleRequest(inboundMessage, connection);
+            var responsePackets = handler.HandleRequest(inboundMessage, connection);
 
-            if (intendsToRespond)
+            if (responsePackets != null && responsePackets.Any())
             {
                 // Send any responses prepared for this.
                 var responseMessage = handler.PrepareResponse(responsePackets);

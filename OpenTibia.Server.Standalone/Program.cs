@@ -40,6 +40,7 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Server.Map;
     using OpenTibia.Server.Map.SectorFiles;
     using OpenTibia.Server.Monsters.MonFiles;
+    using OpenTibia.Server.Operations;
     using OpenTibia.Server.PathFinding.AStar;
     using OpenTibia.Server.Spawns.MonstersDbFile;
     using Serilog;
@@ -105,7 +106,7 @@ namespace OpenTibia.Server.Standalone
             hostingContext.ThrowIfNull(nameof(hostingContext));
             services.ThrowIfNull(nameof(services));
 
-            // configure options
+            // Configure options here
             services.Configure<GameConfigurationOptions>(hostingContext.Configuration.GetSection(nameof(GameConfigurationOptions)));
             services.Configure<ProtocolConfigurationOptions>(hostingContext.Configuration.GetSection(nameof(ProtocolConfigurationOptions)));
 
@@ -117,50 +118,54 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton(Log.Logger);
             services.AddSingleton<TelemetryClient>();
 
-            // Add service implementations here.
-            services.AddSingleton<IProtocolFactory, ProtocolFactory>();
-            services.AddSingleton<IConnectionManager, ConnectionManager>();
-
+            services.AddSingleton<IApplicationContext, ApplicationContext>();
             services.AddSingleton<IScheduler, Scheduler>();
 
-            services.AddAzureProviders(hostingContext.Configuration);
+            ConfigureCommunicationsFramework(services);
 
-            // services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
-            services.AddInMemoryDatabaseContext(hostingContext.Configuration);
+            ConfigureEventRules(hostingContext, services);
 
-            services.AddSectorFilesMapLoader(hostingContext.Configuration);
+            ConfigureMap(hostingContext, services);
 
-            services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
+            ConfigureItems(hostingContext, services);
 
-            services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
+            ConfigureCreatures(hostingContext, services);
 
-            services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
+            ConfigurePathFindingAlgorithm(hostingContext, services);
 
-            services.AddMoveUseItemEventLoader(hostingContext.Configuration);
+            ConfigureDatabaseContext(hostingContext, services);
 
-            services.AddAStarPathFinder(hostingContext.Configuration);
+            ConfigureOperations(services);
 
-            // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
-            // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
-            // rather than save an actual copy of the DB context in the app context.
-            services.AddSingleton<Func<IOpenTibiaDbContext>>(s => s.GetService<IOpenTibiaDbContext>);
-            services.AddSingleton<IApplicationContext, ApplicationContext>();
+            ConfigureHostedServices(services);
 
-            services.AddSingleton<IMap, Map>();
-            services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
+            ConfigureExtraServices(hostingContext, services);
+        }
 
-            services.AddSingleton<IScriptApi, StandardScriptApi>();
+        private static void ConfigureCommunicationsFramework(IServiceCollection services)
+        {
+            services.AddSingleton<IProtocolFactory, ProtocolFactory>();
 
-            services.AddSingleton<IItemFactory, ItemFactory>();
+            services.AddSingleton<IConnectionManager, ConnectionManager>();
+            services.AddSingleton<IConnectionFinder>(s => s.GetService<IConnectionManager>());
 
-            services.AddSingleton<ICreatureFactory, CreatureFactory>();
-            services.AddSingleton<ICreatureManager, CreatureManager>();
-            services.AddSingleton<ICreatureFinder>(s => s.GetService<ICreatureManager>());
+            services.AddSingleton<IGameContext, GameContext>();
 
+            // Add all the request handlers:
             services.AddGameHandlers();
             services.AddLoginHandlers();
             services.AddManagementHandlers();
+        }
 
+        private static void ConfigureOperations(IServiceCollection services)
+        {
+            services.AddSingleton<IOperationFactory, OperationFactory>();
+            services.AddSingleton<IOperationContext, OperationContext>();
+            services.AddSingleton<IElevatedOperationContext, ElevatedOperationContext>();
+        }
+
+        private static void ConfigureHostedServices(IServiceCollection services)
+        {
             // Those executing should derive from IHostedService and be added using AddHostedService.
             services.AddSingleton<SimpleDoSDefender>();
             services.AddHostedService(s => s.GetService<SimpleDoSDefender>());
@@ -177,6 +182,68 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<Game>();
             services.AddHostedService(s => s.GetService<Game>());
             services.AddSingleton<IGame>(s => s.GetService<Game>());
+        }
+
+        private static void ConfigureDatabaseContext(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            // Chose a type of Database context:
+            // services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
+            services.AddInMemoryDatabaseContext(hostingContext.Configuration);
+
+            // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
+            // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
+            // rather than save an actual copy of the DB context in the app context.
+            services.AddSingleton<Func<IOpenTibiaDbContext>>(s => s.GetService<IOpenTibiaDbContext>);
+        }
+
+        private static void ConfigurePathFindingAlgorithm(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddAStarPathFinder(hostingContext.Configuration);
+        }
+
+        private static void ConfigureCreatures(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddSingleton<ICreatureFactory, CreatureFactory>();
+            services.AddSingleton<ICreatureManager, CreatureManager>();
+            services.AddSingleton<ICreatureFinder>(s => s.GetService<ICreatureManager>());
+
+            // Chose a type of monster types (catalog) loader:
+            services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
+
+            // Chose a type of monster spawns loader:
+            services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
+        }
+
+        private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddSingleton<IItemFactory, ItemFactory>();
+
+            // Chose a type of item types (catalog) loader:
+            services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
+        }
+
+        private static void ConfigureMap(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddSingleton<IMap, Map>();
+            services.AddSingleton<IMapDescriptor, MapDescriptor>();
+            services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
+
+            // Chose a type of map loader:
+            services.AddSectorFilesMapLoader(hostingContext.Configuration);
+        }
+
+        private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            // Azure providers for Azure VM hosting and storing secrets in KeyVault.
+            services.AddAzureProviders(hostingContext.Configuration);
+        }
+
+        private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddSingleton<IEventRulesService>(s => s.GetService<Game>());
+
+            // Chose a type of event rules loader:
+            services.AddMoveUseEventRulesLoader(hostingContext.Configuration);
         }
     }
 }

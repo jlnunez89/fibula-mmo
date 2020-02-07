@@ -11,15 +11,18 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
-    using System;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for a combat operation.
     /// </summary>
-    public interface ICombatOperation : IEvent
+    public interface ICombatOperation : IOperation
     {
+        /// <summary>
+        /// The default combat rount time in milliseconds.
+        /// </summary>
+        const int DefaultCombatRoundTimeInMs = 2000;
+
         /// <summary>
         /// Gets the combat operation's attack type.
         /// </summary>
@@ -34,16 +37,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets the combatant that is the target on this operation.
         /// </summary>
         ICombatant Target { get; }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        ExhaustionType ExhaustionType { get; }
-
-        /// <summary>
-        /// Gets the exhaustion cost of this operation.
-        /// </summary>
-        TimeSpan ExhaustionCost { get; }
 
         /// <summary>
         /// Gets the absolute minimum damage that the combat operation can result in.

@@ -477,5 +477,15 @@ namespace OpenTibia.Server.Map
 
             return this.tiles.TryGetValue(location, out tile);
         }
+
+        /// <summary>
+        /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
+        /// </summary>
+        /// <param name="location">The location to get the file from.</param>
+        /// <returns>A reference to the <see cref="ITile"/> found, if any.</returns>
+        public ITile GetTileAt(Location location)
+        {
+            return this.GetTileAt(location, out ITile tile) ? tile : null;
+        }
     }
 }

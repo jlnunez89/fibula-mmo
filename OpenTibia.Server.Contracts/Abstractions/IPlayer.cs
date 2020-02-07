@@ -35,7 +35,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
-        bool IsLogoutAllowed { get; }
+        bool IsAllowedToLogOut { get; }
 
         /// <summary>
         /// Checks if this player knows the given creature.

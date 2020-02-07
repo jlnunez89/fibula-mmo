@@ -25,5 +25,12 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="tile">A reference to the <see cref="ITile"/> found, if any.</param>
         /// <returns>A value indicating whether a <see cref="ITile"/> was found, false otherwise.</returns>
         bool GetTileAt(Location location, out ITile tile);
+
+        /// <summary>
+        /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
+        /// </summary>
+        /// <param name="location">The location to get the file from.</param>
+        /// <returns>A reference to the <see cref="ITile"/> found, if any.</returns>
+        ITile GetTileAt(Location location);
     }
 }

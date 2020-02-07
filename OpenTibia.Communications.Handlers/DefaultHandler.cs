@@ -28,15 +28,10 @@ namespace OpenTibia.Communications.Handlers
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="packetType">The type of the packet.</param>
         public DefaultHandler(ILogger logger, byte packetType)
+            : base(logger)
         {
-            this.Logger = logger.ForContext<DefaultHandler>();
             this.IncomingPacketType = packetType;
         }
-
-        /// <summary>
-        /// Gets a reference to the logger in use.
-        /// </summary>
-        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the packet type that resulted in this handler being picked.
@@ -53,8 +48,8 @@ namespace OpenTibia.Communications.Handlers
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             var debugInfo = message.ReadDefaultInfo();
 
@@ -67,7 +62,7 @@ namespace OpenTibia.Communications.Handlers
 
             this.Logger.Information($"Default handler received the following packet type: {this.IncomingPacketType.ToString("X2")}\n\n{sb.ToString()}");
 
-            return (false, null);
+            return null;
         }
     }
 }

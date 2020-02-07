@@ -13,18 +13,12 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
-    using OpenTibia.Scheduling.Contracts.Enumerations;
 
     /// <summary>
     /// Interface that represents an event.
     /// </summary>
     public interface IEvent
     {
-        /// <summary>
-        /// Gets a <see cref="EvaluationTime"/> value indicating when this event should be evaluated.
-        /// </summary>
-        EvaluationTime EvaluateAt { get; }
-
         /// <summary>
         /// Gets a unique identifier for this event.
         /// </summary>

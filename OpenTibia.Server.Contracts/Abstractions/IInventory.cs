@@ -21,7 +21,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// A delegate to invoke when a slot in the inventory is changed.
         /// </summary>
-        event OnInventorySlotChanged OnSlotChanged;
+        event OnInventorySlotChanged SlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.

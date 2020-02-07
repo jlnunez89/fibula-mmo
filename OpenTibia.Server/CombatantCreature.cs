@@ -72,22 +72,22 @@ namespace OpenTibia.Server
         /// <summary>
         /// Event to call when the attack target changes.
         /// </summary>
-        public event OnAttackTargetChange OnTargetChanged;
+        public event OnAttackTargetChange TargetChanged;
 
         /// <summary>
         /// Event to call when the fight mode changes.
         /// </summary>
-        public event FightModeChanged OnFightModeChanged;
+        public event FightModeChanged FightModeChanged;
 
         /// <summary>
         /// Event to call when the chase mode changes.
         /// </summary>
-        public event ChaseModeChanged OnChaseModeChanged;
+        public event ChaseModeChanged ChaseModeChanged;
 
         /// <summary>
         /// Event to call when a combat credit is consumed.
         /// </summary>
-        public event CombatCreditConsumed OnCombatCreditsConsumed;
+        public event CombatCreditConsumed CombatCreditsConsumed;
 
         /// <summary>
         /// Gets the auto attack target combatant.
@@ -232,7 +232,7 @@ namespace OpenTibia.Server
 
                     if (this.AutoAttackCredits != oldAttackCredits)
                     {
-                        this.OnCombatCreditsConsumed?.Invoke(this, creditType, amount);
+                        this.CombatCreditsConsumed?.Invoke(this, creditType, amount);
                     }
 
                     break;
@@ -244,7 +244,7 @@ namespace OpenTibia.Server
 
                     if (this.AutoDefenseCredits != oldDefenseCredits)
                     {
-                        this.OnCombatCreditsConsumed?.Invoke(this, creditType, amount);
+                        this.CombatCreditsConsumed?.Invoke(this, creditType, amount);
                     }
 
                     break;
@@ -282,7 +282,7 @@ namespace OpenTibia.Server
 
                 this.AutoAttackTarget = otherCombatant;
 
-                this.OnTargetChanged?.Invoke(this, oldTarget);
+                this.TargetChanged?.Invoke(this, oldTarget);
             }
         }
 
@@ -292,7 +292,7 @@ namespace OpenTibia.Server
         /// <param name="oldMode">The mode from which the combatant changed.</param>
         public void InvokeFightModeChanged(FightMode oldMode)
         {
-            this.OnFightModeChanged?.Invoke(this, oldMode);
+            this.FightModeChanged?.Invoke(this, oldMode);
         }
 
         /// <summary>
@@ -301,7 +301,7 @@ namespace OpenTibia.Server
         /// <param name="oldMode">The mode from which the combatant changed.</param>
         public void InvokeChaseModeChanged(ChaseMode oldMode)
         {
-            this.OnChaseModeChanged?.Invoke(this, oldMode);
+            this.ChaseModeChanged?.Invoke(this, oldMode);
         }
     }
 }

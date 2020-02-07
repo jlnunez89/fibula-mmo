@@ -28,13 +28,14 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddMoveUseItemEventLoader(this IServiceCollection services, IConfiguration configuration)
+        public static void AddMoveUseEventRulesLoader(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
             // configure options
             services.Configure<MoveUseEventRulesLoaderOptions>(configuration.GetSection(nameof(MoveUseEventRulesLoaderOptions)));
 
+            services.AddSingleton<IEventRulesFactory, MoveUseEventRulesFactory>();
             services.AddSingleton<IEventRulesLoader, MoveUseEventRulesLoader>();
         }
     }

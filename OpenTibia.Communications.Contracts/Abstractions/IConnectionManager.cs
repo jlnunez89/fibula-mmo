@@ -11,12 +11,10 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using System.Collections.Generic;
-
     /// <summary>
     /// Interface that represents a connection manager.
     /// </summary>
-    public interface IConnectionManager
+    public interface IConnectionManager : IConnectionFinder
     {
         /// <summary>
         /// Registers a new connection to the manager.
@@ -30,24 +28,5 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// </summary>
         /// <param name="connection">The connection to unregister.</param>
         void Unregister(IConnection connection);
-
-        /// <summary>
-        /// Looks for a single connection with the associated player id.
-        /// </summary>
-        /// <param name="playerId">The player id for which to look a connection for.</param>
-        /// <returns>The connection instance, if found, and null otherwise.</returns>
-        IConnection FindByPlayerId(uint playerId);
-
-        /// <summary>
-        /// Gets all active connections known to this manager.
-        /// </summary>
-        /// <returns>A collection of connection instances.</returns>
-        IEnumerable<IConnection> GetAllActive();
-
-        /// <summary>
-        /// Gets all orphaned connections known to this manager.
-        /// </summary>
-        /// <returns>A collection of connection instances.</returns>
-        IEnumerable<IConnection> GetAllOrphaned();
     }
 }

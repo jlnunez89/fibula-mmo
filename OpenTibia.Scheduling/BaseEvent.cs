@@ -15,7 +15,6 @@ namespace OpenTibia.Scheduling
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Scheduling.Contracts.Enumerations;
     using Priority_Queue;
     using Serilog;
 
@@ -28,30 +27,19 @@ namespace OpenTibia.Scheduling
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
         /// </summary>
         /// <param name="logger">The logger to use.</param>
-        /// <param name="evaluationTime">Optional. The time at which the event's conditions should be evaluated. Default is <see cref="EvaluationTime.OnExecute"/>.</param>
-        public BaseEvent(ILogger logger, EvaluationTime evaluationTime = EvaluationTime.OnExecute)
+        /// <param name="requestorId">Optional. The id of the creature or entity requesting the event. Default is 0.</param>
+        public BaseEvent(ILogger logger, uint requestorId = 0)
         {
             logger.ThrowIfNull(nameof(logger));
 
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
-            this.EvaluateAt = evaluationTime;
             this.Logger = logger.ForContext(this.GetType());
 
             this.Conditions = new List<IEventCondition>();
             this.ActionsOnPass = new List<Action>();
             this.ActionsOnFail = new List<Action>();
-        }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BaseEvent"/> class.
-        /// </summary>
-        /// <param name="logger">The logger to use.</param>
-        /// <param name="requestorId">Optional. The id of the creature or entity requesting the event. Default is 0.</param>
-        /// <param name="evaluationTime">Optional. The time at which the event's conditions should be evaluated. Default is <see cref="EvaluationTime.OnExecute"/>.</param>
-        public BaseEvent(ILogger logger, uint requestorId = 0, EvaluationTime evaluationTime = EvaluationTime.OnExecute)
-            : this(logger, evaluationTime)
-        {
             this.RequestorId = requestorId;
         }
 
@@ -74,11 +62,6 @@ namespace OpenTibia.Scheduling
         /// Gets or sets the error message that should be bubbled back to the player if the event cannot be executed.
         /// </summary>
         public string ErrorMessage { get; protected set; }
-
-        /// <summary>
-        /// Gets a <see cref="EvaluationTime"/> value indicating when this event should be evaluated.
-        /// </summary>
-        public EvaluationTime EvaluateAt { get; }
 
         /// <summary>
         /// Gets a value indicating whether the event can be executed.

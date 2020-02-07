@@ -10,23 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="EventConditions\ContainerHasEnoughCapacityEventCondition.cs" />
-    <Compile Remove="EventConditions\ContainerHasItemAndEnoughAmountEventCondition.cs" />
-    <Compile Remove="EventConditions\GrabberHasContainerOpenEventCondition.cs" />
-    <Compile Remove="EventConditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
-    <Compile Remove="EventConditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
-    <Compile Remove="Events\OnMapCreatureMovementEvent.cs" />
-    <Compile Remove="Events\ThingMovementContainerToContainer.cs" />
-    <Compile Remove="Events\ThingMovementContainerToGround.cs" />
-    <Compile Remove="Events\ThingMovementContainerToSlot.cs" />
-    <Compile Remove="Events\ThingMovementGroundToContainer.cs" />
-    <Compile Remove="Events\ThingMovementGroundToSlot.cs" />
-    <Compile Remove="Events\ThingMovementSlotToContainer.cs" />
-    <Compile Remove="Events\ThingMovementSlotToGround.cs" />
-    <Compile Remove="Events\ThingMovementSlotToSlot.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -53,6 +36,7 @@
     <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Items\OpenTibia.Server.Items.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Map\OpenTibia.Server.Map.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Operations\OpenTibia.Server.Operations.csproj" />
   </ItemGroup>
 
 </Project>

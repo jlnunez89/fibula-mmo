@@ -434,6 +434,8 @@ namespace OpenTibia.Server
                 }
             }
 
+            description = Regex.Replace(description, @"[^\u0000-\u007F]+", string.Empty);
+
             return description;
         }
 

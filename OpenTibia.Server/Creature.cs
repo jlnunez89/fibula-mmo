@@ -507,18 +507,19 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="container">The container to open.</param>
         /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
-        public void OpenContainerAt(IContainerItem container, byte containerId = 0xFF)
+        /// <returns>The id as which the container ended up being opened as.</returns>
+        public byte OpenContainerAt(IContainerItem container, byte containerId = 0xFF)
         {
             if (containerId == 0xFF)
             {
-                this.OpenContainer(container);
-
-                return;
+                return this.OpenContainer(container);
             }
 
             this.openContainers[containerId]?.EndTracking(this.Id);
             this.openContainers[containerId] = container;
             this.openContainers[containerId].BeginTracking(this.Id, containerId);
+
+            return containerId;
         }
 
         /// <summary>
@@ -693,6 +694,64 @@ namespace OpenTibia.Server
             {
                 this.rangeToCreatureBasedRetryActions.Clear();
             }
+        }
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        public bool EvaluateLocationBasedActions()
+        {
+            bool anyExecuted = false;
+
+            foreach (var (loc, action) in this.LocationBasedActions)
+            {
+                // Check if locations match.
+                if (this.Location != loc)
+                {
+                    continue;
+                }
+
+                anyExecuted = true;
+                action();
+
+                this.DequeueActionAtLocation(loc);
+            }
+
+            return anyExecuted;
+        }
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        public bool EvaluateCreatureRangeBasedActions(ICreatureFinder creatureFinder)
+        {
+            creatureFinder.ThrowIfNull(nameof(creatureFinder));
+
+            bool anyExecuted = false;
+
+            foreach (var (range, targetId, action) in this.RangeBasedActions)
+            {
+                if (creatureFinder.FindCreatureById(targetId) is ICreature targetCreature)
+                {
+                    // Check if target is now within range.
+                    var locDiff = this.Location - targetCreature.Location;
+
+                    if (locDiff.MaxValueIn2D > range)
+                    {
+                        continue;
+                    }
+
+                    action();
+                    anyExecuted = true;
+                }
+
+                this.DequeueRetryActionWithinRangeToCreature(range, targetId);
+            }
+
+            return anyExecuted;
         }
     }
 }

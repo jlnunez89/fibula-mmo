@@ -189,7 +189,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="container">The container to open.</param>
         /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
-        void OpenContainerAt(IContainerItem container, byte containerId = 0xFF);
+        /// <returns>The id as which the container ended up being opened as.</returns>
+        byte OpenContainerAt(IContainerItem container, byte containerId = 0xFF);
 
         /// <summary>
         /// Gets the id of the given container as known by this player, if it is.
@@ -248,5 +249,18 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Removes all actions from the location-based actions queue.
         /// </summary>
         void ClearAllRangeBasedActions();
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        bool EvaluateLocationBasedActions();
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        bool EvaluateCreatureRangeBasedActions(ICreatureFinder creatureFinder);
     }
 }

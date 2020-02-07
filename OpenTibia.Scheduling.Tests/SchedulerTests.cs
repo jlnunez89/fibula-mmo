@@ -18,7 +18,6 @@ namespace OpenTibia.Scheduling.Tests
     using Moq;
     using OpenTibia.Common.Utilities.Testing;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Scheduling.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
@@ -78,7 +77,7 @@ namespace OpenTibia.Scheduling.Tests
 
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, validRunAtDateTime), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
 
-            Mock<BaseEvent> bEventMock = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMock = new Mock<BaseEvent>(loggerMock.Object);
 
             ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, invalidRunAtDateTime), $"Value cannot be earlier than the reference time of the scheduler: {anyNonDefaultDateTime}.{Environment.NewLine}Parameter name: runAt");
 
@@ -108,7 +107,7 @@ namespace OpenTibia.Scheduling.Tests
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
@@ -170,9 +169,9 @@ namespace OpenTibia.Scheduling.Tests
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
@@ -229,8 +228,8 @@ namespace OpenTibia.Scheduling.Tests
             DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
             DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
-            Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>(loggerMock.Object);
+            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
             var inmediateEventFiredCounter = 0;

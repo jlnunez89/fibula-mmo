@@ -47,20 +47,16 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// </summary>
         /// <param name="logger">A reference to the logger instance.</param>
         /// <param name="options">The options for this loader.</param>
-        /// <param name="scriptFactory">A reference to the script factory in use.</param>
-        public MoveUseEventRulesLoader(
-            ILogger logger,
-            IOptions<MoveUseEventRulesLoaderOptions> options,
-            IScriptApi scriptFactory)
+        /// <param name="eventRulesFactory">A reference to the event rules factory in use.</param>
+        public MoveUseEventRulesLoader(ILogger logger, IOptions<MoveUseEventRulesLoaderOptions> options, IEventRulesFactory eventRulesFactory)
         {
             logger.ThrowIfNull(nameof(logger));
             options.ThrowIfNull(nameof(options));
-            scriptFactory.ThrowIfNull(nameof(scriptFactory));
+            eventRulesFactory.ThrowIfNull(nameof(eventRulesFactory));
 
             this.LoaderOptions = options.Value;
             this.Logger = logger.ForContext<MoveUseEventRulesLoader>();
-
-            this.ItemEventFactory = new MoveUseItemEventFactory(logger, scriptFactory);
+            this.EventFactory = eventRulesFactory;
         }
 
         /// <summary>
@@ -69,9 +65,9 @@ namespace OpenTibia.Server.Events.MoveUseFile
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Gets the reference to the item event factory.
+        /// Gets the reference to the event rules factory.
         /// </summary>
-        public MoveUseItemEventFactory ItemEventFactory { get; }
+        public IEventRulesFactory EventFactory { get; }
 
         /// <summary>
         /// Gets the loader options.
@@ -116,7 +112,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
                     if (Enum.TryParse(moveUseEventParsed.Type, out EventRuleType itemEventType))
                     {
-                        eventDictionary[itemEventType].Add(this.ItemEventFactory.Create(moveUseEventParsed));
+                        eventDictionary[itemEventType].Add(this.EventFactory.Create(moveUseEventParsed));
                     }
                 }
                 catch (ParseException parseEx)
