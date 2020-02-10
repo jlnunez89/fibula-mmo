@@ -14,7 +14,6 @@ namespace OpenTibia.Server.Operations.Movements
     using System;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Operations.Conditions;
     using Serilog;
 
     /// <summary>
@@ -44,21 +43,25 @@ namespace OpenTibia.Server.Operations.Movements
             byte fromCreatureContainerIndex,
             Slot toCreatureSlot,
             byte amount = 1)
-            : base(logger, context, (targetCreature as IPlayer)?.GetContainerById(fromCreatureContainerId), (targetCreature as IPlayer)?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
+            : base(logger, context, context?.ContainerManager?.FindForCreature(targetCreature.Id, fromCreatureContainerId), targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
         {
             if (amount == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new CanDressThingAtTargetSlotEventCondition(() => targetCreature, thingMoving, toCreatureSlot));
-            this.Conditions.Add(new ContainerIsOpenEventCondition(() => targetCreature, fromCreatureContainerId));
-
             this.ActionsOnPass.Add(() =>
             {
-                bool moveSuccessful = thingMoving is IItem item &&
-                                      targetCreature is IPlayer targetPlayer &&
-                                      this.PerformItemMovement(item, targetPlayer.GetContainerById(fromCreatureContainerId), targetPlayer.Inventory[(byte)toCreatureSlot] as IContainerItem, fromCreatureContainerIndex, 0, amount, this.Requestor);
+                if (!(thingMoving is IItem item))
+                {
+                    // You may not move this.
+                    return;
+                }
+
+                var creatureHasSourceContainerOpen = this.Context.ContainerManager.FindForCreature(targetCreature.Id, fromCreatureContainerId) != null;
+
+                bool moveSuccessful = creatureHasSourceContainerOpen &&
+                                      this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, fromCreatureContainerIndex, 0, amount, this.Requestor);
 
                 if (!moveSuccessful)
                 {

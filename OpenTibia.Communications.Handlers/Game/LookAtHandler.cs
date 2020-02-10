@@ -74,7 +74,7 @@ namespace OpenTibia.Communications.Handlers.Game
                         thing = this.Context.TileAccessor.GetTileAt(lookAtInfo.Location, out ITile targetTile) ? targetTile.GetTopThingByOrder(this.Context.CreatureFinder, lookAtInfo.StackPosition) : null;
                         break;
                     case LocationType.InsideContainer:
-                        container = player.GetContainerById(lookAtInfo.Location.ContainerId);
+                        container = this.Context.ContainerManager.FindForCreature(player.Id, lookAtInfo.Location.ContainerId);
 
                         thing = container?[lookAtInfo.Location.ContainerIndex];
                         break;

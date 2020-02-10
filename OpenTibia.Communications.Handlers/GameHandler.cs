@@ -26,7 +26,7 @@ namespace OpenTibia.Communications.Handlers
         /// <summary>
         /// The reference to the operation factory.
         /// </summary>
-        private IOperationFactory operationFactory;
+        private readonly IOperationFactory operationFactory;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GameHandler"/> class.
@@ -41,6 +41,7 @@ namespace OpenTibia.Communications.Handlers
             gameContext.ThrowIfNull(nameof(gameContext));
 
             this.operationFactory = operationFactory;
+
             this.Context = gameContext;
         }
 

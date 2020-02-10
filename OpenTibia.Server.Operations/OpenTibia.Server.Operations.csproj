@@ -10,14 +10,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Conditions\ContainerHasEnoughCapacityEventCondition.cs" />
-    <Compile Remove="Conditions\ContainerHasItemAndEnoughAmountEventCondition.cs" />
-    <Compile Remove="Conditions\GrabberHasContainerOpenEventCondition.cs" />
-    <Compile Remove="Conditions\GrabberHasEnoughCarryStrengthEventCondition.cs" />
-    <Compile Remove="Conditions\SlotHasContainerAndContainerHasEnoughCapacityEventCondition.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 

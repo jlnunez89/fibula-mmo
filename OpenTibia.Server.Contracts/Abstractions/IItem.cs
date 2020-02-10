@@ -32,6 +32,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         // event ItemAmountChangeEvent OnAmountChanged;
 
         /// <summary>
+        /// Gets the unique id of this item.
+        /// </summary>
+        Guid UniqueId { get; }
+
+        /// <summary>
         /// Gets a reference to this item's <see cref="IItemType"/>.
         /// </summary>
         IItemType Type { get; }
@@ -40,11 +45,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets the attributes of this item.
         /// </summary>
         IDictionary<ItemAttribute, IConvertible> Attributes { get; }
-
-        ///// <summary>
-        ///// Gets the id of the creature holding this item, if any.
-        ///// </summary>
-        // uint HolderId { get; }
 
         /// <summary>
         /// Gets a value indicating whether this item is ground floor.

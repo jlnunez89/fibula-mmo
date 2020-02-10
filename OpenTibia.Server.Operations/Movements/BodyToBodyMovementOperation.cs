@@ -14,7 +14,6 @@ namespace OpenTibia.Server.Operations.Movements
     using System;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Operations.Conditions;
     using Serilog;
 
     /// <summary>
@@ -42,20 +41,22 @@ namespace OpenTibia.Server.Operations.Movements
             Slot fromCreatureSlot,
             Slot toCreatureSlot,
             byte amount = 1)
-            : base(logger, context, (targetCreature as IPlayer)?.Inventory[(byte)fromCreatureSlot] as IContainerItem, (targetCreature as IPlayer)?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
+            : base(logger, context, targetCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
         {
             if (amount == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new CanDressThingAtTargetSlotEventCondition(() => targetCreature, thingMoving, toCreatureSlot));
-
             this.ActionsOnPass.Add(() =>
             {
-                bool moveSuccessful = thingMoving is IItem item &&
-                                      targetCreature is IPlayer targetPlayer &&
-                                      this.PerformItemMovement(item, targetPlayer.Inventory[(byte)fromCreatureSlot] as IContainerItem, targetPlayer.Inventory[(byte)toCreatureSlot] as IContainerItem, 0, 0, amount, this.Requestor);
+                if (!(thingMoving is IItem item))
+                {
+                    // You may not move this.
+                    return;
+                }
+
+                bool moveSuccessful = this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, 0, amount, this.Requestor);
 
                 if (!moveSuccessful)
                 {

@@ -31,6 +31,7 @@ namespace OpenTibia.Server.Operations
         /// <param name="pathFinder"></param>
         /// <param name="itemFactory"></param>
         /// <param name="creatureFactory"></param>
+        /// <param name="containerManager"></param>
         /// <param name="scheduler"></param>
         public OperationContext(
             IMapDescriptor mapDescriptor,
@@ -40,6 +41,7 @@ namespace OpenTibia.Server.Operations
             IPathFinder pathFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
+            IContainerManager containerManager,
             IScheduler scheduler)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
@@ -49,6 +51,7 @@ namespace OpenTibia.Server.Operations
             pathFinder.ThrowIfNull(nameof(pathFinder));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
+            containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.MapDescriptor = mapDescriptor;
@@ -58,6 +61,7 @@ namespace OpenTibia.Server.Operations
             this.PathFinder = pathFinder;
             this.ItemFactory = itemFactory;
             this.CreatureFactory = creatureFactory;
+            this.ContainerManager = containerManager;
             this.Scheduler = scheduler;
         }
 
@@ -95,6 +99,11 @@ namespace OpenTibia.Server.Operations
         /// Gets a reference to the creature factory in use.
         /// </summary>
         public ICreatureFactory CreatureFactory { get; }
+
+        /// <summary>
+        /// Gets a reference to the container manager in use.
+        /// </summary>
+        public IContainerManager ContainerManager { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

@@ -53,8 +53,8 @@ namespace OpenTibia.Server.Operations.Environment
         {
             this.ActionsOnPass.Add(() =>
             {
-                var fromCylinder = fromLocation.GetCyclinder(this.Context.TileAccessor, ref fromStackPos, ref index, carrierCreature);
-                var item = fromLocation.FindItemById(this.Context.TileAccessor, typeId, carrierCreature);
+                var fromCylinder = fromLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref fromStackPos, ref index, carrierCreature);
+                var item = fromLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, carrierCreature);
 
                 // TODO: shouldn't really need a requestor here.
                 bool successfulChange = this.PerformItemChange(item, toTypeId, fromCylinder, index, this.Requestor);

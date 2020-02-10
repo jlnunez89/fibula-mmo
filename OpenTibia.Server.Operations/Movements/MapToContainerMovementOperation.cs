@@ -12,9 +12,9 @@
 namespace OpenTibia.Server.Operations.Movements
 {
     using System;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
-    using OpenTibia.Server.Operations.Conditions;
     using Serilog;
 
     /// <summary>
@@ -44,25 +44,44 @@ namespace OpenTibia.Server.Operations.Movements
             byte toCreatureContainerId,
             byte toCreatureContainerIndex,
             byte amount = 1)
-            : base(logger, context, context?.TileAccessor.GetTileAt(fromLocation), (toCreature as IPlayer)?.GetContainerById(toCreatureContainerId), creatureRequestingId)
+            : base(logger, context, context?.TileAccessor.GetTileAt(fromLocation), context?.ContainerManager?.FindForCreature(toCreature.Id, toCreatureContainerId), creatureRequestingId)
         {
+            thingMoving.ThrowIfNull(nameof(thingMoving));
+
             if (amount == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new ThingCanBeMovedCondition(this.Requestor, thingMoving));
-            this.Conditions.Add(new TileContainsThingEventCondition(this.Context.TileAccessor, thingMoving, fromLocation, amount));
-            this.Conditions.Add(new RequestorIsInRangeToMoveEventCondition(this.Requestor, () => fromLocation));
-            this.Conditions.Add(new LocationsMatchEventCondition(() => thingMoving?.Location ?? default, () => fromLocation));
-            this.Conditions.Add(new ContainerIsOpenEventCondition(() => toCreature, toCreatureContainerId));
-
             this.ActionsOnPass.Add(() =>
             {
-                bool moveSuccessful = thingMoving is IItem item &&
-                                      toCreature is IPlayer targetPlayer &&
-                                      this.Context.TileAccessor.GetTileAt(fromLocation, out ITile fromTile) &&
-                                      this.PerformItemMovement(item, fromTile, targetPlayer.GetContainerById(toCreatureContainerId), toIndex: toCreatureContainerIndex, amountToMove: amount, requestorCreature: this.Requestor);
+                if (!(thingMoving is IItem item))
+                {
+                    // You may not move this.
+                    return;
+                }
+
+                var sourceTile = this.FromCylinder as ITile;
+                var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+
+                var sourceTileNotNull = sourceTile != null;
+                var thingCanBeMoved = thingMoving.CanBeMoved || thingMoving == this.Requestor;
+                var locationsMatch = thingMoving?.Location == fromLocation;
+                var requestorInRange = this.Requestor == null || (this.Requestor.Location - fromLocation).MaxValueIn2D <= 1;
+                var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
+                                                    sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
+                                                    item.Amount >= amount;
+
+                var destinationContainer = this.ToCylinder as IContainerItem;
+                var creatureHasDestinationContainerOpen = destinationContainer != null;
+
+                bool moveSuccessful = sourceTileNotNull &&
+                                      thingCanBeMoved &&
+                                      locationsMatch &&
+                                      sourceTileHasEnoughItemAmount &&
+                                      requestorInRange &&
+                                      creatureHasDestinationContainerOpen &&
+                                      this.PerformItemMovement(item, sourceTile, destinationContainer, toIndex: toCreatureContainerIndex, amountToMove: amount, requestorCreature: this.Requestor);
 
                 if (!moveSuccessful)
                 {

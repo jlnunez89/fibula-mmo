@@ -21,7 +21,6 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Packets;
     using OpenTibia.Communications.Packets.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -247,7 +246,7 @@ namespace OpenTibia.Communications.Handlers.Game
         {
             player.ThrowIfNull(nameof(player));
 
-            var sourceContainer = player.GetContainerById(containerId);
+            var sourceContainer = this.Context.ContainerManager.FindForCreature(player.Id, containerId);
 
             var thingMoving = sourceContainer?[containerIndex];
 

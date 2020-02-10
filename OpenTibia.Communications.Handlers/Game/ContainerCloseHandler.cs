@@ -54,7 +54,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                var item = player.GetContainerById(containerInfo.ContainerId);
+                var item = this.Context.ContainerManager.FindForCreature(player.Id, containerInfo.ContainerId);
 
                 if (item != null)
                 {

@@ -34,7 +34,7 @@ namespace OpenTibia.Server.Operations.Actions
             {
                 if (containerItem.ParentCylinder is IContainerItem parentContainer)
                 {
-                    this.OpenContainer(player, parentContainer, asContainerId);
+                    this.Context.ContainerManager.OpenContainer(player, parentContainer, asContainerId);
                 }
             });
         }

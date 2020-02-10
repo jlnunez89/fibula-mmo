@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Operations.Environment
 {
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Events;
     using OpenTibia.Server.Operations.Actions;
@@ -51,8 +50,8 @@ namespace OpenTibia.Server.Operations.Environment
             {
                 byte index = 0, subIndex = 0;
 
-                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, ref index, ref subIndex, this.Requestor);
-                var item = atLocation.FindItemById(this.Context.TileAccessor, typeId, this.Requestor);
+                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
+                var item = atLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, this.Requestor);
 
                 bool successfulDeletion = this.PerformItemDeletion(item, fromCylinder, subIndex);
 

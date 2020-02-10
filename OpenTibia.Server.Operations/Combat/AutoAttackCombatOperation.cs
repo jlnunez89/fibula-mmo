@@ -21,7 +21,7 @@ namespace OpenTibia.Server.Operations.Combat
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Operations.Conditions;
+    using OpenTibia.Server.Operations.Actions;
     using OpenTibia.Server.Operations.Movements;
     using OpenTibia.Server.Operations.Notifications;
     using OpenTibia.Server.Operations.Notifications.Arguments;
@@ -53,22 +53,21 @@ namespace OpenTibia.Server.Operations.Combat
 
             this.ExhaustionCost = exhaustionCost;
 
-            this.Conditions.Add(new AttackingCorrectTargetEventCondition(attacker, attacker?.AutoAttackTarget?.Id ?? 0));
-            this.Conditions.Add(new LocationsAreDistantByEventCondition(() => attacker?.Location ?? target.Location, () => target.Location, attacker?.AutoAttackRange ?? DefaultAttackRangeDistance, sameFloorOnly: true));
-
-            // Add this next attack action to both scenarios.
-            this.ActionsOnFail.Add(() =>
-            {
-                // Do we need to continue attacking?
-                if (this.Attacker.AutoAttackTarget != null)
-                {
-                    this.AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
-                }
-            });
+            var targetIdAtSchedueTime = attacker?.AutoAttackTarget?.Id ?? 0;
 
             this.ActionsOnPass.Add(() =>
             {
-                this.PerformAttack();
+                var noAttacker = this.Attacker == null;
+                var correctTarget = this.Attacker?.AutoAttackTarget?.Id == targetIdAtSchedueTime;
+                var enoughCredits = this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
+
+                var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
+                var targetInRange = distanceBetweenCombatants.MaxValueIn2D <= (attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
+
+                if (noAttacker || (correctTarget && enoughCredits && targetInRange))
+                {
+                    this.PerformAttack();
+                }
 
                 // Do we need to continue attacking?
                 if (this.Attacker.AutoAttackTarget != null)
@@ -220,12 +219,6 @@ namespace OpenTibia.Server.Operations.Combat
                 packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, GetTextColor(damageToApply), Math.Abs(damageToApply).ToString()));
             }
 
-            this.Context.Scheduler.ImmediateEvent(
-                new GenericNotification(
-                    this.Logger,
-                    () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Target.Location),
-                    new GenericNotificationArguments(packetsToSend.ToArray())));
-
             this.Target.ConsumeCredits(CombatCreditType.Defense, 1);
 
             if (this.Attacker != null)
@@ -235,7 +228,20 @@ namespace OpenTibia.Server.Operations.Combat
                 this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
                 this.Attacker.AddExhaustion(ExhaustionType.PhysicalCombat, this.Context.Scheduler.CurrentTime, this.ExhaustionCost);
+
+                if (this.Attacker.Location != this.Target.Location && this.Attacker.Id != this.Target.Id)
+                {
+                    var directionToTarget = this.Attacker.Location.DirectionTo(this.Target.Location);
+
+                    this.Context.Scheduler.ImmediateEvent(new TurnToDirectionOperation(this.Logger, this.Context, this.Attacker, directionToTarget));
+                }
             }
+
+            this.Context.Scheduler.ImmediateEvent(
+                new GenericNotification(
+                    this.Logger,
+                    () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Target.Location),
+                    new GenericNotificationArguments(packetsToSend.ToArray())));
         }
 
         /// <summary>

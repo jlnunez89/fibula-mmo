@@ -16,7 +16,6 @@ namespace OpenTibia.Server.Operations.Movements
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Conditions;
     using Serilog;
 
     /// <summary>
@@ -44,22 +43,31 @@ namespace OpenTibia.Server.Operations.Movements
             Slot fromCreatureSlot,
             Location toLocation,
             byte amount = 1)
-            : base(logger, context, (fromCreature as IPlayer)?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
+            : base(logger, context, fromCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
         {
             if (amount == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.Conditions.Add(new LocationNotObstructedEventCondition(this.Context.TileAccessor, this.Requestor, () => thingMoving, () => toLocation));
-            this.Conditions.Add(new LocationHasTileWithGroundEventCondition(this.Context.TileAccessor, () => toLocation));
-
             this.ActionsOnPass.Add(() =>
             {
-                bool moveSuccessful = thingMoving is IItem item &&
-                                      fromCreature is IPlayer targetPlayer &&
-                                      this.Context.TileAccessor.GetTileAt(toLocation, out ITile toTile) &&
-                                      this.PerformItemMovement(item, targetPlayer.Inventory[(byte)fromCreatureSlot] as IContainerItem, toTile, 0, amountToMove: amount, requestorCreature: this.Requestor);
+                if (!(thingMoving is IItem item))
+                {
+                    // You may not move this.
+                    return;
+                }
+
+                var destinationTile = this.ToCylinder as ITile;
+
+                var destinationHasGround = destinationTile?.Ground != null;
+                var destinationNotObstructed = !destinationTile.BlocksLay && !(item.BlocksPass && destinationTile.BlocksPass);
+                var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(fromCreature.Location, toLocation, checkLineOfSight: true);
+
+                bool moveSuccessful = destinationHasGround &&
+                                      destinationNotObstructed &&
+                                      canThrowBetweenLocations &&
+                                      this.PerformItemMovement(item, this.FromCylinder, destinationTile, 0, amountToMove: amount, requestorCreature: this.Requestor);
 
                 if (!moveSuccessful)
                 {
@@ -72,9 +80,7 @@ namespace OpenTibia.Server.Operations.Movements
                 {
                     var directionToDestination = player.Location.DirectionTo(toLocation);
 
-                    this.Context.Scheduler.ScheduleEvent(
-                        new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination),
-                        this.Context.Scheduler.CurrentTime);
+                    this.Context.Scheduler.ImmediateEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
                 }
             });
         }

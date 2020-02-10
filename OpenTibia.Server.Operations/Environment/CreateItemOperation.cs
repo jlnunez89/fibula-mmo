@@ -47,7 +47,7 @@ namespace OpenTibia.Server.Operations.Environment
             {
                 byte index = 0, subIndex = 0;
 
-                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, ref index, ref subIndex, this.Requestor);
+                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
 
                 // TODO: shouldn't really need a requestor here.
                 bool successfulCreation = this.PerformItemCreation(typeId, fromCylinder, subIndex, this.Requestor);

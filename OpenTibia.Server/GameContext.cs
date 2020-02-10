@@ -27,12 +27,14 @@ namespace OpenTibia.Server.Operations
         /// <param name="tileAccessor"></param>
         /// <param name="creatureFinder"></param>
         /// <param name="pathFinder"></param>
+        /// <param name="containerManager"></param>
         /// <param name="scheduler"></param>
         public GameContext(
             IGame game,
             ITileAccessor tileAccessor,
             ICreatureFinder creatureFinder,
             IPathFinder pathFinder,
+            IContainerManager containerManager,
             IScheduler scheduler)
         {
             game.ThrowIfNull(nameof(game));
@@ -45,6 +47,7 @@ namespace OpenTibia.Server.Operations
             this.TileAccessor = tileAccessor;
             this.CreatureFinder = creatureFinder;
             this.PathFinder = pathFinder;
+            this.ContainerManager = containerManager;
             this.Scheduler = scheduler;
         }
 
@@ -67,6 +70,11 @@ namespace OpenTibia.Server.Operations
         /// Gets the reference to the path finder helper in use.
         /// </summary>
         public IPathFinder PathFinder { get; }
+
+        /// <summary>
+        /// Gets a reference to the container manager in use.
+        /// </summary>
+        public IContainerManager ContainerManager { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

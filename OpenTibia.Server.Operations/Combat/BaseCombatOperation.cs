@@ -15,7 +15,6 @@ namespace OpenTibia.Server.Operations.Combat
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Operations;
-    using OpenTibia.Server.Operations.Conditions;
     using Serilog;
 
     /// <summary>
@@ -40,8 +39,7 @@ namespace OpenTibia.Server.Operations.Combat
 
             this.Target = target;
             this.Attacker = attacker;
-
-            this.Conditions.Add(new EnoughAttackCreditsEventCondition(attacker, attackCreditsCost));
+            this.AttackCreditsCost = attackCreditsCost;
         }
 
         /// <summary>
@@ -58,6 +56,11 @@ namespace OpenTibia.Server.Operations.Combat
         /// Gets the combat operation's attack type.
         /// </summary>
         public abstract AttackType AttackType { get; }
+
+        /// <summary>
+        /// Gets the number of credits that the attacker must have to perform this operation.
+        /// </summary>
+        public byte AttackCreditsCost { get; }
 
         /// <summary>
         /// Gets the absolute minimum damage that the combat operation can result in.

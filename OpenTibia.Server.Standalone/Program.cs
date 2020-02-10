@@ -218,6 +218,8 @@ namespace OpenTibia.Server.Standalone
         {
             services.AddSingleton<IItemFactory, ItemFactory>();
 
+            services.AddSingleton<IContainerManager, ContainerManager>();
+
             // Chose a type of item types (catalog) loader:
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);
         }

@@ -55,6 +55,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ICreatureFactory CreatureFactory { get; }
 
         /// <summary>
+        /// Gets a reference to the container manager in use.
+        /// </summary>
+        IContainerManager ContainerManager { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

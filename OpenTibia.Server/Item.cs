@@ -33,11 +33,17 @@ namespace OpenTibia.Server
         public Item(IItemType type)
         {
             this.Type = type;
-            // this.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
+
+            this.UniqueId = Guid.NewGuid();
 
             // make a copy of the type we are based on...
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
         }
+
+        /// <summary>
+        /// Gets the unique id of this item.
+        /// </summary>
+        public Guid UniqueId { get; }
 
         public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
 

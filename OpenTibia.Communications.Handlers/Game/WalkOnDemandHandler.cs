@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Communications.Handlers.Game
 {
-    using System;
     using System.Collections.Generic;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Handlers;

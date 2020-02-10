@@ -31,6 +31,7 @@ namespace OpenTibia.Server.Operations
         /// <param name="pathFinder"></param>
         /// <param name="itemFactory"></param>
         /// <param name="creatureFactory"></param>
+        /// <param name="containerManager"></param>
         /// <param name="scheduler"></param>
         public ElevatedOperationContext(
             IMapDescriptor mapDescriptor,
@@ -40,8 +41,9 @@ namespace OpenTibia.Server.Operations
             IPathFinder pathFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
+            IContainerManager containerManager,
             IScheduler scheduler)
-            : base(mapDescriptor, tileAccessor, connectionManager, creatureManager, pathFinder, itemFactory, creatureFactory, scheduler)
+            : base(mapDescriptor, tileAccessor, connectionManager, creatureManager, pathFinder, itemFactory, creatureFactory, containerManager, scheduler)
         {
         }
 

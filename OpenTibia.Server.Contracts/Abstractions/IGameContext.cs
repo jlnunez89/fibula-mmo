@@ -39,6 +39,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IPathFinder PathFinder { get; }
 
         /// <summary>
+        /// Gets a reference to the container manager in use.
+        /// </summary>
+        IContainerManager ContainerManager { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

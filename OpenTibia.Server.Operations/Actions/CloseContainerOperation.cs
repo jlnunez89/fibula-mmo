@@ -32,7 +32,7 @@ namespace OpenTibia.Server.Operations.Actions
         {
             this.ActionsOnPass.Add(() =>
             {
-                this.CloseContainer(player, containerItem, asContainerId);
+                this.Context.ContainerManager.CloseContainer(player, containerItem, asContainerId);
             });
         }
     }

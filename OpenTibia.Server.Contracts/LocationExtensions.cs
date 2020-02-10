@@ -27,13 +27,15 @@ namespace OpenTibia.Server.Contracts
         /// </summary>
         /// <param name="fromLocation">The location from which to decode the cylinder information.</param>
         /// <param name="tileAccessor">A reference to the tile accessor.</param>
+        /// <param name="containerManager">A reference to the container manager.</param>
         /// <param name="index">The index within the cyclinder to target.</param>
         /// <param name="subIndex">The sub-index within the cylinder to target.</param>
         /// <param name="creature">Optional. The creature that owns the target cylinder to target.</param>
         /// <returns>An instance of the target <see cref="ICylinder"/> of the location.</returns>
-        public static ICylinder GetCyclinder(this Location fromLocation, ITileAccessor tileAccessor, ref byte index, ref byte subIndex, ICreature creature = null)
+        public static ICylinder GetCyclinder(this Location fromLocation, ITileAccessor tileAccessor, IContainerManager containerManager, ref byte index, ref byte subIndex, ICreature creature = null)
         {
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            containerManager.ThrowIfNull(nameof(containerManager));
 
             if (fromLocation.Type == LocationType.Map && tileAccessor.GetTileAt(fromLocation, out ITile fromTile))
             {
@@ -44,7 +46,7 @@ namespace OpenTibia.Server.Contracts
                 index = fromLocation.ContainerId;
                 subIndex = fromLocation.ContainerIndex;
 
-                return creature?.GetContainerById(fromLocation.ContainerId);
+                return containerManager.FindForCreature(creature.Id, fromLocation.ContainerId);
             }
             else if (fromLocation.Type == LocationType.InventorySlot)
             {
@@ -62,11 +64,15 @@ namespace OpenTibia.Server.Contracts
         /// </summary>
         /// <param name="atLocation">The location at which to look for the item.</param>
         /// <param name="tileAccessor">A reference to the tile accessor.</param>
+        /// <param name="containerManager">A reference to the container manager.</param>
         /// <param name="typeId">The type id of the item to look for.</param>
         /// <param name="creature">Optional. The creature that the location's cyclinder targets, if any.</param>
         /// <returns>An item instance, if found at the location.</returns>
-        public static IItem FindItemById(this Location atLocation, ITileAccessor tileAccessor, ushort typeId, ICreature creature = null)
+        public static IItem FindItemById(this Location atLocation, ITileAccessor tileAccessor, IContainerManager containerManager, ushort typeId, ICreature creature = null)
         {
+            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            containerManager.ThrowIfNull(nameof(containerManager));
+
             switch (atLocation.Type)
             {
                 case LocationType.Map:
@@ -82,7 +88,7 @@ namespace OpenTibia.Server.Contracts
 
                     return fromBodyContainer?.Content.FirstOrDefault();
                 case LocationType.InsideContainer:
-                    var fromContainer = creature.GetContainerById(atLocation.ContainerId);
+                    var fromContainer = containerManager.FindForCreature(creature.Id, atLocation.ContainerId);
 
                     return fromContainer?[atLocation.ContainerIndex];
             }

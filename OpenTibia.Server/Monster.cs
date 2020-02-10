@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.Monsters
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -33,7 +34,6 @@ namespace OpenTibia.Server.Monsters
             : base(monsterType.Name, monsterType.Article, monsterType.MaxHitPoints, monsterType.MaxManaPoints, monsterType.Corpse)
         {
             this.Type = monsterType;
-            this.Experience = monsterType.Experience;
             this.Speed += monsterType.Speed;
             this.Outfit = monsterType.Outfit;
 
@@ -50,6 +50,9 @@ namespace OpenTibia.Server.Monsters
 
                 this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
             }
+
+            // Add experience as a skill
+            this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Max(int.MaxValue, (int)monsterType.Experience), 0, int.MaxValue, 100, 1100, 5);
         }
 
         /// <summary>
@@ -57,7 +60,10 @@ namespace OpenTibia.Server.Monsters
         /// </summary>
         public IMonsterType Type { get; }
 
-        public uint Experience { get; }
+        /// <summary>
+        /// Gets the experience yielded when this monster dies.
+        /// </summary>
+        public uint Experience => this.Skills[SkillType.Experience].Level;
 
         /// <summary>
         /// Gets or sets the inventory for the monster.

@@ -26,10 +26,6 @@ namespace OpenTibia.Server
     /// </summary>
     public class ContainerItem : Item, IContainerItem
     {
-        private const int UnsetContainerId = 0xFF;
-
-        private readonly object openedByLock;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerItem"/> class.
         /// </summary>
@@ -37,10 +33,7 @@ namespace OpenTibia.Server
         public ContainerItem(IItemType type)
             : base(type)
         {
-            this.openedByLock = new object();
-
             this.Content = new List<IItem>();
-            this.OpenedBy = new Dictionary<uint, byte>();
         }
 
         /// <summary>
@@ -62,11 +55,6 @@ namespace OpenTibia.Server
         /// Gets the collection of items contained in this container.
         /// </summary>
         public IList<IItem> Content { get; }
-
-        /// <summary>
-        /// Gets the mapping of player ids to container ids for which this container is known to be opened.
-        /// </summary>
-        public IDictionary<uint, byte> OpenedBy { get; }
 
         /// <summary>
         /// Gets the capacity of this container.
@@ -268,62 +256,6 @@ namespace OpenTibia.Server
             this.InvokeContentUpdated(index, toThing as IItem);
 
             return (true, null);
-        }
-
-        /// <summary>
-        /// Begins tracking this container as opened by a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature that is opening this container.</param>
-        /// <param name="asContainerId">The id which the creature is proposing to label this container with.</param>
-        /// <returns>The id of the container which this container is or will be known to this creature.</returns>
-        /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
-        public byte BeginTracking(uint creatureId, byte asContainerId)
-        {
-            lock (this.openedByLock)
-            {
-                if (!this.OpenedBy.ContainsKey(creatureId))
-                {
-                    this.OpenedBy.Add(creatureId, asContainerId);
-                }
-
-                return this.OpenedBy[creatureId];
-            }
-        }
-
-        /// <summary>
-        /// Stop tracking this container as opened by a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature that is closing this container.</param>
-        public void EndTracking(uint creatureId)
-        {
-            lock (this.openedByLock)
-            {
-                if (this.OpenedBy.ContainsKey(creatureId))
-                {
-                    this.OpenedBy.Remove(creatureId);
-                }
-            }
-        }
-
-        /// <summary>
-        /// Checks if this container is being tracked as opened a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
-        /// <param name="containerId">The id which the creature is tracking this container with.</param>
-        /// <returns>True if this container is being tracked by the creature, false otherwise.</returns>
-        public bool IsTracking(uint creatureId, out byte containerId)
-        {
-            containerId = UnsetContainerId;
-
-            lock (this.openedByLock)
-            {
-                if (this.OpenedBy.ContainsKey(creatureId))
-                {
-                    containerId = this.OpenedBy[creatureId];
-                }
-            }
-
-            return containerId != UnsetContainerId;
         }
 
         /// <summary>

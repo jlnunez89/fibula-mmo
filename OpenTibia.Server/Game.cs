@@ -458,7 +458,6 @@ namespace OpenTibia.Server
             {
                 foreach (var creature in this.creatureManager.FindAllCreatures())
                 {
-
                 }
             }
         }
@@ -544,10 +543,13 @@ namespace OpenTibia.Server
             }
             finally
             {
-                // If this was an operation that just ran, unhook any event rule listeners we are currently tied to.
+                // If this was an operation that just ran, we need to do some extra stuff.
                 if (evt is IOperation operation)
                 {
+                    // Unhook any event rule listeners we are currently tied to.
                     operation.EventRulesEvaluationTriggered -= this.OnOperationEventRulesEvaluationTriggered;
+
+                    // Add any exhaustion for the requestor of the operation, if any.
                 }
             }
         }
@@ -845,7 +847,6 @@ namespace OpenTibia.Server
             }
 
             this.ScheduleNewOperation(OperationType.DeleteItem, new DeleteItemOperationCreationArguments(requestorId: 0, item.ThingId, item.Location));
-
         }
 
         /// <summary>
@@ -928,7 +929,6 @@ namespace OpenTibia.Server
         public void LogPlayerOut(IPlayer player)
         {
             this.ScheduleNewOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
-
         }
 
         /// <summary>

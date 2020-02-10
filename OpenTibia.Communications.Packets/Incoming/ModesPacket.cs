@@ -23,7 +23,9 @@ namespace OpenTibia.Communications.Packets.Incoming
         /// <summary>
         /// Initializes a new instance of the <see cref="ModesPacket"/> class.
         /// </summary>
-        /// 
+        /// <param name="fightMode">The fight mode selected.</param>
+        /// <param name="chaseMode">The chase mode selected.</param>
+        /// <param name="isSafetyEnabled">A value indicating whether the safety mode is on.</param>
         public ModesPacket(FightMode fightMode, ChaseMode chaseMode, bool isSafetyEnabled)
         {
             this.FightMode = fightMode;
