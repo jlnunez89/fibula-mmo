@@ -13,9 +13,19 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations.Environment;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="DeleteItemOperation"/>.
+    /// </summary>
     public class DeleteItemOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DeleteItemOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="itemTypeId"></param>
+        /// <param name="atLocation"></param>
         public DeleteItemOperationCreationArguments(uint requestorId, ushort itemTypeId, Location atLocation)
         {
             this.RequestorId = requestorId;
@@ -27,6 +37,9 @@ namespace OpenTibia.Server.Operations.Arguments
 
         public Location AtLocation { get; }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
     }
 }

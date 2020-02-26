@@ -89,7 +89,7 @@ namespace OpenTibia.Communications.Handlers
 
             // Hook up the event rules event listener here.
             // This gets unhooked when the operation is processed.
-            newOperation.EventRulesEvaluationTriggered += this.Context.Game.OnOperationEventRulesEvaluationTriggered;
+            newOperation.EventRulesEvaluationTriggered += this.Context.Game.EvaluateRules;
 
             // Normalize delay to protect against negative time spans.
             var actualDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
@@ -102,7 +102,7 @@ namespace OpenTibia.Communications.Handlers
                 actualDelay += exhaustionDelay;
             }
 
-            this.Context.Scheduler.ScheduleEvent(newOperation, this.Context.Scheduler.CurrentTime + actualDelay);
+            this.Context.Scheduler.ScheduleEvent(newOperation, actualDelay);
         }
     }
 }

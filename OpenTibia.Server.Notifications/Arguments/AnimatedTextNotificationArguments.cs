@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AnimatedEffectNotificationArguments.cs" company="2Dudes">
+// <copyright file="AnimatedTextNotificationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications.Arguments
+namespace OpenTibia.Server.Notifications.Arguments
 {
     using System;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -19,22 +19,24 @@ namespace OpenTibia.Server.Operations.Notifications.Arguments
     /// <summary>
     /// public class that represents arguments for an animated text notification.
     /// </summary>
-    public class AnimatedEffectNotificationArguments : INotificationArguments
+    public class AnimatedTextNotificationArguments : INotificationArguments
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnimatedEffectNotificationArguments"/> class.
+        /// Initializes a new instance of the <see cref="AnimatedTextNotificationArguments"/> class.
         /// </summary>
         /// <param name="location">The location of the animated text.</param>
-        /// <param name="effect">The effect.</param>
-        public AnimatedEffectNotificationArguments(Location location, AnimatedEffect effect = AnimatedEffect.None)
+        /// <param name="color">The color of text to send.</param>
+        /// <param name="text">The text to send.</param>
+        public AnimatedTextNotificationArguments(Location location, TextColor color, string text)
         {
-            if (effect == AnimatedEffect.None)
+            if (color == TextColor.None)
             {
-                throw new ArgumentException($"Invalid value for effect parameter: {effect}.", nameof(effect));
+                throw new ArgumentException($"Invalid value for animated text parameter: {color}.", nameof(color));
             }
 
             this.Location = location;
-            this.Effect = effect;
+            this.Color = color;
+            this.Text = text;
         }
 
         /// <summary>
@@ -43,8 +45,13 @@ namespace OpenTibia.Server.Operations.Notifications.Arguments
         public Location Location { get; }
 
         /// <summary>
-        /// Gets the actual effect.
+        /// Gets the text color.
         /// </summary>
-        public AnimatedEffect Effect { get; }
+        public TextColor Color { get; }
+
+        /// <summary>
+        /// Gets the text value.
+        /// </summary>
+        public string Text { get; }
     }
 }

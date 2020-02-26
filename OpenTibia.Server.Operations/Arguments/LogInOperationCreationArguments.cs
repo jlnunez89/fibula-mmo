@@ -14,9 +14,20 @@ namespace OpenTibia.Server.Operations.Arguments
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Operations.Environment;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="LogInOperation"/>.
+    /// </summary>
     public class LogInOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogInOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="metadata"></param>
+        /// <param name="connection"></param>
+        /// <param name="currentWorldLightLevel"></param>
+        /// <param name="currentWorldLightColor"></param>
         public LogInOperationCreationArguments(ICreatureCreationMetadata metadata, IConnection connection, byte currentWorldLightLevel, byte currentWorldLightColor)
         {
             metadata.ThrowIfNull(nameof(metadata));
@@ -32,6 +43,9 @@ namespace OpenTibia.Server.Operations.Arguments
 
         public IConnection Connection { get; }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
 
         public byte WorldLightLevel { get; }

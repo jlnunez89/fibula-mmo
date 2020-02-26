@@ -318,6 +318,11 @@ namespace OpenTibia.Server
         {
             lock (this.exhaustionLock)
             {
+                if (this.ExhaustionInformation.ContainsKey(type) && this.ExhaustionInformation[type] > fromTime)
+                {
+                    fromTime = this.ExhaustionInformation[type];
+                }
+
                 this.ExhaustionInformation[type] = fromTime + timeSpan;
             }
         }

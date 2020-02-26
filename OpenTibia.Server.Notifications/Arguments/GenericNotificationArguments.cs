@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications.Arguments
+namespace OpenTibia.Server.Notifications.Arguments
 {
     using System;
     using System.Collections.Generic;

@@ -31,17 +31,11 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         DateTimeOffset CurrentTime { get; }
 
         /// <summary>
-        /// Schedules an event to be fired immediately.
-        /// </summary>
-        /// <param name="eventToSchedule">The event to schedule.</param>
-        void ImmediateEvent(IEvent eventToSchedule);
-
-        /// <summary>
         /// Schedules an event to be fired at the specified time.
         /// </summary>
         /// <param name="eventToSchedule">The event to schedule.</param>
-        /// <param name="runAt">The time at which the event should be fired.</param>
-        void ScheduleEvent(IEvent eventToSchedule, DateTimeOffset runAt);
+        /// <param name="delayTime">Optional. The time delay after which the event should be fired. If left null, the event is scheduled to be fired ASAP.</param>
+        void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null);
 
         /// <summary>
         /// Cancels a specific event by it's id.

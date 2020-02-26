@@ -110,7 +110,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             gameApi.ThrowIfNull(nameof(gameApi));
 
             // TODO: fix this indirection.
-            this.Adapter.GameApi = gameApi;
+            this.Adapter.Game = gameApi;
 
             return this.Conditions.All(condition => this.InvokeCondition(primaryThing, secondaryThing, requestingPlayer, condition.FunctionName, condition.Parameters));
         }
@@ -128,7 +128,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
             gameApi.ThrowIfNull(nameof(gameApi));
 
             // TODO: fix this.
-            this.Adapter.GameApi = gameApi;
+            this.Adapter.Game = gameApi;
 
             foreach (var action in this.Actions)
             {

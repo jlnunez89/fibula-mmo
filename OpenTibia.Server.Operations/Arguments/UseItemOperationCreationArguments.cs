@@ -13,9 +13,21 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations.Actions;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="UseItemOperation"/>.
+    /// </summary>
     public class UseItemOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UseItemOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="itemTypeId"></param>
+        /// <param name="fromLocation"></param>
+        /// <param name="fromStackPos"></param>
+        /// <param name="index"></param>
         public UseItemOperationCreationArguments(uint requestorId, ushort itemTypeId, Location fromLocation, byte fromStackPos = 255, byte index = 1)
         {
             this.RequestorId = requestorId;
@@ -25,6 +37,9 @@ namespace OpenTibia.Server.Operations.Arguments
             this.Index = index;
         }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
 
         public ushort ItemTypeId { get; }

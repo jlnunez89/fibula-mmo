@@ -11,9 +11,6 @@
 
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
-    using System;
-    using System.Collections.Generic;
-
     /// <summary>
     /// Interface that represents an event.
     /// </summary>
@@ -30,28 +27,13 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         uint RequestorId { get; }
 
         /// <summary>
-        /// Gets a value indicating whether the event can be executed.
-        /// </summary>
-        bool CanBeExecuted { get; }
-
-        /// <summary>
         /// Gets the error message that should be bubbled back to the player if the event cannot be executed.
         /// </summary>
         string ErrorMessage { get; }
 
         /// <summary>
-        /// Gets the collection of conditional <see cref="IEventCondition"/> that the event must pass on evaluation.
+        /// Executes the event logic.
         /// </summary>
-        IList<IEventCondition> Conditions { get; }
-
-        /// <summary>
-        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check succeeds.
-        /// </summary>
-        IList<Action> ActionsOnPass { get; }
-
-        /// <summary>
-        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check fails.
-        /// </summary>
-        IList<Action> ActionsOnFail { get; }
+        void Execute();
     }
 }

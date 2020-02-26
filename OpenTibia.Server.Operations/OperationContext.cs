@@ -24,15 +24,15 @@ namespace OpenTibia.Server.Operations
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationContext"/> class.
         /// </summary>
-        /// <param name="mapDescriptor"></param>
-        /// <param name="tileAccessor"></param>
-        /// <param name="connectionFinder"></param>
-        /// <param name="creatureFinder"></param>
-        /// <param name="pathFinder"></param>
-        /// <param name="itemFactory"></param>
-        /// <param name="creatureFactory"></param>
-        /// <param name="containerManager"></param>
-        /// <param name="scheduler"></param>
+        /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
+        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="connectionFinder">A reference to the connection finder in use.</param>
+        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
+        /// <param name="pathFinder">A reference to the path finder helper in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="creatureFactory">A reference to the creature factory in use.</param>
+        /// <param name="containerManager">A reference to the container manager in use.</param>
+        /// <param name="scheduler">A reference to the scheduler instance.</param>
         public OperationContext(
             IMapDescriptor mapDescriptor,
             ITileAccessor tileAccessor,

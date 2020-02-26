@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations
+namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;
@@ -20,8 +20,8 @@ namespace OpenTibia.Server.Operations
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -91,7 +91,7 @@ namespace OpenTibia.Server.Operations
             // Now actually open the container for this player.
             byte containerId = this.OpenContainerInternal(forCreature, container, atPosition);
 
-            this.scheduler.ImmediateEvent(
+            this.scheduler.ScheduleEvent(
                 new GenericNotification(
                     this.logger,
                     () => this.connectionFinder.FindByPlayerId(forCreature.Id).YieldSingleItem(),
@@ -124,13 +124,19 @@ namespace OpenTibia.Server.Operations
 
             this.CloseContainerInternal(forCreature, container, atPosition);
 
-            this.scheduler.ImmediateEvent(
+            this.scheduler.ScheduleEvent(
                 new GenericNotification(
                     this.logger,
                     () => this.connectionFinder.FindByPlayerId(forCreature.Id).YieldSingleItem(),
                     new GenericNotificationArguments(new ContainerClosePacket(atPosition))));
         }
 
+        /// <summary>
+        /// Finds a container for a specific creature at the specified position.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature for which to find the container.</param>
+        /// <param name="atPosition">The position at which to look for the container.</param>
+        /// <returns>The container found, or null if not found.</returns>
         public IContainerItem FindForCreature(uint creatureId, byte atPosition)
         {
             lock (this.internalDictionariesLock)
@@ -144,8 +150,19 @@ namespace OpenTibia.Server.Operations
             }
         }
 
+        /// <summary>
+        /// Finds the position of a specified container as seen by a specific creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature for which to find the container.</param>
+        /// <param name="container">The container to look for.</param>
+        /// <returns>The position of container found, or <see cref="IContainerManager.UnsetContainerPosition"/>> if not found.</returns>
         public byte FindForCreature(uint creatureId, IContainerItem container)
         {
+            if (container == null)
+            {
+                return IContainerManager.UnsetContainerPosition;
+            }
+
             lock (this.internalDictionariesLock)
             {
                 if (this.creaturesToContainers.ContainsKey(creatureId))
@@ -163,6 +180,11 @@ namespace OpenTibia.Server.Operations
             }
         }
 
+        /// <summary>
+        /// Finds all the containers known by the specified creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <returns>A collection of containers that the creature knows.</returns>
         public IEnumerable<IContainerItem> FindAllForCreature(uint creatureId)
         {
             lock (this.internalDictionariesLock)
@@ -326,7 +348,7 @@ namespace OpenTibia.Server.Operations
                         continue;
                     }
 
-                    this.scheduler.ImmediateEvent(
+                    this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
@@ -357,7 +379,7 @@ namespace OpenTibia.Server.Operations
                         continue;
                     }
 
-                    this.scheduler.ImmediateEvent(
+                    this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
@@ -394,7 +416,7 @@ namespace OpenTibia.Server.Operations
                         continue;
                     }
 
-                    this.scheduler.ImmediateEvent(
+                    this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),

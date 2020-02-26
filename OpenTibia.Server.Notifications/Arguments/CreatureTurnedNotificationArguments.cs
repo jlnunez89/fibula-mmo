@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications.Arguments
+namespace OpenTibia.Server.Notifications.Arguments
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;

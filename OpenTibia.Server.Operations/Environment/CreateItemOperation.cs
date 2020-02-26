@@ -43,22 +43,11 @@ namespace OpenTibia.Server.Operations.Environment
             Location atLocation)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                byte index = 0, subIndex = 0;
+            byte index = 0, subIndex = 0xFF;
 
-                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
-
-                // TODO: shouldn't really need a requestor here.
-                bool successfulCreation = this.PerformItemCreation(typeId, fromCylinder, subIndex, this.Requestor);
-
-                if (!successfulCreation)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.TypeId = typeId;
+            this.AtCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
+            this.AtIndex = subIndex;
         }
 
         /// <summary>
@@ -78,30 +67,32 @@ namespace OpenTibia.Server.Operations.Environment
         }
 
         /// <summary>
-        /// Immediately attempts to perform an item creation in behalf of the requesting creature, if any.
+        /// Gets the type id of the item to create.
         /// </summary>
-        /// <param name="typeId">The id of the item being being created.</param>
-        /// <param name="atCylinder">The cylinder from which the use is happening.</param>
-        /// <param name="index">Optional. The index within the cylinder from which to use the item.</param>
-        /// <param name="requestor">Optional. The creature requesting the creation.</param>
-        /// <returns>True if the item was successfully created, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>>
-        private bool PerformItemCreation(ushort typeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null)
+        public ushort TypeId { get; }
+
+        /// <summary>
+        /// Gets the cylinder at which to create the item.
+        /// </summary>
+        public ICylinder AtCylinder { get; }
+
+        /// <summary>
+        /// Gets the index at which to create the item in the cylinder.
+        /// </summary>
+        public byte AtIndex { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
         {
-            if (atCylinder == null)
+            if (this.AtCylinder == null || !(this.Context.ItemFactory.Create(this.TypeId) is IThing thingCreated))
             {
-                return false;
-            }
-
-            IThing newItem = this.Context.ItemFactory.Create(typeId);
-
-            if (newItem == null)
-            {
-                return false;
+                return;
             }
 
             // At this point, we were able to generate the new one, let's proceed to add it.
-            return this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), index, ref newItem, requestor);
+            this.AddContentToCylinderChain(this.AtCylinder.GetCylinderHierarchy(), this.AtIndex, ref thingCreated, this.Requestor);
         }
     }
 }

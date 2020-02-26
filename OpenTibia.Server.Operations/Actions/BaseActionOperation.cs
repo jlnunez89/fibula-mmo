@@ -71,8 +71,8 @@ namespace OpenTibia.Server.Operations.Actions
         public override ExhaustionType ExhaustionType => ExhaustionType.Action;
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public override TimeSpan ExhaustionCost { get; protected set; }
     }
 }

@@ -21,6 +21,16 @@ namespace OpenTibia.Server.Contracts.Abstractions
     public interface ICombatant : ICreature
     {
         /// <summary>
+        /// The maximum allowed combat speed on the game for combatants.
+        /// </summary>
+        public const decimal MaximumCombatSpeed = 5.0m;
+
+        /// <summary>
+        /// The minimum allowed combat speed on the game for combatants.
+        /// </summary>
+        public const decimal MinimumCombatSpeed = 0.2m;
+
+        /// <summary>
         /// Event to call when the attack target changes.
         /// </summary>
         event OnAttackTargetChange TargetChanged;

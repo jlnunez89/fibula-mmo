@@ -242,7 +242,7 @@ namespace OpenTibia.Server.Standalone
 
         private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
         {
-            services.AddSingleton<IEventRulesService>(s => s.GetService<Game>());
+            services.AddSingleton<IEventRulesEvaluator>(s => s.GetService<Game>());
 
             // Chose a type of event rules loader:
             services.AddMoveUseEventRulesLoader(hostingContext.Configuration);

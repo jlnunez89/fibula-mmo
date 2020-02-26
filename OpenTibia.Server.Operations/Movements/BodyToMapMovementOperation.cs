@@ -50,44 +50,70 @@ namespace OpenTibia.Server.Operations.Movements
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                if (!(thingMoving is IItem item))
-                {
-                    // You may not move this.
-                    return;
-                }
-
-                var destinationTile = this.ToCylinder as ITile;
-
-                var destinationHasGround = destinationTile?.Ground != null;
-                var destinationNotObstructed = !destinationTile.BlocksLay && !(item.BlocksPass && destinationTile.BlocksPass);
-                var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(fromCreature.Location, toLocation, checkLineOfSight: true);
-
-                bool moveSuccessful = destinationHasGround &&
-                                      destinationNotObstructed &&
-                                      canThrowBetweenLocations &&
-                                      this.PerformItemMovement(item, this.FromCylinder, destinationTile, 0, amountToMove: amount, requestorCreature: this.Requestor);
-
-                if (!moveSuccessful)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-
-                if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
-                {
-                    var directionToDestination = player.Location.DirectionTo(toLocation);
-
-                    this.Context.Scheduler.ImmediateEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
+            this.FromCreature = fromCreature;
+            this.ToLocation = toLocation;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Gets the creature from which the movement is happening.
+        /// </summary>
+        public ICreature FromCreature { get; }
+
+        /// <summary>
+        /// Gets the location to which the movement is happening.
+        /// </summary>
+        public Location ToLocation { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            if (!(this.ThingMoving is IItem item))
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+
+                return;
+            }
+
+            var destinationTile = this.ToCylinder as ITile;
+
+            // Declare some pre-conditions.
+            var destinationHasGround = destinationTile?.Ground != null;
+            var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
+            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(this.FromCreature.Location, this.ToLocation, checkLineOfSight: true);
+
+            if (!destinationHasGround || !canThrowBetweenLocations)
+            {
+                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+            }
+            else if (destinationIsObstructed)
+            {
+                this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+            }
+            else if (!this.PerformItemMovement(item, this.FromCylinder, destinationTile, 0, amountToMove: this.Amount, requestorCreature: this.Requestor))
+            {
+                // Something else went wrong.
+                this.SendFailureNotification();
+            }
+            else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+            {
+                var directionToDestination = player.Location.DirectionTo(this.ToLocation);
+
+                this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+            }
+        }
     }
 }

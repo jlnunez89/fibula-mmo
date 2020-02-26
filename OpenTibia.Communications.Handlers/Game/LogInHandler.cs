@@ -41,7 +41,7 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="protocolConfigurationOptions">A reference to the protocol configuration options.</param>
         /// <param name="logger">A reference to the logger to use in this handler.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
-        /// <param name="gameContext"></param>
+        /// <param name="gameContext">A reference to the game context to use.</param>
         public LogInHandler(
             IApplicationContext applicationContext,
             IOptions<ProtocolConfigurationOptions> protocolConfigurationOptions,

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AnimatedEffectNotification.cs" company="2Dudes">
+// <copyright file="AnimatedTextNotification.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,28 +9,28 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications
+namespace OpenTibia.Server.Notifications
 {
     using System;
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
+    using OpenTibia.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
     /// Class that represents a notification for animated effects.
     /// </summary>
-    public class AnimatedEffectNotification : Notification
+    public class AnimatedTextNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnimatedEffectNotification"/> class.
+        /// Initializes a new instance of the <see cref="AnimatedTextNotification"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public AnimatedEffectNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, AnimatedEffectNotificationArguments arguments)
+        public AnimatedTextNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, AnimatedTextNotificationArguments arguments)
             : base(logger)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
@@ -43,7 +43,7 @@ namespace OpenTibia.Server.Operations.Notifications
         /// <summary>
         /// Gets this notification's arguments.
         /// </summary>
-        public AnimatedEffectNotificationArguments Arguments { get; }
+        public AnimatedTextNotificationArguments Arguments { get; }
 
         /// <summary>
         /// Gets the function for determining target connections for this notification.
@@ -57,7 +57,7 @@ namespace OpenTibia.Server.Operations.Notifications
         /// <returns>A collection of <see cref="IOutgoingPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutgoingPacket> Prepare(uint playerId)
         {
-            return new MagicEffectPacket(this.Arguments.Location, this.Arguments.Effect).YieldSingleItem();
+            return new AnimatedTextPacket(this.Arguments.Location, this.Arguments.Color, this.Arguments.Text).YieldSingleItem();
         }
     }
 }

@@ -17,14 +17,12 @@ namespace OpenTibia.Server.Operations.Combat
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Movements;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -33,10 +31,6 @@ namespace OpenTibia.Server.Operations.Combat
     public class AutoAttackCombatOperation : BaseCombatOperation
     {
         private const int DefaultAttackRangeDistance = 1;
-
-        private const decimal MaximumCombatSpeed = 5.0m;
-
-        private const decimal MinimumCombatSpeed = 0.2m;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoAttackCombatOperation"/> class.
@@ -53,28 +47,7 @@ namespace OpenTibia.Server.Operations.Combat
 
             this.ExhaustionCost = exhaustionCost;
 
-            var targetIdAtSchedueTime = attacker?.AutoAttackTarget?.Id ?? 0;
-
-            this.ActionsOnPass.Add(() =>
-            {
-                var noAttacker = this.Attacker == null;
-                var correctTarget = this.Attacker?.AutoAttackTarget?.Id == targetIdAtSchedueTime;
-                var enoughCredits = this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
-
-                var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
-                var targetInRange = distanceBetweenCombatants.MaxValueIn2D <= (attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
-
-                if (noAttacker || (correctTarget && enoughCredits && targetInRange))
-                {
-                    this.PerformAttack();
-                }
-
-                // Do we need to continue attacking?
-                if (this.Attacker.AutoAttackTarget != null)
-                {
-                    this.AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
-                }
-            });
+            this.TargetIdAtScheduleTime = attacker?.AutoAttackTarget?.Id ?? 0;
         }
 
         /// <summary>
@@ -88,9 +61,14 @@ namespace OpenTibia.Server.Operations.Combat
         public override ExhaustionType ExhaustionType => ExhaustionType.PhysicalCombat;
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public override TimeSpan ExhaustionCost { get; protected set; }
+
+        /// <summary>
+        /// Gets the id of the target at schedule time.
+        /// </summary>
+        public uint TargetIdAtScheduleTime { get; }
 
         /// <summary>
         /// Gets the absolute minimum damage that the combat operation can result in.
@@ -101,6 +79,35 @@ namespace OpenTibia.Server.Operations.Combat
         /// Gets the absolute maximum damage that the combat operation can result in.
         /// </summary>
         public override int MaximumDamage { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            var noAttacker = this.Attacker == null;
+            var correctTarget = this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
+            var enoughCredits = this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
+
+            var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
+            var targetInRange = distanceBetweenCombatants.MaxValueIn2D <= (this.Attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
+
+            if (noAttacker || (correctTarget && enoughCredits && targetInRange))
+            {
+                this.PerformAttack();
+            }
+            else
+            {
+                // Update the actual cost if the attack wasn't performed.
+                this.ExhaustionCost = TimeSpan.Zero;
+            }
+
+            // Do we need to continue attacking?
+            if (this.Attacker.AutoAttackTarget != null)
+            {
+                this.AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
+            }
+        }
 
         private void AutoAttack(ICombatant attacker, ICombatant target)
         {
@@ -125,14 +132,12 @@ namespace OpenTibia.Server.Operations.Combat
                 return;
             }
 
-            var normalizedAttackSpeed = Math.Min(MaximumCombatSpeed, Math.Max(MinimumCombatSpeed, attacker.BaseAttackSpeed));
-            var attackCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / normalizedAttackSpeed));
+            var attackExhaustionCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / attacker.BaseAttackSpeed));
 
-            IEvent attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, attacker, target, attackCost);
+            var attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, attacker, target, attackExhaustionCost);
+            var attackCooldownRemaining = attacker.CalculateRemainingCooldownTime(attackOperation.ExhaustionType, this.Context.Scheduler.CurrentTime);
 
-            var cooldownRemaining = attacker.CalculateRemainingCooldownTime(ExhaustionType.PhysicalCombat, this.Context.Scheduler.CurrentTime);
-
-            this.Context.Scheduler.ScheduleEvent(attackOperation, this.Context.Scheduler.CurrentTime + cooldownRemaining);
+            this.Context.Scheduler.ScheduleEvent(attackOperation, attackCooldownRemaining);
         }
 
         private void PerformAttack()
@@ -227,59 +232,21 @@ namespace OpenTibia.Server.Operations.Combat
 
                 this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
-                this.Attacker.AddExhaustion(ExhaustionType.PhysicalCombat, this.Context.Scheduler.CurrentTime, this.ExhaustionCost);
-
                 if (this.Attacker.Location != this.Target.Location && this.Attacker.Id != this.Target.Id)
                 {
                     var directionToTarget = this.Attacker.Location.DirectionTo(this.Target.Location);
 
-                    this.Context.Scheduler.ImmediateEvent(new TurnToDirectionOperation(this.Logger, this.Context, this.Attacker, directionToTarget));
+                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, this.Attacker, directionToTarget));
                 }
+
+                this.Context.Scheduler.CancelAllFor(this.Attacker.Id, typeof(AutoAttackCombatOperation));
             }
 
-            this.Context.Scheduler.ImmediateEvent(
+            this.Context.Scheduler.ScheduleEvent(
                 new GenericNotification(
                     this.Logger,
                     () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Target.Location),
                     new GenericNotificationArguments(packetsToSend.ToArray())));
-        }
-
-        /// <summary>
-        /// Schedules autowalking by a creature in the directions supplied.
-        /// </summary>
-        /// <param name="creature">The creature walking.</param>
-        /// <param name="directions">The directions to follow.</param>
-        /// <param name="stepIndex">Optional. The index of the current direction.</param>
-        private void AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0)
-        {
-            if (directions.Length == 0 || stepIndex >= directions.Length)
-            {
-                return;
-            }
-
-            // A new request overrides and cancels any movement waiting to be retried.
-            this.Context.Scheduler.CancelAllFor(creature.Id, typeof(IMovementOperation));
-
-            var nextLocation = creature.Location.LocationAt(directions[stepIndex]);
-
-            // TODO: revise exhaustion logic.
-            TimeSpan movementDelay = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.Context.Scheduler.CurrentTime);
-
-            this.Context.Scheduler.ScheduleEvent(
-                new MapToMapMovementOperation(
-                    this.Logger,
-                    this.Context,
-                    creature.Id,
-                    creature,
-                    creature.Location,
-                    nextLocation),
-                this.Context.Scheduler.CurrentTime + movementDelay);
-
-            if (directions.Length > 1)
-            {
-                // Add this request as the retry action, so that the request gets repeated when the player hits this location.
-                creature.EnqueueRetryActionAtLocation(nextLocation, () => this.AutoWalk(creature, directions, stepIndex + 1));
-            }
         }
     }
 }

@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications
+namespace OpenTibia.Server.Notifications
 {
     using System;
     using System.Collections.Generic;
@@ -32,7 +32,6 @@ namespace OpenTibia.Server.Operations.Notifications
         protected Notification(ILogger logger)
             : base(logger)
         {
-            this.ActionsOnPass.Add(this.Send);
         }
 
         /// <summary>
@@ -41,16 +40,9 @@ namespace OpenTibia.Server.Operations.Notifications
         protected abstract Func<IEnumerable<IConnection>> TargetConnectionsFunction { get; }
 
         /// <summary>
-        /// Finalizes the notification in preparation to it being sent.
-        /// </summary>
-        /// <param name="playerId">The id of the player which this notification is being prepared for.</param>
-        /// <returns>A collection of <see cref="IOutgoingPacket"/>s, the ones to be sent.</returns>
-        protected abstract IEnumerable<IOutgoingPacket> Prepare(uint playerId);
-
-        /// <summary>
         /// Sends the notification using the supplied connection.
         /// </summary>
-        protected virtual void Send()
+        public override void Execute()
         {
             try
             {
@@ -86,5 +78,12 @@ namespace OpenTibia.Server.Operations.Notifications
                 this.Logger.Error($"Error while sending {this.GetType().Name}: {ex.Message}");
             }
         }
+
+        /// <summary>
+        /// Finalizes the notification in preparation to it being sent.
+        /// </summary>
+        /// <param name="playerId">The id of the player which this notification is being prepared for.</param>
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s, the ones to be sent.</returns>
+        protected abstract IEnumerable<IOutgoingPacket> Prepare(uint playerId);
     }
 }

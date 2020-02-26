@@ -11,11 +11,15 @@
 
 namespace OpenTibia.Server.Operations.Actions
 {
+    using System;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Events;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -36,73 +40,89 @@ namespace OpenTibia.Server.Operations.Actions
         public UseItemOperation(ILogger logger, IOperationContext context, uint requestorId, ushort typeId, Location fromLocation, byte fromStackPos = byte.MaxValue, byte index = 1)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                var fromCylinder = fromLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref fromStackPos, ref index, this.Requestor);
-                var item = fromLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, this.Requestor);
-
-                bool successfulUse = this.PerformItemUse(item, fromCylinder, index, this.Requestor, fromLocation.Type == LocationType.InsideContainer ? (byte?)fromLocation.ContainerId : null);
-
-                if (!successfulUse)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.ItemToUse = fromLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, this.Requestor);
+            this.FromCylinder = fromLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref fromStackPos, ref index, this.Requestor);
+            this.Index = index;
+            this.ContainerPosition = fromLocation.Type == LocationType.InsideContainer ? (byte?)fromLocation.ContainerId : null;
         }
 
         /// <summary>
-        /// Immediately attempts to perform an item use in behalf of the requesting creature, if any.
+        /// Gets the reference to the item being used.
         /// </summary>
-        /// <param name="item">The item being used.</param>
-        /// <param name="fromCylinder">The cylinder from which the use is happening.</param>
-        /// <param name="index">The index within the cylinder from which to use the item.</param>
-        /// <param name="requestor">The creature requesting the use.</param>
-        /// <param name="containerId">Optional. The id of the container as which to open, in case this is a container.</param>
-        /// <returns>True if the item was successfully used, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        private bool PerformItemUse(IItem item, ICylinder fromCylinder, byte index, ICreature requestor, byte? containerId = null)
+        public IItem ItemToUse { get; }
+
+        /// <summary>
+        /// Gets the cylinder from which the item is being used.
+        /// </summary>
+        public ICylinder FromCylinder { get; }
+
+        /// <summary>
+        /// Gets the index withing the cylinder from which the item is being used.
+        /// </summary>
+        public byte Index { get; }
+
+        /// <summary>
+        /// Gets the container position of the item being used, if applicable.
+        /// </summary>
+        public byte? ContainerPosition { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
         {
-            if (item == null || fromCylinder == null)
+            if (this.ItemToUse == null || this.FromCylinder == null)
             {
-                return false;
+                return;
             }
 
-            if (this.TriggerUseEventRules(new UseEventRuleArguments(item, requestor)))
-            {
-                requestor.AddExhaustion(this.ExhaustionType, this.Context.Scheduler.CurrentTime, DefaultPlayerActionDelay);
+            var actionCooldownRemaining = this.Requestor?.CalculateRemainingCooldownTime(this.ExhaustionType, this.Context.Scheduler.CurrentTime) ?? TimeSpan.Zero;
 
-                return true;
+            if (this.TriggerUseEventRules(new UseEventRuleArguments(this.ItemToUse, this.Requestor)))
+            {
+                return;
             }
 
-            // Change this item into the target.
-            if (item.ChangesOnUse && this.PerformItemChange(item, item.ChangeOnUseTo, fromCylinder, index, requestor))
+            if (this.ItemToUse.ChangesOnUse)
             {
-                requestor.AddExhaustion(this.ExhaustionType, this.Context.Scheduler.CurrentTime, DefaultPlayerActionDelay);
+                this.Context.Scheduler.ScheduleEvent(
+                    new ChangeItemOperation(this.Logger, this.Context, this.RequestorId, this.ItemToUse, this.FromCylinder, this.Index, this.ItemToUse.ChangeOnUseTo),
+                    actionCooldownRemaining);
 
-                return true;
+                return;
             }
 
-            if (item is IContainerItem container && requestor is IPlayer player)
+            if (this.Requestor is IPlayer player)
             {
-                var currentPosition = this.Context.ContainerManager.FindForCreature(player.Id, container);
-
-                if (currentPosition == IContainerManager.UnsetContainerPosition)
+                if (this.ItemToUse is IContainerItem container)
                 {
-                    // Player doesn't have this container open, so open.
-                    this.Context.ContainerManager.OpenContainer(player, container, containerId ?? IContainerManager.UnsetContainerPosition);
-                }
-                else
-                {
-                    // Close the container for this player.
-                    this.Context.ContainerManager.CloseContainer(player, container, currentPosition);
+                    var currentlyOpenAtPosition = this.Context.ContainerManager.FindForCreature(player.Id, container);
+
+                    if (currentlyOpenAtPosition == IContainerManager.UnsetContainerPosition)
+                    {
+                        // Player doesn't have this container open, so open.
+                        this.Context.Scheduler.ScheduleEvent(
+                            new OpenContainerOperation(this.Logger, this.Context, player, container, this.ContainerPosition ?? IContainerManager.UnsetContainerPosition),
+                            actionCooldownRemaining);
+                    }
+                    else
+                    {
+                        // Close the container for this player.
+                        this.Context.Scheduler.ScheduleEvent(
+                            new CloseContainerOperation(this.Logger, this.Context, player, container, currentlyOpenAtPosition),
+                            actionCooldownRemaining);
+                    }
+
+                    return;
                 }
 
-                return true;
+                // Nothing was successful, send an error message.
+                this.Context.Scheduler.ScheduleEvent(
+                    new TextMessageNotification(
+                        this.Logger,
+                        () => this.Context.ConnectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
+                        new TextMessageNotificationArguments(MessageType.StatusSmall, OperationMessage.NotPossible)));
             }
-
-            return false;
         }
     }
 }

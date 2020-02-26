@@ -13,9 +13,20 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Operations.Actions;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="CloseContainerOperation"/>.
+    /// </summary>
     public class CloseContainerOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CloseContainerOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="player"></param>
+        /// <param name="containerItem"></param>
+        /// <param name="containerId"></param>
         public CloseContainerOperationCreationArguments(uint requestorId, IPlayer player, IContainerItem containerItem, byte containerId)
         {
             player.ThrowIfNull(nameof(player));
@@ -27,6 +38,9 @@ namespace OpenTibia.Server.Operations.Arguments
             this.ContainerId = containerId;
         }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
 
         public IPlayer Player { get; }

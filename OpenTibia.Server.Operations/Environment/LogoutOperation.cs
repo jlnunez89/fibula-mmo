@@ -12,12 +12,11 @@
 namespace OpenTibia.Server.Operations.Environment
 {
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -35,52 +34,45 @@ namespace OpenTibia.Server.Operations.Environment
         public LogOutOperation(ILogger logger, IElevatedOperationContext context, uint requestorId, IPlayer player)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                bool success = this.LogOut(player);
-
-                if (!success)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.Player = player;
         }
 
         /// <summary>
-        /// Attempts to log a player out of the game.
+        /// Gets the player to log out.
         /// </summary>
-        /// <param name="player">The player to attempt to attempt log out.</param>
-        /// <returns>True if the log-out was successful, false otherwise.</returns>
-        private bool LogOut(IPlayer player)
-        {
-            if (!player.IsAllowedToLogOut)
-            {
-                this.Context.Scheduler.ImmediateEvent(
-                    new GenericNotification(
-                        this.Logger,
-                        () => this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                        new GenericNotificationArguments(new TextMessagePacket(MessageType.StatusSmall, "You may not logout at this time."))));
+        public IPlayer Player { get; }
 
-                return false;
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            if (!this.Player.IsAllowedToLogOut)
+            {
+                this.Context.Scheduler.ScheduleEvent(
+                    new TextMessageNotification(
+                        this.Logger,
+                        () => this.Context.ConnectionManager.FindByPlayerId(this.Player.Id).YieldSingleItem(),
+                        new TextMessageNotificationArguments(MessageType.StatusSmall, "You may not logout at this time.")));
+
+                return;
             }
 
-            if (!this.Context.TileAccessor.GetTileAt(player.Location, out ITile tile))
+            if (!this.Context.TileAccessor.GetTileAt(this.Player.Location, out ITile tile))
             {
-                return false;
+                return;
             }
 
             // TODO: more validations missing
 
             // At this point, we're allowed to log this player out, so go for it.
-            var removedFromMap = this.RemoveCreature(player);
+            var removedFromMap = this.RemoveCreature(this.Player);
 
             if (removedFromMap)
             {
-                this.Context.CreatureManager.UnregisterCreature(player);
+                this.Context.CreatureManager.UnregisterCreature(this.Player);
 
-                var currentConnection = this.Context.ConnectionManager.FindByPlayerId(player.Id);
+                var currentConnection = this.Context.ConnectionManager.FindByPlayerId(this.Player.Id);
 
                 if (currentConnection != null)
                 {
@@ -88,14 +80,7 @@ namespace OpenTibia.Server.Operations.Environment
 
                     this.Context.ConnectionManager.Unregister(currentConnection);
                 }
-
-                player.TargetChanged -= this.HandleCombatantTargetChanged;
-                player.ChaseModeChanged -= this.HandleCombatantChaseModeChanged;
-                player.Inventory.SlotChanged -= this.HandlePlayerInventoryChanged;
-                player.CombatCreditsConsumed -= this.HandleCombatCreditsConsumed;
             }
-
-            return removedFromMap;
         }
     }
 }

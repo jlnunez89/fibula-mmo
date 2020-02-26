@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="GenericNotification.cs" company="2Dudes">
+// <copyright file="TextMessageNotification.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -9,40 +9,41 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications
+namespace OpenTibia.Server.Notifications
 {
     using System;
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
+    using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
-    /// Class that represents a generic notification.
+    /// Class that represents a notification for text messages.
     /// </summary>
-    public class GenericNotification : Notification
+    public class TextMessageNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericNotification"/> class.
+        /// Initializes a new instance of the <see cref="TextMessageNotification"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="targetConnectionsFunc">A reference to determine the target connections of this notification.</param>
+        /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public GenericNotification(ILogger logger, Func<IEnumerable<IConnection>> targetConnectionsFunc, GenericNotificationArguments arguments)
+        public TextMessageNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, TextMessageNotificationArguments arguments)
             : base(logger)
         {
-            targetConnectionsFunc.ThrowIfNull(nameof(targetConnectionsFunc));
+            determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));
 
-            this.TargetConnectionsFunction = targetConnectionsFunc;
+            this.TargetConnectionsFunction = determineTargetConnectionsFunction;
             this.Arguments = arguments;
         }
 
         /// <summary>
         /// Gets this notification's arguments.
         /// </summary>
-        public GenericNotificationArguments Arguments { get; }
+        public TextMessageNotificationArguments Arguments { get; }
 
         /// <summary>
         /// Gets the function for determining target connections for this notification.
@@ -56,7 +57,7 @@ namespace OpenTibia.Server.Operations.Notifications
         /// <returns>A collection of <see cref="IOutgoingPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutgoingPacket> Prepare(uint playerId)
         {
-            return this.Arguments.OutgoingPackets;
+            return new TextMessagePacket(this.Arguments.Type, this.Arguments.Text).YieldSingleItem();
         }
     }
 }

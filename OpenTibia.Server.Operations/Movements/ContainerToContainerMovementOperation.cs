@@ -51,33 +51,58 @@ namespace OpenTibia.Server.Operations.Movements
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                if (!(thingMoving is IItem item))
-                {
-                    // You may not move this.
-                    return;
-                }
-
-                var creatureHasSourceContainerOpen = this.FromCylinder != null;
-                var creatureHasDestinationContainerOpen = this.ToCylinder != null;
-
-                bool moveSuccessful = creatureHasSourceContainerOpen &&
-                                      creatureHasDestinationContainerOpen &&
-                                      this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, fromCreatureContainerIndex, toCreatureContainerIndex, amount, this.Requestor);
-
-                if (!moveSuccessful)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
+            this.FromCreatureContainerIndex = fromCreatureContainerIndex;
+            this.ToCreatureContainerIndex = toCreatureContainerIndex;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Gets the index within the container from which the movement is happening.
+        /// </summary>
+        public byte FromCreatureContainerIndex { get; }
+
+        /// <summary>
+        /// Gets the index within the container to which the movement is happening.
+        /// </summary>
+        public byte ToCreatureContainerIndex { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            // Declare some pre-conditions.
+            var creatureHasSourceContainerOpen = this.FromCylinder != null;
+            var creatureHasDestinationContainerOpen = this.ToCylinder != null;
+
+            if (!(this.ThingMoving is IItem item))
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+            }
+            else if (!creatureHasSourceContainerOpen)
+            {
+                this.SendFailureNotification(OperationMessage.MustFirstOpenThatContainer);
+            }
+            else if (!creatureHasDestinationContainerOpen)
+            {
+                this.SendFailureNotification(OperationMessage.MustFirstOpenThatContainer);
+            }
+            else if (!this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, this.FromCreatureContainerIndex, this.ToCreatureContainerIndex, this.Amount, this.Requestor))
+            {
+                // Something else went wrong.
+                this.SendFailureNotification();
+            }
+        }
     }
 }

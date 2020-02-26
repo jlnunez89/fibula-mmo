@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Contracts.Enumerations
     public enum OperationType
     {
         // Actions
+        ContainerOpen,
         ContainerClose,
         ContainerMoveUp,
         Turn,

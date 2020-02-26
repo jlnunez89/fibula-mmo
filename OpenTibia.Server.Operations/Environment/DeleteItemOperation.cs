@@ -15,9 +15,9 @@ namespace OpenTibia.Server.Operations.Environment
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Events;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -46,22 +46,11 @@ namespace OpenTibia.Server.Operations.Environment
             Location atLocation)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                byte index = 0, subIndex = 0;
+            byte index = 0, subIndex = 0xFF;
 
-                var fromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
-                var item = atLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, this.Requestor);
-
-                bool successfulDeletion = this.PerformItemDeletion(item, fromCylinder, subIndex);
-
-                if (!successfulDeletion)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.FromCylinder = atLocation.GetCyclinder(this.Context.TileAccessor, this.Context.ContainerManager, ref index, ref subIndex, this.Requestor);
+            this.Item = atLocation.FindItemById(this.Context.TileAccessor, this.Context.ContainerManager, typeId, this.Requestor);
+            this.FromIndex = subIndex;
         }
 
         /// <summary>
@@ -81,34 +70,42 @@ namespace OpenTibia.Server.Operations.Environment
         }
 
         /// <summary>
-        /// Immediately attempts to perform an item deletion in behalf of the requesting creature, if any.
+        /// Gets the item to delete.
         /// </summary>
-        /// <param name="item">The item being deleted.</param>
-        /// <param name="fromCylinder">The cylinder from which the deletion is happening.</param>
-        /// <param name="index">Optional. The index within the cylinder from which to delete the item.</param>
-        /// <returns>True if the item was successfully deleted, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        private bool PerformItemDeletion(IItem item, ICylinder fromCylinder, byte index = 0xFF)
+        public IItem Item { get; }
+
+        /// <summary>
+        /// Gets the cylinder from which to delete the item.
+        /// </summary>
+        public ICylinder FromCylinder { get; }
+
+        /// <summary>
+        /// Gets the index at which to delete the item from the cyclinder.
+        /// </summary>
+        public byte FromIndex { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
         {
-            if (item == null || fromCylinder == null)
+            if (this.FromCylinder == null || !(this.Item is IThing itemAsThing))
             {
-                return false;
+                return;
             }
 
-            IThing itemAsThing = item as IThing;
-
             // At this point, we have an item to remove, let's proceed.
-            (bool removeSuccessful, IThing remainder) = fromCylinder.RemoveContent(this.Context.ItemFactory, ref itemAsThing, index, amount: item.Amount);
+            (bool removeSuccessful, IThing remainder) = this.FromCylinder.RemoveContent(this.Context.ItemFactory, ref itemAsThing, this.FromIndex, amount: this.Item.Amount);
 
             if (!removeSuccessful)
             {
                 // Failing to remove the item from the original cylinder stops the entire operation.
-                return false;
+                return;
             }
 
-            if (fromCylinder is ITile fromTile)
+            if (this.FromCylinder is ITile fromTile)
             {
-                this.Context.Scheduler.ImmediateEvent(
+                this.Context.Scheduler.ScheduleEvent(
                     new TileUpdatedNotification(
                             this.Logger,
                             this.Context.CreatureFinder,
@@ -119,9 +116,7 @@ namespace OpenTibia.Server.Operations.Environment
             }
 
             // TODO: do we really need a requestor here?
-            this.TriggerSeparationEventRules(new SeparationEventRuleArguments(fromCylinder.Location, item, this.Requestor));
-
-            return true;
+            this.TriggerSeparationEventRules(new SeparationEventRuleArguments(this.FromCylinder.Location, this.Item, this.Requestor));
         }
     }
 }

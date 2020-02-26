@@ -11,8 +11,8 @@
 
 namespace OpenTibia.Server.Operations.Combat
 {
+    using System;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Scheduling;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using Serilog;
@@ -20,7 +20,7 @@ namespace OpenTibia.Server.Operations.Combat
     /// <summary>
     /// Class that represents an event to restore combat credits.
     /// </summary>
-    public class RestoreCombatCreditOperation : BaseEvent
+    public class RestoreCombatCreditOperation : BaseOperation
     {
         private const int AmountToRestore = 1;
 
@@ -28,30 +28,46 @@ namespace OpenTibia.Server.Operations.Combat
         /// Initializes a new instance of the <see cref="RestoreCombatCreditOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="context">A reference to the operation context in use.</param>
         /// <param name="combatant">The combatant that is being restored.</param>
         /// <param name="creditType">The type of combat credit to restore.</param>
-        public RestoreCombatCreditOperation(ILogger logger, ICombatant combatant, CombatCreditType creditType)
-            : base(logger, combatant?.Id ?? 0)
+        public RestoreCombatCreditOperation(ILogger logger, IOperationContext context, ICombatant combatant, CombatCreditType creditType)
+            : base(logger, context, combatant?.Id ?? 0)
         {
             combatant.ThrowIfNull(nameof(combatant));
 
             this.Combatant = combatant;
-
-            switch (creditType)
-            {
-                case CombatCreditType.Attack:
-                    this.ActionsOnPass.Add(() => this.Combatant.RestoreCredits(CombatCreditType.Attack, AmountToRestore));
-                    break;
-
-                case CombatCreditType.Defense:
-                    this.ActionsOnPass.Add(() => this.Combatant.RestoreCredits(CombatCreditType.Defense, AmountToRestore));
-                    break;
-            }
+            this.CreditType = creditType;
         }
 
         /// <summary>
-        /// Gets the combatant that is attacking on this operation.
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.None;
+
+        /// <summary>
+        /// Gets or sets the exhaustion cost time of this operation.
+        /// </summary>
+        public override TimeSpan ExhaustionCost
+        {
+            get => TimeSpan.Zero;
+
+            protected set => throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Gets the combatant that the credit will be restored for.
         /// </summary>
         public ICombatant Combatant { get; }
+
+        /// <summary>
+        /// Gets the type of credit to restore.
+        /// </summary>
+        public CombatCreditType CreditType { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute() => this.Combatant.RestoreCredits(this.CreditType, AmountToRestore);
     }
 }

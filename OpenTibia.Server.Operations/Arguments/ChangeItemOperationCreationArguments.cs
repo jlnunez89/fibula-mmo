@@ -13,9 +13,23 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations.Actions;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="ChangeItemOperation"/>.
+    /// </summary>
     public class ChangeItemOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ChangeItemOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="fromTypeId"></param>
+        /// <param name="fromLocation"></param>
+        /// <param name="toTypeId"></param>
+        /// <param name="fromStackPos"></param>
+        /// <param name="index"></param>
+        /// <param name="carrierCreature"></param>
         public ChangeItemOperationCreationArguments(
             uint requestorId,
             ushort fromTypeId,
@@ -34,6 +48,11 @@ namespace OpenTibia.Server.Operations.Arguments
             this.Carrier = carrierCreature;
         }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
+        public uint RequestorId { get; }
+
         public ushort ItemTypeId { get; }
 
         public Location FromLocation { get; }
@@ -45,7 +64,5 @@ namespace OpenTibia.Server.Operations.Arguments
         public byte Index { get; }
 
         public ICreature Carrier { get; }
-
-        public uint RequestorId { get; }
     }
 }

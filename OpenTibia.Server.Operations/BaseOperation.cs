@@ -20,8 +20,9 @@ namespace OpenTibia.Server.Operations
     using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Events;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
+    using OpenTibia.Server.Operations.Movements;
     using Serilog;
 
     /// <summary>
@@ -59,61 +60,9 @@ namespace OpenTibia.Server.Operations
         public abstract ExhaustionType ExhaustionType { get; }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
-        public abstract TimeSpan ExhaustionCost { get; }
-
-        /// <summary>
-        /// Immediately attempts to perform an item change in behalf of the requesting creature, if any.
-        /// </summary>
-        /// <param name="item">The item being changed.</param>
-        /// <param name="toTypeId">The type id of the item being changed to.</param>
-        /// <param name="atCylinder">The cylinder at which the change is happening.</param>
-        /// <param name="index">Optional. The index within the cylinder from which to change the item.</param>
-        /// <param name="requestor">Optional. The creature requesting the change.</param>
-        /// <returns>True if the item was successfully changed, false otherwise.</returns>
-        /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        protected bool PerformItemChange(IItem item, ushort toTypeId, ICylinder atCylinder, byte index = 0xFF, ICreature requestor = null)
-        {
-            const byte FallbackIndex = 0xFF;
-
-            if (item == null || atCylinder == null)
-            {
-                return false;
-            }
-
-            IThing newItem = this.Context.ItemFactory.Create(toTypeId);
-
-            if (newItem == null)
-            {
-                return false;
-            }
-
-            // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
-            (bool replaceSuccessful, IThing replaceRemainder) = atCylinder.ReplaceContent(this.Context.ItemFactory, item, newItem, index, item.Amount);
-
-            if (!replaceSuccessful || replaceRemainder != null)
-            {
-                this.AddContentToCylinderChain(atCylinder.GetCylinderHierarchy(), FallbackIndex, ref replaceRemainder, requestor);
-            }
-
-            if (replaceSuccessful)
-            {
-                if (atCylinder is ITile atTile)
-                {
-                    this.Context.Scheduler.ImmediateEvent(
-                            new TileUpdatedNotification(
-                            this.Logger,
-                            this.Context.CreatureFinder,
-                            () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, atTile.Location),
-                            new TileUpdatedNotificationArguments(atTile.Location, this.Context.MapDescriptor.DescribeTile)));
-
-                    this.TriggerCollisionEventRules(new CollisionEventRuleArguments(atCylinder.Location, item, requestor));
-                }
-            }
-
-            return true;
-        }
+        public abstract TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Attempts to add content to the first possible cylinder that accepts it, on a chain of cylinders.
@@ -151,7 +100,7 @@ namespace OpenTibia.Server.Operations
                 {
                     if (targetCylinder is ITile targetTile)
                     {
-                        this.Context.Scheduler.ImmediateEvent(
+                        this.Context.Scheduler.ScheduleEvent(
                                     new TileUpdatedNotification(
                                 this.Logger,
                                 this.Context.CreatureFinder,
@@ -221,6 +170,43 @@ namespace OpenTibia.Server.Operations
         protected bool TriggerMultiUseEventRules(IEventRuleArguments eventRuleArguments)
         {
             return this.EventRulesEvaluationTriggered?.Invoke(this, EventRuleType.MultiUse, eventRuleArguments) ?? false;
+        }
+
+        /// <summary>
+        /// Schedules autowalking by a creature in the directions supplied.
+        /// </summary>
+        /// <param name="creature">The creature walking.</param>
+        /// <param name="directions">The directions to follow.</param>
+        /// <param name="stepIndex">Optional. The index of the current direction.</param>
+        protected void AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0)
+        {
+            if (creature == null || directions.Length == 0 || stepIndex >= directions.Length)
+            {
+                return;
+            }
+
+            // A new request overrides and cancels any movement waiting to be retried.
+            this.Context.Scheduler.CancelAllFor(creature.Id, typeof(IMovementOperation));
+
+            var nextLocation = creature.Location.LocationAt(directions[stepIndex]);
+
+            TimeSpan movementDelay = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.Context.Scheduler.CurrentTime);
+
+            this.Context.Scheduler.ScheduleEvent(
+                new MapToMapMovementOperation(
+                    this.Logger,
+                    this.Context,
+                    creature.Id,
+                    creature,
+                    creature.Location,
+                    nextLocation),
+                movementDelay);
+
+            if (directions.Length > 1)
+            {
+                // Add this request as the retry action, so that the request gets repeated when the player hits this location.
+                creature.EnqueueRetryActionAtLocation(nextLocation, () => this.AutoWalk(creature, directions, stepIndex + 1));
+            }
         }
     }
 }

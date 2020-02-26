@@ -12,7 +12,6 @@
 namespace OpenTibia.Scheduling
 {
     using System;
-    using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using Priority_Queue;
@@ -35,10 +34,6 @@ namespace OpenTibia.Scheduling
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
             this.Logger = logger.ForContext(this.GetType());
-
-            this.Conditions = new List<IEventCondition>();
-            this.ActionsOnPass = new List<Action>();
-            this.ActionsOnFail = new List<Action>();
 
             this.RequestorId = requestorId;
         }
@@ -64,43 +59,8 @@ namespace OpenTibia.Scheduling
         public string ErrorMessage { get; protected set; }
 
         /// <summary>
-        /// Gets a value indicating whether the event can be executed.
+        /// Executes the event logic.
         /// </summary>
-        public bool CanBeExecuted
-        {
-            get
-            {
-                var allPassed = true;
-
-                foreach (var condition in this.Conditions)
-                {
-                    allPassed &= condition.Evaluate();
-
-                    if (!allPassed)
-                    {
-                        this.Logger.Verbose($"Failed event condition {condition.GetType().Name}.");
-                        this.ErrorMessage = condition.ErrorMessage;
-                        break;
-                    }
-                }
-
-                return allPassed;
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of conditional <see cref="IEventCondition"/> that the event must pass on evaluation.
-        /// </summary>
-        public IList<IEventCondition> Conditions { get; }
-
-        /// <summary>
-        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check succeeds.
-        /// </summary>
-        public IList<Action> ActionsOnPass { get; }
-
-        /// <summary>
-        /// Gets the collection of <see cref="Action"/>s that will be executed if the conditions check fails.
-        /// </summary>
-        public IList<Action> ActionsOnFail { get; }
+        public abstract void Execute();
     }
 }

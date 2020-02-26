@@ -37,17 +37,33 @@ namespace OpenTibia.Server.Operations.Environment
             ICreature creature)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                bool successfulPlacement = this.PlaceCreature(atLocation, creature);
+            this.AtLocation = atLocation;
+            this.Creature = creature;
+        }
 
-                if (!successfulPlacement)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+        /// <summary>
+        /// Gets the creature to place.
+        /// </summary>
+        public ICreature Creature { get; }
+
+        /// <summary>
+        /// Gets the location at which to place the creature.
+        /// </summary>
+        public Location AtLocation { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            bool successfulPlacement = this.PlaceCreature(this.AtLocation, this.Creature);
+
+            if (!successfulPlacement)
+            {
+                // handles check for isPlayer.
+                // this.NotifyOfFailure();
+                return;
+            }
         }
     }
 }

@@ -19,7 +19,6 @@ namespace OpenTibia.Server
     using System.Threading.Tasks;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
@@ -27,16 +26,16 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Events;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Arguments;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using OpenTibia.Server.Parsing.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
     /// Class that represents the game instance.
     /// </summary>
-    public class Game : IGame, IEventRulesService
+    public class Game : IGame, IEventRulesEvaluator
     {
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
@@ -148,7 +147,7 @@ namespace OpenTibia.Server
 
             // Hook some event handlers.
             this.scheduler.OnEventFired += this.ProcessEvent;
-            this.map.WindowLoaded += this.HandleMapWindowLoaded;
+            this.map.WindowLoaded += this.OnMapWindowLoaded;
         }
 
         /// <summary>
@@ -204,10 +203,11 @@ namespace OpenTibia.Server
         /// <summary>
         /// Evaluates any rules of the given type using the supplied arguments.
         /// </summary>
+        /// <param name="caller">The evaluation requestor.</param>
         /// <param name="type">The type of rules to evaluate.</param>
         /// <param name="eventRuleArguments">The arguments to evaluate with.</param>
         /// <returns>True if at least one rule was matched and executed, false otherwise.</returns>
-        public bool EvaluateRules(EventRuleType type, IEventRuleArguments eventRuleArguments)
+        public bool EvaluateRules(object caller, EventRuleType type, IEventRuleArguments eventRuleArguments)
         {
             switch (type)
             {
@@ -257,6 +257,509 @@ namespace OpenTibia.Server
             }
 
             return false;
+        }
+
+        public bool CompareItemCountAt(Location location, FunctionComparisonType comparisonType, ushort value)
+        {
+            if (!this.map.GetTileAt(location, out ITile tile))
+            {
+                return false;
+            }
+
+            var count = tile.Ground != null ? 1 : 0;
+
+            count += tile.Items.Count();
+
+            return comparisonType switch
+            {
+                FunctionComparisonType.Equal => count == value,
+                FunctionComparisonType.GreaterThanOrEqual => count >= value,
+                FunctionComparisonType.LessThanOrEqual => count <= value,
+                FunctionComparisonType.GreaterThan => count > value,
+                FunctionComparisonType.LessThan => count < value,
+
+                _ => false,
+            };
+        }
+
+        public bool IsAllowedToLogOut(IPlayer player)
+        {
+            return player.IsAllowedToLogOut;
+        }
+
+        public bool IsAtLocation(IThing thing, Location location)
+        {
+            return thing != null && thing.Location == location;
+        }
+
+        public bool IsCreature(IThing thing)
+        {
+            return thing is ICreature;
+        }
+
+        public bool IsDressed(IThing thing)
+        {
+            if (!(thing is IItem item))
+            {
+                return false;
+            }
+
+            return (item.ParentCylinder is BodyContainerItem bodyContainer) && (item.DressPosition == Slot.Anywhere || item.DressPosition == bodyContainer.Slot);
+        }
+
+        public bool IsHouse(IThing thing)
+        {
+            // TODO: implement houses.
+            return false; // thing?.Tile != null && thing.Tile.IsHouse;
+        }
+
+        public bool IsHouseOwner(IThing thing, IPlayer user)
+        {
+            // TODO: implement house ownership.
+            return this.IsHouse(thing); // && thing.Tile.House.Owner == user.Name;
+        }
+
+        public bool IsSpecificItem(IThing thing, ushort typeId)
+        {
+            return thing is IItem item && item.Type.TypeId == typeId;
+        }
+
+        public bool IsPlayer(IThing thing)
+        {
+            return thing is IPlayer;
+        }
+
+        public bool IsObjectThere(Location location, ushort typeId)
+        {
+            return this.map.GetTileAt(location, out ITile targetTile) && targetTile.HasItemWithId(typeId);
+        }
+
+        public bool HasAccessFlag(IPlayer user, string rightStr)
+        {
+            return true; // TODO: implement.
+        }
+
+        public bool HasFlag(IThing itemThing, string flagStr)
+        {
+            if (!(itemThing is IItem))
+            {
+                return false;
+            }
+
+            if (string.IsNullOrWhiteSpace(flagStr))
+            {
+                return true;
+            }
+
+            return Enum.TryParse(flagStr, out ItemFlag parsedFlag) && ((IItem)itemThing).Type.Flags.Contains(parsedFlag);
+        }
+
+        public bool HasProfession(IThing thing, byte profesionId)
+        {
+            // TODO: implement professions.
+            return thing != null && thing is IPlayer && false;
+        }
+
+        public bool CompareItemAttribute(IThing thing, ItemAttribute attribute, FunctionComparisonType comparisonType, ushort value)
+        {
+            if (thing == null || !(thing is IItem thingAsItem))
+            {
+                return false;
+            }
+
+            if (!thingAsItem.Attributes.ContainsKey(attribute))
+            {
+                return false;
+            }
+
+            return comparisonType switch
+            {
+                FunctionComparisonType.Equal => Convert.ToUInt16(thingAsItem.Attributes[attribute]) == value,
+                FunctionComparisonType.GreaterThanOrEqual => Convert.ToUInt16(thingAsItem.Attributes[attribute]) >= value,
+                FunctionComparisonType.LessThanOrEqual => Convert.ToUInt16(thingAsItem.Attributes[attribute]) <= value,
+                FunctionComparisonType.GreaterThan => Convert.ToUInt16(thingAsItem.Attributes[attribute]) > value,
+                FunctionComparisonType.LessThan => Convert.ToUInt16(thingAsItem.Attributes[attribute]) < value,
+
+                _ => false,
+            };
+        }
+
+        public bool IsRandomNumberUnder(byte value, int maxValue = 100)
+        {
+            return new Random().Next(maxValue) <= value;
+        }
+
+        /// <summary>
+        /// Attempts to create an item at a given location.
+        /// </summary>
+        /// <param name="location">The location at which to create the item.</param>
+        /// <param name="itemTypeId">The type id of the item to create.</param>
+        /// <param name="effect">An effect to use when the creation takes place.</param>
+        public void CreateItemAtLocation(Location location, ushort itemTypeId, byte effect)
+        {
+            this.DispatchOperation(OperationType.CreateItem, new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location));
+        }
+
+        /// <summary>
+        /// Attempts to change a given item to the supplied id.
+        /// </summary>
+        /// <param name="thing">The thing to change.</param>
+        /// <param name="toTypeId">The id of the item type to change to.</param>
+        /// <param name="effect">An optional effect to send as part of the change.</param>
+        public void ChangeItem(IThing thing, ushort toTypeId, byte effect)
+        {
+            if (thing == null)
+            {
+                return;
+            }
+
+            AnimatedEffect animatedEffect = AnimatedEffect.None;
+
+            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
+            {
+                animatedEffect = (AnimatedEffect)effect;
+
+                this.scheduler.ScheduleEvent(
+                    new AnimatedEffectNotification(
+                        this.logger,
+                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, thing.Location),
+                        new AnimatedEffectNotificationArguments(thing.Location, animatedEffect)));
+            }
+
+            this.DispatchOperation(
+                    OperationType.ChangeItem,
+                    new ChangeItemOperationCreationArguments(
+                        requestorId: 0,
+                        thing.ThingId,
+                        thing.CarryLocation ?? thing.Location,
+                        toTypeId,
+                        carrierCreature: (thing is IItem item) ? item.Carrier : null));
+        }
+
+        /// <summary>
+        /// Attempts to change a given item to the supplied id at a given location.
+        /// </summary>
+        /// <param name="location">The location at which the change will happen.</param>
+        /// <param name="fromTypeId">The id of the item from which the change is happening.</param>
+        /// <param name="toTypeId">The id of the item to which the change is happening.</param>
+        /// <param name="effect">An optional effect to send as part of the change.</param>
+        public void ChangeItemAtLocation(Location location, ushort fromTypeId, ushort toTypeId, byte effect)
+        {
+            AnimatedEffect animatedEffect = AnimatedEffect.None;
+
+            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
+            {
+                animatedEffect = (AnimatedEffect)effect;
+
+                this.scheduler.ScheduleEvent(
+                    new AnimatedEffectNotification(
+                        this.logger,
+                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
+                        new AnimatedEffectNotificationArguments(location, animatedEffect)));
+            }
+
+            this.DispatchOperation(
+                    OperationType.ChangeItem,
+                    new ChangeItemOperationCreationArguments(
+                        requestorId: 0,
+                        fromTypeId,
+                        location,
+                        toTypeId));
+        }
+
+        public void ChangePlayerStartLocation(IPlayer player, Location newLocation)
+        {
+            // TODO: implement.
+        }
+
+        /// <summary>
+        /// Attempts to display an animated efect on the given location.
+        /// </summary>
+        /// <param name="location">The location at which to display the effect.</param>
+        /// <param name="effect">The effect to display.</param>
+        public void DisplayAnimatedEffectAt(Location location, byte effect)
+        {
+            AnimatedEffect animatedEffect = AnimatedEffect.None;
+
+            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
+            {
+                animatedEffect = (AnimatedEffect)effect;
+            }
+
+            if (animatedEffect != AnimatedEffect.None)
+            {
+                this.scheduler.ScheduleEvent(
+                    new AnimatedEffectNotification(
+                        this.logger,
+                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
+                        new AnimatedEffectNotificationArguments(location, animatedEffect)));
+            }
+        }
+
+        public void DisplayAnimatedText(Location location, string text, byte textType)
+        {
+            this.scheduler.ScheduleEvent(
+                new TextMessageNotification(
+                    this.logger,
+                    () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
+                    new TextMessageNotificationArguments((MessageType)textType, text)));
+        }
+
+        /// <summary>
+        /// Attempts to delete an item.
+        /// </summary>
+        /// <param name="thing">The item to delete.</param>
+        public void Delete(IThing thing)
+        {
+            if (thing == null || !(thing is IItem item))
+            {
+                return;
+            }
+
+            this.DispatchOperation(OperationType.DeleteItem, new DeleteItemOperationCreationArguments(requestorId: 0, item.ThingId, item.Location));
+        }
+
+        /// <summary>
+        /// Attempts to delete an item at a given location on the map.
+        /// </summary>
+        /// <param name="location">The location at which to delete the item.</param>
+        /// <param name="itemType">The type of the item to delete.</param>
+        public void DeleteOnMap(Location location, ushort itemType)
+        {
+            this.DispatchOperation(OperationType.DeleteItem, new DeleteItemOperationCreationArguments(requestorId: 0, itemType, location));
+        }
+
+        /// <summary>
+        /// Attempts to get the description (attribute only) of the item.
+        /// </summary>
+        /// <param name="thingToDescribe">The item to get the description of.</param>
+        /// <param name="creature">The creature who the description is for.</param>
+        public void DescribeFor(IThing thingToDescribe, ICreature creature)
+        {
+            if (thingToDescribe == null ||
+                creature == null ||
+                !(thingToDescribe is IItem itemToDescribe) ||
+                string.IsNullOrWhiteSpace(itemToDescribe.Type.Description) ||
+                !(creature is IPlayer player))
+            {
+                return;
+            }
+
+            this.scheduler.ScheduleEvent(
+                new TextMessageNotification(
+                    this.logger,
+                    () => this.connectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
+                    new TextMessageNotificationArguments(MessageType.DescriptionGreen, itemToDescribe.Type.Description)));
+        }
+
+        public void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue)
+        {
+            // TODO: implement correctly when combat is...
+            if (!(damagedThing is ICreature damagedCreature))
+            {
+                return;
+            }
+
+            switch (damageSourceType)
+            {
+                default: // physical
+                    break;
+                case 2: // magic? or mana?
+                    break;
+                case 4: // fire instant
+                    this.DisplayAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.Flame);
+                    break;
+                case 8: // energy instant
+                    this.DisplayAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.DamageEnergy);
+                    break;
+                case 16: // poison instant?
+                    this.DisplayAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.RingsGreen);
+                    break;
+                case 32: // poison over time (poisoned condition)
+                    break;
+                case 64: // fire over time (burned condition)
+                    break;
+                case 128: // energy over time (electrified condition)
+                    break;
+            }
+        }
+
+        public void LogPlayerOut(IPlayer player)
+        {
+            this.DispatchOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
+        }
+
+        /// <summary>
+        /// Attempts to move some thing to a given location.
+        /// </summary>
+        /// <param name="thingToMove">The thing to move.</param>
+        /// <param name="targetLocation">The location to move the creature to.</param>
+        public void MoveTo(IThing thingToMove, Location targetLocation)
+        {
+            if (thingToMove == null)
+            {
+                return;
+            }
+
+            if (thingToMove is ICreature creature &&
+                this.map.GetTileAt(creature.Location, out ITile creatureTile) &&
+                this.map.GetTileAt(targetLocation, out _))
+            {
+                var creatureStackPosition = creatureTile.GetStackPositionOfThing(creature);
+
+                TimeSpan creatureMovementCooldown = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.scheduler.CurrentTime);
+
+                this.DispatchOperation(
+                        OperationType.MapToMapMovement,
+                        new MapToMapMovementOperationCreationArguments(
+                            requestorId: 0,
+                            creature,
+                            creature.Location,
+                            targetLocation,
+                            creatureStackPosition),
+                        creatureMovementCooldown);
+            }
+            else if (thingToMove is IItem item && this.map.GetTileAt(item.Location, out ITile itemTile) && this.map.GetTileAt(targetLocation, out _))
+            {
+                var itemStackPosition = itemTile.GetStackPositionOfThing(item);
+
+                this.DispatchOperation(
+                        OperationType.MapToMapMovement,
+                        new MapToMapMovementOperationCreationArguments(
+                            requestorId: 0,
+                            item,
+                            item.Location,
+                            targetLocation,
+                            itemStackPosition,
+                            amount: item.Amount));
+            }
+        }
+
+        /// <summary>
+        /// Attempts to move all items and creatures in a location to a given location.
+        /// </summary>
+        /// <param name="fromLocation">The location from which to move everything.</param>
+        /// <param name="targetLocation">The location to move everything to.</param>
+        /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
+        public void MoveTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
+        {
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
+            {
+                return;
+            }
+
+            foreach (var item in fromTile.Items)
+            {
+                if (exceptTypeIds.Length > 0 && exceptTypeIds.Contains(item.ThingId))
+                {
+                    continue;
+                }
+
+                var fromStackPos = fromTile.GetStackPositionOfThing(item);
+
+                this.DispatchOperation(
+                        OperationType.MapToMapMovement,
+                        new MapToMapMovementOperationCreationArguments(
+                            requestorId: 0,
+                            item,
+                            fromLocation,
+                            targetLocation,
+                            fromStackPos,
+                            amount: item.Amount));
+            }
+
+            foreach (var creatureId in fromTile.CreatureIds)
+            {
+                var creature = this.creatureManager.FindCreatureById(creatureId);
+
+                if (creature == null)
+                {
+                    continue;
+                }
+
+                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
+
+                this.DispatchOperation(
+                        OperationType.MapToMapMovement,
+                        new MapToMapMovementOperationCreationArguments(
+                            requestorId: 0,
+                            creature,
+                            fromLocation,
+                            targetLocation,
+                            creatureStackPosition));
+            }
+        }
+
+        /// <summary>
+        /// Attempts to move an item of the given type from the given location to another location.
+        /// </summary>
+        /// <param name="itemType">The type of the item to move.</param>
+        /// <param name="fromLocation">The location from which to move the item.</param>
+        /// <param name="toLocation">The location to which to move the item.</param>
+        public void MoveTo(ushort itemType, Location fromLocation, Location toLocation)
+        {
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out _))
+            {
+                return;
+            }
+
+            var item = fromTile.FindItemWithId(itemType);
+
+            if (item == null)
+            {
+                return;
+            }
+
+            var itemStackPosition = fromTile.GetStackPositionOfThing(item);
+
+            this.DispatchOperation(
+                    OperationType.MapToMapMovement,
+                    new MapToMapMovementOperationCreationArguments(
+                        requestorId: 0,
+                        item,
+                        item.Location,
+                        toLocation,
+                        itemStackPosition,
+                        amount: item.Amount));
+        }
+
+        /// <summary>
+        /// Attempts to place a new monster at the given location.
+        /// </summary>
+        /// <param name="location">The location at which to place the monster.</param>
+        /// <param name="monsterType">The race of the monster to place.</param>
+        public void PlaceMonsterAt(Location location, ushort monsterType)
+        {
+            var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterType));
+
+            this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, location, newMonster));
+        }
+
+        public void TagThing(IPlayer player, string format, IThing targetThing)
+        {
+            // TODO: implement.
+        }
+
+        private void DispatchOperation(OperationType operationType, IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
+        {
+            IOperation newOperation = this.operationFactory.Create(operationType, operationArguments);
+
+            // Hook up the event rules event listener here.
+            // This gets unhooked when the operation is processed.
+            newOperation.EventRulesEvaluationTriggered += this.EvaluateRules;
+
+            // Normalize delay to protect against negative time spans.
+            var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
+
+            // Add delay from current exhaustion of the requestor, if any.
+            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ICreature creature)
+            {
+                TimeSpan cooldownRemaining = creature.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
+
+                operationDelay += cooldownRemaining;
+            }
+
+            this.scheduler.ScheduleEvent(newOperation, operationDelay);
         }
 
         /// <summary>
@@ -437,27 +940,11 @@ namespace OpenTibia.Server
 
                 if (this.WorldLightLevel != currentLevel || this.WorldLightColor != currentColor)
                 {
-                    this.scheduler.ImmediateEvent(
+                    this.scheduler.ScheduleEvent(
                         new WorldLightChangedNotification(
                             this.logger,
                             () => this.connectionManager.GetAllActive(),
                             new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)));
-                }
-            }
-        }
-
-        /// <summary>
-        /// Handles creature thinking.
-        /// </summary>
-        /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
-        private void CreatureThinkingLoop(object tokenState)
-        {
-            var cancellationToken = (tokenState as CancellationToken?).Value;
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                foreach (var creature in this.creatureManager.FindAllCreatures())
-                {
                 }
             }
         }
@@ -484,7 +971,7 @@ namespace OpenTibia.Server
 
                     player.SetAttackTarget(null);
 
-                    this.ScheduleNewOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
+                    this.DispatchOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
                 }
             }
         }
@@ -505,34 +992,11 @@ namespace OpenTibia.Server
 
             try
             {
-                Stopwatch sw = new Stopwatch();
+                Stopwatch sw = Stopwatch.StartNew();
 
-                if (evt.CanBeExecuted)
-                {
-                    for (int i = 0; i < evt.ActionsOnPass.Count; i++)
-                    {
-                        sw.Restart();
+                evt.Execute();
 
-                        evt.ActionsOnPass[i].Invoke();
-
-                        sw.Stop();
-
-                        this.logger.Verbose($"Executed ({i + 1} of {evt.ActionsOnPass.Count}) on pass... done in {sw.Elapsed}.");
-                    }
-
-                    return;
-                }
-
-                for (int i = 0; i < evt.ActionsOnFail.Count; i++)
-                {
-                    sw.Restart();
-
-                    evt.ActionsOnFail[i].Invoke();
-
-                    sw.Stop();
-
-                    this.logger.Verbose($"Executed ({i + 1} of {evt.ActionsOnFail.Count}) actions on fail... done in {sw.Elapsed}.");
-                }
+                sw.Stop();
 
                 this.logger.Verbose($"Processed event {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
@@ -547,9 +1011,13 @@ namespace OpenTibia.Server
                 if (evt is IOperation operation)
                 {
                     // Unhook any event rule listeners we are currently tied to.
-                    operation.EventRulesEvaluationTriggered -= this.OnOperationEventRulesEvaluationTriggered;
+                    operation.EventRulesEvaluationTriggered -= this.EvaluateRules;
 
                     // Add any exhaustion for the requestor of the operation, if any.
+                    if (this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
+                    {
+                        requestor.AddExhaustion(operation.ExhaustionType, this.scheduler.CurrentTime, operation.ExhaustionCost);
+                    }
                 }
             }
         }
@@ -563,7 +1031,7 @@ namespace OpenTibia.Server
         /// <param name="toY">The end Y coordinate for the loaded window.</param>
         /// <param name="fromZ">The start Z coordinate for the loaded window.</param>
         /// <param name="toZ">The end Z coordinate for the loaded window.</param>
-        private void HandleMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
+        private void OnMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
             var rng = new Random();
 
@@ -573,544 +1041,35 @@ namespace OpenTibia.Server
                             s.Location.Y >= fromY && s.Location.Y <= toY &&
                             s.Location.Z >= fromZ && s.Location.Z <= toZ);
 
-            if (spawnsInWindow != null)
+            if (spawnsInWindow == null)
             {
-                foreach (var spawn in spawnsInWindow)
+                return;
+            }
+
+            foreach (var spawn in spawnsInWindow)
+            {
+                for (int i = 0; i < spawn.Count; i++)
                 {
-                    for (int i = 0; i < spawn.Count; i++)
+                    var r = Math.Max(1, spawn.Radius / 4);
+
+                    var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+
+                    if (!this.map.GetTileAt(randomLoc, out ITile randomTile))
                     {
-                        var r = Math.Max(1, spawn.Radius / 4);
+                        continue;
+                    }
 
-                        var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+                    // Need to actually pathfind to avoid placing a monster in unreachable places.
+                    this.pathFinder.FindBetween(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 10);
 
-                        if (!this.map.GetTileAt(randomLoc, out ITile randomTile))
-                        {
-                            continue;
-                        }
+                    if (this.map.GetTileAt(foundLocation, out ITile foundTile) && !foundTile.IsPathBlocking())
+                    {
+                        var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id));
 
-                        // Need to actually pathfind to avoid placing a monster in unreachable places.
-                        this.pathFinder.FindBetween(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 10);
-
-                        if (this.map.GetTileAt(foundLocation, out ITile foundTile) && !foundTile.IsPathBlocking())
-                        {
-                            var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id));
-
-                            this.ScheduleNewOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, foundLocation, newMonster));
-                        }
+                        this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, foundLocation, newMonster));
                     }
                 }
             }
-        }
-
-        public bool CompareItemCountAt(Location location, FunctionComparisonType comparisonType, ushort value)
-        {
-            if (!this.map.GetTileAt(location, out ITile tile))
-            {
-                return false;
-            }
-
-            var count = tile.Ground != null ? 1 : 0;
-
-            count += tile.Items.Count();
-
-            return comparisonType switch
-            {
-                FunctionComparisonType.Equal => count == value,
-                FunctionComparisonType.GreaterThanOrEqual => count >= value,
-                FunctionComparisonType.LessThanOrEqual => count <= value,
-                FunctionComparisonType.GreaterThan => count > value,
-                FunctionComparisonType.LessThan => count < value,
-
-                _ => false,
-            };
-        }
-
-        public bool IsAllowedToLogOut(IPlayer player)
-        {
-            return player.IsAllowedToLogOut;
-        }
-
-        public bool IsAtLocation(IThing thing, Location location)
-        {
-            return thing != null && thing.Location == location;
-        }
-
-        public bool IsCreature(IThing thing)
-        {
-            return thing is ICreature;
-        }
-
-        public bool IsDressed(IThing thing)
-        {
-            if (!(thing is IItem item))
-            {
-                return false;
-            }
-
-            return (item.ParentCylinder is BodyContainerItem bodyContainer) && (item.DressPosition == Slot.Anywhere || item.DressPosition == bodyContainer.Slot);
-        }
-
-        public bool IsHouse(IThing thing)
-        {
-            // TODO: implement houses.
-            return false; // thing?.Tile != null && thing.Tile.IsHouse;
-        }
-
-        public bool IsHouseOwner(IThing thing, IPlayer user)
-        {
-            // TODO: implement house ownership.
-            return this.IsHouse(thing); // && thing.Tile.House.Owner == user.Name;
-        }
-
-        public bool IsType(IThing thing, ushort typeId)
-        {
-            return thing is IItem item && item.Type.TypeId == typeId;
-        }
-
-        public bool IsPlayer(IThing thing)
-        {
-            return thing is IPlayer;
-        }
-
-        public bool IsObjectThere(Location location, ushort typeId)
-        {
-            return this.map.GetTileAt(location, out ITile targetTile) && targetTile.HasItemWithId(typeId);
-        }
-
-        public bool HasRight(IPlayer user, string rightStr)
-        {
-            return true; // TODO: implement.
-        }
-
-        public bool HasFlag(IThing itemThing, string flagStr)
-        {
-            if (!(itemThing is IItem))
-            {
-                return false;
-            }
-
-            if (string.IsNullOrWhiteSpace(flagStr))
-            {
-                return true;
-            }
-
-            return Enum.TryParse(flagStr, out ItemFlag parsedFlag) && ((IItem)itemThing).Type.Flags.Contains(parsedFlag);
-        }
-
-        public bool HasProfession(IThing thing, byte profesionId)
-        {
-            // TODO: implement professions.
-            return thing != null && thing is IPlayer && false;
-        }
-
-        public bool HasInstanceAttribute(IThing thing, ItemAttribute attribute, FunctionComparisonType comparisonType, ushort value)
-        {
-            if (thing == null || !(thing is IItem thingAsItem))
-            {
-                return false;
-            }
-
-            if (!thingAsItem.Attributes.ContainsKey(attribute))
-            {
-                return false;
-            }
-
-            return comparisonType switch
-            {
-                FunctionComparisonType.Equal => Convert.ToUInt16(thingAsItem.Attributes[attribute]) == value,
-                FunctionComparisonType.GreaterThanOrEqual => Convert.ToUInt16(thingAsItem.Attributes[attribute]) >= value,
-                FunctionComparisonType.LessThanOrEqual => Convert.ToUInt16(thingAsItem.Attributes[attribute]) <= value,
-                FunctionComparisonType.GreaterThan => Convert.ToUInt16(thingAsItem.Attributes[attribute]) > value,
-                FunctionComparisonType.LessThan => Convert.ToUInt16(thingAsItem.Attributes[attribute]) < value,
-
-                _ => false,
-            };
-        }
-
-        public bool Random(byte value)
-        {
-            // TODO: is this really bound to 100? or do we need more precision.
-            return new Random().Next(100) <= value;
-        }
-
-        /// <summary>
-        /// Attempts to create an item at a given location.
-        /// </summary>
-        /// <param name="location">The location at which to create the item.</param>
-        /// <param name="itemTypeId">The type id of the item to create.</param>
-        /// <param name="effect">An effect to use when the creation takes place.</param>
-        public void CreateItemAtLocation(Location location, ushort itemTypeId, byte effect)
-        {
-            this.ScheduleNewOperation(OperationType.CreateItem, new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location));
-        }
-
-        /// <summary>
-        /// Attempts to change a given item to the supplied id.
-        /// </summary>
-        /// <param name="thing">The thing to change.</param>
-        /// <param name="toTypeId">The id of the item type to change to.</param>
-        /// <param name="effect">An optional effect to send as part of the change.</param>
-        public void ChangeItem(IThing thing, ushort toTypeId, byte effect)
-        {
-            if (thing == null)
-            {
-                return;
-            }
-
-            AnimatedEffect animatedEffect = AnimatedEffect.None;
-
-            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
-            {
-                animatedEffect = (AnimatedEffect)effect;
-
-                this.scheduler.ImmediateEvent(
-                    new AnimatedEffectNotification(
-                        this.logger,
-                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, thing.Location),
-                        new AnimatedEffectNotificationArguments(thing.Location, animatedEffect)));
-            }
-
-            this.ScheduleNewOperation(
-                    OperationType.ChangeItem,
-                    new ChangeItemOperationCreationArguments(
-                        requestorId: 0,
-                        thing.ThingId,
-                        thing.CarryLocation ?? thing.Location,
-                        toTypeId,
-                        carrierCreature: (thing is IItem item) ? item.Carrier : null));
-        }
-
-        /// <summary>
-        /// Attempts to change a given item to the supplied id at a given location.
-        /// </summary>
-        /// <param name="location">The location at which the change will happen.</param>
-        /// <param name="fromTypeId">The id of the item from which the change is happening.</param>
-        /// <param name="toTypeId">The id of the item to which the change is happening.</param>
-        /// <param name="effect">An optional effect to send as part of the change.</param>
-        public void ChangeItemAtLocation(Location location, ushort fromTypeId, ushort toTypeId, byte effect)
-        {
-            AnimatedEffect animatedEffect = AnimatedEffect.None;
-
-            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
-            {
-                animatedEffect = (AnimatedEffect)effect;
-
-                this.scheduler.ImmediateEvent(
-                    new AnimatedEffectNotification(
-                        this.logger,
-                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
-                        new AnimatedEffectNotificationArguments(location, animatedEffect)));
-            }
-
-            this.ScheduleNewOperation(
-                    OperationType.ChangeItem,
-                    new ChangeItemOperationCreationArguments(
-                        requestorId: 0,
-                        fromTypeId,
-                        location,
-                        toTypeId));
-        }
-
-        /// <summary>
-        /// Attempts to display an animated efect on the given location.
-        /// </summary>
-        /// <param name="location">The location at which to display the effect.</param>
-        /// <param name="effect">The effect to display.</param>
-        public void CreateAnimatedEffectAt(Location location, byte effect)
-        {
-            AnimatedEffect animatedEffect = AnimatedEffect.None;
-
-            if (effect >= (byte)AnimatedEffect.First && effect <= (byte)AnimatedEffect.Last)
-            {
-                animatedEffect = (AnimatedEffect)effect;
-            }
-
-            if (animatedEffect != AnimatedEffect.None)
-            {
-                this.scheduler.ImmediateEvent(
-                    new AnimatedEffectNotification(
-                        this.logger,
-                        () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
-                        new AnimatedEffectNotificationArguments(location, animatedEffect)));
-            }
-        }
-
-        /// <summary>
-        /// Attempts to delete an item.
-        /// </summary>
-        /// <param name="thing">The item to delete.</param>
-        public void Delete(IThing thing)
-        {
-            if (thing == null || !(thing is IItem item))
-            {
-                return;
-            }
-
-            this.ScheduleNewOperation(OperationType.DeleteItem, new DeleteItemOperationCreationArguments(requestorId: 0, item.ThingId, item.Location));
-        }
-
-        /// <summary>
-        /// Attempts to delete an item at a given location on the map.
-        /// </summary>
-        /// <param name="location">The location at which to delete the item.</param>
-        /// <param name="itemType">The type of the item to delete.</param>
-        public void DeleteOnMap(Location location, ushort itemType)
-        {
-            this.ScheduleNewOperation(OperationType.DeleteItem, new DeleteItemOperationCreationArguments(requestorId: 0, itemType, location));
-        }
-
-        /// <summary>
-        /// Attempts to get the description (attribute only) of the item.
-        /// </summary>
-        /// <param name="thingToDescribe">The item to get the description of.</param>
-        /// <param name="creature">The creature who the description is for.</param>
-        public void DescribeThingFor(IThing thingToDescribe, ICreature creature)
-        {
-            if (thingToDescribe == null ||
-                creature == null ||
-                !(thingToDescribe is IItem itemToDescribe) ||
-                string.IsNullOrWhiteSpace(itemToDescribe.Type.Description) ||
-                !(creature is IPlayer player))
-            {
-                return;
-            }
-
-            this.scheduler.ImmediateEvent(
-                new GenericNotification(
-                    this.logger,
-                    () => this.connectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
-                    new GenericNotificationArguments(new TextMessagePacket(MessageType.DescriptionGreen, itemToDescribe.Type.Description))));
-        }
-
-        /// <summary>
-        /// Attempts to place a new monster at the given location.
-        /// </summary>
-        /// <param name="location">The location at which to place the monster.</param>
-        /// <param name="monsterType">The race of the monster to place.</param>
-        public void PlaceMonsterAt(Location location, ushort monsterType)
-        {
-            var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterType));
-
-            this.ScheduleNewOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, location, newMonster));
-        }
-
-        public void ApplyDamage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue)
-        {
-            // TODO: implement correctly when combat is...
-            if (!(damagedThing is ICreature damagedCreature))
-            {
-                return;
-            }
-
-            switch (damageSourceType)
-            {
-                default: // physical
-                    break;
-                case 2: // magic? or mana?
-                    break;
-                case 4: // fire instant
-                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.Flame);
-                    break;
-                case 8: // energy instant
-                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.DamageEnergy);
-                    break;
-                case 16: // poison instant?
-                    this.CreateAnimatedEffectAt(damagedCreature.Location, (byte)AnimatedEffect.RingsGreen);
-                    break;
-                case 32: // poison over time (poisoned condition)
-                    break;
-                case 64: // fire over time (burned condition)
-                    break;
-                case 128: // energy over time (electrified condition)
-                    break;
-            }
-        }
-
-        public void LogPlayerOut(IPlayer player)
-        {
-            this.ScheduleNewOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
-        }
-
-        /// <summary>
-        /// Attempts to move some thing to a given location.
-        /// </summary>
-        /// <param name="thingToMove">The thing to move.</param>
-        /// <param name="targetLocation">The location to move the creature to.</param>
-        public void MoveThingTo(IThing thingToMove, Location targetLocation)
-        {
-            if (thingToMove == null)
-            {
-                return;
-            }
-
-            if (thingToMove is ICreature creature &&
-                this.map.GetTileAt(creature.Location, out ITile creatureTile) &&
-                this.map.GetTileAt(targetLocation, out _))
-            {
-                var creatureStackPosition = creatureTile.GetStackPositionOfThing(creature);
-
-                this.ScheduleNewOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
-                            requestorId: 0,
-                            creature,
-                            creature.Location,
-                            targetLocation,
-                            creatureStackPosition));
-            }
-            else if (thingToMove is IItem item && this.map.GetTileAt(item.Location, out ITile itemTile) && this.map.GetTileAt(targetLocation, out _))
-            {
-                var itemStackPosition = itemTile.GetStackPositionOfThing(item);
-
-                this.ScheduleNewOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
-                            requestorId: 0,
-                            item,
-                            item.Location,
-                            targetLocation,
-                            itemStackPosition,
-                            amount: item.Amount));
-            }
-        }
-
-        /// <summary>
-        /// Attempts to move all items and creatures in a location to a given location.
-        /// </summary>
-        /// <param name="fromLocation">The location from which to move everything.</param>
-        /// <param name="targetLocation">The location to move everything to.</param>
-        /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
-        public void MoveEverythingToLocation(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
-        {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
-            {
-                return;
-            }
-
-            foreach (var item in fromTile.Items)
-            {
-                if (exceptTypeIds.Length > 0 && exceptTypeIds.Contains(item.ThingId))
-                {
-                    continue;
-                }
-
-                var fromStackPos = fromTile.GetStackPositionOfThing(item);
-
-                this.ScheduleNewOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
-                            requestorId: 0,
-                            item,
-                            fromLocation,
-                            targetLocation,
-                            fromStackPos,
-                            amount: item.Amount));
-            }
-
-            foreach (var creatureId in fromTile.CreatureIds)
-            {
-                var creature = this.creatureManager.FindCreatureById(creatureId);
-
-                if (creature == null)
-                {
-                    continue;
-                }
-
-                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
-
-                this.ScheduleNewOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
-                            requestorId: 0,
-                            creature,
-                            fromLocation,
-                            targetLocation,
-                            creatureStackPosition));
-            }
-        }
-
-        /// <summary>
-        /// Attempts to move an item of the given type from the given location to another location.
-        /// </summary>
-        /// <param name="itemType">The type of the item to move.</param>
-        /// <param name="fromLocation">The location from which to move the item.</param>
-        /// <param name="toLocation">The location to which to move the item.</param>
-        public void MoveByIdToLocation(ushort itemType, Location fromLocation, Location toLocation)
-        {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out _))
-            {
-                return;
-            }
-
-            var item = fromTile.FindItemWithId(itemType);
-
-            if (item == null)
-            {
-                return;
-            }
-
-            var itemStackPosition = fromTile.GetStackPositionOfThing(item);
-
-            this.ScheduleNewOperation(
-                    OperationType.MapToMapMovement,
-                    new MapToMapMovementOperationCreationArguments(
-                        requestorId: 0,
-                        item,
-                        item.Location,
-                        toLocation,
-                        itemStackPosition,
-                        amount: item.Amount));
-        }
-
-        public void DisplayAnimatedText(Location location, string text, byte textType)
-        {
-            this.scheduler.ImmediateEvent(
-                new GenericNotification(
-                    this.logger,
-                    () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
-                    new GenericNotificationArguments(new AnimatedTextPacket(location, (TextColor)textType, text))));
-        }
-
-        public void WritePlayerNameOnThing(IPlayer player, string format, IThing targetThing)
-        {
-            // TODO: implement.
-        }
-
-        public void ChangePlayerStartLocation(IPlayer player, Location newLocation)
-        {
-            // TODO: implement.
-        }
-
-        public bool OnOperationEventRulesEvaluationTriggered(IEvent byEvent, EventRuleType ruleType, IEventRuleArguments ruleArguments)
-        {
-            if (ruleArguments != null)
-            {
-                return this.EvaluateRules(ruleType, ruleArguments);
-            }
-
-            return false;
-        }
-
-        private void ScheduleNewOperation(OperationType operationType, IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
-        {
-            IOperation newOperation = this.operationFactory.Create(operationType, operationArguments);
-
-            // Hook up the event rules event listener here.
-            // This gets unhooked when the operation is processed.
-            newOperation.EventRulesEvaluationTriggered += this.OnOperationEventRulesEvaluationTriggered;
-
-            // Normalize delay to protect against negative time spans.
-            var actualDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
-
-            // Add delay from current exhaustion of the requestor, if any.
-            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ICreature creature)
-            {
-                TimeSpan exhaustionDelay = creature.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
-
-                actualDelay += exhaustionDelay;
-            }
-
-            this.scheduler.ScheduleEvent(newOperation, this.scheduler.CurrentTime + actualDelay);
         }
     }
 }

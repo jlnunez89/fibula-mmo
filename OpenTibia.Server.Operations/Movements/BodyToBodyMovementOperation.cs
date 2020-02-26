@@ -48,28 +48,34 @@ namespace OpenTibia.Server.Operations.Movements
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                if (!(thingMoving is IItem item))
-                {
-                    // You may not move this.
-                    return;
-                }
-
-                bool moveSuccessful = this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, 0, amount, this.Requestor);
-
-                if (!moveSuccessful)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            if (!(this.ThingMoving is IItem item))
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+            }
+            else if (!this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, 0, this.Amount, this.Requestor))
+            {
+                // Something else went wrong.
+                this.SendFailureNotification();
+            }
+        }
     }
 }

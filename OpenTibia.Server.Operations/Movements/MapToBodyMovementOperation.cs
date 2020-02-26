@@ -49,44 +49,72 @@ namespace OpenTibia.Server.Operations.Movements
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                if (!(thingMoving is IItem item))
-                {
-                    // You may not move this.
-                    return;
-                }
-
-                var sourceTile = this.FromCylinder as ITile;
-                var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
-
-                var sourceTileNotNull = sourceTile != null;
-                var thingCanBeMoved = thingMoving.CanBeMoved || thingMoving == this.Requestor;
-                var locationsMatch = thingMoving?.Location == fromLocation;
-                var requestorInRange = this.Requestor == null || (this.Requestor.Location - fromLocation).MaxValueIn2D <= 1;
-                var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                    sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
-                                                    item.Amount >= amount;
-
-                bool moveSuccessful = sourceTileNotNull &&
-                                      thingCanBeMoved &&
-                                      locationsMatch &&
-                                      sourceTileHasEnoughItemAmount &&
-                                      requestorInRange &&
-                                      this.PerformItemMovement(item, sourceTile, this.ToCylinder, toIndex: 0, amountToMove: amount, requestorCreature: this.Requestor);
-
-                if (!moveSuccessful)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
+            this.FromLocation = fromLocation;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Gets the location from which the movement is happening.
+        /// </summary>
+        public Location FromLocation { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            if (!(this.ThingMoving is IItem item))
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+
+                return;
+            }
+
+            var sourceTile = this.FromCylinder as ITile;
+            var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+
+            // Declare some pre-conditions.
+            var sourceTileIsNull = sourceTile == null;
+            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == this.Requestor;
+            var locationsMatch = this.ThingMoving?.Location == this.FromLocation;
+            var requestorInRange = this.Requestor == null || (this.Requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
+            var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
+                                                sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
+                                                item.Amount >= this.Amount;
+
+            if (sourceTileIsNull || !thingCanBeMoved)
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+            }
+            else if (!locationsMatch)
+            {
+                // Silent fail.
+                return;
+            }
+            else if (!sourceTileHasEnoughItemAmount)
+            {
+                this.SendFailureNotification(OperationMessage.NotEnoughQuantity);
+            }
+            else if (!requestorInRange)
+            {
+                this.SendFailureNotification(OperationMessage.TooFarAway);
+            }
+            else if (!this.PerformItemMovement(item, sourceTile, this.ToCylinder, toIndex: 0, amountToMove: this.Amount, requestorCreature: this.Requestor))
+            {
+                // Something else went wrong.
+                this.SendFailureNotification();
+            }
+        }
     }
 }

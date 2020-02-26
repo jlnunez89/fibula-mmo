@@ -34,17 +34,27 @@ namespace OpenTibia.Server.Operations.Environment
             ICreature creature)
             : base(logger, context, requestorId)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                bool successfulRemoval = this.RemoveCreature(creature);
+            this.Creature = creature;
+        }
 
-                if (!successfulRemoval)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+        /// <summary>
+        /// Gets the creature to remove.
+        /// </summary>
+        public ICreature Creature { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            bool successfulRemoval = this.RemoveCreature(this.Creature);
+
+            if (!successfulRemoval)
+            {
+                // handles check for isPlayer.
+                // this.NotifyOfFailure();
+                return;
+            }
         }
     }
 }

@@ -28,32 +28,84 @@ namespace OpenTibia.Server.Map.SectorFiles
     /// </summary>
     public class SectorMapLoader : IMapLoader
     {
+        /// <summary>
+        /// The symbol used for comments.
+        /// </summary>
         public const char CommentSymbol = '#';
 
+        /// <summary>
+        /// The separator used for sector files.
+        /// </summary>
         public const char SectorSeparator = ':';
 
+        /// <summary>
+        /// The separator used for positions of sectors.
+        /// </summary>
         public const char PositionSeparator = '-';
 
+        /// <summary>
+        /// The minimum X value for sectors known.
+        /// </summary>
         public const int SectorXMin = 996;
+
+        /// <summary>
+        /// The maximum X value for sectors known.
+        /// </summary>
         public const int SectorXMax = 1043;
 
+        /// <summary>
+        /// The minimum Y value for sectors known.
+        /// </summary>
         public const int SectorYMin = 984;
+
+        /// <summary>
+        /// The maximum Y value for sectors known.
+        /// </summary>
         public const int SectorYMax = 1031;
 
+        /// <summary>
+        /// The minimum Z value for sectors known.
+        /// </summary>
         public const int SectorZMin = 0;
+
+        /// <summary>
+        /// The maximum Z value for sectors known.
+        /// </summary>
         public const int SectorZMax = 15;
 
+        /// <summary>
+        /// Holds the map directory info.
+        /// </summary>
         private readonly DirectoryInfo mapDirInfo;
 
+        /// <summary>
+        /// The Z length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthZ;
 
+        /// <summary>
+        /// The Y length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthY;
 
+        /// <summary>
+        /// The X length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthX;
 
+        /// <summary>
+        /// Holds the loaded sectors.
+        /// </summary>
         private readonly bool[,,] sectorsLoaded;
 
+        /// <summary>
+        /// The total known tile count.
+        /// </summary>
         private long totalTileCount;
+
+        /// <summary>
+        /// The total loaded tiles count.
+        /// </summary>
         private long totalLoadedCount;
 
         /// <summary>

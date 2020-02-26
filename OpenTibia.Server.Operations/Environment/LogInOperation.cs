@@ -17,9 +17,9 @@ namespace OpenTibia.Server.Operations.Environment
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -39,70 +39,72 @@ namespace OpenTibia.Server.Operations.Environment
         /// <param name="requestorId">The id of the creature requesting the action.</param>
         /// <param name="playerMetadata">The creation metadata of the player that is logging in.</param>
         /// <param name="connection">The connection that the player uses.</param>
-        /// <param name="worldLightLevel"></param>
-        /// <param name="worldLightColor"></param>
+        /// <param name="worldLightLevel">The level of the world light to send to the player.</param>
+        /// <param name="worldLightColor">The color of the world light to send to the player.</param>
         public LogInOperation(ILogger logger, IElevatedOperationContext context, uint requestorId, ICreatureCreationMetadata playerMetadata, IConnection connection, byte worldLightLevel, byte worldLightColor)
             : base(logger, context, requestorId)
         {
-            this.WorldLightLevel = worldLightLevel;
-            this.WorldLightColor = worldLightColor;
+            this.CurrentWorldLightLevel = worldLightLevel;
+            this.CurrentWorldLightColor = worldLightColor;
 
-            this.ActionsOnPass.Add(() =>
-            {
-                bool success = this.LogIn(playerMetadata, connection);
-
-                if (!success)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.PlayerMetadata = playerMetadata;
+            this.Connection = connection;
         }
 
-        public byte WorldLightLevel { get; }
-
-        public byte WorldLightColor { get; }
+        /// <summary>
+        /// Gets the current light level of the world, to send with the login information.
+        /// </summary>
+        public byte CurrentWorldLightLevel { get; }
 
         /// <summary>
-        /// Attempts to log a player in to the game.
+        /// Gets the current light color of the world, to send with the login information.
         /// </summary>
-        /// <param name="metadata">The creation metadata of the player that is logging in.</param>
-        /// <param name="connection">The connection that the player uses.</param>
-        /// <returns>An instance of the new <see cref="IPlayer"/> in the game.</returns>
-        private bool LogIn(ICreatureCreationMetadata metadata, IConnection connection)
+        public byte CurrentWorldLightColor { get; }
+
+        /// <summary>
+        /// Gets the player metadata.
+        /// </summary>
+        public ICreatureCreationMetadata PlayerMetadata { get; }
+
+        /// <summary>
+        /// Gets the connection instance of the player.
+        /// </summary>
+        public IConnection Connection { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
         {
             // TODO: should be something like character.location
             var targetLocation = VeteranStart;
 
-            IPlayer player = this.Context.CreatureFactory.Create(CreatureType.Player, metadata) as IPlayer;
+            IPlayer player = this.Context.CreatureFactory.Create(CreatureType.Player, this.PlayerMetadata) as IPlayer;
 
             if (!this.PlaceCreature(targetLocation, player))
             {
-                return false;
+                return;
             }
 
             if (player == null)
             {
                 // Unable to place the player in the map.
-                this.Context.Scheduler.ImmediateEvent(
+                this.Context.Scheduler.ScheduleEvent(
                     new GenericNotification(
                         this.Logger,
-                        () => connection.YieldSingleItem(),
+                        () => this.Connection.YieldSingleItem(),
                         new GenericNotificationArguments(
                             new GameServerDisconnectPacket("Your character could not be placed on the map.\nPlease try again, or contact an administrator if the issue persists."))));
 
-                return false;
+                return;
             }
 
-            this.Context.ConnectionManager.Register(connection, player.Id);
+            this.Context.ConnectionManager.Register(this.Connection, player.Id);
 
-            player.Inventory.SlotChanged += this.HandlePlayerInventoryChanged;
-
-            this.Context.Scheduler.ImmediateEvent(
+            this.Context.Scheduler.ScheduleEvent(
                 new GenericNotification(
                     this.Logger,
-                    () => connection.YieldSingleItem(),
+                    () => this.Connection.YieldSingleItem(),
                     new GenericNotificationArguments(
                         new SelfAppearPacket(player.Id, true, player),
                         new MapDescriptionPacket(player.Location, this.Context.MapDescriptor.DescribeAt(player, player.Location)),
@@ -110,7 +112,7 @@ namespace OpenTibia.Server.Operations.Environment
                         new PlayerInventoryPacket(player),
                         new PlayerStatsPacket(player),
                         new PlayerSkillsPacket(player),
-                        new WorldLightPacket(this.WorldLightLevel, this.WorldLightColor),
+                        new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
                         new CreatureLightPacket(player),
                         new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
 
@@ -149,8 +151,6 @@ namespace OpenTibia.Server.Operations.Environment
                         //    }
                         // }
                         new PlayerConditionsPacket(player))));
-
-            return true;
         }
     }
 }

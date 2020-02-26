@@ -18,9 +18,9 @@ namespace OpenTibia.Server.Operations.Movements
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Events;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -61,77 +61,157 @@ namespace OpenTibia.Server.Operations.Movements
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                var sourceTile = this.FromCylinder as ITile;
-                var destinationTile = this.ToCylinder as ITile;
-
-                var sourceTileNotNull = sourceTile != null;
-                var destinationHasGround = destinationTile?.Ground != null;
-                var thingCanBeMoved = thingMoving.CanBeMoved || thingMoving == this.Requestor;
-                var locationsMatch = thingMoving?.Location == fromLocation;
-                var requestorInRange = this.Requestor == null || (this.Requestor.Location - fromLocation).MaxValueIn2D <= 1;
-                var canThrowBetweenLocations = isTeleport || this.Requestor == null || this.CanThrowBetweenMapLocations(fromLocation, toLocation, checkLineOfSight: true);
-
-                bool moveSuccessful = sourceTileNotNull && destinationHasGround && thingCanBeMoved;
-
-                if (thingMoving is ICreature creature)
-                {
-                    var distanceBetweenLocations = fromLocation - toLocation;
-                    var inRange = isTeleport || this.Requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
-
-                    var creatureStackPos = sourceTile?.GetStackPositionOfThing(creature);
-                    var doesNotAvoidDestination = isTeleport || this.Requestor == null || this.Requestor == creature || !destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
-                    var sourceTileHasThing = creatureStackPos != byte.MaxValue &&
-                                             sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, creatureStackPos.Value) is ICreature &&
-                                             amount == 1;
-
-                    moveSuccessful = sourceTileHasThing &&
-                                     doesNotAvoidDestination &&
-                                     inRange &&
-                                     locationsMatch &&
-                                     requestorInRange &&
-                                     this.PerformCreatureMovement(creature, toLocation, isTeleport, requestorCreature: this.Requestor);
-                }
-                else if (thingMoving is IItem item)
-                {
-                    var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
-                    var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                         sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
-                                                         item.Amount >= amount;
-                    var destinationNotObstructed = !destinationTile.BlocksLay && !(item.BlocksPass && destinationTile.BlocksPass);
-                    var distanceBetweenLocations = (this.Requestor?.Location ?? fromLocation) - toLocation;
-                    var movementInRange = this.Requestor == null || !item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0);
-
-                    moveSuccessful = sourceTileHasEnoughItemAmount &&
-                                     destinationNotObstructed &&
-                                     canThrowBetweenLocations &&
-                                     locationsMatch &&
-                                     requestorInRange &&
-                                     movementInRange &&
-                                     this.PerformItemMovement(item, sourceTile, destinationTile, fromStackPos, amountToMove: amount, requestorCreature: this.Requestor);
-                }
-
-                if (!moveSuccessful)
-                {
-                    // handles check for whether there is a player to notify.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-
-                if (this.Requestor is IPlayer player && toLocation != player.Location && player != thingMoving)
-                {
-                    var directionToDestination = player.Location.DirectionTo(toLocation);
-
-                    this.Context.Scheduler.ImmediateEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
+            this.FromLocation = fromLocation;
+            this.FromStackPos = fromStackPos;
+            this.ToLocation = toLocation;
+            this.IsTeleport = isTeleport;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Gets the location from which the movement is happening.
+        /// </summary>
+        public Location FromLocation { get; }
+
+        /// <summary>
+        /// Gets the position in the stack of the location from which the movement is happening.
+        /// </summary>
+        public byte FromStackPos { get; }
+
+        /// <summary>
+        /// Gets the location to which the movement is happening.
+        /// </summary>
+        public Location ToLocation { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the movement is considered a teleportation.
+        /// </summary>
+        public bool IsTeleport { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            var sourceTile = this.FromCylinder as ITile;
+            var destinationTile = this.ToCylinder as ITile;
+
+            // Declare some pre-conditions.
+            var sourceTileIsNull = sourceTile == null;
+            var destinationHasGround = destinationTile?.Ground != null;
+            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == this.Requestor;
+            var locationsMatch = this.ThingMoving?.Location == this.FromLocation;
+            var requestorInRange = this.Requestor == null || (this.Requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
+            var canThrowBetweenLocations = this.IsTeleport || this.Requestor == null || this.CanThrowBetweenMapLocations(this.FromLocation, this.ToLocation, checkLineOfSight: true);
+
+            if (sourceTileIsNull || !thingCanBeMoved)
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+            }
+            else if (!locationsMatch)
+            {
+                // Silent fail.
+                return;
+            }
+            else if (!destinationHasGround || !canThrowBetweenLocations)
+            {
+                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+            }
+            else if (this.ThingMoving is ICreature creature)
+            {
+                var distanceBetweenLocations = this.FromLocation - this.ToLocation;
+                var creatureStackPos = sourceTile?.GetStackPositionOfThing(creature);
+
+                // More pre-conditions.
+                var canThrowThatFar = this.IsTeleport || this.Requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
+                var creatureAvoidsDestination = !this.IsTeleport && this.Requestor != null && this.Requestor != creature && destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
+                var destinationIsObstructed = !this.IsTeleport && (destinationTile.BlocksLay || destinationTile.BlocksPass);
+                var sourceTileHasThing = creatureStackPos != byte.MaxValue &&
+                                         sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, creatureStackPos.Value) is ICreature &&
+                                         this.Amount == 1;
+
+                if (!sourceTileHasThing)
+                {
+                    // Silent fail.
+                    return;
+                }
+                else if (creatureAvoidsDestination || destinationIsObstructed)
+                {
+                    this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                }
+                else if (!requestorInRange)
+                {
+                    this.SendFailureNotification(OperationMessage.TooFarAway);
+                }
+                else if (!canThrowThatFar)
+                {
+                    this.SendFailureNotification(OperationMessage.DestinationTooFarAway);
+                }
+                else if (!this.PerformCreatureMovement(creature, this.ToLocation, this.IsTeleport, requestorCreature: this.Requestor))
+                {
+                    // Something else went wrong.
+                    this.SendFailureNotification();
+                }
+                else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+                {
+                    var directionToDestination = player.Location.DirectionTo(this.ToLocation);
+
+                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                }
+            }
+            else if (this.ThingMoving is IItem item)
+            {
+                var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+                var distanceBetweenLocations = (this.Requestor?.Location ?? this.FromLocation) - this.ToLocation;
+
+                // More pre-conditions.
+                var itemCanBeMoved = item.CanBeMoved;
+                var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
+                                                    sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
+                                                    item.Amount >= this.Amount;
+                var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
+                var movementInRange = this.Requestor == null || !item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0);
+
+                if (!itemCanBeMoved)
+                {
+                    this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                }
+                else if (destinationIsObstructed)
+                {
+                    this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                }
+                else if (!movementInRange)
+                {
+                    this.SendFailureNotification(OperationMessage.DestinationTooFarAway);
+                }
+                else if (!sourceTileHasEnoughItemAmount)
+                {
+                    this.SendFailureNotification(OperationMessage.NotEnoughQuantity);
+                }
+                else if (!this.PerformItemMovement(item, sourceTile, destinationTile, this.FromStackPos, amountToMove: this.Amount, requestorCreature: this.Requestor))
+                {
+                    // Something else went wrong.
+                    this.SendFailureNotification();
+                }
+                else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+                {
+                    var directionToDestination = player.Location.DirectionTo(this.ToLocation);
+
+                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                }
+            }
+        }
 
         /// <summary>
         /// Immediately attempts to perform a creature movement to a tile on the map.
@@ -195,7 +275,7 @@ namespace OpenTibia.Server.Operations.Movements
 
             if (toStackPosition != byte.MaxValue)
             {
-                this.Context.Scheduler.ImmediateEvent(
+                this.Context.Scheduler.ScheduleEvent(
                     new CreatureMovedNotification(
                         this.Logger,
                         this.Context.MapDescriptor,

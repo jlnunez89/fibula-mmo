@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using Microsoft.Extensions.Hosting;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Parsing.Contracts.Enumerations;
@@ -37,31 +36,48 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         WorldState Status { get; }
 
-        bool OnOperationEventRulesEvaluationTriggered(IEvent byEvent, EventRuleType ruleType, IEventRuleArguments ruleArguments);
+        /// <summary>
+        /// Evaluates any rules of the given type using the supplied arguments.
+        /// </summary>
+        /// <param name="caller">The evaluation requestor.</param>
+        /// <param name="type">The type of rules to evaluate.</param>
+        /// <param name="eventRuleArguments">The arguments to evaluate with.</param>
+        /// <returns>True if at least one rule was matched and executed, false otherwise.</returns>
+        bool EvaluateRules(object caller, EventRuleType type, IEventRuleArguments eventRuleArguments);
 
         void ChangeItem(IThing thing, ushort toItemId, byte effect);
 
         void ChangeItemAtLocation(Location location, ushort fromItemId, ushort toItemId, byte effect);
 
+        void ChangePlayerStartLocation(IPlayer player, Location newLocation);
+
         bool CompareItemCountAt(Location location, FunctionComparisonType comparisonType, ushort value);
+
+        bool CompareItemAttribute(IThing thing, ItemAttribute attribute, FunctionComparisonType comparisonType, ushort value);
 
         void CreateItemAtLocation(Location location, ushort itemId, byte effect);
 
-        void ApplyDamage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
+        void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
 
         void Delete(IThing thing);
 
         void DeleteOnMap(Location location, ushort itemId);
 
-        void CreateAnimatedEffectAt(Location location, byte effectByte);
+        void DescribeFor(IThing thingToDescribe, ICreature user);
+
+        void DisplayAnimatedEffectAt(Location location, byte effectByte);
+
+        void DisplayAnimatedText(Location location, string text, byte textType);
+
+        bool HasAccessFlag(IPlayer player, string rightStr);
 
         bool HasFlag(IThing itemThing, string flagStr);
 
-        bool HasInstanceAttribute(IThing thing, ItemAttribute attribute, FunctionComparisonType comparisonType, ushort value);
-
         bool HasProfession(IThing thing, byte profesionId);
 
-        bool HasRight(IPlayer user, string rightStr);
+        bool IsAllowedToLogOut(IPlayer player);
+
+        bool IsAtLocation(IThing thing, Location location);
 
         bool IsCreature(IThing thing);
 
@@ -75,30 +91,20 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         bool IsPlayer(IThing thing);
 
-        bool IsAtLocation(IThing thing, Location location);
+        bool IsRandomNumberUnder(byte value, int maxValue = 100);
 
-        bool IsType(IThing thing, ushort typeId);
+        bool IsSpecificItem(IThing thing, ushort typeId);
 
-        void LogPlayerOut(IPlayer user);
+        void LogPlayerOut(IPlayer player);
 
-        bool IsAllowedToLogOut(IPlayer user);
+        void MoveTo(IThing thingToMove, Location targetLocation);
+
+        void MoveTo(ushort itemId, Location fromLocation, Location toLocation);
+
+        void MoveTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds);
 
         void PlaceMonsterAt(Location location, ushort monsterId);
 
-        void MoveThingTo(IThing thingToMove, Location targetLocation);
-
-        void MoveEverythingToLocation(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds);
-
-        void MoveByIdToLocation(ushort itemId, Location fromLocation, Location toLocation);
-
-        bool Random(byte value);
-
-        void ChangePlayerStartLocation(IPlayer player, Location newLocation);
-
-        void DisplayAnimatedText(Location location, string text, byte textType);
-
-        void WritePlayerNameOnThing(IPlayer player, string format, IThing targetThing);
-
-        void DescribeThingFor(IThing thingToDescribe, ICreature user);
+        void TagThing(IPlayer player, string format, IThing targetThing);
     }
 }

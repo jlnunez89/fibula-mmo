@@ -30,7 +30,7 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="targetCreature">The creature in which the movement is happening.</param>
         /// <param name="fromCreatureSlot">The slot of the creature from which the movement is happening.</param>
-        /// <param name="toCreatureContainerId">The id of the container to which the movement is happening.</param>
+        /// <param name="toCreatureContainerPosition">The position of the container to which the movement is happening.</param>
         /// <param name="toCreatureContainerIndex">The index in the container to which the movement is happening.</param>
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public BodyToContainerMovementOperation(
@@ -40,41 +40,63 @@ namespace OpenTibia.Server.Operations.Movements
             IThing thingMoving,
             ICreature targetCreature,
             Slot fromCreatureSlot,
-            byte toCreatureContainerId,
+            byte toCreatureContainerPosition,
             byte toCreatureContainerIndex,
             byte amount = 1)
-            : base(logger, context, targetCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.ContainerManager?.FindForCreature(targetCreature.Id, toCreatureContainerId), creatureRequestingId)
+            : base(logger, context, targetCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.ContainerManager?.FindForCreature(targetCreature.Id, toCreatureContainerPosition), creatureRequestingId)
         {
             if (amount == 0)
             {
                 throw new ArgumentException("Invalid count zero.", nameof(amount));
             }
 
-            this.ActionsOnPass.Add(() =>
-            {
-                if (!(thingMoving is IItem item))
-                {
-                    // You may not move this.
-                    return;
-                }
-
-                var creatureHasDestinationContainerOpen = this.Context.ContainerManager.FindForCreature(targetCreature.Id, toCreatureContainerId) != null;
-
-                bool moveSuccessful = creatureHasDestinationContainerOpen &&
-                                      this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, toCreatureContainerIndex, amount, this.Requestor);
-
-                if (!moveSuccessful)
-                {
-                    // handles check for isPlayer.
-                    // this.NotifyOfFailure();
-                    return;
-                }
-            });
+            this.ThingMoving = thingMoving;
+            this.Amount = amount;
+            this.TargetCreature = targetCreature;
+            this.ToCreatureContainerIndex = toCreatureContainerIndex;
         }
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets a reference to the thing moving.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public IThing ThingMoving { get; }
+
+        /// <summary>
+        /// Gets the amount of the thing moving.
+        /// </summary>
+        public byte Amount { get; }
+
+        /// <summary>
+        /// Gets the creature within which the movement is happening.
+        /// </summary>
+        public ICreature TargetCreature { get; }
+
+        /// <summary>
+        /// Gets the index within the container to which the movement is happening.
+        /// </summary>
+        public byte ToCreatureContainerIndex { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute()
+        {
+            // Declare some pre-conditions.
+            var creatureHasDestinationContainerOpen = this.Context.ContainerManager.FindForCreature(this.TargetCreature.Id, this.ToCylinder as IContainerItem) != IContainerManager.UnsetContainerPosition;
+
+            if (!(this.ThingMoving is IItem item))
+            {
+                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+            }
+            else if (!creatureHasDestinationContainerOpen)
+            {
+                this.SendFailureNotification(OperationMessage.MustFirstOpenThatContainer);
+            }
+            else if (!this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, this.ToCreatureContainerIndex, this.Amount, this.Requestor))
+            {
+                // Something else went wrong.
+                this.SendFailureNotification();
+            }
+        }
     }
 }

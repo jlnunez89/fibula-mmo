@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Operations.Notifications
+namespace OpenTibia.Server.Notifications
 {
     using System;
     using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace OpenTibia.Server.Operations.Notifications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
+    using OpenTibia.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>

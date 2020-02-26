@@ -14,9 +14,19 @@ namespace OpenTibia.Server.Operations.Arguments
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations.Environment;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="PlaceCreatureOperation"/>.
+    /// </summary>
     public class PlaceCreatureOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PlaceCreatureOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="atLocation"></param>
+        /// <param name="creature"></param>
         public PlaceCreatureOperationCreationArguments(uint requestorId, Location atLocation, ICreature creature)
         {
             creature.ThrowIfNull(nameof(creature));
@@ -30,6 +40,9 @@ namespace OpenTibia.Server.Operations.Arguments
 
         public ICreature Creature { get; }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
     }
 }

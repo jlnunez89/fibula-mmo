@@ -15,9 +15,22 @@ namespace OpenTibia.Server.Operations.Arguments
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations.Movements;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="MapToBodyMovementOperation"/>.
+    /// </summary>
     public class MapToBodyMovementOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MapToBodyMovementOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="thingMoving"></param>
+        /// <param name="fromLocation"></param>
+        /// <param name="toCreature"></param>
+        /// <param name="toSlot"></param>
+        /// <param name="amount"></param>
         public MapToBodyMovementOperationCreationArguments(uint requestorId, IThing thingMoving, Location fromLocation, ICreature toCreature, Slot toSlot, byte amount = 1)
         {
             thingMoving.ThrowIfNull(nameof(thingMoving));
@@ -31,6 +44,9 @@ namespace OpenTibia.Server.Operations.Arguments
             this.Amount = amount;
         }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
 
         public IThing ThingMoving { get; }

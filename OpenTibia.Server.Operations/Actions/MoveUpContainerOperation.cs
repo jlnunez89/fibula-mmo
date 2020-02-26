@@ -26,17 +26,33 @@ namespace OpenTibia.Server.Operations.Actions
         /// <param name="context">The context of the operation.</param>
         /// <param name="player">The player who has the container open.</param>
         /// <param name="containerItem">The container being closed.</param>
-        /// <param name="asContainerId">The id of the container being closed, as seen by the player.</param>
-        public MoveUpContainerOperation(ILogger logger, IOperationContext context, IPlayer player, IContainerItem containerItem, byte asContainerId)
+        /// <param name="containerPosition">The position of the container being closed, as seen by the player.</param>
+        public MoveUpContainerOperation(ILogger logger, IOperationContext context, IPlayer player, IContainerItem containerItem, byte containerPosition)
             : base(logger, context, player.Id)
         {
-            this.ActionsOnPass.Add(() =>
-            {
-                if (containerItem.ParentCylinder is IContainerItem parentContainer)
-                {
-                    this.Context.ContainerManager.OpenContainer(player, parentContainer, asContainerId);
-                }
-            });
+            this.Player = player;
+            this.ContainerItem = containerItem;
+            this.ContainerPosition = containerPosition;
         }
+
+        /// <summary>
+        /// Gets the reference to the player making the operation.
+        /// </summary>
+        public IPlayer Player { get; }
+
+        /// <summary>
+        /// Gets the reference to the container being moved up from.
+        /// </summary>
+        public IContainerItem ContainerItem { get; }
+
+        /// <summary>
+        /// Gets the position of the container with respect to the player moving up from it.
+        /// </summary>
+        public byte ContainerPosition { get; }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        public override void Execute() => this.Context.ContainerManager.OpenContainer(this.Player, this.ContainerItem?.ParentCylinder as IContainerItem, this.ContainerPosition);
     }
 }

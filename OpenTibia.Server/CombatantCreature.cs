@@ -23,13 +23,13 @@ namespace OpenTibia.Server
     /// </summary>
     public abstract class CombatantCreature : Creature, ICombatant
     {
-        const decimal DefaultAttackSpeed = 1.0m;
+        private const decimal DefaultAttackSpeed = 1.0m;
 
-        const decimal DefaultDefenseSpeed = 2.0m;
+        private const decimal DefaultDefenseSpeed = 2.0m;
 
-        const byte DefaultMaximumAttackCredits = 1;
+        private const byte DefaultMaximumAttackCredits = 1;
 
-        const byte DefaultMaximumDefenseCredits = 2;
+        private const byte DefaultMaximumDefenseCredits = 2;
 
         private readonly object damageTakenFromOthersLock;
 
@@ -59,8 +59,9 @@ namespace OpenTibia.Server
             decimal baseDefenseSpeed = DefaultDefenseSpeed)
             : base(name, article, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
         {
-            this.BaseAttackSpeed = baseAttackSpeed;
-            this.BaseDefenseSpeed = baseDefenseSpeed;
+            // Normalize combat speeds.
+            this.BaseAttackSpeed = Math.Min(ICombatant.MaximumCombatSpeed, Math.Max(ICombatant.MinimumCombatSpeed, baseAttackSpeed));
+            this.BaseDefenseSpeed = Math.Min(ICombatant.MaximumCombatSpeed, Math.Max(ICombatant.MinimumCombatSpeed, baseDefenseSpeed));
 
             this.AutoAttackCredits = this.AutoAttackMaximumCredits;
             this.AutoDefenseCredits = this.AutoDefenseMaximumCredits;

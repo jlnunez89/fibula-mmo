@@ -124,7 +124,7 @@ namespace OpenTibia.Server.Operations
                     {
                         return new ChangeItemOperation(
                             this.Logger,
-                            this.DefaultElevatedOperationContext,
+                            this.DefaultOperationContext,
                             changeItemOpArgs.RequestorId,
                             changeItemOpArgs.ItemTypeId,
                             changeItemOpArgs.FromLocation,
@@ -156,6 +156,18 @@ namespace OpenTibia.Server.Operations
                             deleteItemOpArgs.RequestorId,
                             deleteItemOpArgs.ItemTypeId,
                             deleteItemOpArgs.AtLocation);
+                    }
+
+                    break;
+                case OperationType.ContainerOpen:
+                    if (arguments is OpenContainerOperationCreationArguments openContainerOpArgs)
+                    {
+                        return new OpenContainerOperation(
+                            this.Logger,
+                            this.DefaultOperationContext,
+                            openContainerOpArgs.Player,
+                            openContainerOpArgs.Container,
+                            openContainerOpArgs.ContainerId);
                     }
 
                     break;
@@ -233,7 +245,7 @@ namespace OpenTibia.Server.Operations
                             bodyToContainerOpArgs.ThingMoving,
                             bodyToContainerOpArgs.TargetCreature,
                             bodyToContainerOpArgs.FromSlot,
-                            bodyToContainerOpArgs.ToContainerId,
+                            bodyToContainerOpArgs.ToContainerPosition,
                             bodyToContainerOpArgs.ToContainerIndex,
                             bodyToContainerOpArgs.Amount);
                     }

@@ -13,9 +13,17 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Operations.Environment;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="LogOutOperation"/>.
+    /// </summary>
     public class LogOutOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="LogOutOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="player"></param>
         public LogOutOperationCreationArguments(IPlayer player)
         {
             player.ThrowIfNull(nameof(player));
@@ -25,6 +33,9 @@ namespace OpenTibia.Server.Operations.Arguments
 
         public IPlayer Player { get; }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId => this.Player.Id;
     }
 }

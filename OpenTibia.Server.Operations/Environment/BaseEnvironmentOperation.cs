@@ -17,16 +17,14 @@ namespace OpenTibia.Server.Operations.Actions
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Combat;
-    using OpenTibia.Server.Operations.Movements;
-    using OpenTibia.Server.Operations.Notifications;
-    using OpenTibia.Server.Operations.Notifications.Arguments;
     using Serilog;
 
     /// <summary>
@@ -34,10 +32,6 @@ namespace OpenTibia.Server.Operations.Actions
     /// </summary>
     public abstract class BaseEnvironmentOperation : ElevatedOperation
     {
-        private const decimal MaximumCombatSpeed = 5.0m;
-
-        private const decimal MinimumCombatSpeed = 0.2m;
-
         /// <summary>
         /// The default exhaustion cost for environment operations.
         /// </summary>
@@ -62,9 +56,9 @@ namespace OpenTibia.Server.Operations.Actions
         public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
         /// <summary>
-        /// Gets the exhaustion cost time of this operation.
+        /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
-        public override TimeSpan ExhaustionCost { get; }
+        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Attempts to place a creature on the map.
@@ -79,48 +73,53 @@ namespace OpenTibia.Server.Operations.Actions
                 return false;
             }
 
-            if (this.Context.TileAccessor.GetTileAt(location, out ITile targetTile))
+            if (!this.Context.TileAccessor.GetTileAt(location, out ITile targetTile))
             {
-                var (addResult, _) = targetTile.AddContent(this.Context.ItemFactory, creature);
-
-                if (addResult)
-                {
-                    this.Context.CreatureManager.RegisterCreature(creature);
-
-                    if (creature is ICombatant combatant)
-                    {
-                        combatant.TargetChanged += this.HandleCombatantTargetChanged;
-                        combatant.ChaseModeChanged += this.HandleCombatantChaseModeChanged;
-                        combatant.CombatCreditsConsumed += this.HandleCombatCreditsConsumed;
-                    }
-
-                    this.Logger.Debug($"Placed {creature.Name} at {location}.");
-
-                    IEnumerable<IConnection> TargetConnectionsFunc()
-                    {
-                        if (creature is IPlayer player)
-                        {
-                            return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location).Except(this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem());
-                        }
-
-                        return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location);
-                    }
-
-                    var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
-
-                    this.Context.Scheduler.ImmediateEvent(
-                            new CreatureMovedNotification(
-                            this.Logger,
-                            this.Context.MapDescriptor,
-                            this.Context.CreatureManager,
-                            TargetConnectionsFunc,
-                            new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, location, placedAtStackPos, wasTeleport: true)));
-                }
-
-                return addResult;
+                return false;
             }
 
-            return false;
+            var (addSuccessful, _) = targetTile.AddContent(this.Context.ItemFactory, creature);
+
+            if (addSuccessful)
+            {
+                this.Context.CreatureManager.RegisterCreature(creature);
+
+                if (creature is ICombatant combatant)
+                {
+                    combatant.TargetChanged += this.OnCombatantTargetChanged;
+                    combatant.ChaseModeChanged += this.OnCombatantChaseModeChanged;
+                    combatant.CombatCreditsConsumed += this.OnCombatCreditsConsumed;
+                }
+
+                if (creature is IPlayer player)
+                {
+                    player.Inventory.SlotChanged += this.OnPlayerInventoryChanged;
+                }
+
+                this.Logger.Debug($"Placed {creature.Name} at {location}.");
+
+                IEnumerable<IConnection> TargetConnectionsFunc()
+                {
+                    if (creature is IPlayer player)
+                    {
+                        return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location).Except(this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem());
+                    }
+
+                    return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location);
+                }
+
+                var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
+
+                this.Context.Scheduler.ScheduleEvent(
+                        new CreatureMovedNotification(
+                        this.Logger,
+                        this.Context.MapDescriptor,
+                        this.Context.CreatureManager,
+                        TargetConnectionsFunc,
+                        new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, location, placedAtStackPos, wasTeleport: true)));
+            }
+
+            return addSuccessful;
         }
 
         /// <summary>
@@ -143,7 +142,19 @@ namespace OpenTibia.Server.Operations.Actions
 
             if (removedFromTile)
             {
-                this.Context.Scheduler.ImmediateEvent(
+                if (creature is ICombatant combatant)
+                {
+                    combatant.TargetChanged -= this.OnCombatantTargetChanged;
+                    combatant.ChaseModeChanged -= this.OnCombatantChaseModeChanged;
+                    combatant.CombatCreditsConsumed -= this.OnCombatCreditsConsumed;
+                }
+
+                if (creature is IPlayer player)
+                {
+                    player.Inventory.SlotChanged -= this.OnPlayerInventoryChanged;
+                }
+
+                this.Context.Scheduler.ScheduleEvent(
                     new CreatureRemovedNotification(
                         this.Logger,
                         this.Context.CreatureManager,
@@ -154,58 +165,38 @@ namespace OpenTibia.Server.Operations.Actions
             return removedFromTile;
         }
 
-        protected void HandleCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount)
+        private void OnCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount)
         {
             if (combatant == null)
             {
                 return;
             }
 
-            var restoreOperation = new RestoreCombatCreditOperation(this.Logger, combatant, creditType);
+            var combatSpeed = creditType == CombatCreditType.Attack ? combatant.BaseAttackSpeed : combatant.BaseDefenseSpeed;
+            var restoreOperation = new RestoreCombatCreditOperation(this.Logger, this.Context, combatant, creditType);
+            var restoreCreditDelay = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / combatSpeed));
 
-            var normalizedSpeed = Math.Min(MaximumCombatSpeed, Math.Max(MinimumCombatSpeed, creditType == CombatCreditType.Attack ? combatant.BaseAttackSpeed : combatant.BaseDefenseSpeed));
-            var restoreCreditDelay = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / normalizedSpeed));
-
-            this.Context.Scheduler.ScheduleEvent(restoreOperation, this.Context.Scheduler.CurrentTime + restoreCreditDelay);
+            this.Context.Scheduler.ScheduleEvent(restoreOperation, restoreCreditDelay);
         }
 
-        protected void HandleCombatantTargetChanged(ICombatant combatant, ICombatant oldTarget)
+        private void OnCombatantTargetChanged(ICombatant combatant, ICombatant oldTarget)
         {
-            if (combatant == null || combatant.AutoAttackTarget?.Id == oldTarget?.Id)
-            {
-                return;
-            }
-
-            if (combatant.AutoAttackTarget == null)
+            if (combatant?.AutoAttackTarget == null)
             {
                 // This combatant has stopped attacks.
-                combatant.ClearAllLocationActions();
-                combatant.ClearAllRangeBasedActions();
-
                 return;
             }
 
-            if (oldTarget != null)
-            {
-                // This combatant has switched to attack something else.
-                combatant.ClearAllLocationActions();
-                combatant.ClearAllRangeBasedActions();
-            }
+            var attackExhaustionCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / combatant.BaseAttackSpeed));
 
-            if (combatant.AutoAttackTarget != null)
-            {
-                var normalizedAttackSpeed = Math.Min(MaximumCombatSpeed, Math.Max(MinimumCombatSpeed, combatant.BaseAttackSpeed));
-                var attackCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / normalizedAttackSpeed));
+            var attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, combatant, combatant.AutoAttackTarget, attackExhaustionCost);
 
-                IEvent attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, combatant, combatant.AutoAttackTarget, attackCost);
+            var cooldownRemaining = combatant.CalculateRemainingCooldownTime(attackOperation.ExhaustionType, this.Context.Scheduler.CurrentTime);
 
-                var cooldownRemaining = combatant.CalculateRemainingCooldownTime(ExhaustionType.PhysicalCombat, this.Context.Scheduler.CurrentTime);
-
-                this.Context.Scheduler.ScheduleEvent(attackOperation, this.Context.Scheduler.CurrentTime + cooldownRemaining);
-            }
+            this.Context.Scheduler.ScheduleEvent(attackOperation, cooldownRemaining);
         }
 
-        protected void HandleCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode)
+        private void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode)
         {
             if (combatant == null || combatant.ChaseMode == oldMode)
             {
@@ -230,7 +221,7 @@ namespace OpenTibia.Server.Operations.Actions
             }
         }
 
-        protected void HandlePlayerInventoryChanged(IInventory inventory, Slot slot, IItem item)
+        private void OnPlayerInventoryChanged(IInventory inventory, Slot slot, IItem item)
         {
             if (!(inventory.Owner is IPlayer player))
             {
@@ -246,43 +237,7 @@ namespace OpenTibia.Server.Operations.Actions
 
             var notification = new GenericNotification(this.Logger, () => this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem(), notificationArgs);
 
-            this.Context.Scheduler.ImmediateEvent(notification);
-        }
-
-        /// <summary>
-        /// Attempts to schedule a creature's auto walk movements.
-        /// </summary>
-        /// <param name="creature">The creature making the request.</param>
-        /// <param name="directions">The directions to walk to.</param>
-        /// <param name="stepIndex">Optional. The index in the directions array at which to start moving. Defaults to zero.</param>
-        /// <returns>True if the auto walk request was accepted, false otherwise.</returns>
-        private bool AutoWalk(ICreature creature, Direction[] directions, int stepIndex = 0)
-        {
-            creature.ThrowIfNull(nameof(creature));
-
-            if (directions.Length == 0 || stepIndex >= directions.Length)
-            {
-                return true;
-            }
-
-            // A new request overrides and cancels any "auto" actions waiting to be retried.
-            this.Context.Scheduler.CancelAllFor(creature.Id, typeof(IMovementOperation));
-
-            var nextLocation = creature.Location.LocationAt(directions[stepIndex]);
-
-            TimeSpan movementDelay = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.Context.Scheduler.CurrentTime);
-
-            IEvent movementOperation = new MapToMapMovementOperation(this.Logger, this.Context, creature.Id, creature, creature.Location, nextLocation);
-
-            this.Context.Scheduler.ScheduleEvent(movementOperation, this.Context.Scheduler.CurrentTime + movementDelay);
-
-            if (directions.Length > 1)
-            {
-                // Add this request as the retry action, so that the request gets repeated when the player hits this location.
-                creature.EnqueueRetryActionAtLocation(nextLocation, () => this.AutoWalk(creature, directions, stepIndex + 1));
-            }
-
-            return true;
+            this.Context.Scheduler.ScheduleEvent(notification);
         }
     }
 }

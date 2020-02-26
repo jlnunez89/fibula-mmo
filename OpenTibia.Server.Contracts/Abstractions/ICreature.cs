@@ -22,9 +22,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, ICylinder, IHasInventory
     {
-        // event OnCreatureStateChange OnZeroHealth;
-        // event OnCreatureStateChange OnInventoryChanged;
-
         /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>

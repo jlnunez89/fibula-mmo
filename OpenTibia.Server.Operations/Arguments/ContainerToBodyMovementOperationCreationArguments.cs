@@ -14,9 +14,23 @@ namespace OpenTibia.Server.Operations.Arguments
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Operations.Movements;
 
+    /// <summary>
+    /// Class that represents creation arguments for a <see cref="ContainerToBodyMovementOperation"/>.
+    /// </summary>
     public class ContainerToBodyMovementOperationCreationArguments : IOperationCreationArguments
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ContainerToBodyMovementOperationCreationArguments"/> class.
+        /// </summary>
+        /// <param name="requestorId"></param>
+        /// <param name="thingMoving"></param>
+        /// <param name="targetCreature"></param>
+        /// <param name="fromContainerId"></param>
+        /// <param name="fromContainerIndex"></param>
+        /// <param name="toSlot"></param>
+        /// <param name="amount"></param>
         public ContainerToBodyMovementOperationCreationArguments(
             uint requestorId,
             IThing thingMoving,
@@ -38,6 +52,9 @@ namespace OpenTibia.Server.Operations.Arguments
             this.Amount = amount;
         }
 
+        /// <summary>
+        /// Gets the id of the requestor of the operation.
+        /// </summary>
         public uint RequestorId { get; }
 
         public IThing ThingMoving { get; }
