@@ -22,6 +22,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Arguments;
     using Serilog;
 
@@ -85,9 +86,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
-            this.UseItemAt(player, itemUseInfo.ItemClientId, itemUseInfo.FromLocation, itemUseInfo.FromStackPos, itemUseInfo.Index);
-
-            return null;
+            return this.UseItemAt(player, itemUseInfo.ItemClientId, itemUseInfo.FromLocation, itemUseInfo.FromStackPos, itemUseInfo.Index);
         }
 
         /// <summary>
@@ -98,7 +97,7 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="fromLocation">The location from which the item is being used.</param>
         /// <param name="fromStackPos">The position in the stack of the location from which the item is being used.</param>
         /// <param name="index">The index of the item being used.</param>
-        private void UseItemAt(ICreature creature, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index)
+        private IEnumerable<IOutgoingPacket> UseItemAt(ICreature creature, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index)
         {
             var locationDiff = fromLocation - creature.Location;
 
@@ -109,7 +108,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
                 if (directions == null || !directions.Any())
                 {
-                    return;
+                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
                 }
                 else
                 {
@@ -118,7 +117,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
                     this.AutoWalk(creature, directions.ToArray());
 
-                    return;
+                    return null;
                 }
             }
 
@@ -130,6 +129,8 @@ namespace OpenTibia.Communications.Handlers.Game
                     fromLocation,
                     fromStackPos,
                     index));
+
+            return null;
         }
     }
 }

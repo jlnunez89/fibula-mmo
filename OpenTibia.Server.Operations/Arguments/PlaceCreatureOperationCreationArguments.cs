@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Operations.Environment;
 
     /// <summary>
@@ -25,18 +24,18 @@ namespace OpenTibia.Server.Operations.Arguments
         /// Initializes a new instance of the <see cref="PlaceCreatureOperationCreationArguments"/> class.
         /// </summary>
         /// <param name="requestorId"></param>
-        /// <param name="atLocation"></param>
+        /// <param name="atTile"></param>
         /// <param name="creature"></param>
-        public PlaceCreatureOperationCreationArguments(uint requestorId, Location atLocation, ICreature creature)
+        public PlaceCreatureOperationCreationArguments(uint requestorId, ITile atTile, ICreature creature)
         {
             creature.ThrowIfNull(nameof(creature));
 
             this.RequestorId = requestorId;
-            this.AtLocation = atLocation;
+            this.AtTile = atTile;
             this.Creature = creature;
         }
 
-        public Location AtLocation { get; }
+        public ITile AtTile { get; }
 
         public ICreature Creature { get; }
 

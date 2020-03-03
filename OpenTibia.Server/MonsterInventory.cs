@@ -132,7 +132,7 @@ namespace OpenTibia.Server.Monsters
                 if (!(itemFactory.Create(typeId) is IItem newItem))
                 {
                     // TODO: propper logging.
-                    Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
+                    // Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
                     continue;
                 }
 
@@ -144,7 +144,7 @@ namespace OpenTibia.Server.Monsters
                 }
 
                 // TODO: propper logging.
-                Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
+                // Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
 
                 this.inventory[this.lastPosByte++] = (newItem, DefaultLossProbability);
             }

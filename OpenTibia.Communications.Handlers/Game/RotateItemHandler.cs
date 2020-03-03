@@ -22,6 +22,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Arguments;
     using Serilog;
 
@@ -85,9 +86,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
-            this.RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId);
-
-            return null;
+            return this.RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId);
         }
 
         /// <summary>
@@ -97,7 +96,7 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="atLocation">The location at which the item to rotate is.</param>
         /// <param name="index">The index where the item to rotate is.</param>
         /// <param name="typeId">The type id of the item to rotate.</param>
-        private void RotateItemAt(ICreature creature, Location atLocation, byte index, ushort typeId)
+        private IEnumerable<IOutgoingPacket> RotateItemAt(ICreature creature, Location atLocation, byte index, ushort typeId)
         {
             var locationDiff = atLocation - creature.Location;
 
@@ -108,7 +107,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
                 if (directions == null || !directions.Any())
                 {
-                    return;
+                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
                 }
                 else
                 {
@@ -117,16 +116,15 @@ namespace OpenTibia.Communications.Handlers.Game
 
                     this.AutoWalk(creature, directions.ToArray());
 
-                    return;
+                    return null;
                 }
             }
 
-            // TODO: should this be scheduled too?
             if (this.Context.TileAccessor.GetTileAt(atLocation, out ITile targetTile))
             {
                 if (!(targetTile.GetTopThingByOrder(this.Context.CreatureFinder, index) is IItem item) || item.ThingId != typeId || !item.CanBeRotated)
                 {
-                    return;
+                    return null;
                 }
 
                 this.ScheduleNewOperation(
@@ -137,6 +135,8 @@ namespace OpenTibia.Communications.Handlers.Game
                             atLocation,
                             item.RotateTo));
             }
+
+            return null;
         }
     }
 }

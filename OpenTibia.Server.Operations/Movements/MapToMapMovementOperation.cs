@@ -136,7 +136,7 @@ namespace OpenTibia.Server.Operations.Movements
                 // More pre-conditions.
                 var canThrowThatFar = this.IsTeleport || this.Requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
                 var creatureAvoidsDestination = !this.IsTeleport && this.Requestor != null && this.Requestor != creature && destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
-                var destinationIsObstructed = !this.IsTeleport && (destinationTile.BlocksLay || destinationTile.BlocksPass);
+                var destinationIsObstructed = !this.IsTeleport && distanceBetweenLocations.Z == 0 && (destinationTile.BlocksLay || destinationTile.BlocksPass);
                 var sourceTileHasThing = creatureStackPos != byte.MaxValue &&
                                          sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, creatureStackPos.Value) is ICreature &&
                                          this.Amount == 1;

@@ -276,23 +276,5 @@ namespace OpenTibia.Server.Operations.Movements
 
             return true;
         }
-
-        /// <summary>
-        /// Sends a <see cref="TextMessageNotification"/> to the requestor of the operation, if there is one and it is a player.
-        /// </summary>
-        /// <param name="message">Optional. The message to send. Defaults to <see cref="OperationMessage.NotPossible"/>.</param>
-        protected void SendFailureNotification(string message = OperationMessage.NotPossible)
-        {
-            message.ThrowIfNullOrWhiteSpace();
-
-            if (this.Requestor is IPlayer)
-            {
-                this.Context.Scheduler.ScheduleEvent(
-                    new TextMessageNotification(
-                        this.Logger,
-                        () => this.Context.ConnectionFinder.FindByPlayerId(this.RequestorId).YieldSingleItem(),
-                        new TextMessageNotificationArguments(MessageType.StatusSmall, message)));
-            }
-        }
     }
 }

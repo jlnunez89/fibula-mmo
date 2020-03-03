@@ -81,7 +81,7 @@ namespace OpenTibia.Server.Operations.Environment
 
             IPlayer player = this.Context.CreatureFactory.Create(CreatureType.Player, this.PlayerMetadata) as IPlayer;
 
-            if (!this.PlaceCreature(targetLocation, player))
+            if (!this.Context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(targetTile, player))
             {
                 return;
             }

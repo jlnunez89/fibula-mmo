@@ -72,7 +72,7 @@ namespace OpenTibia.Server.PathFinding.AStar
                     this.nodesDictionary.Add(searchId, new Dictionary<Location, TileNode>());
                 }
 
-                if (!this.nodesDictionary[searchId].ContainsKey(locToSearch) && this.tileAccessor.GetTileAt(tileNodeArguments.Location, out ITile tile))
+                if (!this.nodesDictionary[searchId].ContainsKey(locToSearch) && this.tileAccessor.GetTileAt(tileNodeArguments.Location, out ITile tile, loadAsNeeded: true))
                 {
                     this.nodesDictionary[searchId].Add(locToSearch, new TileNode(searchId, tile, tileNodeArguments.OnBehalfOfCreature));
                 }

@@ -601,12 +601,8 @@ namespace OpenTibia.Server
                 return;
             }
 
-            if (thingToMove is ICreature creature &&
-                this.map.GetTileAt(creature.Location, out ITile creatureTile) &&
-                this.map.GetTileAt(targetLocation, out _))
+            if (thingToMove is ICreature creature)
             {
-                var creatureStackPosition = creatureTile.GetStackPositionOfThing(creature);
-
                 TimeSpan creatureMovementCooldown = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.scheduler.CurrentTime);
 
                 this.DispatchOperation(
@@ -615,14 +611,11 @@ namespace OpenTibia.Server
                             requestorId: 0,
                             creature,
                             creature.Location,
-                            targetLocation,
-                            creatureStackPosition),
+                            targetLocation),
                         creatureMovementCooldown);
             }
-            else if (thingToMove is IItem item && this.map.GetTileAt(item.Location, out ITile itemTile) && this.map.GetTileAt(targetLocation, out _))
+            else if (thingToMove is IItem item)
             {
-                var itemStackPosition = itemTile.GetStackPositionOfThing(item);
-
                 this.DispatchOperation(
                         OperationType.MapToMapMovement,
                         new MapToMapMovementOperationCreationArguments(
@@ -630,7 +623,6 @@ namespace OpenTibia.Server
                             item,
                             item.Location,
                             targetLocation,
-                            itemStackPosition,
                             amount: item.Amount));
             }
         }
@@ -643,29 +635,9 @@ namespace OpenTibia.Server
         /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
         public void MoveTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
         {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(targetLocation, out _))
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile))
             {
                 return;
-            }
-
-            foreach (var item in fromTile.Items)
-            {
-                if (exceptTypeIds.Length > 0 && exceptTypeIds.Contains(item.ThingId))
-                {
-                    continue;
-                }
-
-                var fromStackPos = fromTile.GetStackPositionOfThing(item);
-
-                this.DispatchOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
-                            requestorId: 0,
-                            item,
-                            fromLocation,
-                            targetLocation,
-                            fromStackPos,
-                            amount: item.Amount));
             }
 
             foreach (var creatureId in fromTile.CreatureIds)
@@ -677,16 +649,30 @@ namespace OpenTibia.Server
                     continue;
                 }
 
-                var creatureStackPosition = fromTile.GetStackPositionOfThing(creature);
-
                 this.DispatchOperation(
                         OperationType.MapToMapMovement,
                         new MapToMapMovementOperationCreationArguments(
                             requestorId: 0,
                             creature,
                             fromLocation,
+                            targetLocation));
+            }
+
+            foreach (var item in fromTile.Items)
+            {
+                if (exceptTypeIds.Length > 0 && exceptTypeIds.Contains(item.ThingId))
+                {
+                    continue;
+                }
+
+                this.DispatchOperation(
+                        OperationType.MapToMapMovement,
+                        new MapToMapMovementOperationCreationArguments(
+                            requestorId: 0,
+                            item,
+                            fromLocation,
                             targetLocation,
-                            creatureStackPosition));
+                            amount: item.Amount));
             }
         }
 
@@ -698,19 +684,10 @@ namespace OpenTibia.Server
         /// <param name="toLocation">The location to which to move the item.</param>
         public void MoveTo(ushort itemType, Location fromLocation, Location toLocation)
         {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !this.map.GetTileAt(toLocation, out _))
+            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !(fromTile.FindItemWithId(itemType) is IItem item) || item == null)
             {
                 return;
             }
-
-            var item = fromTile.FindItemWithId(itemType);
-
-            if (item == null)
-            {
-                return;
-            }
-
-            var itemStackPosition = fromTile.GetStackPositionOfThing(item);
 
             this.DispatchOperation(
                     OperationType.MapToMapMovement,
@@ -719,7 +696,6 @@ namespace OpenTibia.Server
                         item,
                         item.Location,
                         toLocation,
-                        itemStackPosition,
                         amount: item.Amount));
         }
 
@@ -732,7 +708,14 @@ namespace OpenTibia.Server
         {
             var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterType));
 
-            this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, location, newMonster));
+            if (!this.map.GetTileAt(location, out ITile atTile))
+            {
+                this.logger.Warning($"No tile found at {location} to place creature at, ignoring.");
+
+                return;
+            }
+
+            this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, atTile, newMonster));
         }
 
         public void TagThing(IPlayer player, string format, IThing targetThing)
@@ -905,6 +888,7 @@ namespace OpenTibia.Server
 
             while (!cancellationToken.IsCancellationRequested)
             {
+                // Thread.Sleep here is OK because MiscellaneousEventsLoop runs on it's own thread.
                 Thread.Sleep(TimeSpan.FromMinutes(1));
 
                 const int NightLightLevel = 30;
@@ -959,6 +943,7 @@ namespace OpenTibia.Server
 
             while (!cancellationToken.IsCancellationRequested)
             {
+                // Thread.Sleep is OK here because ConnectionSweeper runs on it's own thread.
                 Thread.Sleep(CheckConnectionsDelay);
 
                 // Now let's clean up and try to log out all orphaned ones.
@@ -1050,23 +1035,18 @@ namespace OpenTibia.Server
             {
                 for (int i = 0; i < spawn.Count; i++)
                 {
-                    var r = Math.Max(1, spawn.Radius / 4);
+                    var r = spawn.Radius / 4;
+                    var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id));
 
                     var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
 
-                    if (!this.map.GetTileAt(randomLoc, out ITile randomTile))
-                    {
-                        continue;
-                    }
-
                     // Need to actually pathfind to avoid placing a monster in unreachable places.
-                    this.pathFinder.FindBetween(spawn.Location, randomTile.Location, out Location foundLocation, (i + 1) * 10);
+                    this.pathFinder.FindBetween(spawn.Location, randomLoc, out Location foundLocation, (i + 1) * 10);
 
-                    if (this.map.GetTileAt(foundLocation, out ITile foundTile) && !foundTile.IsPathBlocking())
+                    // TODO: some property of newMonster here to figure out what actually blocks path finding.
+                    if (this.map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
                     {
-                        var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id));
-
-                        this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, foundLocation, newMonster));
+                        this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, targetTile, newMonster));
                     }
                 }
             }

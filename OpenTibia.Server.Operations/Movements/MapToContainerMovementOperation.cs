@@ -55,6 +55,7 @@ namespace OpenTibia.Server.Operations.Movements
 
             this.ThingMoving = thingMoving;
             this.Amount = amount;
+            this.FromLocation = fromLocation;
             this.ToCreatureContainerIndex = toCreatureContainerIndex;
         }
 

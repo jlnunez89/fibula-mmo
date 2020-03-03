@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Operations
     using System;
     using System.Collections.Generic;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -207,6 +208,26 @@ namespace OpenTibia.Server.Operations
                 // Add this request as the retry action, so that the request gets repeated when the player hits this location.
                 creature.EnqueueRetryActionAtLocation(nextLocation, () => this.AutoWalk(creature, directions, stepIndex + 1));
             }
+        }
+
+        /// <summary>
+        /// Sends a <see cref="TextMessageNotification"/> to the requestor of the operation, if there is one and it is a player.
+        /// </summary>
+        /// <param name="message">Optional. The message to send. Defaults to <see cref="OperationMessage.NotPossible"/>.</param>
+        protected void SendFailureNotification(string message = OperationMessage.NotPossible)
+        {
+            if (this.RequestorId == 0 || !(this.Context.ConnectionFinder.FindByPlayerId(this.RequestorId) is IConnection connection) || connection == null)
+            {
+                return;
+            }
+
+            message.ThrowIfNullOrWhiteSpace();
+
+            this.Context.Scheduler.ScheduleEvent(
+                new TextMessageNotification(
+                    this.Logger,
+                    () => connection.YieldSingleItem(),
+                    new TextMessageNotificationArguments(MessageType.StatusSmall, message)));
         }
     }
 }

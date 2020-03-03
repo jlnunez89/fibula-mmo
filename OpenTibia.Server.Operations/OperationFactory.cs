@@ -103,7 +103,7 @@ namespace OpenTibia.Server.Operations
                             this.Logger,
                             this.DefaultElevatedOperationContext,
                             placeCreatureOpArgs.RequestorId,
-                            placeCreatureOpArgs.AtLocation,
+                            placeCreatureOpArgs.AtTile,
                             placeCreatureOpArgs.Creature);
                     }
 

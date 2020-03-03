@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.Operations.Environment
 {
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Operations.Actions;
     using Serilog;
 
@@ -26,18 +25,18 @@ namespace OpenTibia.Server.Operations.Environment
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="context">The context of the operation.</param>
-        /// <param name="requestorId">The id of the creature requesting the use.</param>
-        /// <param name="atLocation">The location from which the item is being created.</param>
+        /// <param name="requestorId">The id of the creature requesting the placement.</param>
+        /// <param name="atTile">The tile at which to place the creature.</param>
         /// <param name="creature">The creature being placed.</param>
         public PlaceCreatureOperation(
             ILogger logger,
             IElevatedOperationContext context,
             uint requestorId,
-            Location atLocation,
+            ITile atTile,
             ICreature creature)
             : base(logger, context, requestorId)
         {
-            this.AtLocation = atLocation;
+            this.AtTile = atTile;
             this.Creature = creature;
         }
 
@@ -47,16 +46,16 @@ namespace OpenTibia.Server.Operations.Environment
         public ICreature Creature { get; }
 
         /// <summary>
-        /// Gets the location at which to place the creature.
+        /// Gets the tile at which to place the creature.
         /// </summary>
-        public Location AtLocation { get; }
+        public ITile AtTile { get; }
 
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
         public override void Execute()
         {
-            bool successfulPlacement = this.PlaceCreature(this.AtLocation, this.Creature);
+            bool successfulPlacement = this.PlaceCreature(this.AtTile, this.Creature);
 
             if (!successfulPlacement)
             {

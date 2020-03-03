@@ -24,6 +24,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Arguments;
     using Serilog;
 
@@ -133,13 +134,13 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="fromStackPos">The position in the stack of the location from which the thing is being moved.</param>
         /// <param name="toLocation">The location to which the thing is being moved.</param>
         /// <param name="count">The amount of the thing that is being moved.</param>
-        private void MoveThingFromMap(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
+        private IEnumerable<IOutgoingPacket> MoveThingFromMap(IPlayer player, ushort thingId, Location fromLocation, byte fromStackPos, Location toLocation, byte count)
         {
             player.ThrowIfNull(nameof(player));
 
             if (fromLocation.Type != LocationType.Map)
             {
-                return;
+                return null;
             }
 
             var locationDiff = fromLocation - player.Location;
@@ -151,7 +152,7 @@ namespace OpenTibia.Communications.Handlers.Game
 
                 if (directions == null || !directions.Any())
                 {
-                    return;
+                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
                 }
                 else
                 {
@@ -160,20 +161,20 @@ namespace OpenTibia.Communications.Handlers.Game
 
                     this.AutoWalk(player, directions.ToArray());
 
-                    return;
+                    return null;
                 }
             }
 
             if (!this.Context.TileAccessor.GetTileAt(fromLocation, out ITile sourceTile))
             {
-                return;
+                return null;
             }
 
             var thingAtStackPos = sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, fromStackPos);
 
             if (thingAtStackPos == null || thingAtStackPos.ThingId != thingId)
             {
-                return;
+                return null;
             }
 
             // We know the source location is good, now let's figure out the destination to create the appropriate movement event.
@@ -216,6 +217,8 @@ namespace OpenTibia.Communications.Handlers.Game
                             count));
                     break;
             }
+
+            return null;
         }
 
         /// <summary>

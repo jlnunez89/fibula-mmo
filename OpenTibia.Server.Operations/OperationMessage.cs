@@ -55,5 +55,10 @@ namespace OpenTibia.Server.Operations
         /// The operation cannot be completed because the player no longer has access to the source container.
         /// </summary>
         public const string MustFirstOpenThatContainer = "You must first open the container.";
+
+        /// <summary>
+        /// The operation cannot be completed because there is no way for the player to get there.
+        /// </summary>
+        public const string ThereIsNoWay = "There is no way.";
     }
 }

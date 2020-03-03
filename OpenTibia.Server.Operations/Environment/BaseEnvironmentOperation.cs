@@ -63,20 +63,13 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Attempts to place a creature on the map.
         /// </summary>
-        /// <param name="location">The location to place the creature at.</param>
+        /// <param name="targetTile">The tile to place the creature at.</param>
         /// <param name="creature">The creature to place.</param>
         /// <returns>True if the creature is successfully added to the map, false otherwise.</returns>
-        protected bool PlaceCreature(Location location, ICreature creature)
+        protected bool PlaceCreature(ITile targetTile, ICreature creature)
         {
-            if (location.Type != LocationType.Map)
-            {
-                return false;
-            }
-
-            if (!this.Context.TileAccessor.GetTileAt(location, out ITile targetTile))
-            {
-                return false;
-            }
+            targetTile.ThrowIfNull(nameof(targetTile));
+            creature.ThrowIfNull(nameof(creature));
 
             var (addSuccessful, _) = targetTile.AddContent(this.Context.ItemFactory, creature);
 
@@ -96,16 +89,16 @@ namespace OpenTibia.Server.Operations.Actions
                     player.Inventory.SlotChanged += this.OnPlayerInventoryChanged;
                 }
 
-                this.Logger.Debug($"Placed {creature.Name} at {location}.");
+                this.Logger.Debug($"Placed {creature.Name} at {targetTile.Location}.");
 
                 IEnumerable<IConnection> TargetConnectionsFunc()
                 {
                     if (creature is IPlayer player)
                     {
-                        return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location).Except(this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem());
+                        return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, targetTile.Location).Except(this.Context.ConnectionManager.FindByPlayerId(player.Id).YieldSingleItem());
                     }
 
-                    return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, location);
+                    return this.Context.ConnectionManager.PlayersThatCanSee(this.Context.CreatureManager, targetTile.Location);
                 }
 
                 var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
@@ -116,7 +109,7 @@ namespace OpenTibia.Server.Operations.Actions
                         this.Context.MapDescriptor,
                         this.Context.CreatureManager,
                         TargetConnectionsFunc,
-                        new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, location, placedAtStackPos, wasTeleport: true)));
+                        new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, targetTile.Location, placedAtStackPos, wasTeleport: true)));
             }
 
             return addSuccessful;
@@ -213,7 +206,11 @@ namespace OpenTibia.Server.Operations.Actions
 
                     var directions = this.Context.PathFinder.FindBetween(combatant.Location, combatant.AutoAttackTarget.Location, out _, onBehalfOfCreature: combatant, considerAvoidsAsBlock: true);
 
-                    if (directions != null && directions.Any())
+                    if (directions == null || !directions.Any())
+                    {
+                        this.SendFailureNotification(OperationMessage.ThereIsNoWay);
+                    }
+                    else
                     {
                         this.AutoWalk(combatant, directions.ToArray());
                     }

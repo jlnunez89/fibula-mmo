@@ -90,9 +90,9 @@ namespace OpenTibia.Server.Operations.Combat
             var enoughCredits = this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
 
             var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
-            var targetInRange = distanceBetweenCombatants.MaxValueIn2D <= (this.Attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
+            var inRange = distanceBetweenCombatants.MaxValueIn2D <= (this.Attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
 
-            if (noAttacker || (correctTarget && enoughCredits && targetInRange))
+            if (noAttacker || (enoughCredits && correctTarget && inRange))
             {
                 this.PerformAttack();
             }
@@ -120,13 +120,17 @@ namespace OpenTibia.Server.Operations.Combat
                     // Too far away to attack, we need to move closer first.
                     var directions = this.Context.PathFinder.FindBetween(attacker.Location, target.Location, out _, onBehalfOfCreature: attacker, considerAvoidsAsBlock: true);
 
-                    if (directions != null && directions.Any())
+                    if (directions == null || !directions.Any())
+                    {
+                        this.SendFailureNotification(OperationMessage.ThereIsNoWay);
+                    }
+                    else
                     {
                         this.AutoWalk(attacker, directions.ToArray());
                     }
                 }
 
-                // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                // Add as the retry action, so that the request gets repeated when the player hits this location.
                 attacker.EnqueueRetryActionWithinRangeToCreature(attacker.AutoAttackRange, target.Id, () => this.AutoAttack(attacker, target));
 
                 return;

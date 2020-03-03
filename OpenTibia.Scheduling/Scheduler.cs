@@ -31,7 +31,7 @@ namespace OpenTibia.Scheduling
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
         /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
-        private const int MaxQueueNodes = 1000;
+        private const int MaxQueueNodes = 2000;
 
         /// <summary>
         /// The default processing wait time on the processing queue thread.
@@ -130,11 +130,22 @@ namespace OpenTibia.Scheduling
 
                     lock (this.eventsAvailableLock)
                     {
-                        // wait until we're flagged that there are events available.
-                        Monitor.Wait(this.eventsAvailableLock, waitForNewTimeOut > TimeSpan.Zero ? waitForNewTimeOut : DefaultProcessWaitTime);
+                        // Wait until we're flagged that there are events available.
+                        // Note that we normalize waitForNewTimeOut to be between Zero and DefaultProcessWaitTime)
+                        if (waitForNewTimeOut < TimeSpan.Zero)
+                        {
+                            // Normalize to zero because the Monitor.Wait() call throws on negative values.
+                            waitForNewTimeOut = TimeSpan.Zero;
+                        }
+                        else if (waitForNewTimeOut > DefaultProcessWaitTime)
+                        {
+                            waitForNewTimeOut = DefaultProcessWaitTime;
+                        }
 
-                        // reset time to wait.
-                        waitForNewTimeOut = TimeSpan.Zero;
+                        Monitor.Wait(this.eventsAvailableLock, waitForNewTimeOut);
+
+                        // Then, we reset time to wait and start the stopwatch.
+                        waitForNewTimeOut = DefaultProcessWaitTime;
                         sw.Restart();
 
                         if (this.priorityQueue.First == null)

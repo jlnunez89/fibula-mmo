@@ -50,7 +50,7 @@ namespace OpenTibia.Server.Notifications
 
                 if (connections == null)
                 {
-                    this.Logger.Warning($"Attempted to send '{this.GetType().Name}' without any connections targets.");
+                    this.Logger.Warning($"Failed to send '{this.GetType().Name}' because the target connections function is null.");
 
                     return;
                 }
