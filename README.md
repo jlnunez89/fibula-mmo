@@ -10,7 +10,7 @@ For some ramblings about me, and why I started this project, visit this [project
 
 And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](docs/Roadmap.md).
 
-Amiroslo was kind enough to set up a channel on his Discord server: so join the conversation there: https://discord.gg/GpMJt9
+Amiroslo was kind enough to set up a channel on his Discord server: so join the conversation there: https://discord.gg/cJeVygB
 
 ###### More docs to (probably) come soon!
 
