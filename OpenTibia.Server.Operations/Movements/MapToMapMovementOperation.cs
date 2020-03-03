@@ -13,6 +13,7 @@ namespace OpenTibia.Server.Operations.Movements
 {
     using System;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -146,8 +147,22 @@ namespace OpenTibia.Server.Operations.Movements
                     // Silent fail.
                     return;
                 }
-                else if (creatureAvoidsDestination || destinationIsObstructed)
+                else if (creatureAvoidsDestination)
                 {
+                    this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                }
+                else if (destinationIsObstructed)
+                {
+                    if (this.Requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
+                    {
+                        var cancelMovementNotification = new GenericNotification(
+                            this.Logger,
+                            () => this.Context.ConnectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
+                            new GenericNotificationArguments(new PlayerWalkCancelPacket(player.Direction.GetClientSafeDirection())));
+
+                        this.Context.Scheduler.ScheduleEvent(cancelMovementNotification);
+                    }
+
                     this.SendFailureNotification(OperationMessage.NotEnoughRoom);
                 }
                 else if (!requestorInRange)

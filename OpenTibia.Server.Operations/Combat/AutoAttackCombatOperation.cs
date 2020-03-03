@@ -30,8 +30,6 @@ namespace OpenTibia.Server.Operations.Combat
     /// </summary>
     public class AutoAttackCombatOperation : BaseCombatOperation
     {
-        private const int DefaultAttackRangeDistance = 1;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoAttackCombatOperation"/> class.
         /// </summary>
@@ -85,54 +83,68 @@ namespace OpenTibia.Server.Operations.Combat
         /// </summary>
         public override void Execute()
         {
-            var noAttacker = this.Attacker == null;
-            var correctTarget = this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
-            var enoughCredits = this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
-
             var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
-            var inRange = distanceBetweenCombatants.MaxValueIn2D <= (this.Attacker?.AutoAttackRange ?? DefaultAttackRangeDistance) && distanceBetweenCombatants.Z == 0;
 
-            if (noAttacker || (enoughCredits && correctTarget && inRange))
+            var nullAttacker = this.Attacker == null;
+            var correctTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
+            var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
+            var inChaseMode = nullAttacker ? false : this.Attacker.ChaseMode == ChaseMode.Chase;
+            var inRange = nullAttacker ? true : distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+
+            var attackPerformed = false;
+
+            if (enoughCredits && correctTarget && inRange)
             {
-                this.PerformAttack();
+                attackPerformed |= this.PerformAttack();
             }
-            else
+
+            if (!attackPerformed)
             {
                 // Update the actual cost if the attack wasn't performed.
                 this.ExhaustionCost = TimeSpan.Zero;
             }
 
-            // Do we need to continue attacking?
-            if (this.Attacker.AutoAttackTarget != null)
+            if (!nullAttacker)
             {
-                this.AutoAttack(this.Attacker, this.Attacker.AutoAttackTarget);
+                this.Context.Scheduler.CancelAllFor(this.Attacker.Id, typeof(AutoAttackCombatOperation));
+
+                if (!inRange)
+                {
+                    // Add as the retry action, so that the request gets repeated when the player hits this location.
+                    this.Attacker.EnqueueRetryActionWithinRangeToCreature(this.Attacker.AutoAttackRange, this.Target.Id, () => this.AutoAttack(this.Attacker, this.Target));
+
+                    if (inChaseMode)
+                    {
+                        // Too far away to attack, we need to move closer first.
+                        var directions = this.Context.PathFinder.FindBetween(this.Attacker.Location, this.Target.Location, out _, onBehalfOfCreature: this.Attacker, considerAvoidsAsBlock: true);
+
+                        if (directions == null || !directions.Any())
+                        {
+                            this.SendFailureNotification(OperationMessage.ThereIsNoWay);
+                        }
+                        else
+                        {
+                            this.AutoWalk(this.Attacker, directions.ToArray());
+                        }
+                    }
+                }
+
+                // Do we need to continue attacking?
+                if (this.Attacker.AutoAttackTarget != null)
+                {
+                    var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / this.Attacker.BaseAttackSpeed));
+                    var attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, this.Attacker, this.Attacker.AutoAttackTarget, exhaustionCost: normalizedAttackSpeed);
+                    var attackCooldownRemaining = this.Attacker.CalculateRemainingCooldownTime(attackOperation.ExhaustionType, this.Context.Scheduler.CurrentTime);
+
+                    this.Context.Scheduler.ScheduleEvent(attackOperation, delayTime: attackPerformed ? attackCooldownRemaining : normalizedAttackSpeed);
+                }
             }
         }
 
         private void AutoAttack(ICombatant attacker, ICombatant target)
         {
-            var locationDiff = attacker.Location - target.Location;
-
-            if (locationDiff.MaxValueIn2D > attacker.AutoAttackRange)
+            if (attacker == null)
             {
-                if (attacker.ChaseMode == ChaseMode.Chase)
-                {
-                    // Too far away to attack, we need to move closer first.
-                    var directions = this.Context.PathFinder.FindBetween(attacker.Location, target.Location, out _, onBehalfOfCreature: attacker, considerAvoidsAsBlock: true);
-
-                    if (directions == null || !directions.Any())
-                    {
-                        this.SendFailureNotification(OperationMessage.ThereIsNoWay);
-                    }
-                    else
-                    {
-                        this.AutoWalk(attacker, directions.ToArray());
-                    }
-                }
-
-                // Add as the retry action, so that the request gets repeated when the player hits this location.
-                attacker.EnqueueRetryActionWithinRangeToCreature(attacker.AutoAttackRange, target.Id, () => this.AutoAttack(attacker, target));
-
                 return;
             }
 
@@ -144,7 +156,7 @@ namespace OpenTibia.Server.Operations.Combat
             this.Context.Scheduler.ScheduleEvent(attackOperation, attackCooldownRemaining);
         }
 
-        private void PerformAttack()
+        private bool PerformAttack()
         {
             int CalculateInflictedDamage(out bool armorBlock, out bool wasShielded)
             {
@@ -251,6 +263,8 @@ namespace OpenTibia.Server.Operations.Combat
                     this.Logger,
                     () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Target.Location),
                     new GenericNotificationArguments(packetsToSend.ToArray())));
+
+            return true;
         }
     }
 }

@@ -31,7 +31,7 @@ namespace OpenTibia.Scheduling
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
         /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
-        private const int MaxQueueNodes = 2000;
+        private const int MaxQueueNodes = 5000;
 
         /// <summary>
         /// The default processing wait time on the processing queue thread.
