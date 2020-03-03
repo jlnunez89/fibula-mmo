@@ -7,7 +7,6 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="Incoming\AttackPacket.cs" />
     <Compile Remove="Incoming\CharacterDeathPacket.cs" />
     <Compile Remove="Incoming\CreatePlayerListPacket.cs" />
     <Compile Remove="Incoming\DebugAssertionPacket.cs" />
@@ -22,7 +21,6 @@
     <Compile Remove="Incoming\SpeechPacket.cs" />
     <Compile Remove="Incoming\StatementPacket.cs" />
     <Compile Remove="Outgoing\AddItemPacket.cs" />
-    <Compile Remove="Outgoing\AnimatedTextPacket.cs" />
     <Compile Remove="Outgoing\AuctionsResultPacket.cs" />
     <Compile Remove="Outgoing\AuthenticationResultPacket.cs" />
     <Compile Remove="Outgoing\BanismentResultPacket.cs" />

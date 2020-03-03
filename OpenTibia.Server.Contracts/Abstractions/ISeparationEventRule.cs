@@ -19,6 +19,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the id of the thing involved in the separation.
         /// </summary>
-        ushort ThingIdOfSeparation { get; }
+        ushort SeparatingThingId { get; }
     }
 }

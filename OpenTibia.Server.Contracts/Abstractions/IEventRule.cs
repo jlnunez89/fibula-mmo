@@ -25,27 +25,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         EventRuleType Type { get; }
 
         /// <summary>
-        /// Gets the primary thing involved in the event.
-        /// </summary>
-        IThing PrimaryThing { get; }
-
-        /// <summary>
-        /// Gets the secondary thing involved in the event.
-        /// </summary>
-        IThing SecondaryThing { get; }
-
-        /// <summary>
-        /// Gets the player involved in the event.
-        /// </summary>
-        IPlayer Player { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this event can be executed.
-        /// This generally means the <see cref="Conditions"/> have been passed.
-        /// </summary>
-        bool CanBeExecuted { get; }
-
-        /// <summary>
         /// Gets the conditions for the event to happen.
         /// </summary>
         IEnumerable<IEventRuleFunction> Conditions { get; }
@@ -56,18 +35,24 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IEnumerable<IEventRuleFunction> Actions { get; }
 
         /// <summary>
-        /// Sets up this event.
+        /// Checks whether this event rule can be executed.
+        /// This generally means the <see cref="Conditions"/> all evaluate to true.
         /// </summary>
-        /// <param name="primaryThing">The primary thing involved in the event.</param>
-        /// <param name="secondaryThing">The secondary thing involved in the event.</param>
-        /// <param name="player">The player involved in the event.</param>
-        /// <returns>True if the event is successfully set up, false otherwise.</returns>
-        bool Setup(IThing primaryThing, IThing secondaryThing = null, IPlayer player = null);
+        /// <param name="gameApi">A reference to the game's api in use.</param>
+        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
+        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
+        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        /// <returns>True if the rule can be executed, false otherwise.</returns>
+        bool CanBeExecuted(IGame gameApi, IThing primaryThing, IThing secondaryThing = null, IPlayer requestingPlayer = null);
 
         /// <summary>
-        /// Executes this event.
-        /// This generally means executing the event's <see cref="Actions"/>.
+        /// Executes this event rule.
+        /// This generally means executing the event rule's <see cref="Actions"/>.
         /// </summary>
-        void Execute();
+        /// <param name="gameApi">A reference to the game's api in use.</param>
+        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
+        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
+        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        void Execute(IGame gameApi, ref IThing primaryThing, ref IThing secondaryThing, ref IPlayer requestingPlayer);
     }
 }

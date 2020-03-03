@@ -28,8 +28,8 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection);
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection);
 
         /// <summary>
         /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.

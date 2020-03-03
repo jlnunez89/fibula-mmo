@@ -17,6 +17,9 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Operations.Arguments;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a handler for a player closing a container.
@@ -26,18 +29,13 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerCloseHandler"/> class.
         /// </summary>
-        /// <param name="gameInstance">A reference to the game instance.</param>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        public ContainerCloseHandler(IGame gameInstance, ICreatureFinder creatureFinder)
-            : base(gameInstance)
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="operationFactory">A reference to the operation factory in use.</param>
+        /// <param name="gameContext">A reference to the game context to use.</param>
+        public ContainerCloseHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
+            : base(logger, operationFactory, gameContext)
         {
-            this.CreatureFinder = creatureFinder;
         }
-
-        /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
 
         /// <summary>
         /// Gets the type of packet that this handler is for.
@@ -49,17 +47,22 @@ namespace OpenTibia.Communications.Handlers.Game
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             var containerInfo = message.ReadContainerCloseInfo();
 
-            if (this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
+            if (this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                this.Game.PlayerRequest_CloseContainer(player, containerInfo.ContainerId);
+                var item = this.Context.ContainerManager.FindForCreature(player.Id, containerInfo.ContainerId);
+
+                if (item != null)
+                {
+                    this.ScheduleNewOperation(OperationType.ContainerClose, new CloseContainerOperationCreationArguments(player.Id, player, item, containerInfo.ContainerId));
+                }
             }
 
-            return (false, null);
+            return null;
         }
     }
 }

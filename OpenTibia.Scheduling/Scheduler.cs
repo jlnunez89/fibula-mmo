@@ -13,6 +13,7 @@ namespace OpenTibia.Scheduling
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Threading;
     using System.Threading.Tasks;
     using OpenTibia.Common.Utilities;
@@ -30,12 +31,12 @@ namespace OpenTibia.Scheduling
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
         /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
-        private const int MaxQueueNodes = 1000000;
+        private const int MaxQueueNodes = 5000;
 
         /// <summary>
         /// The default processing wait time on the processing queue thread.
         /// </summary>
-        private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromSeconds(5);
 
         /// <summary>
         /// The start time of the scheduler.
@@ -58,9 +59,9 @@ namespace OpenTibia.Scheduling
         private readonly IDictionary<uint, ISet<string>> eventsPerRequestor;
 
         /// <summary>
-        /// A lock object to semaphore queue modifications.
+        /// A dictionary to keep track of the type of events.
         /// </summary>
-        private readonly object queueLock;
+        private readonly IDictionary<string, Type> eventTypes;
 
         /// <summary>
         /// A lock object to monitor when new events are added to the queue.
@@ -84,11 +85,11 @@ namespace OpenTibia.Scheduling
 
             this.eventsPerRequestorLock = new object();
             this.eventsAvailableLock = new object();
-            this.queueLock = new object();
             this.startTime = this.CurrentTime;
             this.priorityQueue = new FastPriorityQueue<BaseEvent>(MaxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
             this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
+            this.eventTypes = new Dictionary<string, Type>();
         }
 
         /// <summary>
@@ -118,58 +119,88 @@ namespace OpenTibia.Scheduling
                 this.Logger.Debug("Scheduler started.");
 
                 TimeSpan waitForNewTimeOut = TimeSpan.Zero;
+                Stopwatch sw = new Stopwatch();
+
+                long cyclesProcessed = 0;
+                long cycleTimeTotal = 0;
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
+                    var processed = new List<BaseEvent>();
+
                     lock (this.eventsAvailableLock)
                     {
-                        // wait until we're flagged that there are events available.
-                        Monitor.Wait(this.eventsAvailableLock, waitForNewTimeOut > TimeSpan.Zero ? waitForNewTimeOut : DefaultProcessWaitTime);
-
-                        // reset time to wait.
-                        waitForNewTimeOut = TimeSpan.Zero;
-
-                        lock (this.queueLock)
+                        // Wait until we're flagged that there are events available.
+                        // Note that we normalize waitForNewTimeOut to be between Zero and DefaultProcessWaitTime)
+                        if (waitForNewTimeOut < TimeSpan.Zero)
                         {
-                            if (this.priorityQueue.First == null)
+                            // Normalize to zero because the Monitor.Wait() call throws on negative values.
+                            waitForNewTimeOut = TimeSpan.Zero;
+                        }
+                        else if (waitForNewTimeOut > DefaultProcessWaitTime)
+                        {
+                            waitForNewTimeOut = DefaultProcessWaitTime;
+                        }
+
+                        Monitor.Wait(this.eventsAvailableLock, waitForNewTimeOut);
+
+                        // Then, we reset time to wait and start the stopwatch.
+                        waitForNewTimeOut = DefaultProcessWaitTime;
+                        sw.Restart();
+
+                        if (this.priorityQueue.First == null)
+                        {
+                            // no more items on the queue, go to wait.
+                            this.Logger.Warning("Queue empty.");
+                            continue;
+                        }
+
+                        var processTimeAdjustment = cyclesProcessed == 0 ? 0 : cycleTimeTotal / cyclesProcessed++;
+
+                        var priorityDue = this.GetMillisecondsAfterReferenceTime(this.CurrentTime) - processTimeAdjustment;
+
+                        // Check the current queue and fire any events that are due.
+                        while (this.priorityQueue.Count > 0)
+                        {
+                            if (this.priorityQueue.Count > (int)(MaxQueueNodes * 0.80))
                             {
-                                // no more items on the queue, go to wait.
-                                this.Logger.Warning("Queue empty.");
-                                continue;
+                                this.Logger.Warning($"Queue is over 80% capacity, consider growing the {nameof(MaxQueueNodes)} value.");
                             }
 
-                            var currentTimeInMilliseconds = this.GetMillisecondsAfterReferenceTime(this.CurrentTime);
+                            // The first item always points to the next-in-time event available.
+                            var nextEvent = this.priorityQueue.First;
+                            var isDue = nextEvent.Priority <= priorityDue;
+                            var isCancelled = this.cancelledEvents.Contains(nextEvent.EventId);
 
-                            // check the current queue and fire any events that are due.
-                            while (this.priorityQueue.Count > 0)
+                            // Check if this event has been cancelled or is due.
+                            if (isDue || isCancelled)
                             {
-                                // the first item always points to the next-in-time event available.
-                                var nextEvent = this.priorityQueue.First;
+                                processed.Add(this.priorityQueue.Dequeue());
 
-                                // check if this event has been cancelled.
-                                if (this.cancelledEvents.Contains(nextEvent.EventId))
+                                if (!isCancelled)
                                 {
-                                    // dequeue, clean and move next.
-                                    this.priorityQueue.Dequeue();
-                                    this.CleanAllAttributedTo(nextEvent.EventId);
-                                    continue;
-                                }
-
-                                // check if the event is due
-                                if (nextEvent.Priority <= currentTimeInMilliseconds)
-                                {
-                                    // actually dequeue this item.
-                                    this.priorityQueue.Dequeue();
+                                    this.Logger.Verbose($"Firing event {nextEvent.GetType().Name} with id {nextEvent.EventId}, at {priorityDue}.");
 
                                     this.OnEventFired?.Invoke(this, new EventFiredEventArgs(nextEvent));
-                                    continue;
                                 }
-
-                                // else the next item is in the future, so figure out how long to wait, update and break.
-                                waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < currentTimeInMilliseconds ? 0 : nextEvent.Priority - currentTimeInMilliseconds);
+                            }
+                            else
+                            {
+                                // The next item is in the future, so figure out how long to wait, update and break.
+                                waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < priorityDue ? 0 : nextEvent.Priority - priorityDue);
                                 break;
                             }
                         }
+
+                        // Clean up the processed events.
+                        foreach (var evt in processed)
+                        {
+                            this.CleanUp(evt.EventId, evt.RequestorId);
+                        }
+
+                        sw.Stop();
+
+                        cycleTimeTotal += sw.ElapsedMilliseconds;
                     }
                 }
 
@@ -205,8 +236,12 @@ namespace OpenTibia.Scheduling
 
                 foreach (var eventId in this.eventsPerRequestor[requestorId])
                 {
-                    // if (specificType == null || !eventTypes[eventId].IsAssignableFrom(specificType))
-                    this.CancelEvent(eventId);
+                    if (!this.eventTypes.TryGetValue(eventId, out Type evetType) || evetType.IsAssignableFrom(specificType))
+                    {
+                        this.CancelEvent(eventId);
+
+                        this.Logger.Verbose($"Cancelled event {eventId} of type {specificType.Name}.");
+                    }
                 }
 
                 this.eventsPerRequestor.Remove(requestorId);
@@ -221,18 +256,19 @@ namespace OpenTibia.Scheduling
         {
             eventId.ThrowIfNullOrWhiteSpace();
 
-            try
+            // Lock on the events available to prevent race conditions on cancel vs firing.
+            lock (this.eventsAvailableLock)
             {
                 this.cancelledEvents.Add(eventId);
             }
-            catch
-            {
-                // just ignore any collisions.
-            }
         }
 
-        /// <inheritdoc/>
-        public void ImmediateEvent(IEvent eventToSchedule)
+        /// <summary>
+        /// Schedules an event to be fired at the specified time.
+        /// </summary>
+        /// <param name="eventToSchedule">The event to schedule.</param>
+        /// <param name="delayTime">Optional. The time delay after which the event should be fired. If left null, the event is scheduled to be fired ASAP.</param>
+        public void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null)
         {
             eventToSchedule.ThrowIfNull(nameof(eventToSchedule));
 
@@ -241,17 +277,24 @@ namespace OpenTibia.Scheduling
                 throw new ArgumentException($"Argument must be of type {nameof(BaseEvent)}.", nameof(eventToSchedule));
             }
 
+            if (delayTime == null || delayTime < TimeSpan.Zero)
+            {
+                delayTime = TimeSpan.Zero;
+            }
+
             lock (this.eventsAvailableLock)
             {
-                lock (this.queueLock)
+                if (this.priorityQueue.Contains(castedEvent))
                 {
-                    if (this.priorityQueue.Contains(castedEvent))
-                    {
-                        throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
-                    }
-
-                    this.priorityQueue.Enqueue(castedEvent, 0);
+                    throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
                 }
+
+                var targetTime = this.CurrentTime + delayTime.Value;
+                var milliseconds = this.GetMillisecondsAfterReferenceTime(targetTime);
+
+                this.priorityQueue.Enqueue(castedEvent, milliseconds);
+
+                this.Logger.Verbose($"Scheduled event {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
 
                 // check and add event attribution to the requestor
                 if (castedEvent.RequestorId > 0)
@@ -264,51 +307,11 @@ namespace OpenTibia.Scheduling
                         }
 
                         this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
-                    }
-                }
 
-                Monitor.Pulse(this.eventsAvailableLock);
-            }
-        }
-
-        /// <inheritdoc/>
-        public void ScheduleEvent(IEvent eventToSchedule, DateTimeOffset runAt)
-        {
-            eventToSchedule.ThrowIfNull(nameof(eventToSchedule));
-
-            if (!(eventToSchedule is BaseEvent castedEvent))
-            {
-                throw new ArgumentException($"Argument must be of type {nameof(BaseEvent)}.", nameof(eventToSchedule));
-            }
-
-            if (runAt < this.startTime)
-            {
-                throw new ArgumentException($"Value cannot be earlier than the reference time of the scheduler: {this.startTime}.", nameof(runAt));
-            }
-
-            lock (this.eventsAvailableLock)
-            {
-                lock (this.queueLock)
-                {
-                    if (this.priorityQueue.Contains(castedEvent))
-                    {
-                        throw new ArgumentException($"The event is already scheduled.", nameof(eventToSchedule));
-                    }
-
-                    this.priorityQueue.Enqueue(castedEvent, this.GetMillisecondsAfterReferenceTime(runAt));
-                }
-
-                // check and add event attribution to the requestor
-                if (castedEvent.RequestorId > 0)
-                {
-                    lock (this.eventsPerRequestorLock)
-                    {
-                        if (!this.eventsPerRequestor.ContainsKey(castedEvent.RequestorId))
+                        if (!this.eventTypes.ContainsKey(castedEvent.EventId))
                         {
-                            this.eventsPerRequestor.Add(castedEvent.RequestorId, new HashSet<string>());
+                            this.eventTypes[castedEvent.EventId] = eventToSchedule.GetType();
                         }
-
-                        this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
                     }
                 }
 
@@ -331,16 +334,11 @@ namespace OpenTibia.Scheduling
         /// </summary>
         /// <param name="eventId">The id of the event to cancel.</param>
         /// <param name="eventRequestor">The id of the requestor.</param>
-        private void CleanAllAttributedTo(string eventId, uint eventRequestor = 0)
+        private void CleanUp(string eventId, uint eventRequestor = 0)
         {
-            try
-            {
-                this.cancelledEvents.Remove(eventId);
-            }
-            catch
-            {
-                // ignore, as if this fails then the value is not there.
-            }
+            this.cancelledEvents.Remove(eventId);
+
+            this.eventTypes.Remove(eventId);
 
             if (eventRequestor == 0)
             {
@@ -348,21 +346,19 @@ namespace OpenTibia.Scheduling
                 return;
             }
 
-            try
+            lock (this.eventsPerRequestorLock)
             {
-                lock (this.eventsPerRequestorLock)
+                if (!this.eventsPerRequestor.ContainsKey(eventRequestor))
                 {
-                    this.eventsPerRequestor[eventRequestor].Remove(eventId);
-
-                    if (this.eventsPerRequestor[eventRequestor].Count == 0)
-                    {
-                        this.eventsPerRequestor.Remove(eventRequestor);
-                    }
+                    return;
                 }
-            }
-            catch
-            {
-                // ignore, as if this fails then the value is not there.
+
+                this.eventsPerRequestor[eventRequestor].Remove(eventId);
+
+                if (this.eventsPerRequestor[eventRequestor].Count == 0)
+                {
+                    this.eventsPerRequestor.Remove(eventRequestor);
+                }
             }
         }
     }

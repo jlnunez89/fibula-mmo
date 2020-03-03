@@ -22,9 +22,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, ICylinder, IHasInventory
     {
-        // event OnCreatureStateChange OnZeroHealth;
-        // event OnCreatureStateChange OnInventoryChanged;
-
         /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>
@@ -130,14 +127,14 @@ namespace OpenTibia.Server.Contracts.Abstractions
         byte Shield { get; } // TODO: implement.
 
         /// <summary>
-        /// Gets the collection of open containers tracked by this player.
-        /// </summary>
-        IEnumerable<IContainerItem> OpenContainers { get; }
-
-        /// <summary>
         /// Gets the collection of current location-based actions to retry.
         /// </summary>
         IEnumerable<(Location atLocation, Action action)> LocationBasedActions { get; }
+
+        /// <summary>
+        /// Gets the collection of current range-based actions to retry.
+        /// </summary>
+        IEnumerable<(byte range, uint creatureId, Action action)> RangeBasedActions { get; }
 
         /// <summary>
         /// Checks if this creature can see a given creature.
@@ -172,46 +169,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IEnumerable<(IEvent Event, TimeSpan Delay)> Think();
 
         /// <summary>
-        /// Opens a container for this player, which tracks it.
-        /// </summary>
-        /// <param name="container">The container being opened.</param>
-        /// <returns>The id of the container as seen by this player.</returns>
-        byte OpenContainer(IContainerItem container);
-
-        /// <summary>
-        /// Opens a container by placing it at the given index id.
-        /// If there is a container already open at this index, it is first closed.
-        /// </summary>
-        /// <param name="container">The container to open.</param>
-        /// <param name="containerId">Optional. The index at which to open the container. Defaults to 0xFF which means open at any free index.</param>
-        void OpenContainerAt(IContainerItem container, byte containerId = 0xFF);
-
-        /// <summary>
-        /// Gets the id of the given container as known by this player, if it is.
-        /// </summary>
-        /// <param name="container">The container to check.</param>
-        /// <returns>The id of the container if known by this player.</returns>
-        sbyte GetContainerId(IContainerItem container);
-
-        /// <summary>
-        /// Closes a container for this player, which stops tracking it.
-        /// </summary>
-        /// <param name="containerId">The id of the container being closed.</param>
-        void CloseContainerWithId(byte containerId);
-
-        /// <summary>
-        /// Gets a container by the id known to this player.
-        /// </summary>
-        /// <param name="containerId">The id of the container.</param>
-        /// <returns>The container, if found.</returns>
-        IContainerItem GetContainerById(byte containerId);
-
-        /// <summary>
         /// Adds an action that should be retried when the creature steps at this particular location.
         /// </summary>
         /// <param name="retryLoc">The location at which the retry happens.</param>
         /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        void EnqueueActionAtLocation(Location retryLoc, Action action);
+        void EnqueueRetryActionAtLocation(Location retryLoc, Action action);
 
         /// <summary>
         /// Removes a single action from the queue given its particular location.
@@ -223,5 +185,38 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Removes all actions from the location-based actions queue.
         /// </summary>
         void ClearAllLocationActions();
+
+        /// <summary>
+        /// Adds an action that should be retried when the creature steps within a given range of another.
+        /// </summary>
+        /// <param name="range">The range withing which the retry happens.</param>
+        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        /// <param name="action">The delegate action to invoke when the location is reached.</param>
+        void EnqueueRetryActionWithinRangeToCreature(byte range, uint creatureId, Action action);
+
+        /// <summary>
+        /// Removes a single action from the queue given its particular location.
+        /// </summary>
+        /// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
+        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        void DequeueRetryActionWithinRangeToCreature(byte withinRange, uint creatureId);
+
+        /// <summary>
+        /// Removes all actions from the location-based actions queue.
+        /// </summary>
+        void ClearAllRangeBasedActions();
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        bool EvaluateLocationBasedActions();
+
+        /// <summary>
+        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        /// </summary>
+        /// <param name="creatureFinder">A reference to the creature finder.</param>
+        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        bool EvaluateCreatureRangeBasedActions(ICreatureFinder creatureFinder);
     }
 }

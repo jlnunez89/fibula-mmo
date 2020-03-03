@@ -15,8 +15,8 @@ namespace OpenTibia.Server.Monsters
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
 
     /// <summary>
     /// Class that represents an inventory for monsters.
@@ -71,12 +71,32 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// A delegate to invoke when a slot in the inventory changes.
         /// </summary>
-        public event OnInventorySlotChanged OnSlotChanged;
+        public event OnInventorySlotChanged SlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.
         /// </summary>
         public ICreature Owner { get; }
+
+        /// <summary>
+        /// Gets the attack range suggested by equiped weapons in this inventory.
+        /// </summary>
+        public byte EquipmentAttackRange => 1;
+
+        /// <summary>
+        /// Gets the attack power suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentAttackPower => 0;
+
+        /// <summary>
+        /// Gets the defense power suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentDefensePower => 0;
+
+        /// <summary>
+        /// Gets the armor rating suggested by equiped weapons in this inventory.
+        /// </summary>
+        public ushort EquipmentArmorRating => 0;
 
         /// <summary>
         /// Gets the <see cref="IItem"/> at a given position of this inventory.
@@ -112,7 +132,7 @@ namespace OpenTibia.Server.Monsters
                 if (!(itemFactory.Create(typeId) is IItem newItem))
                 {
                     // TODO: propper logging.
-                    Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
+                    // Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
                     continue;
                 }
 
@@ -124,7 +144,7 @@ namespace OpenTibia.Server.Monsters
                 }
 
                 // TODO: propper logging.
-                Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
+                // Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
 
                 this.inventory[this.lastPosByte++] = (newItem, DefaultLossProbability);
             }

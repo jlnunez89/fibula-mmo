@@ -75,19 +75,14 @@ namespace OpenTibia.Server.Factories
                 // throw new InvalidCastException($"{nameof(creatureMetadata)} must be castable to {nameof(NonPlayerCharacterMetadata)} when {type} is used.");
 
                 case CreatureType.Player:
-                    if (creatureMetadata is PlayerCreationMetadata playerMetadata)
-                    {
-                        return new Player(
-                            playerMetadata.Identifier,
-                            playerMetadata.Name,
-                            playerMetadata.MaxHitpoints,
-                            playerMetadata.MaxManapoints,
-                            playerMetadata.Corpse,
-                            playerMetadata.Hitpoints,
-                            playerMetadata.Manapoints);
-                    }
-
-                    throw new InvalidCastException($"{nameof(creatureMetadata)} must be castable to {nameof(PlayerCreationMetadata)} when {type} is used.");
+                    return new Player(
+                        creatureMetadata.Identifier,
+                        creatureMetadata.Name,
+                        creatureMetadata.MaxHitpoints,
+                        creatureMetadata.MaxManapoints,
+                        creatureMetadata.Corpse,
+                        creatureMetadata.MaxHitpoints,      // TODO: current hitpoints.
+                        creatureMetadata.MaxManapoints);    // TODO: current mana points.
 
                 case CreatureType.Monster:
                     // Find the actual monster type to init with.

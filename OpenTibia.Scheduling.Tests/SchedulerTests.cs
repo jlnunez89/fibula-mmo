@@ -18,7 +18,6 @@ namespace OpenTibia.Scheduling.Tests
     using Moq;
     using OpenTibia.Common.Utilities.Testing;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Scheduling.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
@@ -40,52 +39,35 @@ namespace OpenTibia.Scheduling.Tests
         }
 
         /// <summary>
-        /// Checks that <see cref="Scheduler.ImmediateEvent(IEvent)"/> throws when needed.
-        /// </summary>
-        [TestMethod]
-        public void InmediateEvent_Throws_WhenBad()
-        {
-            Mock<ILogger> loggerMock = new Mock<ILogger>();
-
-            Scheduler scheduler = new Scheduler(loggerMock.Object);
-
-            Assert.ThrowsException<ArgumentNullException>(() => scheduler.ImmediateEvent(null), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
-
-            Mock<IEvent> eventMock = new Mock<IEvent>();
-
-            Assert.ThrowsException<ArgumentException>(() => scheduler.ImmediateEvent(eventMock.Object), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
-        }
-
-        /// <summary>
-        /// Checks that <see cref="Scheduler.ScheduleEvent(IEvent, DateTimeOffset)"/> throws when needed.
+        /// Checks that <see cref="Scheduler.ScheduleEvent(IEvent, TimeSpan?)"/> throws when needed.
         /// </summary>
         [TestMethod]
         public void ScheduleEvent_Throws_WhenBad()
         {
+            const uint RequestorId = 0;
+
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            DateTimeOffset invalidRunAtDateTime = anyNonDefaultDateTime - TimeSpan.FromMilliseconds(1);
-            DateTimeOffset validRunAtDateTime = anyNonDefaultDateTime + TimeSpan.FromMilliseconds(1);
-            DateTimeOffset twoSecondsFromNowDateTime = anyNonDefaultDateTime + TimeSpan.FromSeconds(2);
+            schedulerLoggerMock.Setup(l => l.ForContext<Scheduler>()).Returns(schedulerLoggerMock.Object);
+
+            TimeSpan oneMillisecondDelayTime = TimeSpan.FromMilliseconds(1);
+            TimeSpan twoSecondsDelayTime = TimeSpan.FromSeconds(2);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
-            ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, validRunAtDateTime), $"Value cannot be null.{Environment.NewLine}Parameter name: eventToSchedule");
+            ExceptionAssert.Throws<ArgumentNullException>(() => scheduler.ScheduleEvent(null, oneMillisecondDelayTime), $"Value cannot be null. (Parameter 'eventToSchedule')");
 
             Mock<IEvent> eventMock = new Mock<IEvent>();
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, validRunAtDateTime), $"Argument must be of type {nameof(BaseEvent)}.{Environment.NewLine}Parameter name: eventToSchedule");
+            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(eventMock.Object, oneMillisecondDelayTime), $"Argument must be of type {nameof(BaseEvent)}. (Parameter 'eventToSchedule')");
 
-            Mock<BaseEvent> bEventMock = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
-
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object, invalidRunAtDateTime), $"Value cannot be earlier than the reference time of the scheduler: {anyNonDefaultDateTime}.{Environment.NewLine}Parameter name: runAt");
+            Mock<BaseEvent> bEventMock = new Mock<BaseEvent>(loggerMock.Object, RequestorId);
 
             // schedule twice
-            scheduler.ScheduleEvent(bEventMock.Object, twoSecondsFromNowDateTime);
+            scheduler.ScheduleEvent(bEventMock.Object, twoSecondsDelayTime);
 
-            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ImmediateEvent(bEventMock.Object), $"The event is already scheduled.{Environment.NewLine}Parameter name: eventToSchedule");
+            ExceptionAssert.Throws<ArgumentException>(() => scheduler.ScheduleEvent(bEventMock.Object), $"The event is already scheduled. (Parameter 'eventToSchedule')");
         }
 
         /// <summary>
@@ -94,21 +76,23 @@ namespace OpenTibia.Scheduling.Tests
         [TestMethod]
         public void Cancelling_SingleEvent()
         {
+            const uint RequestorId = 0;
+
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
+
+            schedulerLoggerMock.Setup(l => l.ForContext<Scheduler>()).Returns(schedulerLoggerMock.Object);
 
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
             TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
             TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
             const int ExpectedCounterValueBeforeRun = 0;
             const int ExpectedCounterValueAfterRun = 0;
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, RequestorId);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
@@ -127,7 +111,7 @@ namespace OpenTibia.Scheduling.Tests
             };
 
             // fire a scheduled event that shall be fired only after some seconds.
-            scheduler.ScheduleEvent(bEventMockForScheduled.Object, twoSecondsFromNowDate);
+            scheduler.ScheduleEvent(bEventMockForScheduled.Object, twoSecondsTimeSpan);
 
             // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
             Task.Delay(overheadDelay)
@@ -158,11 +142,11 @@ namespace OpenTibia.Scheduling.Tests
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
 
+            schedulerLoggerMock.Setup(l => l.ForContext<Scheduler>()).Returns(schedulerLoggerMock.Object);
+
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
             TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
             TimeSpan threeSecondsTimeSpan = TimeSpan.FromSeconds(3);
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
             const uint anyRequestorId = 100u;
             const int ExpectedCounterValueBeforeRun = 0;
@@ -170,9 +154,9 @@ namespace OpenTibia.Scheduling.Tests
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
+            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(loggerMock.Object, anyRequestorId);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
@@ -188,9 +172,9 @@ namespace OpenTibia.Scheduling.Tests
             };
 
             // fire a scheduled event that shall be fired only after some seconds.
-            scheduler.ScheduleEvent(bEventMockForScheduled1.Object, twoSecondsFromNowDate);
-            scheduler.ScheduleEvent(bEventMockForScheduled2.Object, twoSecondsFromNowDate);
-            scheduler.ScheduleEvent(bEventMockForScheduled3.Object, twoSecondsFromNowDate);
+            scheduler.ScheduleEvent(bEventMockForScheduled1.Object, twoSecondsTimeSpan);
+            scheduler.ScheduleEvent(bEventMockForScheduled2.Object, twoSecondsTimeSpan);
+            scheduler.ScheduleEvent(bEventMockForScheduled3.Object, twoSecondsTimeSpan);
 
             // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
             Task.Delay(overheadDelay)
@@ -218,19 +202,21 @@ namespace OpenTibia.Scheduling.Tests
         [TestMethod]
         public void OnEventFired_IsCalled()
         {
+            const uint RequestorId = 0;
+
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<ILogger> schedulerLoggerMock = new Mock<ILogger>();
+
+            schedulerLoggerMock.Setup(l => l.ForContext<Scheduler>()).Returns(schedulerLoggerMock.Object);
 
             const int ExpectedCounterValueBeforeRun = 0;
             const int ExpectedCounterValueAfterRun = 1;
 
             TimeSpan twoSecondsTimeSpan = TimeSpan.FromSeconds(2);
             TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
-            DateTimeOffset anyNonDefaultDateTime = DateTimeOffset.UtcNow;
-            DateTimeOffset twoSecondsFromNowDate = anyNonDefaultDateTime + twoSecondsTimeSpan;
 
-            Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
-            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, EvaluationTime.OnExecute);
+            Mock<BaseEvent> bEventMockForInmediate = new Mock<BaseEvent>(loggerMock.Object, RequestorId);
+            Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(loggerMock.Object, RequestorId);
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
             var inmediateEventFiredCounter = 0;
@@ -261,7 +247,7 @@ namespace OpenTibia.Scheduling.Tests
             }
 
             // fire a scheduled event that shall be fired only after some seconds.
-            scheduler.ScheduleEvent(bEventMockForScheduled.Object, twoSecondsFromNowDate);
+            scheduler.ScheduleEvent(bEventMockForScheduled.Object, twoSecondsTimeSpan);
 
             // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
             Task.Delay(overheadDelay)
@@ -272,7 +258,7 @@ namespace OpenTibia.Scheduling.Tests
                 .Wait();
 
             // fire the inmediate event, which should be run asap.
-            scheduler.ImmediateEvent(bEventMockForInmediate.Object);
+            scheduler.ScheduleEvent(bEventMockForInmediate.Object);
 
             // delay for 500 ms and check that the counter has gone up.
             Task.Delay(overheadDelay)

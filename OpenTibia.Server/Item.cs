@@ -33,11 +33,17 @@ namespace OpenTibia.Server
         public Item(IItemType type)
         {
             this.Type = type;
-            // this.UniqueId = Guid.NewGuid().ToString().Substring(0, 8);
+
+            this.UniqueId = Guid.NewGuid();
 
             // make a copy of the type we are based on...
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
         }
+
+        /// <summary>
+        /// Gets the unique id of this item.
+        /// </summary>
+        public Guid UniqueId { get; }
 
         public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
 
@@ -382,17 +388,33 @@ namespace OpenTibia.Server
         /// <returns>The description string.</returns>
         public override string GetDescription(IPlayer forPlayer)
         {
-            string description = $"{this.Type.Name}.";
+            string description = $"{this.Type.Name}";
+
+            if (this.Type.Flags.Contains(ItemFlag.LiquidPool) && this.Attributes.ContainsKey(ItemAttribute.PoolLiquidType))
+            {
+                var liquidTypeName = ((LiquidType)this.Attributes[ItemAttribute.PoolLiquidType]).ToString().ToLower();
+
+                description += $" of {liquidTypeName}";
+            }
+
+            if (this.Type.Flags.Contains(ItemFlag.LiquidContainer) && this.Attributes.ContainsKey(ItemAttribute.ContainerLiquidType))
+            {
+                var liquidTypeName = ((LiquidType)this.Attributes[ItemAttribute.ContainerLiquidType]).ToString().ToLower();
+
+                description += $" of {liquidTypeName}";
+            }
+
+            description += $".";
 
             if (this.Amount > 1)
             {
                 // TODO: naive solution, add S to pluralize will produce some spelling errors.
-                description = $"{this.Amount}{description.TrimStart('a').TrimEnd('.')}s.";
+                description = $"{this.Amount} {description.TrimStartArticles().TrimEnd('.')}s.";
             }
 
             if (!string.IsNullOrWhiteSpace(this.Type.Description))
             {
-                description += $"\n{this.Type.Description}.";
+                description += $"\n{this.Type.Description}";
             }
 
             if (this.Type.Flags.Contains(ItemFlag.Text) && this.Attributes.ContainsKey(ItemAttribute.String) && this.Attributes.ContainsKey(ItemAttribute.FontSize))
@@ -417,6 +439,8 @@ namespace OpenTibia.Server
                         break;
                 }
             }
+
+            description = Regex.Replace(description, @"[^\u0000-\u007F]+", string.Empty);
 
             return description;
         }

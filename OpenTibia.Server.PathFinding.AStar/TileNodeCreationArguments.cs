@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Server.PathFinding.AStar
 {
-    using OpenTibia.Common.Utilities;
     using OpenTibia.Common.Utilities.Pathfinding;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;

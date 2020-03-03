@@ -38,32 +38,33 @@ namespace OpenTibia.Communications.Handlers
         public static void AddGameHandlers(this IServiceCollection services)
         {
             // Game handlers only
+            services.AddSingleton<IHandler, AttackHandler>();
             services.AddSingleton<IHandler, AutoMoveCancelHandler>();
             services.AddSingleton<IHandler, AutoMoveHandler>();
             services.AddSingleton<IHandler, ContainerCloseHandler>();
-            services.AddSingleton<IHandler, ContainerUpHandler>();
+            services.AddSingleton<IHandler, ContainerMoveUpHandler>();
             services.AddSingleton<IHandler, MoveThingHandler>();
-            services.AddSingleton<IHandler, LogoutHandler>();
+            services.AddSingleton<IHandler, LogOutHandler>();
             services.AddSingleton<IHandler, LookAtHandler>();
             services.AddSingleton<IHandler, KeepAliveRequestHandler>();
-            services.AddSingleton<IHandler, PlayerLoginHandler>();
-            services.AddSingleton<IHandler, PlayerTurnEastHandler>();
-            services.AddSingleton<IHandler, PlayerTurnNorthHandler>();
-            services.AddSingleton<IHandler, PlayerTurnSouthHandler>();
-            services.AddSingleton<IHandler, PlayerTurnWestHandler>();
-            services.AddSingleton<IHandler, PlayerWalkEastHandler>();
-            services.AddSingleton<IHandler, PlayerWalkNortheastHandler>();
-            services.AddSingleton<IHandler, PlayerWalkNorthHandler>();
-            services.AddSingleton<IHandler, PlayerWalkNorthWestHandler>();
-            services.AddSingleton<IHandler, PlayerWalkSoutheastHandler>();
-            services.AddSingleton<IHandler, PlayerWalkSouthHandler>();
-            services.AddSingleton<IHandler, PlayerWalkSouthwestHandler>();
-            services.AddSingleton<IHandler, PlayerWalkWestHandler>();
+            services.AddSingleton<IHandler, LogInHandler>();
+            services.AddSingleton<IHandler, TurnEastHandler>();
+            services.AddSingleton<IHandler, TurnNorthHandler>();
+            services.AddSingleton<IHandler, TurnSouthHandler>();
+            services.AddSingleton<IHandler, TurnWestHandler>();
+            services.AddSingleton<IHandler, WalkEastHandler>();
+            services.AddSingleton<IHandler, WalkNortheastHandler>();
+            services.AddSingleton<IHandler, WalkNorthHandler>();
+            services.AddSingleton<IHandler, WalkNorthWestHandler>();
+            services.AddSingleton<IHandler, WalkSoutheastHandler>();
+            services.AddSingleton<IHandler, WalkSouthHandler>();
+            services.AddSingleton<IHandler, WalkSouthwestHandler>();
+            services.AddSingleton<IHandler, WalkWestHandler>();
             services.AddSingleton<IHandler, RotateItemHandler>();
+            services.AddSingleton<IHandler, SetModeHandler>();
             services.AddSingleton<IHandler, StopAllActionsHandler>();
             services.AddSingleton<IHandler, UseItemHandler>();
 
-            //services.AddSingleton<IHandler, AttackHandler>();
             //services.AddSingleton<IHandler, ChannelCloseHandler>();
             //services.AddSingleton<IHandler, ChannelCreateOwnHandler>();
             //services.AddSingleton<IHandler, ChannelInviteHandler>();
@@ -82,7 +83,6 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, PartyPassLeadershipHandler>();
             //services.AddSingleton<IHandler, PartyRejectHandler>();
             //services.AddSingleton<IHandler, PartyRequestHandler>();
-            //services.AddSingleton<IHandler, PlayerSetModeHandler>();
             //services.AddSingleton<IHandler, ReportBugHandler>();
             //services.AddSingleton<IHandler, ReportCancelHandler>();
             //services.AddSingleton<IHandler, ReportCloseHandler>();

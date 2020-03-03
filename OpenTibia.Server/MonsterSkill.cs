@@ -12,8 +12,8 @@
 namespace OpenTibia.Server
 {
     using System;
-    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -26,13 +26,12 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="type">This skill's type.</param>
         /// <param name="defaultLevel">This skill's default level.</param>
-        /// <param name="rate">This skill's rate of target count increase.</param>
         /// <param name="level">This skill's current level.</param>
         /// <param name="maxLevel">This skill's maximum level.</param>
-        /// <param name="count">This skill's current count.</param>
-        /// <param name="baseIncrease">This skill's target base increase level over level.</param>
-        /// <param name="skillIncrease">This skill's value increase level over level.</param>
-        public MonsterSkill(SkillType type, ushort defaultLevel, double rate, ushort level, ushort maxLevel, uint count, uint baseIncrease, byte skillIncrease)
+        /// <param name="targetForNextLevel">This skill's target count for next level.</param>
+        /// <param name="targetIncreaseFactor">This skill's target increase factor for calculating the next level's target.</param>
+        /// <param name="increasePerLevel">This skill's value increase level over level.</param>
+        public MonsterSkill(SkillType type, int defaultLevel, int level, int maxLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel)
         {
             if (defaultLevel < 1)
             {
@@ -44,36 +43,19 @@ namespace OpenTibia.Server
                 throw new ArgumentException($"{nameof(maxLevel)} must be positive.", nameof(maxLevel));
             }
 
-            if (rate < 1)
-            {
-                throw new ArgumentException($"{nameof(rate)} must be positive.", nameof(rate));
-            }
-
-            if (baseIncrease < 1)
-            {
-                throw new ArgumentException($"{nameof(baseIncrease)} must be positive.", nameof(baseIncrease));
-            }
-
-            if (count < 0)
-            {
-                throw new ArgumentException($"{nameof(count)} cannot be negative.", nameof(count));
-            }
-
             if (maxLevel < defaultLevel)
             {
                 throw new ArgumentException($"{nameof(maxLevel)} must be at least the same value as {nameof(defaultLevel)}.", nameof(maxLevel));
             }
 
             this.Type = type;
-            this.DefaultLevel = defaultLevel;
-            this.MaxLevel = maxLevel;
-            this.Level = Math.Min(this.MaxLevel, level == 0 ? defaultLevel : level);
-            this.Rate = rate;
-            this.BaseTargetIncrease = baseIncrease;
-
-            this.Target = this.CalculateNextTarget();
-            this.Count = Math.Min(count, this.Target);
-            this.PerLevelIncrease = skillIncrease;
+            this.DefaultLevel = (uint)Math.Max(0, defaultLevel);
+            this.MaxLevel = (uint)Math.Max(0, maxLevel);
+            this.Level = (uint)Math.Min(this.MaxLevel, level == 0 ? defaultLevel : level);
+            this.Rate = targetIncreaseFactor / 1000d;
+            this.Count = 0;
+            this.Target = targetForNextLevel;
+            this.PerLevelIncrease = increasePerLevel;
         }
 
         /// <summary>
@@ -89,17 +71,17 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this skill's level.
         /// </summary>
-        public ushort Level { get; private set; }
+        public uint Level { get; private set; }
 
         /// <summary>
         /// Gets this skill's maximum level.
         /// </summary>
-        public ushort MaxLevel { get; }
+        public uint MaxLevel { get; }
 
         /// <summary>
         /// Gets this skill's default level.
         /// </summary>
-        public ushort DefaultLevel { get; }
+        public uint DefaultLevel { get; }
 
         /// <summary>
         /// Gets this skill's current count.
@@ -124,7 +106,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this skill's target base increase level over level.
         /// </summary>
-        public double BaseTargetIncrease { get; }
+        public double BaseTargetIncrease => throw new NotImplementedException();
 
         /// <summary>
         /// Increases this skill's counter.
@@ -138,32 +120,11 @@ namespace OpenTibia.Server
             if (Math.Abs(this.Count - this.Target) < 0.001)
             {
                 this.Level += this.PerLevelIncrease;
-                this.Target = this.CalculateNextTarget();
+                this.Target = Math.Floor(this.Target * this.Rate);
 
                 // Invoke any subscribers to the level advance.
                 this.OnAdvance?.Invoke(this.Type);
             }
-        }
-
-        /// <summary>
-        /// Calculates the next target count.
-        /// </summary>
-        /// <returns>The next target count value.</returns>
-        private double CalculateNextTarget()
-        {
-            var nextTarget = (this.Target * this.Rate) + this.BaseTargetIncrease;
-
-            // need to recalculate everything.
-            if (Math.Abs(this.Target) < 0.001)
-            {
-                for (int i = 0; i < this.DefaultLevel - this.Level; i++)
-                {
-                    // how many advances we need to calculate
-                    nextTarget = (nextTarget * this.Rate) + this.BaseTargetIncrease;
-                }
-            }
-
-            return nextTarget;
         }
     }
 }

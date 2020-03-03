@@ -19,6 +19,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Gets the id of the thing involved in the collision.
         /// </summary>
-        public ushort ThingIdOfCollision { get; }
+        public ushort CollidingThingId { get; }
     }
 }

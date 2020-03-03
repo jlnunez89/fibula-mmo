@@ -13,6 +13,7 @@ namespace OpenTibia.Communications.Handlers.Game
 {
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Communications.Handlers;
@@ -20,6 +21,10 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Operations;
+    using OpenTibia.Server.Operations.Arguments;
+    using Serilog;
 
     /// <summary>
     /// Class that represents an item rotation handler for the game server.
@@ -29,12 +34,12 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <summary>
         /// Initializes a new instance of the <see cref="RotateItemHandler"/> class.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <param name="gameInstance">A reference to the game instance.</param>
-        public RotateItemHandler(ICreatureFinder creatureFinder, IGame gameInstance)
-            : base(gameInstance)
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="operationFactory">A reference to the operation factory in use.</param>
+        /// <param name="gameContext">A reference to the game context to use.</param>
+        public RotateItemHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
+            : base(logger, operationFactory, gameContext)
         {
-            this.CreatureFinder = creatureFinder;
         }
 
         /// <summary>
@@ -43,32 +48,23 @@ namespace OpenTibia.Communications.Handlers.Game
         public override byte ForPacketType => (byte)IncomingGamePacketType.ItemRotate;
 
         /// <summary>
-        /// Gets the reference to the creature finder.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
-
-        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             var itemRotationInfo = message.ReadItemRotationInfo();
 
-            var responsePackets = new List<IOutgoingPacket>();
-
-            if (!(this.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
+            if (!(this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
             {
-                return (false, null);
+                return null;
             }
 
-            // A new request overrides and cancels any "auto" actions waiting to be retried.
-            if (this.Game.PlayerRequest_CancelPendingMovements(player))
-            {
-                player.ClearAllLocationActions();
-            }
+            player.ClearAllLocationActions();
+
+            this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 
             // Before actually using the item, check if we're close enough to use it.
             if (itemRotationInfo.AtLocation.Type == LocationType.Map)
@@ -78,7 +74,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 {
                     var directionToThing = player.Location.DirectionTo(itemRotationInfo.AtLocation);
 
-                    this.Game.PlayerRequest_TurnToDirection(player, directionToThing);
+                    this.ScheduleNewOperation(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToThing));
                 }
 
                 var locationDiff = itemRotationInfo.AtLocation - player.Location;
@@ -86,16 +82,61 @@ namespace OpenTibia.Communications.Handlers.Game
                 if (locationDiff.Z != 0)
                 {
                     // it's on a different floor...
-                    responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "There is no way."));
+                    return new TextMessagePacket(MessageType.StatusSmall, "There is no way.").YieldSingleItem();
                 }
             }
 
-            if (!responsePackets.Any() && !this.Game.PlayerRequest_RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId))
+            return this.RotateItemAt(player, itemRotationInfo.AtLocation, itemRotationInfo.Index, itemRotationInfo.ItemClientId);
+        }
+
+        /// <summary>
+        /// Attempts to rotate an item.
+        /// </summary>
+        /// <param name="creature">The creature requesting the rotation.</param>
+        /// <param name="atLocation">The location at which the item to rotate is.</param>
+        /// <param name="index">The index where the item to rotate is.</param>
+        /// <param name="typeId">The type id of the item to rotate.</param>
+        private IEnumerable<IOutgoingPacket> RotateItemAt(ICreature creature, Location atLocation, byte index, ushort typeId)
+        {
+            var locationDiff = atLocation - creature.Location;
+
+            if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
-                responsePackets.Add(new TextMessagePacket(MessageType.StatusSmall, "Sorry, not possible."));
+                // Too far away to move it, we need to move closer first.
+                var directions = this.Context.PathFinder.FindBetween(creature.Location, atLocation, out Location retryLoc, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+
+                if (directions == null || !directions.Any())
+                {
+                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
+                }
+                else
+                {
+                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
+                    creature.EnqueueRetryActionAtLocation(retryLoc, () => this.RotateItemAt(creature, atLocation, index, typeId));
+
+                    this.AutoWalk(creature, directions.ToArray());
+
+                    return null;
+                }
             }
 
-            return (responsePackets.Any(), responsePackets);
+            if (this.Context.TileAccessor.GetTileAt(atLocation, out ITile targetTile))
+            {
+                if (!(targetTile.GetTopThingByOrder(this.Context.CreatureFinder, index) is IItem item) || item.ThingId != typeId || !item.CanBeRotated)
+                {
+                    return null;
+                }
+
+                this.ScheduleNewOperation(
+                        OperationType.ChangeItem,
+                        new ChangeItemOperationCreationArguments(
+                            requestorId: 0,
+                            item.ThingId,
+                            atLocation,
+                            item.RotateTo));
+            }
+
+            return null;
         }
     }
 }

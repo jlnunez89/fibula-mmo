@@ -27,4 +27,8 @@
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Enumerations\" />
+  </ItemGroup>
+
 </Project>

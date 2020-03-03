@@ -172,5 +172,18 @@ namespace OpenTibia.Common.Utilities
 
             return stringsFound;
         }
+
+        /// <summary>
+        /// Trims the articles "a" and "an" out of the given string.
+        /// </summary>
+        /// <param name="fromString">The string to trim the articles from.</param>
+        /// <returns>The resulting stream.</returns>
+        public static string TrimStartArticles(this string fromString)
+        {
+            const string AArticle = "a ";
+            const string AnArticle = "an ";
+
+            return fromString.Replace(AnArticle, string.Empty).Replace(AArticle, string.Empty);
+        }
     }
 }

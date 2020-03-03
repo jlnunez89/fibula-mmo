@@ -443,10 +443,11 @@ namespace OpenTibia.Server.Map
         /// </summary>
         /// <param name="location">The location to get the file from.</param>
         /// <param name="tile">A reference to the <see cref="ITile"/> found, if any.</param>
+        /// <param name="loadAsNeeded">Optional. A value indicating whether to attempt to load tiles if the loader hasn't loaded them yet.</param>
         /// <returns>A value indicating whether a <see cref="ITile"/> was found, false otherwise.</returns>
-        public bool GetTileAt(Location location, out ITile tile)
+        public bool GetTileAt(Location location, out ITile tile, bool loadAsNeeded = true)
         {
-            if (!this.Loader.HasLoaded(location.X, location.Y, location.Z))
+            if (loadAsNeeded && !this.Loader.HasLoaded(location.X, location.Y, location.Z))
             {
                 int minXLoaded = int.MaxValue;
                 int maxXLoaded = int.MinValue;
@@ -476,6 +477,16 @@ namespace OpenTibia.Server.Map
             }
 
             return this.tiles.TryGetValue(location, out tile);
+        }
+
+        /// <summary>
+        /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
+        /// </summary>
+        /// <param name="location">The location to get the file from.</param>
+        /// <returns>A reference to the <see cref="ITile"/> found, if any.</returns>
+        public ITile GetTileAt(Location location)
+        {
+            return this.GetTileAt(location, out ITile tile) ? tile : null;
         }
     }
 }

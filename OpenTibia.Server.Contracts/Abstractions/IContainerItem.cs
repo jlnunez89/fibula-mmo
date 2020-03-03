@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using OpenTibia.Server.Contracts.Delegates;
 
     /// <summary>
     /// Interface for items that are containers for other items.
@@ -26,22 +27,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// A delegate to invoke when new content is added to this container.
         /// </summary>
-        event OnContentAdded OnContentAdded;
+        event OnContentAdded ContentAdded;
 
         /// <summary>
         /// A delegate to invoke when content is updated in this container.
         /// </summary>
-        event OnContentUpdated OnContentUpdated;
+        event OnContentUpdated ContentUpdated;
 
         /// <summary>
         /// A delegate to invoke when content is removed from this container.
         /// </summary>
-        event OnContentRemoved OnContentRemoved;
-
-        /// <summary>
-        /// Gets the mapping of player ids to container ids for which this container is known to be opened.
-        /// </summary>
-        IDictionary<uint, byte> OpenedBy { get; }
+        event OnContentRemoved ContentRemoved;
 
         /// <summary>
         /// Gets the collection of items contained in this container.
@@ -59,29 +55,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="index">The index to retrieve.</param>
         /// <returns>The item retrieved, if any, or null.</returns>
         IItem this[int index] { get; }
-
-        /// <summary>
-        /// Marks this container as oppened by a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature that is opening this container.</param>
-        /// <param name="containerId">The id which the creature is proposing to label this container with.</param>
-        /// <returns>The id of the container which this container is or will be known to this creature.</returns>
-        /// <remarks>The id returned may not match the one supplied if the container was already opened by this creature before.</remarks>
-        byte BeginTracking(uint creatureId, byte containerId);
-
-        /// <summary>
-        /// Marks this container as closed by a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature that is closing this container.</param>
-        void EndTracking(uint creatureId);
-
-        /// <summary>
-        /// Checks if this container is being tracked as opened a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
-        /// <param name="containerId">The id which the creature is tracking this container with.</param>
-        /// <returns>True if this container is being tracked by the creature, false otherwise.</returns>
-        bool IsTracking(uint creatureId, out byte containerId);
 
         /// <summary>
         /// Counts the amount of the specified content item at a given index within this container.

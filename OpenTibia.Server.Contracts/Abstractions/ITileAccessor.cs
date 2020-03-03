@@ -23,7 +23,15 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="location">The location to get the file from.</param>
         /// <param name="tile">A reference to the <see cref="ITile"/> found, if any.</param>
+        /// <param name="loadAsNeeded">Optional. A value indicating whether to attempt to load tiles if the loader hasn't loaded them yet.</param>
         /// <returns>A value indicating whether a <see cref="ITile"/> was found, false otherwise.</returns>
-        bool GetTileAt(Location location, out ITile tile);
+        bool GetTileAt(Location location, out ITile tile, bool loadAsNeeded = true);
+
+        /// <summary>
+        /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
+        /// </summary>
+        /// <param name="location">The location to get the file from.</param>
+        /// <returns>A reference to the <see cref="ITile"/> found, if any.</returns>
+        ITile GetTileAt(Location location);
     }
 }

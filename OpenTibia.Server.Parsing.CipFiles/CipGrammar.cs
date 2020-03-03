@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Parsing.CipFiles
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Server.Parsing.CipFiles.Models;
     using OpenTibia.Server.Parsing.Contracts;
     using Sprache;
 
@@ -230,13 +231,13 @@ namespace OpenTibia.Server.Parsing.CipFiles
         /// <summary>
         /// Parses the raw event rules.
         /// </summary>
-        public static readonly Parser<RawEventRule> EventRule =
+        public static readonly Parser<ParsedEventRule> EventRule =
             from conditions in Conditions
             from leading in Parse.WhiteSpace.Optional().Many()
             from separator in ConditionsActionsSeparator
             from trailing in Parse.WhiteSpace.Many()
             from actions in Actions
-            select new RawEventRule(conditions, actions);
+            select new ParsedEventRule(conditions, actions);
 
         /// <summary>
         /// Parses monster spells.

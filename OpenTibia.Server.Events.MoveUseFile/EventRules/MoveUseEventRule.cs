@@ -54,31 +54,21 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         public const string NameShorthand = "%N";
 
         /// <summary>
-        /// A value to indicate whether this event is set up.
-        /// </summary>
-        private bool isSetup;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="MoveUseEventRule"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="scriptApi">A reference to the script factory in use.</param>
         /// <param name="conditionSet">The conditions for this event.</param>
         /// <param name="actionSet">The actions of this event.</param>
-        public MoveUseEventRule(ILogger logger, IScriptApi scriptApi, IList<string> conditionSet, IList<string> actionSet)
+        public MoveUseEventRule(ILogger logger, IList<string> conditionSet, IList<string> actionSet)
         {
             logger.ThrowIfNull(nameof(logger));
-            scriptApi.ThrowIfNull(nameof(scriptApi));
 
-            this.ScriptFactory = scriptApi;
             this.Logger = logger.ForContext(this.GetType());
 
             this.Conditions = this.ParseRules(conditionSet);
             this.Actions = this.ParseRules(actionSet);
 
-            this.Adapter = new MoveUseScriptApiAdapter(logger, scriptApi);
-
-            this.isSetup = false;
+            this.Adapter = new MoveUseScriptApiAdapter(logger);
         }
 
         /// <summary>
@@ -87,29 +77,9 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Gets a reference to the script factory in use.
-        /// </summary>
-        public IScriptApi ScriptFactory { get; }
-
-        /// <summary>
         /// Gets the type of this event.
         /// </summary>
         public abstract EventRuleType Type { get; }
-
-        /// <summary>
-        /// Gets or sets the primary thing involved in the event.
-        /// </summary>
-        public IThing PrimaryThing { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the secondary thing involved in the event.
-        /// </summary>
-        public IThing SecondaryThing { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the player involved in the event.
-        /// </summary>
-        public IPlayer Player { get; protected set; }
 
         /// <summary>
         /// Gets the actions to perform when an event is executed.
@@ -127,57 +97,42 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         public IEnumerable<IEventRuleFunction> Conditions { get; protected set; }
 
         /// <summary>
-        /// Gets a value indicating whether this event can be executed.
-        /// This generally means the <see cref="Conditions"/> have been passed.
+        /// Checks whether this event rule can be executed.
+        /// This generally means the <see cref="Conditions"/> all evaluate to true.
         /// </summary>
-        public bool CanBeExecuted
+        /// <param name="gameApi">A reference to the game's api in use.</param>
+        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
+        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
+        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        /// <returns>True if the rule can be executed, false otherwise.</returns>
+        public bool CanBeExecuted(IGame gameApi, IThing primaryThing, IThing secondaryThing = null, IPlayer requestingPlayer = null)
         {
-            get
-            {
-                return this.isSetup && this.Conditions.All(condition => this.InvokeCondition(this.PrimaryThing, this.SecondaryThing, this.Player, condition.FunctionName, condition.Parameters));
-            }
+            gameApi.ThrowIfNull(nameof(gameApi));
+
+            // TODO: fix this indirection.
+            this.Adapter.Game = gameApi;
+
+            return this.Conditions.All(condition => this.InvokeCondition(primaryThing, secondaryThing, requestingPlayer, condition.FunctionName, condition.Parameters));
         }
 
         /// <summary>
-        /// Sets up this event.
+        /// Executes this event rule.
+        /// This generally means executing the event rule's <see cref="Actions"/>.
         /// </summary>
-        /// <param name="obj1">The primary thing involved in the event.</param>
-        /// <param name="obj2">The secondary thing involved in the event.</param>
-        /// <param name="user">The player involved in the event.</param>
-        /// <returns>True if the event is successfully set up, false otherwise.</returns>
-        public bool Setup(IThing obj1, IThing obj2 = null, IPlayer user = null)
+        /// <param name="gameApi">A reference to the game's api in use.</param>
+        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
+        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
+        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        public void Execute(IGame gameApi, ref IThing primaryThing, ref IThing secondaryThing, ref IPlayer requestingPlayer)
         {
-            this.PrimaryThing = obj1;
-            this.SecondaryThing = obj2;
-            this.Player = user;
+            gameApi.ThrowIfNull(nameof(gameApi));
 
-            this.isSetup = true;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Executes this event.
-        /// This generally means executing the event's <see cref="Actions"/>.
-        /// </summary>
-        public void Execute()
-        {
-            if (!this.isSetup)
-            {
-                throw new InvalidOperationException("Cannot execute event without first doing Setup.");
-            }
+            // TODO: fix this.
+            this.Adapter.Game = gameApi;
 
             foreach (var action in this.Actions)
             {
-                var obj1Result = this.PrimaryThing;
-                var obj2Result = this.SecondaryThing;
-                var userResult = this.Player;
-
-                this.InvokeAction(ref obj1Result, ref obj2Result, ref userResult, action.FunctionName, action.Parameters);
-
-                this.PrimaryThing = obj1Result;
-                this.SecondaryThing = obj2Result;
-                this.Player = userResult;
+                this.InvokeAction(ref primaryThing, ref secondaryThing, ref requestingPlayer, action.FunctionName, action.Parameters);
             }
         }
 

@@ -28,32 +28,89 @@ namespace OpenTibia.Server.Map.SectorFiles
     /// </summary>
     public class SectorMapLoader : IMapLoader
     {
+        /// <summary>
+        /// The symbol used for comments.
+        /// </summary>
         public const char CommentSymbol = '#';
 
+        /// <summary>
+        /// The separator used for sector files.
+        /// </summary>
         public const char SectorSeparator = ':';
 
+        /// <summary>
+        /// The separator used for positions of sectors.
+        /// </summary>
         public const char PositionSeparator = '-';
 
+        /// <summary>
+        /// The minimum X value for sectors known.
+        /// </summary>
         public const int SectorXMin = 996;
+
+        /// <summary>
+        /// The maximum X value for sectors known.
+        /// </summary>
         public const int SectorXMax = 1043;
 
+        /// <summary>
+        /// The minimum Y value for sectors known.
+        /// </summary>
         public const int SectorYMin = 984;
+
+        /// <summary>
+        /// The maximum Y value for sectors known.
+        /// </summary>
         public const int SectorYMax = 1031;
 
+        /// <summary>
+        /// The minimum Z value for sectors known.
+        /// </summary>
         public const int SectorZMin = 0;
+
+        /// <summary>
+        /// The maximum Z value for sectors known.
+        /// </summary>
         public const int SectorZMax = 15;
 
+        /// <summary>
+        /// Holds the map directory info.
+        /// </summary>
         private readonly DirectoryInfo mapDirInfo;
 
+        /// <summary>
+        /// The Z length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthZ;
 
+        /// <summary>
+        /// The Y length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthY;
 
+        /// <summary>
+        /// The X length of sectors known.
+        /// </summary>
         private readonly int sectorsLengthX;
 
+        /// <summary>
+        /// Holds the loaded sectors.
+        /// </summary>
         private readonly bool[,,] sectorsLoaded;
 
+        /// <summary>
+        /// An object used as a lock to semaphore loading into the sectors' dictionary.
+        /// </summary>
+        private readonly object loadLock;
+
+        /// <summary>
+        /// The total known tile count.
+        /// </summary>
         private long totalTileCount;
+
+        /// <summary>
+        /// The total loaded tiles count.
+        /// </summary>
         private long totalLoadedCount;
 
         /// <summary>
@@ -78,6 +135,8 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             this.totalTileCount = 1;
             this.totalLoadedCount = default;
+
+            this.loadLock = new object();
 
             this.sectorsLengthX = 1 + SectorXMax - SectorXMin;
             this.sectorsLengthY = 1 + SectorYMax - SectorYMin;
@@ -128,7 +187,10 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             if (probeX >= 0 && probeX < this.sectorsLengthX && probeY >= 0 && probeY < this.sectorsLengthY && probeZ >= 0 && probeZ < this.sectorsLengthZ)
             {
-                return this.sectorsLoaded[probeX, probeY, probeZ];
+                lock (this.loadLock)
+                {
+                    return this.sectorsLoaded[probeX, probeY, probeZ];
+                }
             }
 
             return false;
@@ -161,31 +223,38 @@ namespace OpenTibia.Server.Map.SectorFiles
             this.totalTileCount = (toSectorX - fromSectorX + 1) * 32 * (toSectorY - fromSectorY + 1) * 32 * (toZ - fromZ + 1);
             this.totalLoadedCount = default;
 
-            Parallel.For(fromZ, toZ + 1, sectorZ =>
+            lock (this.loadLock)
             {
-                Parallel.For(fromSectorY, toSectorY + 1, sectorY =>
+                Parallel.For(fromZ, toZ + 1, sectorZ =>
                 {
-                    Parallel.For(fromSectorX, toSectorX + 1, sectorX =>
+                    Parallel.For(fromSectorY, toSectorY + 1, sectorY =>
                     {
-                        var sectorFileName = $"{sectorX:0000}-{sectorY:0000}-{sectorZ:00}.sec";
-
-                        var fullFilePath = Path.Combine(this.mapDirInfo.FullName, sectorFileName);
-                        var sectorFileInfo = new FileInfo(fullFilePath);
-
-                        if (sectorFileInfo.Exists)
+                        Parallel.For(fromSectorX, toSectorX + 1, sectorX =>
                         {
-                            using var streamReader = sectorFileInfo.OpenText();
+                            var sectorFileName = $"{sectorX:0000}-{sectorY:0000}-{sectorZ:00}.sec";
 
-                            var fileContents = streamReader.ReadToEnd();
+                            var fullFilePath = Path.Combine(this.mapDirInfo.FullName, sectorFileName);
+                            var sectorFileInfo = new FileInfo(fullFilePath);
 
-                            tuplesAdded.AddRange(SectorFileReader.ReadSector(this.Logger, this.ItemFactory, sectorFileName, fileContents, (ushort)(sectorX * 32), (ushort)(sectorY * 32), (sbyte)sectorZ));
+                            if (sectorFileInfo.Exists)
+                            {
+                                using var streamReader = sectorFileInfo.OpenText();
 
-                            Interlocked.Add(ref this.totalLoadedCount, 1024); // 1024 per sector file, regardless if there is a tile or not...
+                                var tuplesLoaded = SectorFileReader.ReadSector(this.Logger, this.ItemFactory, sectorFileName, streamReader.ReadToEnd(), (ushort)(sectorX * 32), (ushort)(sectorY * 32), (sbyte)sectorZ);
+
+                                tuplesAdded.AddRange(tuplesLoaded);
+                            }
+
+                            // 1024 per sector file, regardless if there is a tile or not...
+                            Interlocked.Add(ref this.totalLoadedCount, 1024);
+
                             this.sectorsLoaded[sectorX - SectorXMin, sectorY - SectorYMin, sectorZ - SectorZMin] = true;
-                        }
+
+                            this.Logger.Debug($"Loaded sector {sectorFileName} [{this.totalLoadedCount} out of {this.totalTileCount}].");
+                        });
                     });
                 });
-            });
+            }
 
             this.totalLoadedCount = this.totalTileCount;
 

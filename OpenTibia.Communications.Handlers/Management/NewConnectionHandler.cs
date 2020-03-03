@@ -45,13 +45,12 @@ namespace OpenTibia.Communications.Handlers.Management
             IApplicationContext applicationContext,
             IOptions<GameConfigurationOptions> gameConfigOptions,
             IOptions<ProtocolConfigurationOptions> protocolConfigOptions)
+            : base(logger)
         {
-            logger.ThrowIfNull(nameof(logger));
             applicationContext.ThrowIfNull(nameof(applicationContext));
             gameConfigOptions.ThrowIfNull(nameof(gameConfigOptions));
             protocolConfigOptions.ThrowIfNull(nameof(protocolConfigOptions));
 
-            this.Logger = logger.ForContext<NewConnectionHandler>();
             this.ApplicationContext = applicationContext;
             this.GameConfiguration = gameConfigOptions.Value;
             this.ProtocolConfiguration = protocolConfigOptions.Value;
@@ -61,11 +60,6 @@ namespace OpenTibia.Communications.Handlers.Management
         /// Gets the type of packet that this handler is for.
         /// </summary>
         public override byte ForPacketType => (byte)IncomingManagementPacketType.LoginServerRequest;
-
-        /// <summary>
-        /// Gets the reference to the logger in use.
-        /// </summary>
-        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets a reference to the application context.
@@ -87,8 +81,8 @@ namespace OpenTibia.Communications.Handlers.Management
         /// </summary>
         /// <param name="message">The message to handle.</param>
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A value tuple with a value indicating whether the handler intends to respond, and a collection of <see cref="IOutgoingPacket"/>s that compose that response.</returns>
-        public override (bool IntendsToRespond, IEnumerable<IOutgoingPacket> ResponsePackets) HandleRequest(INetworkMessage message, IConnection connection)
+        /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection)
         {
             connection.ThrowIfNull(nameof(connection));
 
@@ -136,7 +130,7 @@ namespace OpenTibia.Communications.Handlers.Management
                     // {
                     //    this.SendDisconnect(connection, $"The RSA encryption keys used by your client cannot communicate with this game server.\nPlease use an IP changer that replaces the RSA Keys.\nWe recommend using OTLand's IP changer with a virgin 7.7 client.\nYou may also download the client from our website.");
                     // }
-                    return (false, null);
+                    return null;
                 }
             }
 
@@ -148,7 +142,7 @@ namespace OpenTibia.Communications.Handlers.Management
             if (responsePackets.Any())
             {
                 // Something went wrong, but we held up this far just to be able to send a message back to the client, as up until this point we didn't set the XTea keys.
-                return (true, responsePackets);
+                return responsePackets;
             }
 
             using var unitOfWork = new OpenTibiaUnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
@@ -162,7 +156,7 @@ namespace OpenTibia.Communications.Handlers.Management
                 // TODO: hardcoded messages.
                 responsePackets.Add(new LoginServerDisconnectPacket("Please enter a valid account number and password."));
 
-                return (true, responsePackets);
+                return responsePackets;
             }
 
             var charactersFound = unitOfWork.Characters.FindMany(p => p.AccountId == account.Id);
@@ -172,7 +166,7 @@ namespace OpenTibia.Communications.Handlers.Management
                 // TODO: hardcoded messages.
                 responsePackets.Add(new LoginServerDisconnectPacket($"You don't have any characters in your account.\nPlease create a new character in our web site: {this.GameConfiguration.World.WebsiteUrl}"));
 
-                return (true, responsePackets);
+                return responsePackets;
             }
 
             var charList = new List<ICharacterListItem>();
@@ -189,7 +183,7 @@ namespace OpenTibia.Communications.Handlers.Management
             responsePackets.Add(new MessageOfTheDayPacket(this.GameConfiguration.World.MessageOfTheDay));
             responsePackets.Add(new CharacterListPacket(charList, (ushort)(account.PremiumDays + account.TrialOrBonusPremiumDays)));
 
-            return (true, responsePackets);
+            return responsePackets;
         }
     }
 }
