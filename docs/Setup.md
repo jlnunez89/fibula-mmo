@@ -46,11 +46,11 @@ Running the server is simple:
 
    ![Image of running service](readme/standaloneExecution.PNG?raw=true)
 
-> This server is designed to only load the sector files surronding players as they approach them, making it start _**really fast**_ and requiring just a few memory: usually hovering around **250kb** so far. This will change of course as we add up monsters, their behaviour and NPCs.
+> This server is designed to only load the sector files surronding players as they approach them, making it start _**really fast**_ and requiring just a few memory: usually hovering around **~60 MB** so far. This will change of course as we add up a non-in memory database, monsters, their behaviour and NPCs.
 
 ## 5) Log in:
 
-1) Use you favorite `7.7` (soon to be 7.71) client to connnect to `localhost` / `127.0.0.1` (per vanilla configuration). In my case, I use Tibia Loader:
+1) Use you favorite `7.72` client to connnect to `localhost` / `127.0.0.1` (per vanilla configuration). In my case, I use Tibia Loader:
 
     ![Image of Tibia Loader](readme/tibiaLoader.PNG?raw=true)
 
