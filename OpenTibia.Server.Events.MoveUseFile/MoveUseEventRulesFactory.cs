@@ -43,10 +43,12 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <summary>
         /// Creates a new item event from a parsed instance of <see cref="IEventRuleCreationArguments"/>, that must be castable to <see cref="ParsedEventRule"/>.
         /// </summary>
+        /// <param name="gameApi">A reference to the game API to initialize rules with.</param>
         /// <param name="eventRuleArgs">The parsed event rule creation arguments..</param>
         /// <returns>A new instance of a <see cref="IEventRule"/> implementation, based on the parsed event.</returns>
-        public IEventRule Create(IEventRuleCreationArguments eventRuleArgs)
+        public IEventRule Create(IGameApi gameApi, IEventRuleCreationArguments eventRuleArgs)
         {
+            gameApi.ThrowIfNull(nameof(gameApi));
             eventRuleArgs.ThrowIfNull(nameof(eventRuleArgs));
 
             if (!(eventRuleArgs is ParsedEventRule rawEventRuleArgs))
@@ -61,11 +63,11 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
             return eventType switch
             {
-                EventRuleType.Collision => new CollisionMoveUseEventRule(this.Logger, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
-                EventRuleType.Use => new UseMoveUseEventRule(this.Logger, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
-                EventRuleType.MultiUse => new MultiUseMoveUseEventRule(this.Logger, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
-                EventRuleType.Separation => new SeparationMoveUseEventRule(this.Logger, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
-                EventRuleType.Movement => new MovementMoveUseEventRule(this.Logger, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
+                EventRuleType.Collision => new CollisionMoveUseEventRule(this.Logger, gameApi, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
+                EventRuleType.Use => new UseMoveUseEventRule(this.Logger, gameApi, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
+                EventRuleType.MultiUse => new MultiUseMoveUseEventRule(this.Logger, gameApi, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
+                EventRuleType.Separation => new SeparationMoveUseEventRule(this.Logger, gameApi, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
+                EventRuleType.Movement => new MovementMoveUseEventRule(this.Logger, gameApi, rawEventRuleArgs.ConditionSet, rawEventRuleArgs.ActionSet),
 
                 _ => throw new InvalidCastException($"Unsupported type of event on {nameof(MoveUseEventRulesFactory)}: {rawEventRuleArgs.Type}"),
             };

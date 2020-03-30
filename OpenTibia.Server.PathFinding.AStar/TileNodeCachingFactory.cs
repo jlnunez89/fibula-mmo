@@ -48,14 +48,14 @@ namespace OpenTibia.Server.PathFinding.AStar
         }
 
         /// <summary>
-        /// Creates a node belonging to the given <paramref name="searchId"/>, using the given <paramref name="nodeCreationData"/>.
+        /// Creates a node with the given <paramref name="searchContext"/>, using the given <paramref name="nodeCreationData"/>.
         /// </summary>
-        /// <param name="searchId">The search id.</param>
+        /// <param name="searchContext">A reference to the context of the search this node takes place in.</param>
         /// <param name="nodeCreationData">The node creation data.</param>
         /// <returns>An instance of a <see cref="INode"/>.</returns>
-        public INode Create(string searchId, INodeCreationArguments nodeCreationData)
+        public INode Create(ISearchContext searchContext, INodeCreationArguments nodeCreationData)
         {
-            searchId.ThrowIfNullOrWhiteSpace(nameof(searchId));
+            searchContext.ThrowIfNull(nameof(searchContext));
             nodeCreationData.ThrowIfNull(nameof(nodeCreationData));
 
             if (!(nodeCreationData is TileNodeCreationArguments tileNodeArguments))
@@ -67,17 +67,17 @@ namespace OpenTibia.Server.PathFinding.AStar
 
             lock (this.nodesDictionaryLock)
             {
-                if (!this.nodesDictionary.ContainsKey(searchId))
+                if (!this.nodesDictionary.ContainsKey(searchContext.SearchId))
                 {
-                    this.nodesDictionary.Add(searchId, new Dictionary<Location, TileNode>());
+                    this.nodesDictionary.Add(searchContext.SearchId, new Dictionary<Location, TileNode>());
                 }
 
-                if (!this.nodesDictionary[searchId].ContainsKey(locToSearch) && this.tileAccessor.GetTileAt(tileNodeArguments.Location, out ITile tile, loadAsNeeded: true))
+                if (!this.nodesDictionary[searchContext.SearchId].ContainsKey(locToSearch) && this.tileAccessor.GetTileAt(tileNodeArguments.Location, out ITile tile, loadAsNeeded: true))
                 {
-                    this.nodesDictionary[searchId].Add(locToSearch, new TileNode(searchId, tile, tileNodeArguments.OnBehalfOfCreature));
+                    this.nodesDictionary[searchContext.SearchId].Add(locToSearch, new TileNode(searchContext, tile));
                 }
 
-                return this.nodesDictionary[searchId].TryGetValue(locToSearch, out TileNode node) ? node : null;
+                return this.nodesDictionary[searchContext.SearchId].TryGetValue(locToSearch, out TileNode node) ? node : null;
             }
         }
 

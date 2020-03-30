@@ -22,7 +22,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for when a creature has moved.
@@ -32,13 +31,11 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureMovedNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder instance.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureMovedNotification(ILogger logger, IMapDescriptor mapDescriptor, ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureMovedNotificationArguments arguments)
-            : base(logger)
+        public CreatureMovedNotification(IMapDescriptor mapDescriptor, ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureMovedNotificationArguments arguments)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));

@@ -43,15 +43,21 @@ namespace OpenTibia.Communications.Handlers
             services.AddSingleton<IHandler, AutoMoveHandler>();
             services.AddSingleton<IHandler, ContainerCloseHandler>();
             services.AddSingleton<IHandler, ContainerMoveUpHandler>();
-            services.AddSingleton<IHandler, MoveThingHandler>();
-            services.AddSingleton<IHandler, LogOutHandler>();
-            services.AddSingleton<IHandler, LookAtHandler>();
             services.AddSingleton<IHandler, KeepAliveRequestHandler>();
             services.AddSingleton<IHandler, LogInHandler>();
+            services.AddSingleton<IHandler, LogOutHandler>();
+            services.AddSingleton<IHandler, LookAtHandler>();
+            services.AddSingleton<IHandler, MoveThingHandler>();
+            services.AddSingleton<IHandler, RotateItemHandler>();
+            services.AddSingleton<IHandler, SetModeHandler>();
+            services.AddSingleton<IHandler, SpeechHandler>();
+            services.AddSingleton<IHandler, StopAllActionsHandler>();
             services.AddSingleton<IHandler, TurnEastHandler>();
             services.AddSingleton<IHandler, TurnNorthHandler>();
             services.AddSingleton<IHandler, TurnSouthHandler>();
             services.AddSingleton<IHandler, TurnWestHandler>();
+            services.AddSingleton<IHandler, UseItemHandler>();
+            services.AddSingleton<IHandler, UseItemOnHandler>();
             services.AddSingleton<IHandler, WalkEastHandler>();
             services.AddSingleton<IHandler, WalkNortheastHandler>();
             services.AddSingleton<IHandler, WalkNorthHandler>();
@@ -60,10 +66,6 @@ namespace OpenTibia.Communications.Handlers
             services.AddSingleton<IHandler, WalkSouthHandler>();
             services.AddSingleton<IHandler, WalkSouthwestHandler>();
             services.AddSingleton<IHandler, WalkWestHandler>();
-            services.AddSingleton<IHandler, RotateItemHandler>();
-            services.AddSingleton<IHandler, SetModeHandler>();
-            services.AddSingleton<IHandler, StopAllActionsHandler>();
-            services.AddSingleton<IHandler, UseItemHandler>();
 
             //services.AddSingleton<IHandler, ChannelCloseHandler>();
             //services.AddSingleton<IHandler, ChannelCreateOwnHandler>();
@@ -75,7 +77,6 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, FollowHandler>();
             //services.AddSingleton<IHandler, HouseWindowPostHandler>();
             //services.AddSingleton<IHandler, ItemUseBattleHandler>();
-            //services.AddSingleton<IHandler, ItemUseOnHandler>();
             //services.AddSingleton<IHandler, OutfitChangedHandler>();
             //services.AddSingleton<IHandler, OutfitChangeRequestHandler>();
             //services.AddSingleton<IHandler, PartyAcceptHandler>();
@@ -91,7 +92,6 @@ namespace OpenTibia.Communications.Handlers
             //services.AddSingleton<IHandler, ReportViolationHandler>();
             //services.AddSingleton<IHandler, ReSendContainerRequestHandler>();
             //services.AddSingleton<IHandler, ReSendTileRequestHandler>();
-            //services.AddSingleton<IHandler, SpeechHandler>();
             //services.AddSingleton<IHandler, TextWindowPostHandler>();
             //services.AddSingleton<IHandler, TradeAcceptHandler>();
             //services.AddSingleton<IHandler, TradeCancelHandler>();

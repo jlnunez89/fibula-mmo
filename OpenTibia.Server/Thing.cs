@@ -23,11 +23,6 @@ namespace OpenTibia.Server
     public abstract class Thing : IThing
     {
         /// <summary>
-        /// The id for things that are creatures.
-        /// </summary>
-        public const ushort CreatureThingId = 0x63;
-
-        /// <summary>
         /// Holds this thing's parent cylinder.
         /// </summary>
         private ICylinder parentCylinder;

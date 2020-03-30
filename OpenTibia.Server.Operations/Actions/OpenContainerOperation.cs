@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.Operations.Actions
 {
     using OpenTibia.Server.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an event for an container being opened.
@@ -22,13 +21,11 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Initializes a new instance of the <see cref="OpenContainerOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="player">The player who has the container open.</param>
         /// <param name="containerItem">The container being opened.</param>
         /// <param name="containerPosition">Optional. The position at which the container is being opened, as seen by the player.</param>
-        public OpenContainerOperation(ILogger logger, IOperationContext context, IPlayer player, IContainerItem containerItem, byte containerPosition = 0xFF)
-            : base(logger, context, player.Id)
+        public OpenContainerOperation(IPlayer player, IContainerItem containerItem, byte containerPosition = 0xFF)
+            : base(player.Id)
         {
             this.Player = player;
             this.ContainerItem = containerItem;
@@ -53,6 +50,7 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute() => this.Context.ContainerManager.OpenContainer(this.Player, this.ContainerItem, this.ContainerPosition);
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context) => context.ContainerManager.OpenContainer(this.Player, this.ContainerItem, this.ContainerPosition);
     }
 }

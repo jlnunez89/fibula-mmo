@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Operations.Environment
 {
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Operations.Actions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an operation for removing a creature from the map.
@@ -23,16 +22,10 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Initializes a new instance of the <see cref="RemoveCreatureOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">the context of the operation.</param>
-        /// <param name="requestorId">The id of the creature requesting the use.</param>
-        /// <param name="creature">The creature being placed.</param>
-        public RemoveCreatureOperation(
-            ILogger logger,
-            IElevatedOperationContext context,
-            uint requestorId,
-            ICreature creature)
-            : base(logger, context, requestorId)
+        /// <param name="requestorId">The id of the creature requesting the removal.</param>
+        /// <param name="creature">The creature being removed.</param>
+        public RemoveCreatureOperation(uint requestorId, ICreature creature)
+            : base(requestorId)
         {
             this.Creature = creature;
         }
@@ -45,9 +38,10 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IElevatedOperationContext context)
         {
-            bool successfulRemoval = this.RemoveCreature(this.Creature);
+            bool successfulRemoval = this.RemoveCreature(context, this.Creature);
 
             if (!successfulRemoval)
             {

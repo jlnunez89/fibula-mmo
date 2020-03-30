@@ -28,11 +28,10 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="WalkOnDemandHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
         /// <param name="direction">The direction in which the turn is happening.</param>
-        public WalkOnDemandHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext, Direction direction)
-            : base(logger, operationFactory, gameContext)
+        public WalkOnDemandHandler(ILogger logger, IGameContext gameContext, Direction direction)
+            : base(logger, gameContext)
         {
             this.Direction = direction;
         }
@@ -55,19 +54,23 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            player.ClearAllLocationActions();
+            //player.ClearAllLocationBasedOperations();
 
             this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 
             var nextLocation = player.Location.LocationAt(this.Direction);
 
             this.ScheduleNewOperation(
-                    OperationType.MapToMapMovement,
-                    new MapToMapMovementOperationCreationArguments(
+                this.Context.OperationFactory.Create(
+                    OperationType.Movement,
+                    new MovementOperationCreationArguments(
                         player.Id,
-                        player,
+                        ICreature.CreatureThingId,
                         player.Location,
-                        nextLocation));
+                        fromIndex: 0xFF,
+                        player.Id,
+                        nextLocation,
+                        player.Id)));
 
             return null;
         }

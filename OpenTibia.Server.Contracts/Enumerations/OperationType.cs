@@ -13,27 +13,24 @@ namespace OpenTibia.Server.Contracts.Enumerations
 {
     public enum OperationType
     {
+        Thinking,
+        Speech,
+
         // Actions
         ContainerOpen,
         ContainerClose,
         ContainerMoveUp,
         Turn,
         UseItem,
+        UseItemOn,
 
         // Combat
         AutoAttack,
         RestoreCombatCredit,
 
         // Movement
-        BodyToBodyMovement,
-        BodyToContainerMovement,
-        BodyToMapMovement,
-        ContainerToBodyMovement,
-        ContainerToContainerMovement,
-        ContainerToMapMovement,
-        MapToBodyMovement,
-        MapToContainerMovement,
-        MapToMapMovement,
+        AutoWalk,
+        Movement,
 
         // Elevated
         ChangeItem,

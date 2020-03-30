@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.Operations.Actions
 {
     using OpenTibia.Server.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an event for moving up in an open container.
@@ -22,13 +21,11 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Initializes a new instance of the <see cref="MoveUpContainerOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="player">The player who has the container open.</param>
         /// <param name="containerItem">The container being closed.</param>
         /// <param name="containerPosition">The position of the container being closed, as seen by the player.</param>
-        public MoveUpContainerOperation(ILogger logger, IOperationContext context, IPlayer player, IContainerItem containerItem, byte containerPosition)
-            : base(logger, context, player.Id)
+        public MoveUpContainerOperation(IPlayer player, IContainerItem containerItem, byte containerPosition)
+            : base(player.Id)
         {
             this.Player = player;
             this.ContainerItem = containerItem;
@@ -53,6 +50,7 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute() => this.Context.ContainerManager.OpenContainer(this.Player, this.ContainerItem?.ParentCylinder as IContainerItem, this.ContainerPosition);
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context) => context.ContainerManager.OpenContainer(this.Player, this.ContainerItem?.ParentCylinder as IContainerItem, this.ContainerPosition);
     }
 }

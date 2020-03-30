@@ -182,6 +182,7 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<Game>();
             services.AddHostedService(s => s.GetService<Game>());
             services.AddSingleton<IGame>(s => s.GetService<Game>());
+            services.AddSingleton<ICombatApi>(s => s.GetService<Game>());
         }
 
         private static void ConfigureDatabaseContext(HostBuilderContext hostingContext, IServiceCollection services)
@@ -242,7 +243,7 @@ namespace OpenTibia.Server.Standalone
 
         private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
         {
-            services.AddSingleton<IEventRulesEvaluator>(s => s.GetService<Game>());
+            services.AddSingleton<IEventRulesApi>(s => s.GetService<Game>());
 
             // Chose a type of event rules loader:
             services.AddMoveUseEventRulesLoader(hostingContext.Configuration);

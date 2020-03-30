@@ -18,7 +18,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for a tile update.
@@ -28,12 +27,10 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="TileUpdatedNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder instance.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public TileUpdatedNotification(ILogger logger, ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, TileUpdatedNotificationArguments arguments)
-            : base(logger)
+        public TileUpdatedNotification(ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, TileUpdatedNotificationArguments arguments)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));

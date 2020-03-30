@@ -16,7 +16,6 @@ namespace OpenTibia.Server.Operations.Actions
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Notifications;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an event for a creature turning.
@@ -26,12 +25,10 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnToDirectionOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The operation's context.</param>
         /// <param name="creature">The creature which is turning.</param>
         /// <param name="direction">The direction to which the creature is turning.</param>
-        public TurnToDirectionOperation(ILogger logger, IOperationContext context, ICreature creature, Direction direction)
-            : base(logger, context, creature.Id)
+        public TurnToDirectionOperation(ICreature creature, Direction direction)
+            : base(creature.Id)
         {
             this.Creature = creature;
             this.Direction = direction;
@@ -50,20 +47,20 @@ namespace OpenTibia.Server.Operations.Actions
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             // Perform the actual, internal turn.
             this.Creature.TurnToDirection(this.Direction);
 
             // Send the notification if applicable.
-            if (this.Context.TileAccessor.GetTileAt(this.Creature.Location, out ITile playerTile))
+            if (context.TileAccessor.GetTileAt(this.Creature.Location, out ITile playerTile))
             {
                 var playerStackPos = playerTile.GetStackPositionOfThing(this.Creature);
 
-                this.Context.Scheduler.ScheduleEvent(
+                context.Scheduler.ScheduleEvent(
                     new CreatureTurnedNotification(
-                        this.Logger,
-                        () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Creature.Location),
+                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, this.Creature.Location),
                         new CreatureTurnedNotificationArguments(this.Creature, playerStackPos)));
             }
         }

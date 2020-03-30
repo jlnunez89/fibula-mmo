@@ -19,7 +19,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for a creature being removed.
@@ -29,12 +28,10 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureRemovedNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder instance.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureRemovedNotification(ILogger logger, ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureRemovedNotificationArguments arguments)
-            : base(logger)
+        public CreatureRemovedNotification(ICreatureFinder creatureFinder, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureRemovedNotificationArguments arguments)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));

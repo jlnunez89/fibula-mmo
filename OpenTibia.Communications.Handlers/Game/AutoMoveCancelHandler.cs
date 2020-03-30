@@ -30,10 +30,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="AutoMoveCancelHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public AutoMoveCancelHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+        public AutoMoveCancelHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext)
         {
         }
 
@@ -56,7 +55,7 @@ namespace OpenTibia.Communications.Handlers.Game
             }
 
             // A new request overrides and cancels any "auto" actions waiting to be retried.
-            player.ClearAllLocationActions();
+            //player.ClearAllLocationBasedOperations();
 
             this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 

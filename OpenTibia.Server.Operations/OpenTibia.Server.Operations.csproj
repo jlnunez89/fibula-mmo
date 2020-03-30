@@ -10,6 +10,28 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Arguments\BodyToBodyMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\BodyToContainerMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\BodyToMapMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\ContainerToBodyMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\ContainerToContainerMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\ContainerToMapMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\MapToBodyMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\MapToContainerMovementOperationCreationArguments.cs" />
+    <Compile Remove="Arguments\MapToMapMovementOperationCreationArguments.cs" />
+    <Compile Remove="Movements\BaseMovementOperation.cs" />
+    <Compile Remove="Movements\BodyToBodyMovementOperation.cs" />
+    <Compile Remove="Movements\BodyToContainerMovementOperation.cs" />
+    <Compile Remove="Movements\BodyToMapMovementOperation.cs" />
+    <Compile Remove="Movements\ContainerToBodyMovementOperation.cs" />
+    <Compile Remove="Movements\ContainerToContainerMovementOperation.cs" />
+    <Compile Remove="Movements\ContainerToMapMovementOperation.cs" />
+    <Compile Remove="Movements\MapToBodyMovementOperation.cs" />
+    <Compile Remove="Movements\MapToContainerMovementOperation.cs" />
+    <Compile Remove="Movements\MapToMapMovementOperation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 

@@ -22,7 +22,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Loads all the events.
         /// </summary>
+        /// <param name="gameApi">A reference to the game API.</param>
         /// <returns>A mapping between <see cref="EventRuleType"/> and a set of <see cref="IEventRule"/>s of such type.</returns>
-        IDictionary<EventRuleType, ISet<IEventRule>> LoadEventRules();
+        IDictionary<EventRuleType, ISet<IEventRule>> LoadEventRules(IGameApi gameApi);
     }
 }

@@ -26,7 +26,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="MapToContainerMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="fromLocation">The location from which the movement is happening.</param>
@@ -36,7 +35,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public MapToContainerMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             Location fromLocation,
@@ -44,7 +42,7 @@ namespace OpenTibia.Server.Operations.Movements
             byte toCreatureContainerId,
             byte toCreatureContainerIndex,
             byte amount = 1)
-            : base(logger, context, context?.TileAccessor.GetTileAt(fromLocation), context?.ContainerManager?.FindForCreature(toCreature.Id, toCreatureContainerId), creatureRequestingId)
+            : base(logger, context?.TileAccessor.GetTileAt(fromLocation), context?.ContainerManager?.FindForCreature(toCreature.Id, toCreatureContainerId), creatureRequestingId)
         {
             thingMoving.ThrowIfNull(nameof(thingMoving));
 
@@ -82,11 +80,12 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             if (!(this.ThingMoving is IItem item))
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
 
                 return;
             }
@@ -94,20 +93,21 @@ namespace OpenTibia.Server.Operations.Movements
             var destinationContainer = this.ToCylinder as IContainerItem;
             var sourceTile = this.FromCylinder as ITile;
             var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+            var requestor = this.GetRequestor(context.CreatureFinder);
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
-            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == this.Requestor;
+            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == requestor;
             var locationsMatch = this.ThingMoving?.Location == this.FromLocation;
-            var requestorInRange = this.Requestor == null || (this.Requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
+            var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var creatureHasDestinationContainerOpen = destinationContainer != null;
             var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
+                                                sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
                                                 item.Amount >= this.Amount;
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
             else if (!locationsMatch)
             {
@@ -116,20 +116,20 @@ namespace OpenTibia.Server.Operations.Movements
             }
             else if (!sourceTileHasEnoughItemAmount)
             {
-                this.SendFailureNotification(OperationMessage.NotEnoughQuantity);
+                this.DispatchTextNotification(context, OperationMessage.NotEnoughQuantity);
             }
             else if (!creatureHasDestinationContainerOpen)
             {
-                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                this.DispatchTextNotification(context, OperationMessage.MayNotThrowThere);
             }
             else if (!requestorInRange)
             {
-                this.SendFailureNotification(OperationMessage.TooFarAway);
+                this.DispatchTextNotification(context, OperationMessage.TooFarAway);
             }
-            else if (!this.PerformItemMovement(item, sourceTile, destinationContainer, toIndex: this.ToCreatureContainerIndex, amountToMove: this.Amount, requestorCreature: this.Requestor))
+            else if (!this.PerformItemMovement(context, item, sourceTile, destinationContainer, toIndex: this.ToCreatureContainerIndex, amountToMove: this.Amount, requestorCreature: requestor))
             {
                 // Something else went wrong.
-                this.SendFailureNotification();
+                this.DispatchTextNotification(context);
             }
         }
     }

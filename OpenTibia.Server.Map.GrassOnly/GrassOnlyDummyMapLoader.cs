@@ -43,7 +43,7 @@ namespace OpenTibia.Server.Map.GrassOnly
         /// <summary>
         /// Event not in use for this loader.
         /// </summary>
-        public event OnMapWindowLoaded MapWindowLoaded;
+        public event WindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the percentage completed loading the map [0, 100].

@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using Serilog;
@@ -27,10 +28,11 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// Initializes a new instance of the <see cref="MultiUseMoveUseEventRule"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="gameApi">A reference to the game API.</param>
         /// <param name="conditionSet">The conditions for this event.</param>
         /// <param name="actionSet">The actions of this event.</param>
-        public MultiUseMoveUseEventRule(ILogger logger, IList<string> conditionSet, IList<string> actionSet)
-            : base(logger, conditionSet, actionSet)
+        public MultiUseMoveUseEventRule(ILogger logger, IGameApi gameApi, IList<string> conditionSet, IList<string> actionSet)
+            : base(logger, gameApi, conditionSet, actionSet)
         {
             // Look for a IsType condition.
             var isTypeConditions = this.Conditions.Where(func => IsTypeFunctionName.Equals(func.FunctionName));
@@ -67,5 +69,71 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// Gets the type of this event.
         /// </summary>
         public override EventRuleType Type => EventRuleType.MultiUse;
+
+        /// <summary>
+        /// Checks whether this event rule can be executed.
+        /// </summary>
+        /// <param name="context">The execution context of this rule.</param>
+        /// <returns>True if the rule can be executed, false otherwise.</returns>
+        public override bool CanBeExecuted(IEventRuleContext context)
+        {
+            context.ThrowIfNull(nameof(context));
+
+            if (context.Arguments is MultiUseEventRuleArguments multiUseEventRuleArguments)
+            {
+                if (multiUseEventRuleArguments.ItemUsed == null ||
+                    multiUseEventRuleArguments.ItemUsed.ThingId != this.ItemToUseId ||
+                    multiUseEventRuleArguments.UseOnThing == null ||
+                    multiUseEventRuleArguments.UseOnThing.ThingId != this.ThingToUseOnId)
+                {
+                    return false;
+                }
+
+                return this.Conditions.All(condition =>
+                    this.InvokeCondition(
+                        multiUseEventRuleArguments.ItemUsed,
+                        multiUseEventRuleArguments.UseOnThing,
+                        multiUseEventRuleArguments.Requestor as IPlayer,
+                        condition.FunctionName,
+                        condition.Parameters));
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Executes this event rule.
+        /// </summary>
+        /// <param name="context">The execution context of this rule.</param>
+        public override void Execute(IEventRuleContext context)
+        {
+            context.ThrowIfNull(nameof(context));
+
+            if (!(context.Arguments is MultiUseEventRuleArguments multiUseEventRuleArguments))
+            {
+                return;
+            }
+
+            IThing primaryThing = multiUseEventRuleArguments.ItemUsed;
+            IThing secondaryThing = multiUseEventRuleArguments.UseOnThing;
+            IPlayer user = multiUseEventRuleArguments.Requestor as IPlayer;
+
+            foreach (var action in this.Actions)
+            {
+                this.InvokeAction(ref primaryThing, ref secondaryThing, ref user, action.FunctionName, action.Parameters);
+            }
+
+            // Re-map the arguments.
+            multiUseEventRuleArguments.ItemUsed = primaryThing as IItem;
+            multiUseEventRuleArguments.UseOnThing = secondaryThing;
+            multiUseEventRuleArguments.Requestor = user;
+
+            context.Arguments = multiUseEventRuleArguments;
+
+            if (this.RemainingExecutionCount != IEventRule.UnlimitedExecutions && this.RemainingExecutionCount > 0)
+            {
+                this.RemainingExecutionCount--;
+            }
+        }
     }
 }

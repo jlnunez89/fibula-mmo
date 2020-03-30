@@ -16,9 +16,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IElevatedOperation : IOperation
     {
-        /// <summary>
-        /// Gets the reference to this operation's context.
-        /// </summary>
-        new IElevatedOperationContext Context { get; }
     }
 }

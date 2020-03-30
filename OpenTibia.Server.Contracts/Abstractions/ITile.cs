@@ -60,6 +60,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
 
         IItem FindItemWithId(ushort typeId);
 
+        byte GetPositionOfItemWithId(ushort typeId);
+
         byte GetStackPositionOfThing(IThing thing);
 
         /// <summary>
@@ -70,8 +72,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
         IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order);
 
+        /// <summary>
+        /// Sets a flag on this tile.
+        /// </summary>
+        /// <param name="flag">The flag to set.</param>
         void SetFlag(TileFlag flag);
 
+        /// <summary>
+        /// Determines if this tile is considered to be blocking the path.
+        /// </summary>
+        /// <param name="avoidTypes">The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</param>
+        /// <returns>True if the tile is considered path blocking, false otherwise.</returns>
         bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All);
     }
 }

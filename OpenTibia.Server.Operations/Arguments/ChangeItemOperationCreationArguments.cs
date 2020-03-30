@@ -35,16 +35,12 @@ namespace OpenTibia.Server.Operations.Arguments
             ushort fromTypeId,
             Location fromLocation,
             ushort toTypeId,
-            byte fromStackPos = 255,
-            byte index = 1,
             ICreature carrierCreature = null)
         {
             this.RequestorId = requestorId;
             this.ItemTypeId = fromTypeId;
             this.FromLocation = fromLocation;
             this.ToTypeId = toTypeId;
-            this.FromStackPos = fromStackPos;
-            this.Index = index;
             this.Carrier = carrierCreature;
         }
 
@@ -58,10 +54,6 @@ namespace OpenTibia.Server.Operations.Arguments
         public Location FromLocation { get; }
 
         public ushort ToTypeId { get; }
-
-        public byte FromStackPos { get; }
-
-        public byte Index { get; }
 
         public ICreature Carrier { get; }
     }

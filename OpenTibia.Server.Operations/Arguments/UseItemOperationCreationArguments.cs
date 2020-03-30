@@ -26,15 +26,13 @@ namespace OpenTibia.Server.Operations.Arguments
         /// <param name="requestorId"></param>
         /// <param name="itemTypeId"></param>
         /// <param name="fromLocation"></param>
-        /// <param name="fromStackPos"></param>
-        /// <param name="index"></param>
-        public UseItemOperationCreationArguments(uint requestorId, ushort itemTypeId, Location fromLocation, byte fromStackPos = 255, byte index = 1)
+        /// <param name="fromIndex"></param>
+        public UseItemOperationCreationArguments(uint requestorId, ushort itemTypeId, Location fromLocation, byte fromIndex)
         {
             this.RequestorId = requestorId;
             this.ItemTypeId = itemTypeId;
             this.FromLocation = fromLocation;
-            this.FromStackPos = fromStackPos;
-            this.Index = index;
+            this.FromIndex = fromIndex;
         }
 
         /// <summary>
@@ -46,8 +44,6 @@ namespace OpenTibia.Server.Operations.Arguments
 
         public Location FromLocation { get; }
 
-        public byte FromStackPos { get; }
-
-        public byte Index { get; }
+        public byte FromIndex { get; }
     }
 }

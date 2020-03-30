@@ -28,11 +28,10 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="TurnToDirectionHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
         /// <param name="direction">The direction in which the walk is happening.</param>
-        public TurnToDirectionHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext, Direction direction)
-            : base(logger, operationFactory, gameContext)
+        public TurnToDirectionHandler(ILogger logger, IGameContext gameContext, Direction direction)
+            : base(logger, gameContext)
         {
             this.Direction = direction;
         }
@@ -53,11 +52,14 @@ namespace OpenTibia.Communications.Handlers.Game
             // No other content in message.
             if (this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                player.ClearAllLocationActions();
+                //player.ClearAllLocationBasedOperations();
 
                 this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 
-                this.ScheduleNewOperation(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, this.Direction));
+                this.ScheduleNewOperation(
+                    this.Context.OperationFactory.Create(
+                        OperationType.Turn,
+                        new TurnToDirectionOperationCreationArguments(player, this.Direction)));
             }
 
             return null;

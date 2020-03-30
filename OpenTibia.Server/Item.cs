@@ -110,20 +110,6 @@ namespace OpenTibia.Server
             }
         }
 
-        public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
-        {
-            var blocking = this.BlocksPass;
-
-            if (blocking)
-            {
-                return true;
-            }
-
-            blocking |= this.Type.Flags.Contains(ItemFlag.Avoid) && (Convert.ToByte(this.Attributes[ItemAttribute.AvoidDamageTypes]) ^ avoidTypes) > 0;
-
-            return blocking;
-        }
-
         public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container);
 
         public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
@@ -285,6 +271,20 @@ namespace OpenTibia.Server
         public bool BlocksLay => this.Type.Flags.Contains(ItemFlag.Unlay);
 
         public decimal Weight => (this.Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(this.Attributes[ItemAttribute.Weight]) / 100 : default) * this.Amount;
+
+        public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
+        {
+            var blocking = this.BlocksPass;
+
+            if (blocking)
+            {
+                return true;
+            }
+
+            blocking |= this.Type.Flags.Contains(ItemFlag.Avoid) && (Convert.ToByte(this.Attributes[ItemAttribute.AvoidDamageTypes]) ^ avoidTypes) > 0;
+
+            return blocking;
+        }
 
         public void SetAmount(byte amount)
         {

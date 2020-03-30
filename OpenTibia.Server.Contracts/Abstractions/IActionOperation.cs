@@ -16,9 +16,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IActionOperation : IOperation
     {
-        /// <summary>
-        /// Gets the creature that is requesting the operation, if known.
-        /// </summary>
-        ICreature Requestor { get; }
     }
 }

@@ -1928,5 +1928,5 @@ Use, IsType (Obj1,2773), IsPosition (Obj1,[32405,32211,09]) -> Change(Obj1,2772,
 Use, IsType (Obj1,2773), IsPosition (Obj1,[32394,32211,09]) -> Change(Obj1,2772,0), DeleteOnMap([32399,32210,09],1282), DeleteOnMap([32398,32210,09],1282) "OUTDATED"
 END
 BEGIN "Test"
-Collision, IsPlayer (Obj1), IsPosition (Obj1,[32283,32848,07]), IsType (Obj2,3351), IsDressed (Obj2) -> Damage(Obj2,Obj1,256,10)
+Collision, IsType (Obj1,3351), IsDressed (Obj1), IsPlayer (Obj2), IsPosition (Obj2,[32283,32848,07]) -> Damage(Obj1,Obj2,256,10)
 END

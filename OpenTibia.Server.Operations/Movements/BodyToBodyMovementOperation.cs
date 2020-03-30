@@ -25,7 +25,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="BodyToBodyMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The operation's context.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="targetCreature">The creature in which the movement is happening.</param>
@@ -34,14 +33,13 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public BodyToBodyMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             ICreature targetCreature,
             Slot fromCreatureSlot,
             Slot toCreatureSlot,
             byte amount = 1)
-            : base(logger, context, targetCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
+            : base(logger, targetCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
         {
             if (amount == 0)
             {
@@ -65,16 +63,17 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             if (!(this.ThingMoving is IItem item))
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
-            else if (!this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, 0, 0, this.Amount, this.Requestor))
+            else if (!this.PerformItemMovement(context, item, this.FromCylinder, this.ToCylinder, 0, 0, this.Amount, this.GetRequestor(context.CreatureFinder)))
             {
                 // Something else went wrong.
-                this.SendFailureNotification();
+                this.DispatchTextNotification(context);
             }
         }
     }

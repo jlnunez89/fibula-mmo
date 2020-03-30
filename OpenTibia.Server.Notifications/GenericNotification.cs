@@ -16,7 +16,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a generic notification.
@@ -26,11 +25,9 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="GenericNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="targetConnectionsFunc">A reference to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public GenericNotification(ILogger logger, Func<IEnumerable<IConnection>> targetConnectionsFunc, GenericNotificationArguments arguments)
-            : base(logger)
+        public GenericNotification(Func<IEnumerable<IConnection>> targetConnectionsFunc, GenericNotificationArguments arguments)
         {
             targetConnectionsFunc.ThrowIfNull(nameof(targetConnectionsFunc));
             arguments.ThrowIfNull(nameof(arguments));

@@ -21,6 +21,13 @@ namespace OpenTibia.Server.Contracts.Abstractions
     public interface ICylinder : ILocatable, IHasParentCylinder
     {
         /// <summary>
+        /// Gets an item within this cylinder.
+        /// </summary>
+        /// <param name="index">The index at which to get the item.</param>
+        /// <returns>The item found at the index, if there is any.</returns>
+        IItem FindItemAt(byte index);
+
+        /// <summary>
         /// Forcefully adds parsed content elements to this cylinder.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>

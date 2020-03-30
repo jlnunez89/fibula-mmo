@@ -17,6 +17,7 @@ namespace OpenTibia.Server.Operations
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Operations.Actions;
     using OpenTibia.Server.Operations.Arguments;
+    using OpenTibia.Server.Operations.Combat;
     using OpenTibia.Server.Operations.Environment;
     using OpenTibia.Server.Operations.Movements;
     using Serilog;
@@ -32,33 +33,17 @@ namespace OpenTibia.Server.Operations
         /// Initializes a new instance of the <see cref="OperationFactory"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="defaultElevatedOperationContext">A reference to the default elevated operation context.</param>
-        /// <param name="defaultOperationContext">A reference for the default operation context.</param>
-        public OperationFactory(ILogger logger, IElevatedOperationContext defaultElevatedOperationContext, IOperationContext defaultOperationContext)
+        public OperationFactory(ILogger logger)
         {
             logger.ThrowIfNull(nameof(logger));
-            defaultOperationContext.ThrowIfNull(nameof(defaultOperationContext));
-            defaultElevatedOperationContext.ThrowIfNull(nameof(defaultElevatedOperationContext));
 
             this.Logger = logger;
-            this.DefaultElevatedOperationContext = defaultElevatedOperationContext;
-            this.DefaultOperationContext = defaultOperationContext;
         }
 
         /// <summary>
         /// Gets a reference to the logger in use.
         /// </summary>
         public ILogger Logger { get; }
-
-        /// <summary>
-        /// Gets a reference to the default elevated operation context.
-        /// </summary>
-        public IElevatedOperationContext DefaultElevatedOperationContext { get; }
-
-        /// <summary>
-        /// Gets the reference to the default operation context.
-        /// </summary>
-        public IOperationContext DefaultOperationContext { get; }
 
         /// <summary>
         /// Creates a new <see cref="IOperation"/> based on the type specified with the given arguments.
@@ -70,12 +55,30 @@ namespace OpenTibia.Server.Operations
         {
             switch (type)
             {
+                case OperationType.AutoAttack:
+                    if (arguments is AutoAttackCombatOperationCreationArguments autoAttackOpArgs)
+                    {
+                        return new AutoAttackCombatOperation(
+                            autoAttackOpArgs.Attacker,
+                            autoAttackOpArgs.Target,
+                            autoAttackOpArgs.ExhaustionCost);
+                    }
+
+                    break;
+                case OperationType.AutoWalk:
+                    if (arguments is AutoWalkOperationCreationArguments autoWalkOpArgs)
+                    {
+                        return new AutoWalkOperation(
+                            autoWalkOpArgs.RequestorId,
+                            autoWalkOpArgs.Creature,
+                            autoWalkOpArgs.Directions);
+                    }
+
+                    break;
                 case OperationType.LogIn:
                     if (arguments is LogInOperationCreationArguments logInOpArgs)
                     {
                         return new LogInOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
                             NoRequestorId,
                             logInOpArgs.CreationMetadata,
                             logInOpArgs.Connection,
@@ -87,11 +90,7 @@ namespace OpenTibia.Server.Operations
                 case OperationType.LogOut:
                     if (arguments is LogOutOperationCreationArguments logOutOpArgs)
                     {
-                        return new LogOutOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
-                            logOutOpArgs.RequestorId,
-                            logOutOpArgs.Player);
+                        return new LogOutOperation(logOutOpArgs.RequestorId, logOutOpArgs.Player);
                     }
 
                     break;
@@ -100,8 +99,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
                     {
                         return new PlaceCreatureOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
                             placeCreatureOpArgs.RequestorId,
                             placeCreatureOpArgs.AtTile,
                             placeCreatureOpArgs.Creature);
@@ -112,10 +109,17 @@ namespace OpenTibia.Server.Operations
                     if (arguments is RemoveCreatureOperationCreationArguments removeCreatureOpArgs)
                     {
                         return new RemoveCreatureOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
                             removeCreatureOpArgs.RequestorId,
                             removeCreatureOpArgs.Creature);
+                    }
+
+                    break;
+                case OperationType.Speech:
+                    if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
+                    {
+                        return new SpeechOperation(
+                            speechOperationOpArgs.RequestorId,
+                            speechOperationOpArgs.SpeechInfo);
                     }
 
                     break;
@@ -123,14 +127,10 @@ namespace OpenTibia.Server.Operations
                     if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
                     {
                         return new ChangeItemOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
                             changeItemOpArgs.RequestorId,
                             changeItemOpArgs.ItemTypeId,
                             changeItemOpArgs.FromLocation,
                             changeItemOpArgs.ToTypeId,
-                            changeItemOpArgs.FromStackPos,
-                            changeItemOpArgs.Index,
                             changeItemOpArgs.Carrier);
                     }
 
@@ -139,8 +139,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
                     {
                         return new CreateItemOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
                             createItemOpArgs.RequestorId,
                             createItemOpArgs.ItemTypeId,
                             createItemOpArgs.AtLocation);
@@ -151,8 +149,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
                     {
                         return new DeleteItemOperation(
-                            this.Logger,
-                            this.DefaultElevatedOperationContext,
                             deleteItemOpArgs.RequestorId,
                             deleteItemOpArgs.ItemTypeId,
                             deleteItemOpArgs.AtLocation);
@@ -163,8 +159,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is OpenContainerOperationCreationArguments openContainerOpArgs)
                     {
                         return new OpenContainerOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
                             openContainerOpArgs.Player,
                             openContainerOpArgs.Container,
                             openContainerOpArgs.ContainerId);
@@ -175,8 +169,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is CloseContainerOperationCreationArguments closeContainerOpArgs)
                     {
                         return new CloseContainerOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
                             closeContainerOpArgs.Player,
                             closeContainerOpArgs.Container,
                             closeContainerOpArgs.ContainerId);
@@ -187,8 +179,6 @@ namespace OpenTibia.Server.Operations
                     if (arguments is MoveUpContainerOperationCreationArguments moveUpContainerOpArgs)
                     {
                         return new MoveUpContainerOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
                             moveUpContainerOpArgs.Player,
                             moveUpContainerOpArgs.Container,
                             moveUpContainerOpArgs.AsContainerId);
@@ -198,11 +188,7 @@ namespace OpenTibia.Server.Operations
                 case OperationType.Turn:
                     if (arguments is TurnToDirectionOperationCreationArguments turnToDirectionOpArgs)
                     {
-                        return new TurnToDirectionOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            turnToDirectionOpArgs.Creature,
-                            turnToDirectionOpArgs.Direction);
+                        return new TurnToDirectionOperation(turnToDirectionOpArgs.Creature, turnToDirectionOpArgs.Direction);
                     }
 
                     break;
@@ -210,155 +196,53 @@ namespace OpenTibia.Server.Operations
                     if (arguments is UseItemOperationCreationArguments useItemOpArgs)
                     {
                         return new UseItemOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
                             useItemOpArgs.RequestorId,
                             useItemOpArgs.ItemTypeId,
                             useItemOpArgs.FromLocation,
-                            useItemOpArgs.FromStackPos,
-                            useItemOpArgs.Index);
+                            useItemOpArgs.FromIndex);
                     }
 
                     break;
-                case OperationType.BodyToBodyMovement:
-                    if (arguments is BodyToBodyMovementOperationCreationArguments bodyToBodyOpArgs)
+                case OperationType.UseItemOn:
+                    if (arguments is UseItemOnOperationCreationArguments useItemOnOpArgs)
                     {
-                        return new BodyToBodyMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            bodyToBodyOpArgs.RequestorId,
-                            bodyToBodyOpArgs.ThingMoving,
-                            bodyToBodyOpArgs.TargetCreature,
-                            bodyToBodyOpArgs.FromSlot,
-                            bodyToBodyOpArgs.ToSlot,
-                            bodyToBodyOpArgs.Amount);
+                        return new UseItemOnOperation(
+                            useItemOnOpArgs.RequestorId,
+                            useItemOnOpArgs.FromItemTypeId,
+                            useItemOnOpArgs.FromLocation,
+                            useItemOnOpArgs.FromIndex,
+                            useItemOnOpArgs.ToThingId,
+                            useItemOnOpArgs.ToLocation,
+                            useItemOnOpArgs.ToIndex);
                     }
 
                     break;
-                case OperationType.BodyToContainerMovement:
-                    if (arguments is BodyToContainerMovementOperationCreationArguments bodyToContainerOpArgs)
+                case OperationType.Movement:
+                    if (arguments is MovementOperationCreationArguments movementOpArgs)
                     {
-                        return new BodyToContainerMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            bodyToContainerOpArgs.RequestorId,
-                            bodyToContainerOpArgs.ThingMoving,
-                            bodyToContainerOpArgs.TargetCreature,
-                            bodyToContainerOpArgs.FromSlot,
-                            bodyToContainerOpArgs.ToContainerPosition,
-                            bodyToContainerOpArgs.ToContainerIndex,
-                            bodyToContainerOpArgs.Amount);
+                        return new MovementOperation(
+                            movementOpArgs.RequestorId,
+                            movementOpArgs.ThingId,
+                            movementOpArgs.FromLocation,
+                            movementOpArgs.FromIndex,
+                            movementOpArgs.FromCreatureId,
+                            movementOpArgs.ToLocation,
+                            movementOpArgs.ToCreatureId,
+                            movementOpArgs.Amount);
                     }
 
                     break;
-                case OperationType.BodyToMapMovement:
-                    if (arguments is BodyToMapMovementOperationCreationArguments bodyToMapOpArgs)
+                case OperationType.Thinking:
+                    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
                     {
-                        return new BodyToMapMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            bodyToMapOpArgs.RequestorId,
-                            bodyToMapOpArgs.ThingMoving,
-                            bodyToMapOpArgs.FromCreature,
-                            bodyToMapOpArgs.FromSlot,
-                            bodyToMapOpArgs.ToLocation,
-                            bodyToMapOpArgs.Amount);
+                        return new ThinkingOperation(thinkingOpArgs.Combatant, thinkingOpArgs.Cadence);
                     }
 
                     break;
-                case OperationType.ContainerToBodyMovement:
-                    if (arguments is ContainerToBodyMovementOperationCreationArguments containerToBodyOpArgs)
+                case OperationType.RestoreCombatCredit:
+                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
                     {
-                        return new ContainerToBodyMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            containerToBodyOpArgs.RequestorId,
-                            containerToBodyOpArgs.ThingMoving,
-                            containerToBodyOpArgs.TargetCreature,
-                            containerToBodyOpArgs.FromContainerId,
-                            containerToBodyOpArgs.FromContainerIndex,
-                            containerToBodyOpArgs.ToSlot,
-                            containerToBodyOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.ContainerToContainerMovement:
-                    if (arguments is ContainerToContainerMovementOperationCreationArguments containerToContainerOpArgs)
-                    {
-                        return new ContainerToContainerMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            containerToContainerOpArgs.RequestorId,
-                            containerToContainerOpArgs.ThingMoving,
-                            containerToContainerOpArgs.TargetCreature,
-                            containerToContainerOpArgs.FromContainerId,
-                            containerToContainerOpArgs.FromContainerIndex,
-                            containerToContainerOpArgs.ToContainerId,
-                            containerToContainerOpArgs.ToContainerIndex,
-                            containerToContainerOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.ContainerToMapMovement:
-                    if (arguments is ContainerToMapMovementOperationCreationArguments containerToMapOpArgs)
-                    {
-                        return new ContainerToMapMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            containerToMapOpArgs.RequestorId,
-                            containerToMapOpArgs.ThingMoving,
-                            containerToMapOpArgs.FromCreature,
-                            containerToMapOpArgs.FromContainerId,
-                            containerToMapOpArgs.FromContainerIndex,
-                            containerToMapOpArgs.ToLocation,
-                            containerToMapOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.MapToBodyMovement:
-                    if (arguments is MapToBodyMovementOperationCreationArguments mapToBodyOpArgs)
-                    {
-                        return new MapToBodyMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            mapToBodyOpArgs.RequestorId,
-                            mapToBodyOpArgs.ThingMoving,
-                            mapToBodyOpArgs.FromLocation,
-                            mapToBodyOpArgs.ToCreature,
-                            mapToBodyOpArgs.ToSlot,
-                            mapToBodyOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.MapToContainerMovement:
-                    if (arguments is MapToContainerMovementOperationCreationArguments mapToContainerOpArgs)
-                    {
-                        return new MapToContainerMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            mapToContainerOpArgs.RequestorId,
-                            mapToContainerOpArgs.ThingMoving,
-                            mapToContainerOpArgs.FromLocation,
-                            mapToContainerOpArgs.ToCreature,
-                            mapToContainerOpArgs.ToContainerId,
-                            mapToContainerOpArgs.ToContainerIndex,
-                            mapToContainerOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.MapToMapMovement:
-                    if (arguments is MapToMapMovementOperationCreationArguments mapToMapOpArgs)
-                    {
-                        return new MapToMapMovementOperation(
-                            this.Logger,
-                            this.DefaultOperationContext,
-                            mapToMapOpArgs.RequestorId,
-                            mapToMapOpArgs.ThingMoving,
-                            mapToMapOpArgs.FromLocation,
-                            mapToMapOpArgs.ToLocation,
-                            mapToMapOpArgs.FromStackPos,
-                            mapToMapOpArgs.Amount,
-                            mapToMapOpArgs.IsTeleport);
+                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
                     }
 
                     break;

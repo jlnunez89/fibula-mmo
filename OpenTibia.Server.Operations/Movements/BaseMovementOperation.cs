@@ -31,47 +31,24 @@ namespace OpenTibia.Server.Operations.Movements
         private static readonly TimeSpan DefaultMovementExhaustionCost = TimeSpan.Zero;
 
         /// <summary>
-        /// Caches the requestor creature, if defined.
-        /// </summary>
-        private ICreature requestor = null;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">A reference to the operation context.</param>
         /// <param name="fromCylinder">The cyclinder from which the movement is happening.</param>
         /// <param name="toCylinder">The cyclinder to which the movement is happening.</param>
         /// <param name="requestorId">The id of the creature requesting the movement.</param>
         /// <param name="movementExhaustionCost">Optional. The cost of this operation. Defaults to <see cref="DefaultMovementExhaustionCost"/>.</param>
         protected BaseMovementOperation(
             ILogger logger,
-            IOperationContext context,
             ICylinder fromCylinder,
             ICylinder toCylinder,
             uint requestorId,
             TimeSpan? movementExhaustionCost = null)
-            : base(logger, context, requestorId)
+            : base(logger, requestorId)
         {
             this.FromCylinder = fromCylinder;
             this.ToCylinder = toCylinder;
             this.ExhaustionCost = movementExhaustionCost ?? DefaultMovementExhaustionCost;
-        }
-
-        /// <summary>
-        /// Gets the creature that is requesting the event, if known.
-        /// </summary>
-        public ICreature Requestor
-        {
-            get
-            {
-                if (this.RequestorId > 0 && this.requestor == null)
-                {
-                    this.requestor = this.Context.CreatureFinder.FindCreatureById(this.RequestorId);
-                }
-
-                return this.requestor;
-            }
         }
 
         /// <summary>
@@ -97,6 +74,7 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Immediately attempts to perform an item movement between two cylinders.
         /// </summary>
+        /// <param name="context">A reference to the operation context.</param>
         /// <param name="item">The item being moved.</param>
         /// <param name="fromCylinder">The cylinder from which the movement is being performed.</param>
         /// <param name="toCylinder">The cylinder to which the movement is being performed.</param>
@@ -106,7 +84,7 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        protected bool PerformItemMovement(IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
+        protected bool PerformItemMovement(IOperationContext context, IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
         {
             const byte FallbackIndex = 0xFF;
 
@@ -131,7 +109,7 @@ namespace OpenTibia.Server.Operations.Movements
 
             IThing itemAsThing = item as IThing;
 
-            (bool removeSuccessful, IThing removeRemainder) = fromCylinder.RemoveContent(this.Context.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
+            (bool removeSuccessful, IThing removeRemainder) = fromCylinder.RemoveContent(context.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
 
             if (!removeSuccessful)
             {
@@ -141,12 +119,12 @@ namespace OpenTibia.Server.Operations.Movements
 
             if (fromCylinder is ITile fromTile)
             {
-                this.Context.Scheduler.ScheduleEvent(
+                context.Scheduler.ScheduleEvent(
                     new TileUpdatedNotification(
                         this.Logger,
-                        this.Context.CreatureFinder,
-                        () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, fromTile.Location),
-                        new TileUpdatedNotificationArguments(fromTile.Location, this.Context.MapDescriptor.DescribeTile)));
+                        context.CreatureFinder,
+                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location),
+                        new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile)));
             }
 
             this.TriggerSeparationEventRules(new SeparationEventRuleArguments(fromCylinder.Location, item, requestorCreature));
@@ -159,12 +137,12 @@ namespace OpenTibia.Server.Operations.Movements
                 toIndex--;
             }
 
-            if (!this.AddContentToCylinderChain(toCylinder.GetCylinderHierarchy(includeTiles: false), toIndex, ref addRemainder, requestorCreature) || addRemainder != null)
+            if (!this.AddContentToCylinderOrFallback(context, toCylinder, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
             {
                 // There is some rollback to do, as we failed to add the entire thing.
                 IThing rollbackRemainder = addRemainder ?? item;
 
-                if (!this.AddContentToCylinderChain(fromCylinder.GetCylinderHierarchy(), FallbackIndex, ref rollbackRemainder, requestorCreature))
+                if (!this.AddContentToCylinderOrFallback(context, fromCylinder, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
                 {
                     this.Logger.Error($"Rollback failed on {nameof(this.PerformItemMovement)}. Thing: {rollbackRemainder.DescribeForLogger()}");
                 }
@@ -176,12 +154,15 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Checks if a throw between two map locations is valid.
         /// </summary>
+        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="fromLocation">The first location.</param>
         /// <param name="toLocation">The second location.</param>
         /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
         /// <returns>True if the throw is valid, false otherwise.</returns>
-        protected bool CanThrowBetweenMapLocations(Location fromLocation, Location toLocation, bool checkLineOfSight = true)
+        protected bool CanThrowBetweenMapLocations(ITileAccessor tileAccessor, Location fromLocation, Location toLocation, bool checkLineOfSight = true)
         {
+            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+
             if (fromLocation.Type != LocationType.Map || toLocation.Type != LocationType.Map)
             {
                 return false;
@@ -208,17 +189,20 @@ namespace OpenTibia.Server.Operations.Movements
                 return false;
             }
 
-            return !checkLineOfSight || this.InLineOfSight(fromLocation, toLocation) || this.InLineOfSight(toLocation, fromLocation);
+            return !checkLineOfSight || this.InLineOfSight(tileAccessor, fromLocation, toLocation) || this.InLineOfSight(tileAccessor, toLocation, fromLocation);
         }
 
         /// <summary>
         /// Checks if a map location is in the line of sight of another map location.
         /// </summary>
+        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="firstLocation">The first location.</param>
         /// <param name="secondLocation">The second location.</param>
         /// <returns>True if the second location is considered within the line of sight of the first location, false otherwise.</returns>
-        protected bool InLineOfSight(Location firstLocation, Location secondLocation)
+        protected bool InLineOfSight(ITileAccessor tileAccessor, Location firstLocation, Location secondLocation)
         {
+            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+
             if (firstLocation.Type != LocationType.Map || secondLocation.Type != LocationType.Map)
             {
                 return false;
@@ -257,7 +241,7 @@ namespace OpenTibia.Server.Operations.Movements
                     origin.X += stepX;
                 }
 
-                if (this.Context.TileAccessor.GetTileAt(origin, out ITile tile) && tile.BlocksThrow)
+                if (tileAccessor.GetTileAt(origin, out ITile tile) && tile.BlocksThrow)
                 {
                     return false;
                 }
@@ -266,7 +250,7 @@ namespace OpenTibia.Server.Operations.Movements
             while (origin.Z != target.Z)
             {
                 // now we need to perform a jump between floors to see if everything is clear (literally)
-                if (this.Context.TileAccessor.GetTileAt(origin, out ITile tile) && tile.Ground != null)
+                if (tileAccessor.GetTileAt(origin, out ITile tile) && tile.Ground != null)
                 {
                     return false;
                 }

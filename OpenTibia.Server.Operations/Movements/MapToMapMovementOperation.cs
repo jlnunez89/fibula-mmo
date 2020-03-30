@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Operations.Movements
 {
     using System;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
@@ -35,7 +36,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="MapToMapMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The operation's context.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="fromLocation">The location in the map from which the movement is happening.</param>
@@ -45,7 +45,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
         public MapToMapMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             Location fromLocation,
@@ -53,7 +52,7 @@ namespace OpenTibia.Server.Operations.Movements
             byte fromStackPos = byte.MaxValue,
             byte amount = 1,
             bool isTeleport = false)
-            : base(logger, context, context?.TileAccessor.GetTileAt(fromLocation), context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
+            : base(logger, context?.TileAccessor.GetTileAt(fromLocation), context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
         {
             thingMoving.ThrowIfNull(nameof(thingMoving));
 
@@ -103,22 +102,24 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             var sourceTile = this.FromCylinder as ITile;
             var destinationTile = this.ToCylinder as ITile;
+            var requestor = this.GetRequestor(context.CreatureFinder);
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
             var destinationHasGround = destinationTile?.Ground != null;
-            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == this.Requestor;
+            var thingCanBeMoved = this.ThingMoving.CanBeMoved || this.ThingMoving == requestor;
             var locationsMatch = this.ThingMoving?.Location == this.FromLocation;
-            var requestorInRange = this.Requestor == null || (this.Requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
-            var canThrowBetweenLocations = this.IsTeleport || this.Requestor == null || this.CanThrowBetweenMapLocations(this.FromLocation, this.ToLocation, checkLineOfSight: true);
+            var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
+            var canThrowBetweenLocations = this.IsTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.TileAccessor, this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
             else if (!locationsMatch)
             {
@@ -127,7 +128,7 @@ namespace OpenTibia.Server.Operations.Movements
             }
             else if (!destinationHasGround || !canThrowBetweenLocations)
             {
-                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                this.DispatchTextNotification(context, OperationMessage.MayNotThrowThere);
             }
             else if (this.ThingMoving is ICreature creature)
             {
@@ -135,11 +136,11 @@ namespace OpenTibia.Server.Operations.Movements
                 var creatureStackPos = sourceTile?.GetStackPositionOfThing(creature);
 
                 // More pre-conditions.
-                var canThrowThatFar = this.IsTeleport || this.Requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
-                var creatureAvoidsDestination = !this.IsTeleport && this.Requestor != null && this.Requestor != creature && destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
+                var canThrowThatFar = this.IsTeleport || requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
+                var creatureAvoidsDestination = !this.IsTeleport && requestor != null && requestor != creature && destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
                 var destinationIsObstructed = !this.IsTeleport && distanceBetweenLocations.Z == 0 && (destinationTile.BlocksLay || destinationTile.BlocksPass);
                 var sourceTileHasThing = creatureStackPos != byte.MaxValue &&
-                                         sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, creatureStackPos.Value) is ICreature &&
+                                         sourceTile.GetTopThingByOrder(context.CreatureFinder, creatureStackPos.Value) is ICreature &&
                                          this.Amount == 1;
 
                 if (!sourceTileHasThing)
@@ -149,97 +150,100 @@ namespace OpenTibia.Server.Operations.Movements
                 }
                 else if (creatureAvoidsDestination)
                 {
-                    this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                    this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
                 }
                 else if (destinationIsObstructed)
                 {
-                    if (this.Requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
+                    if (requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
                     {
                         var cancelMovementNotification = new GenericNotification(
                             this.Logger,
-                            () => this.Context.ConnectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
+                            () => context.ConnectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
                             new GenericNotificationArguments(new PlayerWalkCancelPacket(player.Direction.GetClientSafeDirection())));
 
-                        this.Context.Scheduler.ScheduleEvent(cancelMovementNotification);
+                        context.Scheduler.ScheduleEvent(cancelMovementNotification);
                     }
 
-                    this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                    this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
                 }
                 else if (!requestorInRange)
                 {
-                    this.SendFailureNotification(OperationMessage.TooFarAway);
+                    this.DispatchTextNotification(context, OperationMessage.TooFarAway);
                 }
                 else if (!canThrowThatFar)
                 {
-                    this.SendFailureNotification(OperationMessage.DestinationTooFarAway);
+                    this.DispatchTextNotification(context, OperationMessage.DestinationTooFarAway);
                 }
-                else if (!this.PerformCreatureMovement(creature, this.ToLocation, this.IsTeleport, requestorCreature: this.Requestor))
+                else if (!this.PerformCreatureMovement(context, creature, this.ToLocation, this.IsTeleport, requestorCreature: requestor))
                 {
                     // Something else went wrong.
-                    this.SendFailureNotification();
+                    this.DispatchTextNotification(context);
                 }
-                else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+                else if (requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                    context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, player, directionToDestination));
                 }
             }
             else if (this.ThingMoving is IItem item)
             {
                 var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
-                var distanceBetweenLocations = (this.Requestor?.Location ?? this.FromLocation) - this.ToLocation;
+                var distanceBetweenLocations = (requestor?.Location ?? this.FromLocation) - this.ToLocation;
 
                 // More pre-conditions.
                 var itemCanBeMoved = item.CanBeMoved;
                 var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                    sourceTile.GetTopThingByOrder(this.Context.CreatureFinder, itemStackPos.Value) == item &&
+                                                    sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
                                                     item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-                var movementInRange = this.Requestor == null || !item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0);
+                var movementInRange = requestor == null || !item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0);
 
                 if (!itemCanBeMoved)
                 {
-                    this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                    this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
                 }
                 else if (destinationIsObstructed)
                 {
-                    this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                    this.DispatchTextNotification(context, OperationMessage.MayNotThrowThere);
                 }
                 else if (!movementInRange)
                 {
-                    this.SendFailureNotification(OperationMessage.DestinationTooFarAway);
+                    this.DispatchTextNotification(context, OperationMessage.DestinationTooFarAway);
                 }
                 else if (!sourceTileHasEnoughItemAmount)
                 {
-                    this.SendFailureNotification(OperationMessage.NotEnoughQuantity);
+                    this.DispatchTextNotification(context, OperationMessage.NotEnoughQuantity);
                 }
-                else if (!this.PerformItemMovement(item, sourceTile, destinationTile, this.FromStackPos, amountToMove: this.Amount, requestorCreature: this.Requestor))
+                else if (!this.PerformItemMovement(context, item, sourceTile, destinationTile, this.FromStackPos, amountToMove: this.Amount, requestorCreature: requestor))
                 {
                     // Something else went wrong.
-                    this.SendFailureNotification();
+                    this.DispatchTextNotification(context);
                 }
-                else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+                else if (requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                    context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, player, directionToDestination));
                 }
+
+                // TODO: Check if the item is an IContainerItem and, if it got moved, check if there are players that have it open that now are too far away from it.
             }
         }
 
         /// <summary>
         /// Immediately attempts to perform a creature movement to a tile on the map.
         /// </summary>
+        /// <param name="context">A reference to the operation context.</param>
         /// <param name="creature">The creature being moved.</param>
         /// <param name="toLocation">The tile to which the movement is being performed.</param>
         /// <param name="isTeleport">Optional. A value indicating whether the movement is considered a teleportation. Defaults to false.</param>
         /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        private bool PerformCreatureMovement(ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null)
+        private bool PerformCreatureMovement(IOperationContext context, ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null)
         {
-            if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !this.Context.TileAccessor.GetTileAt(toLocation, out ITile toTile))
+            if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !context.TileAccessor.GetTileAt(toLocation, out ITile toTile))
             {
                 return false;
             }
@@ -258,19 +262,19 @@ namespace OpenTibia.Server.Operations.Movements
             IThing creatureAsThing = creature as IThing;
 
             // Do the actual move first.
-            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(this.Context.ItemFactory, ref creatureAsThing);
+            (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(context.ItemFactory, ref creatureAsThing);
 
             if (!removeSuccessful)
             {
                 return false;
             }
 
-            (bool addSuccessful, IThing addRemainder) = toTile.AddContent(this.Context.ItemFactory, creature);
+            (bool addSuccessful, IThing addRemainder) = toTile.AddContent(context.ItemFactory, creature);
 
             if (!addSuccessful)
             {
                 // attempt to rollback state.
-                (bool rollbackSuccessful, IThing rollbackRemainder) = fromTile.RemoveContent(this.Context.ItemFactory, ref creatureAsThing);
+                (bool rollbackSuccessful, IThing rollbackRemainder) = fromTile.RemoveContent(context.ItemFactory, ref creatureAsThing);
 
                 if (!rollbackSuccessful)
                 {
@@ -286,23 +290,23 @@ namespace OpenTibia.Server.Operations.Movements
 
             var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
-            creature.AddExhaustion(this.ExhaustionType, this.Context.Scheduler.CurrentTime, stepDurationTime);
+            creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime);
 
             if (toStackPosition != byte.MaxValue)
             {
-                this.Context.Scheduler.ScheduleEvent(
+                context.Scheduler.ScheduleEvent(
                     new CreatureMovedNotification(
                         this.Logger,
-                        this.Context.MapDescriptor,
-                        this.Context.CreatureFinder,
-                        () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, fromTile.Location, toLocation),
+                        context.MapDescriptor,
+                        context.CreatureFinder,
+                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location, toLocation),
                         new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport)));
             }
 
             if (creature is IPlayer player)
             {
                 // If the creature is a player, we must check if the movement caused it to walk away from any open containers.
-                foreach (var container in this.Context.ContainerManager.FindAllForCreature(player.Id))
+                foreach (var container in context.ContainerManager.FindAllForCreature(player.Id))
                 {
                     if (container == null)
                     {
@@ -313,11 +317,11 @@ namespace OpenTibia.Server.Operations.Movements
 
                     if (locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0)
                     {
-                        var containerId = this.Context.ContainerManager.FindForCreature(player.Id, container);
+                        var containerId = context.ContainerManager.FindForCreature(player.Id, container);
 
                         if (containerId != IContainerManager.UnsetContainerPosition)
                         {
-                            this.Context.ContainerManager.CloseContainer(player, container, containerId);
+                            context.ContainerManager.CloseContainer(player, container, containerId);
                         }
                     }
                 }
@@ -327,19 +331,42 @@ namespace OpenTibia.Server.Operations.Movements
             this.TriggerCollisionEventRules(new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
 
             creature.EvaluateLocationBasedActions();
-            creature.EvaluateCreatureRangeBasedActions(this.Context.CreatureFinder);
+            creature.EvaluateCreatureRangeBasedActions(context.CreatureFinder);
 
             if (creature is ICombatant combatant)
             {
                 // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
                 foreach (var attackerId in combatant.AttackedBy)
                 {
-                    if (!(this.Context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
+                    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
                     {
                         continue;
                     }
 
-                    otherCombatant.EvaluateCreatureRangeBasedActions(this.Context.CreatureFinder);
+                    otherCombatant.EvaluateCreatureRangeBasedActions(context.CreatureFinder);
+                }
+
+                // And check if it walked into new combatants view range.
+                var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
+                var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
+
+                var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
+                var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
+
+                foreach (var spectator in spectatorsAdded)
+                {
+                    if (spectator is ICombatant newCombatant)
+                    {
+                        newCombatant.CombatantNowInView(combatant);
+                    }
+                }
+
+                foreach (var spectator in spectatorsLost)
+                {
+                    if (spectator is ICombatant oldCombatant)
+                    {
+                        oldCombatant.CombatantNoLongerInView(combatant);
+                    }
                 }
             }
 

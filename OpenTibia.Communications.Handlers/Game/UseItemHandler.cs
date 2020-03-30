@@ -27,7 +27,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using Serilog;
 
     /// <summary>
-    /// Class that represents an item use handler for the game server.
+    /// Class that represents an "item use" handler for the game server.
     /// </summary>
     public class UseItemHandler : GameHandler
     {
@@ -35,10 +35,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="UseItemHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public UseItemHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+        public UseItemHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext)
         {
         }
 
@@ -62,7 +61,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            player.ClearAllLocationActions();
+            //player.ClearAllLocationBasedOperations();
 
             this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 
@@ -74,7 +73,10 @@ namespace OpenTibia.Communications.Handlers.Game
                 {
                     var directionToThing = player.Location.DirectionTo(itemUseInfo.FromLocation);
 
-                    this.ScheduleNewOperation(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToThing));
+                    this.ScheduleNewOperation(
+                        this.Context.OperationFactory.Create(
+                            OperationType.Turn,
+                            new TurnToDirectionOperationCreationArguments(player, directionToThing)));
                 }
 
                 var locationDiff = itemUseInfo.FromLocation - player.Location;
@@ -86,7 +88,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
             }
 
-            return this.UseItemAt(player, itemUseInfo.ItemClientId, itemUseInfo.FromLocation, itemUseInfo.FromStackPos, itemUseInfo.Index);
+            return this.UseItemAt(player, itemUseInfo.ItemClientId, itemUseInfo.FromLocation, itemUseInfo.Index);
         }
 
         /// <summary>
@@ -95,16 +97,20 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="creature">The creature using the item.</param>
         /// <param name="itemClientId">The id of the item attempting to be used.</param>
         /// <param name="fromLocation">The location from which the item is being used.</param>
-        /// <param name="fromStackPos">The position in the stack of the location from which the item is being used.</param>
         /// <param name="index">The index of the item being used.</param>
-        private IEnumerable<IOutgoingPacket> UseItemAt(ICreature creature, ushort itemClientId, Location fromLocation, byte fromStackPos, byte index)
+        private IEnumerable<IOutgoingPacket> UseItemAt(ICreature creature, ushort itemClientId, Location fromLocation, byte index)
         {
             var locationDiff = fromLocation - creature.Location;
 
+            var useItemOperation =
+                this.Context.OperationFactory.Create(
+                    OperationType.UseItem,
+                    new UseItemOperationCreationArguments(creature.Id, itemClientId, fromLocation, index));
+
             if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
-                // Too far away to move it, we need to move closer first.
-                var directions = this.Context.PathFinder.FindBetween(creature.Location, fromLocation, out Location retryLoc, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+                // Too far away from it, we need to move closer first.
+                var directions = this.Context.PathFinder.FindBetween(creature.Location, fromLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -112,23 +118,18 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
                 else
                 {
-                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
-                    creature.EnqueueRetryActionAtLocation(retryLoc, () => this.UseItemAt(creature, itemClientId, fromLocation, fromStackPos, index));
+                    //creature.SetOperationAtLocation(retryLocation, useItemOperation);
 
-                    this.AutoWalk(creature, directions.ToArray());
-
-                    return null;
+                    this.ScheduleNewOperation(
+                        this.Context.OperationFactory.Create(
+                            OperationType.AutoWalk,
+                            new AutoWalkOperationCreationArguments(creature.Id, creature, directions.ToArray())));
                 }
+
+                return null;
             }
 
-            this.ScheduleNewOperation(
-                OperationType.UseItem,
-                new UseItemOperationCreationArguments(
-                    creature.Id,
-                    itemClientId,
-                    fromLocation,
-                    fromStackPos,
-                    index));
+            this.ScheduleNewOperation(useItemOperation);
 
             return null;
         }

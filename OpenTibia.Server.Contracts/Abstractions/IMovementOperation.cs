@@ -11,24 +11,21 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Server.Contracts.Structs;
+
     /// <summary>
     /// Interface for a movement operation.
     /// </summary>
     public interface IMovementOperation : IOperation
     {
         /// <summary>
-        /// Gets the creature that is requesting the operation, if known.
+        /// Gets the location from which the movement happens.
         /// </summary>
-        ICreature Requestor { get; }
+        Location FromLocation { get; }
 
         /// <summary>
-        /// Gets the cylinder from which the movement happens.
+        /// Gets the location to which the movement happens.
         /// </summary>
-        ICylinder FromCylinder { get; }
-
-        /// <summary>
-        /// Gets the cylinder to which the movement happens.
-        /// </summary>
-        ICylinder ToCylinder { get; }
+        Location ToLocation { get; }
     }
 }

@@ -12,16 +12,19 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
-    using System.Collections.Generic;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
     /// Interface for all creatures in the game.
     /// </summary>
-    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, ICylinder, IHasInventory
+    public interface ICreature : IThing, ISuffersExhaustion, IHasSkills, ICylinder, IHasInventory, IEquatable<ICreature>
     {
+        /// <summary>
+        /// The id for things that are creatures.
+        /// </summary>
+        public const ushort CreatureThingId = 0x63;
+
         /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>
@@ -127,16 +130,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
         byte Shield { get; } // TODO: implement.
 
         /// <summary>
-        /// Gets the collection of current location-based actions to retry.
-        /// </summary>
-        IEnumerable<(Location atLocation, Action action)> LocationBasedActions { get; }
-
-        /// <summary>
-        /// Gets the collection of current range-based actions to retry.
-        /// </summary>
-        IEnumerable<(byte range, uint creatureId, Action action)> RangeBasedActions { get; }
-
-        /// <summary>
         /// Checks if this creature can see a given creature.
         /// </summary>
         /// <param name="creature">The creature to check against.</param>
@@ -162,61 +155,63 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="outfit">The new outfit to change to.</param>
         void SetOutfit(Outfit outfit);
 
-        /// <summary>
-        /// Makes this creature "think" and make decisions for the next game step.
-        /// </summary>
-        /// <returns>A collection of events with delays, representing decisions made after thinking.</returns>
-        IEnumerable<(IEvent Event, TimeSpan Delay)> Think();
+        ///// <summary>
+        ///// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
+        ///// </summary>
+        ///// <param name="operationContext">The context to pass down to operations to fire.</param>
+        ///// <returns>True if there is at least one action that was executed, false otherwise.</returns>
+        //bool ExecuteLocationBasedOperations(IOperationContext operationContext);
 
-        /// <summary>
-        /// Adds an action that should be retried when the creature steps at this particular location.
-        /// </summary>
-        /// <param name="retryLoc">The location at which the retry happens.</param>
-        /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        void EnqueueRetryActionAtLocation(Location retryLoc, Action action);
+        ///// <summary>
+        ///// Adds an operation that should be fired when the creature steps at a given location.
+        ///// </summary>
+        ///// <param name="atLocation">The location.</param>
+        ///// <param name="operation">The operation.</param>
+        //void SetOperationAtLocation(Location atLocation, IOperation operation);
 
-        /// <summary>
-        /// Removes a single action from the queue given its particular location.
-        /// </summary>
-        /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
-        void DequeueActionAtLocation(Location loc);
+        ///// <summary>
+        ///// Removes all the operations from the queue at a given location.
+        ///// </summary>
+        ///// <param name="atLocation">The location.</param>
+        //void ClearAllOperationsAtLocation(Location atLocation);
 
-        /// <summary>
-        /// Removes all actions from the location-based actions queue.
-        /// </summary>
-        void ClearAllLocationActions();
+        ///// <summary>
+        ///// Removes all operations from the location-based actions queue.
+        ///// </summary>
+        //void ClearAllLocationBasedOperations();
 
-        /// <summary>
-        /// Adds an action that should be retried when the creature steps within a given range of another.
-        /// </summary>
-        /// <param name="range">The range withing which the retry happens.</param>
-        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
-        /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        void EnqueueRetryActionWithinRangeToCreature(byte range, uint creatureId, Action action);
+        ///// <summary>
+        ///// Gets the collection of operations to fire based on location.
+        ///// </summary>
+        ///// <param name="atLocation">The location to evaluate for.</param>
+        ///// <returns>The collection of operations set to be fired at the location, if any.</returns>
+        //IEnumerable<IOperation> GetLocationBasedOperations(Location atLocation);
 
-        /// <summary>
-        /// Removes a single action from the queue given its particular location.
-        /// </summary>
-        /// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
-        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
-        void DequeueRetryActionWithinRangeToCreature(byte withinRange, uint creatureId);
+        ///// <summary>
+        ///// Adds an operation that should be fired when the creature steps within a given range of another.
+        ///// </summary>
+        ///// <param name="range">The range withing which the retry happens.</param>
+        ///// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        ///// <param name="operation">The operation.</param>
+        //void EnqueueOperationWithinRangeToCreature(byte range, uint creatureId, IOperation operation);
 
-        /// <summary>
-        /// Removes all actions from the location-based actions queue.
-        /// </summary>
-        void ClearAllRangeBasedActions();
+        ///// <summary>
+        ///// Removes a single action from the queue given its particular location.
+        ///// </summary>
+        ///// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
+        ///// <param name="creatureId">The id of the creature which to calculate the range to.</param>
+        //void DequeueOperationsWithinRangeToCreature(byte withinRange, uint creatureId);
 
-        /// <summary>
-        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
-        /// </summary>
-        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
-        bool EvaluateLocationBasedActions();
+        ///// <summary>
+        ///// Removes all actions from the location-based actions queue.
+        ///// </summary>
+        //void ClearAllRangeBasedOperations();
 
-        /// <summary>
-        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
-        /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
-        bool EvaluateCreatureRangeBasedActions(ICreatureFinder creatureFinder);
+        ///// <summary>
+        ///// Evaluates the range-based operations of this creature, and invokes them if any is met.
+        ///// </summary>
+        ///// <param name="operationContext">The context to pass down to operations to fire.</param>
+        ///// <returns>True if there is at least one operation that was executed, false otherwise.</returns>
+        //bool ExecuteRangeBasedOperations(IOperationContext operationContext);
     }
 }

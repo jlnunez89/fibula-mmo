@@ -19,6 +19,7 @@ namespace OpenTibia.Server
     using System.Threading.Tasks;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
@@ -28,6 +29,7 @@ namespace OpenTibia.Server
     using OpenTibia.Server.Events;
     using OpenTibia.Server.Notifications;
     using OpenTibia.Server.Notifications.Arguments;
+    using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Arguments;
     using OpenTibia.Server.Parsing.Contracts.Enumerations;
     using Serilog;
@@ -35,7 +37,7 @@ namespace OpenTibia.Server
     /// <summary>
     /// Class that represents the game instance.
     /// </summary>
-    public class Game : IGame, IEventRulesEvaluator
+    public class Game : IGame, IEventRulesApi, ICombatApi, IGameApi
     {
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for orphaned conections.
@@ -43,9 +45,9 @@ namespace OpenTibia.Server
         private static readonly TimeSpan CheckConnectionsDelay = TimeSpan.FromMinutes(1);
 
         /// <summary>
-        /// The current <see cref="IMap"/> instance.
+        /// The current <see cref="ITileAccessor"/> instance.
         /// </summary>
-        private readonly IMap map;
+        private readonly ITileAccessor tileAccessor;
 
         /// <summary>
         /// The connection manager instance.
@@ -77,6 +79,10 @@ namespace OpenTibia.Server
         /// </summary>
         private readonly IPathFinder pathFinder;
 
+        private readonly IMapDescriptor mapDescriptor;
+        private readonly IItemFactory itemFactory;
+        private readonly IContainerManager containerManager;
+
         /// <summary>
         /// Gets the monster spawns in the game.
         /// </summary>
@@ -92,52 +98,75 @@ namespace OpenTibia.Server
         /// </summary>
         private readonly IDictionary<EventRuleType, ISet<IEventRule>> eventRulesCatalog;
 
+        private readonly IDictionary<string, ISet<string>> eventRulesPerPartition;
+
+        private readonly ISet<string> cancelledEventRules;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="map">A reference to the map to use.</param>
+        /// <param name="mapLoader">A reference to the map loader in use.</param>
+        /// <param name="mapDescriptor">A reference to the map descriptor to use.</param>
+        /// <param name="tileAccessor">A reference to the tile accessor to use.</param>
         /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
         /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
+        /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
-            IMap map,
+            IMapLoader mapLoader,
+            IMapDescriptor mapDescriptor,
+            ITileAccessor tileAccessor,
             IPathFinder pathFinder,
             IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             IEventRulesLoader eventRulesLoader,
             IMonsterSpawnLoader monsterSpawnsLoader,
+            IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
+            IContainerManager containerManager,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
-            map.ThrowIfNull(nameof(map));
+            mapLoader.ThrowIfNull(nameof(mapLoader));
+            mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
+            tileAccessor.ThrowIfNull(nameof(tileAccessor));
             pathFinder.ThrowIfNull(nameof(pathFinder));
             connectionManager.ThrowIfNull(nameof(connectionManager));
             creatureManager.ThrowIfNull(nameof(creatureManager));
             eventRulesLoader.ThrowIfNull(nameof(eventRulesLoader));
             monsterSpawnsLoader.ThrowIfNull(nameof(monsterSpawnsLoader));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
+            itemFactory.ThrowIfNull(nameof(itemFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
+            containerManager.ThrowIfNull(nameof(containerManager));
 
             this.logger = logger.ForContext<Game>();
+            this.mapDescriptor = mapDescriptor;
+            this.tileAccessor = tileAccessor;
             this.connectionManager = connectionManager;
             this.creatureManager = creatureManager;
             this.creatureFactory = creatureFactory;
             this.operationFactory = operationFactory;
             this.scheduler = scheduler;
-            this.map = map;
             this.pathFinder = pathFinder;
 
+            this.itemFactory = itemFactory;
+            this.containerManager = containerManager;
+
+            this.cancelledEventRules = new HashSet<string>();
+            this.eventRulesPerPartition = new Dictionary<string, ISet<string>>();
+
             // Load some catalogs.
-            this.eventRulesCatalog = eventRulesLoader.LoadEventRules();
+            this.eventRulesCatalog = eventRulesLoader.LoadEventRules(this);
             this.monsterSpawns = monsterSpawnsLoader.LoadSpawns();
 
             // Initialize game vars.
@@ -146,8 +175,9 @@ namespace OpenTibia.Server
             this.WorldLightLevel = (byte)LightLevels.World;
 
             // Hook some event handlers.
-            this.scheduler.OnEventFired += this.ProcessEvent;
-            this.map.WindowLoaded += this.OnMapWindowLoaded;
+            this.scheduler.EventFired += this.ProcessFiredEvent;
+
+            mapLoader.WindowLoaded += this.OnMapWindowLoaded;
         }
 
         /// <summary>
@@ -196,8 +226,37 @@ namespace OpenTibia.Server
         /// <inheritdoc/>
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            this.logger.Warning($"Cancellation requested on game instance, beginning shut-down...");
+
             // TODO: probably save game state here.
             return Task.CompletedTask;
+        }
+
+        public void SetupRule(IEventRule rule, string partitionKey = "ALL")
+        {
+            this.eventRulesCatalog[rule.Type].Add(rule);
+
+            if (!this.eventRulesPerPartition.ContainsKey(partitionKey))
+            {
+                this.eventRulesPerPartition.Add(partitionKey, new HashSet<string>());
+            }
+
+            this.eventRulesPerPartition[partitionKey].Add(rule.Id);
+        }
+
+        public void ClearAllFor(string partitionKey)
+        {
+            if (!this.eventRulesPerPartition.ContainsKey(partitionKey))
+            {
+                return;
+            }
+
+            foreach (var ruleId in this.eventRulesPerPartition[partitionKey])
+            {
+                this.cancelledEventRules.Add(ruleId);
+            }
+
+            this.eventRulesPerPartition[partitionKey].Clear();
         }
 
         /// <summary>
@@ -209,59 +268,38 @@ namespace OpenTibia.Server
         /// <returns>True if at least one rule was matched and executed, false otherwise.</returns>
         public bool EvaluateRules(object caller, EventRuleType type, IEventRuleArguments eventRuleArguments)
         {
-            switch (type)
+            this.logger.Debug($"{type} rules evaluation triggered by {caller.GetType().Name}.");
+
+            if (!this.eventRulesCatalog.TryGetValue(type, out ISet<IEventRule> rulesToEvaluate))
             {
-                case EventRuleType.Use:
-                    if (eventRuleArguments is UseEventRuleArguments useRuleArgs)
-                    {
-                        return this.EvaluateUseEventRules(useRuleArgs.ItemUsed, useRuleArgs.Requestor);
-                    }
-
-                    break;
-
-                case EventRuleType.Collision:
-                    if (eventRuleArguments is CollisionEventRuleArguments collisionRuleArgs)
-                    {
-                        return this.EvaluateCollisionEventRules(collisionRuleArgs.AtLocation, collisionRuleArgs.ThingMoving, collisionRuleArgs.Requestor);
-                    }
-
-                    break;
-
-                case EventRuleType.Movement:
-                    if (eventRuleArguments is MovementEventRuleArguments movementRuleArgs)
-                    {
-                        return this.EvaluateMovementEventRules(movementRuleArgs.ThingMoving, movementRuleArgs.Requestor);
-                    }
-
-                    break;
-
-                // case EventRuleType.MultiUse:
-                //    if (eventRuleArguments is MultiUseEventRuleArguments multiUseRuleArgs)
-                //    {
-                //        return this.EvaluateMultiUseEventRules(multiUseRuleArgs.ItemUsed, multiUseRuleArgs.Requestor);
-                //    }
-
-                //    break;
-
-                case EventRuleType.Separation:
-                    if (eventRuleArguments is SeparationEventRuleArguments separationRuleArgs)
-                    {
-                        return this.EvaluateSeparationEventRules(separationRuleArgs.AtLocation, separationRuleArgs.ThingMoving, separationRuleArgs.Requestor);
-                    }
-
-                    break;
-
-                default:
-                    this.logger.Warning($"Unsupported type '{type}' of rule evalation requested, ignored.");
-                    break;
+                return false;
             }
 
-            return false;
+            var executedRules = new List<IEventRule>();
+
+            IEventRuleContext evaluationContext = new EventRuleContext(this, this.tileAccessor, eventRuleArguments);
+
+            foreach (var rule in rulesToEvaluate.Where(e => !this.cancelledEventRules.Contains(e.Id) && e.CanBeExecuted(evaluationContext)).ToList())
+            {
+                rule.Execute(evaluationContext);
+
+                executedRules.Add(rule);
+            }
+
+            foreach (var rule in executedRules)
+            {
+                if (rule.RemainingExecutionCount == 0)
+                {
+                    this.eventRulesCatalog[rule.Type].Remove(rule);
+                }
+            }
+
+            return executedRules.Any();
         }
 
         public bool CompareItemCountAt(Location location, FunctionComparisonType comparisonType, ushort value)
         {
-            if (!this.map.GetTileAt(location, out ITile tile))
+            if (!this.tileAccessor.GetTileAt(location, out ITile tile))
             {
                 return false;
             }
@@ -331,7 +369,7 @@ namespace OpenTibia.Server
 
         public bool IsObjectThere(Location location, ushort typeId)
         {
-            return this.map.GetTileAt(location, out ITile targetTile) && targetTile.HasItemWithId(typeId);
+            return this.tileAccessor.GetTileAt(location, out ITile targetTile) && targetTile.HasItemWithId(typeId);
         }
 
         public bool HasAccessFlag(IPlayer user, string rightStr)
@@ -421,7 +459,6 @@ namespace OpenTibia.Server
 
                 this.scheduler.ScheduleEvent(
                     new AnimatedEffectNotification(
-                        this.logger,
                         () => this.connectionManager.PlayersThatCanSee(this.creatureManager, thing.Location),
                         new AnimatedEffectNotificationArguments(thing.Location, animatedEffect)));
             }
@@ -453,18 +490,13 @@ namespace OpenTibia.Server
 
                 this.scheduler.ScheduleEvent(
                     new AnimatedEffectNotification(
-                        this.logger,
                         () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
                         new AnimatedEffectNotificationArguments(location, animatedEffect)));
             }
 
             this.DispatchOperation(
                     OperationType.ChangeItem,
-                    new ChangeItemOperationCreationArguments(
-                        requestorId: 0,
-                        fromTypeId,
-                        location,
-                        toTypeId));
+                    new ChangeItemOperationCreationArguments(requestorId: 0, fromTypeId, location, toTypeId));
         }
 
         public void ChangePlayerStartLocation(IPlayer player, Location newLocation)
@@ -490,7 +522,6 @@ namespace OpenTibia.Server
             {
                 this.scheduler.ScheduleEvent(
                     new AnimatedEffectNotification(
-                        this.logger,
                         () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
                         new AnimatedEffectNotificationArguments(location, animatedEffect)));
             }
@@ -499,10 +530,9 @@ namespace OpenTibia.Server
         public void DisplayAnimatedText(Location location, string text, byte textType)
         {
             this.scheduler.ScheduleEvent(
-                new TextMessageNotification(
-                    this.logger,
+                new AnimatedTextNotification(
                     () => this.connectionManager.PlayersThatCanSee(this.creatureManager, location),
-                    new TextMessageNotificationArguments((MessageType)textType, text)));
+                    new AnimatedTextNotificationArguments(location, (TextColor)textType, text)));
         }
 
         /// <summary>
@@ -547,7 +577,6 @@ namespace OpenTibia.Server
 
             this.scheduler.ScheduleEvent(
                 new TextMessageNotification(
-                    this.logger,
                     () => this.connectionManager.FindByPlayerId(player.Id).YieldSingleItem(),
                     new TextMessageNotificationArguments(MessageType.DescriptionGreen, itemToDescribe.Type.Description)));
         }
@@ -606,23 +635,29 @@ namespace OpenTibia.Server
                 TimeSpan creatureMovementCooldown = creature.CalculateRemainingCooldownTime(ExhaustionType.Movement, this.scheduler.CurrentTime);
 
                 this.DispatchOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
+                        OperationType.Movement,
+                        new MovementOperationCreationArguments(
                             requestorId: 0,
-                            creature,
+                            ICreature.CreatureThingId,
                             creature.Location,
-                            targetLocation),
+                            fromIndex: 0xFF,
+                            creature.Id,
+                            targetLocation,
+                            creature.Id),
                         creatureMovementCooldown);
             }
             else if (thingToMove is IItem item)
             {
                 this.DispatchOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
+                        OperationType.Movement,
+                        new MovementOperationCreationArguments(
                             requestorId: 0,
-                            item,
+                            item.ThingId,
                             item.Location,
+                            fromIndex: 0xFF,
+                            fromCreatureId: 0,
                             targetLocation,
+                            toCreatureId: 0,
                             amount: item.Amount));
             }
         }
@@ -635,7 +670,7 @@ namespace OpenTibia.Server
         /// <param name="exceptTypeIds">Optional. Any type ids to explicitly exclude.</param>
         public void MoveTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds)
         {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile))
+            if (!this.tileAccessor.GetTileAt(fromLocation, out ITile fromTile))
             {
                 return;
             }
@@ -650,12 +685,15 @@ namespace OpenTibia.Server
                 }
 
                 this.DispatchOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
+                        OperationType.Movement,
+                        new MovementOperationCreationArguments(
                             requestorId: 0,
-                            creature,
+                            ICreature.CreatureThingId,
                             fromLocation,
-                            targetLocation));
+                            fromIndex: 0xFF,
+                            creatureId,
+                            targetLocation,
+                            creatureId));
             }
 
             foreach (var item in fromTile.Items)
@@ -666,12 +704,15 @@ namespace OpenTibia.Server
                 }
 
                 this.DispatchOperation(
-                        OperationType.MapToMapMovement,
-                        new MapToMapMovementOperationCreationArguments(
+                        OperationType.Movement,
+                        new MovementOperationCreationArguments(
                             requestorId: 0,
-                            item,
+                            item.ThingId,
                             fromLocation,
+                            fromIndex: 0xFF,
+                            fromCreatureId: 0,
                             targetLocation,
+                            toCreatureId: 0,
                             amount: item.Amount));
             }
         }
@@ -684,18 +725,21 @@ namespace OpenTibia.Server
         /// <param name="toLocation">The location to which to move the item.</param>
         public void MoveTo(ushort itemType, Location fromLocation, Location toLocation)
         {
-            if (!this.map.GetTileAt(fromLocation, out ITile fromTile) || !(fromTile.FindItemWithId(itemType) is IItem item) || item == null)
+            if (!this.tileAccessor.GetTileAt(fromLocation, out ITile fromTile) || !(fromTile.FindItemWithId(itemType) is IItem item) || item == null)
             {
                 return;
             }
 
             this.DispatchOperation(
-                    OperationType.MapToMapMovement,
-                    new MapToMapMovementOperationCreationArguments(
+                    OperationType.Movement,
+                    new MovementOperationCreationArguments(
                         requestorId: 0,
-                        item,
+                        item.ThingId,
                         item.Location,
+                        fromIndex: 0xFF,
+                        fromCreatureId: 0,
                         toLocation,
+                        toCreatureId: 0,
                         amount: item.Amount));
         }
 
@@ -708,7 +752,7 @@ namespace OpenTibia.Server
         {
             var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(monsterType));
 
-            if (!this.map.GetTileAt(location, out ITile atTile))
+            if (!this.tileAccessor.GetTileAt(location, out ITile atTile))
             {
                 this.logger.Warning($"No tile found at {location} to place creature at, ignoring.");
 
@@ -723,13 +767,98 @@ namespace OpenTibia.Server
             // TODO: implement.
         }
 
+        public void OnCombatantCombatStarted(ICombatant combatant)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            this.DispatchOperation(OperationType.Thinking, new ThinkingOperationCreationArguments(combatant.Id, combatant));
+        }
+
+        public void OnCombatantCombatEnded(ICombatant combatant)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            this.scheduler.CancelAllFor(combatant.Id, typeof(ThinkingOperation));
+        }
+
+        public void OnCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            var combatSpeed = creditType == CombatCreditType.Attack ? combatant.BaseAttackSpeed : combatant.BaseDefenseSpeed;
+            var restoreCreditDelay = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / combatSpeed));
+
+            this.DispatchOperation(OperationType.RestoreCombatCredit, new RestoreCombatCreditOperationCreationArguments(requestorId: 0, combatant, creditType), restoreCreditDelay);
+        }
+
+        public void OnCombatantTargetChanged(ICombatant combatant, ICombatant oldTarget)
+        {
+            if (combatant?.AutoAttackTarget == null)
+            {
+                // This combatant has stopped attacks.
+                return;
+            }
+
+            var attackExhaustionCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / combatant.BaseAttackSpeed));
+
+            this.DispatchOperation(OperationType.AutoAttack, new AutoAttackCombatOperationCreationArguments(combatant.Id, combatant, combatant.AutoAttackTarget, attackExhaustionCost));
+        }
+
+        public void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode)
+        {
+            if (combatant == null || combatant.ChaseMode == oldMode)
+            {
+                return;
+            }
+
+            if (combatant.ChaseMode == ChaseMode.Chase && combatant.AutoAttackTarget != null)
+            {
+                var locationDiff = combatant.Location - combatant.AutoAttackTarget.Location;
+
+                if (locationDiff.MaxValueIn2D > 1)
+                {
+                    // Too far away from it, we need to move closer first.
+                    var directions = this.pathFinder.FindBetween(combatant.Location, combatant.AutoAttackTarget.Location, out _, onBehalfOfCreature: combatant, considerAvoidsAsBlock: true);
+
+                    if (directions != null && directions.Any())
+                    {
+                        this.DispatchOperation(OperationType.AutoWalk, new AutoWalkOperationCreationArguments(combatant.Id, combatant, directions.ToArray()));
+                    }
+                }
+            }
+        }
+
+        public void OnPlayerInventoryChanged(IInventory inventory, Slot slot, IItem item)
+        {
+            if (!(inventory.Owner is IPlayer player))
+            {
+                return;
+            }
+
+            this.logger.Information($"{player.Name}'s inventory slot {slot} changed to {item?.ToString() ?? "empty"}.");
+
+            var notificationArgs = item == null ?
+                new GenericNotificationArguments(new PlayerInventoryClearSlotPacket(slot))
+                :
+                new GenericNotificationArguments(new PlayerInventorySetSlotPacket(slot, item));
+
+            var notification = new GenericNotification(() => this.connectionManager.FindByPlayerId(player.Id).YieldSingleItem(), notificationArgs);
+
+            this.scheduler.ScheduleEvent(notification);
+        }
+
         private void DispatchOperation(OperationType operationType, IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
         {
             IOperation newOperation = this.operationFactory.Create(operationType, operationArguments);
-
-            // Hook up the event rules event listener here.
-            // This gets unhooked when the operation is processed.
-            newOperation.EventRulesEvaluationTriggered += this.EvaluateRules;
 
             // Normalize delay to protect against negative time spans.
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
@@ -743,139 +872,6 @@ namespace OpenTibia.Server
             }
 
             this.scheduler.ScheduleEvent(newOperation, operationDelay);
-        }
-
-        /// <summary>
-        /// Evaluates use event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="thingBeingUsed">The thing that is being used.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        /// <remarks>This operation is not thread-safe.</remarks>
-        private bool EvaluateUseEventRules(IThing thingBeingUsed, ICreature requestor)
-        {
-            if (thingBeingUsed is IItem itemUsed)
-            {
-                var useItemEventRules = this.eventRulesCatalog[EventRuleType.Use].Cast<IUseItemEventRule>();
-                var requestorPlayer = requestor as IPlayer;
-                var itemUsedAsThing = itemUsed as IThing;
-                IThing discardThing = null;
-
-                var rulesThatCanBeExecuted = useItemEventRules.Where(e => e.ItemToUseId == itemUsed.Type.TypeId && e.CanBeExecuted(this, itemUsed, null, requestorPlayer));
-
-                // Execute all actions.
-                if (rulesThatCanBeExecuted.Any())
-                {
-                    foreach (var rule in rulesThatCanBeExecuted)
-                    {
-                        rule.Execute(this, ref itemUsedAsThing, ref discardThing, ref requestorPlayer);
-                    }
-
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Evaluates separation event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="location">The location at which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        /// <remarks>This operation is not thread-safe.</remarks>
-        private bool EvaluateSeparationEventRules(Location location, IThing thingMoving, ICreature requestor)
-        {
-            if (this.map.GetTileAt(location, out ITile fromTile) && fromTile.HasSeparationEvents)
-            {
-                foreach (var item in fromTile.ItemsWithSeparation)
-                {
-                    var separationEvents = this.eventRulesCatalog[EventRuleType.Separation].Cast<ISeparationEventRule>();
-                    var requestorPlayer = requestor as IPlayer;
-                    var itemAsThing = item as IThing;
-
-                    var rulesThatCanBeExecuted = separationEvents.Where(e => e.SeparatingThingId == item.Type.TypeId && e.CanBeExecuted(this, item, thingMoving, requestorPlayer));
-
-                    // Execute all actions.
-                    if (rulesThatCanBeExecuted.Any())
-                    {
-                        foreach (var rule in rulesThatCanBeExecuted)
-                        {
-                            rule.Execute(this, ref itemAsThing, ref thingMoving, ref requestorPlayer);
-                        }
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Evaluates collision event rules on the given location for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="location">The location at which the events take place.</param>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        /// <remarks>This operation is not thread-safe.</remarks>
-        private bool EvaluateCollisionEventRules(Location location, IThing thingMoving, ICreature requestor)
-        {
-            if (this.map.GetTileAt(location, out ITile toTile) && toTile.HasCollisionEvents)
-            {
-                foreach (var item in toTile.ItemsWithCollision)
-                {
-                    var collisionEvents = this.eventRulesCatalog[EventRuleType.Collision].Cast<ICollisionEventRule>();
-                    var requestorPlayer = requestor as IPlayer;
-                    var itemAsThing = item as IThing;
-
-                    var rulesThatCanBeExecuted = collisionEvents.Where(e => e.CollidingThingId == item.Type.TypeId && e.CanBeExecuted(this, item, thingMoving, requestorPlayer));
-
-                    // Execute all actions.
-                    if (rulesThatCanBeExecuted.Any())
-                    {
-                        foreach (var rule in rulesThatCanBeExecuted)
-                        {
-                            rule.Execute(this, ref itemAsThing, ref thingMoving, ref requestorPlayer);
-                        }
-
-                        return true;
-                    }
-                }
-            }
-
-            return false;
-        }
-
-        /// <summary>
-        /// Evaluates movement event rules on for the given thing, on behalf of the supplied requestor creature.
-        /// </summary>
-        /// <param name="thingMoving">The thing that is moving.</param>
-        /// <param name="requestor">The requestor creature, if any.</param>
-        /// <returns>True if there is at least one rule that was executed, false otherwise.</returns>
-        private bool EvaluateMovementEventRules(IThing thingMoving, ICreature requestor)
-        {
-            var movementEventRules = this.eventRulesCatalog[EventRuleType.Movement].Cast<IThingMovementEventRule>();
-            var requestorPlayer = requestor as IPlayer;
-            IThing discardThing = null;
-
-            var rulesThatCanBeExecuted = movementEventRules.Where(e => e.CanBeExecuted(this, thingMoving, null, requestorPlayer));
-
-            // Execute all actions.
-            if (rulesThatCanBeExecuted.Any())
-            {
-                foreach (var rule in rulesThatCanBeExecuted)
-                {
-                    rule.Execute(this, ref thingMoving, ref discardThing, ref requestorPlayer);
-                }
-
-                return true;
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -926,7 +922,6 @@ namespace OpenTibia.Server
                 {
                     this.scheduler.ScheduleEvent(
                         new WorldLightChangedNotification(
-                            this.logger,
                             () => this.connectionManager.GetAllActive(),
                             new WorldLightChangedNotificationArguments(this.WorldLightLevel, this.WorldLightColor)));
                 }
@@ -966,7 +961,7 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="eventArgs">The arguments of the event.</param>
-        private void ProcessEvent(object sender, EventFiredEventArgs eventArgs)
+        private void ProcessFiredEvent(object sender, EventFiredEventArgs eventArgs)
         {
             if (sender != this.scheduler || eventArgs?.Event == null)
             {
@@ -979,7 +974,7 @@ namespace OpenTibia.Server
             {
                 Stopwatch sw = Stopwatch.StartNew();
 
-                evt.Execute();
+                evt.Execute(this.GetContextForEventType(evt.GetType()));
 
                 sw.Stop();
 
@@ -992,12 +987,8 @@ namespace OpenTibia.Server
             }
             finally
             {
-                // If this was an operation that just ran, we need to do some extra stuff.
                 if (evt is IOperation operation)
                 {
-                    // Unhook any event rule listeners we are currently tied to.
-                    operation.EventRulesEvaluationTriggered -= this.EvaluateRules;
-
                     // Add any exhaustion for the requestor of the operation, if any.
                     if (this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
                     {
@@ -1005,6 +996,48 @@ namespace OpenTibia.Server
                     }
                 }
             }
+        }
+
+        private IEventContext GetContextForEventType(Type type)
+        {
+            if (typeof(IElevatedOperation).IsAssignableFrom(type))
+            {
+                return new ElevatedOperationContext(
+                    this.logger,
+                    this.mapDescriptor,
+                    this.tileAccessor,
+                    this.connectionManager,
+                    this.creatureManager,
+                    this.pathFinder,
+                    this.itemFactory,
+                    this.creatureFactory,
+                    this.operationFactory,
+                    this.containerManager,
+                    this.scheduler,
+                    this,
+                    this,
+                    this);
+            }
+            else if (typeof(IOperation).IsAssignableFrom(type))
+            {
+                return new OperationContext(
+                    this.logger,
+                    this.mapDescriptor,
+                    this.tileAccessor,
+                    this.connectionManager,
+                    this.creatureManager,
+                    this.pathFinder,
+                    this.itemFactory,
+                    this.creatureFactory,
+                    this.operationFactory,
+                    this.containerManager,
+                    this.scheduler,
+                    this,
+                    this,
+                    this);
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -1026,7 +1059,9 @@ namespace OpenTibia.Server
                             s.Location.Y >= fromY && s.Location.Y <= toY &&
                             s.Location.Z >= fromZ && s.Location.Z <= toZ);
 
-            if (spawnsInWindow == null)
+            this.logger.Debug($"Loaded map window X=[{fromX},{toX}] Y=[{fromY},{toY}] Z=[{fromZ},{toZ}]. Spawns here: {spawnsInWindow.Count()}");
+
+            if (!spawnsInWindow.Any())
             {
                 return;
             }
@@ -1036,15 +1071,21 @@ namespace OpenTibia.Server
                 for (int i = 0; i < spawn.Count; i++)
                 {
                     var r = spawn.Radius / 4;
-                    var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id));
+                    var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id)) as IMonster;
 
                     var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+
+                    // TODO: this doesn't actually work because when the OnMapWindowLoaded event gets triggered while loading the tiles in a sector, but before they
+                    // are marked as loaded, so the pathfinding actually doesn't find anything for now.
+                    // The long term solution here is to abstract spawns into an operation and trigger it, so that they are
+                    // A) performed after the tiles are marked as loaded, and
+                    // B) reusable when we trigger time-based re-spawn.
 
                     // Need to actually pathfind to avoid placing a monster in unreachable places.
                     this.pathFinder.FindBetween(spawn.Location, randomLoc, out Location foundLocation, (i + 1) * 10);
 
                     // TODO: some property of newMonster here to figure out what actually blocks path finding.
-                    if (this.map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
+                    if (this.tileAccessor.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
                     {
                         this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, targetTile, newMonster));
                     }

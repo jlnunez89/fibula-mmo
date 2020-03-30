@@ -30,10 +30,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="ContainerMoveUpHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public ContainerMoveUpHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+        public ContainerMoveUpHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext)
         {
         }
 
@@ -56,9 +55,12 @@ namespace OpenTibia.Communications.Handlers.Game
             {
                 var container = this.Context.ContainerManager.FindForCreature(player.Id, containerInfo.ContainerId);
 
-                if (container != null && container.ParentCylinder is IContainerItem parentContainer)
+                if (container != null && container.ParentCylinder is IContainerItem)
                 {
-                    this.ScheduleNewOperation(OperationType.ContainerMoveUp, new MoveUpContainerOperationCreationArguments(player.Id, player, container, containerInfo.ContainerId));
+                    this.ScheduleNewOperation(
+                        this.Context.OperationFactory.Create(
+                            OperationType.ContainerMoveUp,
+                            new MoveUpContainerOperationCreationArguments(player.Id, player, container, containerInfo.ContainerId)));
                 }
             }
 

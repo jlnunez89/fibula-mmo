@@ -37,7 +37,7 @@ namespace OpenTibia.Communications.Packets.Incoming
 
             this.ToLocation = toLocation;
 
-            this.Count = count;
+            this.Amount = count;
         }
 
         /// <summary>
@@ -63,6 +63,6 @@ namespace OpenTibia.Communications.Packets.Incoming
         /// <summary>
         /// Gets the amount of the thing being moved.
         /// </summary>
-        public byte Count { get; }
+        public byte Amount { get; }
     }
 }

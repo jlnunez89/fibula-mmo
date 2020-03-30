@@ -41,13 +41,13 @@ namespace OpenTibia.Server.Events
         public Location AtLocation { get; }
 
         /// <summary>
-        /// Gets the thing that is moving.
+        /// Gets or sets the thing that is moving.
         /// </summary>
-        public IThing ThingMoving { get; }
+        public IThing ThingMoving { get; set; }
 
         /// <summary>
-        /// Gets the creature who requested the use, if any.
+        /// Gets or sets the creature who requested the use, if any.
         /// </summary>
-        public ICreature Requestor { get; }
+        public ICreature Requestor { get; set; }
     }
 }

@@ -243,31 +243,31 @@ namespace OpenTibia.Communications.Packets
             return new ModesPacket(fightMode, chaseMode, isSafetyEnabled: rawSafeMode > 0);
         }
 
-        ///// <summary>
-        ///// Reads the item used on information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The item used on information.</returns>
-        // public static IItemUseOnInfo ReadItemUseOnInfo(this INetworkMessage message)
-        // {
-        //    return new ItemUseOnPacket(
-        //        fromLocation: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        fromSpriteId: message.GetUInt16(),
-        //        fromStackPos: message.GetByte(),
-        //        toLocation: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        toSpriteId: message.GetUInt16(),
-        //        toStackPos: message.GetByte());
-        // }
+        /// <summary>
+        /// Reads the item used on information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The item used on information.</returns>
+        public static IUseItemOnInfo ReadItemUseOnInfo(this INetworkMessage message)
+        {
+            return new UseItemOnPacket(
+                fromLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                fromItemId: message.GetUInt16(),
+                fromStackPos: message.GetByte(),
+                toLocation: new Location
+                {
+                    X = message.GetUInt16(),
+                    Y = message.GetUInt16(),
+                    Z = (sbyte)message.GetByte(),
+                },
+                toItemId: message.GetUInt16(),
+                toStackPos: message.GetByte());
+        }
 
         /// <summary>
         /// Reads the item use information sent in the message.
@@ -441,50 +441,30 @@ namespace OpenTibia.Communications.Packets
         //        comment: message.GetString());
         // }
 
-        ///// <summary>
-        ///// Reads speech information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The speech information.</returns>
-        // public static ISpeechInfo ReadSpeechInfo(this INetworkMessage message)
-        // {
-        //    SpeechType type = (SpeechType)message.GetByte();
-        //    Speech speech;
+        /// <summary>
+        /// Reads speech information sent in the message.
+        /// </summary>
+        /// <param name="message">The mesage to read the information from.</param>
+        /// <returns>The speech information.</returns>
+        public static ISpeechInfo ReadSpeechInfo(this INetworkMessage message)
+        {
+            SpeechType type = (SpeechType)message.GetByte();
 
-        // switch (type)
-        //    {
-        //        case SpeechType.Private:
-        //        // case SpeechType.PrivateRed:
-        //        case SpeechType.RuleViolationAnswer:
-        //            speech = new Speech
-        //            {
-        //                Type = type,
-        //                Receiver = message.GetString(),
-        //                Message = message.GetString(),
-        //            };
-        //            break;
-        //        case SpeechType.ChannelYellow:
-        //            // case SpeechType.ChannelRed:
-        //            // case SpeechType.ChannelRedAnonymous:
-        //            // case SpeechType.ChannelWhite:
-        //            speech = new Speech
-        //            {
-        //                Type = type,
-        //                ChannelId = (ChatChannelType)message.GetUInt16(),
-        //                Message = message.GetString(),
-        //            };
-        //            break;
-        //        default:
-        //            speech = new Speech
-        //            {
-        //                Type = type,
-        //                Message = message.GetString(),
-        //            };
-        //            break;
-        //    }
-
-        // return new SpeechPacket(speech);
-        // }
+            switch (type)
+            {
+                case SpeechType.Private:
+                // case SpeechType.PrivateRed:
+                case SpeechType.RuleViolationAnswer:
+                    return new SpeechPacket(type, receiver: message.GetString(), content: message.GetString());
+                case SpeechType.ChannelYellow:
+                    // case SpeechType.ChannelRed:
+                    // case SpeechType.ChannelRedAnonymous:
+                    // case SpeechType.ChannelWhite:
+                    return new SpeechPacket(type, channelId: (ChatChannelType)message.GetUInt16(), content: message.GetString());
+                default:
+                    return new SpeechPacket(type, channelId: ChatChannelType.None, content: message.GetString());
+            }
+        }
 
         ///// <summary>
         ///// Reads statements list information sent in the message.
@@ -787,46 +767,46 @@ namespace OpenTibia.Communications.Packets
             message.AddLocation(packet.ToLocation);
         }
 
-        ///// <summary>
-        ///// Writes the contents of the <see cref="CreatureSpeechPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        // public static void WriteCreatureSpeechPacket(this INetworkMessage message, CreatureSpeechPacket packet)
-        // {
-        //    packet.ThrowIfNull(nameof(packet));
+        /// <summary>
+        /// Writes the contents of the <see cref="CreatureSpeechPacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteCreatureSpeechPacket(this INetworkMessage message, CreatureSpeechPacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
 
-        // message.WritePacketType(packet);
+            message.WritePacketType(packet);
 
-        // message.AddUInt32(0);
-        //    message.AddString(packet.SenderName);
-        //    message.AddByte((byte)packet.SpeechType);
+            message.AddUInt32(0);
+            message.AddString(packet.SenderName);
+            message.AddByte((byte)packet.SpeechType);
 
-        // switch (packet.SpeechType)
-        //    {
-        //        case SpeechType.Normal:
-        //        case SpeechType.Whisper:
-        //        case SpeechType.Yell:
-        //        case SpeechType.MonsterSay:
-        //            // case SpeechType.MonsterYell:
-        //            message.AddLocation(packet.Location);
-        //            break;
-        //        // case SpeechType.ChannelRed:
-        //        // case SpeechType.ChannelRedAnonymous:
-        //        // case SpeechType.ChannelOrange:
-        //        case SpeechType.ChannelYellow:
-        //            // case SpeechType.ChannelWhite:
-        //            message.AddUInt16((ushort)packet.ChannelId);
-        //            break;
-        //        case SpeechType.RuleViolationReport:
-        //            message.AddUInt32(packet.Time);
-        //            break;
-        //        default:
-        //            break;
-        //    }
+            switch (packet.SpeechType)
+            {
+                case SpeechType.Say:
+                case SpeechType.Whisper:
+                case SpeechType.Yell:
+                case SpeechType.MonsterSay:
+                    // case SpeechType.MonsterYell:
+                    message.AddLocation(packet.Location);
+                    break;
+                // case SpeechType.ChannelRed:
+                // case SpeechType.ChannelRedAnonymous:
+                // case SpeechType.ChannelOrange:
+                case SpeechType.ChannelYellow:
+                    // case SpeechType.ChannelWhite:
+                    message.AddUInt16((ushort)packet.ChannelId);
+                    break;
+                case SpeechType.RuleViolationReport:
+                    message.AddUInt32(packet.Time);
+                    break;
+                default:
+                    break;
+            }
 
-        // message.AddString(packet.Text);
-        // }
+            message.AddString(packet.Text);
+        }
 
         /// <summary>
         /// Writes the contents of the <see cref="CreatureTurnedPacket"/> into the message.

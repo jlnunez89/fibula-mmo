@@ -93,7 +93,6 @@ namespace OpenTibia.Server
 
             this.scheduler.ScheduleEvent(
                 new GenericNotification(
-                    this.logger,
                     () => this.connectionFinder.FindByPlayerId(forCreature.Id).YieldSingleItem(),
                     new GenericNotificationArguments(
                         new ContainerOpenPacket(
@@ -126,7 +125,6 @@ namespace OpenTibia.Server
 
             this.scheduler.ScheduleEvent(
                 new GenericNotification(
-                    this.logger,
                     () => this.connectionFinder.FindByPlayerId(forCreature.Id).YieldSingleItem(),
                     new GenericNotificationArguments(new ContainerClosePacket(atPosition))));
         }
@@ -350,7 +348,6 @@ namespace OpenTibia.Server
 
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
-                            this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
                             new GenericNotificationArguments(new ContainerAddItemPacket(containerPosition, addedItem))));
                 }
@@ -381,7 +378,6 @@ namespace OpenTibia.Server
 
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
-                            this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
                             new GenericNotificationArguments(new ContainerRemoveItemPacket(indexRemoved, containerId))));
                 }
@@ -418,7 +414,6 @@ namespace OpenTibia.Server
 
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
-                            this.logger,
                             () => this.connectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
                             new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, containerId, updatedItem))));
                 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OnMapWindowLoaded.cs" company="2Dudes">
+// <copyright file="WindowLoaded.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -20,5 +20,5 @@ namespace OpenTibia.Server.Contracts.Delegates
     /// <param name="toY">The end Y coordinate for the load window.</param>
     /// <param name="fromZ">The start Z coordinate for the load window.</param>
     /// <param name="toZ">The end Z coordinate for the load window.</param>
-    public delegate void OnMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ);
+    public delegate void WindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ);
 }

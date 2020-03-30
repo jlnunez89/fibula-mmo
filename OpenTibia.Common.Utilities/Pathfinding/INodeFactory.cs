@@ -17,12 +17,12 @@ namespace OpenTibia.Common.Utilities.Pathfinding
     public interface INodeFactory
     {
         /// <summary>
-        /// Creates a node belonging to the given <paramref name="searchId"/>, using the given <paramref name="nodeCreationData"/>.
+        /// Creates a node with the given <paramref name="searchContext"/>, using the given <paramref name="nodeCreationData"/>.
         /// </summary>
-        /// <param name="searchId">The search id.</param>
+        /// <param name="searchContext">A reference to the context of the search this node takes place in.</param>
         /// <param name="nodeCreationData">The node creation data.</param>
         /// <returns>An instance of a <see cref="INode"/>.</returns>
-        INode Create(string searchId, INodeCreationArguments nodeCreationData);
+        INode Create(ISearchContext searchContext, INodeCreationArguments nodeCreationData);
 
         /// <summary>
         /// Method called when a search is completed, whatever the result is.

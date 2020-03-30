@@ -79,7 +79,7 @@ namespace OpenTibia.Server
 
             this.SoulPoints = 0;
 
-            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, 1.0, 10, 1, 150);
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, 1.0, 100, 100, 150);
             this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 1, 1.0, 10, 1, 150);
             this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 10, 1.0, 10, 10, 150);
             this.Skills[SkillType.Axe] = new Skill(SkillType.Axe, 10, 1.0, 10, 10, 150);
@@ -238,6 +238,24 @@ namespace OpenTibia.Server
             }
 
             return uint.MinValue;
+        }
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void CombatantNowInView(ICombatant otherCombatant)
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void CombatantNoLongerInView(ICombatant otherCombatant)
+        {
+            return;
         }
 
         private ushort CalculateMovementBaseSpeed()

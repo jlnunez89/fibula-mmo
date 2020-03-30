@@ -67,54 +67,65 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// <param name="maxStepsCount">Optional. The maximum number of search steps to perform before giving up on finding the target location. Default is 100.</param>
         /// <param name="onBehalfOfCreature">Optional. The creature on behalf of which the search is being performed.</param>
         /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
+        /// <param name="targetDistance">Optional. The target distance from the target node to shoot for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Direction"/>s leading to the end location. The <paramref name="endLocation"/> and <paramref name="targetLocation"/> may or may not be the same.</returns>
-        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null, bool considerAvoidsAsBlock = true)
+        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null, bool considerAvoidsAsBlock = true, int targetDistance = 1)
         {
             endLocation = startLocation;
             maxStepsCount = maxStepsCount == default ? this.Options.DefaultMaximumSteps : maxStepsCount;
 
-            var searchId = Guid.NewGuid().ToString();
+            var searchContext = new AStarSearchContext(
+                Guid.NewGuid().ToString(),
+                onBehalfOfCreature,
+                considerAvoidsAsBlock,
+                targetDistance);
 
-            var startNode = this.NodeFactory.Create(searchId, new TileNodeCreationArguments(startLocation, onBehalfOfCreature));
-            var targetNode = this.NodeFactory.Create(searchId, new TileNodeCreationArguments(targetLocation, onBehalfOfCreature));
+            var startNode = this.NodeFactory.Create(searchContext, new TileNodeCreationArguments(startLocation));
 
-            if (startLocation == targetLocation || startNode == null || targetNode == null)
+            try
             {
-                return Enumerable.Empty<Direction>();
-            }
+                var targetNode = this.NodeFactory.Create(searchContext, new TileNodeCreationArguments(targetLocation));
 
-            var dirList = new List<Direction>();
-
-            var algo = new AStar(this.NodeFactory, startNode, targetNode, maxStepsCount);
-
-            if (algo.Run() == SearchState.Failed)
-            {
-                var lastTile = algo.GetLastPath()?.LastOrDefault() as TileNode;
-
-                if (lastTile?.Tile != null)
+                if (startLocation == targetLocation || startNode == null || targetNode == null)
                 {
-                    endLocation = lastTile.Tile.Location;
+                    return Enumerable.Empty<Direction>();
                 }
+
+                var dirList = new List<Direction>();
+
+                var algo = new AStar(this.NodeFactory, startNode, targetNode, maxStepsCount);
+
+                if (algo.Run() == SearchState.Failed)
+                {
+                    var lastTile = algo.GetLastPath()?.LastOrDefault() as TileNode;
+
+                    if (lastTile?.Tile != null)
+                    {
+                        endLocation = lastTile.Tile.Location;
+                    }
+
+                    return dirList;
+                }
+
+                var lastLoc = startLocation;
+
+                foreach (var node in algo.GetLastPath().Cast<TileNode>().Skip(1))
+                {
+                    var newDir = lastLoc.DirectionTo(node.Tile.Location, true);
+
+                    dirList.Add(newDir);
+
+                    lastLoc = node.Tile.Location;
+                }
+
+                endLocation = lastLoc;
 
                 return dirList;
             }
-
-            var lastLoc = startLocation;
-
-            foreach (var node in algo.GetLastPath().Cast<TileNode>().Skip(1))
+            finally
             {
-                var newDir = lastLoc.DirectionTo(node.Tile.Location, true);
-
-                dirList.Add(newDir);
-
-                lastLoc = node.Tile.Location;
+                this.NodeFactory.OnSearchCompleted(searchContext.SearchId);
             }
-
-            endLocation = lastLoc;
-
-            this.NodeFactory.OnSearchCompleted(searchId);
-
-            return dirList;
         }
     }
 }

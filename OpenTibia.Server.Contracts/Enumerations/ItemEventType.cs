@@ -14,32 +14,32 @@ namespace OpenTibia.Server.Contracts.Enumerations
     using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>
-    /// Enumerates the different types of an <see cref="IEventRule"/>.
+    /// Enumerates the different types of <see cref="IEventRule"/>s.
     /// </summary>
     public enum EventRuleType : byte
     {
         /// <summary>
-        /// Using an item.
+        /// An item is used.
         /// </summary>
         Use,
 
         /// <summary>
-        /// Using an item on something else.
+        /// An item is used on something else.
         /// </summary>
         MultiUse,
 
         /// <summary>
-        /// Movement event.
+        /// Something moves between cyclinders.
         /// </summary>
         Movement,
 
         /// <summary>
-        /// Collision event.
+        /// A thing is moved into the same tile cyclinder as another thing.
         /// </summary>
         Collision,
 
         /// <summary>
-        /// Separation event.
+        /// Something is moved from a particular tile cyclinder.
         /// </summary>
         Separation,
     }

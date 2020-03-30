@@ -23,7 +23,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <summary>
         /// Event invoked when a window of coordinates in the map is loaded.
         /// </summary>
-        event OnMapWindowLoaded MapWindowLoaded;
+        event WindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the percentage completed loading the map [0, 100].

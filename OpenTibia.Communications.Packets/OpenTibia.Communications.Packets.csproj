@@ -12,13 +12,11 @@
     <Compile Remove="Incoming\DebugAssertionPacket.cs" />
     <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
     <Compile Remove="Incoming\InsertHousePacket.cs" />
-    <Compile Remove="Incoming\ItemUseOnPacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLoginPacket.cs" />
     <Compile Remove="Incoming\ManagementPlayerLogoutPacket.cs" />
     <Compile Remove="Incoming\OutfitChangedPacket.cs" />
     <Compile Remove="Incoming\PacketIncoming.cs" />
     <Compile Remove="Incoming\RuleViolationPacket.cs" />
-    <Compile Remove="Incoming\SpeechPacket.cs" />
     <Compile Remove="Incoming\StatementPacket.cs" />
     <Compile Remove="Outgoing\AddItemPacket.cs" />
     <Compile Remove="Outgoing\AuctionsResultPacket.cs" />
@@ -27,7 +25,6 @@
     <Compile Remove="Outgoing\ClearOnlinePlayersResultPacket.cs" />
     <Compile Remove="Outgoing\CreatePlayerListResultPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
-    <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />
     <Compile Remove="Outgoing\LoadPlayersResultPacket.cs" />
     <Compile Remove="Outgoing\NotationResultPacket.cs" />
     <Compile Remove="Outgoing\PlayerChooseOutfitPacket.cs" />

@@ -11,7 +11,6 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
-    using System.Collections.Generic;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -20,39 +19,36 @@ namespace OpenTibia.Server.Contracts.Abstractions
     public interface IEventRule
     {
         /// <summary>
-        /// Gets the type of this event rule.
+        /// The value to use for unlimited number of executions.
+        /// </summary>
+        public const int UnlimitedExecutions = -1;
+
+        /// <summary>
+        /// Gets the identifier of this rule.
+        /// </summary>
+        string Id { get; }
+
+        /// <summary>
+        /// Gets the type of this rule.
         /// </summary>
         EventRuleType Type { get; }
 
         /// <summary>
-        /// Gets the conditions for the event to happen.
+        /// Gets the remaining number of executions for this rule.
         /// </summary>
-        IEnumerable<IEventRuleFunction> Conditions { get; }
-
-        /// <summary>
-        /// Gets the actions to perform when an event is executed.
-        /// </summary>
-        IEnumerable<IEventRuleFunction> Actions { get; }
+        int RemainingExecutionCount { get; }
 
         /// <summary>
         /// Checks whether this event rule can be executed.
-        /// This generally means the <see cref="Conditions"/> all evaluate to true.
         /// </summary>
-        /// <param name="gameApi">A reference to the game's api in use.</param>
-        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
-        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
-        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        /// <param name="context">The execution context of this rule.</param>
         /// <returns>True if the rule can be executed, false otherwise.</returns>
-        bool CanBeExecuted(IGame gameApi, IThing primaryThing, IThing secondaryThing = null, IPlayer requestingPlayer = null);
+        bool CanBeExecuted(IEventRuleContext context);
 
         /// <summary>
         /// Executes this event rule.
-        /// This generally means executing the event rule's <see cref="Actions"/>.
         /// </summary>
-        /// <param name="gameApi">A reference to the game's api in use.</param>
-        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
-        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
-        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
-        void Execute(IGame gameApi, ref IThing primaryThing, ref IThing secondaryThing, ref IPlayer requestingPlayer);
+        /// <param name="context">The execution context of this rule.</param>
+        void Execute(IEventRuleContext context);
     }
 }

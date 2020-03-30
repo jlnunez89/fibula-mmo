@@ -29,31 +29,37 @@ namespace OpenTibia.Server.Contracts
         /// <param name="tileAccessor">A reference to the tile accessor.</param>
         /// <param name="containerManager">A reference to the container manager.</param>
         /// <param name="index">The index within the cyclinder to target.</param>
-        /// <param name="subIndex">The sub-index within the cylinder to target.</param>
-        /// <param name="creature">Optional. The creature that owns the target cylinder to target.</param>
+        /// <param name="carrierCreature">The creature that carries the decoded cylinder. Required for locations of type <see cref="LocationType.InsideContainer"/> and <see cref="LocationType.InventorySlot"/>.</param>
         /// <returns>An instance of the target <see cref="ICylinder"/> of the location.</returns>
-        public static ICylinder GetCyclinder(this Location fromLocation, ITileAccessor tileAccessor, IContainerManager containerManager, ref byte index, ref byte subIndex, ICreature creature = null)
+        public static ICylinder DecodeCyclinder(this Location fromLocation, ITileAccessor tileAccessor, IContainerManager containerManager, out byte index, ICreature carrierCreature = null)
         {
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
             containerManager.ThrowIfNull(nameof(containerManager));
 
+            index = 0;
+
             if (fromLocation.Type == LocationType.Map && tileAccessor.GetTileAt(fromLocation, out ITile fromTile))
             {
-                return fromTile;
-            }
-            else if (fromLocation.Type == LocationType.InsideContainer)
-            {
-                index = fromLocation.ContainerId;
-                subIndex = fromLocation.ContainerIndex;
+                index = byte.MaxValue;
 
-                return containerManager.FindForCreature(creature.Id, fromLocation.ContainerId);
+                return fromTile;
             }
             else if (fromLocation.Type == LocationType.InventorySlot)
             {
-                index = 0;
-                subIndex = 0;
+                carrierCreature.ThrowIfNull(nameof(carrierCreature));
 
-                return creature?.Inventory[(byte)fromLocation.Slot] as IContainerItem;
+                index = (byte)fromLocation.Slot;
+
+                // creature?.Inventory[(byte)fromLocation.Slot] as IContainerItem
+                return carrierCreature;
+            }
+            else if (fromLocation.Type == LocationType.InsideContainer)
+            {
+                carrierCreature.ThrowIfNull(nameof(carrierCreature));
+
+                index = fromLocation.ContainerIndex;
+
+                return containerManager.FindForCreature(carrierCreature.Id, fromLocation.ContainerId);
             }
 
             return null;

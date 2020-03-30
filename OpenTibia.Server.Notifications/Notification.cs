@@ -17,7 +17,7 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Scheduling;
-    using Serilog;
+    using OpenTibia.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Abstract class that represents a notification to a player's connection.
@@ -28,9 +28,7 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="Notification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger.</param>
-        protected Notification(ILogger logger)
-            : base(logger)
+        protected Notification()
         {
         }
 
@@ -42,7 +40,8 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Sends the notification using the supplied connection.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">The context for this notification.</param>
+        public override void Execute(IEventContext context)
         {
             try
             {
@@ -50,12 +49,12 @@ namespace OpenTibia.Server.Notifications
 
                 if (connections == null)
                 {
-                    this.Logger.Warning($"Failed to send '{this.GetType().Name}' because the target connections function is null.");
+                    context.Logger?.Warning($"Failed to send '{this.GetType().Name}' because the target connections function is null.");
 
                     return;
                 }
 
-                foreach (var connection in connections)
+                foreach (var connection in connections.Where(c => c != null))
                 {
                     INetworkMessage outboundMessage = new NetworkMessage();
                     IEnumerable<IOutgoingPacket> outgoingPackets = this.Prepare(connection.PlayerId);
@@ -75,7 +74,7 @@ namespace OpenTibia.Server.Notifications
             }
             catch (Exception ex)
             {
-                this.Logger.Error($"Error while sending {this.GetType().Name}: {ex.Message}");
+                context.Logger?.Error($"Error while sending {this.GetType().Name}: {ex.Message}");
             }
         }
 

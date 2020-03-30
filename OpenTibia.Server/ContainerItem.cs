@@ -351,6 +351,16 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
+        /// Gets an item within this cylinder.
+        /// </summary>
+        /// <param name="index">The index at which to get the item.</param>
+        /// <returns>The item found at the index, if there is any.</returns>
+        public IItem FindItemAt(byte index)
+        {
+            return this[index];
+        }
+
+        /// <summary>
         /// Invokes the <see cref="ContentAdded"/> event on this container.
         /// </summary>
         /// <param name="itemAdded">The item added.</param>

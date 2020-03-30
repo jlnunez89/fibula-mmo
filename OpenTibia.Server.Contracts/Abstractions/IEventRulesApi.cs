@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IEventRulesEvaluator.cs" company="2Dudes">
+// <copyright file="IEventRulesApi.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -16,8 +16,13 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for an event rules evaluator.
     /// </summary>
-    public interface IEventRulesEvaluator
+    public interface IEventRulesApi
     {
+        /// <summary>
+        /// The default partition key for event rules in the catalog.
+        /// </summary>
+        const string DefaultPartitionKey = "ALL";
+
         /// <summary>
         /// Evaluates any rules of the given type using the supplied arguments.
         /// </summary>
@@ -26,5 +31,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// <param name="eventRuleArguments">The arguments to evaluate with.</param>
         /// <returns>True if at least one rule was matched and executed, false otherwise.</returns>
         bool EvaluateRules(object caller, EventRuleType type, IEventRuleArguments eventRuleArguments);
+
+        void SetupRule(IEventRule rule, string partitionKey = DefaultPartitionKey);
+
+        void ClearAllFor(string partitionKey);
     }
 }

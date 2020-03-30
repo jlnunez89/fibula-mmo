@@ -56,7 +56,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
             this.LoaderOptions = options.Value;
             this.Logger = logger.ForContext<MoveUseEventRulesLoader>();
-            this.EventFactory = eventRulesFactory;
+            this.EventRulesFactory = eventRulesFactory;
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <summary>
         /// Gets the reference to the event rules factory.
         /// </summary>
-        public IEventRulesFactory EventFactory { get; }
+        public IEventRulesFactory EventRulesFactory { get; }
 
         /// <summary>
         /// Gets the loader options.
@@ -77,9 +77,12 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <summary>
         /// Loads all the event rules.
         /// </summary>
+        /// <param name="gameApi">A reference to the game API.</param>
         /// <returns>A mapping between <see cref="EventRuleType"/> and a set of <see cref="IEventRule"/>s of such type.</returns>
-        public IDictionary<EventRuleType, ISet<IEventRule>> LoadEventRules()
+        public IDictionary<EventRuleType, ISet<IEventRule>> LoadEventRules(IGameApi gameApi)
         {
+            gameApi.ThrowIfNull(nameof(gameApi));
+
             var moveUseFilePath = Path.Combine(Environment.CurrentDirectory, this.LoaderOptions.FilePath);
 
             var eventDictionary = new Dictionary<EventRuleType, ISet<IEventRule>>
@@ -112,7 +115,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
                     if (Enum.TryParse(moveUseEventParsed.Type, out EventRuleType itemEventType))
                     {
-                        eventDictionary[itemEventType].Add(this.EventFactory.Create(moveUseEventParsed));
+                        eventDictionary[itemEventType].Add(this.EventRulesFactory.Create(gameApi, moveUseEventParsed));
                     }
                 }
                 catch (ParseException parseEx)

@@ -12,10 +12,9 @@
 namespace OpenTibia.Scheduling
 {
     using System;
-    using OpenTibia.Common.Utilities;
+    using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using Priority_Queue;
-    using Serilog;
 
     /// <summary>
     /// Abstract class that represents the base event for scheduling.
@@ -25,18 +24,19 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
         /// </summary>
-        /// <param name="logger">The logger to use.</param>
         /// <param name="requestorId">Optional. The id of the creature or entity requesting the event. Default is 0.</param>
-        public BaseEvent(ILogger logger, uint requestorId = 0)
+        public BaseEvent(uint requestorId = 0)
         {
-            logger.ThrowIfNull(nameof(logger));
-
             this.EventId = Guid.NewGuid().ToString("N");
             this.RequestorId = 0;
-            this.Logger = logger.ForContext(this.GetType());
 
             this.RequestorId = requestorId;
         }
+
+        /// <summary>
+        /// Fired when this event is expedited.
+        /// </summary>
+        public event EventExpedited Expedited;
 
         /// <summary>
         /// Gets a unique identifier for this event.
@@ -49,18 +49,32 @@ namespace OpenTibia.Scheduling
         public uint RequestorId { get; }
 
         /// <summary>
-        /// Gets a reference to the logger instance.
+        /// Gets or sets a value indicating whether the event should be repeated.
         /// </summary>
-        public ILogger Logger { get; }
+        public bool Repeat { get; set; }
 
         /// <summary>
-        /// Gets or sets the error message that should be bubbled back to the player if the event cannot be executed.
+        /// Gets or sets a value for how long to wait until the event should be repeated.
         /// </summary>
-        public string ErrorMessage { get; protected set; }
+        public TimeSpan RepeatDelay { get; set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Expedited"/> event.
+        /// </summary>
+        public bool HasExpeditionHandler => this.Expedited != null;
 
         /// <summary>
         /// Executes the event logic.
         /// </summary>
-        public abstract void Execute();
+        /// <param name="context">The execution context.</param>
+        public abstract void Execute(IEventContext context);
+
+        /// <summary>
+        /// Attempts to expedite this event, in other words, requesting it to be fired immediately.
+        /// </summary>
+        public void Expedite()
+        {
+            this.Expedited?.Invoke(this);
+        }
     }
 }

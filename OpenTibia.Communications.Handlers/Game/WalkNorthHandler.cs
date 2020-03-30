@@ -25,10 +25,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="WalkNorthHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public WalkNorthHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext, Direction.North)
+        public WalkNorthHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext, Direction.North)
         {
         }
 

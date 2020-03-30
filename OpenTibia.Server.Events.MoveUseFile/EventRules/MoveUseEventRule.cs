@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
@@ -57,24 +56,36 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// Initializes a new instance of the <see cref="MoveUseEventRule"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="gameApi">A reference to the game API.</param>
         /// <param name="conditionSet">The conditions for this event.</param>
         /// <param name="actionSet">The actions of this event.</param>
-        public MoveUseEventRule(ILogger logger, IList<string> conditionSet, IList<string> actionSet)
+        /// <param name="totalExecutionCount">Optional. The number of total executions to perform this rule.</param>
+        public MoveUseEventRule(ILogger logger, IGameApi gameApi, IList<string> conditionSet, IList<string> actionSet, int totalExecutionCount = IEventRule.UnlimitedExecutions)
         {
             logger.ThrowIfNull(nameof(logger));
+            gameApi.ThrowIfNull(nameof(gameApi));
 
             this.Logger = logger.ForContext(this.GetType());
+
+            this.Id = Guid.NewGuid().ToString("N");
 
             this.Conditions = this.ParseRules(conditionSet);
             this.Actions = this.ParseRules(actionSet);
 
-            this.Adapter = new MoveUseScriptApiAdapter(logger);
+            this.RemainingExecutionCount = totalExecutionCount;
+
+            this.Adapter = new MoveUseEventsAdapter(logger, gameApi);
         }
 
         /// <summary>
         /// Gets a reference to the logger in use.
         /// </summary>
         public ILogger Logger { get; }
+
+        /// <summary>
+        /// Gets the id of this rule.
+        /// </summary>
+        public string Id { get; }
 
         /// <summary>
         /// Gets the type of this event.
@@ -89,7 +100,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// <summary>
         /// Gets the reference to the script API adapter in use.
         /// </summary>
-        public MoveUseScriptApiAdapter Adapter { get; }
+        public MoveUseEventsAdapter Adapter { get; }
 
         /// <summary>
         /// Gets or sets the conditions for the event to happen.
@@ -97,92 +108,22 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         public IEnumerable<IEventRuleFunction> Conditions { get; protected set; }
 
         /// <summary>
-        /// Checks whether this event rule can be executed.
-        /// This generally means the <see cref="Conditions"/> all evaluate to true.
+        /// Gets or sets the remaining number of executions of this rule.
         /// </summary>
-        /// <param name="gameApi">A reference to the game's api in use.</param>
-        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
-        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
-        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
+        public int RemainingExecutionCount { get; protected set; }
+
+        /// <summary>
+        /// Checks whether this event rule can be executed.
+        /// </summary>
+        /// <param name="context">The execution context of this rule.</param>
         /// <returns>True if the rule can be executed, false otherwise.</returns>
-        public bool CanBeExecuted(IGame gameApi, IThing primaryThing, IThing secondaryThing = null, IPlayer requestingPlayer = null)
-        {
-            gameApi.ThrowIfNull(nameof(gameApi));
-
-            // TODO: fix this indirection.
-            this.Adapter.Game = gameApi;
-
-            return this.Conditions.All(condition => this.InvokeCondition(primaryThing, secondaryThing, requestingPlayer, condition.FunctionName, condition.Parameters));
-        }
+        public abstract bool CanBeExecuted(IEventRuleContext context);
 
         /// <summary>
         /// Executes this event rule.
-        /// This generally means executing the event rule's <see cref="Actions"/>.
         /// </summary>
-        /// <param name="gameApi">A reference to the game's api in use.</param>
-        /// <param name="primaryThing">The primary thing involved in the event rule.</param>
-        /// <param name="secondaryThing">The secondary thing involved in the event rule.</param>
-        /// <param name="requestingPlayer">The player requesting the event rule execution.</param>
-        public void Execute(IGame gameApi, ref IThing primaryThing, ref IThing secondaryThing, ref IPlayer requestingPlayer)
-        {
-            gameApi.ThrowIfNull(nameof(gameApi));
-
-            // TODO: fix this.
-            this.Adapter.Game = gameApi;
-
-            foreach (var action in this.Actions)
-            {
-                this.InvokeAction(ref primaryThing, ref secondaryThing, ref requestingPlayer, action.FunctionName, action.Parameters);
-            }
-        }
-
-        /// <summary>
-        /// Parses event rules from a collection of strings.
-        /// </summary>
-        /// <param name="stringSet">The collection of strings to parse.</param>
-        /// <returns>A collection of <see cref="IEventRuleFunction"/>s parsed.</returns>
-        private IEnumerable<IEventRuleFunction> ParseRules(IList<string> stringSet)
-        {
-            var functionList = new List<IEventRuleFunction>();
-
-            const string specialCaseNoOperationAction = "NOP";
-
-            if (stringSet != null)
-            {
-                foreach (var str in stringSet)
-                {
-                    if (specialCaseNoOperationAction.Equals(str))
-                    {
-                        continue;
-                    }
-
-                    var actionFunctionParseResult = CipGrammar.ActionFunction.TryParse(str);
-
-                    if (actionFunctionParseResult.WasSuccessful)
-                    {
-                        functionList.Add(new MoveUseActionFunction(actionFunctionParseResult.Value.Name, actionFunctionParseResult.Value.Parameters));
-
-                        continue;
-                    }
-
-                    var comparisonFunctionParseResult = CipGrammar.ComparisonFunction.TryParse(str);
-
-                    if (comparisonFunctionParseResult.WasSuccessful)
-                    {
-                        functionList.Add(
-                            new MoveUseComparisonFunction(
-                                comparisonFunctionParseResult.Value.Name,
-                                comparisonFunctionParseResult.Value.Type,
-                                comparisonFunctionParseResult.Value.ConstantOrValue,
-                                comparisonFunctionParseResult.Value.Parameters));
-                    }
-
-                    throw new ParseException($"Failed to parse '{str}' into an {nameof(CipGrammar.ActionFunction)} or {nameof(CipGrammar.ComparisonFunction)}.");
-                }
-            }
-
-            return functionList;
-        }
+        /// <param name="context">The execution context of this rule.</param>
+        public abstract void Execute(IEventRuleContext context);
 
         /// <summary>
         /// Invokes a condition function.
@@ -193,7 +134,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// <param name="methodName">The name of the condition to invoke.</param>
         /// <param name="parameters">The parameters to invoke with.</param>
         /// <returns>True if the condition was found and invoked, false otherwise.</returns>
-        private bool InvokeCondition(IThing obj1, IThing obj2, IPlayer user, string methodName, params object[] parameters)
+        protected bool InvokeCondition(IThing obj1, IThing obj2, IPlayer user, string methodName, params object[] parameters)
         {
             methodName.ThrowIfNullOrWhiteSpace(nameof(methodName));
 
@@ -256,7 +197,7 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
         /// <param name="user">The user involved.</param>
         /// <param name="methodName">The name of the action to invoke.</param>
         /// <param name="parameters">The parameters to invoke with.</param>
-        private void InvokeAction(ref IThing obj1, ref IThing obj2, ref IPlayer user, string methodName, params object[] parameters)
+        protected void InvokeAction(ref IThing obj1, ref IThing obj2, ref IPlayer user, string methodName, params object[] parameters)
         {
             methodName.ThrowIfNullOrWhiteSpace(nameof(methodName));
 
@@ -321,6 +262,54 @@ namespace OpenTibia.Server.Events.MoveUseFile.EventRules
                 this.Logger.Error(ex.Message);
                 this.Logger.Error(ex.StackTrace);
             }
+        }
+
+        /// <summary>
+        /// Parses event rules from a collection of strings.
+        /// </summary>
+        /// <param name="stringSet">The collection of strings to parse.</param>
+        /// <returns>A collection of <see cref="IEventRuleFunction"/>s parsed.</returns>
+        private IEnumerable<IEventRuleFunction> ParseRules(IList<string> stringSet)
+        {
+            var functionList = new List<IEventRuleFunction>();
+
+            const string specialCaseNoOperationAction = "NOP";
+
+            if (stringSet != null)
+            {
+                foreach (var str in stringSet)
+                {
+                    if (specialCaseNoOperationAction.Equals(str))
+                    {
+                        continue;
+                    }
+
+                    var actionFunctionParseResult = CipGrammar.ActionFunction.TryParse(str);
+
+                    if (actionFunctionParseResult.WasSuccessful)
+                    {
+                        functionList.Add(new MoveUseActionFunction(actionFunctionParseResult.Value.Name, actionFunctionParseResult.Value.Parameters));
+
+                        continue;
+                    }
+
+                    var comparisonFunctionParseResult = CipGrammar.ComparisonFunction.TryParse(str);
+
+                    if (comparisonFunctionParseResult.WasSuccessful)
+                    {
+                        functionList.Add(
+                            new MoveUseComparisonFunction(
+                                comparisonFunctionParseResult.Value.Name,
+                                comparisonFunctionParseResult.Value.Type,
+                                comparisonFunctionParseResult.Value.ConstantOrValue,
+                                comparisonFunctionParseResult.Value.Parameters));
+                    }
+
+                    throw new ParseException($"Failed to parse '{str}' into an {nameof(CipGrammar.ActionFunction)} or {nameof(CipGrammar.ComparisonFunction)}.");
+                }
+            }
+
+            return functionList;
         }
     }
 }

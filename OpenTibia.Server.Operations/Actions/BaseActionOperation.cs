@@ -14,12 +14,11 @@ namespace OpenTibia.Server.Operations.Actions
     using System;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a base combat operation.
     /// </summary>
-    public abstract class BaseActionOperation : BaseOperation, IActionOperation
+    public abstract class BaseActionOperation : Operation, IActionOperation
     {
         /// <summary>
         /// The default exhaustion cost for action operations.
@@ -32,37 +31,14 @@ namespace OpenTibia.Server.Operations.Actions
         protected static readonly TimeSpan DefaultPlayerActionDelay = TimeSpan.FromMilliseconds(200);
 
         /// <summary>
-        /// Caches the requestor creature, if defined.
-        /// </summary>
-        private ICreature requestor = null;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseActionOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">A reference to the operation context.</param>
         /// <param name="requestorId">The id of the creature requesting the movement.</param>
         /// <param name="actionExhaustionCost">Optional. The cost of this operation. Defaults to <see cref="DefaultActionExhaustionCost"/>.</param>
-        public BaseActionOperation(ILogger logger, IOperationContext context, uint requestorId, TimeSpan? actionExhaustionCost = null)
-            : base(logger, context, requestorId)
+        public BaseActionOperation(uint requestorId, TimeSpan? actionExhaustionCost = null)
+            : base(requestorId)
         {
             this.ExhaustionCost = actionExhaustionCost ?? DefaultActionExhaustionCost;
-        }
-
-        /// <summary>
-        /// Gets the creature that is requesting the event, if known.
-        /// </summary>
-        public ICreature Requestor
-        {
-            get
-            {
-                if (this.RequestorId > 0 && this.requestor == null)
-                {
-                    this.requestor = this.Context.CreatureFinder.FindCreatureById(this.RequestorId);
-                }
-
-                return this.requestor;
-            }
         }
 
         /// <summary>

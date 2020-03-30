@@ -25,10 +25,5 @@ namespace OpenTibia.Communications.Contracts
         /// Gets or sets the public address binding options.
         /// </summary>
         public AddressBindingOptions PublicAddressBinding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the private address binding options.
-        /// </summary>
-        public AddressBindingOptions PrivateAddressBinding { get; set; }
     }
 }

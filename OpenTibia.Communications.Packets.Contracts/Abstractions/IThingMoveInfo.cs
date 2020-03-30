@@ -41,6 +41,6 @@ namespace OpenTibia.Communications.Packets.Contracts.Abstractions
         /// <summary>
         /// Gets the amount of the thing being moved.
         /// </summary>
-        byte Count { get; }
+        byte Amount { get; }
     }
 }

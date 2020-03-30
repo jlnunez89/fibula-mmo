@@ -11,32 +11,44 @@
 
 namespace OpenTibia.Server.Operations
 {
+    using System;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an elevated base between game operations, for which the context changes.
     /// </summary>
-    public abstract class ElevatedOperation : BaseOperation, IElevatedOperation
+    public abstract class ElevatedOperation : Operation, IElevatedOperation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ElevatedOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationContext">A reference to this operation's context.</param>
         /// <param name="requestorId">The id of the creature requesting the movement.</param>
-        protected ElevatedOperation(ILogger logger, IElevatedOperationContext operationContext, uint requestorId)
-            : base(logger, operationContext, requestorId)
+        protected ElevatedOperation(uint requestorId)
+            : base(requestorId)
         {
-            operationContext.ThrowIfNull(nameof(operationContext));
-
-            this.Context = operationContext;
         }
 
         /// <summary>
-        /// Gets a reference to this operation's context.
+        /// Executes the operation's logic.
         /// </summary>
-        public new IElevatedOperationContext Context { get; }
+        /// <param name="context">The execution context for this operation.</param>
+        protected override void Execute(IOperationContext context)
+        {
+            context.ThrowIfNull(nameof(context));
+
+            if (!typeof(IElevatedOperationContext).IsAssignableFrom(context.GetType()))
+            {
+                throw new ArgumentException($"{nameof(context)} must be an {nameof(IElevatedOperationContext)}.");
+            }
+
+            this.Execute(context as IElevatedOperationContext);
+        }
+
+        /// <summary>
+        /// Executes the operation's logic.
+        /// </summary>
+        /// <param name="context">The execution context for this operation.</param>
+        protected abstract void Execute(IElevatedOperationContext context);
     }
 }

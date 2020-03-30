@@ -9,6 +9,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Enumerations\**" />
+    <EmbeddedResource Remove="Enumerations\**" />
+    <None Remove="Enumerations\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -17,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Serilog" Version="2.9.1-dev-01151" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -25,10 +32,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Enumerations\" />
   </ItemGroup>
 
 </Project>

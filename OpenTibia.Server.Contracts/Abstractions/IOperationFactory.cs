@@ -12,12 +12,18 @@
 namespace OpenTibia.Server.Contracts.Abstractions
 {
     using OpenTibia.Server.Contracts.Enumerations;
+    using Serilog;
 
     /// <summary>
     /// Interface for factories of operations.
     /// </summary>
     public interface IOperationFactory
     {
+        /// <summary>
+        /// Gets the reference to the factory's logger.
+        /// </summary>
+        ILogger Logger { get; }
+
         /// <summary>
         /// Creates a new <see cref="IOperation"/> based on the type specified with the given arguments.
         /// </summary>

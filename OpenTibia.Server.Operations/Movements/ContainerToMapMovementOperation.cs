@@ -26,7 +26,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="ContainerToMapMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="fromCreature">The creature in which the movement is happening.</param>
@@ -36,7 +35,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public ContainerToMapMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             ICreature fromCreature,
@@ -44,7 +42,7 @@ namespace OpenTibia.Server.Operations.Movements
             byte fromCreatureContainerIndex,
             Location toLocation,
             byte amount = 1)
-            : base(logger, context, context.ContainerManager?.FindForCreature(fromCreature.Id, fromCreatureContainerId), context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
+            : base(logger, context.ContainerManager?.FindForCreature(fromCreature.Id, fromCreatureContainerId), context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
         {
             if (amount == 0)
             {
@@ -86,11 +84,12 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             if (!(this.ThingMoving is IItem item))
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
 
                 return;
             }
@@ -102,30 +101,30 @@ namespace OpenTibia.Server.Operations.Movements
             var destinationHasGround = destinationTile?.Ground != null;
             var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
             var creatureHasSourceContainerOpen = sourceContainer != null;
-            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(this.FromCreature.Location, this.ToLocation, checkLineOfSight: true);
+            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.TileAccessor, this.FromCreature.Location, this.ToLocation, checkLineOfSight: true);
 
             if (!destinationHasGround || !canThrowBetweenLocations)
             {
-                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                this.DispatchTextNotification(context, OperationMessage.MayNotThrowThere);
             }
             else if (destinationIsObstructed)
             {
-                this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
             }
             else if (!creatureHasSourceContainerOpen)
             {
-                this.SendFailureNotification(OperationMessage.MustFirstOpenThatContainer);
+                this.DispatchTextNotification(context, OperationMessage.MustFirstOpenThatContainer);
             }
-            else if (!this.PerformItemMovement(item, sourceContainer, destinationTile, fromIndex: this.FromCreatureContainerIndex, amountToMove: this.Amount, requestorCreature: this.Requestor))
+            else if (!this.PerformItemMovement(context, item, sourceContainer, destinationTile, fromIndex: this.FromCreatureContainerIndex, amountToMove: this.Amount, requestorCreature: this.GetRequestor(context.CreatureFinder)))
             {
                 // Something else went wrong.
-                this.SendFailureNotification();
+                this.DispatchTextNotification(context);
             }
-            else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+            else if (this.GetRequestor(context.CreatureFinder) is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, player, directionToDestination));
             }
         }
     }

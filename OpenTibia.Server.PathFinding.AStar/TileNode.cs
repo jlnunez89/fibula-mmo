@@ -24,42 +24,33 @@ namespace OpenTibia.Server.PathFinding.AStar
     internal class TileNode : INode
     {
         /// <summary>
-        /// A pseudo-random number generator to use.
-        /// </summary>
-        private readonly Random randomNumberGenerator;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="TileNode"/> class.
         /// </summary>
-        /// <param name="searchId">The id of the search in progress.</param>
+        /// <param name="searchContext">A reference to the context of the search this node takes place in.</param>
         /// <param name="tile">The tile to reference in this node.</param>
-        /// <param name="onBehalfOfCreature">Optional. The creature on behalf of which the search is being performed.</param>
-        public TileNode(string searchId, ITile tile, ICreature onBehalfOfCreature = null)
+        public TileNode(ISearchContext searchContext, ITile tile)
         {
-            searchId.ThrowIfNullOrWhiteSpace(nameof(searchId));
+            searchContext.ThrowIfNull(nameof(searchContext));
             tile.ThrowIfNull(nameof(tile));
 
-            this.SearchId = searchId;
-            this.Tile = tile;
-            this.OnBehalfOfCreature = onBehalfOfCreature;
+            if (!(searchContext is AStarSearchContext aStarSearchContext))
+            {
+                throw new ArgumentException($"{nameof(searchContext)} must be of type {nameof(AStarSearchContext)} for this node type.");
+            }
 
-            this.randomNumberGenerator = new Random(this.SearchId.GetHashCode());
+            this.SearchContext = aStarSearchContext;
+            this.Tile = tile;
         }
 
         /// <summary>
-        /// Gets the id of the search this node belongs to.
+        /// Gets the context of the search this node belongs in.
         /// </summary>
-        public string SearchId { get; }
+        public AStarSearchContext SearchContext { get; }
 
         /// <summary>
         /// Gets the tile referenced by this node.
         /// </summary>
         public ITile Tile { get; }
-
-        /// <summary>
-        /// Gets the creature of behalf of which the search is being performed, if any.
-        /// </summary>
-        public ICreature OnBehalfOfCreature { get; }
 
         /// <summary>
         /// Gets the total cost for this node.
@@ -106,6 +97,7 @@ namespace OpenTibia.Server.PathFinding.AStar
 
             var currentLoc = this.Tile.Location;
 
+            var rng = new Random();
             var offsets = new List<Location>();
 
             // look at adjacent tiles.
@@ -119,13 +111,13 @@ namespace OpenTibia.Server.PathFinding.AStar
                         continue;
                     }
 
-                    offsets.Insert(this.randomNumberGenerator.Next(offsets.Count), new Location { X = dx, Y = dy, Z = 0 });
+                    offsets.Insert(rng.Next(offsets.Count), new Location { X = dx, Y = dy, Z = 0 });
                 }
             }
 
             foreach (var locOffset in offsets)
             {
-                if (nodeFactory.Create(this.SearchId, new TileNodeCreationArguments(currentLoc + locOffset, this.OnBehalfOfCreature)) is TileNode tileNode && !tileNode.Tile.IsPathBlocking())
+                if (nodeFactory.Create(this.SearchContext, new TileNodeCreationArguments(currentLoc + locOffset)) is TileNode tileNode && !tileNode.Tile.IsPathBlocking())
                 {
                     adjacent.Add(tileNode);
                 }
@@ -191,7 +183,7 @@ namespace OpenTibia.Server.PathFinding.AStar
 
             var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
-            return Math.Abs(locationDiff.X) <= 1 && Math.Abs(locationDiff.Y) <= 1;
+            return locationDiff.Z == 0 && locationDiff.MaxValueIn2D <= this.SearchContext.TargetDistance;
         }
     }
 }

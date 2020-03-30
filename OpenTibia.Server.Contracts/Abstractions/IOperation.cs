@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
 {
     using System;
     using OpenTibia.Scheduling.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -21,16 +20,6 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// </summary>
     public interface IOperation : IEvent
     {
-        /// <summary>
-        /// Event delegate that is called when a rule event evaluation is requested.
-        /// </summary>
-        event EventRulesEvaluationTriggered EventRulesEvaluationTriggered;
-
-        /// <summary>
-        /// Gets the reference to this operation's context.
-        /// </summary>
-        IOperationContext Context { get; }
-
         /// <summary>
         /// Gets the type of exhaustion that this operation produces.
         /// </summary>

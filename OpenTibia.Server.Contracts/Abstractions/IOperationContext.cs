@@ -17,7 +17,7 @@ namespace OpenTibia.Server.Contracts.Abstractions
     /// <summary>
     /// Interface for an operation context.
     /// </summary>
-    public interface IOperationContext
+    public interface IOperationContext : IEventContext
     {
         /// <summary>
         /// Gets a reference to the map descriptor in use.
@@ -55,6 +55,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         ICreatureFactory CreatureFactory { get; }
 
         /// <summary>
+        /// Gets the reference to the operation factory.
+        /// </summary>
+        IOperationFactory OperationFactory { get; }
+
+        /// <summary>
         /// Gets a reference to the container manager in use.
         /// </summary>
         IContainerManager ContainerManager { get; }
@@ -63,5 +68,20 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }
+
+        /// <summary>
+        /// Gets the reference to the combat api.
+        /// </summary>
+        ICombatApi CombatApi { get; }
+
+        /// <summary>
+        /// Gets the reference to the game api.
+        /// </summary>
+        IGameApi GameApi { get; }
+
+        /// <summary>
+        /// Gets the reference to the event rules api.
+        /// </summary>
+        IEventRulesApi EventRulesApi { get; }
     }
 }

@@ -149,7 +149,7 @@ namespace OpenTibia.Server
             // need to recalculate everything.
             if (Math.Abs(this.Target) < 0.001)
             {
-                for (int i = 0; i < this.DefaultLevel - this.Level; i++)
+                for (int i = 0; i < this.Level - this.DefaultLevel; i++)
                 {
                     // how many advances we need to calculate
                     nextTarget = (nextTarget * this.Rate) + this.BaseTargetIncrease;

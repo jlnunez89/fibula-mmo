@@ -17,7 +17,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for a world light change.
@@ -27,11 +26,9 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="WorldLightChangedNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public WorldLightChangedNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, WorldLightChangedNotificationArguments arguments)
-            : base(logger)
+        public WorldLightChangedNotification(Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, WorldLightChangedNotificationArguments arguments)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));

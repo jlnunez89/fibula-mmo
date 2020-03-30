@@ -40,15 +40,13 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="applicationContext">A reference to the application context.</param>
         /// <param name="protocolConfigurationOptions">A reference to the protocol configuration options.</param>
         /// <param name="logger">A reference to the logger to use in this handler.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
         public LogInHandler(
             IApplicationContext applicationContext,
             IOptions<ProtocolConfigurationOptions> protocolConfigurationOptions,
             ILogger logger,
-            IOperationFactory operationFactory,
             IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+            : base(logger, gameContext)
         {
             applicationContext.ThrowIfNull(nameof(applicationContext));
             protocolConfigurationOptions.ThrowIfNull(nameof(protocolConfigurationOptions));
@@ -150,12 +148,13 @@ namespace OpenTibia.Communications.Handlers.Game
             character.IsOnline = true;
 
             this.ScheduleNewOperation(
+                this.Context.OperationFactory.Create(
                     OperationType.LogIn,
                     new LogInOperationCreationArguments(
                         new PlayerCreationMetadata(character.Id, character.Name, 100, 100, 100, 100, 4240),
                         connection,
                         this.Context.Game.WorldLightLevel,
-                        this.Context.Game.WorldLightColor));
+                        this.Context.Game.WorldLightColor)));
 
             // save any changes to the entities.
             unitOfWork.Complete();

@@ -20,7 +20,6 @@ namespace OpenTibia.Server.Operations.Environment
     using OpenTibia.Server.Notifications;
     using OpenTibia.Server.Notifications.Arguments;
     using OpenTibia.Server.Operations.Actions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a login operation.
@@ -34,15 +33,13 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Initializes a new instance of the <see cref="LogInOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="requestorId">The id of the creature requesting the action.</param>
         /// <param name="playerMetadata">The creation metadata of the player that is logging in.</param>
         /// <param name="connection">The connection that the player uses.</param>
         /// <param name="worldLightLevel">The level of the world light to send to the player.</param>
         /// <param name="worldLightColor">The color of the world light to send to the player.</param>
-        public LogInOperation(ILogger logger, IElevatedOperationContext context, uint requestorId, ICreatureCreationMetadata playerMetadata, IConnection connection, byte worldLightLevel, byte worldLightColor)
-            : base(logger, context, requestorId)
+        public LogInOperation(uint requestorId, ICreatureCreationMetadata playerMetadata, IConnection connection, byte worldLightLevel, byte worldLightColor)
+            : base(requestorId)
         {
             this.CurrentWorldLightLevel = worldLightLevel;
             this.CurrentWorldLightColor = worldLightColor;
@@ -74,14 +71,15 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IElevatedOperationContext context)
         {
             // TODO: should be something like character.location
             var targetLocation = VeteranStart;
 
-            IPlayer player = this.Context.CreatureFactory.Create(CreatureType.Player, this.PlayerMetadata) as IPlayer;
+            IPlayer player = context.CreatureFactory.Create(CreatureType.Player, this.PlayerMetadata) as IPlayer;
 
-            if (!this.Context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(targetTile, player))
+            if (!context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
             {
                 return;
             }
@@ -89,9 +87,8 @@ namespace OpenTibia.Server.Operations.Environment
             if (player == null)
             {
                 // Unable to place the player in the map.
-                this.Context.Scheduler.ScheduleEvent(
+                context.Scheduler.ScheduleEvent(
                     new GenericNotification(
-                        this.Logger,
                         () => this.Connection.YieldSingleItem(),
                         new GenericNotificationArguments(
                             new GameServerDisconnectPacket("Your character could not be placed on the map.\nPlease try again, or contact an administrator if the issue persists."))));
@@ -99,15 +96,14 @@ namespace OpenTibia.Server.Operations.Environment
                 return;
             }
 
-            this.Context.ConnectionManager.Register(this.Connection, player.Id);
+            context.ConnectionManager.Register(this.Connection, player.Id);
 
-            this.Context.Scheduler.ScheduleEvent(
+            context.Scheduler.ScheduleEvent(
                 new GenericNotification(
-                    this.Logger,
                     () => this.Connection.YieldSingleItem(),
                     new GenericNotificationArguments(
                         new SelfAppearPacket(player.Id, true, player),
-                        new MapDescriptionPacket(player.Location, this.Context.MapDescriptor.DescribeAt(player, player.Location)),
+                        new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
                         new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
                         new PlayerInventoryPacket(player),
                         new PlayerStatsPacket(player),
@@ -115,41 +111,8 @@ namespace OpenTibia.Server.Operations.Environment
                         new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
                         new CreatureLightPacket(player),
                         new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
-
-                        // if (player->getLastLoginSaved() != 0)
-                        // {
-                        //    tempstring = "Your last visit was on ";
-                        //    time_t lastLogin = player->getLastLoginSaved();
-                        //    tempstring += ctime(&lastLogin);
-                        //    tempstring.erase(tempstring.length() - 1);
-                        //    tempstring += ".";
-
-                        // AddTextMessage(msg, MSG_STATUS_DEFAULT, tempstring.c_str());
-                        // }
-                        // else
-                        // {
-                        //    tempstring = "Welcome to ";
-                        //    tempstring += g_config.getString(ConfigManager::SERVER_NAME);
-                        //    tempstring += ". Please choose an outfit.";
-                        //    sendOutfitWindow(player);
-                        // }
-
-                        // Add any Vips here.
-
-                        // for (VIPListSet::iterator it = player->VIPList.begin(); it != player->VIPList.end(); it++)
-                        // {
-                        //    bool online;
-                        //    std::string vip_name;
-                        //    if (IOPlayer::instance()->getNameByGuid((*it), vip_name))
-                        //    {
-                        //        online = (g_game.getPlayerByName(vip_name) != NULL);
-                        //
-                        // msg->AddByte(0xD2);
-                        // msg->AddU32(guid);
-                        // msg->AddString(name);
-                        // msg->AddByte(isOnline ? 1 : 0);
-                        //    }
-                        // }
+                        // TODO: Send first time login message + outfit window here if needed.
+                        // TODO: Send any Buddies here.
                         new PlayerConditionsPacket(player))));
         }
     }

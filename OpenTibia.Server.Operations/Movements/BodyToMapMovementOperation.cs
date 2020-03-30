@@ -27,7 +27,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="BodyToMapMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">A reference to the operation's context.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="fromCreature">The creature from which the movement is happening.</param>
@@ -36,14 +35,13 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public BodyToMapMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             ICreature fromCreature,
             Slot fromCreatureSlot,
             Location toLocation,
             byte amount = 1)
-            : base(logger, context, fromCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
+            : base(logger, fromCreature?.Inventory[(byte)fromCreatureSlot] as IContainerItem, context?.TileAccessor.GetTileAt(toLocation), creatureRequestingId)
         {
             if (amount == 0)
             {
@@ -79,11 +77,12 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             if (!(this.ThingMoving is IItem item))
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
 
                 return;
             }
@@ -93,26 +92,26 @@ namespace OpenTibia.Server.Operations.Movements
             // Declare some pre-conditions.
             var destinationHasGround = destinationTile?.Ground != null;
             var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(this.FromCreature.Location, this.ToLocation, checkLineOfSight: true);
+            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.TileAccessor, this.FromCreature.Location, this.ToLocation, checkLineOfSight: true);
 
             if (!destinationHasGround || !canThrowBetweenLocations)
             {
-                this.SendFailureNotification(OperationMessage.MayNotThrowThere);
+                this.DispatchTextNotification(context, OperationMessage.MayNotThrowThere);
             }
             else if (destinationIsObstructed)
             {
-                this.SendFailureNotification(OperationMessage.NotEnoughRoom);
+                this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
             }
-            else if (!this.PerformItemMovement(item, this.FromCylinder, destinationTile, 0, amountToMove: this.Amount, requestorCreature: this.Requestor))
+            else if (!this.PerformItemMovement(context, item, this.FromCylinder, destinationTile, 0, amountToMove: this.Amount, requestorCreature: this.GetRequestor(context.CreatureFinder)))
             {
                 // Something else went wrong.
-                this.SendFailureNotification();
+                this.DispatchTextNotification(context);
             }
-            else if (this.Requestor is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
+            else if (this.GetRequestor(context.CreatureFinder) is IPlayer player && this.ToLocation != player.Location && player != this.ThingMoving)
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, player, directionToDestination));
+                context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, player, directionToDestination));
             }
         }
     }

@@ -51,9 +51,44 @@ namespace OpenTibia.Server.Contracts.Abstractions
         event CombatCreditConsumed CombatCreditsConsumed;
 
         /// <summary>
-        /// Gets the auto attack target combatant.
+        /// Event to call when combat starts for this combatant.
+        /// </summary>
+        event CombatStarted CombatStarted;
+
+        /// <summary>
+        /// Event to call when combat ends for this combatant.
+        /// </summary>
+        event CombatEnded CombatEnded;
+
+        /// <summary>
+        /// Gets the set of creatures currently in view for this combatant.
+        /// </summary>
+        IEnumerable<uint> CreaturesInView { get; }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
+        /// </summary>
+        ISet<uint> HostilesInView { get; }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers neutral.
+        /// </summary>
+        ISet<uint> NeutralsInView { get; }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
+        /// </summary>
+        ISet<uint> FriendlyInView { get; }
+
+        /// <summary>
+        /// Gets the current target combatant, if any.
         /// </summary>
         ICombatant AutoAttackTarget { get; }
+
+        /// <summary>
+        /// Gets the current target being chased, if any.
+        /// </summary>
+        ICombatant ChasingTarget { get; }
 
         /// <summary>
         /// Gets the range that the auto attack has.
@@ -156,5 +191,17 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// Clears the tracking store of damage taken from other combatants.
         /// </summary>
         void ClearDamageTaken();
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        void CombatantNowInView(ICombatant otherCombatant);
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        void CombatantNoLongerInView(ICombatant otherCombatant);
     }
 }

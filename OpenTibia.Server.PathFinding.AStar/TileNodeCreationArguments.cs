@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.PathFinding.AStar
 {
     using OpenTibia.Common.Utilities.Pathfinding;
-    using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
 
     /// <summary>
@@ -24,21 +23,14 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// Initializes a new instance of the <see cref="TileNodeCreationArguments"/> class.
         /// </summary>
         /// <param name="location">The location of the tile.</param>
-        /// <param name="forCreature">The creature for which this node will calculate movement costs.</param>
-        public TileNodeCreationArguments(Location location, ICreature forCreature)
+        public TileNodeCreationArguments(Location location)
         {
             this.Location = location;
-            this.OnBehalfOfCreature = forCreature;
         }
 
         /// <summary>
         /// Gets the location of the tile.
         /// </summary>
         public Location Location { get; }
-
-        /// <summary>
-        /// Gets the creature on behalf of which this node calculates movement costs.
-        /// </summary>
-        public ICreature OnBehalfOfCreature { get; }
     }
 }

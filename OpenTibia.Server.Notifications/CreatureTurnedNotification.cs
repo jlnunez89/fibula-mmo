@@ -18,7 +18,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for when a creature has turned.
@@ -28,11 +27,9 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureTurnedNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureTurnedNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureTurnedNotificationArguments arguments)
-            : base(logger)
+        public CreatureTurnedNotification(Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, CreatureTurnedNotificationArguments arguments)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));

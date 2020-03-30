@@ -35,10 +35,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="RotateItemHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public RotateItemHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+        public RotateItemHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext)
         {
         }
 
@@ -62,8 +61,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            player.ClearAllLocationActions();
-
             this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
 
             // Before actually using the item, check if we're close enough to use it.
@@ -74,7 +71,10 @@ namespace OpenTibia.Communications.Handlers.Game
                 {
                     var directionToThing = player.Location.DirectionTo(itemRotationInfo.AtLocation);
 
-                    this.ScheduleNewOperation(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToThing));
+                    this.ScheduleNewOperation(
+                        this.Context.OperationFactory.Create(
+                            OperationType.Turn,
+                            new TurnToDirectionOperationCreationArguments(player, directionToThing)));
                 }
 
                 var locationDiff = itemRotationInfo.AtLocation - player.Location;
@@ -82,7 +82,7 @@ namespace OpenTibia.Communications.Handlers.Game
                 if (locationDiff.Z != 0)
                 {
                     // it's on a different floor...
-                    return new TextMessagePacket(MessageType.StatusSmall, "There is no way.").YieldSingleItem();
+                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
                 }
             }
 
@@ -98,28 +98,6 @@ namespace OpenTibia.Communications.Handlers.Game
         /// <param name="typeId">The type id of the item to rotate.</param>
         private IEnumerable<IOutgoingPacket> RotateItemAt(ICreature creature, Location atLocation, byte index, ushort typeId)
         {
-            var locationDiff = atLocation - creature.Location;
-
-            if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
-            {
-                // Too far away to move it, we need to move closer first.
-                var directions = this.Context.PathFinder.FindBetween(creature.Location, atLocation, out Location retryLoc, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
-
-                if (directions == null || !directions.Any())
-                {
-                    return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
-                }
-                else
-                {
-                    // We basically add this request as the retry action, so that the request gets repeated when the player hits this location.
-                    creature.EnqueueRetryActionAtLocation(retryLoc, () => this.RotateItemAt(creature, atLocation, index, typeId));
-
-                    this.AutoWalk(creature, directions.ToArray());
-
-                    return null;
-                }
-            }
-
             if (this.Context.TileAccessor.GetTileAt(atLocation, out ITile targetTile))
             {
                 if (!(targetTile.GetTopThingByOrder(this.Context.CreatureFinder, index) is IItem item) || item.ThingId != typeId || !item.CanBeRotated)
@@ -127,13 +105,36 @@ namespace OpenTibia.Communications.Handlers.Game
                     return null;
                 }
 
-                this.ScheduleNewOperation(
-                        OperationType.ChangeItem,
-                        new ChangeItemOperationCreationArguments(
-                            requestorId: 0,
-                            item.ThingId,
-                            atLocation,
-                            item.RotateTo));
+                var changeItemOperation =
+                        this.Context.OperationFactory.Create(
+                            OperationType.ChangeItem,
+                            new ChangeItemOperationCreationArguments(requestorId: 0, item.ThingId, atLocation, item.RotateTo));
+
+                var locationDiff = atLocation - creature.Location;
+
+                if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
+                {
+                    // Too far away from it, we need to move closer first.
+                    var directions = this.Context.PathFinder.FindBetween(creature.Location, atLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+
+                    if (directions == null || !directions.Any())
+                    {
+                        return new TextMessagePacket(MessageType.StatusSmall, OperationMessage.ThereIsNoWay).YieldSingleItem();
+                    }
+                    else
+                    {
+                        //creature.SetOperationAtLocation(retryLocation, changeItemOperation);
+
+                        this.ScheduleNewOperation(
+                            this.Context.OperationFactory.Create(
+                                OperationType.AutoWalk,
+                                new AutoWalkOperationCreationArguments(creature.Id, creature, directions.ToArray())));
+                    }
+
+                    return null;
+                }
+
+                this.ScheduleNewOperation(changeItemOperation);
             }
 
             return null;

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="MoveUseScriptApiAdapter.cs" company="2Dudes">
+// <copyright file="MoveUseEventsAdapter.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -20,22 +20,25 @@ namespace OpenTibia.Server.Events.MoveUseFile
     using Serilog;
 
     /// <summary>
-    /// Class that represents an adapter between the Move/Use scripts and the current <see cref="IGame"/> implementation.
+    /// Class that represents an adapter between the Move/Use scripts and the actual <see cref="IGameApi"/>.
     /// </summary>
     /// <remarks>
-    /// Names of functions in this class must match those found within the Move/Use file.
+    /// The names of all functions in this class must match those found within the Move/Use file.
     /// </remarks>
-    public class MoveUseScriptApiAdapter
+    public class MoveUseEventsAdapter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="MoveUseScriptApiAdapter"/> class.
+        /// Initializes a new instance of the <see cref="MoveUseEventsAdapter"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        public MoveUseScriptApiAdapter(ILogger logger)
+        /// <param name="gameApi">A reference to the game API.</param>
+        public MoveUseEventsAdapter(ILogger logger, IGameApi gameApi)
         {
             logger.ThrowIfNull(nameof(logger));
+            gameApi.ThrowIfNull(nameof(gameApi));
 
-            this.Logger = logger.ForContext<MoveUseScriptApiAdapter>();
+            this.Logger = logger.ForContext<MoveUseEventsAdapter>();
+            this.GameApi = gameApi;
         }
 
         /// <summary>
@@ -44,9 +47,9 @@ namespace OpenTibia.Server.Events.MoveUseFile
         public ILogger Logger { get; }
 
         /// <summary>
-        /// Gets or sets the reference to the game API in use.
+        /// Gets the reference to the game API in use.
         /// </summary>
-        public IGame Game { get; set; }
+        public IGameApi GameApi { get; }
 
         /// <summary>
         /// Counts the occurrences of the <paramref name="thingToCount"/>'s type in it's own location.
@@ -101,7 +104,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 throw new ArgumentException($"{nameof(this.CountObjects)}: Invalid {nameof(comparer)} value '{comparer}'.", nameof(comparer));
             }
 
-            return this.Game.CompareItemCountAt(location, comparison, value);
+            return this.GameApi.CompareItemCountAt(location, comparison, value);
         }
 
         /// <summary>
@@ -116,7 +119,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return false;
             }
 
-            return this.Game.IsCreature(thing);
+            return this.GameApi.IsCreature(thing);
         }
 
         /// <summary>
@@ -131,7 +134,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return false;
             }
 
-            return this.Game.IsDressed(thing);
+            return this.GameApi.IsDressed(thing);
         }
 
         /// <summary>
@@ -142,7 +145,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing is of the given type, false otherwise.</returns>
         public bool IsType(IThing thing, ushort typeId)
         {
-            return this.Game.IsSpecificItem(thing, typeId);
+            return this.GameApi.IsSpecificItem(thing, typeId);
         }
 
         /// <summary>
@@ -153,7 +156,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing is at the given location, false otherwise.</returns>
         public bool IsPosition(IThing thing, Location location)
         {
-            return this.Game.IsAtLocation(thing, location);
+            return this.GameApi.IsAtLocation(thing, location);
         }
 
         /// <summary>
@@ -163,7 +166,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing is an <see cref="IPlayer"/>, false otherwise.</returns>
         public bool IsPlayer(IThing thing)
         {
-            return this.Game.IsPlayer(thing);
+            return this.GameApi.IsPlayer(thing);
         }
 
         /// <summary>
@@ -174,7 +177,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if there is an object of that type at the location, false otherwise.</returns>
         public bool IsObjectThere(Location location, ushort typeId)
         {
-            return this.Game.IsObjectThere(location, typeId);
+            return this.GameApi.IsObjectThere(location, typeId);
         }
 
         /// <summary>
@@ -185,7 +188,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the player has the right, false otherwise.</returns>
         public bool HasRight(IPlayer player, string rightStr)
         {
-            return this.Game.HasAccessFlag(player, rightStr);
+            return this.GameApi.HasAccessFlag(player, rightStr);
         }
 
         /// <summary>
@@ -195,7 +198,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the player is allowed to log out, false otherwise.</returns>
         public bool MayLogout(IPlayer player)
         {
-            return this.Game.IsAllowedToLogOut(player);
+            return this.GameApi.IsAllowedToLogOut(player);
         }
 
         /// <summary>
@@ -206,7 +209,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing has the flag, false otherwise.</returns>
         public bool HasFlag(IThing itemThing, string flagStr)
         {
-            return this.Game.HasFlag(itemThing, flagStr);
+            return this.GameApi.HasFlag(itemThing, flagStr);
         }
 
         /// <summary>
@@ -217,7 +220,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing is a player and has the given profession, false otherwise.</returns>
         public bool HasProfession(IThing thing, byte professionId)
         {
-            return this.Game.HasProfession(thing, professionId);
+            return this.GameApi.HasProfession(thing, professionId);
         }
 
         /// <summary>
@@ -262,7 +265,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 throw new ArgumentException($"{nameof(this.HasInstanceAttribute)}: Invalid {nameof(comparer)} value '{comparer}'.", nameof(comparer));
             }
 
-            return this.Game.CompareItemAttribute(thing, actualAttribute, comparison, value);
+            return this.GameApi.CompareItemAttribute(thing, actualAttribute, comparison, value);
         }
 
         /// <summary>
@@ -272,7 +275,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the thing is inside a house.</returns>
         public bool IsHouse(IThing thing)
         {
-            return this.Game.IsHouse(thing);
+            return this.GameApi.IsHouse(thing);
         }
 
         /// <summary>
@@ -283,7 +286,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the item is in a house and the player owns the house. False otherwise.</returns>
         public bool IsHouseOwner(IThing thing, IPlayer user)
         {
-            return this.Game.IsHouseOwner(thing, user);
+            return this.GameApi.IsHouseOwner(thing, user);
         }
 
         /// <summary>
@@ -293,7 +296,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <returns>True if the random number generated is less than or equal to the value, false otherwise.</returns>
         public bool Random(byte value)
         {
-            return this.Game.IsRandomNumberUnder(value);
+            return this.GameApi.IsRandomNumberUnder(value);
         }
 
         /// <summary>
@@ -309,7 +312,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return;
             }
 
-            this.Game.CreateItemAtLocation(atThing.Location, typeId, effect);
+            this.GameApi.CreateItemAtLocation(atThing.Location, typeId, effect);
         }
 
         /// <summary>
@@ -320,7 +323,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="effect">An optional effect to include with the creation.</param>
         public void CreateOnMap(Location location, ushort typeId, byte effect)
         {
-            this.Game.CreateItemAtLocation(location, typeId, effect);
+            this.GameApi.CreateItemAtLocation(location, typeId, effect);
         }
 
         /// <summary>
@@ -332,7 +335,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="limit">Limit the amount of items to change in this operation. 0 means no limit.</param>
         public void ChangeOnMap(Location location, ushort fromItemId, ushort toItemId, byte limit)
         {
-            this.Game.ChangeItemAtLocation(location, fromItemId, toItemId, limit);
+            this.GameApi.ChangeItemAtLocation(location, fromItemId, toItemId, limit);
         }
 
         /// <summary>
@@ -347,7 +350,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return;
             }
 
-            this.Game.DisplayAnimatedEffectAt(thing.Location, effect);
+            this.GameApi.DisplayAnimatedEffectAt(thing.Location, effect);
         }
 
         /// <summary>
@@ -357,7 +360,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="effect">The effect to display.</param>
         public void EffectOnMap(Location location, byte effect)
         {
-            this.Game.DisplayAnimatedEffectAt(location, effect);
+            this.GameApi.DisplayAnimatedEffectAt(location, effect);
         }
 
         /// <summary>
@@ -366,7 +369,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="thing">The thing to delete.</param>
         public void Delete(IThing thing)
         {
-            this.Game.Delete(thing);
+            this.GameApi.Delete(thing);
         }
 
         /// <summary>
@@ -376,7 +379,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="typeId">The type to delete.</param>
         public void DeleteOnMap(Location location, ushort typeId)
         {
-            this.Game.DeleteOnMap(location, typeId);
+            this.GameApi.DeleteOnMap(location, typeId);
         }
 
         /// <summary>
@@ -386,7 +389,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="monsterType">The type of monster to place.</param>
         public void MonsterOnMap(Location location, ushort monsterType)
         {
-            this.Game.PlaceMonsterAt(location, monsterType);
+            this.GameApi.PlaceMonsterAt(location, monsterType);
         }
 
         /// <summary>
@@ -397,7 +400,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="effect">The effect to display as part of the change.</param>
         public void Change(IThing thing, ushort toTypeId, byte effect)
         {
-            this.Game.ChangeItem(thing, toTypeId, effect);
+            this.GameApi.ChangeItem(thing, toTypeId, effect);
         }
 
         /// <summary>
@@ -417,7 +420,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
             var targetLocation = fromThing.Location + locationOffset;
 
-            this.Game.ChangeItemAtLocation(targetLocation, fromTypeId, toTypeId, effect);
+            this.GameApi.ChangeItemAtLocation(targetLocation, fromTypeId, toTypeId, effect);
         }
 
         /// <summary>
@@ -429,7 +432,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="value">The initial value of the damage.</param>
         public void Damage(IThing attacker, IThing victim, byte damageType, ushort value)
         {
-            this.Game.Damage(attacker, victim, damageType, value);
+            this.GameApi.Damage(attacker, victim, damageType, value);
         }
 
         /// <summary>
@@ -439,7 +442,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="user">The player as which to get the description.</param>
         public void Description(IThing thingToDescribe, ICreature user)
         {
-            this.Game.DescribeFor(thingToDescribe, user);
+            this.GameApi.DescribeFor(thingToDescribe, user);
         }
 
         /// <summary>
@@ -448,7 +451,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="player">The player.</param>
         public void Logout(IPlayer player)
         {
-            this.Game.LogPlayerOut(player);
+            this.GameApi.LogPlayerOut(player);
         }
 
         /// <summary>
@@ -458,7 +461,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="targetLocation">The target location.</param>
         public void Move(IThing thingToMove, Location targetLocation)
         {
-            this.Game.MoveTo(thingToMove, targetLocation);
+            this.GameApi.MoveTo(thingToMove, targetLocation);
         }
 
         /// <summary>
@@ -476,7 +479,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
             var targetLocation = objectUsed.Location + locationOffset;
 
-            this.Game.MoveTo(user, targetLocation);
+            this.GameApi.MoveTo(user, targetLocation);
         }
 
         /// <summary>
@@ -491,7 +494,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return;
             }
 
-            this.Game.MoveTo(fromThing.Location, targetLocation);
+            this.GameApi.MoveTo(fromThing.Location, targetLocation);
         }
 
         /// <summary>
@@ -508,7 +511,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
 
             var targetLocation = fromThing.Location + locationOffset;
 
-            this.Game.MoveTo(fromThing.Location, targetLocation);
+            this.GameApi.MoveTo(fromThing.Location, targetLocation);
         }
 
         /// <summary>
@@ -519,7 +522,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="toLocation">The location to move to.</param>
         public void MoveTopOnMap(Location fromLocation, ushort typeId, Location toLocation)
         {
-            this.Game.MoveTo(fromLocation, toLocation, typeId);
+            this.GameApi.MoveTo(fromLocation, toLocation, typeId);
         }
 
         /// <summary>
@@ -535,7 +538,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return;
             }
 
-            this.Game.DisplayAnimatedText(fromThing.Location, text, textType);
+            this.GameApi.DisplayAnimatedText(fromThing.Location, text, textType);
         }
 
         /// <summary>
@@ -546,7 +549,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <param name="targetThing">The target thing.</param>
         public void WriteName(IPlayer user, string format, IThing targetThing)
         {
-            this.Game.TagThing(user, format, targetThing);
+            this.GameApi.TagThing(user, format, targetThing);
         }
 
         /// <summary>
@@ -561,7 +564,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
                 return;
             }
 
-            this.Game.ChangePlayerStartLocation(player, newStartingLocation);
+            this.GameApi.ChangePlayerStartLocation(player, newStartingLocation);
         }
     }
 }

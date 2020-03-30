@@ -15,24 +15,21 @@ namespace OpenTibia.Server.Operations.Combat
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an event to restore combat credits.
     /// </summary>
-    public class RestoreCombatCreditOperation : BaseOperation
+    public class RestoreCombatCreditOperation : Operation
     {
         private const int AmountToRestore = 1;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="RestoreCombatCreditOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">A reference to the operation context in use.</param>
         /// <param name="combatant">The combatant that is being restored.</param>
         /// <param name="creditType">The type of combat credit to restore.</param>
-        public RestoreCombatCreditOperation(ILogger logger, IOperationContext context, ICombatant combatant, CombatCreditType creditType)
-            : base(logger, context, combatant?.Id ?? 0)
+        public RestoreCombatCreditOperation(ICombatant combatant, CombatCreditType creditType)
+            : base(combatant?.Id ?? 0)
         {
             combatant.ThrowIfNull(nameof(combatant));
 
@@ -68,6 +65,7 @@ namespace OpenTibia.Server.Operations.Combat
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute() => this.Combatant.RestoreCredits(this.CreditType, AmountToRestore);
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context) => this.Combatant.RestoreCredits(this.CreditType, AmountToRestore);
     }
 }

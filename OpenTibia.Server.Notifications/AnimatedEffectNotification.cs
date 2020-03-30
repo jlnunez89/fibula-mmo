@@ -17,7 +17,6 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Notifications.Arguments;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a notification for animated effects.
@@ -27,11 +26,9 @@ namespace OpenTibia.Server.Notifications
         /// <summary>
         /// Initializes a new instance of the <see cref="AnimatedEffectNotification"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="determineTargetConnectionsFunction">A function to determine the target connections of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public AnimatedEffectNotification(ILogger logger, Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, AnimatedEffectNotificationArguments arguments)
-            : base(logger)
+        public AnimatedEffectNotification(Func<IEnumerable<IConnection>> determineTargetConnectionsFunction, AnimatedEffectNotificationArguments arguments)
         {
             determineTargetConnectionsFunction.ThrowIfNull(nameof(determineTargetConnectionsFunction));
             arguments.ThrowIfNull(nameof(arguments));

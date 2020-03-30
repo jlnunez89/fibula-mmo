@@ -68,6 +68,10 @@ namespace OpenTibia.Server
 
             this.damageTakenFromOthersLock = new object();
             this.damageTakenFromOthers = new Dictionary<uint, uint>();
+
+            this.HostilesInView = new HashSet<uint>();
+            this.NeutralsInView = new HashSet<uint>();
+            this.FriendlyInView = new HashSet<uint>();
         }
 
         /// <summary>
@@ -91,7 +95,45 @@ namespace OpenTibia.Server
         public event CombatCreditConsumed CombatCreditsConsumed;
 
         /// <summary>
-        /// Gets the auto attack target combatant.
+        /// Event to call when combat starts for this combatant.
+        /// </summary>
+        public event CombatStarted CombatStarted;
+
+        /// <summary>
+        /// Event to call when combat ends for this combatant.
+        /// </summary>
+        public event CombatEnded CombatEnded;
+
+        /// <summary>
+        /// Gets the set of creatures currently in view for this combatant.
+        /// </summary>
+        public IEnumerable<uint> CreaturesInView
+        {
+            get
+            {
+                return this.HostilesInView
+                    .Union(this.NeutralsInView)
+                    .Union(this.FriendlyInView);
+            }
+        }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
+        /// </summary>
+        public ISet<uint> HostilesInView { get; }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers neutral.
+        /// </summary>
+        public ISet<uint> NeutralsInView { get; }
+
+        /// <summary>
+        /// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
+        /// </summary>
+        public ISet<uint> FriendlyInView { get; }
+
+        /// <summary>
+        /// Gets the current target combatant.
         /// </summary>
         public ICombatant AutoAttackTarget { get; private set; }
 
@@ -124,6 +166,11 @@ namespace OpenTibia.Server
         /// Gets a metric of how fast an Actor can earn a new AutoDefense credit per second.
         /// </summary>
         public decimal BaseDefenseSpeed { get; }
+
+        /// <summary>
+        /// Gets the target being chased, if any.
+        /// </summary>
+        public ICombatant ChasingTarget { get; private set; }
 
         /// <summary>
         /// Gets or sets the chase mode selected by this combatant.
@@ -213,6 +260,10 @@ namespace OpenTibia.Server
                     this.damageTakenFromOthers[fromCombatantId] = 0u;
                 }
 
+                // Add to the Hostiles list so that this creature can choose to attack them.
+                // TOOD: should we check for Friends here and avoid adding them?
+                this.HostilesInView.Add(fromCombatantId);
+
                 this.damageTakenFromOthers[fromCombatantId] = this.damageTakenFromOthers[fromCombatantId] + (uint)damage;
             }
         }
@@ -283,15 +334,32 @@ namespace OpenTibia.Server
 
                 this.AutoAttackTarget = otherCombatant;
 
+                if (this.ChaseMode == ChaseMode.Chase || otherCombatant == null)
+                {
+                    this.ChasingTarget = otherCombatant;
+                }
+
                 this.TargetChanged?.Invoke(this, oldTarget);
             }
         }
 
         /// <summary>
+        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public abstract void CombatantNowInView(ICombatant otherCombatant);
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public abstract void CombatantNoLongerInView(ICombatant otherCombatant);
+
+        /// <summary>
         /// Invokes the fight mode changed event.
         /// </summary>
         /// <param name="oldMode">The mode from which the combatant changed.</param>
-        public void InvokeFightModeChanged(FightMode oldMode)
+        protected void InvokeFightModeChanged(FightMode oldMode)
         {
             this.FightModeChanged?.Invoke(this, oldMode);
         }
@@ -300,9 +368,25 @@ namespace OpenTibia.Server
         /// Invokes the chase mode changed event.
         /// </summary>
         /// <param name="oldMode">The mode from which the combatant changed.</param>
-        public void InvokeChaseModeChanged(ChaseMode oldMode)
+        protected void InvokeChaseModeChanged(ChaseMode oldMode)
         {
             this.ChaseModeChanged?.Invoke(this, oldMode);
+        }
+
+        /// <summary>
+        /// Invokes the combat started event.
+        /// </summary>
+        protected void InvokeCombatStarted()
+        {
+            this.CombatStarted?.Invoke(this);
+        }
+
+        /// <summary>
+        /// Invokes the combat ended event.
+        /// </summary>
+        protected void InvokeCombatEnded()
+        {
+            this.CombatEnded?.Invoke(this);
         }
     }
 }

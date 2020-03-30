@@ -19,12 +19,8 @@ namespace OpenTibia.Server.Monsters
     /// <summary>
     /// Class that represents all monsters in the game.
     /// </summary>
-    public class Monster : CombatantCreature, ICombatant
+    public class Monster : CombatantCreature, IMonster
     {
-        private const int MeleeFightingMonsterAttackRange = 1;
-
-        private const int DistanceFightingMonsterAttackRange = 5;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Monster"/> class.
         /// </summary>
@@ -78,7 +74,7 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// Gets the range that the auto attack has.
         /// </summary>
-        public override byte AutoAttackRange => (byte)(this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? DistanceFightingMonsterAttackRange : MeleeFightingMonsterAttackRange);
+        public override byte AutoAttackRange => (byte)(this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? IMonster.DefaultDistanceFightingAttackRange : IMonster.DefaultMeleeFightingAttackRange);
 
         /// <summary>
         /// Gets the attack power of this combatant.
@@ -104,5 +100,60 @@ namespace OpenTibia.Server.Monsters
         /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
         public override FightMode FightMode { get; set; }
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void CombatantNowInView(ICombatant otherCombatant)
+        {
+            otherCombatant.ThrowIfNull(nameof(otherCombatant));
+
+            var totalInViewBefore = this.HostilesInView.Count + this.NeutralsInView.Count + this.FriendlyInView.Count;
+
+            if (otherCombatant is Monster otherMonster)
+            {
+                // TODO: consider monsters that are not friendly.
+                this.FriendlyInView.Add(otherMonster.Id);
+            }
+            else if (otherCombatant is IPlayer player)
+            {
+                this.HostilesInView.Add(player.Id);
+            }
+            else
+            {
+                this.NeutralsInView.Add(otherCombatant.Id);
+            }
+
+            if (totalInViewBefore == 0)
+            {
+                this.InvokeCombatStarted();
+            }
+        }
+
+        /// <summary>
+        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void CombatantNoLongerInView(ICombatant otherCombatant)
+        {
+            otherCombatant.ThrowIfNull(nameof(otherCombatant));
+
+            if (this.AutoAttackTarget == otherCombatant)
+            {
+                this.SetAttackTarget(null);
+            }
+
+            this.FriendlyInView.Remove(otherCombatant.Id);
+            this.HostilesInView.Remove(otherCombatant.Id);
+            this.NeutralsInView.Remove(otherCombatant.Id);
+
+            var totalInViewAfter = this.HostilesInView.Count + this.NeutralsInView.Count + this.FriendlyInView.Count;
+
+            if (totalInViewAfter == 0)
+            {
+                this.InvokeCombatEnded();
+            }
+        }
     }
 }

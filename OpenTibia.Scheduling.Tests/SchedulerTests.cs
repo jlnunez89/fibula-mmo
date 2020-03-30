@@ -96,7 +96,7 @@ namespace OpenTibia.Scheduling.Tests
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
-            scheduler.OnEventFired += (sender, eventArgs) =>
+            scheduler.EventFired += (sender, eventArgs) =>
             {
                 // test that sender is the same scheduler instance, while we're here.
                 Assert.AreEqual(scheduler, sender);
@@ -160,7 +160,7 @@ namespace OpenTibia.Scheduling.Tests
 
             Scheduler scheduler = new Scheduler(schedulerLoggerMock.Object);
 
-            scheduler.OnEventFired += (sender, eventArgs) =>
+            scheduler.EventFired += (sender, eventArgs) =>
             {
                 // test that sender is the same scheduler instance, while we're here.
                 Assert.AreEqual(scheduler, sender);
@@ -197,7 +197,7 @@ namespace OpenTibia.Scheduling.Tests
         }
 
         /// <summary>
-        /// Checks that <see cref="Scheduler.OnEventFired"/> gets fired when an event is scheduled.
+        /// Checks that <see cref="Scheduler.EventFired"/> gets fired when an event is scheduled.
         /// </summary>
         [TestMethod]
         public void OnEventFired_IsCalled()
@@ -224,7 +224,7 @@ namespace OpenTibia.Scheduling.Tests
 
             using (CancellationTokenSource cts = new CancellationTokenSource())
             {
-                scheduler.OnEventFired += (sender, eventArgs) =>
+                scheduler.EventFired += (sender, eventArgs) =>
                 {
                     // test that sender is the same scheduler instance, while we're here.
                     Assert.AreEqual(scheduler, sender);

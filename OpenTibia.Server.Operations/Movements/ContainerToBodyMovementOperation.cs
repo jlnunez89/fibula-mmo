@@ -25,7 +25,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// Initializes a new instance of the <see cref="ContainerToBodyMovementOperation"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="creatureRequestingId">The id of the creature requesting the movement.</param>
         /// <param name="thingMoving">The thing being moved.</param>
         /// <param name="targetCreature">The creature in which the movement is happening.</param>
@@ -35,7 +34,6 @@ namespace OpenTibia.Server.Operations.Movements
         /// <param name="amount">Optional. The amount of the thing to move. Must be positive. Defaults to 1.</param>
         public ContainerToBodyMovementOperation(
             ILogger logger,
-            IOperationContext context,
             uint creatureRequestingId,
             IThing thingMoving,
             ICreature targetCreature,
@@ -43,7 +41,7 @@ namespace OpenTibia.Server.Operations.Movements
             byte fromCreatureContainerIndex,
             Slot toCreatureSlot,
             byte amount = 1)
-            : base(logger, context, context?.ContainerManager?.FindForCreature(targetCreature.Id, fromCreatureContainerPosition), targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
+            : base(logger, context?.ContainerManager?.FindForCreature(targetCreature.Id, fromCreatureContainerPosition), targetCreature?.Inventory[(byte)toCreatureSlot] as IContainerItem, creatureRequestingId)
         {
             if (amount == 0)
             {
@@ -79,23 +77,24 @@ namespace OpenTibia.Server.Operations.Movements
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             // Declare some pre-conditions.
-            var creatureHasSourceContainerOpen = this.Context.ContainerManager.FindForCreature(this.TargetCreature.Id, this.FromCylinder as IContainerItem) != IContainerManager.UnsetContainerPosition;
+            var creatureHasSourceContainerOpen = context.ContainerManager.FindForCreature(this.TargetCreature.Id, this.FromCylinder as IContainerItem) != IContainerManager.UnsetContainerPosition;
 
             if (!(this.ThingMoving is IItem item))
             {
-                this.SendFailureNotification(OperationMessage.MayNotMoveThis);
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
             else if (!creatureHasSourceContainerOpen)
             {
-                this.SendFailureNotification(OperationMessage.MustFirstOpenThatContainer);
+                this.DispatchTextNotification(context, OperationMessage.MustFirstOpenThatContainer);
             }
-            else if (!this.PerformItemMovement(item, this.FromCylinder, this.ToCylinder, this.FromCreatureContainerIndex, 0, this.Amount, this.Requestor))
+            else if (!this.PerformItemMovement(context, item, this.FromCylinder, this.ToCylinder, this.FromCreatureContainerIndex, 0, this.Amount, this.GetRequestor(context.CreatureFinder)))
             {
                 // Something else went wrong.
-                this.SendFailureNotification();
+                this.DispatchTextNotification(context);
             }
         }
     }

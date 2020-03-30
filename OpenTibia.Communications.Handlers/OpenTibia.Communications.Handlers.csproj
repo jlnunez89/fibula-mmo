@@ -39,6 +39,8 @@
     <Compile Include="Game\AutoMoveHandler.cs" />
     <Compile Include="Game\ContainerCloseHandler.cs" />
     <Compile Include="Game\ContainerMoveUpHandler.cs" />
+    <Compile Include="Game\SpeechHandler.cs" />
+    <Compile Include="Game\UseItemOnHandler.cs" />
     <Compile Include="Game\SetModeHandler.cs" />
     <Compile Include="Game\RotateItemHandler.cs" />
     <Compile Include="Game\UseItemHandler.cs" />

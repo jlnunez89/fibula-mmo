@@ -17,6 +17,8 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Operations.Arguments;
     using Serilog;
 
     /// <summary>
@@ -28,10 +30,9 @@ namespace OpenTibia.Communications.Handlers.Game
         /// Initializes a new instance of the <see cref="AutoMoveHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="gameContext">A reference to the game context to use.</param>
-        public AutoMoveHandler(ILogger logger, IOperationFactory operationFactory, IGameContext gameContext)
-            : base(logger, operationFactory, gameContext)
+        public AutoMoveHandler(ILogger logger, IGameContext gameContext)
+            : base(logger, gameContext)
         {
         }
 
@@ -52,7 +53,10 @@ namespace OpenTibia.Communications.Handlers.Game
 
             if (this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player)
             {
-                this.AutoWalk(player, automovementInfo.Directions);
+                this.ScheduleNewOperation(
+                    this.Context.OperationFactory.Create(
+                        OperationType.AutoWalk,
+                        new AutoWalkOperationCreationArguments(player.Id, player, automovementInfo.Directions)));
             }
 
             return null;

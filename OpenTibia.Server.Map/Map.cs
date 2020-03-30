@@ -21,7 +21,6 @@ namespace OpenTibia.Server.Map
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
@@ -66,11 +65,6 @@ namespace OpenTibia.Server.Map
             this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>, int[])>();
             this.tilesCacheLock = new object();
         }
-
-        /// <summary>
-        /// Event invoked when a window of coordinates in the map is loaded.
-        /// </summary>
-        public event OnMapWindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the reference to the current logger.
@@ -468,11 +462,6 @@ namespace OpenTibia.Server.Map
 
                     minZLoaded = Math.Min(loc.Z, minZLoaded);
                     maxZLoaded = Math.Max(loc.Z, maxZLoaded);
-                }
-
-                if (minXLoaded < int.MaxValue)
-                {
-                    this.WindowLoaded?.Invoke(minXLoaded, maxXLoaded, minYLoaded, maxYLoaded, minZLoaded, maxZLoaded);
                 }
             }
 

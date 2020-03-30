@@ -23,7 +23,7 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         /// <summary>
         /// Event fired when an event gets fired by the scheduler.
         /// </summary>
-        event EventFired OnEventFired;
+        event EventFired EventFired;
 
         /// <summary>
         /// Gets the current time.

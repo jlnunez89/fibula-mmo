@@ -33,13 +33,13 @@ namespace OpenTibia.Server.Events
         }
 
         /// <summary>
-        /// Gets the item being used.
+        /// Gets or sets the item being used.
         /// </summary>
-        public IItem ItemUsed { get; }
+        public IItem ItemUsed { get; set; }
 
         /// <summary>
-        /// Gets the creature who requested the use, if any.
+        /// Gets or sets the creature who requested the use, if any.
         /// </summary>
-        public ICreature Requestor { get; }
+        public ICreature Requestor { get; set; }
     }
 }

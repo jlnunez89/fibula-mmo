@@ -11,11 +11,18 @@
 
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
+    using System;
+
     /// <summary>
     /// Interface that represents an event.
     /// </summary>
     public interface IEvent
     {
+        /// <summary>
+        /// Fired when this event is expedited.
+        /// </summary>
+        event EventExpedited Expedited;
+
         /// <summary>
         /// Gets a unique identifier for this event.
         /// </summary>
@@ -27,13 +34,24 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         uint RequestorId { get; }
 
         /// <summary>
-        /// Gets the error message that should be bubbled back to the player if the event cannot be executed.
+        /// Gets a value indicating whether the event should be repeated.
         /// </summary>
-        string ErrorMessage { get; }
+        bool Repeat { get; }
+
+        /// <summary>
+        /// Gets a value for how long to wait until the event should be repeated.
+        /// </summary>
+        TimeSpan RepeatDelay { get; }
 
         /// <summary>
         /// Executes the event logic.
         /// </summary>
-        void Execute();
+        /// <param name="context">The execution context.</param>
+        void Execute(IEventContext context);
+
+        /// <summary>
+        /// Attempts to expedite this event, requesting it to be fired immediately.
+        /// </summary>
+        void Expedite();
     }
 }

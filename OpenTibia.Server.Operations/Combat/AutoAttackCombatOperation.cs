@@ -13,33 +13,30 @@ namespace OpenTibia.Server.Operations.Combat
 {
     using System;
     using System.Collections.Generic;
-    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Events;
     using OpenTibia.Server.Notifications;
     using OpenTibia.Server.Notifications.Arguments;
-    using OpenTibia.Server.Operations.Actions;
-    using Serilog;
+    using OpenTibia.Server.Operations.Arguments;
 
     /// <summary>
-    /// Class that represents a base combat operation.
+    /// Class that represents an auto attack combat operation.
     /// </summary>
     public class AutoAttackCombatOperation : BaseCombatOperation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoAttackCombatOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of this operation.</param>
         /// <param name="attacker">The combatant that is attacking.</param>
         /// <param name="target">The combatant that is the target.</param>
         /// <param name="exhaustionCost">Optional. The exhaustion cost of this operation.</param>
-        public AutoAttackCombatOperation(ILogger logger, IOperationContext context, ICombatant attacker, ICombatant target, TimeSpan exhaustionCost)
-            : base(logger, context, target, attacker)
+        public AutoAttackCombatOperation(ICombatant attacker, ICombatant target, TimeSpan exhaustionCost)
+            : base(target, attacker)
         {
             attacker.ThrowIfNull(nameof(attacker));
 
@@ -81,82 +78,87 @@ namespace OpenTibia.Server.Operations.Combat
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IOperationContext context)
         {
             var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
 
+            // Pre-checks.
             var nullAttacker = this.Attacker == null;
-            var correctTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
+            var isCorrectTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
             var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= this.AttackCreditsCost;
-            var inChaseMode = nullAttacker ? false : this.Attacker.ChaseMode == ChaseMode.Chase;
             var inRange = nullAttacker ? true : distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
 
             var attackPerformed = false;
 
-            if (enoughCredits && correctTarget && inRange)
+            try
             {
-                attackPerformed |= this.PerformAttack();
-            }
-
-            if (!attackPerformed)
-            {
-                // Update the actual cost if the attack wasn't performed.
-                this.ExhaustionCost = TimeSpan.Zero;
-            }
-
-            if (!nullAttacker)
-            {
-                this.Context.Scheduler.CancelAllFor(this.Attacker.Id, typeof(AutoAttackCombatOperation));
-
-                if (!inRange)
+                if (!isCorrectTarget)
                 {
-                    // Add as the retry action, so that the request gets repeated when the player hits this location.
-                    this.Attacker.EnqueueRetryActionWithinRangeToCreature(this.Attacker.AutoAttackRange, this.Target.Id, () => this.AutoAttack(this.Attacker, this.Target));
+                    // We're not attacking the correct target, so stop right here.
+                    return;
+                }
 
-                    if (inChaseMode)
+                var rulesPartitionKey = $"{nameof(AutoAttackCombatOperation)}:{this.Attacker.Id}";
+
+                if (inRange)
+                {
+                    context.EventRulesApi.ClearAllFor(rulesPartitionKey);
+
+                    attackPerformed = enoughCredits && this.PerformAttack(context);
+                }
+                else if (!nullAttacker)
+                {
+                    // Setup as a movement rule, so that it gets expedited when the combatant is in range from it's target.
+                    var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
                     {
-                        // Too far away to attack, we need to move closer first.
-                        var directions = this.Context.PathFinder.FindBetween(this.Attacker.Location, this.Target.Location, out _, onBehalfOfCreature: this.Attacker, considerAvoidsAsBlock: true);
+                        (context) =>
+                        {
+                            if (!(context.Arguments is MovementEventRuleArguments movementEventRuleArguments) ||
+                                !(movementEventRuleArguments.ThingMoving is ICombatant attacker) ||
+                                !(attacker.AutoAttackTarget is ICombatant target))
+                            {
+                                return false;
+                            }
 
-                        if (directions == null || !directions.Any())
-                        {
-                            this.SendFailureNotification(OperationMessage.ThereIsNoWay);
-                        }
-                        else
-                        {
-                            this.AutoWalk(this.Attacker, directions.ToArray());
-                        }
-                    }
+                            return (target.Location - attacker.Location).MaxValueIn2D <= attacker.AutoAttackRange;
+                        },
+                    };
+
+                    context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), rulesPartitionKey);
+                }
+
+                if (nullAttacker)
+                {
+                    // Stop here if we don't have an attacker, as we don't need to repeat this operation.
+                    return;
                 }
 
                 // Do we need to continue attacking?
                 if (this.Attacker.AutoAttackTarget != null)
                 {
                     var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / this.Attacker.BaseAttackSpeed));
-                    var attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, this.Attacker, this.Attacker.AutoAttackTarget, exhaustionCost: normalizedAttackSpeed);
-                    var attackCooldownRemaining = this.Attacker.CalculateRemainingCooldownTime(attackOperation.ExhaustionType, this.Context.Scheduler.CurrentTime);
+                    var attackCooldownRemaining = this.Attacker.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
 
-                    this.Context.Scheduler.ScheduleEvent(attackOperation, delayTime: attackPerformed ? attackCooldownRemaining : normalizedAttackSpeed);
+                    // Update exhaustion cost in case the creature's attack speed changed.
+                    this.ExhaustionCost = attackPerformed ? normalizedAttackSpeed : TimeSpan.Zero;
+
+                    // Setting repeat members to repeat this operation.
+                    this.Repeat = isCorrectTarget;
+                    this.RepeatDelay = attackPerformed ? attackCooldownRemaining : normalizedAttackSpeed;
+                }
+            }
+            finally
+            {
+                if (!attackPerformed)
+                {
+                    // Update the actual cost if the attack wasn't performed.
+                    this.ExhaustionCost = TimeSpan.Zero;
                 }
             }
         }
 
-        private void AutoAttack(ICombatant attacker, ICombatant target)
-        {
-            if (attacker == null)
-            {
-                return;
-            }
-
-            var attackExhaustionCost = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / attacker.BaseAttackSpeed));
-
-            var attackOperation = new AutoAttackCombatOperation(this.Logger, this.Context, attacker, target, attackExhaustionCost);
-            var attackCooldownRemaining = attacker.CalculateRemainingCooldownTime(attackOperation.ExhaustionType, this.Context.Scheduler.CurrentTime);
-
-            this.Context.Scheduler.ScheduleEvent(attackOperation, attackCooldownRemaining);
-        }
-
-        private bool PerformAttack()
+        private bool PerformAttack(IOperationContext context)
         {
             int CalculateInflictedDamage(out bool armorBlock, out bool wasShielded)
             {
@@ -252,16 +254,13 @@ namespace OpenTibia.Server.Operations.Combat
                 {
                     var directionToTarget = this.Attacker.Location.DirectionTo(this.Target.Location);
 
-                    this.Context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(this.Logger, this.Context, this.Attacker, directionToTarget));
+                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(OperationType.Turn, new TurnToDirectionOperationCreationArguments(this.Attacker, directionToTarget)));
                 }
-
-                this.Context.Scheduler.CancelAllFor(this.Attacker.Id, typeof(AutoAttackCombatOperation));
             }
 
-            this.Context.Scheduler.ScheduleEvent(
+            context.Scheduler.ScheduleEvent(
                 new GenericNotification(
-                    this.Logger,
-                    () => this.Context.ConnectionFinder.PlayersThatCanSee(this.Context.CreatureFinder, this.Target.Location),
+                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, this.Target.Location),
                     new GenericNotificationArguments(packetsToSend.ToArray())));
 
             return true;

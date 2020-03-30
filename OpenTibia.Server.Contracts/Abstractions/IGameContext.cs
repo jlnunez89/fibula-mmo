@@ -44,6 +44,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IContainerManager ContainerManager { get; }
 
         /// <summary>
+        /// Gets the reference to the operation factory in use.
+        /// </summary>
+        IOperationFactory OperationFactory { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

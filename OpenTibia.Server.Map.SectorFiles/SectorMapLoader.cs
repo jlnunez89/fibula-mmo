@@ -148,7 +148,7 @@ namespace OpenTibia.Server.Map.SectorFiles
         /// <summary>
         /// Event invoked when a window of coordinates in the map is loaded.
         /// </summary>
-        public event OnMapWindowLoaded MapWindowLoaded;
+        public event WindowLoaded WindowLoaded;
 
         /// <summary>
         /// Gets the logger to use.
@@ -258,7 +258,7 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             this.totalLoadedCount = this.totalTileCount;
 
-            this.MapWindowLoaded?.Invoke(fromSectorX * 32, (toSectorX * 32) + 32, fromSectorY * 32, (toSectorY * 32) + 32, fromZ, toZ);
+            this.WindowLoaded?.Invoke(fromSectorX * 32, (toSectorX * 32) + 32, fromSectorY * 32, (toSectorY * 32) + 32, fromZ, toZ);
 
             return tuplesAdded;
         }

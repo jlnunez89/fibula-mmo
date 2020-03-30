@@ -416,6 +416,52 @@ namespace OpenTibia.Server.Map
         }
 
         /// <summary>
+        /// Attempts to get the position in the stack for the given type id.
+        /// </summary>
+        /// <param name="typeId">The type id of the item to find.</param>
+        /// <returns>The position in the stack for the item found, or <see cref="byte.MaxValue"/> if it's not found.</returns>
+        public byte GetPositionOfItemWithId(ushort typeId)
+        {
+            byte n = 0;
+
+            if (this.Ground != null && typeId == this.Ground.Type.TypeId)
+            {
+                return n;
+            }
+
+            foreach (var item in this.StayOnTopItems)
+            {
+                ++n;
+                if (typeId == item.Type.TypeId)
+                {
+                    return n;
+                }
+            }
+
+            foreach (var item in this.StayOnBottomItems)
+            {
+                ++n;
+                if (typeId == item.Type.TypeId)
+                {
+                    return n;
+                }
+            }
+
+            n += (byte)this.CreatureIds.Count();
+
+            foreach (var item in this.Items)
+            {
+                ++n;
+                if (typeId == item.Type.TypeId)
+                {
+                    return n;
+                }
+            }
+
+            return byte.MaxValue;
+        }
+
+        /// <summary>
         /// Attempts to get the position in the stack for the given <see cref="IThing"/>.
         /// </summary>
         /// <param name="thing">The thing to find.</param>
@@ -814,6 +860,11 @@ namespace OpenTibia.Server.Map
             return this.YieldSingleItem();
         }
 
+        /// <summary>
+        /// Determines if this tile is considered to be blocking the path.
+        /// </summary>
+        /// <param name="avoidTypes">The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</param>
+        /// <returns>True if the tile is considered path blocking, false otherwise.</returns>
         public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
         {
             var blocking = this.BlocksPass;
@@ -830,6 +881,11 @@ namespace OpenTibia.Server.Map
                         this.Items.Any(i => i.IsPathBlocking(avoidTypes));
 
             return blocking;
+        }
+
+        public IItem FindItemAt(byte index)
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

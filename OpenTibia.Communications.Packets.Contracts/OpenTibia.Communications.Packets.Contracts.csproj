@@ -11,7 +11,6 @@
     <Compile Remove="Abstractions\ICharacterDeathInfo.cs" />
     <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />
     <Compile Remove="Abstractions\IInsertHouseInfo.cs" />
-    <Compile Remove="Abstractions\IItemUseOnInfo.cs" />
     <Compile Remove="Abstractions\IManagementPlayerLoginInfo.cs" />
     <Compile Remove="Abstractions\INamelockInfo.cs" />
     <Compile Remove="Abstractions\IOnlinePlayer.cs" />
@@ -20,7 +19,6 @@
     <Compile Remove="Abstractions\IPlayerLoaded.cs" />
     <Compile Remove="Abstractions\IPlayerLogoutInfo.cs" />
     <Compile Remove="Abstractions\IRuleViolationInfo.cs" />
-    <Compile Remove="Abstractions\ISpeechInfo.cs" />
     <Compile Remove="Abstractions\IStatement.cs" />
     <Compile Remove="Abstractions\IStatementListInfo.cs" />
     <Compile Remove="Abstractions\IVipContact.cs" />

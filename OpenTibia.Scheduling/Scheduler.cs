@@ -31,7 +31,7 @@ namespace OpenTibia.Scheduling
         /// The maximum number of nodes that the internal queue can hold.
         /// </summary>
         /// <remarks>Arbitrarily chosen, resize as needed.</remarks>
-        private const int MaxQueueNodes = 5000;
+        private const int MaxQueueNodes = 1000;
 
         /// <summary>
         /// The default processing wait time on the processing queue thread.
@@ -93,9 +93,9 @@ namespace OpenTibia.Scheduling
         }
 
         /// <summary>
-        /// Event fired when an event gets fired by the scheduler.
+        /// When an event gets fired by the this scheduler.
         /// </summary>
-        public event EventFired OnEventFired;
+        public event EventFired EventFired;
 
         /// <summary>
         /// Gets a reference to the logger instance.
@@ -126,7 +126,8 @@ namespace OpenTibia.Scheduling
 
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var processed = new List<BaseEvent>();
+                    var toBeCleanedUp = new List<BaseEvent>();
+                    var toBeRepeated = new List<BaseEvent>();
 
                     lock (this.eventsAvailableLock)
                     {
@@ -168,34 +169,56 @@ namespace OpenTibia.Scheduling
                             }
 
                             // The first item always points to the next-in-time event available.
-                            var nextEvent = this.priorityQueue.First;
-                            var isDue = nextEvent.Priority <= priorityDue;
-                            var isCancelled = this.cancelledEvents.Contains(nextEvent.EventId);
+                            var evt = this.priorityQueue.First;
+                            var isDue = evt.Priority <= priorityDue;
+                            var shouldBeSkipped = this.cancelledEvents.Contains(evt.EventId);
 
                             // Check if this event has been cancelled or is due.
-                            if (isDue || isCancelled)
+                            if (isDue || shouldBeSkipped)
                             {
-                                processed.Add(this.priorityQueue.Dequeue());
+                                // Actually dequeue the event.
+                                this.priorityQueue.Dequeue();
 
-                                if (!isCancelled)
+                                if (!shouldBeSkipped)
                                 {
-                                    this.Logger.Verbose($"Firing event {nextEvent.GetType().Name} with id {nextEvent.EventId}, at {priorityDue}.");
+                                    this.Logger.Verbose($"Firing event {evt.GetType().Name} with id {evt.EventId}, at {priorityDue}.");
 
-                                    this.OnEventFired?.Invoke(this, new EventFiredEventArgs(nextEvent));
+                                    this.EventFired?.Invoke(this, new EventFiredEventArgs(evt));
+
+                                    if (evt.Repeat)
+                                    {
+                                        toBeRepeated.Add(evt);
+                                    }
+                                }
+
+                                if (!evt.Repeat)
+                                {
+                                    toBeCleanedUp.Add(evt);
                                 }
                             }
                             else
                             {
                                 // The next item is in the future, so figure out how long to wait, update and break.
-                                waitForNewTimeOut = TimeSpan.FromMilliseconds(nextEvent.Priority < priorityDue ? 0 : nextEvent.Priority - priorityDue);
+                                waitForNewTimeOut = TimeSpan.FromMilliseconds(evt.Priority < priorityDue ? 0 : evt.Priority - priorityDue);
                                 break;
                             }
                         }
 
+                        // Re-schedule the events that need to be repeated.
+                        foreach (var evt in toBeRepeated)
+                        {
+                            evt.Repeat = false;
+
+                            this.ScheduleEvent(evt, evt.RepeatDelay);
+                        }
+
                         // Clean up the processed events.
-                        foreach (var evt in processed)
+                        foreach (var evt in toBeCleanedUp)
                         {
                             this.CleanUp(evt.EventId, evt.RequestorId);
+
+                            // And clean up the expedition hook.
+                            evt.Expedited -= this.HandleEventExpedition;
                         }
 
                         sw.Stop();
@@ -292,6 +315,11 @@ namespace OpenTibia.Scheduling
                 var targetTime = this.CurrentTime + delayTime.Value;
                 var milliseconds = this.GetMillisecondsAfterReferenceTime(targetTime);
 
+                if (!castedEvent.HasExpeditionHandler)
+                {
+                    castedEvent.Expedited += this.HandleEventExpedition;
+                }
+
                 this.priorityQueue.Enqueue(castedEvent, milliseconds);
 
                 this.Logger.Verbose($"Scheduled event {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
@@ -315,6 +343,28 @@ namespace OpenTibia.Scheduling
                     }
                 }
 
+                Monitor.Pulse(this.eventsAvailableLock);
+            }
+        }
+
+        /// <summary>
+        /// Handles a call from a manually  event.
+        /// </summary>
+        /// <param name="sender">The event that was processed manually.</param>
+        private void HandleEventExpedition(IEvent sender)
+        {
+            if (sender == null || !(sender is BaseEvent evt))
+            {
+                return;
+            }
+
+            // Lock on the events available to prevent race conditions on the manually firing list vs firing.
+            lock (this.eventsAvailableLock)
+            {
+                // Expedite the event.
+                this.priorityQueue.UpdatePriority(evt, this.GetMillisecondsAfterReferenceTime(this.CurrentTime));
+
+                // Flag the processing queue.
                 Monitor.Pulse(this.eventsAvailableLock);
             }
         }

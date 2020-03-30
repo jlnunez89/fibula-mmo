@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Operations.Arguments
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Operations.Movements;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="ContainerToContainerMovementOperation"/>.

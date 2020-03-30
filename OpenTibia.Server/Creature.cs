@@ -13,8 +13,9 @@ namespace OpenTibia.Server
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics.CodeAnalysis;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
-    using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -26,6 +27,11 @@ namespace OpenTibia.Server
     /// </summary>
     public abstract class Creature : Thing, ICreature
     {
+        /// <summary>
+        /// The default index for body containers.
+        /// </summary>
+        private const byte DefaultBodyContainerIndex = 0;
+
         /// <summary>
         /// Lock used when assigning creature ids.
         /// </summary>
@@ -40,26 +46,6 @@ namespace OpenTibia.Server
         /// Lock object to semaphore interaction with the exhaustion dictionary.
         /// </summary>
         private readonly object exhaustionLock;
-
-        /// <summary>
-        /// Lock object to semaphore interaction with the location-based actions queue.
-        /// </summary>
-        private readonly object actionsAtLocationLock;
-
-        /// <summary>
-        /// The queue of current location-based actions to retry.
-        /// </summary>
-        private readonly Queue<(Location atLoc, Action action)> locationBasedRetryActions;
-
-        /// <summary>
-        /// Lock object to semaphore interaction with the range-based actions queue.
-        /// </summary>
-        private readonly object actionsWithinRangeLock;
-
-        /// <summary>
-        /// The queue of current range-based actions to retry.
-        /// </summary>
-        private readonly Queue<(byte range, uint creatureId, Action action)> rangeToCreatureBasedRetryActions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -103,19 +89,13 @@ namespace OpenTibia.Server
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
-            this.actionsAtLocationLock = new object();
-            this.locationBasedRetryActions = new Queue<(Location atLoc, Action action)>();
-
-            this.actionsWithinRangeLock = new object();
-            this.rangeToCreatureBasedRetryActions = new Queue<(byte range, uint creatureId, Action action)>();
-
             this.Outfit = new Outfit
             {
                 Id = 0,
                 ItemIdLookAlike = 0,
             };
 
-            this.Speed = 220;
+            this.Speed = 200;
 
             this.Skills = new Dictionary<SkillType, ISkill>();
 
@@ -124,17 +104,12 @@ namespace OpenTibia.Server
             // this.OnThingChanged += this.CheckPendingActions;         // Are we in range with our pending action?
             // OnTargetChanged += CheckAutoAttack;                      // Are we attacking someone new / not attacking anymore?
             // OnInventoryChanged += Mind.AttackConditionsChanged;      // Equipped / DeEquiped something?
-
-            // this.Hostiles = new HashSet<uint>();
-            // this.Friendly = new HashSet<uint>();
         }
-
-        // public event OnAttackTargetChange OnTargetChanged;
 
         /// <summary>
         /// Gets the id of this creature.
         /// </summary>
-        public override ushort ThingId => CreatureThingId;
+        public override ushort ThingId => ICreature.CreatureThingId;
 
         /// <summary>
         /// Gets the creature's in-game id.
@@ -254,34 +229,6 @@ namespace OpenTibia.Server
         public abstract IInventory Inventory { get; protected set; }
 
         /// <summary>
-        /// Gets the collection of current location-based actions to retry.
-        /// </summary>
-        public IEnumerable<(Location atLocation, Action action)> LocationBasedActions
-        {
-            get
-            {
-                lock (this.actionsAtLocationLock)
-                {
-                    return this.locationBasedRetryActions.ToArray();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Gets the collection of current range-based actions to retry.
-        /// </summary>
-        public IEnumerable<(byte range, uint creatureId, Action action)> RangeBasedActions
-        {
-            get
-            {
-                lock (this.actionsWithinRangeLock)
-                {
-                    return this.rangeToCreatureBasedRetryActions.ToArray();
-                }
-            }
-        }
-
-        /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
         /// </summary>
         /// <param name="type">The type of exhaustion.</param>
@@ -346,16 +293,6 @@ namespace OpenTibia.Server
         public byte CalculateSkillPercent(SkillType type)
         {
             return (byte)Math.Min(100, this.Skills[type].Count * 100 / (this.Skills[type].Target + 1));
-        }
-
-        /// <summary>
-        /// Makes this creature "think" and make decisions for the next game step.
-        /// </summary>
-        /// <returns>A collection of events with delays, representing decisions made after thinking.</returns>
-        public IEnumerable<(IEvent Event, TimeSpan Delay)> Think()
-        {
-            // TODO: return something else here.
-            return null;
         }
 
         /// <summary>
@@ -427,22 +364,45 @@ namespace OpenTibia.Server
 
         public void AddContent(ILogger logger, IItemFactory itemFactory, IEnumerable<IParsedElement> contentElements)
         {
+            // TODO: iterate all body containers and try to add there.
             throw new NotImplementedException();
         }
 
         public (bool result, IThing remainder) AddContent(IItemFactory itemFactory, IThing thing, byte index = 255)
         {
+            // TODO: try to add at that specific body container.
             return (false, thing);
         }
 
         public (bool result, IThing remainder) RemoveContent(IItemFactory itemFactory, ref IThing thing, byte index = 255, byte amount = 1)
         {
+            // TODO: try to delete from that specific body container.
             throw new NotImplementedException();
         }
 
         public (bool result, IThing remainderToChange) ReplaceContent(IItemFactory itemFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)
         {
-            throw new NotImplementedException();
+            if (this.Inventory[index] is IContainerItem bodyContainer)
+            {
+                return bodyContainer.ReplaceContent(itemFactory, fromThing, toThing, DefaultBodyContainerIndex, amount);
+            }
+
+            return (false, fromThing);
+        }
+
+        /// <summary>
+        /// Gets an item within this cylinder.
+        /// </summary>
+        /// <param name="index">The index at which to get the item.</param>
+        /// <returns>The item found at the index, if there is any.</returns>
+        public IItem FindItemAt(byte index)
+        {
+            if (this.Inventory[index] is IContainerItem bodyContainer)
+            {
+                return bodyContainer[DefaultBodyContainerIndex];
+            }
+
+            return null;
         }
 
         /// <summary>
@@ -465,173 +425,13 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Adds an action that should be retried when the creature steps at this particular location.
+        /// Indicates whether the current object is equal to another object of the same type.
         /// </summary>
-        /// <param name="retryLoc">The location at which the retry happens.</param>
-        /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        public void EnqueueRetryActionAtLocation(Location retryLoc, Action action)
+        /// <param name="other">The other object to compare against.</param>
+        /// <returns>True if the current object is equal to the other parameter, false otherwise.</returns>
+        public bool Equals([AllowNull] ICreature other)
         {
-            if (action == null || retryLoc == default)
-            {
-                return;
-            }
-
-            lock (this.actionsAtLocationLock)
-            {
-                this.locationBasedRetryActions.Enqueue((retryLoc, action));
-            }
-        }
-
-        /// <summary>
-        /// Removes a single action from the queue given its particular location.
-        /// </summary>
-        /// <param name="loc">The location by which to identify the action to remove from the queue.</param>
-        public void DequeueActionAtLocation(Location loc)
-        {
-            lock (this.actionsAtLocationLock)
-            {
-                int count = this.locationBasedRetryActions.Count;
-
-                for (int i = 0; i < count; i++)
-                {
-                    var tuple = this.locationBasedRetryActions.Dequeue();
-
-                    if (tuple.atLoc != loc)
-                    {
-                        this.locationBasedRetryActions.Enqueue(tuple);
-                        continue;
-                    }
-
-                    // we already removed it, just exit.
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Removes all actions from the location-based actions queue.
-        /// </summary>
-        public void ClearAllLocationActions()
-        {
-            lock (this.actionsAtLocationLock)
-            {
-                this.locationBasedRetryActions.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Adds an action that should be retried when the creature steps within a given range of another.
-        /// </summary>
-        /// <param name="range">The range withing which the retry happens.</param>
-        /// <param name="creatureId">The id of the creature which to calculate the range to.</param>
-        /// <param name="action">The delegate action to invoke when the location is reached.</param>
-        public void EnqueueRetryActionWithinRangeToCreature(byte range, uint creatureId, Action action)
-        {
-            if (action == null || creatureId == 0)
-            {
-                return;
-            }
-
-            lock (this.actionsWithinRangeLock)
-            {
-                this.rangeToCreatureBasedRetryActions.Enqueue((range, creatureId, action));
-            }
-        }
-
-        /// <summary>
-        /// Removes a single action from the queue given its particular location.
-        /// </summary>
-        /// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
-        /// <param name="creatureId">The location to which to calculate the range.</param>
-        public void DequeueRetryActionWithinRangeToCreature(byte withinRange, uint creatureId)
-        {
-            lock (this.actionsWithinRangeLock)
-            {
-                int count = this.rangeToCreatureBasedRetryActions.Count;
-
-                for (int i = 0; i < count; i++)
-                {
-                    var tuple = this.rangeToCreatureBasedRetryActions.Dequeue();
-
-                    if (tuple.range > withinRange || tuple.creatureId != creatureId)
-                    {
-                        this.rangeToCreatureBasedRetryActions.Enqueue(tuple);
-                        continue;
-                    }
-
-                    // we already removed it, just exit.
-                    break;
-                }
-            }
-        }
-
-        /// <summary>
-        /// Removes all actions from the location-based actions queue.
-        /// </summary>
-        public void ClearAllRangeBasedActions()
-        {
-            lock (this.actionsWithinRangeLock)
-            {
-                this.rangeToCreatureBasedRetryActions.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
-        /// </summary>
-        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
-        public bool EvaluateLocationBasedActions()
-        {
-            bool anyExecuted = false;
-
-            foreach (var (loc, action) in this.LocationBasedActions)
-            {
-                // Check if locations match.
-                if (this.Location != loc)
-                {
-                    continue;
-                }
-
-                anyExecuted = true;
-                action();
-
-                this.DequeueActionAtLocation(loc);
-            }
-
-            return anyExecuted;
-        }
-
-        /// <summary>
-        /// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
-        /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <returns>True if there is at least one action that was executed, false otherwise.</returns>
-        public bool EvaluateCreatureRangeBasedActions(ICreatureFinder creatureFinder)
-        {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
-
-            bool anyExecuted = false;
-
-            foreach (var (range, targetId, action) in this.RangeBasedActions)
-            {
-                if (creatureFinder.FindCreatureById(targetId) is ICreature targetCreature)
-                {
-                    // Check if target is now within range.
-                    var locDiff = this.Location - targetCreature.Location;
-
-                    if (locDiff.MaxValueIn2D > range)
-                    {
-                        continue;
-                    }
-
-                    action();
-                    anyExecuted = true;
-                }
-
-                this.DequeueRetryActionWithinRangeToCreature(range, targetId);
-            }
-
-            return anyExecuted;
+            return this.Id == other?.Id;
         }
     }
 }

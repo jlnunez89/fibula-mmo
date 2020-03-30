@@ -13,7 +13,6 @@ namespace OpenTibia.Server.Operations.Environment
 {
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Operations.Actions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents an operation for placing a creature on the map.
@@ -23,18 +22,11 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Initializes a new instance of the <see cref="PlaceCreatureOperation"/> class.
         /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="context">The context of the operation.</param>
         /// <param name="requestorId">The id of the creature requesting the placement.</param>
         /// <param name="atTile">The tile at which to place the creature.</param>
         /// <param name="creature">The creature being placed.</param>
-        public PlaceCreatureOperation(
-            ILogger logger,
-            IElevatedOperationContext context,
-            uint requestorId,
-            ITile atTile,
-            ICreature creature)
-            : base(logger, context, requestorId)
+        public PlaceCreatureOperation(uint requestorId, ITile atTile, ICreature creature)
+            : base(requestorId)
         {
             this.AtTile = atTile;
             this.Creature = creature;
@@ -53,9 +45,10 @@ namespace OpenTibia.Server.Operations.Environment
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        public override void Execute()
+        /// <param name="context">A reference to the operation context.</param>
+        protected override void Execute(IElevatedOperationContext context)
         {
-            bool successfulPlacement = this.PlaceCreature(this.AtTile, this.Creature);
+            bool successfulPlacement = this.PlaceCreature(context, this.AtTile, this.Creature);
 
             if (!successfulPlacement)
             {
