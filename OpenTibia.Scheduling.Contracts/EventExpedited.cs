@@ -17,5 +17,6 @@ namespace OpenTibia.Scheduling.Contracts
     /// Delegate to call when an event is processed earlier than the scheduler intended.
     /// </summary>
     /// <param name="sender">The sender of the event processed event.</param>
-    public delegate void EventExpedited(IEvent sender);
+    /// <returns>True if the event is successfully expedited, false otherwise.</returns>
+    public delegate bool EventExpedited(IEvent sender);
 }

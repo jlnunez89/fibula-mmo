@@ -72,9 +72,15 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// Attempts to expedite this event, in other words, requesting it to be fired immediately.
         /// </summary>
-        public void Expedite()
+        /// <returns>True if the event is successfully expedited, false otherwise.</returns>
+        public bool Expedite()
         {
-            this.Expedited?.Invoke(this);
+            if (this.Expedited == null)
+            {
+                return false;
+            }
+
+            return this.Expedited.Invoke(this);
         }
     }
 }

@@ -74,7 +74,12 @@ namespace OpenTibia.Server.Events
         {
             context.ThrowIfNull(nameof(context));
 
-            this.TargetOperation.Expedite();
+            if (!this.TargetOperation.Expedite())
+            {
+                context.Scheduler.ScheduleEvent(this.TargetOperation);
+            }
+
+            this.Logger.Verbose($"Expedited operation {this.TargetOperation.EventId}.");
 
             if (this.RemainingExecutionCount != IEventRule.UnlimitedExecutions && this.RemainingExecutionCount > 0)
             {

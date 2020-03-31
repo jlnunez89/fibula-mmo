@@ -268,7 +268,7 @@ namespace OpenTibia.Server
         /// <returns>True if at least one rule was matched and executed, false otherwise.</returns>
         public bool EvaluateRules(object caller, EventRuleType type, IEventRuleArguments eventRuleArguments)
         {
-            this.logger.Debug($"{type} rules evaluation triggered by {caller.GetType().Name}.");
+            this.logger.Verbose($"{type} rules evaluation triggered by {caller.GetType().Name}.");
 
             if (!this.eventRulesCatalog.TryGetValue(type, out ISet<IEventRule> rulesToEvaluate))
             {
@@ -277,7 +277,7 @@ namespace OpenTibia.Server
 
             var executedRules = new List<IEventRule>();
 
-            IEventRuleContext evaluationContext = new EventRuleContext(this, this.tileAccessor, eventRuleArguments);
+            IEventRuleContext evaluationContext = new EventRuleContext(this, this.tileAccessor, this.scheduler, eventRuleArguments);
 
             foreach (var rule in rulesToEvaluate.Where(e => !this.cancelledEventRules.Contains(e.Id) && e.CanBeExecuted(evaluationContext)).ToList())
             {
@@ -1051,15 +1051,13 @@ namespace OpenTibia.Server
         /// <param name="toZ">The end Z coordinate for the loaded window.</param>
         private void OnMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
-            var rng = new Random();
-
             // For spawns, check which fall within this window:
             var spawnsInWindow = this.monsterSpawns
                 .Where(s => s.Location.X >= fromX && s.Location.X <= toX &&
                             s.Location.Y >= fromY && s.Location.Y <= toY &&
                             s.Location.Z >= fromZ && s.Location.Z <= toZ);
 
-            this.logger.Debug($"Loaded map window X=[{fromX},{toX}] Y=[{fromY},{toY}] Z=[{fromZ},{toZ}]. Spawns here: {spawnsInWindow.Count()}");
+            this.logger.Debug($"Loaded map window X=[{fromX},{toX}] Y=[{fromY},{toY}] Z=[{fromZ},{toZ}], with {spawnsInWindow.Count()} spawns triggered.");
 
             if (!spawnsInWindow.Any())
             {
@@ -1068,28 +1066,7 @@ namespace OpenTibia.Server
 
             foreach (var spawn in spawnsInWindow)
             {
-                for (int i = 0; i < spawn.Count; i++)
-                {
-                    var r = spawn.Radius / 4;
-                    var newMonster = this.creatureFactory.Create(CreatureType.Monster, new MonsterCreationMetadata(spawn.Id)) as IMonster;
-
-                    var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
-
-                    // TODO: this doesn't actually work because when the OnMapWindowLoaded event gets triggered while loading the tiles in a sector, but before they
-                    // are marked as loaded, so the pathfinding actually doesn't find anything for now.
-                    // The long term solution here is to abstract spawns into an operation and trigger it, so that they are
-                    // A) performed after the tiles are marked as loaded, and
-                    // B) reusable when we trigger time-based re-spawn.
-
-                    // Need to actually pathfind to avoid placing a monster in unreachable places.
-                    this.pathFinder.FindBetween(spawn.Location, randomLoc, out Location foundLocation, (i + 1) * 10);
-
-                    // TODO: some property of newMonster here to figure out what actually blocks path finding.
-                    if (this.tileAccessor.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
-                    {
-                        this.DispatchOperation(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, targetTile, newMonster));
-                    }
-                }
+                this.DispatchOperation(OperationType.SpawnMonsters, new SpawnMonstersOperationCreationArguments(spawn, new MonsterCreationMetadata(spawn.Id)));
             }
         }
     }

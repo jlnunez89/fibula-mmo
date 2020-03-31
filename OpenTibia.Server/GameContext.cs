@@ -29,6 +29,7 @@ namespace OpenTibia.Server.Operations
         /// <param name="pathFinder"></param>
         /// <param name="containerManager"></param>
         /// <param name="operationFactory"></param>
+        /// <param name="eventRulesApi"></param>
         /// <param name="scheduler"></param>
         public GameContext(
             IGame game,
@@ -37,6 +38,7 @@ namespace OpenTibia.Server.Operations
             IPathFinder pathFinder,
             IContainerManager containerManager,
             IOperationFactory operationFactory,
+            IEventRulesApi eventRulesApi,
             IScheduler scheduler)
         {
             game.ThrowIfNull(nameof(game));
@@ -44,6 +46,7 @@ namespace OpenTibia.Server.Operations
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
             pathFinder.ThrowIfNull(nameof(pathFinder));
             operationFactory.ThrowIfNull(nameof(operationFactory));
+            eventRulesApi.ThrowIfNull(nameof(eventRulesApi));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.Game = game;
@@ -52,6 +55,7 @@ namespace OpenTibia.Server.Operations
             this.PathFinder = pathFinder;
             this.ContainerManager = containerManager;
             this.OperationFactory = operationFactory;
+            this.EventRulesApi = eventRulesApi;
             this.Scheduler = scheduler;
         }
 
@@ -84,6 +88,11 @@ namespace OpenTibia.Server.Operations
         /// Gets a reference to the operation factory in use.
         /// </summary>
         public IOperationFactory OperationFactory { get; }
+
+        /// <summary>
+        /// Gets a reference to the event rules API.
+        /// </summary>
+        public IEventRulesApi EventRulesApi { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

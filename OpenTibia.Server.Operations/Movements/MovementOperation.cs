@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Operations.Movements
 {
     using System;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Packets.Outgoing;
     using OpenTibia.Server.Contracts;
@@ -783,45 +784,42 @@ namespace OpenTibia.Server.Operations.Movements
             context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
             context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
 
-            //creature.ExecuteLocationBasedOperations(context);
-            //creature.ExecuteRangeBasedOperations(context);
+            if (creature is ICombatant combatant)
+            {
+                // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
+                //foreach (var attackerId in combatant.AttackedBy)
+                //{
+                //    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
+                //    {
+                //        continue;
+                //    }
 
-            //if (creature is ICombatant combatant)
-            //{
-            //    // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
-            //    foreach (var attackerId in combatant.AttackedBy)
-            //    {
-            //        if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
-            //        {
-            //            continue;
-            //        }
+                //    otherCombatant.ExecuteRangeBasedOperations(context);
+                //}
 
-            //        otherCombatant.ExecuteRangeBasedOperations(context);
-            //    }
+                // And check if it walked into new combatants view range.
+                var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
+                var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
 
-            //    // And check if it walked into new combatants view range.
-            //    var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
-            //    var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
+                var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
+                var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
 
-            //    var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
-            //    var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
+                foreach (var spectator in spectatorsAdded)
+                {
+                    if (spectator is ICombatant newCombatant)
+                    {
+                        newCombatant.CombatantNowInView(combatant);
+                    }
+                }
 
-            //    foreach (var spectator in spectatorsAdded)
-            //    {
-            //        if (spectator is ICombatant newCombatant)
-            //        {
-            //            newCombatant.CombatantNowInView(combatant);
-            //        }
-            //    }
-
-            //    foreach (var spectator in spectatorsLost)
-            //    {
-            //        if (spectator is ICombatant oldCombatant)
-            //        {
-            //            oldCombatant.CombatantNoLongerInView(combatant);
-            //        }
-            //    }
-            //}
+                foreach (var spectator in spectatorsLost)
+                {
+                    if (spectator is ICombatant oldCombatant)
+                    {
+                        oldCombatant.CombatantNoLongerInView(combatant);
+                    }
+                }
+            }
 
             return true;
         }

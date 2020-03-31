@@ -52,6 +52,7 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         /// <summary>
         /// Attempts to expedite this event, requesting it to be fired immediately.
         /// </summary>
-        void Expedite();
+        /// <returns>True if the event is successfully expedited, false otherwise.</returns>
+        bool Expedite();
     }
 }

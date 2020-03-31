@@ -23,6 +23,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Events;
     using OpenTibia.Server.Operations;
     using OpenTibia.Server.Operations.Arguments;
     using Serilog;
@@ -97,7 +98,21 @@ namespace OpenTibia.Communications.Handlers.Game
                 }
                 else
                 {
-                    //player.SetOperationAtLocation(retryLocation, movementOperation);
+                    var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
+                    {
+                        (context) =>
+                        {
+                            if (!(context.Arguments is MovementEventRuleArguments movementEventRuleArguments) ||
+                                !(movementEventRuleArguments.ThingMoving is ICreature creature))
+                            {
+                                return false;
+                            }
+
+                            return creature.Location == retryLocation;
+                        },
+                    };
+
+                    this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, movementOperation, conditionsForExpedition, 1), $"{nameof(MoveThingHandler)}:{player.Id}");
 
                     this.ScheduleNewOperation(
                         this.Context.OperationFactory.Create(

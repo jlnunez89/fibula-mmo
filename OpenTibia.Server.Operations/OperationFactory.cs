@@ -75,54 +75,6 @@ namespace OpenTibia.Server.Operations
                     }
 
                     break;
-                case OperationType.LogIn:
-                    if (arguments is LogInOperationCreationArguments logInOpArgs)
-                    {
-                        return new LogInOperation(
-                            NoRequestorId,
-                            logInOpArgs.CreationMetadata,
-                            logInOpArgs.Connection,
-                            logInOpArgs.WorldLightLevel,
-                            logInOpArgs.WorldLightColor);
-                    }
-
-                    break;
-                case OperationType.LogOut:
-                    if (arguments is LogOutOperationCreationArguments logOutOpArgs)
-                    {
-                        return new LogOutOperation(logOutOpArgs.RequestorId, logOutOpArgs.Player);
-                    }
-
-                    break;
-
-                case OperationType.PlaceCreature:
-                    if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
-                    {
-                        return new PlaceCreatureOperation(
-                            placeCreatureOpArgs.RequestorId,
-                            placeCreatureOpArgs.AtTile,
-                            placeCreatureOpArgs.Creature);
-                    }
-
-                    break;
-                case OperationType.RemoveCreature:
-                    if (arguments is RemoveCreatureOperationCreationArguments removeCreatureOpArgs)
-                    {
-                        return new RemoveCreatureOperation(
-                            removeCreatureOpArgs.RequestorId,
-                            removeCreatureOpArgs.Creature);
-                    }
-
-                    break;
-                case OperationType.Speech:
-                    if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
-                    {
-                        return new SpeechOperation(
-                            speechOperationOpArgs.RequestorId,
-                            speechOperationOpArgs.SpeechInfo);
-                    }
-
-                    break;
                 case OperationType.ChangeItem:
                     if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
                     {
@@ -132,26 +84,6 @@ namespace OpenTibia.Server.Operations
                             changeItemOpArgs.FromLocation,
                             changeItemOpArgs.ToTypeId,
                             changeItemOpArgs.Carrier);
-                    }
-
-                    break;
-                case OperationType.CreateItem:
-                    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
-                    {
-                        return new CreateItemOperation(
-                            createItemOpArgs.RequestorId,
-                            createItemOpArgs.ItemTypeId,
-                            createItemOpArgs.AtLocation);
-                    }
-
-                    break;
-                case OperationType.DeleteItem:
-                    if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
-                    {
-                        return new DeleteItemOperation(
-                            deleteItemOpArgs.RequestorId,
-                            deleteItemOpArgs.ItemTypeId,
-                            deleteItemOpArgs.AtLocation);
                     }
 
                     break;
@@ -185,6 +117,112 @@ namespace OpenTibia.Server.Operations
                     }
 
                     break;
+                case OperationType.CreateItem:
+                    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
+                    {
+                        return new CreateItemOperation(
+                            createItemOpArgs.RequestorId,
+                            createItemOpArgs.ItemTypeId,
+                            createItemOpArgs.AtLocation);
+                    }
+
+                    break;
+                case OperationType.DeleteItem:
+                    if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
+                    {
+                        return new DeleteItemOperation(
+                            deleteItemOpArgs.RequestorId,
+                            deleteItemOpArgs.ItemTypeId,
+                            deleteItemOpArgs.AtLocation);
+                    }
+
+                    break;
+                case OperationType.LogIn:
+                    if (arguments is LogInOperationCreationArguments logInOpArgs)
+                    {
+                        return new LogInOperation(
+                            NoRequestorId,
+                            logInOpArgs.CreationMetadata,
+                            logInOpArgs.Connection,
+                            logInOpArgs.WorldLightLevel,
+                            logInOpArgs.WorldLightColor);
+                    }
+
+                    break;
+                case OperationType.LogOut:
+                    if (arguments is LogOutOperationCreationArguments logOutOpArgs)
+                    {
+                        return new LogOutOperation(logOutOpArgs.RequestorId, logOutOpArgs.Player);
+                    }
+
+                    break;
+                case OperationType.Movement:
+                    if (arguments is MovementOperationCreationArguments movementOpArgs)
+                    {
+                        return new MovementOperation(
+                            movementOpArgs.RequestorId,
+                            movementOpArgs.ThingId,
+                            movementOpArgs.FromLocation,
+                            movementOpArgs.FromIndex,
+                            movementOpArgs.FromCreatureId,
+                            movementOpArgs.ToLocation,
+                            movementOpArgs.ToCreatureId,
+                            movementOpArgs.Amount);
+                    }
+
+                    break;
+                case OperationType.PlaceCreature:
+                    if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
+                    {
+                        return new PlaceCreatureOperation(
+                            placeCreatureOpArgs.RequestorId,
+                            placeCreatureOpArgs.AtTile,
+                            placeCreatureOpArgs.Creature);
+                    }
+
+                    break;
+                case OperationType.RemoveCreature:
+                    if (arguments is RemoveCreatureOperationCreationArguments removeCreatureOpArgs)
+                    {
+                        return new RemoveCreatureOperation(
+                            removeCreatureOpArgs.RequestorId,
+                            removeCreatureOpArgs.Creature);
+                    }
+
+                    break;
+                case OperationType.RestoreCombatCredit:
+                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
+                    {
+                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
+                    }
+
+                    break;
+                case OperationType.Speech:
+                    if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
+                    {
+                        return new SpeechOperation(
+                            speechOperationOpArgs.RequestorId,
+                            speechOperationOpArgs.SpeechInfo);
+                    }
+
+                    break;
+                case OperationType.SpawnMonsters:
+                    if (arguments is SpawnMonstersOperationCreationArguments spawnMonstersOpArgs)
+                    {
+                        return new SpawnMonstersOperation(
+                            NoRequestorId,
+                            spawnMonstersOpArgs.Spawn,
+                            spawnMonstersOpArgs.MonsterCreationMetadata);
+                    }
+
+                    break;
+                case OperationType.Thinking:
+                    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
+                    {
+                        return new ThinkingOperation(thinkingOpArgs.Combatant, thinkingOpArgs.Cadence);
+                    }
+
+                    break;
                 case OperationType.Turn:
                     if (arguments is TurnToDirectionOperationCreationArguments turnToDirectionOpArgs)
                     {
@@ -214,35 +252,6 @@ namespace OpenTibia.Server.Operations
                             useItemOnOpArgs.ToThingId,
                             useItemOnOpArgs.ToLocation,
                             useItemOnOpArgs.ToIndex);
-                    }
-
-                    break;
-                case OperationType.Movement:
-                    if (arguments is MovementOperationCreationArguments movementOpArgs)
-                    {
-                        return new MovementOperation(
-                            movementOpArgs.RequestorId,
-                            movementOpArgs.ThingId,
-                            movementOpArgs.FromLocation,
-                            movementOpArgs.FromIndex,
-                            movementOpArgs.FromCreatureId,
-                            movementOpArgs.ToLocation,
-                            movementOpArgs.ToCreatureId,
-                            movementOpArgs.Amount);
-                    }
-
-                    break;
-                case OperationType.Thinking:
-                    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
-                    {
-                        return new ThinkingOperation(thinkingOpArgs.Combatant, thinkingOpArgs.Cadence);
-                    }
-
-                    break;
-                case OperationType.RestoreCombatCredit:
-                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
-                    {
-                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
                     }
 
                     break;

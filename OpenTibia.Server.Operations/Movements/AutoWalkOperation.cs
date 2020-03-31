@@ -123,14 +123,11 @@ namespace OpenTibia.Server.Operations.Movements
                             return false;
                         }
 
-                        return creature.Location != nextLocation;
+                        return creature.Location == nextLocation;
                     },
                 };
 
                 context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, totalExecutionCount: 1), partitionKey);
-
-                this.Repeat = true;
-                this.RepeatDelay = TimeSpan.FromSeconds(5);
             }
         }
     }

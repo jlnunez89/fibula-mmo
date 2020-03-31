@@ -351,11 +351,11 @@ namespace OpenTibia.Scheduling
         /// Handles a call from a manually  event.
         /// </summary>
         /// <param name="sender">The event that was processed manually.</param>
-        private void HandleEventExpedition(IEvent sender)
+        private bool HandleEventExpedition(IEvent sender)
         {
             if (sender == null || !(sender is BaseEvent evt))
             {
-                return;
+                return false;
             }
 
             // Lock on the events available to prevent race conditions on the manually firing list vs firing.
@@ -367,6 +367,8 @@ namespace OpenTibia.Scheduling
                 // Flag the processing queue.
                 Monitor.Pulse(this.eventsAvailableLock);
             }
+
+            return true;
         }
 
         /// <summary>

@@ -49,6 +49,11 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IOperationFactory OperationFactory { get; }
 
         /// <summary>
+        /// Gets the reference to the event rules API.
+        /// </summary>
+        IEventRulesApi EventRulesApi { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

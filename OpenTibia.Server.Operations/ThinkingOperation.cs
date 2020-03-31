@@ -102,8 +102,8 @@ namespace OpenTibia.Server.Operations
                 if (monster.HostilesInView.Any() || monster.NeutralsInView.Any())
                 {
                     // Set retry members to force retry of this operation.
-                    // this.Repeat = true;
-                    // this.RepeatDelay = this.Combatant.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
+                    this.Repeat = true;
+                    this.RepeatDelay = monster.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
                 }
             }
         }

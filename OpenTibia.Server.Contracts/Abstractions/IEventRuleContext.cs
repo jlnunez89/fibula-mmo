@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Contracts.Abstractions
 {
+    using OpenTibia.Scheduling.Contracts.Abstractions;
+
     /// <summary>
     /// Interface for an event rule execution context.
     /// </summary>
@@ -19,6 +21,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         IGameApi GameApi { get; }
 
         ITileAccessor TileAccessor { get; }
+
+        IScheduler Scheduler { get; }
 
         IEventRuleArguments Arguments { get; set; }
     }

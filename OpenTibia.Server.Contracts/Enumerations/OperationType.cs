@@ -40,5 +40,6 @@ namespace OpenTibia.Server.Contracts.Enumerations
         LogOut,
         PlaceCreature,
         RemoveCreature,
+        SpawnMonsters,
     }
 }
