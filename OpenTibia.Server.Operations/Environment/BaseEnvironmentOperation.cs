@@ -100,12 +100,19 @@ namespace OpenTibia.Server.Operations.Actions
 
                 var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
 
-                context.Scheduler.ScheduleEvent(
-                    new CreatureMovedNotification(
-                        context.MapDescriptor,
-                        context.CreatureManager,
-                        TargetConnectionsFunc,
-                        new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, targetTile.Location, placedAtStackPos, wasTeleport: true)));
+                //context.Scheduler.ScheduleEvent(
+                //    new CreatureMovedNotification(
+                //        context.MapDescriptor,
+                //        context.CreatureManager,
+                //        TargetConnectionsFunc,
+                //        new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, targetTile.Location, placedAtStackPos, wasTeleport: true)));
+
+                new CreatureMovedNotification(
+                    context.MapDescriptor,
+                    context.CreatureManager,
+                    TargetConnectionsFunc,
+                    new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, targetTile.Location, placedAtStackPos, wasTeleport: true))
+                .Execute(context);
             }
 
             return addSuccessful;

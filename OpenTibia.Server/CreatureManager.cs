@@ -77,14 +77,9 @@ namespace OpenTibia.Server
         /// <returns>The creature instance, if found, and null otherwise.</returns>
         public ICreature FindCreatureById(uint creatureId)
         {
-            try
-            {
-                return this.creatureMap[creatureId];
-            }
-            catch
-            {
-                return null;
-            }
+            this.creatureMap.TryGetValue(creatureId, out ICreature creature);
+
+            return creature;
         }
 
         /// <summary>

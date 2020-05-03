@@ -64,12 +64,12 @@ namespace OpenTibia.Server.PathFinding.AStar
         /// <param name="startLocation">The start location.</param>
         /// <param name="targetLocation">The target location to find a path to.</param>
         /// <param name="endLocation">The last searched location before returning.</param>
-        /// <param name="maxStepsCount">Optional. The maximum number of search steps to perform before giving up on finding the target location. Default is 100.</param>
+        /// <param name="maxStepsCount">Optional. The maximum number of search steps to perform before giving up on finding the target location. Default is <see cref="AStarPathFinderOptions.DefaultMaximumSteps"/>.</param>
         /// <param name="onBehalfOfCreature">Optional. The creature on behalf of which the search is being performed.</param>
-        /// <param name="considerAvoidsAsBlock">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
+        /// <param name="considerAvoidsAsBlocking">Optional. A value indicating whether to consider the creature avoid tastes as blocking in path finding. Defaults to true.</param>
         /// <param name="targetDistance">Optional. The target distance from the target node to shoot for.</param>
         /// <returns>An <see cref="IEnumerable{T}"/> of <see cref="Direction"/>s leading to the end location. The <paramref name="endLocation"/> and <paramref name="targetLocation"/> may or may not be the same.</returns>
-        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null, bool considerAvoidsAsBlock = true, int targetDistance = 1)
+        public IEnumerable<Direction> FindBetween(Location startLocation, Location targetLocation, out Location endLocation, int maxStepsCount = default, ICreature onBehalfOfCreature = null, bool considerAvoidsAsBlocking = true, int targetDistance = 1)
         {
             endLocation = startLocation;
             maxStepsCount = maxStepsCount == default ? this.Options.DefaultMaximumSteps : maxStepsCount;
@@ -77,7 +77,7 @@ namespace OpenTibia.Server.PathFinding.AStar
             var searchContext = new AStarSearchContext(
                 Guid.NewGuid().ToString(),
                 onBehalfOfCreature,
-                considerAvoidsAsBlock,
+                considerAvoidsAsBlocking,
                 targetDistance);
 
             var startNode = this.NodeFactory.Create(searchContext, new TileNodeCreationArguments(startLocation));
@@ -91,11 +91,11 @@ namespace OpenTibia.Server.PathFinding.AStar
                     return Enumerable.Empty<Direction>();
                 }
 
-                var dirList = new List<Direction>();
-
                 var algo = new AStar(this.NodeFactory, startNode, targetNode, maxStepsCount);
 
-                if (algo.Run() == SearchState.Failed)
+                var resultState = algo.Run();
+
+                if (resultState == SearchState.Failed)
                 {
                     var lastTile = algo.GetLastPath()?.LastOrDefault() as TileNode;
 
@@ -104,21 +104,19 @@ namespace OpenTibia.Server.PathFinding.AStar
                         endLocation = lastTile.Tile.Location;
                     }
 
-                    return dirList;
+                    return Enumerable.Empty<Direction>();
                 }
 
-                var lastLoc = startLocation;
+                var dirList = new List<Direction>();
 
                 foreach (var node in algo.GetLastPath().Cast<TileNode>().Skip(1))
                 {
-                    var newDir = lastLoc.DirectionTo(node.Tile.Location, true);
+                    var newDir = endLocation.DirectionTo(node.Tile.Location, true);
 
                     dirList.Add(newDir);
 
-                    lastLoc = node.Tile.Location;
+                    endLocation = node.Tile.Location;
                 }
-
-                endLocation = lastLoc;
 
                 return dirList;
             }

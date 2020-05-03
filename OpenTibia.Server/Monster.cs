@@ -12,6 +12,7 @@
 namespace OpenTibia.Server.Monsters
 {
     using System;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -101,6 +102,8 @@ namespace OpenTibia.Server.Monsters
         /// </summary>
         public override FightMode FightMode { get; set; }
 
+        public override bool IsThinking => this.HostilesInView.Any() || this.NeutralsInView.Any();
+
         /// <summary>
         /// Sets a <see cref="ICombatant"/> now in view for this combatant.
         /// </summary>
@@ -108,8 +111,6 @@ namespace OpenTibia.Server.Monsters
         public override void CombatantNowInView(ICombatant otherCombatant)
         {
             otherCombatant.ThrowIfNull(nameof(otherCombatant));
-
-            var totalInViewBefore = this.HostilesInView.Count + this.NeutralsInView.Count + this.FriendlyInView.Count;
 
             if (otherCombatant is Monster otherMonster)
             {
@@ -123,11 +124,6 @@ namespace OpenTibia.Server.Monsters
             else
             {
                 this.NeutralsInView.Add(otherCombatant.Id);
-            }
-
-            if (totalInViewBefore == 0)
-            {
-                this.InvokeCombatStarted();
             }
         }
 

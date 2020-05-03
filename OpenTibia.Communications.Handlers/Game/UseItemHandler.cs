@@ -20,6 +20,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -63,10 +64,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            //player.ClearAllLocationBasedOperations();
-
-            this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
-
             // Before actually using the item, check if we're close enough to use it.
             if (itemUseInfo.FromLocation.Type == LocationType.Map)
             {
@@ -109,10 +106,13 @@ namespace OpenTibia.Communications.Handlers.Game
                     OperationType.UseItem,
                     new UseItemOperationCreationArguments(creature.Id, itemClientId, fromLocation, index));
 
+            this.Context.EventRulesApi.ClearAllFor(useItemOperation.GetPartitionKey());
+            this.Context.Scheduler.CancelAllFor(creature.Id, typeof(IMovementOperation));
+
             if (fromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away from it, we need to move closer first.
-                var directions = this.Context.PathFinder.FindBetween(creature.Location, fromLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+                var directions = this.Context.PathFinder.FindBetween(creature.Location, fromLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlocking: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -134,7 +134,7 @@ namespace OpenTibia.Communications.Handlers.Game
                         },
                     };
 
-                    this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, useItemOperation, conditionsForExpedition, 1), $"{nameof(UseItemHandler)}:{creature.Id}");
+                    this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, useItemOperation, conditionsForExpedition, 1), useItemOperation.GetPartitionKey());
 
                     this.ScheduleNewOperation(
                         this.Context.OperationFactory.Create(

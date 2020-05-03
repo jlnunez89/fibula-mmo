@@ -152,9 +152,14 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         AnimatedText = 0x84,
 
         /// <summary>
-        /// Cancel walking.
+        /// An animated projectile.
         /// </summary>
-        WalkCancel = 0xB5,
+        ProjectileEffect = 0x85,
+
+        /// <summary>
+        /// A square around a creature.
+        /// </summary>
+        Square = 0x86,
 
         /// <summary>
         /// Update creature light.
@@ -165,6 +170,11 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         /// Update creature outfit.
         /// </summary>
         CreatureOutfit = 0x8E,
+
+        /// <summary>
+        /// Update creature speed.
+        /// </summary>
+        CreatureSpeedChange = 0x8F,
 
         /// <summary>
         /// Send a player stats.
@@ -182,6 +192,11 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         PlayerConditions = 0xA2,
 
         /// <summary>
+        /// Cancel an attack target.
+        /// </summary>
+        CancelTarget = 0xA3,
+
+        /// <summary>
         /// A creature speech shown on the map.
         /// </summary>
         CreatureSpeech = 0xAA,
@@ -190,6 +205,11 @@ namespace OpenTibia.Communications.Contracts.Enumerations
         /// A direct text message.
         /// </summary>
         TextMessage = 0xB4,
+
+        /// <summary>
+        /// Cancel walking.
+        /// </summary>
+        WalkCancel = 0xB5,
 
         /// <summary>
         /// Going up a floor.

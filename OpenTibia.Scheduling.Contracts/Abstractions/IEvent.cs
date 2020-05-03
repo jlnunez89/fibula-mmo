@@ -11,8 +11,6 @@
 
 namespace OpenTibia.Scheduling.Contracts.Abstractions
 {
-    using System;
-
     /// <summary>
     /// Interface that represents an event.
     /// </summary>
@@ -32,16 +30,6 @@ namespace OpenTibia.Scheduling.Contracts.Abstractions
         /// Gets the id of the requestor of this event, if available.
         /// </summary>
         uint RequestorId { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether the event should be repeated.
-        /// </summary>
-        bool Repeat { get; }
-
-        /// <summary>
-        /// Gets a value for how long to wait until the event should be repeated.
-        /// </summary>
-        TimeSpan RepeatDelay { get; }
 
         /// <summary>
         /// Executes the event logic.

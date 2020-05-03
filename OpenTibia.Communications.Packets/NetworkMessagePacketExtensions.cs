@@ -60,19 +60,6 @@ namespace OpenTibia.Communications.Packets
         }
 
         /// <summary>
-        /// Reads authentication info from the network message.
-        /// </summary>
-        /// <param name="message">The message to read from.</param>
-        /// <returns>The authentication information.</returns>
-        public static IAuthenticationInfo ReadAuthenticationInfo(this INetworkMessage message)
-        {
-            // one byte to read and ignore.
-            message.GetByte();
-
-            return new AuthenticationPacket(password: message.GetString(), worldName: message.GetString());
-        }
-
-        /// <summary>
         /// Reads the automove directions information sent in the message.
         /// </summary>
         /// <param name="message">The message to read from.</param>
@@ -747,8 +734,8 @@ namespace OpenTibia.Communications.Packets
             message.WritePacketType(packet);
 
             message.AddUInt32(packet.Creature.Id);
-            message.AddByte(packet.Creature.EmittedLightLevel); // light level
-            message.AddByte(packet.Creature.EmittedLightColor); // color
+            message.AddByte(packet.Creature.EmittedLightLevel);
+            message.AddByte(packet.Creature.EmittedLightColor);
         }
 
         /// <summary>
@@ -962,6 +949,21 @@ namespace OpenTibia.Communications.Packets
 
             message.AddLocation(packet.Location);
             message.AddByte((byte)packet.Effect);
+        }
+
+        /// <summary>
+        /// Writes the contents of the <see cref="SquarePacket"/> into the message.
+        /// </summary>
+        /// <param name="message">The message to write to.</param>
+        /// <param name="packet">The packet to write in the message.</param>
+        public static void WriteCreatureSquarePacket(this INetworkMessage message, SquarePacket packet)
+        {
+            packet.ThrowIfNull(nameof(packet));
+
+            message.WritePacketType(packet);
+
+            message.AddUInt32(packet.OnCreatureId);
+            message.AddByte((byte)packet.Color);
         }
 
         /// <summary>

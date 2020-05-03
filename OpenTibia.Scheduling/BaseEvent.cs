@@ -19,7 +19,7 @@ namespace OpenTibia.Scheduling
     /// <summary>
     /// Abstract class that represents the base event for scheduling.
     /// </summary>
-    public abstract class BaseEvent : FastPriorityQueueNode, IEvent
+    public abstract class BaseEvent : StablePriorityQueueNode, IEvent
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
@@ -47,16 +47,6 @@ namespace OpenTibia.Scheduling
         /// Gets the id of the requestor of this event, if available.
         /// </summary>
         public uint RequestorId { get; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the event should be repeated.
-        /// </summary>
-        public bool Repeat { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value for how long to wait until the event should be repeated.
-        /// </summary>
-        public TimeSpan RepeatDelay { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Expedited"/> event.

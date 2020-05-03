@@ -24,7 +24,7 @@ namespace OpenTibia.Server.Map.GrassOnly
     /// </summary>
     public class GrassOnlyDummyMapLoader : IMapLoader
     {
-        private ConcurrentDictionary<Location, ITile> tilesAndLocations;
+        private readonly ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
         private bool preloaded;
 

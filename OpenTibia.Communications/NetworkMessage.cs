@@ -13,6 +13,7 @@ namespace OpenTibia.Communications
 {
     using System;
     using System.Buffers;
+    using System.Linq;
     using System.Text;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Security.Encryption;
@@ -322,9 +323,6 @@ namespace OpenTibia.Communications
         {
             // Must be before Xtea, because the packet length is encrypted as well
             this.InsertPacketLength();
-
-            //var messageBytes = this.Buffer.Take(this.Length).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
-            //Console.WriteLine($"Message bytes before being sent: {messageBytes}");
 
             if (!this.XteaEncrypt(xteaKey))
             {

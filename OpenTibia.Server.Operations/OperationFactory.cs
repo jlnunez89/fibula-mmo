@@ -219,7 +219,7 @@ namespace OpenTibia.Server.Operations
                 case OperationType.Thinking:
                     if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
                     {
-                        return new ThinkingOperation(thinkingOpArgs.Combatant, thinkingOpArgs.Cadence);
+                        return new ThinkingOperation(thinkingOpArgs.Creature, thinkingOpArgs.Cadence);
                     }
 
                     break;

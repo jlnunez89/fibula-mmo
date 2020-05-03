@@ -99,16 +99,16 @@ namespace OpenTibia.Server.Operations.Combat
                     return;
                 }
 
-                var rulesPartitionKey = $"{nameof(AutoAttackCombatOperation)}:{this.Attacker.Id}";
-
                 if (inRange)
                 {
-                    context.EventRulesApi.ClearAllFor(rulesPartitionKey);
+                    context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
 
                     attackPerformed = enoughCredits && this.PerformAttack(context);
                 }
                 else if (!nullAttacker)
                 {
+                    context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
+
                     // Setup as a movement rule, so that it gets expedited when the combatant is in range from it's target.
                     var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
                     {
@@ -125,27 +125,7 @@ namespace OpenTibia.Server.Operations.Combat
                         },
                     };
 
-                    context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), rulesPartitionKey);
-                }
-
-                if (nullAttacker)
-                {
-                    // Stop here if we don't have an attacker, as we don't need to repeat this operation.
-                    return;
-                }
-
-                // Do we need to continue attacking?
-                if (this.Attacker.AutoAttackTarget != null)
-                {
-                    var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / this.Attacker.BaseAttackSpeed));
-                    var attackCooldownRemaining = this.Attacker.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
-
-                    // Update exhaustion cost in case the creature's attack speed changed.
-                    this.ExhaustionCost = attackPerformed ? normalizedAttackSpeed : TimeSpan.Zero;
-
-                    // Setting repeat members to repeat this operation.
-                    this.Repeat = isCorrectTarget;
-                    this.RepeatDelay = attackPerformed ? attackCooldownRemaining : normalizedAttackSpeed;
+                    context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), this.GetPartitionKey());
                 }
             }
             finally
@@ -262,6 +242,16 @@ namespace OpenTibia.Server.Operations.Combat
                 new GenericNotification(
                     () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, this.Target.Location),
                     new GenericNotificationArguments(packetsToSend.ToArray())));
+
+            if (this.Target is IPlayer targetPlayer)
+            {
+                var squarePacket = new SquarePacket(this.Attacker.Id, SquareColor.Black);
+
+                context.Scheduler.ScheduleEvent(
+                    new GenericNotification(
+                        () => context.ConnectionFinder.FindByPlayerId(targetPlayer.Id).YieldSingleItem(),
+                        new GenericNotificationArguments(squarePacket)));
+            }
 
             return true;
         }

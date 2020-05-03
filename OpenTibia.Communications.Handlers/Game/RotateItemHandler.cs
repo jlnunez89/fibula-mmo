@@ -20,6 +20,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -63,8 +64,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
-
             // Before actually using the item, check if we're close enough to use it.
             if (itemRotationInfo.AtLocation.Type == LocationType.Map)
             {
@@ -107,17 +106,20 @@ namespace OpenTibia.Communications.Handlers.Game
                     return null;
                 }
 
+                var locationDiff = atLocation - creature.Location;
+
                 var changeItemOperation =
                         this.Context.OperationFactory.Create(
                             OperationType.ChangeItem,
                             new ChangeItemOperationCreationArguments(requestorId: 0, item.ThingId, atLocation, item.RotateTo));
 
-                var locationDiff = atLocation - creature.Location;
+                this.Context.EventRulesApi.ClearAllFor(changeItemOperation.GetPartitionKey());
+                this.Context.Scheduler.CancelAllFor(creature.Id, typeof(IMovementOperation));
 
                 if (atLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
                 {
                     // Too far away from it, we need to move closer first.
-                    var directions = this.Context.PathFinder.FindBetween(creature.Location, atLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlock: true);
+                    var directions = this.Context.PathFinder.FindBetween(creature.Location, atLocation, out Location retryLocation, onBehalfOfCreature: creature, considerAvoidsAsBlocking: true);
 
                     if (directions == null || !directions.Any())
                     {
@@ -139,7 +141,7 @@ namespace OpenTibia.Communications.Handlers.Game
                             },
                         };
 
-                        this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, changeItemOperation, conditionsForExpedition, 1), $"{nameof(RotateItemHandler)}:{creature.Id}");
+                        this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, changeItemOperation, conditionsForExpedition, 1), changeItemOperation.GetPartitionKey());
 
                         this.ScheduleNewOperation(
                             this.Context.OperationFactory.Create(

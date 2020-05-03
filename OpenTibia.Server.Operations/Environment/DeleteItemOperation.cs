@@ -79,13 +79,21 @@ namespace OpenTibia.Server.Operations.Environment
 
             if (atCylinder is ITile atTile)
             {
-                context.Scheduler.ScheduleEvent(
-                    new TileUpdatedNotification(
-                            context.CreatureFinder,
-                            () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, atTile.Location),
-                            new TileUpdatedNotificationArguments(
-                                atTile.Location,
-                                context.MapDescriptor.DescribeTile)));
+                //context.Scheduler.ScheduleEvent(
+                //    new TileUpdatedNotification(
+                //        context.CreatureFinder,
+                //        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, atTile.Location),
+                //        new TileUpdatedNotificationArguments(
+                //            atTile.Location,
+                //            context.MapDescriptor.DescribeTile)));
+
+                new TileUpdatedNotification(
+                    context.CreatureFinder,
+                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, atTile.Location),
+                    new TileUpdatedNotificationArguments(
+                        atTile.Location,
+                        context.MapDescriptor.DescribeTile))
+                .Execute(context);
             }
 
             context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(atCylinder.Location, item, this.GetRequestor(context.CreatureFinder)));

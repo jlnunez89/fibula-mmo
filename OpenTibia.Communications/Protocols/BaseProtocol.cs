@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Communications
 {
+    using System.Collections.Generic;
+    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
 
@@ -63,6 +65,28 @@ namespace OpenTibia.Communications
 
             connection.InboundMessage.Reset();
             connection.BeginStreamRead();
+        }
+
+        /// <summary>
+        /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.
+        /// </summary>
+        /// <param name="responsePackets">The packets that compose that response.</param>
+        /// <returns>The response as a <see cref="INetworkMessage"/>.</returns>
+        protected INetworkMessage PrepareResponse(IEnumerable<IOutgoingPacket> responsePackets)
+        {
+            if (responsePackets == null || !responsePackets.Any())
+            {
+                return null;
+            }
+
+            INetworkMessage outgoingMessage = new NetworkMessage();
+
+            foreach (var outPacket in responsePackets)
+            {
+                outPacket.WriteToMessage(outgoingMessage);
+            }
+
+            return outgoingMessage;
         }
     }
 }

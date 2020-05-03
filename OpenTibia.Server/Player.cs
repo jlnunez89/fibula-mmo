@@ -192,6 +192,8 @@ namespace OpenTibia.Server
             }
         }
 
+        public override bool IsThinking => true;
+
         /// <summary>
         /// Checks if this player knows the given creature.
         /// </summary>

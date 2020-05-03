@@ -208,7 +208,7 @@ namespace OpenTibia.Server
 
                 var miscellaneusEventsTask = Task.Factory.StartNew(this.MiscellaneousEventsLoop, cancellationToken, TaskCreationOptions.LongRunning);
 
-                // var creatureThinkingTask = Task.Factory.StartNew(this.CreatureThinkingLoop, cancellationToken, TaskCreationOptions.LongRunning);
+                var creatureThinkingTask = Task.Factory.StartNew(this.CreatureThinkingLoop, cancellationToken, TaskCreationOptions.LongRunning);
 
                 // start the scheduler.
                 var schedulerTask = this.scheduler.RunAsync(cancellationToken);
@@ -242,6 +242,8 @@ namespace OpenTibia.Server
             }
 
             this.eventRulesPerPartition[partitionKey].Add(rule.Id);
+
+            this.logger.Debug($"Added {rule.Type} rule with partition {partitionKey}.");
         }
 
         public void ClearAllFor(string partitionKey)
@@ -257,6 +259,8 @@ namespace OpenTibia.Server
             }
 
             this.eventRulesPerPartition[partitionKey].Clear();
+
+            this.logger.Debug($"Cleared all rules with partition {partitionKey}.");
         }
 
         /// <summary>
@@ -290,6 +294,7 @@ namespace OpenTibia.Server
             {
                 if (rule.RemainingExecutionCount == 0)
                 {
+                    this.cancelledEventRules.Remove(rule.Id);
                     this.eventRulesCatalog[rule.Type].Remove(rule);
                 }
             }
@@ -784,7 +789,6 @@ namespace OpenTibia.Server
                 return;
             }
 
-            this.scheduler.CancelAllFor(combatant.Id, typeof(ThinkingOperation));
         }
 
         public void OnCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount)
@@ -827,7 +831,7 @@ namespace OpenTibia.Server
                 if (locationDiff.MaxValueIn2D > 1)
                 {
                     // Too far away from it, we need to move closer first.
-                    var directions = this.pathFinder.FindBetween(combatant.Location, combatant.AutoAttackTarget.Location, out _, onBehalfOfCreature: combatant, considerAvoidsAsBlock: true);
+                    var directions = this.pathFinder.FindBetween(combatant.Location, combatant.AutoAttackTarget.Location, out _, onBehalfOfCreature: combatant, considerAvoidsAsBlocking: true);
 
                     if (directions != null && directions.Any())
                     {
@@ -872,6 +876,33 @@ namespace OpenTibia.Server
             }
 
             this.scheduler.ScheduleEvent(newOperation, operationDelay);
+        }
+
+        /// <summary>
+        /// Handles creature 'thinking' in the game.
+        /// </summary>
+        /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
+        private void CreatureThinkingLoop(object tokenState)
+        {
+            var cancellationToken = (tokenState as CancellationToken?).Value;
+
+            // TODO: seed pseudo-RNGs.
+            var rng = new Random();
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                // Thread.Sleep here is OK because CreatureThinkingLoop runs on it's own thread.
+                Thread.Sleep(TimeSpan.FromSeconds(1));
+
+                // Get all the creatures in the game that are 'thinking' and randomize the order to make it fair.
+                var allActiveCreatures = this.creatureManager.FindAllCreatures().Where(c => c.IsThinking).OrderBy(c => rng.Next());
+
+                foreach (var creature in allActiveCreatures)
+                {
+                    // Dispatch a thinking operation for them.
+                    this.DispatchOperation(OperationType.Thinking, new ThinkingOperationCreationArguments(creature.Id, creature));
+                }
+            }
         }
 
         /// <summary>

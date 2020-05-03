@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Operations
     using System;
     using System.Linq;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Operations.Arguments;
@@ -23,6 +24,11 @@ namespace OpenTibia.Server.Operations
     /// </summary>
     public class ThinkingOperation : Operation
     {
+        /// <summary>
+        /// A pseudo-random number generator for insternal use.
+        /// </summary>
+        private readonly Random rng;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ThinkingOperation"/> class.
         /// </summary>
@@ -35,6 +41,8 @@ namespace OpenTibia.Server.Operations
 
             this.ExhaustionCost = thinkingCadence;
             this.Creature = creature;
+
+            this.rng = new Random();
         }
 
         /// <summary>
@@ -59,51 +67,76 @@ namespace OpenTibia.Server.Operations
         protected override void Execute(IOperationContext context)
         {
             // This is where the combatant is thinking about what to do during combat.
+            // First off: is the creature attacking something?
+            if (this.Creature is ICombatant combatant)
+            {
+                if (combatant.AutoAttackTarget != null)
+                {
+                    var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Ceiling(ICombatOperation.DefaultCombatRoundTimeInMs / combatant.BaseAttackSpeed));
+                    var autoAttackOperation = context.OperationFactory.Create(OperationType.AutoAttack, new AutoAttackCombatOperationCreationArguments(combatant.Id, combatant, combatant.AutoAttackTarget, normalizedAttackSpeed));
+
+                    var attackCooldownRemaining = combatant.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
+
+                    context.Scheduler.ScheduleEvent(autoAttackOperation, attackCooldownRemaining);
+                }
+            }
+
+            // If the creature is a player, let's handle accordingly.
+            if (this.Creature is IPlayer player)
+            {
+                this.ThinkForPlayer(context, player);
+            }
+
+            // If the creature is a monster, let's handle accordingly.
             if (this.Creature is IMonster monster)
             {
-                Random rng = new Random();
+                this.ThinkForMonster(context, monster);
+            }
+        }
 
-                var inChaseMode = monster.ChaseMode == ChaseMode.Chase;
+        private void ThinkForPlayer(IOperationContext context, IPlayer player)
+        {
 
-                // Monsters should pick or change their current target, usually from their Hostiles list.
-                if (monster.AutoAttackTarget == null || (monster.AutoAttackTarget.Location - monster.Location).Z != 0)
+        }
+
+        private void ThinkForMonster(IOperationContext context, IMonster monster)
+        {
+            var inChaseMode = monster.ChaseMode == ChaseMode.Chase;
+
+            // Monsters should pick or change their current target, usually from their Hostiles list.
+            if (monster.AutoAttackTarget == null || (monster.AutoAttackTarget.Location - monster.Location).Z != 0)
+            {
+                foreach (var hostileId in monster.HostilesInView.OrderBy(_ => this.rng.Next()))
                 {
-                    foreach (var hostileId in monster.HostilesInView.OrderBy(_ => rng.Next()))
+                    if (!(context.CreatureFinder.FindCreatureById(hostileId) is ICombatant targetCombatant) || (monster.Location.Z != targetCombatant.Location.Z))
                     {
-                        if (!(context.CreatureFinder.FindCreatureById(hostileId) is ICombatant targetCombatant) || (monster.Location.Z != targetCombatant.Location.Z))
-                        {
-                            continue;
-                        }
-
-                        monster.SetAttackTarget(targetCombatant);
-
-                        break;
+                        continue;
                     }
+
+                    monster.SetAttackTarget(targetCombatant);
+
+                    break;
                 }
-                else
+            }
+            else
+            {
+                // TODO: decide when to do abilities/spells, speech, movement.
+            }
+
+            if (inChaseMode && monster.ChasingTarget != null)
+            {
+                // Too far away to attack, we need to move closer first.
+                var directions = context.PathFinder.FindBetween(monster.Location, monster.ChasingTarget.Location, out _, onBehalfOfCreature: monster, considerAvoidsAsBlocking: true);
+
+                if (directions != null && directions.Any())
                 {
-                    // TODO: decide when to do abilities/spells, speech, movement.
-                }
+                    var autoWalkOperation = context.OperationFactory.Create(OperationType.AutoWalk, new AutoWalkOperationCreationArguments(this.RequestorId, monster, directions.ToArray()));
 
-                if (inChaseMode && monster.ChasingTarget != null)
-                {
-                    // Too far away to attack, we need to move closer first.
-                    var directions = context.PathFinder.FindBetween(monster.Location, monster.ChasingTarget.Location, out _, onBehalfOfCreature: monster, considerAvoidsAsBlock: true);
+                    context.EventRulesApi.ClearAllFor(autoWalkOperation.GetPartitionKey());
 
-                    if (directions != null && directions.Any())
-                    {
-                        var autoWalkOperation = context.OperationFactory.Create(OperationType.AutoWalk, new AutoWalkOperationCreationArguments(this.RequestorId, monster, directions.ToArray()));
-                        var movementCooldownRemaining = monster.CalculateRemainingCooldownTime(autoWalkOperation.ExhaustionType, context.Scheduler.CurrentTime);
+                    var movementCooldownRemaining = monster.CalculateRemainingCooldownTime(autoWalkOperation.ExhaustionType, context.Scheduler.CurrentTime);
 
-                        context.Scheduler.ScheduleEvent(autoWalkOperation, movementCooldownRemaining);
-                    }
-                }
-
-                if (monster.HostilesInView.Any() || monster.NeutralsInView.Any())
-                {
-                    // Set retry members to force retry of this operation.
-                    this.Repeat = true;
-                    this.RepeatDelay = monster.CalculateRemainingCooldownTime(this.ExhaustionType, context.Scheduler.CurrentTime);
+                    context.Scheduler.ScheduleEvent(autoWalkOperation, movementCooldownRemaining);
                 }
             }
         }

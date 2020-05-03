@@ -20,6 +20,7 @@ namespace OpenTibia.Communications.Handlers.Game
     using OpenTibia.Communications.Handlers;
     using OpenTibia.Communications.Packets;
     using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -68,10 +69,6 @@ namespace OpenTibia.Communications.Handlers.Game
                 return null;
             }
 
-            //player.ClearAllLocationBasedOperations();
-
-            this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
-
             var movementOperation =
                 this.Context.OperationFactory.Create(
                     OperationType.Movement,
@@ -85,12 +82,15 @@ namespace OpenTibia.Communications.Handlers.Game
                         player.Id,
                         moveThingInfo.Amount));
 
+            this.Context.EventRulesApi.ClearAllFor(movementOperation.GetPartitionKey());
+            this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
+
             var locationDiff = moveThingInfo.FromLocation - player.Location;
 
             if (moveThingInfo.FromLocation.Type == LocationType.Map && locationDiff.MaxValueIn2D > 1)
             {
                 // Too far away from it, we need to move closer first.
-                var directions = this.Context.PathFinder.FindBetween(player.Location, moveThingInfo.FromLocation, out Location retryLocation, onBehalfOfCreature: player, considerAvoidsAsBlock: true);
+                var directions = this.Context.PathFinder.FindBetween(player.Location, moveThingInfo.FromLocation, out Location retryLocation, onBehalfOfCreature: player, considerAvoidsAsBlocking: true);
 
                 if (directions == null || !directions.Any())
                 {
@@ -112,7 +112,7 @@ namespace OpenTibia.Communications.Handlers.Game
                         },
                     };
 
-                    this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, movementOperation, conditionsForExpedition, 1), $"{nameof(MoveThingHandler)}:{player.Id}");
+                    this.Context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(this.Logger, movementOperation, conditionsForExpedition, 1), movementOperation.GetPartitionKey());
 
                     this.ScheduleNewOperation(
                         this.Context.OperationFactory.Create(

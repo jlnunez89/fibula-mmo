@@ -13,6 +13,7 @@ namespace OpenTibia.Server.Operations.Movements
 {
     using System;
     using OpenTibia.Common.Utilities;
+    using OpenTibia.Server.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
@@ -82,6 +83,7 @@ namespace OpenTibia.Server.Operations.Movements
         {
             // Cancel any movement waiting to be executed.
             context.Scheduler.CancelAllFor(this.Creature.Id, typeof(IMovementOperation));
+            context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
 
             if (this.StepIndex >= this.Locations.Length)
             {
@@ -107,8 +109,6 @@ namespace OpenTibia.Server.Operations.Movements
 
             context.Scheduler.ScheduleEvent(movementOperation, movementDelay);
 
-            var partitionKey = $"{nameof(AutoWalkOperation)}:{this.Creature.Id}";
-
             // Increment the step and check if we need to worry about further steps.
             if (++this.StepIndex < this.Locations.Length)
             {
@@ -127,7 +127,7 @@ namespace OpenTibia.Server.Operations.Movements
                     },
                 };
 
-                context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, totalExecutionCount: 1), partitionKey);
+                context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, totalExecutionCount: 1), this.GetPartitionKey());
             }
         }
     }

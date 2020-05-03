@@ -105,6 +105,8 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         uint Flags { get; }
 
+        bool IsThinking { get; }
+
         /// <summary>
         /// Gets a value indicating whether this creature is currently invisible from any source.
         /// </summary>

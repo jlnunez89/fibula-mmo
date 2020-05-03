@@ -52,7 +52,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the id of this thing, which is the item's client id.
         /// </summary>
-        public override ushort ThingId => this.Type.ClientId;
+        public override ushort ThingId => this.Type.TypeId;
 
         public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangeUse);
 

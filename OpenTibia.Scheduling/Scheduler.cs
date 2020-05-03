@@ -46,7 +46,7 @@ namespace OpenTibia.Scheduling
         /// <summary>
         /// The internal priority queue used to manage events.
         /// </summary>
-        private readonly FastPriorityQueue<BaseEvent> priorityQueue;
+        private readonly StablePriorityQueue<BaseEvent> priorityQueue;
 
         /// <summary>
         /// Stores the ids of cancelled events.
@@ -86,7 +86,7 @@ namespace OpenTibia.Scheduling
             this.eventsPerRequestorLock = new object();
             this.eventsAvailableLock = new object();
             this.startTime = this.CurrentTime;
-            this.priorityQueue = new FastPriorityQueue<BaseEvent>(MaxQueueNodes);
+            this.priorityQueue = new StablePriorityQueue<BaseEvent>(MaxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
             this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
             this.eventTypes = new Dictionary<string, Type>();
@@ -127,7 +127,6 @@ namespace OpenTibia.Scheduling
                 while (!cancellationToken.IsCancellationRequested)
                 {
                     var toBeCleanedUp = new List<BaseEvent>();
-                    var toBeRepeated = new List<BaseEvent>();
 
                     lock (this.eventsAvailableLock)
                     {
@@ -166,6 +165,8 @@ namespace OpenTibia.Scheduling
                             if (this.priorityQueue.Count > (int)(MaxQueueNodes * 0.80))
                             {
                                 this.Logger.Warning($"Queue is over 80% capacity, consider growing the {nameof(MaxQueueNodes)} value.");
+
+                                // TODO: use this.priorityQueue.Resize() here with some sort of amortization logic.
                             }
 
                             // The first item always points to the next-in-time event available.
@@ -184,17 +185,9 @@ namespace OpenTibia.Scheduling
                                     this.Logger.Verbose($"Firing event {evt.GetType().Name} with id {evt.EventId}, at {priorityDue}.");
 
                                     this.EventFired?.Invoke(this, new EventFiredEventArgs(evt));
-
-                                    if (evt.Repeat)
-                                    {
-                                        toBeRepeated.Add(evt);
-                                    }
                                 }
 
-                                if (!evt.Repeat)
-                                {
-                                    toBeCleanedUp.Add(evt);
-                                }
+                                toBeCleanedUp.Add(evt);
                             }
                             else
                             {
@@ -202,14 +195,6 @@ namespace OpenTibia.Scheduling
                                 waitForNewTimeOut = TimeSpan.FromMilliseconds(evt.Priority < priorityDue ? 0 : evt.Priority - priorityDue);
                                 break;
                             }
-                        }
-
-                        // Re-schedule the events that need to be repeated.
-                        foreach (var evt in toBeRepeated)
-                        {
-                            evt.Repeat = false;
-
-                            this.ScheduleEvent(evt, evt.RepeatDelay);
                         }
 
                         // Clean up the processed events.
@@ -362,7 +347,14 @@ namespace OpenTibia.Scheduling
             lock (this.eventsAvailableLock)
             {
                 // Expedite the event.
-                this.priorityQueue.UpdatePriority(evt, this.GetMillisecondsAfterReferenceTime(this.CurrentTime));
+                if (this.priorityQueue.Contains(evt))
+                {
+                    this.priorityQueue.UpdatePriority(evt, this.GetMillisecondsAfterReferenceTime(this.CurrentTime));
+                }
+                else
+                {
+                    this.ScheduleEvent(evt);
+                }
 
                 // Flag the processing queue.
                 Monitor.Pulse(this.eventsAvailableLock);

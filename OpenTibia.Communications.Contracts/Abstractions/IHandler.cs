@@ -30,12 +30,5 @@ namespace OpenTibia.Communications.Contracts.Abstractions
         /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
         /// <returns>A collection of <see cref="IOutgoingPacket"/>s that compose that synchronous response, if any.</returns>
         IEnumerable<IOutgoingPacket> HandleRequest(INetworkMessage message, IConnection connection);
-
-        /// <summary>
-        /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.
-        /// </summary>
-        /// <param name="responsePackets">The packets that compose that response.</param>
-        /// <returns>The response as a <see cref="INetworkMessage"/>.</returns>
-        INetworkMessage PrepareResponse(IEnumerable<IOutgoingPacket> responsePackets);
     }
 }

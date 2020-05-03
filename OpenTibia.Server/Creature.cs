@@ -14,7 +14,6 @@ namespace OpenTibia.Server
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using System.Linq;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
@@ -227,6 +226,8 @@ namespace OpenTibia.Server
         /// Gets or sets the inventory for the creature.
         /// </summary>
         public abstract IInventory Inventory { get; protected set; }
+
+        public abstract bool IsThinking { get; }
 
         /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.

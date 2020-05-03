@@ -215,7 +215,7 @@ namespace OpenTibia.Communications
         {
             try
             {
-                int read = this.stream.EndRead(ar);
+                int read = this.stream.CanRead ? this.stream.EndRead(ar) : 0;
 
                 if (read == 0)
                 {

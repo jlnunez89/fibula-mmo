@@ -29,21 +29,21 @@ namespace OpenTibia.Server.Operations.Arguments
         /// Initializes a new instance of the <see cref="ThinkingOperationCreationArguments"/> class.
         /// </summary>
         /// <param name="requestorId"></param>
-        /// <param name="combatant"></param>
+        /// <param name="creature"></param>
         /// <param name="target"></param>
         /// <param name="thinkingCadence"></param>
-        public ThinkingOperationCreationArguments(uint requestorId, ICombatant combatant, TimeSpan? thinkingCadence = null)
+        public ThinkingOperationCreationArguments(uint requestorId, ICreature creature, TimeSpan? thinkingCadence = null)
         {
-            combatant.ThrowIfNull(nameof(combatant));
+            creature.ThrowIfNull(nameof(creature));
 
             this.RequestorId = requestorId;
-            this.Combatant = combatant;
+            this.Creature = creature;
             this.Cadence = thinkingCadence ?? DefaultThinkingCadence;
         }
 
         public uint RequestorId { get; }
 
-        public ICombatant Combatant { get; }
+        public ICreature Creature { get; }
 
         public TimeSpan Cadence { get; }
     }

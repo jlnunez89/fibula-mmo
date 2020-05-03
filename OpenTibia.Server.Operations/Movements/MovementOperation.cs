@@ -490,6 +490,7 @@ namespace OpenTibia.Server.Operations.Movements
             var destinationHasGround = destinationTile?.Ground != null;
             var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
             var locationsMatch = thingMoving?.Location == this.FromLocation;
+            var isIntendedThing = thingMoving?.ThingId == this.ThingMovingId;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var canThrowBetweenLocations = isTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.TileAccessor, this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
@@ -497,7 +498,7 @@ namespace OpenTibia.Server.Operations.Movements
             {
                 this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
-            else if (!locationsMatch)
+            else if (!locationsMatch || !isIntendedThing)
             {
                 // Silent fail.
                 return;
@@ -565,6 +566,7 @@ namespace OpenTibia.Server.Operations.Movements
             {
                 var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
                 var distanceBetweenLocations = (requestor?.Location ?? this.FromLocation) - this.ToLocation;
+                var distanceFromSource = (requestor?.Location ?? this.FromLocation) - this.FromLocation;
 
                 // More pre-conditions.
                 var itemCanBeMoved = item.CanBeMoved;
@@ -572,7 +574,7 @@ namespace OpenTibia.Server.Operations.Movements
                                                     sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
                                                     item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-                var movementInRange = requestor == null || !item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0);
+                var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
 
                 if (!itemCanBeMoved)
                 {
@@ -654,11 +656,12 @@ namespace OpenTibia.Server.Operations.Movements
 
             if (fromCylinder is ITile fromTile)
             {
-                context.Scheduler.ScheduleEvent(
-                    new TileUpdatedNotification(
-                        context.CreatureFinder,
-                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location),
-                        new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile)));
+                // TODO: formally introduce async/synchronous notifications.
+                new TileUpdatedNotification(
+                    context.CreatureFinder,
+                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location),
+                    new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
+                .Execute(context);
             }
 
             context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromCylinder.Location, item, requestorCreature));
@@ -748,12 +751,13 @@ namespace OpenTibia.Server.Operations.Movements
 
             if (toStackPosition != byte.MaxValue)
             {
-                context.Scheduler.ScheduleEvent(
-                    new CreatureMovedNotification(
-                        context.MapDescriptor,
-                        context.CreatureFinder,
-                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location, toLocation),
-                        new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport)));
+                // TODO: formally introduce async/synchronous notifications.
+                new CreatureMovedNotification(
+                    context.MapDescriptor,
+                    context.CreatureFinder,
+                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location, toLocation),
+                    new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
+                .Execute(context);
             }
 
             if (creature is IPlayer player)
@@ -787,15 +791,15 @@ namespace OpenTibia.Server.Operations.Movements
             if (creature is ICombatant combatant)
             {
                 // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
-                //foreach (var attackerId in combatant.AttackedBy)
-                //{
-                //    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
-                //    {
-                //        continue;
-                //    }
+                foreach (var attackerId in combatant.AttackedBy)
+                {
+                    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
+                    {
+                        continue;
+                    }
 
-                //    otherCombatant.ExecuteRangeBasedOperations(context);
-                //}
+                    context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
+                }
 
                 // And check if it walked into new combatants view range.
                 var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
@@ -806,17 +810,29 @@ namespace OpenTibia.Server.Operations.Movements
 
                 foreach (var spectator in spectatorsAdded)
                 {
+                    if (spectator == combatant)
+                    {
+                        continue;
+                    }
+
                     if (spectator is ICombatant newCombatant)
                     {
                         newCombatant.CombatantNowInView(combatant);
+                        combatant.CombatantNowInView(newCombatant);
                     }
                 }
 
                 foreach (var spectator in spectatorsLost)
                 {
+                    if (spectator == combatant)
+                    {
+                        continue;
+                    }
+
                     if (spectator is ICombatant oldCombatant)
                     {
                         oldCombatant.CombatantNoLongerInView(combatant);
+                        combatant.CombatantNoLongerInView(oldCombatant);
                     }
                 }
             }

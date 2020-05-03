@@ -16,6 +16,7 @@ namespace OpenTibia.Server.Notifications
     using System.Linq;
     using OpenTibia.Communications;
     using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts.Abstractions;
 
@@ -64,12 +65,24 @@ namespace OpenTibia.Server.Notifications
                         continue;
                     }
 
+                    int readAlready = 4; // 4 to skip the length bytes.
+
                     foreach (var packet in outgoingPackets)
                     {
                         packet.WriteToMessage(outboundMessage);
+
+                        var thisPacketLen = outboundMessage.Length - readAlready;
+                        var packetBytes = outboundMessage.Buffer.Skip(readAlready).Take(thisPacketLen).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
+
+                        context.Logger?.Verbose($"Message bytes added by packet {packet.GetType().Name} ({(OutgoingGamePacketType)packet.PacketType}): {packetBytes}");
+
+                        readAlready += thisPacketLen;
                     }
 
-                    connection.Send(outboundMessage.Copy());
+                    if (!connection.IsOrphaned)
+                    {
+                        connection.Send(outboundMessage.Copy());
+                    }
                 }
             }
             catch (Exception ex)

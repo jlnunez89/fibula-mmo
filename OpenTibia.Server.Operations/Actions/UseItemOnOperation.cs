@@ -86,7 +86,7 @@ namespace OpenTibia.Server.Operations.Actions
 
             // Adjust index if this a map location.
             var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemWithId(this.FromTypeId) : fromCylinder?.FindItemAt(fromIndex);
-            var targetThing = (this.ToLocation.Type == LocationType.Map && (toCylinder is ITile toTile)) ? toTile.GetTopThingByOrder(context.CreatureFinder, this.ToIndex) : fromCylinder?.FindItemAt(fromIndex);
+            var targetThing = (this.ToLocation.Type == LocationType.Map && (toCylinder is ITile toTile)) ? toTile.GetTopThingByOrder(context.CreatureFinder, this.ToIndex) : toCylinder?.FindItemAt(fromIndex);
 
             if (item == null || fromCylinder == null || targetThing == null || targetThing.ThingId != this.ToThingId)
             {

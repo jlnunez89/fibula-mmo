@@ -67,7 +67,7 @@ namespace OpenTibia.Communications
 
             if (responsePackets != null && responsePackets.Any())
             {
-                var responseMessage = handler.PrepareResponse(responsePackets);
+                var responseMessage = this.PrepareResponse(responsePackets);
 
                 connection.Send(responseMessage);
             }

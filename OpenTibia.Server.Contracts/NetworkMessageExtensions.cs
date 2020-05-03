@@ -47,14 +47,12 @@ namespace OpenTibia.Server.Contracts
         {
             if (asKnown)
             {
-                message.AddByte((byte)OutgoingGamePacketType.AddKnownCreature); // known
-                message.AddByte(0x00);
+                message.AddUInt16((byte)OutgoingGamePacketType.AddKnownCreature);
                 message.AddUInt32(creature.Id);
             }
             else
             {
-                message.AddByte((byte)OutgoingGamePacketType.AddUnknownCreature); // unknown
-                message.AddByte(0x00);
+                message.AddUInt16((byte)OutgoingGamePacketType.AddUnknownCreature);
                 message.AddUInt32(creatureToRemoveId);
                 message.AddUInt32(creature.Id);
                 message.AddString(creature.Name);

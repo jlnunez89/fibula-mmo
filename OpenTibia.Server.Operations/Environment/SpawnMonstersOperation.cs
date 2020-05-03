@@ -64,12 +64,6 @@ namespace OpenTibia.Server.Operations.Environment
 
                 var randomLoc = this.Spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
 
-                // TODO: this doesn't actually work because when the OnMapWindowLoaded event gets triggered while loading the tiles in a sector, but before they
-                // are marked as loaded, so the pathfinding actually doesn't find anything for now.
-                // The long term solution here is to abstract spawns into an operation and trigger it, so that they are
-                // A) performed after the tiles are marked as loaded, and
-                // B) reusable when we implement re-spawn.
-
                 // Need to actually pathfind to avoid placing a monster in unreachable places.
                 context.PathFinder.FindBetween(this.Spawn.Location, randomLoc, out Location foundLocation, (i + 1) * 10);
 
