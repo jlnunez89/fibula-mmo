@@ -34,6 +34,7 @@
     <ProjectReference Include="..\OpenTibia.Scheduling\OpenTibia.Scheduling.csproj" />
     <ProjectReference Include="..\OpenTibia.Security.Contracts\OpenTibia.Security.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Notifications.Contracts\OpenTibia.Server.Notifications.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

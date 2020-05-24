@@ -442,7 +442,7 @@ namespace OpenTibia.Communications.Packets
                 case SpeechType.Private:
                 // case SpeechType.PrivateRed:
                 case SpeechType.RuleViolationAnswer:
-                    return new SpeechPacket(type, receiver: message.GetString(), content: message.GetString());
+                    return new SpeechPacket(type, ChatChannelType.Private, receiver: message.GetString(), content: message.GetString());
                 case SpeechType.ChannelYellow:
                     // case SpeechType.ChannelRed:
                     // case SpeechType.ChannelRedAnonymous:

@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Events.MoveUseFile
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for the <see cref="MoveUseEventRulesLoader"/>.
     /// </summary>
@@ -19,6 +21,7 @@ namespace OpenTibia.Server.Events.MoveUseFile
         /// <summary>
         /// Gets or sets the path to the file to load.
         /// </summary>
+        [Required(ErrorMessage = "A path for the move-use event rules must be specified.")]
         public string FilePath { get; set; }
     }
 }

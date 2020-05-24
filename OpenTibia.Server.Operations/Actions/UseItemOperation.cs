@@ -68,10 +68,15 @@ namespace OpenTibia.Server.Operations.Actions
             var fromCylinder = this.FromLocation.DecodeCyclinder(context.TileAccessor, context.ContainerManager, out byte index, requestor);
 
             // Adjust index if this a map location.
-            var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemWithId(this.TypeId) : fromCylinder?.FindItemAt(index);
+            var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemAt(this.FromIndex) : fromCylinder?.FindItemAt(index);
 
-            if (item == null || fromCylinder == null)
+            // Declare some pre-conditions.
+            var itemFound = item != null;
+            var isIntendedItem = item?.Type.ClientId == this.TypeId;
+
+            if (!itemFound || !isIntendedItem)
             {
+                // Silent fail.
                 return;
             }
 

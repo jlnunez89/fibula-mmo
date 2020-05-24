@@ -20,10 +20,5 @@ namespace OpenTibia.Communications.Contracts
         /// Gets or sets the world configuration options.
         /// </summary>
         public WorldConfigurationOptions World { get; set; }
-
-        /// <summary>
-        /// Gets or sets the public address binding options.
-        /// </summary>
-        public AddressBindingOptions PublicAddressBinding { get; set; }
     }
 }

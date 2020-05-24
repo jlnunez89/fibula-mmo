@@ -105,6 +105,9 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         uint Flags { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this creature is currently thinking.
+        /// </summary>
         bool IsThinking { get; }
 
         /// <summary>
@@ -156,64 +159,5 @@ namespace OpenTibia.Server.Contracts.Abstractions
         /// </summary>
         /// <param name="outfit">The new outfit to change to.</param>
         void SetOutfit(Outfit outfit);
-
-        ///// <summary>
-        ///// Evaluates the location-based retry actions pending of a given creature, and invokes them if any is met.
-        ///// </summary>
-        ///// <param name="operationContext">The context to pass down to operations to fire.</param>
-        ///// <returns>True if there is at least one action that was executed, false otherwise.</returns>
-        //bool ExecuteLocationBasedOperations(IOperationContext operationContext);
-
-        ///// <summary>
-        ///// Adds an operation that should be fired when the creature steps at a given location.
-        ///// </summary>
-        ///// <param name="atLocation">The location.</param>
-        ///// <param name="operation">The operation.</param>
-        //void SetOperationAtLocation(Location atLocation, IOperation operation);
-
-        ///// <summary>
-        ///// Removes all the operations from the queue at a given location.
-        ///// </summary>
-        ///// <param name="atLocation">The location.</param>
-        //void ClearAllOperationsAtLocation(Location atLocation);
-
-        ///// <summary>
-        ///// Removes all operations from the location-based actions queue.
-        ///// </summary>
-        //void ClearAllLocationBasedOperations();
-
-        ///// <summary>
-        ///// Gets the collection of operations to fire based on location.
-        ///// </summary>
-        ///// <param name="atLocation">The location to evaluate for.</param>
-        ///// <returns>The collection of operations set to be fired at the location, if any.</returns>
-        //IEnumerable<IOperation> GetLocationBasedOperations(Location atLocation);
-
-        ///// <summary>
-        ///// Adds an operation that should be fired when the creature steps within a given range of another.
-        ///// </summary>
-        ///// <param name="range">The range withing which the retry happens.</param>
-        ///// <param name="creatureId">The id of the creature which to calculate the range to.</param>
-        ///// <param name="operation">The operation.</param>
-        //void EnqueueOperationWithinRangeToCreature(byte range, uint creatureId, IOperation operation);
-
-        ///// <summary>
-        ///// Removes a single action from the queue given its particular location.
-        ///// </summary>
-        ///// <param name="withinRange">The range within which to identify the action to remove from the queue.</param>
-        ///// <param name="creatureId">The id of the creature which to calculate the range to.</param>
-        //void DequeueOperationsWithinRangeToCreature(byte withinRange, uint creatureId);
-
-        ///// <summary>
-        ///// Removes all actions from the location-based actions queue.
-        ///// </summary>
-        //void ClearAllRangeBasedOperations();
-
-        ///// <summary>
-        ///// Evaluates the range-based operations of this creature, and invokes them if any is met.
-        ///// </summary>
-        ///// <param name="operationContext">The context to pass down to operations to fire.</param>
-        ///// <returns>True if there is at least one operation that was executed, false otherwise.</returns>
-        //bool ExecuteRangeBasedOperations(IOperationContext operationContext);
     }
 }

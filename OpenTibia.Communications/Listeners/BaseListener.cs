@@ -12,6 +12,9 @@
 namespace OpenTibia.Communications
 {
     using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
@@ -24,42 +27,49 @@ namespace OpenTibia.Communications
     /// <summary>
     /// Class that is the base implementation for all listeners.
     /// </summary>
-    public abstract class BaseListener : TcpListener, IOpenTibiaListener
+    public abstract class BaseListener : TcpListener, IListener
     {
-        /// <summary>
-        /// The protocol in use by this listener.
-        /// </summary>
-        private readonly IProtocol protocol;
-
         /// <summary>
         /// The DoS defender to use.
         /// </summary>
-        private readonly IDoSDefender defender;
+        private readonly IDoSDefender dosDefender;
 
         /// <summary>
-        /// The logger instance in use.
+        /// A value indicating whether the protocol should keep the connection open after recieving a packet.
         /// </summary>
-        private readonly ILogger logger;
+        private readonly bool keepConnectionOpen;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseListener"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="port">The port to use on this listener.</param>
-        /// <param name="protocol">The protocol to use in this listener.</param>
-        /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
-        protected BaseListener(ILogger logger, int port, IProtocol protocol, IDoSDefender dosDefender)
-            : base(IPAddress.Any, port)
+        /// <param name="options">The options for this listener.</param>
+        /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
+        /// <param name="dosDefender">A reference to a DoS defender service implementation.</param>
+        /// <param name="keepConnectionOpen">Optional. A value indicating whether to maintain the connection open after processing a message in the connection.</param>
+        protected BaseListener(ILogger logger, BaseListenerOptions options, IHandlerSelector handlerSelector, IDoSDefender dosDefender, bool keepConnectionOpen = true)
+            : base(IPAddress.Any, options.Port)
         {
             logger.ThrowIfNull(nameof(logger));
-            protocol.ThrowIfNull(nameof(protocol));
-            dosDefender.ThrowIfNull(nameof(dosDefender));
 
-            this.protocol = protocol;
-            this.defender = dosDefender;
+            Validator.ValidateObject(options, new ValidationContext(options), validateAllProperties: true);
 
-            this.logger = logger.ForContext(this.GetType());
+            this.dosDefender = dosDefender;
+            this.keepConnectionOpen = keepConnectionOpen;
+
+            this.HandlerSelector = handlerSelector;
+            this.Logger = logger.ForContext(this.GetType());
         }
+
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        protected ILogger Logger { get; }
+
+        /// <summary>
+        /// Gets the handler selector in use.
+        /// </summary>
+        protected IHandlerSelector HandlerSelector { get; }
 
         /// <summary>
         /// Begins listening for requests.
@@ -76,7 +86,7 @@ namespace OpenTibia.Communications
 
                     // Stop() makes AcceptSocketAsync() throw an ObjectDisposedException.
                     // This means that when the token is cancelled, the callback action here will be to Stop() the listener,
-                    // exception which gets caught below in the try catch.
+                    // which in turn throws the exception and it gets caught below, exiting gracefully.
                     cancellationToken.Register(() => this.Stop());
 
                     while (!cancellationToken.IsCancellationRequested)
@@ -85,9 +95,9 @@ namespace OpenTibia.Communications
                         {
                             var socket = await this.AcceptSocketAsync().ConfigureAwait(false);
 
-                            Connection connection = new Connection(this.logger, socket);
+                            Connection connection = new Connection(this.Logger, socket);
 
-                            if (this.defender.IsBlocked(connection.SocketIp))
+                            if (this.dosDefender?.IsBlocked(connection.SocketIp) ?? false)
                             {
                                 // TODO: evaluate if it is worth just leaving the connection open but ignore it, so that they think they are successfully DoSing...
                                 // But we would need to think if it is a connection drain attack then...
@@ -97,10 +107,10 @@ namespace OpenTibia.Communications
                             }
 
                             connection.ConnectionClosed += this.OnConnectionClose;
-                            connection.MessageReady += this.protocol.ProcessMessage;
-                            connection.MessageProcessed += this.protocol.PostProcessMessage;
+                            connection.MessageReady += this.ProcessMessage;
+                            connection.MessageProcessed += this.PostProcessMessage;
 
-                            this.defender.LogConnectionAttempt(connection.SocketIp);
+                            this.dosDefender?.LogConnectionAttempt(connection.SocketIp);
 
                             connection.BeginStreamRead();
                         }
@@ -113,7 +123,7 @@ namespace OpenTibia.Communications
                 }
                 catch (SocketException socEx)
                 {
-                    this.logger.Error(socEx.ToString());
+                    this.Logger.Error(socEx.ToString());
                 }
             });
 
@@ -134,6 +144,51 @@ namespace OpenTibia.Communications
         }
 
         /// <summary>
+        /// Processes an inbound message from the connection.
+        /// </summary>
+        /// <param name="connection">The connection where the message is being read from.</param>
+        /// <param name="inboundMessage">The message to process.</param>
+        public abstract void ProcessMessage(IConnection connection, INetworkMessage inboundMessage);
+
+        /// <summary>
+        /// Runs after processing a message from the connection.
+        /// </summary>
+        /// <param name="connection">The connection where the message is from.</param>
+        public virtual void PostProcessMessage(IConnection connection)
+        {
+            if (!this.keepConnectionOpen)
+            {
+                connection.Close();
+                return;
+            }
+
+            connection.InboundMessage.Reset();
+            connection.BeginStreamRead();
+        }
+
+        /// <summary>
+        /// Prepares a <see cref="INetworkMessage"/> with the reponse packets supplied.
+        /// </summary>
+        /// <param name="responsePackets">The packets that compose that response.</param>
+        /// <returns>The response as a <see cref="INetworkMessage"/>.</returns>
+        protected INetworkMessage PrepareResponse(IEnumerable<IOutgoingPacket> responsePackets)
+        {
+            if (responsePackets == null || !responsePackets.Any())
+            {
+                return null;
+            }
+
+            INetworkMessage outgoingMessage = new NetworkMessage();
+
+            foreach (var outPacket in responsePackets)
+            {
+                outPacket.WriteToMessage(outgoingMessage);
+            }
+
+            return outgoingMessage;
+        }
+
+        /// <summary>
         /// Handles a connection's close event.
         /// </summary>
         /// <param name="connection">The connection that was closed.</param>
@@ -147,8 +202,8 @@ namespace OpenTibia.Communications
 
             // De-subscribe to this event first.
             connection.ConnectionClosed -= this.OnConnectionClose;
-            connection.MessageReady -= this.protocol.ProcessMessage;
-            connection.MessageProcessed -= this.protocol.PostProcessMessage;
+            connection.MessageReady -= this.ProcessMessage;
+            connection.MessageProcessed -= this.PostProcessMessage;
         }
     }
 }

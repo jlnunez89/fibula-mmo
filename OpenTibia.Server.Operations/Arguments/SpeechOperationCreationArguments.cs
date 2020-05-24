@@ -11,8 +11,8 @@
 
 namespace OpenTibia.Server.Operations.Arguments
 {
-    using OpenTibia.Communications.Packets.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="SpeechOperation"/>.
@@ -23,11 +23,18 @@ namespace OpenTibia.Server.Operations.Arguments
         /// Initializes a new instance of the <see cref="SpeechOperationCreationArguments"/> class.
         /// </summary>
         /// <param name="requestorId"></param>
-        /// <param name="speechInfo"></param>
-        public SpeechOperationCreationArguments(uint requestorId, ISpeechInfo speechInfo)
+        /// <param name="speechType"></param>
+        /// <param name="channelId"></param>
+        /// <param name="receiver"></param>
+        /// <param name="content"></param>
+        public SpeechOperationCreationArguments(uint requestorId, SpeechType speechType, ChatChannelType channelId, string receiver, string content)
         {
             this.RequestorId = requestorId;
-            this.SpeechInfo = speechInfo;
+
+            this.Type = speechType;
+            this.ChannelId = channelId;
+            this.Receiver = receiver;
+            this.Content = content;
         }
 
         /// <summary>
@@ -35,6 +42,12 @@ namespace OpenTibia.Server.Operations.Arguments
         /// </summary>
         public uint RequestorId { get; }
 
-        public ISpeechInfo SpeechInfo { get; }
+        public SpeechType Type { get; }
+
+        public ChatChannelType ChannelId { get; }
+
+        public string Receiver { get; }
+
+        public string Content { get; }
     }
 }

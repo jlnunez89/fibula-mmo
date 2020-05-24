@@ -12,7 +12,6 @@
 namespace OpenTibia.Server.Operations
 {
     using System;
-    using OpenTibia.Communications.Packets.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Notifications;
@@ -27,12 +26,18 @@ namespace OpenTibia.Server.Operations
         /// Initializes a new instance of the <see cref="SpeechOperation"/> class.
         /// </summary>
         /// <param name="requestorId"></param>
-        /// <param name="speechInfo"></param>
-        public SpeechOperation(uint requestorId, ISpeechInfo speechInfo)
+        /// <param name="speechType"></param>
+        /// <param name="channelId"></param>
+        /// <param name="content"></param>
+        /// <param name="receiver"></param>
+        public SpeechOperation(uint requestorId, SpeechType speechType, ChatChannelType channelId, string content, string receiver)
             : base(requestorId)
         {
             // this.ExhaustionCost = TimeSpan.FromSeconds(1);
-            this.SpeechInfo = speechInfo;
+            this.Type = speechType;
+            this.ChannelId = channelId;
+            this.Content = content;
+            this.Receiver = receiver;
         }
 
         /// <summary>
@@ -45,7 +50,13 @@ namespace OpenTibia.Server.Operations
         /// </summary>
         public override TimeSpan ExhaustionCost { get; protected set; }
 
-        public ISpeechInfo SpeechInfo { get; }
+        public SpeechType Type { get; }
+
+        public ChatChannelType ChannelId { get; }
+
+        public string Receiver { get; }
+
+        public string Content { get; }
 
         /// <summary>
         /// Executes the operation's logic.
@@ -63,7 +74,7 @@ namespace OpenTibia.Server.Operations
             context.Scheduler.ScheduleEvent(
                 new CreatureSpokeNotification(
                     () => context.ConnectionFinder.GetAllActive(),
-                    new CreatureSpokeNotificationArguments(requestor, this.SpeechInfo.Type, this.SpeechInfo.ChannelId, this.SpeechInfo.Content)));
+                    new CreatureSpokeNotificationArguments(requestor, this.Type, this.ChannelId, this.Content)));
         }
     }
 }

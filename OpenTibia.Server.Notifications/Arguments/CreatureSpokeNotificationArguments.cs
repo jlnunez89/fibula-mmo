@@ -14,6 +14,7 @@ namespace OpenTibia.Server.Notifications.Arguments
     using OpenTibia.Common.Utilities;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
+    using OpenTibia.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the creature spoke notification.

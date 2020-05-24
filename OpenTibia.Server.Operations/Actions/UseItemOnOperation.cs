@@ -30,8 +30,12 @@ namespace OpenTibia.Server.Operations.Actions
         /// Initializes a new instance of the <see cref="UseItemOnOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the use.</param>
-        /// <param name="typeId">The id of the item being used.</param>
+        /// <param name="fromTypeId">The id of the item being used.</param>
         /// <param name="fromLocation">The location from which the item is being used.</param>
+        /// <param name="fromIndex"></param>
+        /// <param name="toThingId"></param>
+        /// <param name="toLocation"></param>
+        /// <param name="toIndex"></param>
         public UseItemOnOperation(uint requestorId, ushort fromTypeId, Location fromLocation, byte fromIndex, ushort toThingId, Location toLocation, byte toIndex)
             : base(requestorId)
         {
@@ -85,11 +89,18 @@ namespace OpenTibia.Server.Operations.Actions
             var toCylinder = this.ToLocation.DecodeCyclinder(context.TileAccessor, context.ContainerManager, out byte toIndex, requestor);
 
             // Adjust index if this a map location.
-            var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemWithId(this.FromTypeId) : fromCylinder?.FindItemAt(fromIndex);
+            var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemAt(this.FromIndex) : fromCylinder?.FindItemAt(fromIndex);
             var targetThing = (this.ToLocation.Type == LocationType.Map && (toCylinder is ITile toTile)) ? toTile.GetTopThingByOrder(context.CreatureFinder, this.ToIndex) : toCylinder?.FindItemAt(fromIndex);
 
-            if (item == null || fromCylinder == null || targetThing == null || targetThing.ThingId != this.ToThingId)
+            // Declare some pre-conditions.
+            var itemFound = item != null;
+            var targetFound = item != null;
+            var isIntendedSource = item?.Type.ClientId == this.FromTypeId;
+            var isIntendedTarget = targetThing?.ThingId == this.ToThingId;
+
+            if (!itemFound || !isIntendedSource || !targetFound || !isIntendedTarget)
             {
+                // Silent fail.
                 return;
             }
 

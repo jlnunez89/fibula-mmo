@@ -9,7 +9,7 @@
       {
         "Name": "Console",
         "Args": {
-          "restrictedToMinimumLevel": "Verbose",
+          "restrictedToMinimumLevel": "Debug",
           "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
         }
       },

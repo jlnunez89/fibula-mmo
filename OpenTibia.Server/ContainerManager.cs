@@ -25,7 +25,7 @@ namespace OpenTibia.Server
     using Serilog;
 
     /// <summary>
-    /// Class that contains helper methods for container operations.
+    /// Class that represents a manager for all open containers.
     /// </summary>
     public class ContainerManager : IContainerManager
     {
@@ -73,13 +73,14 @@ namespace OpenTibia.Server
             forCreature.ThrowIfNull(nameof(forCreature));
             container.ThrowIfNull(nameof(container));
 
+            // Check if this creature already has this container open at the specified position.
+            // If so, we got nothing more to do.
             if (this.IsContainerOpen(container.UniqueId, forCreature.Id, out IEnumerable<byte> openPositions) && openPositions.Contains(atPosition))
             {
-                // This player is has this container open already, at this same position.
                 return;
             }
 
-            // Now, let's check if the player has something else open at the desired location.
+            // Otherwise, let's check if the player has something else open at the desired container position.
             var currentContainer = this.GetContainerAt(forCreature.Id, atPosition);
 
             if (currentContainer != null)
@@ -88,7 +89,7 @@ namespace OpenTibia.Server
                 this.CloseContainerInternal(forCreature, currentContainer, atPosition);
             }
 
-            // Now actually open the container for this player.
+            // Now, actually open the container for this creature.
             byte containerId = this.OpenContainerInternal(forCreature, container, atPosition);
 
             this.scheduler.ScheduleEvent(
@@ -115,9 +116,9 @@ namespace OpenTibia.Server
             forCreature.ThrowIfNull(nameof(forCreature));
             container.ThrowIfNull(nameof(container));
 
+            // Check if this creature doesn't have this container open, or it's no longer at the position specified.
             if (!this.IsContainerOpen(container.UniqueId, forCreature.Id, out IEnumerable<byte> openPositions) || !openPositions.Contains(atPosition))
             {
-                // This player is has this container open already, at this same position.
                 return;
             }
 
@@ -196,6 +197,13 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Checks if the specified container is open by a creature and retrieves any positions where it is.
+        /// </summary>
+        /// <param name="containerUniqueId">The unique id of the container.</param>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="openPositions">A collection of positions in which the container is open.</param>
+        /// <returns>True if the container is open for the creature, false otherwise.</returns>
         private bool IsContainerOpen(Guid containerUniqueId, uint creatureId, out IEnumerable<byte> openPositions)
         {
             openPositions = null;
@@ -215,14 +223,18 @@ namespace OpenTibia.Server
                     }
 
                     openPositions = found;
-
-                    return true;
                 }
             }
 
-            return false;
+            return openPositions != null;
         }
 
+        /// <summary>
+        /// Gets the container for a creature at a given position.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="atPosition">The position to check.</param>
+        /// <returns>The container found at the position, or null if there is none.</returns>
         private IContainerItem GetContainerAt(uint creatureId, byte atPosition)
         {
             lock (this.internalDictionariesLock)
@@ -236,6 +248,12 @@ namespace OpenTibia.Server
             return null;
         }
 
+        /// <summary>
+        /// Closes a container for a creature at a given position.
+        /// </summary>
+        /// <param name="forCreature">The creature to check for.</param>
+        /// <param name="container">The container to close.</param>
+        /// <param name="atPosition">The position at which to close the container.</param>
         private void CloseContainerInternal(ICreature forCreature, IContainerItem container, byte atPosition)
         {
             lock (this.internalDictionariesLock)
@@ -273,6 +291,13 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Opens a container for a given creature at the specified position.
+        /// </summary>
+        /// <param name="forCreature">The creature for which to open the container.</param>
+        /// <param name="container">The container to open.</param>
+        /// <param name="atPosition">The position at which to open the container.</param>
+        /// <returns>The position at which the container was actually opened, which may not be the given <paramref name="atPosition"/>.</returns>
         private byte OpenContainerInternal(ICreature forCreature, IContainerItem container, byte atPosition)
         {
             lock (this.internalDictionariesLock)

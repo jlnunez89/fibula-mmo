@@ -47,6 +47,7 @@ namespace OpenTibia.Server.Notifications
         protected override IEnumerable<IOutgoingPacket> Prepare(uint playerId)
         {
             return new CreatureSpeechPacket(
+                this.Arguments.Creature.Id,
                 this.Arguments.Creature.Name,
                 this.Arguments.SpeechType,
                 this.Arguments.Text,

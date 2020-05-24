@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Providers.Azure
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for the Azure Key Vault secrets provider configuration.
     /// </summary>
@@ -19,6 +21,8 @@ namespace OpenTibia.Providers.Azure
         /// <summary>
         /// Gets or sets the base url for the Key Vault.
         /// </summary>
+        [Required(ErrorMessage = "A Key Vault URL is required.")]
+        [Url(ErrorMessage = "An invalid URL was supplied.")]
         public string VaultBaseUrl { get; set; }
     }
 }

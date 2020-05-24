@@ -61,9 +61,8 @@ namespace OpenTibia.Common.Utilities.Pathfinding
             start.ThrowIfNull(nameof(start));
             goal.ThrowIfNull(nameof(goal));
 
-            var duplicateComparer = new DuplicateIntegerComparer();
-            this.nextToVisit = new SortedList<int, INode>(duplicateComparer);
-            this.visited = new SortedList<int, INode>(duplicateComparer);
+            this.nextToVisit = new SortedList<int, INode>(new DuplicateIntegerComparer());
+            this.visited = new SortedList<int, INode>(new DuplicateIntegerComparer());
 
             this.nodeFactory = nodeFactory;
 

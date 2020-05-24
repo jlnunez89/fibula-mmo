@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SimpleDoSDefender.cs" company="2Dudes">
+// <copyright file="SimpleDosDefender.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // http://linkedin.com/in/jlnunez89
@@ -12,52 +12,59 @@
 namespace OpenTibia.Security
 {
     using System;
-    using System.Collections.Concurrent;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Options;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Security.Contracts;
 
     /// <summary>
-    /// Class that represents a simple DoS defender.
+    /// Class that represents a simple DoS defender that will block addresses but not unblock them (until the application is restarted, since state is not persisted).
+    /// This is helpful only with high connection attempt counts.
     /// </summary>
-    public class SimpleDoSDefender : IDoSDefender, IHostedService
+    public class SimpleDosDefender : IDoSDefender, IHostedService
     {
-        /// <summary>
-        /// To prevent a memory attack... just blacklist a maximum of 1M addresses.
-        /// </summary>
-        private const int ListSizeLimit = 1000000;
-
-        /// <summary>
-        /// The number of seconds per timeframe.
-        /// </summary>
-        private const int TimeframeInSeconds = 5;
-
-        /// <summary>
-        /// Count to reach within a timeframe.
-        /// </summary>
-        private const int BlockAtCount = 20;
-
         /// <summary>
         /// The addresses that are blocked.
         /// </summary>
-        private readonly HashSet<string> blockedAddresses;
+        private readonly ISet<string> blockedAddresses;
+
+        /// <summary>
+        /// A lock object to semaphore access to <see cref="connectionCount"/>.
+        /// </summary>
+        private readonly object connectionCountLock;
 
         /// <summary>
         /// The count per connection.
         /// </summary>
-        private readonly ConcurrentDictionary<string, int> connectionCount;
+        private readonly IDictionary<string, int> connectionCount;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SimpleDoSDefender"/> class.
+        /// Initializes a new instance of the <see cref="SimpleDosDefender"/> class.
         /// </summary>
-        public SimpleDoSDefender()
+        /// <param name="options">The options for this defender.</param>
+        public SimpleDosDefender(IOptions<SimpleDosDefenderOptions> options)
         {
+            options.ThrowIfNull(nameof(options));
+
+            Validator.ValidateObject(options.Value, new ValidationContext(options.Value), validateAllProperties: true);
+
+            this.Options = options.Value;
+
             this.blockedAddresses = new HashSet<string>();
-            this.connectionCount = new ConcurrentDictionary<string, int>();
+
+            this.connectionCountLock = new object();
+            this.connectionCount = new Dictionary<string, int>();
         }
+
+        /// <summary>
+        /// Gets the options set for this defender.
+        /// </summary>
+        public SimpleDosDefenderOptions Options { get; }
 
         /// <summary>
         /// Starts the defender service.
@@ -70,21 +77,22 @@ namespace OpenTibia.Security
             {
                 while (!cancellationToken.IsCancellationRequested)
                 {
-                    var cleaningList = this.connectionCount.ToList();
-
-                    foreach (var kvp in cleaningList)
+                    lock (this.connectionCountLock)
                     {
-                        if (kvp.Value < TimeframeInSeconds)
+                        foreach (var kvp in this.connectionCount.ToList())
                         {
-                            this.connectionCount.TryRemove(kvp.Key, out int count);
-                        }
-                        else
-                        {
-                            this.connectionCount.TryUpdate(kvp.Key, kvp.Value - TimeframeInSeconds, kvp.Value);
+                            if (kvp.Value < this.Options.TimeframeInSeconds)
+                            {
+                                this.connectionCount.Remove(kvp.Key);
+                            }
+                            else
+                            {
+                                this.connectionCount[kvp.Key] = kvp.Value - this.Options.TimeframeInSeconds;
+                            }
                         }
                     }
 
-                    await Task.Delay(TimeSpan.FromSeconds(TimeframeInSeconds));
+                    await Task.Delay(TimeSpan.FromSeconds(this.Options.TimeframeInSeconds));
                 }
             });
 
@@ -109,12 +117,12 @@ namespace OpenTibia.Security
         /// <param name="addressStr">The address to block.</param>
         public void BlockAddress(string addressStr)
         {
-            if (this.blockedAddresses.Count >= ListSizeLimit || string.IsNullOrWhiteSpace(addressStr))
+            if (this.blockedAddresses.Count >= this.Options.ListSizeLimit || string.IsNullOrWhiteSpace(addressStr))
             {
                 return;
             }
 
-            this.AddInternal(addressStr);
+            this.blockedAddresses.Add(addressStr);
         }
 
         /// <summary>
@@ -133,36 +141,21 @@ namespace OpenTibia.Security
         /// <param name="addressStr">The address from which the connection attempt took place.</param>
         public void LogConnectionAttempt(string addressStr)
         {
-            this.connectionCount.AddOrUpdate(addressStr, 0, (key, prev) => { return prev + 1; });
-
-            try
+            lock (this.connectionCountLock)
             {
-                if (this.connectionCount[addressStr] == BlockAtCount)
+                if (!this.connectionCount.ContainsKey(addressStr))
                 {
-                    this.AddInternal(addressStr);
-
-                    this.connectionCount.TryRemove(addressStr, out int count);
+                    this.connectionCount.Add(addressStr, 0);
                 }
-            }
-            catch
-            {
-                // happens if the key was removed exactly at the time we were querying. Just ignore.
-            }
-        }
 
-        /// <summary>
-        /// Adds an address to the blocked addresses list.
-        /// </summary>
-        /// <param name="addressStr">The address to add.</param>
-        private void AddInternal(string addressStr)
-        {
-            try
-            {
-                this.blockedAddresses.Add(addressStr);
-            }
-            catch
-            {
-                // this will be thrown if there is already an element in there, so just ignore.
+                this.connectionCount[addressStr] += 1;
+
+                if (this.connectionCount[addressStr] == this.Options.BlockAtCount)
+                {
+                    this.blockedAddresses.Add(addressStr);
+
+                    this.connectionCount.Remove(addressStr);
+                }
             }
         }
     }

@@ -12,9 +12,9 @@
 namespace OpenTibia.Server.Notifications.Arguments
 {
     using System;
-    using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Structs;
+    using OpenTibia.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// public class that represents arguments for an animated effect notification.

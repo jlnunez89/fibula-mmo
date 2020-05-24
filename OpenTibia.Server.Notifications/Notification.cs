@@ -19,6 +19,7 @@ namespace OpenTibia.Server.Notifications
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts.Abstractions;
+    using OpenTibia.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Abstract class that represents a notification to a player's connection.
@@ -50,7 +51,7 @@ namespace OpenTibia.Server.Notifications
 
                 if (connections == null)
                 {
-                    context.Logger?.Warning($"Failed to send '{this.GetType().Name}' because the target connections function is null.");
+                    context?.Logger.Warning($"Failed to send '{this.GetType().Name}' because the target connections function is null.");
 
                     return;
                 }
@@ -74,7 +75,7 @@ namespace OpenTibia.Server.Notifications
                         var thisPacketLen = outboundMessage.Length - readAlready;
                         var packetBytes = outboundMessage.Buffer.Skip(readAlready).Take(thisPacketLen).Select(b => b.ToString("X2")).Aggregate((str, e) => str += " " + e);
 
-                        context.Logger?.Verbose($"Message bytes added by packet {packet.GetType().Name} ({(OutgoingGamePacketType)packet.PacketType}): {packetBytes}");
+                        context?.Logger.Verbose($"Message bytes added by packet {packet.GetType().Name} ({(OutgoingGamePacketType)packet.PacketType}): {packetBytes}");
 
                         readAlready += thisPacketLen;
                     }

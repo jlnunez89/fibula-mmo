@@ -21,7 +21,6 @@ namespace OpenTibia.Communications
     /// <summary>
     /// Class that represents a connection.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "CA1062:Validate arguments of public methods", Justification = "Validation is done through ThrowIfNull* methods.")]
     public class Connection : IConnection
     {
         /// <summary>

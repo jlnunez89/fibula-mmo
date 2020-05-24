@@ -885,7 +885,37 @@ namespace OpenTibia.Server.Map
 
         public IItem FindItemAt(byte index)
         {
-            throw new NotImplementedException();
+            var i = this.Ground == null ? 0 : 1;
+
+            if (this.stayOnTopItems.Any() && index < i + this.stayOnTopItems.Count)
+            {
+                return this.stayOnTopItems.ElementAt(Math.Max(0, index - i));
+            }
+
+            i += this.stayOnTopItems.Count;
+
+            if (this.stayOnBottomItems.Any() && index < i + this.stayOnBottomItems.Count)
+            {
+                return this.stayOnBottomItems.ElementAt(Math.Max(0, index - i));
+            }
+
+            i += this.stayOnBottomItems.Count;
+
+            if (this.creatureIdsOnTile.Any() && index < i + this.creatureIdsOnTile.Count)
+            {
+                // Not an item.
+                return null;
+            }
+
+            i += this.creatureIdsOnTile.Count;
+
+            if (this.itemsOnTile.Any() && index < i + this.itemsOnTile.Count)
+            {
+                return this.itemsOnTile.ElementAt(Math.Max(0, index - i));
+            }
+
+            // when nothing else works, return the ground (if any).
+            return this.Ground;
         }
 
         /// <summary>

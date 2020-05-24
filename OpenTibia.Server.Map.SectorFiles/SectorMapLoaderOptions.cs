@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Map.SectorFiles
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for the <see cref="SectorMapLoader"/>.
     /// </summary>
@@ -19,11 +21,13 @@ namespace OpenTibia.Server.Map.SectorFiles
         /// <summary>
         /// Gets or sets the directory for the live map.
         /// </summary>
+        [Required(ErrorMessage = "A directory for the live map sector files must be specified.")]
         public string LiveMapDirectory { get; set; }
 
         /// <summary>
         /// Gets or sets the directory for the original map.
         /// </summary>
+        [Required(ErrorMessage = "A directory for the original map sector files must be specified.")]
         public string OriginalMapDirectory { get; set; }
     }
 }

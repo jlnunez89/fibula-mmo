@@ -11,14 +11,17 @@
 
 namespace OpenTibia.Server.Monsters.MonFiles
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for the <see cref="MonFilesMonsterTypeLoader"/>.
     /// </summary>
     public class MonFilesMonsterTypeLoaderOptions
     {
         /// <summary>
-        /// Gets or sets the directory for the monster files.
+        /// Gets or sets the directory for the monster (*.mon) files.
         /// </summary>
+        [Required(ErrorMessage = "A directory for the monster (*.mon) files files must be specified.")]
         public string MonsterFilesDirectory { get; set; }
     }
 }

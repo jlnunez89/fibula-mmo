@@ -15,7 +15,7 @@ namespace OpenTibia.Server.Notifications.Arguments
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents generic notification arguments.

@@ -15,6 +15,7 @@ namespace OpenTibia.Server
     using System.Collections.Generic;
     using System.Linq;
     using OpenTibia.Server.Contracts.Abstractions;
+    using OpenTibia.Server.Contracts.Constants;
     using OpenTibia.Server.Contracts.Delegates;
     using OpenTibia.Server.Contracts.Enumerations;
 
@@ -23,14 +24,6 @@ namespace OpenTibia.Server
     /// </summary>
     public abstract class CombatantCreature : Creature, ICombatant
     {
-        private const decimal DefaultAttackSpeed = 1.0m;
-
-        private const decimal DefaultDefenseSpeed = 2.0m;
-
-        private const byte DefaultMaximumAttackCredits = 1;
-
-        private const byte DefaultMaximumDefenseCredits = 2;
-
         private readonly object damageTakenFromOthersLock;
 
         private readonly Dictionary<uint, uint> damageTakenFromOthers;
@@ -38,15 +31,23 @@ namespace OpenTibia.Server
         /// <summary>
         /// Initializes a new instance of the <see cref="CombatantCreature"/> class.
         /// </summary>
-        /// <param name="name"></param>
-        /// <param name="article"></param>
-        /// <param name="maxHitpoints"></param>
-        /// <param name="maxManapoints"></param>
-        /// <param name="corpse"></param>
-        /// <param name="hitpoints"></param>
-        /// <param name="manapoints"></param>
-        /// <param name="baseAttackSpeed"></param>
-        /// <param name="baseDefenseSpeed"></param>
+        /// <param name="name">The name of this creature.</param>
+        /// <param name="article">An article for the name of this creature.</param>
+        /// <param name="maxHitpoints">The maximum hitpoints of the creature.</param>
+        /// <param name="maxManapoints">The maximum manapoints of the creature.</param>
+        /// <param name="corpse">The corpse of the creature.</param>
+        /// <param name="hitpoints">The current hitpoints of the creature.</param>
+        /// <param name="manapoints">The current manapoints of the creature.</param>
+        /// <param name="baseAttackSpeed">
+        /// Optional. The base attack speed for this creature.
+        /// Bounded between [<see cref="CombatConstants.MinimumCombatSpeed"/>, <see cref="CombatConstants.MaximumCombatSpeed"/>] inclusive.
+        /// Defaults to <see cref="CombatConstants.DefaultAttackSpeed"/>.
+        /// </param>
+        /// <param name="baseDefenseSpeed">
+        /// Optional. The base defense speed for this creature.
+        /// Bounded between [<see cref="CombatConstants.MinimumCombatSpeed"/>, <see cref="CombatConstants.MaximumCombatSpeed"/>] inclusive.
+        /// Defaults to <see cref="CombatConstants.DefaultDefenseSpeed"/>.
+        /// </param>
         protected CombatantCreature(
             string name,
             string article,
@@ -55,13 +56,13 @@ namespace OpenTibia.Server
             ushort corpse,
             ushort hitpoints = 0,
             ushort manapoints = 0,
-            decimal baseAttackSpeed = DefaultAttackSpeed,
-            decimal baseDefenseSpeed = DefaultDefenseSpeed)
+            decimal baseAttackSpeed = CombatConstants.DefaultAttackSpeed,
+            decimal baseDefenseSpeed = CombatConstants.DefaultDefenseSpeed)
             : base(name, article, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
         {
             // Normalize combat speeds.
-            this.BaseAttackSpeed = Math.Min(ICombatant.MaximumCombatSpeed, Math.Max(ICombatant.MinimumCombatSpeed, baseAttackSpeed));
-            this.BaseDefenseSpeed = Math.Min(ICombatant.MaximumCombatSpeed, Math.Max(ICombatant.MinimumCombatSpeed, baseDefenseSpeed));
+            this.BaseAttackSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseAttackSpeed));
+            this.BaseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
 
             this.AutoAttackCredits = this.AutoAttackMaximumCredits;
             this.AutoDefenseCredits = this.AutoDefenseMaximumCredits;
@@ -145,7 +146,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the number of maximum attack credits.
         /// </summary>
-        public byte AutoAttackMaximumCredits => DefaultMaximumAttackCredits;
+        public byte AutoAttackMaximumCredits => CombatConstants.DefaultMaximumAttackCredits;
 
         /// <summary>
         /// Gets the number of auto defense credits available.
@@ -155,7 +156,7 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the number of maximum defense credits.
         /// </summary>
-        public byte AutoDefenseMaximumCredits => DefaultMaximumDefenseCredits;
+        public byte AutoDefenseMaximumCredits => CombatConstants.DefaultMaximumDefenseCredits;
 
         /// <summary>
         /// Gets a metric of how fast an Actor can earn a new AutoAttack credit per second.

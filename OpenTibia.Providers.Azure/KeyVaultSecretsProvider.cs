@@ -13,6 +13,7 @@ namespace OpenTibia.Providers.Azure
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
@@ -43,8 +44,10 @@ namespace OpenTibia.Providers.Azure
             ITokenProvider tokenProvider,
             ILogger logger)
         {
-            secretsProviderOptions?.Value.ThrowIfNull(nameof(secretsProviderOptions));
+            secretsProviderOptions.ThrowIfNull(nameof(secretsProviderOptions));
             tokenProvider.ThrowIfNull(nameof(tokenProvider));
+
+            Validator.ValidateObject(secretsProviderOptions.Value, new ValidationContext(secretsProviderOptions.Value), validateAllProperties: true);
 
             this.BaseUri = new Uri(secretsProviderOptions.Value.VaultBaseUrl);
             this.keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.TokenCallback));
@@ -92,7 +95,7 @@ namespace OpenTibia.Providers.Azure
         /// Retrieves a list of Secret identifiers from the secret store.
         /// </summary>
         /// <returns>A list of secret idetifiers.</returns>
-        public async Task<IEnumerable<string>> ListSecrets()
+        public async Task<IEnumerable<string>> ListSecretIdentifiers()
         {
             this.Logger.Debug($"Getting list of secret names from Vault: {this.BaseUri}");
 

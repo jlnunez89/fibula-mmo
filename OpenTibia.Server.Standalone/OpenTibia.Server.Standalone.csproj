@@ -41,7 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
     <ProjectReference Include="..\OpenTibia.Common\OpenTibia.Common.csproj" />
-    <ProjectReference Include="..\OpenTibia.Communications.Handlers\OpenTibia.Communications.Handlers.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications.Protocol772\OpenTibia.Communications.Protocol772.csproj" />
     <ProjectReference Include="..\OpenTibia.Communications\OpenTibia.Communications.csproj" />
     <ProjectReference Include="..\OpenTibia.Data.CosmosDB\OpenTibia.Data.CosmosDB.csproj" />
     <ProjectReference Include="..\OpenTibia.Data.InMemoryDatabase\OpenTibia.Data.InMemoryDatabase.csproj" />

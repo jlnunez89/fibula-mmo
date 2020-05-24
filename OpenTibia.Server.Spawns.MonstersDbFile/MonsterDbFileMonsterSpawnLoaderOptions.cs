@@ -11,6 +11,8 @@
 
 namespace OpenTibia.Server.Spawns.MonstersDbFile
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for the <see cref="MonsterDbFileMonsterSpawnLoader"/>.
     /// </summary>
@@ -19,6 +21,7 @@ namespace OpenTibia.Server.Spawns.MonstersDbFile
         /// <summary>
         /// Gets or sets the path to the file to load.
         /// </summary>
+        [Required(ErrorMessage = "A path for the monster spawns must be specified.")]
         public string FilePath { get; set; }
     }
 }

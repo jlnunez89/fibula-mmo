@@ -202,7 +202,10 @@ namespace OpenTibia.Server.Operations
                     {
                         return new SpeechOperation(
                             speechOperationOpArgs.RequestorId,
-                            speechOperationOpArgs.SpeechInfo);
+                            speechOperationOpArgs.Type,
+                            speechOperationOpArgs.ChannelId,
+                            speechOperationOpArgs.Content,
+                            speechOperationOpArgs.Receiver);
                     }
 
                     break;

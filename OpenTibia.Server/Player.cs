@@ -192,6 +192,9 @@ namespace OpenTibia.Server
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this player is thinking, which is always true.
+        /// </summary>
         public override bool IsThinking => true;
 
         /// <summary>

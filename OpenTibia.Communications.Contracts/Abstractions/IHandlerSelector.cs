@@ -11,18 +11,11 @@
 
 namespace OpenTibia.Communications.Contracts.Abstractions
 {
-    using OpenTibia.Communications.Contracts.Enumerations;
-
     /// <summary>
     /// Interface that contains methods to select the appropriate incoming packet handler.
     /// </summary>
     public interface IHandlerSelector
     {
-        /// <summary>
-        /// Gets the protocol type for which this handler works.
-        /// </summary>
-        OpenTibiaProtocolType ForProtocol { get; }
-
         /// <summary>
         /// Returns the most appropriate handler for the specified packet type.
         /// </summary>

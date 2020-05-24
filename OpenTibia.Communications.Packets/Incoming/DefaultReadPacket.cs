@@ -13,7 +13,6 @@ namespace OpenTibia.Communications.Packets.Incoming
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents the default packet.

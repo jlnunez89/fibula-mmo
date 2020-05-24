@@ -24,7 +24,7 @@ namespace OpenTibia.Providers.Contracts
         /// Retrieves a list of Secret identifiers from the secret store.
         /// </summary>
         /// <returns>A list of secret idetifiers.</returns>
-        Task<IEnumerable<string>> ListSecrets();
+        Task<IEnumerable<string>> ListSecretIdentifiers();
 
         /// <summary>
         /// Retrieves the specified Secret's value from the secret store.

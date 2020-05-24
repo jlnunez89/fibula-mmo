@@ -20,6 +20,7 @@ namespace OpenTibia.Server
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Packets.Outgoing;
+    using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts;
@@ -779,7 +780,7 @@ namespace OpenTibia.Server
                 return;
             }
 
-            this.DispatchOperation(OperationType.Thinking, new ThinkingOperationCreationArguments(combatant.Id, combatant));
+            // this.DispatchOperation(OperationType.Thinking, new ThinkingOperationCreationArguments(combatant.Id, combatant));
         }
 
         public void OnCombatantCombatEnded(ICombatant combatant)
@@ -788,7 +789,6 @@ namespace OpenTibia.Server
             {
                 return;
             }
-
         }
 
         public void OnCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount)
@@ -1068,7 +1068,7 @@ namespace OpenTibia.Server
                     this);
             }
 
-            return null;
+            return new EventContext(this.logger);
         }
 
         /// <summary>

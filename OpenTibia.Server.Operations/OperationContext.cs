@@ -13,6 +13,7 @@ namespace OpenTibia.Server.Operations
 {
     using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
+    using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Abstractions;
     using Serilog;
@@ -20,7 +21,7 @@ namespace OpenTibia.Server.Operations
     /// <summary>
     /// Class that represents a context for operations.
     /// </summary>
-    public class OperationContext : IOperationContext
+    public class OperationContext : EventContext, IOperationContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="OperationContext"/> class.
@@ -54,8 +55,8 @@ namespace OpenTibia.Server.Operations
             ICombatApi combatApi,
             IGameApi gameApi,
             IEventRulesApi eventRulesApi)
+            : base(logger)
         {
-            logger.ThrowIfNull(nameof(logger));
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
             connectionFinder.ThrowIfNull(nameof(connectionFinder));
@@ -70,7 +71,6 @@ namespace OpenTibia.Server.Operations
             gameApi.ThrowIfNull(nameof(gameApi));
             eventRulesApi.ThrowIfNull(nameof(eventRulesApi));
 
-            this.Logger = logger;
             this.MapDescriptor = mapDescriptor;
             this.TileAccessor = tileAccessor;
             this.ConnectionFinder = connectionFinder;
@@ -85,11 +85,6 @@ namespace OpenTibia.Server.Operations
             this.GameApi = gameApi;
             this.EventRulesApi = eventRulesApi;
         }
-
-        /// <summary>
-        /// Gets a reference to the logger in use.
-        /// </summary>
-        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets a reference to the map descriptor in use.

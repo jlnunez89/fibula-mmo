@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <StyleCopTreatErrorsAsWarnings>True</StyleCopTreatErrorsAsWarnings>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.0-preview3.19553.2" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\OpenTibia.Common.Contracts\OpenTibia.Common.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications.Contracts\OpenTibia.Communications.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications.Packets\OpenTibia.Communications.Packets.csproj" />
+    <ProjectReference Include="..\OpenTibia.Communications\OpenTibia.Communications.csproj" />
+    <ProjectReference Include="..\OpenTibia.Data\OpenTibia.Data.csproj" />
+    <ProjectReference Include="..\OpenTibia.Security\OpenTibia.Security.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Operations\OpenTibia.Server.Operations.csproj" />
+  </ItemGroup>
+</Project>

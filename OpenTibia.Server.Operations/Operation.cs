@@ -129,12 +129,6 @@ namespace OpenTibia.Server.Operations
                 {
                     if (targetCylinder is ITile targetTile)
                     {
-                        //context.Scheduler.ScheduleEvent(
-                        //    new TileUpdatedNotification(
-                        //        context.CreatureFinder,
-                        //        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, targetTile.Location),
-                        //        new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile)));
-
                         new TileUpdatedNotification(
                             context.CreatureFinder,
                             () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, targetTile.Location),

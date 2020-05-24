@@ -13,7 +13,6 @@ namespace OpenTibia.Communications
 {
     using System;
     using System.Buffers;
-    using System.Linq;
     using System.Text;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Security.Encryption;

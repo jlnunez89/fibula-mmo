@@ -79,8 +79,12 @@ namespace OpenTibia.Server.Operations.Actions
             // Adjust index if this a map location.
             var item = (this.FromLocation.Type == LocationType.Map && (fromCylinder is ITile fromTile)) ? fromTile.FindItemWithId(this.FromTypeId) : fromCylinder?.FindItemAt(index);
 
-            if (item == null || fromCylinder == null)
+            // Declare some pre-conditions.
+            var itemFound = item != null;
+
+            if (!itemFound)
             {
+                // Silent fail.
                 return;
             }
 
@@ -103,12 +107,6 @@ namespace OpenTibia.Server.Operations.Actions
             {
                 if (fromCylinder is ITile atTile)
                 {
-                    //context.Scheduler.ScheduleEvent(
-                    //    new TileUpdatedNotification(
-                    //        context.CreatureFinder,
-                    //        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, atTile.Location),
-                    //        new TileUpdatedNotificationArguments(atTile.Location, context.MapDescriptor.DescribeTile)));
-
                     new TileUpdatedNotification(
                         context.CreatureFinder,
                         () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, atTile.Location),

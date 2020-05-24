@@ -25,5 +25,6 @@
     <ProjectReference Include="..\OpenTibia.Communications.Contracts\OpenTibia.Communications.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Security.Contracts\OpenTibia.Security.Contracts.csproj" />
     <ProjectReference Include="..\OpenTibia.Security\OpenTibia.Security.csproj" />
+    <ProjectReference Include="..\OpenTibia.Server.Contracts\OpenTibia.Server.Contracts.csproj" />
   </ItemGroup>
 </Project>

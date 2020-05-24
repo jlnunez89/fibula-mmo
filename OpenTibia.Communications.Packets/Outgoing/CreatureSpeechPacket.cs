@@ -21,14 +21,16 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureSpeechPacket"/> class.
         /// </summary>
+        /// <param name="senderId"></param>
         /// <param name="senderName"></param>
         /// <param name="speechType"></param>
         /// <param name="text"></param>
         /// <param name="location"></param>
         /// <param name="channelId"></param>
         /// <param name="time"></param>
-        public CreatureSpeechPacket(string senderName, SpeechType speechType, string text, Location location, ChatChannelType channelId, uint time)
+        public CreatureSpeechPacket(uint senderId, string senderName, SpeechType speechType, string text, Location location, ChatChannelType channelId, uint time)
         {
+            this.SenderId = senderId;
             this.SenderName = senderName;
             this.SpeechType = speechType;
             this.Text = text;
@@ -38,6 +40,8 @@ namespace OpenTibia.Communications.Packets.Outgoing
         }
 
         public byte PacketType => (byte)OutgoingGamePacketType.CreatureSpeech;
+
+        public uint SenderId { get; }
 
         public string SenderName { get; }
 

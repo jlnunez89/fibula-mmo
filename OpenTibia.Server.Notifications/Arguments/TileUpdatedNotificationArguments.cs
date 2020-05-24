@@ -16,6 +16,7 @@ namespace OpenTibia.Server.Notifications.Arguments
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Contracts.Structs;
     using OpenTibia.Server.Notifications;
+    using OpenTibia.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the <see cref="TileUpdatedNotification"/>.

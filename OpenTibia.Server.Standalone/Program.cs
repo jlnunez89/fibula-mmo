@@ -25,14 +25,13 @@ namespace OpenTibia.Server.Standalone
     using OpenTibia.Communications;
     using OpenTibia.Communications.Contracts;
     using OpenTibia.Communications.Contracts.Abstractions;
-    using OpenTibia.Communications.Handlers;
+    using OpenTibia.Communications.Protocol772;
     using OpenTibia.Data.Contracts.Abstractions;
     using OpenTibia.Data.InMemoryDatabase;
     using OpenTibia.Providers.Azure;
     using OpenTibia.Scheduling;
     using OpenTibia.Scheduling.Contracts.Abstractions;
     using OpenTibia.Security;
-    using OpenTibia.Security.Contracts;
     using OpenTibia.Server.Contracts.Abstractions;
     using OpenTibia.Server.Events.MoveUseFile;
     using OpenTibia.Server.Factories;
@@ -137,15 +136,13 @@ namespace OpenTibia.Server.Standalone
 
             ConfigureOperations(services);
 
-            ConfigureHostedServices(services);
+            ConfigureHostedServices(services, hostingContext.Configuration);
 
             ConfigureExtraServices(hostingContext, services);
         }
 
         private static void ConfigureCommunicationsFramework(IServiceCollection services)
         {
-            services.AddSingleton<IProtocolFactory, ProtocolFactory>();
-
             services.AddSingleton<IConnectionManager, ConnectionManager>();
             services.AddSingleton<IConnectionFinder>(s => s.GetService<IConnectionManager>());
 
@@ -154,7 +151,6 @@ namespace OpenTibia.Server.Standalone
             // Add all the request handlers:
             services.AddGameHandlers();
             services.AddLoginHandlers();
-            services.AddManagementHandlers();
         }
 
         private static void ConfigureOperations(IServiceCollection services)
@@ -164,25 +160,19 @@ namespace OpenTibia.Server.Standalone
             services.AddSingleton<IElevatedOperationContext, ElevatedOperationContext>();
         }
 
-        private static void ConfigureHostedServices(IServiceCollection services)
+        private static void ConfigureHostedServices(IServiceCollection services, IConfiguration configuration)
         {
-            // Those executing should derive from IHostedService and be added using AddHostedService.
-            services.AddSingleton<SimpleDoSDefender>();
-            services.AddHostedService(s => s.GetService<SimpleDoSDefender>());
-            services.AddSingleton<IDoSDefender>(s => s.GetService<SimpleDoSDefender>());
+            services.AddSimpleDosDefender(configuration);
 
-            services.AddSingleton<LoginListener>();
-            services.AddHostedService(s => s.GetService<LoginListener>());
-            services.AddSingleton<IOpenTibiaListener>(s => s.GetService<LoginListener>());
-
-            services.AddSingleton<GameListener>();
-            services.AddHostedService(s => s.GetService<GameListener>());
-            services.AddSingleton<IOpenTibiaListener>(s => s.GetService<GameListener>());
+            services.AddLoginListener(configuration);
+            services.AddGameListener(configuration);
 
             services.AddSingleton<Game>();
-            services.AddHostedService(s => s.GetService<Game>());
             services.AddSingleton<IGame>(s => s.GetService<Game>());
             services.AddSingleton<ICombatApi>(s => s.GetService<Game>());
+
+            // Those executing should derive from IHostedService and be added using AddHostedService.
+            services.AddHostedService(s => s.GetService<Game>());
         }
 
         private static void ConfigureDatabaseContext(HostBuilderContext hostingContext, IServiceCollection services)

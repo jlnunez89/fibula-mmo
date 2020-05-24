@@ -102,6 +102,9 @@ namespace OpenTibia.Server.Monsters
         /// </summary>
         public override FightMode FightMode { get; set; }
 
+        /// <summary>
+        /// Gets a value indicating whether this monster is currently thinking.
+        /// </summary>
         public override bool IsThinking => this.HostilesInView.Any() || this.NeutralsInView.Any();
 
         /// <summary>

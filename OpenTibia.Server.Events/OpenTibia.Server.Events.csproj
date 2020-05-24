@@ -29,7 +29,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\OpenTibia.Common.Utilities\OpenTibia.Common.Utilities.csproj" />
-    <ProjectReference Include="..\OpenTibia.Communications.Packets\OpenTibia.Communications.Packets.csproj" />
     <ProjectReference Include="..\OpenTibia.Communications\OpenTibia.Communications.csproj" />
     <ProjectReference Include="..\OpenTibia.Scheduling\OpenTibia.Scheduling.csproj" />
     <ProjectReference Include="..\OpenTibia.Security.Contracts\OpenTibia.Security.Contracts.csproj" />

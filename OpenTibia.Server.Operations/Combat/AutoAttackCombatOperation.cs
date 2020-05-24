@@ -176,17 +176,12 @@ namespace OpenTibia.Server.Operations.Combat
                     return wasBlockedByArmor ? AnimatedEffect.SparkYellow : AnimatedEffect.Puff;
                 }
 
-                switch (this.Target.Blood)
+                return this.Target.Blood switch
                 {
-                    default:
-                    case BloodType.Fire:
-                    case BloodType.Blood:
-                        return AnimatedEffect.XBlood;
-                    case BloodType.Bones:
-                        return AnimatedEffect.XGray;
-                    case BloodType.Slime:
-                        return AnimatedEffect.Poison;
-                }
+                    BloodType.Bones => AnimatedEffect.XGray,
+                    BloodType.Slime => AnimatedEffect.Poison,
+                    _ => AnimatedEffect.XBlood,
+                };
             }
 
             TextColor GetTextColor(int damage)
@@ -196,18 +191,13 @@ namespace OpenTibia.Server.Operations.Combat
                     return TextColor.Blue;
                 }
 
-                switch (this.Target.Blood)
+                return this.Target.Blood switch
                 {
-                    default:
-                    case BloodType.Blood:
-                        return TextColor.Red;
-                    case BloodType.Bones:
-                        return TextColor.LightGrey;
-                    case BloodType.Fire:
-                        return TextColor.Orange;
-                    case BloodType.Slime:
-                        return TextColor.Green;
-                }
+                    BloodType.Bones => TextColor.LightGrey,
+                    BloodType.Fire => TextColor.Orange,
+                    BloodType.Slime => TextColor.Green,
+                    _ => TextColor.Red,
+                };
             }
 
             var damageToApply = CalculateInflictedDamage(out bool wasArmorBlock, out bool wasShielded);

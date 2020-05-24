@@ -11,24 +11,29 @@
 
 namespace OpenTibia.Data.CosmosDB
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
     /// Class that represents options for CosmosDB configuration.
     /// </summary>
     public class CosmosDbConfigurationOptions
     {
         /// <summary>
-        /// Gets or sets the secret name of the account endpoint.
+        /// Gets or sets the secret name of the account endpoint, used to retrieve the value from the secrets provider.
         /// </summary>
+        [Required(ErrorMessage = "A name for the account endpoint secret is required.")]
         public string AccountEndpointSecretName { get; set; }
 
         /// <summary>
-        /// Gets or sets the secret name of the account key.
+        /// Gets or sets the secret name of the account key, used to retrieve the value from the secrets provider.
         /// </summary>
+        [Required(ErrorMessage = "A name for the account key secret is required.")]
         public string AccountKeySecretName { get; set; }
 
         /// <summary>
         /// Gets or sets the database name.
         /// </summary>
+        [Required(ErrorMessage = "A database name is required.")]
         public string DatabaseName { get; set; }
     }
 }

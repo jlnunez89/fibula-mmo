@@ -23,26 +23,13 @@ namespace OpenTibia.Communications.Packets.Incoming
         /// <param name="type"></param>
         /// <param name="channelId"></param>
         /// <param name="content"></param>
-        public SpeechPacket(SpeechType type, ChatChannelType channelId, string content)
+        /// <param name="receiver"></param>
+        public SpeechPacket(SpeechType type, ChatChannelType channelId, string content, string receiver = "")
         {
             this.Type = type;
             this.ChannelId = channelId;
             this.Content = content;
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SpeechPacket"/> class.
-        /// </summary>
-        /// <param name="type"></param>
-        /// <param name="receiver"></param>
-        /// <param name="content"></param>
-        public SpeechPacket(SpeechType type, string receiver, string content)
-        {
-            this.Type = type;
             this.Receiver = receiver;
-            this.Content = content;
-
-            this.ChannelId = ChatChannelType.Private;
         }
 
         public SpeechType Type { get; }

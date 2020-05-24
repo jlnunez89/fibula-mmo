@@ -13,6 +13,7 @@ namespace OpenTibia.Providers.Azure
 {
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
+    using Microsoft.Extensions.DependencyInjection.Extensions;
     using OpenTibia.Common.Utilities;
     using OpenTibia.Providers.Contracts;
 
@@ -35,8 +36,8 @@ namespace OpenTibia.Providers.Azure
             // configure options
             services.Configure<KeyVaultSecretsProviderOptions>(configuration.GetSection(nameof(KeyVaultSecretsProviderOptions)));
 
-            services.AddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
-            services.AddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
+            services.TryAddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
+            services.TryAddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
         }
     }
 }

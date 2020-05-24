@@ -11,6 +11,9 @@
 
 namespace OpenTibia.Communications
 {
+    using System.Linq;
+    using Microsoft.Extensions.Options;
+    using OpenTibia.Common.Utilities;
     using OpenTibia.Communications.Contracts.Abstractions;
     using OpenTibia.Communications.Contracts.Enumerations;
     using OpenTibia.Security.Contracts;
@@ -19,23 +22,58 @@ namespace OpenTibia.Communications
     /// <summary>
     /// Class that extends the standard <see cref="BaseListener"/> for the login protocol.
     /// </summary>
-    public class LoginListener : BaseListener
+    /// <typeparam name="THandlerSelector">The type of handler selector in use here.</typeparam>
+    public class LoginListener<THandlerSelector> : BaseListener
+        where THandlerSelector : class, IHandlerSelector
     {
         /// <summary>
-        /// The default port which the login listener will be listening to.
-        /// </summary>
-        private const int DefaultLoginListenerPort = 7171;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="LoginListener"/> class.
+        /// Initializes a new instance of the <see cref="LoginListener{THandlerSelector}"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="protocolFactory">The protocol factory reference to create a protocol that the listerner will follow.</param>
+        /// <param name="options">The options for this listener.</param>
+        /// <param name="handlerSelector">A reference to the handler selector to use in this protocol.</param>
         /// <param name="dosDefender">A reference to the DoS defender service implementation.</param>
-        /// <param name="port">The port where this listener will listen.</param>
-        public LoginListener(ILogger logger, IProtocolFactory protocolFactory, IDoSDefender dosDefender, int port = DefaultLoginListenerPort)
-            : base(logger, port, protocolFactory?.CreateForType(OpenTibiaProtocolType.LoginProtocol), dosDefender)
+        public LoginListener(ILogger logger, IOptions<LoginListenerOptions> options, THandlerSelector handlerSelector, IDoSDefender dosDefender)
+            : base(logger, options.Value, handlerSelector, dosDefender, keepConnectionOpen: false)
         {
+        }
+
+        /// <summary>
+        /// Processes an incomming message from the connection.
+        /// </summary>
+        /// <param name="connection">The connection where the message is being read from.</param>
+        /// <param name="inboundMessage">The message to process.</param>
+        public override void ProcessMessage(IConnection connection, INetworkMessage inboundMessage)
+        {
+            connection.ThrowIfNull(nameof(connection));
+            inboundMessage.ThrowIfNull(nameof(inboundMessage));
+
+            byte packetType = inboundMessage.GetByte();
+
+            if (packetType != (byte)IncomingManagementPacketType.LoginServerRequest)
+            {
+                // This packet should NOT have been routed to this protocol.
+                this.Logger.Warning($"Non {nameof(IncomingManagementPacketType.LoginServerRequest)} packet routed to {nameof(LoginListener<THandlerSelector>)}. Packet was ignored.");
+
+                return;
+            }
+
+            var handler = this.HandlerSelector.SelectForType(packetType);
+
+            if (handler == null)
+            {
+                return;
+            }
+
+            var responsePackets = handler.HandleRequest(inboundMessage, connection);
+
+            if (responsePackets != null && responsePackets.Any())
+            {
+                // Send any responses prepared for this.
+                var responseMessage = this.PrepareResponse(responsePackets);
+
+                connection.Send(responseMessage);
+            }
         }
     }
 }
