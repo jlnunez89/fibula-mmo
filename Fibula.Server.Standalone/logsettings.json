@@ -1,0 +1,41 @@
+{
+  "Serilog": {
+    "MinimumLevel": "Verbose",
+    "Using": [
+      "Serilog.Sinks.Console",
+      "Serilog.Sinks.File"
+    ],
+    "WriteTo": [
+      {
+        "Name": "Console",
+        "Args": {
+          "restrictedToMinimumLevel": "Debug",
+          "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "restrictedToMinimumLevel": "Information",
+          "path": "%TEMP%\\Logs\\fibulammo-standalone-info.log",
+          "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
+        }
+      },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "%TEMP%\\Logs\\fibulammo-standalone.log",
+          "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
+        }
+      }
+    ],
+    "Enrich": [
+      "FromLogContext",
+      "WithMachineName",
+      "WithThreadId"
+    ],
+    "Properties": {
+      "Application": "Fibula.Server.Standalone"
+    }
+  }
+}
