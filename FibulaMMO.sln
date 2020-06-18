@@ -135,6 +135,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notifications", "Notificati
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Creatures", "Creatures", "{9A57D82F-2B2E-4AB4-94A9-A2A4897AFF1D}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Security.Tests", "Fibula.Security.Tests\Fibula.Security.Tests.csproj", "{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -567,6 +569,14 @@ Global
 		{53FC94ED-6366-44FB-8E74-003DC292C919}.Release|Any CPU.Build.0 = Release|Any CPU
 		{53FC94ED-6366-44FB-8E74-003DC292C919}.Release|x64.ActiveCfg = Release|Any CPU
 		{53FC94ED-6366-44FB-8E74-003DC292C919}.Release|x64.Build.0 = Release|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Debug|x64.Build.0 = Debug|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Release|x64.ActiveCfg = Release|Any CPU
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -624,6 +634,7 @@ Global
 		{D82935DC-DC80-4A10-A11D-EE69E12E5252} = {9A57D82F-2B2E-4AB4-94A9-A2A4897AFF1D}
 		{733961AA-0543-4AD7-BFAB-2E1C32436055} = {6F0FBAB5-4EEE-40AD-AFB4-F9CBE8B4E179}
 		{53FC94ED-6366-44FB-8E74-003DC292C919} = {9A57D82F-2B2E-4AB4-94A9-A2A4897AFF1D}
+		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB} = {06C3FD59-5CF2-477E-AF01-672BE171A718}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4198A479-8EF8-4C3D-BCC7-702B747E6EE4}

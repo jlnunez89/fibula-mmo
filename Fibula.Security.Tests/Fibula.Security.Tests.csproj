@@ -2,19 +2,13 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Security.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Scheduling.Tests.xml</DocumentationFile>
   </PropertyGroup>
-  
-  <PropertyGroup>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-  </PropertyGroup>
-  
-  <ItemGroup>
-    <Compile Remove="Encryption\Hash.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <None Remove="stylecop.json" />
@@ -25,8 +19,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="BouncyCastle.NetCore" Version="1.8.6" />
-    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.4" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.1" />
+    <PackageReference Include="Moq" Version="4.14.1" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.1" />
+    <PackageReference Include="Serilog" Version="2.9.1-dev-01151" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -34,8 +31,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
-    <ProjectReference Include="..\Fibula.Security.Contracts\Fibula.Security.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Common.TestingUtilities\Fibula.Common.TestingUtilities.csproj" />
+    <ProjectReference Include="..\Fibula.Security\Fibula.Security.csproj" />
   </ItemGroup>
 
 </Project>
