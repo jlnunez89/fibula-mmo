@@ -16,10 +16,10 @@ namespace Fibula.Items.ObjectsFile
     using System.IO;
     using System.Linq;
     using Fibula.Common.Utilities;
+    using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles;
-    using Fibula.Server.Items;
     using Microsoft.Extensions.Options;
     using Serilog;
 

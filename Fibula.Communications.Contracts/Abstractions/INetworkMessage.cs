@@ -102,6 +102,13 @@ namespace Fibula.Communications.Contracts.Abstractions
         uint GetUInt32();
 
         /// <summary>
+        /// Reads some bytes from the message.
+        /// </summary>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The bytes read.</returns>
+        ReadOnlySpan<byte> GetBytes(int count);
+
+        /// <summary>
         /// Resets the message.
         /// </summary>
         void Reset();

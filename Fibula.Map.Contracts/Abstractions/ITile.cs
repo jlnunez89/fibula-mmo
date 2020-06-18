@@ -10,15 +10,15 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Abstractions
+namespace Fibula.Map.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Enumerations;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Map.Contracts.Enumerations;
 
     public interface ITile : IThingContainer
     {

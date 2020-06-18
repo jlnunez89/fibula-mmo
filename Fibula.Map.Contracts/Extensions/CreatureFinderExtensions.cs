@@ -16,9 +16,9 @@ namespace Fibula.Server.Contracts.Extensions
     using System.Linq;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Constants;
 
     /// <summary>
     /// Helper class that provides extensions for the <see cref="ICreatureFinder"/> implementations.

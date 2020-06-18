@@ -33,12 +33,12 @@ namespace Fibula.Server.Standalone
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.ObjectsFile;
     using Fibula.Map;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.GrassOnly;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;
     using Fibula.Server.Handlers;
-    using Fibula.Server.Map.Contracts.Abstractions;
-    using Fibula.Server.Map.GrassOnly;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Contracts.Abstractions;
@@ -202,6 +202,7 @@ namespace Fibula.Server.Standalone
             services.AddProtocol772GatewayComponents(hostingContext.Configuration);
 
             services.AddSimpleDosDefender(hostingContext.Configuration);
+            services.AddLocalPemFileRsaDecryptor(hostingContext.Configuration);
 
             ConfigureHandlers(hostingContext, services);
 

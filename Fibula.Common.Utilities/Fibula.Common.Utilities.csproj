@@ -12,6 +12,8 @@
     <Compile Remove="BinaryHeap.cs" />
     <Compile Remove="BytePair.cs" />
     <Compile Remove="DuplicateIntegerComparer.cs" />
+    <Compile Remove="Extensions\ByteExtensions.cs" />
+    <Compile Remove="Extensions\FlagExtensions.cs" />
     <Compile Remove="Extensions\SortedListExtensions.cs" />
     <Compile Remove="Pathfinding\AStar.cs" />
     <Compile Remove="Pathfinding\INode.cs" />

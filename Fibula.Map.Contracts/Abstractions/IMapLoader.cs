@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Abstractions
+namespace Fibula.Map.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Map.Contracts.Delegates;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Delegates;
 
     /// <summary>
     /// Common interface for map loaders.

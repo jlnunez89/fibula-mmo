@@ -19,12 +19,12 @@ namespace Fibula.Map
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>

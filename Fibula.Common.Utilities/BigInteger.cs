@@ -30,6 +30,7 @@ namespace Fibula.Common.Utilities
     /// <summary>
     /// Class that represents a big integer.
     /// </summary>
+    // TODO: move away from this class.
     public class BigInteger
     {
         /// <summary>

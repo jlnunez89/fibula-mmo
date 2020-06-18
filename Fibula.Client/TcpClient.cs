@@ -16,9 +16,9 @@ namespace Fibula.Client
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Client.Contracts.Models;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Communications.Contracts.Models;
 
     /// <summary>
     /// Class that implements an <see cref="IClient"/> for Tcp connections.
@@ -49,7 +49,7 @@ namespace Fibula.Client
         /// <summary>
         /// Gets a value indicating whether this client is idle.
         /// </summary>
-        public bool IsIdle { get; }
+        public bool IsIdle => this.Connection.IsOrphaned;
 
         /// <summary>
         /// Gets the connection enstablished by this client.

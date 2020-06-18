@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ClientInformation.cs" company="2Dudes">
+// <copyright file="LocalPemFileRsaDecryptorOptions.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,21 +10,19 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Client.Contracts.Models
+namespace Fibula.Security.Encryption
 {
+    using System.ComponentModel.DataAnnotations;
+
     /// <summary>
-    /// Class that represents inforamtion about the client.
+    /// Class that represents options for the <see cref="LocalPemFileRsaDecryptor"/>.
     /// </summary>
-    public class ClientInformation
+    public class LocalPemFileRsaDecryptorOptions
     {
         /// <summary>
-        /// Gets or sets the agent.
+        /// Gets or sets the path to the PEM file.
         /// </summary>
-        public string Agent { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public string Version { get; set; }
+        [Required(ErrorMessage = "A path for the .pem file must be speficied.")]
+        public string FilePath { get; set; }
     }
 }

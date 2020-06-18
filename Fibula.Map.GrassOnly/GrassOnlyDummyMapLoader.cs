@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.GrassOnly
+namespace Fibula.Map.GrassOnly
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -18,9 +18,9 @@ namespace Fibula.Server.Map.GrassOnly
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Delegates;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Delegates;
 
     /// <summary>
     /// Class that represents a dummy map loader that yields all grass tiles.
@@ -31,8 +31,6 @@ namespace Fibula.Server.Map.GrassOnly
 
         private readonly ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
-        private bool preloaded;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="GrassOnlyDummyMapLoader"/> class.
         /// </summary>
@@ -41,7 +39,6 @@ namespace Fibula.Server.Map.GrassOnly
         {
             this.ItemFactory = itemFactory;
 
-            this.preloaded = false;
             this.tilesAndLocations = new ConcurrentDictionary<Location, ITile>();
         }
 
@@ -89,20 +86,6 @@ namespace Fibula.Server.Map.GrassOnly
                 return Enumerable.Empty<(Location, ITile)>();
             }
 
-            if (!this.preloaded)
-            {
-                this.preloaded = true;
-
-                var madeUpCenterLocation = new Location()
-                {
-                    X = 1000,
-                    Y = 1000,
-                    Z = 7,
-                };
-
-                return this.PreloadBlankMap(madeUpCenterLocation);
-            }
-
             var tuplesAdded = new List<(Location loc, ITile tile)>();
 
             for (int x = fromX; x <= toX; x++)
@@ -124,11 +107,6 @@ namespace Fibula.Server.Map.GrassOnly
             }
 
             return tuplesAdded;
-        }
-
-        private IEnumerable<(Location Location, ITile Tile)> PreloadBlankMap(Location centerLocation)
-        {
-            return this.Load(centerLocation.X - 20, centerLocation.X + 20, centerLocation.Y - 10, centerLocation.Y + 10, centerLocation.Z, centerLocation.Z);
         }
     }
 }

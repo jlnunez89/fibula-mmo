@@ -17,9 +17,9 @@ namespace Fibula.Server.Operations
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;
     using Fibula.Server.Notifications.Arguments;
@@ -35,7 +35,6 @@ namespace Fibula.Server.Operations
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the action.</param>
         /// <param name="playerMetadata">The creation metadata of the player that is logging in.</param>
-        /// <param name="client">The client from which the log in was requested.</param>
         /// <param name="worldLightLevel">The level of the world light to send to the player.</param>
         /// <param name="worldLightColor">The color of the world light to send to the player.</param>
         public LogInOperation(uint requestorId, IPlayerCreationMetadata playerMetadata, byte worldLightLevel, byte worldLightColor)

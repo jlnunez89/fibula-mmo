@@ -14,9 +14,9 @@ namespace Fibula.Parsing.CipFiles
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Utilities;
+    using Fibula.Common.Utilities.Extensions;
     using Fibula.Parsing.CipFiles.Models;
     using Fibula.Parsing.Contracts.Abstractions;
-    using OpenTibia.Common.Utilities;
     using Sprache;
 
     /// <summary>

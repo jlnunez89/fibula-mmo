@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Abstractions
+namespace Fibula.Map.Contracts.Abstractions
 {
     using Fibula.Server.Contracts.Structs;
 

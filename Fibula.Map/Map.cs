@@ -21,11 +21,11 @@ namespace Fibula.Map
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Extensions;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts;
-    using Fibula.Server.Map.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>

@@ -29,16 +29,6 @@ namespace Fibula.Server.Protocol.V772
     public static class NetworkMessageExtensions
     {
         /// <summary>
-        /// Attempts to decrypt the message using RSA keys.
-        /// </summary>
-        /// <param name="message">The message to act on.</param>
-        /// <param name="useCipKeys">Optional. A value indicating whether to use CIP RSA keys to attempt this decryption.</param>
-        public static void RsaDecrypt(this INetworkMessage message, bool useCipKeys = true)
-        {
-            Rsa.Decrypt(message.Buffer, message.Cursor, message.Length, useCipKeys);
-        }
-
-        /// <summary>
         /// Attempts to decrypt the message using XTea keys.
         /// </summary>
         /// <param name="message">The message to act on.</param>

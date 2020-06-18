@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts
+namespace Fibula.Map.Contracts
 {
     using System;
     using System.Buffers;

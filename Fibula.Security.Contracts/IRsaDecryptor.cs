@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ClientInformation.cs" company="2Dudes">
+// <copyright file="IRsaDecryptor.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,21 +10,20 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Client.Contracts.Models
+namespace Fibula.Security.Contracts
 {
+    using System;
+
     /// <summary>
-    /// Class that represents inforamtion about the client.
+    /// Interface for all RSA decryptor implementations.
     /// </summary>
-    public class ClientInformation
+    public interface IRsaDecryptor
     {
         /// <summary>
-        /// Gets or sets the agent.
+        /// Decrypts the data supplied.
         /// </summary>
-        public string Agent { get; set; }
-
-        /// <summary>
-        /// Gets or sets the version.
-        /// </summary>
-        public string Version { get; set; }
+        /// <param name="data">The data to decrypt.</param>
+        /// <returns>The decrypted bytes of data.</returns>
+        Span<byte> Decrypt(byte[] data);
     }
 }

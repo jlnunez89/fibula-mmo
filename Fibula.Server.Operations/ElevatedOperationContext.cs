@@ -14,8 +14,8 @@ namespace Fibula.Server.Operations
 {
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Abstractions;
     using Fibula.Server.Operations.Contracts.Abstractions;
     using Serilog;
 

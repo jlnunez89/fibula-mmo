@@ -10,10 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.GrassOnly
+namespace Fibula.Map.GrassOnly
 {
     using Fibula.Common.Utilities;
-    using Fibula.Server.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 

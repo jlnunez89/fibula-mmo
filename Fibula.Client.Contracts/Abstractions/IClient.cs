@@ -13,8 +13,8 @@
 namespace Fibula.Client.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Client.Contracts.Models;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Communications.Contracts.Models;
 
     /// <summary>
     /// Interface for connections.

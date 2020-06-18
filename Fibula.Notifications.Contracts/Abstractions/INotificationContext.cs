@@ -13,8 +13,8 @@
 namespace Fibula.Server.Notifications.Contracts.Abstractions
 {
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for a notification context.

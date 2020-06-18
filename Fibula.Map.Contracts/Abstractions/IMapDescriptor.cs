@@ -10,12 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Abstractions
+namespace Fibula.Map.Contracts.Abstractions
 {
     using System.Buffers;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts.Constants;
 
     /// <summary>
     /// Interface for map descriptors.

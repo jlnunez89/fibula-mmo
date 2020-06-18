@@ -174,6 +174,25 @@ namespace Fibula.Communications
         }
 
         /// <summary>
+        /// Reads some bytes from the message.
+        /// </summary>
+        /// <param name="count">The number of bytes to read.</param>
+        /// <returns>The bytes read.</returns>
+        public ReadOnlySpan<byte> GetBytes(int count)
+        {
+            if (this.Cursor + count > this.Length)
+            {
+                throw new IndexOutOfRangeException($"{nameof(this.GetBytes)} out of range.");
+            }
+
+            var spanToReturn = this.buffer.AsSpan().Slice(this.Cursor, count);
+
+            this.Cursor += count;
+
+            return spanToReturn;
+        }
+
+        /// <summary>
         /// Adds a byte to the message.
         /// </summary>
         /// <param name="value">The byte value to add.</param>
@@ -315,26 +334,6 @@ namespace Fibula.Communications
             this.buffer = new byte[BufferSize];
             this.Length = startingIndex;
             this.Cursor = startingIndex;
-        }
-
-        /// <summary>
-        /// Reads some bytes from the message.
-        /// </summary>
-        /// <param name="count">The number of bytes to read.</param>
-        /// <returns>The bytes read.</returns>
-        private ReadOnlySpan<byte> GetBytes(int count)
-        {
-            if (this.Cursor + count > this.Length)
-            {
-                throw new IndexOutOfRangeException($"{nameof(this.GetBytes)} out of range.");
-            }
-
-            // Before: Array.Copy(this.buffer, this.Cursor, t, 0, count);
-            var spanToReturn = this.buffer.AsSpan().Slice(this.Cursor, count);
-
-            this.Cursor += count;
-
-            return spanToReturn;
         }
     }
 }

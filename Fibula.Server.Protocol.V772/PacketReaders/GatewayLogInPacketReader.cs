@@ -17,7 +17,6 @@ namespace Fibula.Server.Protocol.V772.PacketReaders
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Incoming;
-    using Fibula.Server.Protocol.V772;
     using Serilog;
 
     /// <summary>
@@ -52,35 +51,17 @@ namespace Fibula.Server.Protocol.V772.PacketReaders
         {
             message.ThrowIfNull(nameof(message));
 
-            // OS and Version were included in plain in this packet after version 7.70
+            // OS and Version were included plainly in this version
             var operatingSystem = message.GetUInt16();
             var version = message.GetUInt16();
 
             // unknown bytes.
             message.SkipBytes(12);
 
-            // Make a copy of the message in case we fail to decrypt using the first set of keys.
-            var messageCopy = message.Copy();
+            var targetSpan = message.Buffer[message.Cursor..message.Length];
+            var decryptedBytes = this.ApplicationContext.RsaDecryptor.Decrypt(targetSpan.ToArray());
 
-            message.RsaDecrypt(useCipKeys: this.ApplicationContext.Options.UsingCipsoftRsaKeys);
-
-            // If GetByte() here is not Zero, it means the RSA decrypt was unsuccessful, lets try with the other set of RSA keys...
-            if (message.GetByte() != 0)
-            {
-                this.Logger.Information($"Failed to decrypt client connection data using {(this.ApplicationContext.Options.UsingCipsoftRsaKeys ? "CipSoft" : "OTServ")} RSA keys, attempting the other set...");
-
-                message = messageCopy;
-
-                message.RsaDecrypt(useCipKeys: !this.ApplicationContext.Options.UsingCipsoftRsaKeys);
-
-                if (message.GetByte() != 0)
-                {
-                    // These RSA keys are also unsuccessful... give up.
-                    this.Logger.Warning($"Unable to decrypt and communicate with client. Neither CipSoft or OTServ RSA keys matched... giving up.");
-
-                    return null;
-                }
-            }
+            decryptedBytes.CopyTo(targetSpan);
 
             return new GatewayLogInPacket(
                 version,

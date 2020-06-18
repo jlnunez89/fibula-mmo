@@ -14,6 +14,7 @@ namespace Fibula.Security
 {
     using Fibula.Common.Utilities;
     using Fibula.Security.Contracts;
+    using Fibula.Security.Encryption;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -41,6 +42,23 @@ namespace Fibula.Security
 
             // Since it's derived from IHostedService should be also registered as such.
             services.AddHostedService(s => s.GetService<SimpleDosDefender>());
+        }
+
+        /// <summary>
+        /// Adds the <see cref="LocalPemFileRsaDecryptor"/> contained in this library to the services collection.
+        /// It aslo configures the options required by it: <see cref="LocalPemFileRsaDecryptorOptions"/>.
+        /// </summary>
+        /// <param name="services">The services collection.</param>
+        /// <param name="configuration">The configuration loaded.</param>
+        public static void AddLocalPemFileRsaDecryptor(this IServiceCollection services, IConfiguration configuration)
+        {
+            configuration.ThrowIfNull(nameof(configuration));
+
+            // Configure the options required by the services we're about to add.
+            services.Configure<LocalPemFileRsaDecryptorOptions>(configuration.GetSection(nameof(LocalPemFileRsaDecryptorOptions)));
+
+            services.TryAddSingleton<LocalPemFileRsaDecryptor>();
+            services.TryAddSingleton<IRsaDecryptor>(s => s.GetService<LocalPemFileRsaDecryptor>());
         }
     }
 }

@@ -20,12 +20,12 @@ namespace Fibula.Server
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Map.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;

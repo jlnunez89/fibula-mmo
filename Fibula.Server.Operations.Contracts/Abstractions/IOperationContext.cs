@@ -14,8 +14,8 @@ namespace Fibula.Server.Operations.Contracts.Abstractions
 {
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Abstractions;
-    using Fibula.Server.Map.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for an operation context.

@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Delegates
+namespace Fibula.Map.Contracts.Delegates
 {
     /// <summary>
     /// Delegate for when a window in the map is loaded by the map loader.

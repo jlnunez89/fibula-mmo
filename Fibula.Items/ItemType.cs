@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Items
+namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;

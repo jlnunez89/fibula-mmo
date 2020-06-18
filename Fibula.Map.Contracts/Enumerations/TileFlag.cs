@@ -10,10 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Map.Contracts.Enumerations
+namespace Fibula.Map.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the flags of a <see cref="ITile"/>.
+    /// Enumerates the flags of a tile.
     /// </summary>
     public enum TileFlag : byte
     {

@@ -16,10 +16,10 @@ namespace Fibula.Server.Operations
     using System.Linq;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Extensions;
-    using Fibula.Server.Map.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;
     using Fibula.Server.Notifications.Arguments;

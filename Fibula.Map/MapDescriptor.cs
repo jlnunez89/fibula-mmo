@@ -17,10 +17,10 @@ namespace Fibula.Map
     using System.Linq;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Map.Contracts;
-    using Fibula.Server.Map.Contracts.Abstractions;
 
     /// <summary>
     /// Class that implements a standard map descriptor.

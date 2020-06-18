@@ -15,6 +15,7 @@ namespace Fibula.Common.Contracts.Abstractions
     using System.Threading;
     using Fibula.Common.Contracts.Models;
     using Fibula.Data.Contracts.Abstractions;
+    using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
 
     /// <summary>
@@ -41,5 +42,10 @@ namespace Fibula.Common.Contracts.Abstractions
         /// Gets the default database context to use.
         /// </summary>
         IFibulaDbContext DefaultDatabaseContext { get; }
+
+        /// <summary>
+        /// Gets the RSA decryptor to use.
+        /// </summary>
+        IRsaDecryptor RsaDecryptor { get; }
     }
 }
