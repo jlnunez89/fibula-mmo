@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace Fibula.Server.Mechanics
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,7 @@ namespace OpenTibia.Server
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Server.Contracts;
     using Fibula.Server.Contracts.Abstractions;
@@ -29,15 +30,10 @@ namespace OpenTibia.Server
     using Serilog;
 
     /// <summary>
-    /// Class that represents a manager for all open containers.
+    /// Class that represents a manager for all item container operations by creatures.
     /// </summary>
     public class ContainerManager : IContainerManager
     {
-        /// <summary>
-        /// The maximum number of containers to maintain per creature.
-        /// </summary>
-        private const int MaxContainersPerCreature = 16;
-
         private readonly ILogger logger;
         private readonly ICreatureFinder creatureFinder;
         private readonly IScheduler scheduler;
@@ -103,7 +99,7 @@ namespace OpenTibia.Server
                                 container.ThingId,
                                 container.Type.Name,
                                 container.Capacity,
-                                (container.ParentContainer is IContainerItem parentContainer) && parentContainer.Type.TypeId != 0,
+                                container.ParentContainer is IContainerItem parentContainer && parentContainer.Type.TypeId != 0,
                                 container.Content))));
             }
         }
@@ -145,7 +141,7 @@ namespace OpenTibia.Server
         {
             lock (this.internalDictionariesLock)
             {
-                if (this.creaturesToContainers.ContainsKey(creatureId) && atPosition < MaxContainersPerCreature)
+                if (this.creaturesToContainers.ContainsKey(creatureId) && atPosition < ItemConstants.MaxContainersPerCreature)
                 {
                     return this.creaturesToContainers[creatureId][atPosition];
                 }
@@ -159,19 +155,19 @@ namespace OpenTibia.Server
         /// </summary>
         /// <param name="creatureId">The id of the creature for which to find the container.</param>
         /// <param name="container">The container to look for.</param>
-        /// <returns>The position of container found, or <see cref="IContainerManager.UnsetContainerPosition"/>> if not found.</returns>
+        /// <returns>The position of container found, or <see cref="ItemConstants.UnsetContainerPosition"/>> if not found.</returns>
         public byte FindForCreature(uint creatureId, IContainerItem container)
         {
             if (container == null)
             {
-                return IContainerManager.UnsetContainerPosition;
+                return ItemConstants.UnsetContainerPosition;
             }
 
             lock (this.internalDictionariesLock)
             {
                 if (this.creaturesToContainers.ContainsKey(creatureId))
                 {
-                    for (byte i = 0; i < MaxContainersPerCreature; i++)
+                    for (byte i = 0; i < ItemConstants.MaxContainersPerCreature; i++)
                     {
                         if (this.creaturesToContainers[creatureId][i] != null && this.creaturesToContainers[creatureId][i].UniqueId == container.UniqueId)
                         {
@@ -180,7 +176,7 @@ namespace OpenTibia.Server
                     }
                 }
 
-                return IContainerManager.UnsetContainerPosition;
+                return ItemConstants.UnsetContainerPosition;
             }
         }
 
@@ -293,6 +289,8 @@ namespace OpenTibia.Server
                         container.ThingChanged -= this.OnContainerChanged;
                     }
                 }
+
+                this.logger.Verbose($"Creature with id {forCreatureId} closed a {container.Type.Name} at position {atPosition}.");
             }
         }
 
@@ -307,17 +305,17 @@ namespace OpenTibia.Server
         {
             lock (this.internalDictionariesLock)
             {
-                byte openedAt = IContainerManager.UnsetContainerPosition;
+                byte openedAt = ItemConstants.UnsetContainerPosition;
 
                 if (!this.creaturesToContainers.ContainsKey(forCreatureId))
                 {
-                    this.creaturesToContainers.Add(forCreatureId, new IContainerItem[MaxContainersPerCreature]);
+                    this.creaturesToContainers.Add(forCreatureId, new IContainerItem[ItemConstants.MaxContainersPerCreature]);
                 }
 
-                if (atPosition >= MaxContainersPerCreature)
+                if (atPosition >= ItemConstants.MaxContainersPerCreature)
                 {
                     // Find any available position.
-                    for (byte i = 0; i < MaxContainersPerCreature; i++)
+                    for (byte i = 0; i < ItemConstants.MaxContainersPerCreature; i++)
                     {
                         if (this.creaturesToContainers[forCreatureId][i] != null)
                         {
@@ -349,6 +347,8 @@ namespace OpenTibia.Server
                 }
 
                 this.containersToCreatureIds[container.UniqueId][openedAt] = forCreatureId;
+
+                this.logger.Verbose($"Creature with id {forCreatureId} opened a {container.Type.Name} at position {openedAt}.");
 
                 return openedAt;
             }
@@ -445,7 +445,7 @@ namespace OpenTibia.Server
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             () => player.YieldSingleItem(),
-                            new GenericNotificationArguments(new ContainerUpdateItemPacket((byte)indexOfUpdated, containerId, updatedItem))));
+                            new GenericNotificationArguments(new ContainerUpdateItemPacket(indexOfUpdated, containerId, updatedItem))));
                 }
             }
         }

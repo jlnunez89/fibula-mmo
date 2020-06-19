@@ -27,14 +27,11 @@
     <Compile Remove="Incoming\StatementPacket.cs" />
     <Compile Remove="Incoming\UseItemOnPacket.cs" />
     <Compile Remove="Incoming\UseItemPacket.cs" />
-    <Compile Remove="Outgoing\AnimatedTextPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
     <Compile Remove="Outgoing\DefaultErrorPacket.cs" />
     <Compile Remove="Outgoing\DefaultNoErrorPacket.cs" />
-    <Compile Remove="Outgoing\PlayerInventoryClearSlotPacket.cs" />
-    <Compile Remove="Outgoing\PlayerInventorySetSlotPacket.cs" />
+    <Compile Remove="Outgoing\PlayerInventoryPacket.cs" />
     <Compile Remove="Outgoing\PongPacket.cs" />
-    <Compile Remove="Outgoing\SquarePacket.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="stylecop.json" />
@@ -51,6 +48,5 @@
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Communications.Packets.Contracts\Fibula.Communications.Packets.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Mechanics.Contracts\Fibula.Server.Mechanics.Contracts.csproj" />
   </ItemGroup>
 </Project>

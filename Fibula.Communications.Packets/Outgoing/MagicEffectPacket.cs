@@ -14,8 +14,8 @@ namespace Fibula.Communications.Packets.Outgoing
 {
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a magic effect packet.

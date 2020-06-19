@@ -35,6 +35,7 @@ namespace Fibula.Server.Mechanics
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Microsoft.Azure.Cosmos;
     using Serilog;
 
     /// <summary>
@@ -108,18 +109,16 @@ namespace Fibula.Server.Mechanics
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
-        /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
             IMapLoader mapLoader,
             IMapDescriptor mapDescriptor,
             ITileAccessor tileAccessor,
-            ICreatureManager creatureManager,
+            ICreatureManager creatureManager,               // TODO: declare in-house
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
-            IContainerManager containerManager,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -130,7 +129,6 @@ namespace Fibula.Server.Mechanics
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
-            containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -140,8 +138,9 @@ namespace Fibula.Server.Mechanics
             this.itemFactory = itemFactory;
             this.creatureFactory = creatureFactory;
             this.operationFactory = operationFactory;
-            this.containerManager = containerManager;
             this.scheduler = scheduler;
+
+            this.containerManager = new ContainerManager(this.logger, this.creatureManager, this.scheduler);
 
             // Load some catalogs.
 

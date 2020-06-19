@@ -21,5 +21,15 @@ namespace Fibula.Items.Contracts.Constants
         /// The maximum amount value of cummulative items.
         /// </summary>
         public const byte MaximumAmountOfCummulativeItems = 100;
+
+        /// <summary>
+        /// The position to use for unset or new containers.
+        /// </summary>
+        public const byte UnsetContainerPosition = 0xFF;
+
+        /// <summary>
+        /// The maximum number of containers to maintain per creature.
+        /// </summary>
+        public const int MaxContainersPerCreature = 16;
     }
 }

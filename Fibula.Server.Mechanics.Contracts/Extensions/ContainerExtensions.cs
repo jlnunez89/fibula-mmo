@@ -23,27 +23,27 @@ namespace Fibula.Server.Mechanics.Contracts.Extensions
     public static class ContainerExtensions
     {
         /// <summary>
-        /// Gets this entity's container hierarchy.
+        /// Gets this thing's parent container hierarchy.
         /// </summary>
         /// <param name="containedThing">The contained thing to get the hierarchy for.</param>
         /// <param name="includeTiles">Optional. A value indicating whether to include tiles in the hierarchy. Defaults to true.</param>
         /// <returns>The ordered collection of <see cref="IThingContainer"/>s in this thing's container hierarchy.</returns>
-        public static IEnumerable<IThingContainer> GetContainerHierarchy(this IContainedThing containedThing, bool includeTiles = true)
+        public static IEnumerable<IThingContainer> GetParentContainerHierarchy(this IContainedThing containedThing, bool includeTiles = true)
         {
             containedThing.ThrowIfNull(nameof(containedThing));
 
             IThingContainer currentContainer = (containedThing is IThingContainer containedThingContainer) ? containedThingContainer : containedThing.ParentContainer;
 
-            return currentContainer.GetContainerHierarchy(includeTiles);
+            return currentContainer.GetParentContainerHierarchy(includeTiles);
         }
 
         /// <summary>
-        /// Gets this entity's container hierarchy.
+        /// Gets this thing's parent container hierarchy.
         /// </summary>
         /// <param name="thingContainer">The thing container to get the hierarchy for.</param>
         /// <param name="includeTiles">Optional. A value indicating whether to include tiles in the hierarchy. Defaults to true.</param>
         /// <returns>The ordered collection of <see cref="IThingContainer"/>s in this thing's container hierarchy.</returns>
-        public static IEnumerable<IThingContainer> GetContainerHierarchy(this IThingContainer thingContainer, bool includeTiles = true)
+        public static IEnumerable<IThingContainer> GetParentContainerHierarchy(this IThingContainer thingContainer, bool includeTiles = true)
         {
             thingContainer.ThrowIfNull(nameof(thingContainer));
 

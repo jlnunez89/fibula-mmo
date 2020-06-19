@@ -21,8 +21,8 @@ namespace Fibula.Server.Notifications
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
+    using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Notifications.Contracts.Abstractions;
 

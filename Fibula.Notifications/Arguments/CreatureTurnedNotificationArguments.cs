@@ -14,7 +14,7 @@ namespace Fibula.Server.Notifications.Arguments
 {
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>

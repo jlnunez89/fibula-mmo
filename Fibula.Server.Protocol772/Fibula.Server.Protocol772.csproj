@@ -7,7 +7,7 @@
     <DocumentationFile>bin\Debug\netcoreapp2.0\OpenTibia.Communications.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="PacketWriters\AnimatedTextPacketWriter.cs" />
+    <Compile Remove="PacketWriters\PlayerInventoryPacketWriter.cs" />
     <Compile Remove="PlayerCreationMetadata.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,6 @@
     <ProjectReference Include="..\Fibula.Notifications.Contracts\Fibula.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />
     <ProjectReference Include="..\Fibula.Server.Contracts\Fibula.Server.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Mechanics.Contracts\Fibula.Server.Mechanics.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

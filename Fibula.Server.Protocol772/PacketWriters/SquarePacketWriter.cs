@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AnimatedTextPacketWriter.cs" company="2Dudes">
+// <copyright file="SquarePacketWriter.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -15,19 +15,18 @@ namespace Fibula.Server.Protocol772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Server.Protocol772;
     using Serilog;
 
     /// <summary>
-    /// Class that represents an animated text packet writer for the game server.
+    /// Class that represents a creature square packet writer for the game server.
     /// </summary>
-    public class AnimatedTextPacketWriter : BasePacketWriter
+    public class SquarePacketWriter : BasePacketWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnimatedTextPacketWriter"/> class.
+        /// Initializes a new instance of the <see cref="SquarePacketWriter"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        public AnimatedTextPacketWriter(ILogger logger)
+        public SquarePacketWriter(ILogger logger)
             : base(logger)
         {
         }
@@ -39,18 +38,17 @@ namespace Fibula.Server.Protocol772.PacketWriters
         /// <param name="message">The message to write into.</param>
         public override void WriteToMessage(IOutboundPacket packet, ref INetworkMessage message)
         {
-            if (!(packet is AnimatedTextPacket animatedTextPacket))
+            if (!(packet is SquarePacket squarePacket))
             {
                 this.Logger.Warning($"Invalid packet {packet.GetType().Name} routed to {this.GetType().Name}");
 
                 return;
             }
 
-            message.AddByte(animatedTextPacket.PacketType);
+            message.AddByte(squarePacket.PacketType);
 
-            message.AddLocation(animatedTextPacket.Location);
-            message.AddByte((byte)animatedTextPacket.Color);
-            message.AddString(animatedTextPacket.Text);
+            message.AddUInt32(squarePacket.OnCreatureId);
+            message.AddByte((byte)squarePacket.Color);
         }
     }
 }

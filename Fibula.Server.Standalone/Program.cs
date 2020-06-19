@@ -49,7 +49,6 @@ namespace Fibula.Server.Standalone
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
-    using OpenTibia.Server;
     using Serilog;
 
     /// <summary>
@@ -309,8 +308,6 @@ namespace Fibula.Server.Standalone
         private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)
         {
             services.AddSingleton<IItemFactory, ItemFactory>();
-
-            services.AddSingleton<IContainerManager, ContainerManager>();
 
             // Chose a type of item types (catalog) loader:
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);

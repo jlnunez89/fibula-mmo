@@ -13,17 +13,13 @@
 namespace Fibula.Items.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Items.Contracts.Constants;
 
     /// <summary>
     /// Interface for a container manager.
     /// </summary>
     public interface IContainerManager
     {
-        /// <summary>
-        /// The position to use for unset or new containers.
-        /// </summary>
-        const byte UnsetContainerPosition = 0xFF;
-
         /// <summary>
         /// Performs a container close action for a player.
         /// </summary>
@@ -38,7 +34,7 @@ namespace Fibula.Items.Contracts.Abstractions
         /// <param name="forCreatureId">The id of the creature for which the container is being opened.</param>
         /// <param name="containerItem">The container being opened.</param>
         /// <param name="atPosition">The position in which to open the container, for the player.</param>
-        void OpenContainer(uint forCreatureId, IContainerItem containerItem, byte atPosition = UnsetContainerPosition);
+        void OpenContainer(uint forCreatureId, IContainerItem containerItem, byte atPosition = ItemConstants.UnsetContainerPosition);
 
         /// <summary>
         /// Finds a container for a specific creature at the specified position.
@@ -53,7 +49,7 @@ namespace Fibula.Items.Contracts.Abstractions
         /// </summary>
         /// <param name="creatureId">The id of the creature for which to find the container.</param>
         /// <param name="container">The container to look for.</param>
-        /// <returns>The position of container found, or <see cref="UnsetContainerPosition"/>> if not found.</returns>
+        /// <returns>The position of container found, or <see cref="ItemConstants.UnsetContainerPosition"/>> if not found.</returns>
         byte FindForCreature(uint creatureId, IContainerItem container);
 
         /// <summary>

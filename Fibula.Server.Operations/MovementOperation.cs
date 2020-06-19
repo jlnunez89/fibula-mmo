@@ -17,6 +17,7 @@ namespace Fibula.Server.Operations
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
@@ -778,7 +779,7 @@ namespace Fibula.Server.Operations
                     {
                         var containerId = context.ContainerManager.FindForCreature(player.Id, container);
 
-                        if (containerId != IContainerManager.UnsetContainerPosition)
+                        if (containerId != ItemConstants.UnsetContainerPosition)
                         {
                             context.ContainerManager.CloseContainer(player.Id, container, containerId);
                         }

@@ -27,8 +27,14 @@ namespace Fibula.Map.GrassOnly
     /// </summary>
     public class GrassOnlyDummyMapLoader : IMapLoader
     {
+        /// <summary>
+        /// The id of the type for a grass tile.
+        /// </summary>
         private const int GrassTypeId = 102;
 
+        /// <summary>
+        /// Stores the map of tiles created to their location.
+        /// </summary>
         private readonly ConcurrentDictionary<Location, ITile> tilesAndLocations;
 
         /// <summary>

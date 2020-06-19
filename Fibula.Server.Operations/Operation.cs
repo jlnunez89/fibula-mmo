@@ -114,7 +114,7 @@ namespace Fibula.Server.Operations
             bool success = false;
             bool firstAttempt = true;
 
-            foreach (var targetCylinder in thingContainer.GetContainerHierarchy(includeTileAsFallback))
+            foreach (var targetCylinder in thingContainer.GetParentContainerHierarchy(includeTileAsFallback))
             {
                 IThing lastAddedThing = remainder;
 

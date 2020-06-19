@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Enumerations
+namespace Fibula.Server.Contracts.Enumerations
 {
     /// <summary>
     /// Enumerates the possible colors of text.

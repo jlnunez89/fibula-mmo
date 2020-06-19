@@ -69,6 +69,7 @@ namespace Fibula.Server.Protocol772
 
             var packetWritersToAdd = new Dictionary<OutgoingGamePacketType, Type>()
             {
+                { OutgoingGamePacketType.AnimatedText, typeof(AnimatedTextPacketWriter) },
                 { OutgoingGamePacketType.AddAtStackpos, typeof(AddCreaturePacketWriter) },
                 { OutgoingGamePacketType.ContainerClose, typeof(ContainerClosePacketWriter) },
                 { OutgoingGamePacketType.ContainerOpen, typeof(ContainerOpenPacketWriter) },
@@ -87,10 +88,12 @@ namespace Fibula.Server.Protocol772
                 { OutgoingGamePacketType.MapSliceSouth, typeof(MapPartialDescriptionPacketWriter) },
                 { OutgoingGamePacketType.MapSliceWest, typeof(MapPartialDescriptionPacketWriter) },
                 { OutgoingGamePacketType.PlayerConditions, typeof(PlayerConditionsPacketWriter) },
-                { OutgoingGamePacketType.InventoryItem, typeof(PlayerInventoryPacketWriter) },
+                { OutgoingGamePacketType.InventoryEmpty, typeof(PlayerInventoryClearSlotPacketWriter) },
+                { OutgoingGamePacketType.InventoryItem, typeof(PlayerInventorySetSlotPacketWriter) },
                 { OutgoingGamePacketType.PlayerSkills, typeof(PlayerSkillsPacketWriter) },
                 { OutgoingGamePacketType.PlayerStats, typeof(PlayerStatsPacketWriter) },
                 { OutgoingGamePacketType.RemoveAtStackpos, typeof(RemoveAtPositionPacketWriter) },
+                { OutgoingGamePacketType.Square, typeof(SquarePacketWriter) },
                 { OutgoingGamePacketType.SelfAppear, typeof(SelfAppearPacketWriter) },
                 { OutgoingGamePacketType.TextMessage, typeof(TextMessagePacketWriter) },
                 { OutgoingGamePacketType.TileUpdate, typeof(TileUpdatePacketWriter) },

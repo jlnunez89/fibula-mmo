@@ -20,7 +20,6 @@ namespace Fibula.Server.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
@@ -101,7 +100,7 @@ namespace Fibula.Server.Operations
                         new SelfAppearPacket(player.Id, true, player),
                         new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
                         new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
-                        new PlayerInventoryPacket(player),
+                        // new PlayerInventoryPacket(player),
                         new PlayerStatsPacket(player),
                         new PlayerSkillsPacket(player),
                         new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
