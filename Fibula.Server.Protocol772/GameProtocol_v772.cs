@@ -100,7 +100,7 @@ namespace Fibula.Server.Protocol772
                 throw new InvalidOperationException($"There is already a writer registered for the packet type: {packetType}.");
             }
 
-            this.logger.Verbose($"Registered packet writer for type {forType:x2}.");
+            this.logger.Verbose($"Registered packet writer for type {packetType}.");
 
             this.packetWritersMap[packetType] = packetWriter;
         }

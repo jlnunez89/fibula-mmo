@@ -50,6 +50,7 @@ namespace Fibula.Server.Protocol772
             var packetReadersToAdd = new Dictionary<IncomingGamePacketType, Type>()
             {
                 { IncomingGamePacketType.LogIn, typeof(GameLogInPacketReader) },
+                { IncomingGamePacketType.LogOut, typeof(GameLogOutPacketReader) },
                 { IncomingGamePacketType.Speech, typeof(SpeechPacketReader) },
                 { IncomingGamePacketType.WalkNorth, typeof(WalkNorthPacketReader) },
                 { IncomingGamePacketType.WalkNortheast, typeof(WalkNortheastPacketReader) },

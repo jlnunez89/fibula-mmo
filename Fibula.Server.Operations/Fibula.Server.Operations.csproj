@@ -22,7 +22,6 @@
     <Compile Remove="Arguments\ContainerToMapMovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\CreateItemOperationCreationArguments.cs" />
     <Compile Remove="Arguments\DeleteItemOperationCreationArguments.cs" />
-    <Compile Remove="Arguments\LogOutOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MapToBodyMovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MapToContainerMovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MapToMapMovementOperationCreationArguments.cs" />
@@ -43,7 +42,6 @@
     <Compile Remove="CloseContainerOperation.cs" />
     <Compile Remove="CreateItemOperation.cs" />
     <Compile Remove="DeleteItemOperation.cs" />
-    <Compile Remove="LogoutOperation.cs" />
     <Compile Remove="MoveUpContainerOperation.cs" />
     <Compile Remove="OpenContainerOperation.cs" />
     <Compile Remove="PlaceCreatureOperation.cs" />

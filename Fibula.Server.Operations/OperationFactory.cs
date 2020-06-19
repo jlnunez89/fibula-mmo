@@ -146,13 +146,13 @@ namespace Fibula.Server.Operations
                     }
 
                     break;
-                //case OperationType.LogOut:
-                //    if (arguments is LogOutOperationCreationArguments logOutOpArgs)
-                //    {
-                //        return new LogOutOperation(logOutOpArgs.RequestorId, logOutOpArgs.Player);
-                //    }
+                case OperationType.LogOut:
+                    if (arguments is LogOutOperationCreationArguments logOutOpArgs)
+                    {
+                        return new LogOutOperation(logOutOpArgs.RequestorId, logOutOpArgs.Player);
+                    }
 
-                //    break;
+                    break;
                 case OperationType.Movement:
                     if (arguments is MovementOperationCreationArguments movementOpArgs)
                     {

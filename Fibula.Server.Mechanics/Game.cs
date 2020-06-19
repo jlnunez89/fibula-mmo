@@ -215,6 +215,16 @@ namespace Fibula.Server.Mechanics
                     this.WorldInfo.LightColor));
         }
 
+        public void LogPlayerOut(IPlayer player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            this.DispatchOperation(new LogOutOperationCreationArguments(player));
+        }
+
         public void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
         {
             this.DispatchOperation(
@@ -278,7 +288,7 @@ namespace Fibula.Server.Mechanics
                     //    playerAsCombatant.SetAttackTarget(null);
                     //}
 
-                    //this.DispatchOperation(OperationType.LogOut, new LogOutOperationCreationArguments(player));
+                    this.DispatchOperation(new LogOutOperationCreationArguments(player));
                 }
             }
         }

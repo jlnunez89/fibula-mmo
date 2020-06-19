@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="LogoutOperation.cs" company="2Dudes">
+// <copyright file="LogOutOperation.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,8 +10,16 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Operations.Environment
+namespace Fibula.Server.Operations
 {
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Notifications;
+    using Fibula.Server.Notifications.Arguments;
+    using Fibula.Server.Operations.Contracts.Abstractions;
+
     /// <summary>
     /// Class that represents a logout operation.
     /// </summary>
@@ -43,7 +51,7 @@ namespace Fibula.Server.Operations.Environment
             {
                 context.Scheduler.ScheduleEvent(
                     new TextMessageNotification(
-                        () => context.ConnectionManager.FindByPlayerId(this.Player.Id).YieldSingleItem(),
+                        () => this.Player.YieldSingleItem(),
                         new TextMessageNotificationArguments(MessageType.StatusSmall, "You may not logout at this time.")));
 
                 return;
@@ -63,13 +71,9 @@ namespace Fibula.Server.Operations.Environment
             {
                 context.CreatureManager.UnregisterCreature(this.Player);
 
-                var currentConnection = context.ConnectionManager.FindByPlayerId(this.Player.Id);
-
-                if (currentConnection != null)
+                if (this.Player.Client.Connection != null)
                 {
-                    currentConnection.Close();
-
-                    context.ConnectionManager.Unregister(currentConnection);
+                    this.Player.Client.Connection.Close();
                 }
             }
         }

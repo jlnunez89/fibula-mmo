@@ -13,8 +13,10 @@
 namespace Fibula.Server.Operations.Arguments
 {
     using Fibula.Common.Utilities;
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Server.Operations;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Fibula.Server.Operations.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="LogOutOperation"/>.
@@ -24,7 +26,7 @@ namespace Fibula.Server.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="LogOutOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="player"></param>
+        /// <param name="player">The player attempting to log out.</param>
         public LogOutOperationCreationArguments(IPlayer player)
         {
             player.ThrowIfNull(nameof(player));
@@ -32,6 +34,14 @@ namespace Fibula.Server.Operations.Arguments
             this.Player = player;
         }
 
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
+        public OperationType Type => OperationType.LogOut;
+
+        /// <summary>
+        /// Gets the id of the player logging out.
+        /// </summary>
         public IPlayer Player { get; }
 
         /// <summary>

@@ -234,6 +234,7 @@ namespace Fibula.Server.Standalone
 
             var packetTypeToHandlersMap = new Dictionary<Type, Type>()
             {
+                { typeof(IActionWithoutContentInfo), typeof(ActionWithoutContentHandler) },
                 { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
                 { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },
                 { typeof(IWalkOnDemandInfo), typeof(WalkOnDemandHandler) },

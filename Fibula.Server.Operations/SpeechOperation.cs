@@ -12,12 +12,12 @@
 
 namespace Fibula.Server.Operations
 {
+    using System;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Extensions;
     using Fibula.Server.Notifications;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
-    using System;
 
     /// <summary>
     /// Class that represents a speech operation.

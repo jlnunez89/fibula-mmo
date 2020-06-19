@@ -12,10 +12,10 @@
 
 namespace Fibula.Server.Mechanics.Contracts.Abstractions
 {
+    using System.Threading.Channels;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using System.Threading.Channels;
 
     /// <summary>
     /// Interface for the operations available in the game API.
@@ -78,7 +78,7 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
 
         void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "");
 
-        //void LogPlayerOut(IPlayer player);
+        void LogPlayerOut(IPlayer player);
 
         //void MoveTo(IThing thingToMove, Location targetLocation);
 
