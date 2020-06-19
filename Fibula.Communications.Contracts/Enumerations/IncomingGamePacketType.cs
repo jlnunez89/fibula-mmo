@@ -65,7 +65,7 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Walking north east.
         /// </summary>
-        WalkNorteast = 0x6A,
+        WalkNortheast = 0x6A,
 
         /// <summary>
         /// Walking south east.

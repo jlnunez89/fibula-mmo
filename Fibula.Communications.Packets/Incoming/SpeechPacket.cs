@@ -13,7 +13,7 @@
 namespace Fibula.Communications.Packets.Incoming
 {
     using Fibula.Communications.Packets.Contracts.Abstractions;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Enumerations;
 
     public class SpeechPacket : ISpeechInfo
     {
@@ -27,14 +27,14 @@ namespace Fibula.Communications.Packets.Incoming
         public SpeechPacket(SpeechType type, ChatChannelType channelId, string content, string receiver = "")
         {
             this.Type = type;
-            this.ChannelId = channelId;
+            this.ChannelType = channelId;
             this.Content = content;
             this.Receiver = receiver;
         }
 
         public SpeechType Type { get; }
 
-        public ChatChannelType ChannelId { get; }
+        public ChatChannelType ChannelType { get; }
 
         public string Receiver { get; }
 

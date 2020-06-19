@@ -15,6 +15,7 @@ namespace Fibula.Server.Operations.Arguments
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Fibula.Server.Operations.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="LogInOperation"/>.
@@ -35,6 +36,11 @@ namespace Fibula.Server.Operations.Arguments
             this.WorldLightLevel = currentWorldLightLevel;
             this.WorldLightColor = currentWorldLightColor;
         }
+
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
+        public OperationType Type => OperationType.LogIn;
 
         public IPlayerCreationMetadata CreationMetadata { get; }
 

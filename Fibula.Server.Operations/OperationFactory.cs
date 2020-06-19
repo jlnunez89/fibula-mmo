@@ -45,12 +45,13 @@ namespace Fibula.Server.Operations
         /// <summary>
         /// Creates a new <see cref="IOperation"/> based on the type specified with the given arguments.
         /// </summary>
-        /// <param name="type">The type of operation to create.</param>
         /// <param name="arguments">The arguments for creation.</param>
         /// <returns>A new instance of <see cref="IOperation"/>.</returns>
-        public IOperation Create(OperationType type, IOperationCreationArguments arguments)
+        public IOperation Create(IOperationCreationArguments arguments)
         {
-            switch (type)
+            arguments.ThrowIfNull(nameof(arguments));
+
+            switch (arguments.Type)
             {
                 //case OperationType.AutoAttack:
                 //    if (arguments is AutoAttackCombatOperationCreationArguments autoAttackOpArgs)
@@ -152,21 +153,21 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
-                //case OperationType.Movement:
-                //    if (arguments is MovementOperationCreationArguments movementOpArgs)
-                //    {
-                //        return new MovementOperation(
-                //            movementOpArgs.RequestorId,
-                //            movementOpArgs.ThingId,
-                //            movementOpArgs.FromLocation,
-                //            movementOpArgs.FromIndex,
-                //            movementOpArgs.FromCreatureId,
-                //            movementOpArgs.ToLocation,
-                //            movementOpArgs.ToCreatureId,
-                //            movementOpArgs.Amount);
-                //    }
+                case OperationType.Movement:
+                    if (arguments is MovementOperationCreationArguments movementOpArgs)
+                    {
+                        return new MovementOperation(
+                            movementOpArgs.RequestorId,
+                            movementOpArgs.ThingId,
+                            movementOpArgs.FromLocation,
+                            movementOpArgs.FromIndex,
+                            movementOpArgs.FromCreatureId,
+                            movementOpArgs.ToLocation,
+                            movementOpArgs.ToCreatureId,
+                            movementOpArgs.Amount);
+                    }
 
-                //    break;
+                    break;
                 //case OperationType.PlaceCreature:
                 //    if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
                 //    {
@@ -193,18 +194,18 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
-                //case OperationType.Speech:
-                //    if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
-                //    {
-                //        return new SpeechOperation(
-                //            speechOperationOpArgs.RequestorId,
-                //            speechOperationOpArgs.Type,
-                //            speechOperationOpArgs.ChannelId,
-                //            speechOperationOpArgs.Content,
-                //            speechOperationOpArgs.Receiver);
-                //    }
+                case OperationType.Speech:
+                    if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
+                    {
+                        return new SpeechOperation(
+                            speechOperationOpArgs.RequestorId,
+                            speechOperationOpArgs.SpeechType,
+                            speechOperationOpArgs.ChannelId,
+                            speechOperationOpArgs.Content,
+                            speechOperationOpArgs.Receiver);
+                    }
 
-                //    break;
+                    break;
                 //case OperationType.SpawnMonsters:
                 //    if (arguments is SpawnMonstersOperationCreationArguments spawnMonstersOpArgs)
                 //    {
@@ -256,10 +257,10 @@ namespace Fibula.Server.Operations
                 //    break;
 
                 default:
-                    throw new NotSupportedException($"Unsupported operation type {type}.");
+                    throw new NotSupportedException($"Unsupported operation type {arguments.Type}.");
             }
 
-            throw new NotSupportedException($"Unsupported operation arguments of type '{arguments.GetType().Name}' for operation type {type}.");
+            throw new NotSupportedException($"Unsupported operation arguments of type '{arguments.GetType().Name}' for operation type {arguments.Type}.");
         }
     }
 }

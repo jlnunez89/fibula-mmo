@@ -69,8 +69,8 @@
     <ProjectReference Include="..\Fibula.Security\Fibula.Security.csproj" />
     <ProjectReference Include="..\Fibula.Server.Mechanics\Fibula.Server.Mechanics.csproj" />
     <ProjectReference Include="..\Fibula.Server.Operations\Fibula.Server.Operations.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Protocol.V772\Fibula.Server.Protocol.V772.csproj" />
     <ProjectReference Include="..\Fibula.Communications\Fibula.Communications.csproj" />
+    <ProjectReference Include="..\Fibula.Server.Protocol772\Fibula.Server.Protocol772.csproj" />
     <ProjectReference Include="..\Fibula.Server\Fibula.Server.csproj" />
   </ItemGroup>
   <ItemGroup>

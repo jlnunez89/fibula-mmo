@@ -13,7 +13,7 @@
 namespace Fibula.Server.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the condition flags that a <see cref="ICreature"/> can suffer from.
+    /// Enumerates the condition flags that a creature can suffer from.
     /// </summary>
     public enum ConditionFlag : uint
     {

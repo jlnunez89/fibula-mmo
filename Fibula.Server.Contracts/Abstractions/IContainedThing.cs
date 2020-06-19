@@ -21,13 +21,5 @@ namespace Fibula.Server.Contracts.Abstractions
         /// Gets or sets the parent container of this entity.
         /// </summary>
         IThingContainer ParentContainer { get; set; }
-
-        ///// <summary>
-        ///// Gets this entity's container hierarchy.
-        ///// </summary>
-        ///// <param name="includeTiles">Optional. A value indicating whether to include tiles in the hierarchy. Defaults to true.</param>
-        ///// <returns>The ordered collection of <see cref="IContainer"/>s in this thing's container hierarchy.</returns>
-        //// TODO: move to an extension method instead.
-        //IEnumerable<IContainer> GetCylinderHierarchy(bool includeTiles = true);
     }
 }

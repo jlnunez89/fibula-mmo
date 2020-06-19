@@ -19,6 +19,7 @@ namespace Fibula.Map
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
@@ -707,7 +708,7 @@ namespace Fibula.Map
                             var existingItem = this.itemsOnTile.Count > 0 ? this.itemsOnTile.Peek() as IItem : null;
 
                             // Check if there is an existing top item and if it is of the same type.
-                            if (existingItem == null || existingItem.Type != item.Type || existingItem.Amount >= IItem.MaximumAmountOfCummulativeItems)
+                            if (existingItem == null || existingItem.Type != item.Type || existingItem.Amount >= ItemConstants.MaximumAmountOfCummulativeItems)
                             {
                                 this.itemsOnTile.Push(item);
                                 break;
@@ -716,7 +717,7 @@ namespace Fibula.Map
                             remainingAmountToAdd += existingItem.Amount;
 
                             // Modify the existing item with the new amount, or the maximum permitted.
-                            var newExistingAmount = Math.Min(remainingAmountToAdd, IItem.MaximumAmountOfCummulativeItems);
+                            var newExistingAmount = Math.Min(remainingAmountToAdd, ItemConstants.MaximumAmountOfCummulativeItems);
 
                             existingItem.SetAmount(newExistingAmount);
 
@@ -876,16 +877,6 @@ namespace Fibula.Map
 
             return this.AddContent(thingFactory, toThing, index);
         }
-
-        ///// <summary>
-        ///// Gets this tile's cylinder hierarchy.
-        ///// </summary>
-        ///// <param name="includeTile">The parameter is not used.</param>
-        ///// <returns>The ordered collection of <see cref="IThingContainer"/>s in this tile's cylinder hierarchy.</returns>
-        //public IEnumerable<IThingContainer> GetCylinderHierarchy(bool includeTile = true)
-        //{
-        //    return this.YieldSingleItem();
-        //}
 
         /// <summary>
         /// Determines if this tile is considered to be blocking the path.

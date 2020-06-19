@@ -23,6 +23,7 @@ namespace Fibula.Map
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Extensions;
     using Fibula.Server.Contracts.Structs;
@@ -109,7 +110,7 @@ namespace Fibula.Map
         /// <param name="windowSizeX">The size of the window on the X axis.</param>
         /// <param name="windowSizeY">The size of the window on the Y axis.</param>
         /// <returns>The description bytes.</returns>
-        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY)
+        public ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY)
         {
             ushort toX = (ushort)(fromX + windowSizeX);
             ushort toY = (ushort)(fromY + windowSizeY);
@@ -164,14 +165,14 @@ namespace Fibula.Map
             byte windowSizeX = (byte)(toX - fromX);
             byte windowSizeY = (byte)(toY - fromY);
 
-            if (windowSizeX > IMap.DefaultWindowSizeX)
+            if (windowSizeX > MapConstants.DefaultWindowSizeX)
             {
-                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeX)} is over {nameof(IMap.DefaultWindowSizeX)} ({IMap.DefaultWindowSizeX}).");
+                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeX)} is over {nameof(MapConstants.DefaultWindowSizeX)} ({MapConstants.DefaultWindowSizeX}).");
             }
 
-            if (windowSizeY > IMap.DefaultWindowSizeY)
+            if (windowSizeY > MapConstants.DefaultWindowSizeY)
             {
-                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeY)} is over {nameof(IMap.DefaultWindowSizeY)} ({IMap.DefaultWindowSizeY}).");
+                this.Logger.Debug($"{nameof(this.DescribeForPlayer)} {nameof(windowSizeY)} is over {nameof(MapConstants.DefaultWindowSizeY)} ({MapConstants.DefaultWindowSizeY}).");
             }
 
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
@@ -252,7 +253,7 @@ namespace Fibula.Map
                     var postCreatureDataBytes = new List<byte>();
                     var currentPointer = 0;
                     var currentCount = 0;
-                    var dataPointers = new int[IMap.MaximumNumberOfThingsToDescribePerTile * 2];
+                    var dataPointers = new int[MapConstants.MaximumNumberOfThingsToDescribePerTile * 2];
 
                     // Add ground and top items.
                     if (tile.Ground != null)
@@ -265,7 +266,7 @@ namespace Fibula.Map
 
                     foreach (var item in tile.StayOnTopItems)
                     {
-                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == MapConstants.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
@@ -289,7 +290,7 @@ namespace Fibula.Map
 
                     foreach (var item in tile.StayOnBottomItems)
                     {
-                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == MapConstants.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
@@ -321,7 +322,7 @@ namespace Fibula.Map
 
                     foreach (var item in tile.Items)
                     {
-                        if (currentCount == IMap.MaximumNumberOfThingsToDescribePerTile)
+                        if (currentCount == MapConstants.MaximumNumberOfThingsToDescribePerTile)
                         {
                             break;
                         }
@@ -359,9 +360,10 @@ namespace Fibula.Map
                 }
 
                 // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
-                segments.Add(new MapDescriptionSegment(cachedTileData.preCreatureData.Slice(0, cachedTileData.dataPointers[Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
+                segments.Add(new MapDescriptionSegment(cachedTileData.preCreatureData.Slice(0, cachedTileData.dataPointers[Math.Max(MapConstants.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
 
                 // TODO: The creatures part is more dynamic, figure out how/if we can cache it.
+                // HACK: The order of bytes and packet identifiers here is version specific and thus this will break compatibility with other verisions.
                 // Add creatures in the tile.
                 if (tile.CreatureIds.Any())
                 {
@@ -436,7 +438,7 @@ namespace Fibula.Map
                 }
 
                 // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
-                segments.Add(new MapDescriptionSegment(cachedTileData.postCreatureData.Slice(0, cachedTileData.dataPointers[(cachedTileData.dataPointers.Length / 2) + Math.Max(IMap.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
+                segments.Add(new MapDescriptionSegment(cachedTileData.postCreatureData.Slice(0, cachedTileData.dataPointers[(cachedTileData.dataPointers.Length / 2) + Math.Max(MapConstants.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
 
                 return segments;
             }

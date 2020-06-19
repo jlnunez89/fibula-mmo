@@ -14,6 +14,7 @@ namespace Fibula.Server.Operations.Arguments
 {
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Fibula.Server.Operations.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="SpeechOperation"/>.
@@ -28,27 +29,29 @@ namespace Fibula.Server.Operations.Arguments
         /// <param name="channelId"></param>
         /// <param name="receiver"></param>
         /// <param name="content"></param>
-        public SpeechOperationCreationArguments(uint requestorId, SpeechType speechType, ChatChannelType channelId, string receiver, string content)
+        public SpeechOperationCreationArguments(uint requestorId, SpeechType speechType, ChatChannelType channelId, string content, string receiver)
         {
             this.RequestorId = requestorId;
 
-            this.Type = speechType;
+            this.SpeechType = speechType;
             this.ChannelId = channelId;
-            this.Receiver = receiver;
             this.Content = content;
+            this.Receiver = receiver;
         }
+
+        public OperationType Type => OperationType.Speech;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.
         /// </summary>
         public uint RequestorId { get; }
 
-        public SpeechType Type { get; }
+        public SpeechType SpeechType { get; }
 
         public ChatChannelType ChannelId { get; }
 
-        public string Receiver { get; }
-
         public string Content { get; }
+
+        public string Receiver { get; }
     }
 }

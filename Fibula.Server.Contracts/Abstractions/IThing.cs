@@ -12,16 +12,17 @@
 
 namespace Fibula.Server.Contracts.Abstractions
 {
+    using Fibula.Server.Contracts.Delegates;
+
     /// <summary>
     /// Interface for all things in the game.
     /// </summary>
     public interface IThing : ILocatable, IContainedThing
     {
-        ///// <summary>
-        ///// Event to invoke when any of the properties of this thing have changed.
-        ///// </summary>
-        // TODO: move to mechanics.
-        //event OnThingStateChanged ThingChanged;
+        /// <summary>
+        /// Event to invoke when any of the properties of this thing have changed.
+        /// </summary>
+        event OnThingStateChanged ThingChanged;
 
         /// <summary>
         /// Gets the id of this thing.

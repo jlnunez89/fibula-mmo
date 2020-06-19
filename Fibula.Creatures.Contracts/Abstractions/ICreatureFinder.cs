@@ -27,6 +27,13 @@ namespace Fibula.Creatures.Contracts.Abstractions
         ICreature FindCreatureById(uint creatureId);
 
         /// <summary>
+        /// Looks for a single player with the id.
+        /// </summary>
+        /// <param name="playerId">The player id for which to look.</param>
+        /// <returns>The player instance, if found, and null otherwise.</returns>
+        IPlayer FindPlayerById(uint playerId);
+
+        /// <summary>
         /// Gets all creatures known to this finder.
         /// </summary>
         /// <returns>A collection of creature instances.</returns>

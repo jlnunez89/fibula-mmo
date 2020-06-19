@@ -14,7 +14,6 @@ namespace Fibula.Communications.Packets.Outgoing
 {
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
@@ -34,20 +33,11 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)GameResponseType.WalkCancel;
+        public byte PacketType => (byte)OutgoingGamePacketType.WalkCancel;
 
         /// <summary>
         /// Gets the direction in which the creature will be left facing.
         /// </summary>
         public Direction ResultingDirection { get; }
-
-        /// <summary>
-        /// Writes the packet to the message provided.
-        /// </summary>
-        /// <param name="message">The message to write this packet to.</param>
-        public void WriteToMessage(INetworkMessage message)
-        {
-            message.WritePlayerWalkCancelPacket(this);
-        }
     }
 }

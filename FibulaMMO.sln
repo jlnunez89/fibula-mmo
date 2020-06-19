@@ -93,7 +93,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Notifications", "Fib
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Notifications.Contracts", "Fibula.Notifications.Contracts\Fibula.Notifications.Contracts.csproj", "{2747986F-1C21-4DD8-A4FA-01B349A3B877}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Server.Protocol.V772", "Fibula.Server.Protocol.V772\Fibula.Server.Protocol.V772.csproj", "{62C9083A-E7DA-49BE-960F-77CFBE05E1D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Server.Protocol772", "Fibula.Server.Protocol772\Fibula.Server.Protocol772.csproj", "{62C9083A-E7DA-49BE-960F-77CFBE05E1D2}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Communications.Packets.Contracts", "Fibula.Communications.Packets.Contracts\Fibula.Communications.Packets.Contracts.csproj", "{4F784A93-E246-4B26-8623-40B199AEF4D3}"
 EndProject

@@ -14,6 +14,7 @@ namespace Fibula.Server.Operations.Arguments
 {
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Fibula.Server.Operations.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="MovementOperation"/>.
@@ -42,6 +43,11 @@ namespace Fibula.Server.Operations.Arguments
             this.ToCreatureId = toCreatureId;
             this.Amount = amount;
         }
+
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
+        public OperationType Type => OperationType.Movement;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.

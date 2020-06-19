@@ -19,6 +19,7 @@ namespace Fibula.Map
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
 
@@ -68,7 +69,7 @@ namespace Fibula.Map
         /// <param name="windowSizeY">The size of the window in Y.</param>
         /// <param name="startingZOffset">Optional. A starting offset for Z.</param>
         /// <returns>A sequence of bytes representing the description.</returns>
-        public ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = IMap.DefaultWindowSizeX, byte windowSizeY = IMap.DefaultWindowSizeY, sbyte startingZOffset = 0)
+        public ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte startingZOffset = 0)
         {
             player.ThrowIfNull(nameof(player));
 

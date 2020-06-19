@@ -15,8 +15,7 @@ namespace Fibula.Communications.Packets.Outgoing
     using System.Collections.Generic;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Abstractions;
 
     public class ContainerOpenPacket : IOutboundPacket
     {
@@ -42,7 +41,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)GameResponseType.ContainerOpen;
+        public byte PacketType => (byte)OutgoingGamePacketType.ContainerOpen;
 
         public byte ContainerId { get; }
 
@@ -55,14 +54,5 @@ namespace Fibula.Communications.Packets.Outgoing
         public bool HasParent { get; }
 
         public IList<IItem> Contents { get; }
-
-        /// <summary>
-        /// Writes the packet to the message provided.
-        /// </summary>
-        /// <param name="message">The message to write this packet to.</param>
-        public void WriteToMessage(INetworkMessage message)
-        {
-            message.WriteContainerOpenPacket(this);
-        }
     }
 }

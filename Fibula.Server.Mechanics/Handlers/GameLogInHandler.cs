@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Handlers
+namespace Fibula.Server.Mechanics.Handlers
 {
     using System;
     using System.Collections.Generic;
@@ -22,6 +22,7 @@ namespace Fibula.Server.Handlers
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Data;
     using Fibula.Data.Entities;
+    using Fibula.Server.Mechanics;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Serilog;
@@ -157,6 +158,7 @@ namespace Fibula.Server.Handlers
             client.ClientInformation.Agent = loginInfo.ClientOs.ToString();
             client.ClientInformation.Version = loginInfo.ClientVersion.ToString();
 
+            // TODO: pull these values from the character record.
             this.Game.LogPlayerIn(new PlayerCreationMetadata(client, character.Id, character.Name, 100, 100, 100, 100, 4240));
 
             // save any changes to the entities.

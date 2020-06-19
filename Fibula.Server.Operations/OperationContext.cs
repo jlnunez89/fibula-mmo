@@ -51,7 +51,7 @@ namespace Fibula.Server.Operations
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
-            //IContainerManager containerManager,
+            IContainerManager containerManager,
             IScheduler scheduler)
             //ICombatApi combatApi,
             //IGameApi gameApi,
@@ -65,7 +65,7 @@ namespace Fibula.Server.Operations
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
-            //containerManager.ThrowIfNull(nameof(containerManager));
+            containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
             //combatApi.ThrowIfNull(nameof(combatApi));
             //gameApi.ThrowIfNull(nameof(gameApi));
@@ -78,7 +78,7 @@ namespace Fibula.Server.Operations
             this.ItemFactory = itemFactory;
             this.CreatureFactory = creatureFactory;
             this.OperationFactory = operationFactory;
-            //this.ContainerManager = containerManager;
+            this.ContainerManager = containerManager;
             this.Scheduler = scheduler;
             //this.CombatApi = combatApi;
             //this.GameApi = gameApi;
@@ -120,10 +120,10 @@ namespace Fibula.Server.Operations
         /// </summary>
         public IOperationFactory OperationFactory { get; }
 
-        ///// <summary>
-        ///// Gets a reference to the container manager in use.
-        ///// </summary>
-        //public IContainerManager ContainerManager { get; }
+        /// <summary>
+        /// Gets a reference to the container manager in use.
+        /// </summary>
+        public IContainerManager ContainerManager { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

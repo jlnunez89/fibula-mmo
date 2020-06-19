@@ -13,7 +13,7 @@
 namespace Fibula.Server.Notifications.Arguments
 {
     using Fibula.Common.Utilities;
-    using Fibula.Server.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications.Contracts.Abstractions;
 

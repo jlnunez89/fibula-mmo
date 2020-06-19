@@ -27,6 +27,11 @@ namespace Fibula.Client.Contracts.Abstractions
         bool IsIdle { get; }
 
         /// <summary>
+        /// Gets the id of the player that this client is tied to.
+        /// </summary>
+        public uint PlayerId { get; }
+
+        /// <summary>
         /// Gets the connection enstablished by this client.
         /// </summary>
         IConnection Connection { get; }
@@ -41,5 +46,11 @@ namespace Fibula.Client.Contracts.Abstractions
         /// </summary>
         /// <param name="packetsToSend">The packets to send.</param>
         void Send(IEnumerable<IOutboundPacket> packetsToSend);
+
+        /// <summary>
+        /// Associates this connection with a player.
+        /// </summary>
+        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
+        void AssociateToPlayer(uint toPlayerId);
     }
 }

@@ -22,8 +22,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Creates a new implementation instance of <see cref="ICreature"/> depending on the chosen type.
         /// </summary>
-        /// <param name="type">The type of creature to create.</param>
-        /// <param name="creatureMetadata">The metadata to create the new creature.</param>
+        /// <param name="creationArguments">The creation arguments for the new creature.</param>
         /// <returns>A new instance of the chosen <see cref="ICreature"/> implementation.</returns>
         ICreature CreateCreature(IThingCreationArguments creationArguments);
     }

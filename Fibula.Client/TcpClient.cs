@@ -62,6 +62,11 @@ namespace Fibula.Client
         public ClientInformation ClientInformation { get; }
 
         /// <summary>
+        /// Gets or sets the id of the player that this client is tied to.
+        /// </summary>
+        public uint PlayerId { get; set; }
+
+        /// <summary>
         /// Sends the packets supplied over the <see cref="Connection"/>.
         /// </summary>
         /// <param name="packetsToSend">The packets to send.</param>
@@ -73,6 +78,15 @@ namespace Fibula.Client
             }
 
             this.Connection.Send(packetsToSend);
+        }
+
+        /// <summary>
+        /// Associates this connection with a player.
+        /// </summary>
+        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
+        public void AssociateToPlayer(uint toPlayerId)
+        {
+            this.PlayerId = toPlayerId;
         }
     }
 }

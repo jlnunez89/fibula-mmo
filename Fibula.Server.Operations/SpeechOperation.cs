@@ -12,6 +12,11 @@
 
 namespace Fibula.Server.Operations
 {
+    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Extensions;
+    using Fibula.Server.Notifications;
+    using Fibula.Server.Notifications.Arguments;
+    using Fibula.Server.Operations.Contracts.Abstractions;
     using System;
 
     /// <summary>
@@ -37,10 +42,10 @@ namespace Fibula.Server.Operations
             this.Receiver = receiver;
         }
 
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
+        ///// <summary>
+        ///// Gets the type of exhaustion that this operation produces.
+        ///// </summary>
+        //public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -69,9 +74,9 @@ namespace Fibula.Server.Operations
             }
 
             context.Scheduler.ScheduleEvent(
-                new CreatureSpokeNotification(
-                    () => context.ConnectionFinder.GetAllActive(),
-                    new CreatureSpokeNotificationArguments(requestor, this.Type, this.ChannelId, this.Content)));
+                new CreatureSpeechNotification(
+                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, requestor.Location),
+                    new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content)));
         }
     }
 }

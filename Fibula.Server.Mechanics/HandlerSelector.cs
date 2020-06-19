@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Server.Mechanics
 {
     using System;
     using System.Collections.Generic;

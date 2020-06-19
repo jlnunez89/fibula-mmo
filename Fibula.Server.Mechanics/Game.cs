@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Server.Mechanics
 {
     using System;
     using System.Diagnostics;
@@ -26,6 +26,7 @@ namespace Fibula.Server
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
     using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;
@@ -34,7 +35,6 @@ namespace Fibula.Server
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
-    using Fibula.Server.Operations.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
@@ -85,6 +85,11 @@ namespace Fibula.Server
         private readonly IOperationFactory operationFactory;
 
         /// <summary>
+        /// The container manager instance.
+        /// </summary>
+        private readonly IContainerManager containerManager;
+
+        /// <summary>
         /// Stores the world information.
         /// </summary>
         private readonly WorldInformation worldInfo;
@@ -97,7 +102,6 @@ namespace Fibula.Server
         /// <param name="mapDescriptor">A reference to the map descriptor to use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor to use.</param>
         /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
-        /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
@@ -115,6 +119,7 @@ namespace Fibula.Server
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
+            IContainerManager containerManager,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -125,6 +130,7 @@ namespace Fibula.Server
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
+            containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -134,6 +140,7 @@ namespace Fibula.Server
             this.itemFactory = itemFactory;
             this.creatureFactory = creatureFactory;
             this.operationFactory = operationFactory;
+            this.containerManager = containerManager;
             this.scheduler = scheduler;
 
             // Load some catalogs.
@@ -192,21 +199,39 @@ namespace Fibula.Server
             return Task.CompletedTask;
         }
 
+        public void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "")
+        {
+            this.DispatchOperation(new SpeechOperationCreationArguments(creatureId, speechType, channelType, content, receiver));
+        }
+
         public void LogPlayerIn(IPlayerCreationMetadata playerCreationMetadata)
         {
             playerCreationMetadata.ThrowIfNull(nameof(playerCreationMetadata));
 
             this.DispatchOperation(
-                    OperationType.LogIn,
-                    new LogInOperationCreationArguments(
-                        playerCreationMetadata,
-                        this.WorldInfo.LightLevel,
-                        this.WorldInfo.LightColor));
+                new LogInOperationCreationArguments(
+                    playerCreationMetadata,
+                    this.WorldInfo.LightLevel,
+                    this.WorldInfo.LightColor));
         }
 
-        private void DispatchOperation(OperationType operationType, IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
+        public void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
         {
-            IOperation newOperation = this.operationFactory.Create(operationType, operationArguments);
+            this.DispatchOperation(
+                new MovementOperationCreationArguments(
+                    requestorId,
+                    clientThingId,
+                    fromLocation,
+                    fromIndex,
+                    fromCreatureId,
+                    toLocation,
+                    toCreatureId,
+                    amount));
+        }
+
+        private void DispatchOperation(IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
+        {
+            IOperation newOperation = this.operationFactory.Create(operationArguments);
 
             if (newOperation == null)
             {
@@ -396,7 +421,7 @@ namespace Fibula.Server
                     this.itemFactory,
                     this.creatureFactory,
                     this.operationFactory,
-                    //this.containerManager,
+                    this.containerManager,
                     this.scheduler);
             }
             else if (typeof(IOperation).IsAssignableFrom(type))
@@ -410,7 +435,7 @@ namespace Fibula.Server
                     this.itemFactory,
                     this.creatureFactory,
                     this.operationFactory,
-                    //this.containerManager,
+                    this.containerManager,
                     this.scheduler);
             }
             else if (typeof(INotification).IsAssignableFrom(type))

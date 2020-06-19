@@ -10,14 +10,14 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Server.Mechanics
 {
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
-    /// [TO BE REMOVED] Class that represents the creation metadata for players.
+    /// Class that represents the creation metadata for players.
     /// </summary>
     public class PlayerCreationMetadata : IPlayerCreationMetadata
     {

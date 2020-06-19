@@ -12,7 +12,6 @@
 
 namespace Fibula.Server.Operations.Contracts.Abstractions
 {
-    using Fibula.Server.Operations.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>
@@ -28,9 +27,8 @@ namespace Fibula.Server.Operations.Contracts.Abstractions
         /// <summary>
         /// Creates a new <see cref="IOperation"/> based on the type specified with the given arguments.
         /// </summary>
-        /// <param name="type">The type of operation to create.</param>
         /// <param name="arguments">The arguments for creation.</param>
         /// <returns>A new instance of <see cref="IOperation"/>.</returns>
-        IOperation Create(OperationType type, IOperationCreationArguments arguments);
+        IOperation Create(IOperationCreationArguments arguments);
     }
 }

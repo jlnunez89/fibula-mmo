@@ -16,6 +16,7 @@ namespace Fibula.Items
     using System.Collections.Generic;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Server.Contracts.Abstractions;
 
@@ -69,7 +70,7 @@ namespace Fibula.Items
                 throw new ArgumentException($"Invalid type of arguments '{creationArguments.GetType().Name}' supplied, expected {nameof(ItemCreationArguments)}", nameof(creationArguments));
             }
 
-            if (itemCreationArguments.TypeId < 100 || !this.itemTypesCatalog.ContainsKey(itemCreationArguments.TypeId))
+            if (itemCreationArguments.TypeId < ItemConstants.MaximumAmountOfCummulativeItems || !this.itemTypesCatalog.ContainsKey(itemCreationArguments.TypeId))
             {
                 return null;
             }

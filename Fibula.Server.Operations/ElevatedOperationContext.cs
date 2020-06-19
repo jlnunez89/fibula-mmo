@@ -51,12 +51,12 @@ namespace Fibula.Server.Operations
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
-            //IContainerManager containerManager,
+            IContainerManager containerManager,
             IScheduler scheduler)
             //ICombatApi combatApi,
             //IGameApi gameApi,
             //IEventRulesApi eventRulesApi)
-            : base(logger, mapDescriptor, tileAccessor, creatureManager, itemFactory, creatureFactory, operationFactory, scheduler)
+            : base(logger, mapDescriptor, tileAccessor, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
         {
         }
 

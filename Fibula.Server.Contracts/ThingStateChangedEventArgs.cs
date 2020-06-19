@@ -13,7 +13,7 @@
 namespace Fibula.Server.Contracts
 {
     using System;
-    using OpenTibia.Server.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents event arguments for a <see cref="IThing"/> state changed event.

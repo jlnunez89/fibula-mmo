@@ -12,10 +12,19 @@
 
 namespace Fibula.Server.Operations.Actions
 {
+    using System;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Extensions;
+    using Fibula.Server.Notifications;
+    using Fibula.Server.Notifications.Arguments;
+    using Fibula.Server.Operations.Contracts.Abstractions;
+
     /// <summary>
     /// Class that represents an event for a creature turning.
     /// </summary>
-    public class TurnToDirectionOperation : BaseActionOperation
+    public class TurnToDirectionOperation : Operation
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnToDirectionOperation"/> class.
@@ -28,6 +37,11 @@ namespace Fibula.Server.Operations.Actions
             this.Creature = creature;
             this.Direction = direction;
         }
+
+        /// <summary>
+        /// Gets or sets the exhaustion cost time of this operation.
+        /// </summary>
+        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets a reference to the creature turning.
@@ -55,7 +69,7 @@ namespace Fibula.Server.Operations.Actions
 
                 context.Scheduler.ScheduleEvent(
                     new CreatureTurnedNotification(
-                        () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, this.Creature.Location),
+                        () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, this.Creature.Location),
                         new CreatureTurnedNotificationArguments(this.Creature, playerStackPos)));
             }
         }

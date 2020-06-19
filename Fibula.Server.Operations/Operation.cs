@@ -15,10 +15,13 @@ namespace Fibula.Server.Operations
     using System;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Extensions;
+    using Fibula.Server.Mechanics.Contracts.Extensions;
     using Fibula.Server.Notifications;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
@@ -95,56 +98,57 @@ namespace Fibula.Server.Operations
         /// Attempts to add content to the first possible cylinder that accepts it, on a chain of cylinders.
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
-        /// <param name="cylinder">The first cylinder to add to.</param>
+        /// <param name="thingContainer">The first thing container to add to.</param>
         /// <param name="addIndex">The index at which to attempt to add, only for the first attempted cylinder.</param>
         /// <param name="remainder">The remainder content to add, which overflows to the next cylinder in the chain.</param>
         /// <param name="includeTileAsFallback">Optional. A value for whether to include tiles in the fallback chain.</param>
         /// <param name="requestorCreature">Optional. The creature requesting the addition of content.</param>
         /// <returns>True if the content was successfully added, false otherwise.</returns>
-        protected bool AddContentToCylinderOrFallback(IOperationContext context, IThingContainer cylinder, byte addIndex, ref IThing remainder, bool includeTileAsFallback = true, ICreature requestorCreature = null)
+        protected bool AddContentToCylinderOrFallback(IOperationContext context, IThingContainer thingContainer, byte addIndex, ref IThing remainder, bool includeTileAsFallback = true, ICreature requestorCreature = null)
         {
-            cylinder.ThrowIfNull(nameof(cylinder));
+            context.ThrowIfNull(nameof(context));
+            thingContainer.ThrowIfNull(nameof(thingContainer));
 
             const byte FallbackIndex = 0xFF;
 
             bool success = false;
             bool firstAttempt = true;
 
-            //foreach (var targetCylinder in cylinder.GetCylinderHierarchy(includeTileAsFallback))
-            //{
-            //    IThing lastAddedThing = remainder;
+            foreach (var targetCylinder in thingContainer.GetContainerHierarchy(includeTileAsFallback))
+            {
+                IThing lastAddedThing = remainder;
 
-            //    if (!success)
-            //    {
-            //        (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder, firstAttempt ? addIndex : FallbackIndex);
-            //    }
-            //    else if (remainder != null)
-            //    {
-            //        (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder);
-            //    }
+                if (!success)
+                {
+                    (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder, firstAttempt ? addIndex : FallbackIndex);
+                }
+                else if (remainder != null)
+                {
+                    (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder);
+                }
 
-            //    firstAttempt = false;
+                firstAttempt = false;
 
-            //    if (success)
-            //    {
-            //        if (targetCylinder is ITile targetTile)
-            //        {
-            //            new TileUpdatedNotification(
-            //                () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, targetTile.Location),
-            //                new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
-            //            .Execute(context);
+                if (success)
+                {
+                    if (targetCylinder is ITile targetTile)
+                    {
+                        new TileUpdatedNotification(
+                            () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, targetTile.Location),
+                            new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
+                        .Execute(context);
 
-            //            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetCylinder.Location, lastAddedThing, requestorCreature));
-            //        }
+                        //context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetCylinder.Location, lastAddedThing, requestorCreature));
+                    }
 
-            //        //context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(lastAddedThing, requestorCreature));
-            //    }
+                    //context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(lastAddedThing, requestorCreature));
+                }
 
-            //    if (success && remainder == null)
-            //    {
-            //        break;
-            //    }
-            //}
+                if (success && remainder == null)
+                {
+                    break;
+                }
+            }
 
             return success;
         }

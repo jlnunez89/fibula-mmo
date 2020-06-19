@@ -13,7 +13,7 @@
 namespace Fibula.Server.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the possible colors of the creaure square.
+    /// Enumerates the possible colors of the creature square.
     /// </summary>
     public enum SquareColor : byte
     {

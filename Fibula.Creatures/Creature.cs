@@ -47,10 +47,10 @@ namespace Fibula.Creatures
         /// </summary>
         private static uint idCounter = 1;
 
-        /// <summary>
-        /// Lock object to semaphore interaction with the exhaustion dictionary.
-        /// </summary>
-        private readonly object exhaustionLock;
+        ///// <summary>
+        ///// Lock object to semaphore interaction with the exhaustion dictionary.
+        ///// </summary>
+        //private readonly object exhaustionLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -91,7 +91,7 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
-            this.exhaustionLock = new object();
+            //this.exhaustionLock = new object();
             //this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
             this.Outfit = new Outfit

@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Creatures
 {
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -82,6 +82,18 @@ namespace Fibula.Server
             this.creatureMap.TryGetValue(creatureId, out ICreature creature);
 
             return creature;
+        }
+
+        /// <summary>
+        /// Looks for a single player with the id.
+        /// </summary>
+        /// <param name="playerId">The player id for which to look.</param>
+        /// <returns>The player instance, if found, and null otherwise.</returns>
+        public IPlayer FindPlayerById(uint playerId)
+        {
+            var creature = this.FindCreatureById(playerId);
+
+            return creature as IPlayer;
         }
 
         /// <summary>

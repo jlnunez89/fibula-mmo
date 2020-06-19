@@ -10,17 +10,29 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Server.Mechanics
 {
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
 
-    internal class WorldInformation : IWorldInformation
+    /// <summary>
+    /// Class that implements an <see cref="IWorldInformation"/> model.
+    /// </summary>
+    public class WorldInformation : IWorldInformation
     {
-        public WorldState Status { get; set; }
-
+        /// <summary>
+        /// Gets or sets the game world's light color.
+        /// </summary>
         public byte LightColor { get; set; }
 
+        /// <summary>
+        /// Gets or sets the game world's light level.
+        /// </summary>
         public byte LightLevel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the game world's state.
+        /// </summary>
+        public WorldState Status { get; set; }
     }
 }

@@ -102,7 +102,7 @@ namespace Fibula.Server.Operations
 
                         return context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, creature.Location);
                     },
-                    new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, targetTile.Location, placedAtStackPos, wasTeleport: true))
+                    new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, creature.Location, placedAtStackPos, wasTeleport: true))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 

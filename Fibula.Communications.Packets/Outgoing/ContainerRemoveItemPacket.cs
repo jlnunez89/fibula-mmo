@@ -14,7 +14,6 @@ namespace Fibula.Communications.Packets.Outgoing
 {
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Abstractions;
 
     public class ContainerRemoveItemPacket : IOutboundPacket
     {
@@ -32,19 +31,10 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)GameResponseType.ContainerRemoveItem;
+        public byte PacketType => (byte)OutgoingGamePacketType.ContainerRemoveItem;
 
         public byte Index { get; }
 
         public byte ContainerId { get; }
-
-        /// <summary>
-        /// Writes the packet to the message provided.
-        /// </summary>
-        /// <param name="message">The message to write this packet to.</param>
-        public void WriteToMessage(INetworkMessage message)
-        {
-            message.WriteContainerRemoveItemPacket(this);
-        }
     }
 }

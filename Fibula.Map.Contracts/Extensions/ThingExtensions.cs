@@ -24,6 +24,7 @@ namespace Fibula.Server.Contracts.Extensions
         /// <summary>
         /// Gets the description of the thing as seen by the given player.
         /// </summary>
+        /// <param name="thing">The thing to get the description for.</param>
         /// <param name="forPlayer">The player as which to get the description.</param>
         /// <returns>The description string.</returns>
         public static string GetDescription(this IThing thing, IPlayer forPlayer)

@@ -12,7 +12,10 @@
 
 namespace Fibula.Server
 {
+    using Fibula.Common.Utilities;
+    using Fibula.Server.Contracts;
     using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Delegates;
     using Fibula.Server.Contracts.Structs;
 
     /// <summary>
@@ -25,10 +28,10 @@ namespace Fibula.Server
         /// </summary>
         private IThingContainer parentContainer;
 
-        ///// <summary>
-        ///// Event to invoke when any of the properties of this thing have changed.
-        ///// </summary>
-        //public event OnThingStateChanged ThingChanged;
+        /// <summary>
+        /// Event to invoke when any of the properties of this thing have changed.
+        /// </summary>
+        public event OnThingStateChanged ThingChanged;
 
         /// <summary>
         /// Gets the id of this thing.
@@ -58,8 +61,8 @@ namespace Fibula.Server
 
                 if (oldLocation != this.Location)
                 {
-                    //// The things's location changed since the parent changed.
-                    //this.InvokePropertyChanged(nameof(this.Location));
+                    // The things's location changed since the parent changed.
+                    this.InvokePropertyChanged(nameof(this.Location));
                 }
             }
         }
@@ -80,33 +83,16 @@ namespace Fibula.Server
         /// </summary>
         public abstract Location? CarryLocation { get; }
 
-        ///// <summary>
-        ///// Gets this entity's cylinder hierarchy.
-        ///// </summary>
-        ///// <param name="includeTiles">Optional. A value indicating whether to include <see cref="ITile"/>s in the hierarchy. Defaults to true.</param>
-        ///// <returns>The ordered collection of <see cref="ICylinder"/>s in this thing's cylinder hierarchy.</returns>
-        //public IEnumerable<ICylinder> GetCylinderHierarchy(bool includeTiles = true)
-        //{
-        //    ICylinder current = (this is ICylinder thisAsCylinder) ? thisAsCylinder : this.ParentCylinder;
+        /// <summary>
+        /// Invokes the <see cref="ThingChanged"/> event on this thing.
+        /// </summary>
+        /// <param name="propertyName">The name of the property.</param>
+        public void InvokePropertyChanged(string propertyName)
+        {
+            propertyName.ThrowIfNullOrWhiteSpace(propertyName);
 
-        //    while (current != null)
-        //    {
-        //        yield return current;
-
-        //        current = (includeTiles || !(current.ParentCylinder is ITile)) ? current.ParentCylinder : null;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Invokes the <see cref="ThingChanged"/> event on this thing.
-        ///// </summary>
-        ///// <param name="propertyName">The name of the property.</param>
-        //public void InvokePropertyChanged(string propertyName)
-        //{
-        //    propertyName.ThrowIfNullOrWhiteSpace(propertyName);
-
-        //    this.ThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
-        //}
+            this.ThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
+        }
 
         /// <inheritdoc/>
         public override string ToString()

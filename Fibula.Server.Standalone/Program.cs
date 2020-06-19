@@ -38,16 +38,18 @@ namespace Fibula.Server.Standalone
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;
-    using Fibula.Server.Handlers;
+    using Fibula.Server.Mechanics;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
+    using Fibula.Server.Mechanics.Handlers;
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Contracts.Abstractions;
-    using Fibula.Server.Protocol.V772;
+    using Fibula.Server.Protocol772;
     using Microsoft.ApplicationInsights;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
+    using OpenTibia.Server;
     using Serilog;
 
     /// <summary>
@@ -230,15 +232,27 @@ namespace Fibula.Server.Standalone
             // Add all handlers
             services.TryAddSingleton<DefaultRequestHandler>();
 
-            services.TryAddSingleton<GameLogInHandler>();
-            services.TryAddSingleton<GatewayLogInHandler>();
+            var packetTypeToHandlersMap = new Dictionary<Type, Type>()
+            {
+                { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
+                { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },
+                { typeof(IWalkOnDemandInfo), typeof(WalkOnDemandHandler) },
+                { typeof(ISpeechInfo), typeof(SpeechHandler) },
+            };
+
+            foreach (var (packetType, type) in packetTypeToHandlersMap)
+            {
+                services.TryAddSingleton(type);
+            }
 
             services.AddSingleton<IHandlerSelector>(s =>
             {
                 var handlerSelector = new HandlerSelector(s.GetRequiredService<ILogger>());
 
-                handlerSelector.RegisterForPacketType(typeof(IGameLogInInfo), s.GetRequiredService<GameLogInHandler>());
-                handlerSelector.RegisterForPacketType(typeof(IGatewayLoginInfo), s.GetRequiredService<GatewayLogInHandler>());
+                foreach (var (packetType, type) in packetTypeToHandlersMap)
+                {
+                    handlerSelector.RegisterForPacketType(packetType, s.GetRequiredService(type) as IHandler);
+                }
 
                 return handlerSelector;
             });
@@ -295,7 +309,7 @@ namespace Fibula.Server.Standalone
         {
             services.AddSingleton<IItemFactory, ItemFactory>();
 
-            //services.AddSingleton<IContainerManager, ContainerManager>();
+            services.AddSingleton<IContainerManager, ContainerManager>();
 
             // Chose a type of item types (catalog) loader:
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);

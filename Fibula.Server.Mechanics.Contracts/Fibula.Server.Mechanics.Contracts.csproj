@@ -55,13 +55,11 @@
     <Compile Remove="Delegates\SkillLevelAdvance.cs" />
     <Compile Remove="Enumerations\AttackType.cs" />
     <Compile Remove="Enumerations\ChaseMode.cs" />
-    <Compile Remove="Enumerations\ChatChannelType.cs" />
     <Compile Remove="Enumerations\CombatCreditType.cs" />
     <Compile Remove="Enumerations\ConditionFlag.cs" />
     <Compile Remove="Enumerations\EventRuleType.cs" />
     <Compile Remove="Enumerations\ExhaustionType.cs" />
     <Compile Remove="Enumerations\FightMode.cs" />
-    <Compile Remove="Enumerations\SpeechType.cs" />
     <Compile Remove="Enumerations\SquareColor.cs" />
     <Compile Remove="Enumerations\TextColor.cs" />
     <Compile Remove="Extensions\ConnectionFinderExtensions.cs" />
@@ -96,7 +94,6 @@
   <ItemGroup>
     <Folder Include="Constants\" />
     <Folder Include="Delegates\" />
-    <Folder Include="Extensions\" />
     <Folder Include="Structs\" />
   </ItemGroup>
 

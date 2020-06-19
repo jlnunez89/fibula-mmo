@@ -27,7 +27,6 @@
     <Compile Remove="Handlers\MoveThingHandler.cs" />
     <Compile Remove="Handlers\RotateItemHandler.cs" />
     <Compile Remove="Handlers\SetModeHandler.cs" />
-    <Compile Remove="Handlers\SpeechHandler.cs" />
     <Compile Remove="Handlers\StopAllActionsHandler.cs" />
     <Compile Remove="Handlers\TurnEastHandler.cs" />
     <Compile Remove="Handlers\TurnNorthHandler.cs" />
@@ -40,7 +39,6 @@
     <Compile Remove="Handlers\WalkNortheastHandler.cs" />
     <Compile Remove="Handlers\WalkNorthHandler.cs" />
     <Compile Remove="Handlers\WalkNorthWestHandler.cs" />
-    <Compile Remove="Handlers\WalkOnDemandHandler.cs" />
     <Compile Remove="Handlers\WalkSoutheastHandler.cs" />
     <Compile Remove="Handlers\WalkSouthHandler.cs" />
     <Compile Remove="Handlers\WalkSouthwestHandler.cs" />

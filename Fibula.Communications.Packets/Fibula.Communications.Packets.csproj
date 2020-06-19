@@ -24,24 +24,15 @@
     <Compile Remove="Incoming\OutfitChangedPacket.cs" />
     <Compile Remove="Incoming\RotateItemPacket.cs" />
     <Compile Remove="Incoming\RuleViolationPacket.cs" />
-    <Compile Remove="Incoming\SpeechPacket.cs" />
     <Compile Remove="Incoming\StatementPacket.cs" />
-    <Compile Remove="Incoming\ThingMovePacket.cs" />
     <Compile Remove="Incoming\UseItemOnPacket.cs" />
     <Compile Remove="Incoming\UseItemPacket.cs" />
     <Compile Remove="Outgoing\AnimatedTextPacket.cs" />
-    <Compile Remove="Outgoing\ContainerAddItemPacket.cs" />
-    <Compile Remove="Outgoing\ContainerClosePacket.cs" />
-    <Compile Remove="Outgoing\ContainerOpenPacket.cs" />
-    <Compile Remove="Outgoing\ContainerRemoveItemPacket.cs" />
-    <Compile Remove="Outgoing\ContainerUpdateItemPacket.cs" />
     <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
-    <Compile Remove="Outgoing\CreatureSpeechPacket.cs" />
     <Compile Remove="Outgoing\DefaultErrorPacket.cs" />
     <Compile Remove="Outgoing\DefaultNoErrorPacket.cs" />
     <Compile Remove="Outgoing\PlayerInventoryClearSlotPacket.cs" />
     <Compile Remove="Outgoing\PlayerInventorySetSlotPacket.cs" />
-    <Compile Remove="Outgoing\PlayerWalkCancelPacket.cs" />
     <Compile Remove="Outgoing\PongPacket.cs" />
     <Compile Remove="Outgoing\SquarePacket.cs" />
   </ItemGroup>

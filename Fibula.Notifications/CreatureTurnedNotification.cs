@@ -17,7 +17,7 @@ namespace Fibula.Server.Notifications
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Server.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Notifications.Contracts.Abstractions;

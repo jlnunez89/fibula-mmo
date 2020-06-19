@@ -70,16 +70,17 @@ namespace Fibula.Server.Operations
             // TODO: should be something like character.location
             var rookMark = new Location { X = 32097, Y = 32219, Z = 7 };
             var thaisMark = new Location { X = 32369, Y = 32241, Z = 7 };
+
             var targetLocation = thaisMark;
 
-            IPlayer player = context.CreatureFactory.CreateCreature(new CreatureCreationArguments() { Type = CreatureType.Player, Metadata = this.PlayerMetadata }) as IPlayer;
-
-            if (!context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
+            if (!(context.CreatureFactory.CreateCreature(new CreatureCreationArguments() { Type = CreatureType.Player, Metadata = this.PlayerMetadata }) is IPlayer player))
             {
+                context.Logger.Warning($"Unable to create player instance for {this.PlayerMetadata.Name}, aborting log in.");
+
                 return;
             }
 
-            if (player == null)
+            if (!context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
             {
                 // Unable to place the player in the map.
                 context.Scheduler.ScheduleEvent(
@@ -90,6 +91,8 @@ namespace Fibula.Server.Operations
 
                 return;
             }
+
+            player.Client.AssociateToPlayer(player.Id);
 
             context.Scheduler.ScheduleEvent(
                 new GenericNotification(

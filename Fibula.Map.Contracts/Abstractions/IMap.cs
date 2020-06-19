@@ -16,7 +16,7 @@ namespace Fibula.Map.Contracts.Abstractions
     using System.Collections.Generic;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts;
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Server.Contracts.Structs;
 
     /// <summary>
@@ -24,21 +24,6 @@ namespace Fibula.Map.Contracts.Abstractions
     /// </summary>
     public interface IMap : ITileAccessor
     {
-        /// <summary>
-        /// The maximum number of <see cref="IThing"/>s to describe per tile.
-        /// </summary>
-        public const int MaximumNumberOfThingsToDescribePerTile = 9;
-
-        /// <summary>
-        /// The default window size in the X coordinate.
-        /// </summary>
-        public const byte DefaultWindowSizeX = 18;
-
-        /// <summary>
-        /// The default window size in the Y coordinate.
-        /// </summary>
-        public const byte DefaultWindowSizeY = 14;
-
         /// <summary>
         /// Gets the description of the map as seen by the given <paramref name="player"/>.
         /// </summary>
@@ -57,7 +42,7 @@ namespace Fibula.Map.Contracts.Abstractions
         /// <param name="windowSizeX">The size of the window on the X axis.</param>
         /// <param name="windowSizeY">The size of the window on the Y axis.</param>
         /// <returns>The description bytes.</returns>
-        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = DefaultWindowSizeX, byte windowSizeY = DefaultWindowSizeY);
+        ReadOnlySequence<byte> DescribeForPlayer(IPlayer player, ushort fromX, ushort fromY, sbyte currentZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY);
 
         /// <summary>
         /// Gets the specified window's description of the map as seen by the given <paramref name="player"/>.

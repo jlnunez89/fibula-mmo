@@ -13,7 +13,7 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Server.Mechanics.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for speech information.
@@ -28,7 +28,7 @@ namespace Fibula.Communications.Packets.Contracts.Abstractions
         /// <summary>
         /// Gets the channel type.
         /// </summary>
-        ChatChannelType ChannelId { get; }
+        ChatChannelType ChannelType { get; }
 
         /// <summary>
         /// Gets the receiver of the message.

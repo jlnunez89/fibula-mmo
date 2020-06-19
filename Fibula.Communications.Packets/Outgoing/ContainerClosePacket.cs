@@ -14,7 +14,6 @@ namespace Fibula.Communications.Packets.Outgoing
 {
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Abstractions;
 
     public class ContainerClosePacket : IOutboundPacket
     {
@@ -30,17 +29,8 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)GameResponseType.ContainerClose;
+        public byte PacketType => (byte)OutgoingGamePacketType.ContainerClose;
 
         public byte ContainerId { get; }
-
-        /// <summary>
-        /// Writes the packet to the message provided.
-        /// </summary>
-        /// <param name="message">The message to write this packet to.</param>
-        public void WriteToMessage(INetworkMessage message)
-        {
-            message.WriteContainerClosePacket(this);
-        }
     }
 }

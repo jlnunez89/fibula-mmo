@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Protocol.V772.RequestHandlers
+namespace Fibula.Server.Mechanics.Handlers
 {
     using Fibula.Communications.Contracts.Enumerations;
     using OpenTibia.Server.Contracts.Abstractions;

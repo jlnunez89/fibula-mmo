@@ -25,11 +25,6 @@ namespace Fibula.Items.Contracts.Abstractions
     /// </summary>
     public interface IItem : IThing, IContainedThing
     {
-        /// <summary>
-        /// The maximum amount value of cummulative items.
-        /// </summary>
-        public const byte MaximumAmountOfCummulativeItems = 100;
-
         // event ItemHolderChangeEvent OnHolderChanged;
 
         // event ItemAmountChangeEvent OnAmountChanged;
@@ -60,12 +55,26 @@ namespace Fibula.Items.Contracts.Abstractions
 
         bool StaysOnBottom { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item changes on use.
+        /// </summary>
         bool ChangesOnUse { get; }
 
+        /// <summary>
+        /// Gets the Id of the item into which this will change upon use.
+        /// Callers must check <see cref="ChangesOnUse"/> to verify this item does indeed have a target.
+        /// </summary>
         ushort ChangeOnUseTo { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be rotated.
+        /// </summary>
         bool CanBeRotated { get; }
 
+        /// <summary>
+        /// Gets the Id of the item into which this will rotate to.
+        /// Callers must check <see cref="CanBeRotated"/> to verify this item does indeed have a target.
+        /// </summary>
         ushort RotateTo { get; }
 
         bool IsLiquidPool { get; }
@@ -86,10 +95,19 @@ namespace Fibula.Items.Contracts.Abstractions
 
         bool BlocksLay { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be accumulated.
+        /// </summary>
         bool IsCumulative { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is a container.
+        /// </summary>
         bool IsContainer { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be dressed.
+        /// </summary>
         bool CanBeDressed { get; }
 
         Slot DressPosition { get; }
@@ -106,11 +124,9 @@ namespace Fibula.Items.Contracts.Abstractions
 
         // decimal Weight { get; }
 
-        ///// <summary>
-        ///// Gets the creature carrying this item, if any.
-        ///// </summary>
-        //ICreature Carrier { get; }
-
+        /// <summary>
+        /// Gets the amount of this item.
+        /// </summary>
         byte Amount { get; }
 
         void SetAmount(byte remainingCount);

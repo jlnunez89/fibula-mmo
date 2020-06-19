@@ -26,10 +26,8 @@
     <Compile Remove="Abstractions\IPlayerLogoutInfo.cs" />
     <Compile Remove="Abstractions\IRotateItemInfo.cs" />
     <Compile Remove="Abstractions\IRuleViolationInfo.cs" />
-    <Compile Remove="Abstractions\ISpeechInfo.cs" />
     <Compile Remove="Abstractions\IStatement.cs" />
     <Compile Remove="Abstractions\IStatementListInfo.cs" />
-    <Compile Remove="Abstractions\IThingMoveInfo.cs" />
     <Compile Remove="Abstractions\IUseItemInfo.cs" />
     <Compile Remove="Abstractions\IUseItemOnInfo.cs" />
     <Compile Remove="Abstractions\IVipContact.cs" />

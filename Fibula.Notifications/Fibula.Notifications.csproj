@@ -14,10 +14,6 @@
     <Compile Remove="AnimatedTextNotification.cs" />
     <Compile Remove="Arguments\AnimatedEffectNotificationArguments.cs" />
     <Compile Remove="Arguments\AnimatedTextNotificationArguments.cs" />
-    <Compile Remove="Arguments\CreatureSpokeNotificationArguments.cs" />
-    <Compile Remove="Arguments\CreatureTurnedNotificationArguments.cs" />
-    <Compile Remove="CreatureSpeechNotification.cs" />
-    <Compile Remove="CreatureTurnedNotification.cs" />
   </ItemGroup>
 
   <ItemGroup>

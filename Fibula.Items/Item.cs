@@ -16,6 +16,7 @@ namespace Fibula.Items
     using System.Collections.Generic;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
     using Fibula.Server;
@@ -47,17 +48,31 @@ namespace Fibula.Items
         /// </summary>
         public Guid UniqueId { get; }
 
-        public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
-
+        /// <summary>
+        /// Gets a reference to this item's <see cref="IItemType"/>.
+        /// </summary>
         public IItemType Type { get; }
+
+        /// <summary>
+        /// Gets the attributes of this item.
+        /// </summary>
+        public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
 
         /// <summary>
         /// Gets the id of this thing, which is the item's client id.
         /// </summary>
         public override ushort ThingId => this.Type.TypeId;
 
+        /// <summary>
+        /// Gets a value indicating whether this item changes on use.
+        /// </summary>
         public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangeUse);
 
+        /// <summary>
+        /// Gets the Id of the item into which this will change upon use.
+        /// Callers must check <see cref="ChangesOnUse"/> to verify this item does indeed have a target.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When there is no target to change to.</exception>
         public ushort ChangeOnUseTo
         {
             get
@@ -71,8 +86,16 @@ namespace Fibula.Items
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be rotated.
+        /// </summary>
         public bool CanBeRotated => this.Type.Flags.Contains(ItemFlag.Rotate);
 
+        /// <summary>
+        /// Gets the Id of the item into which this will rotate to.
+        /// Callers must check <see cref="CanBeRotated"/> to verify this item does indeed have a target.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When there is no target to rotate to.</exception>
         public ushort RotateTo
         {
             get
@@ -86,21 +109,30 @@ namespace Fibula.Items
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be moved.
+        /// </summary>
         public override bool CanBeMoved => !this.Type.Flags.Contains(ItemFlag.Unmove);
 
         public bool HasCollision => this.Type.Flags.Contains(ItemFlag.CollisionEvent);
 
         public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.SeparationEvent);
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be accumulated.
+        /// </summary>
         public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
 
+        /// <summary>
+        /// Gets or sets the amount of this item.
+        /// </summary>
         public byte Amount
         {
             get
             {
                 if (this.Attributes.ContainsKey(ItemAttribute.Amount))
                 {
-                    return (byte)Math.Min(IItem.MaximumAmountOfCummulativeItems, Convert.ToInt32(this.Attributes[ItemAttribute.Amount]));
+                    return (byte)Math.Min(ItemConstants.MaximumAmountOfCummulativeItems, Convert.ToInt32(this.Attributes[ItemAttribute.Amount]));
                 }
 
                 return 1;
@@ -112,8 +144,14 @@ namespace Fibula.Items
             }
         }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is a container.
+        /// </summary>
         public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container);
 
+        /// <summary>
+        /// Gets a value indicating whether this item can be dressed.
+        /// </summary>
         public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
 
         public Slot DressPosition => this.Attributes.ContainsKey(ItemAttribute.BodyPosition) && Enum.TryParse(this.Attributes[ItemAttribute.BodyPosition].ToString(), out Slot parsedSlot) ? parsedSlot : Slot.Anywhere;
@@ -140,33 +178,9 @@ namespace Fibula.Items
         {
             get
             {
-                return null; // this.ParentCylinder?.CarryLocation;
+                return this.ParentContainer?.CarryLocation;
             }
         }
-
-        ///// <summary>
-        ///// Gets the creature carrying this item, if any.
-        ///// </summary>
-        //public ICreature Carrier
-        //{
-        //    get
-        //    {
-        //        // Find if there is a parent cylinder that is a creature.
-        //        ICylinder cylinder = this.ParentCylinder;
-
-        //        while (cylinder != null)
-        //        {
-        //            if (cylinder is ICreature creatureCylinder)
-        //            {
-        //                return creatureCylinder;
-        //            }
-
-        //            cylinder = cylinder.ParentCylinder;
-        //        }
-
-        //        return null;
-        //    }
-        //}
 
         public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip);
 
@@ -290,7 +304,7 @@ namespace Fibula.Items
 
         public void SetAmount(byte amount)
         {
-            this.Amount = Math.Min((byte)IItem.MaximumAmountOfCummulativeItems, amount);
+            this.Amount = Math.Min(ItemConstants.MaximumAmountOfCummulativeItems, amount);
         }
 
         public void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes)
@@ -344,7 +358,7 @@ namespace Fibula.Items
             }
 
             // We can join these two, figure out if we have any remainder.
-            if (otherItem.Amount + this.Amount <= IItem.MaximumAmountOfCummulativeItems)
+            if (otherItem.Amount + this.Amount <= ItemConstants.MaximumAmountOfCummulativeItems)
             {
                 this.Amount += otherItem.Amount;
 
@@ -352,9 +366,9 @@ namespace Fibula.Items
             }
 
             // We've gone over the limit, send back a remainder.
-            otherItem.SetAmount(Convert.ToByte(this.Amount + otherItem.Amount - IItem.MaximumAmountOfCummulativeItems));
+            otherItem.SetAmount(Convert.ToByte(this.Amount + otherItem.Amount - ItemConstants.MaximumAmountOfCummulativeItems));
 
-            this.Amount = IItem.MaximumAmountOfCummulativeItems;
+            this.Amount = ItemConstants.MaximumAmountOfCummulativeItems;
 
             return (true, otherItem);
         }

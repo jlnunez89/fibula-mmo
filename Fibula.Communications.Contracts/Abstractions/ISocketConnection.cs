@@ -23,20 +23,9 @@ namespace Fibula.Communications.Contracts.Abstractions
         string SocketIp { get; }
 
         /// <summary>
-        /// Gets the Id of the player that this connection is associated to.
-        /// </summary>
-        uint PlayerId { get; }
-
-        /// <summary>
         /// Sets up an Xtea key expected to be matched on subsequent messages.
         /// </summary>
         /// <param name="xteaKey">The XTea key to use in this connection's communications.</param>
         void SetupAuthenticationKey(uint[] xteaKey);
-
-        /// <summary>
-        /// Associates this connection with a player.
-        /// </summary>
-        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
-        void AssociateToPlayer(uint toPlayerId);
     }
 }

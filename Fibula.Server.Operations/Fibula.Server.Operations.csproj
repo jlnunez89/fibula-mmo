@@ -26,16 +26,13 @@
     <Compile Remove="Arguments\MapToBodyMovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MapToContainerMovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MapToMapMovementOperationCreationArguments.cs" />
-    <Compile Remove="Arguments\MovementOperationCreationArguments.cs" />
     <Compile Remove="Arguments\MoveUpContainerOperationCreationArguments.cs" />
     <Compile Remove="Arguments\OpenContainerOperationCreationArguments.cs" />
     <Compile Remove="Arguments\PlaceCreatureOperationCreationArguments.cs" />
     <Compile Remove="Arguments\RemoveCreatureOperationCreationArguments.cs" />
     <Compile Remove="Arguments\RestoreCombatCreditOperationCreationArguments.cs" />
     <Compile Remove="Arguments\SpawnMonstersOperationCreationArguments.cs" />
-    <Compile Remove="Arguments\SpeechOperationCreationArguments.cs" />
     <Compile Remove="Arguments\ThinkingOperationCreationArguments.cs" />
-    <Compile Remove="Arguments\TurnToDirectionOperationCreationArguments.cs" />
     <Compile Remove="Arguments\UseItemOnOperationCreationArguments.cs" />
     <Compile Remove="Arguments\UseItemOperationCreationArguments.cs" />
     <Compile Remove="AutoAttackCombatOperation.cs" />
@@ -47,16 +44,13 @@
     <Compile Remove="CreateItemOperation.cs" />
     <Compile Remove="DeleteItemOperation.cs" />
     <Compile Remove="LogoutOperation.cs" />
-    <Compile Remove="MovementOperation.cs" />
     <Compile Remove="MoveUpContainerOperation.cs" />
     <Compile Remove="OpenContainerOperation.cs" />
     <Compile Remove="PlaceCreatureOperation.cs" />
     <Compile Remove="RemoveCreatureOperation.cs" />
     <Compile Remove="RestoreCombatCreditOperation.cs" />
     <Compile Remove="SpawnMonstersOperation.cs" />
-    <Compile Remove="SpeechOperation.cs" />
     <Compile Remove="ThinkingOperation.cs" />
-    <Compile Remove="TurnToDirectionOperation.cs" />
     <Compile Remove="UseItemOnOperation.cs" />
     <Compile Remove="UseItemOperation.cs" />
   </ItemGroup>

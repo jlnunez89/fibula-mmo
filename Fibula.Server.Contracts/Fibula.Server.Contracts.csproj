@@ -45,7 +45,6 @@
     <Compile Remove="Extensions\EventExtensions.cs" />
     <Compile Remove="Extensions\LocationExtensions.cs" />
     <Compile Remove="Extensions\ScriptExtensions.cs" />
-    <Compile Remove="ThingStateChangedEventArgs.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -73,6 +72,10 @@
     <ProjectReference Include="..\Fibula.Common.Contracts\Fibula.Common.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Parsing.Contracts\Fibula.Parsing.Contracts.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Delegates\" />
   </ItemGroup>
 
 </Project>

@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Handlers
+namespace Fibula.Server.Mechanics.Handlers
 {
     using System.Collections.Generic;
     using Fibula.Client.Contracts.Abstractions;

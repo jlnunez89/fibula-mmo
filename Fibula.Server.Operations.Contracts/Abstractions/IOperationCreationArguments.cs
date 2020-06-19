@@ -12,11 +12,18 @@
 
 namespace Fibula.Server.Operations.Contracts.Abstractions
 {
+    using Fibula.Server.Operations.Contracts.Enumerations;
+
     /// <summary>
     /// Interface for all operation creation arguments.
     /// </summary>
     public interface IOperationCreationArguments
     {
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
+        OperationType Type { get; }
+
         /// <summary>
         /// Gets the id of the requestor of the operation, if any.
         /// </summary>

@@ -10,13 +10,15 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Protocol.V772.RequestHandlers
+namespace Fibula.Server.Mechanics.Handlers
 {
     using System.Collections.Generic;
+    using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Communications.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Communications.Packets.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>
@@ -28,49 +30,31 @@ namespace Fibula.Server.Protocol.V772.RequestHandlers
         /// Initializes a new instance of the <see cref="SpeechHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="gameContext">A reference to the game context to use.</param>
-        public SpeechHandler(ILogger logger, IGameContext gameContext)
-            : base(logger, gameContext)
+        /// <param name="gameInstance">A reference to the game instance.</param>
+        public SpeechHandler(ILogger logger, IGame gameInstance)
+            : base(logger, gameInstance)
         {
         }
 
         /// <summary>
-        /// Gets the type of packet that this handler is for.
-        /// </summary>
-        public override byte ForRequestType => (byte)GameRequestType.Speech;
-
-        /// <summary>
         /// Handles the contents of a network message.
         /// </summary>
-        /// <param name="message">The message to handle.</param>
-        /// <param name="connection">A reference to the connection from where this message is comming from, for context.</param>
-        /// <returns>A collection of <see cref="IResponsePacket"/>s that compose that synchronous response, if any.</returns>
-        public override IEnumerable<IResponsePacket> HandleRequest(INetworkMessage message, IConnection connection)
+        /// <param name="incomingPacket">The packet to handle.</param>
+        /// <param name="client">A reference to the client from where this request originated from, for context.</param>
+        /// <returns>A collection of <see cref="IOutboundPacket"/>s that compose that synchronous response, if any.</returns>
+        public override IEnumerable<IOutboundPacket> HandleRequest(IIncomingPacket incomingPacket, IClient client)
         {
-            var speechInfo = message.ReadSpeechInfo();
+            incomingPacket.ThrowIfNull(nameof(incomingPacket));
+            client.ThrowIfNull(nameof(client));
 
-            if (!(this.Context.CreatureFinder.FindCreatureById(connection.PlayerId) is IPlayer player))
+            if (!(incomingPacket is ISpeechInfo speechInfo))
             {
+                this.Logger.Error($"Expected packet info of type {nameof(ISpeechInfo)} but got {incomingPacket.GetType().Name}.");
+
                 return null;
             }
 
-            //// TODO: proper implementation.
-            // var msgStr = speechInfo.Content;
-
-            // if (msgStr.ToLower().StartsWith("test"))
-            // {
-            //    this.Game.TestingViaCreatureSpeech(player, msgStr);
-            // }
-
-            this.ScheduleNewOperation(
-                this.Context.OperationFactory.Create(
-                    OperationType.Speech,
-                    new SpeechOperationCreationArguments(
-                        player.Id,
-                        speechInfo.Type,
-                        speechInfo.ChannelId,
-                        speechInfo.Receiver,
-                        speechInfo.Content)));
+            this.Game.CreatureSpeech(client.PlayerId, speechInfo.Type, speechInfo.ChannelType, speechInfo.Content, speechInfo.Receiver);
 
             return null;
         }

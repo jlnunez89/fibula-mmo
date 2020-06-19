@@ -10,15 +10,30 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Operations.Movements
+namespace Fibula.Server.Operations
 {
     using System;
-    using System.Linq;
+    using Fibula.Common.Utilities;
+    using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
+    using Fibula.Notifications;
+    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Contracts.Extensions;
+    using Fibula.Server.Contracts.Structs;
+    using Fibula.Server.Notifications;
+    using Fibula.Server.Notifications.Arguments;
+    using Fibula.Server.Operations.Arguments;
+    using Fibula.Server.Operations.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a common base between movements.
     /// </summary>
-    public class MovementOperation : Operation, IMovementOperation
+    public class MovementOperation : Operation //, IMovementOperation
     {
         private const int DefaultGroundMovementPenaltyInMs = 200;
 
@@ -58,10 +73,10 @@ namespace Fibula.Server.Operations.Movements
             this.ExhaustionCost = movementExhaustionCost ?? DefaultMovementExhaustionCost;
         }
 
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
+        ///// <summary>
+        ///// Gets the type of exhaustion that this operation produces.
+        ///// </summary>
+        //public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
 
         /// <summary>
         /// Gets the id of the thing moving.
@@ -201,7 +216,7 @@ namespace Fibula.Server.Operations.Movements
 
         private void BodyToBody(IOperationContext context, IContainerItem sourceContainer, IContainerItem destinationContainer)
         {
-            var thingMoving = sourceContainer?.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer?.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             if (!(thingMoving is IItem item))
             {
@@ -216,7 +231,7 @@ namespace Fibula.Server.Operations.Movements
 
         private void BodyToContainer(IOperationContext context, IContainerItem sourceContainer, IContainerItem destinationContainer)
         {
-            var thingMoving = sourceContainer?.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer?.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             // Declare some pre-conditions.
             var creatureHasDestinationContainerOpen = destinationContainer != null;
@@ -238,7 +253,7 @@ namespace Fibula.Server.Operations.Movements
 
         private void BodyToMap(IOperationContext context, IContainerItem sourceContainer, ITile destinationTile)
         {
-            var thingMoving = sourceContainer?.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer?.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             if (!(thingMoving is IItem item))
             {
@@ -269,13 +284,13 @@ namespace Fibula.Server.Operations.Movements
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
             }
         }
 
         private void ContainerToBody(IOperationContext context, IContainerItem sourceContainer, IContainerItem destinationContainer)
         {
-            var thingMoving = sourceContainer.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             // Declare some pre-conditions.
             var creatureHasSourceContainerOpen = destinationContainer != null;
@@ -297,7 +312,7 @@ namespace Fibula.Server.Operations.Movements
 
         private void ContainerToContainer(IOperationContext context, IContainerItem sourceContainer, IContainerItem destinationContainer)
         {
-            var thingMoving = sourceContainer.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             // Declare some pre-conditions.
             var creatureHasSourceContainerOpen = sourceContainer != null;
@@ -324,7 +339,7 @@ namespace Fibula.Server.Operations.Movements
 
         private void ContainerToMap(IOperationContext context, IContainerItem sourceContainer, ITile destinationTile)
         {
-            var thingMoving = sourceContainer?.FindItemAt(this.FromLocation.ContainerIndex);
+            var thingMoving = sourceContainer?.FindThingAtIndex(this.FromLocation.ContainerIndex);
 
             if (!(thingMoving is IItem item))
             {
@@ -360,7 +375,7 @@ namespace Fibula.Server.Operations.Movements
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
             }
         }
 
@@ -524,7 +539,7 @@ namespace Fibula.Server.Operations.Movements
                     if (requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
                     {
                         var cancelMovementNotification = new GenericNotification(
-                            () => context.ConnectionFinder.FindByPlayerId(player.Id).YieldSingleItem(),
+                            () => context.CreatureFinder.FindPlayerById(player.Id).YieldSingleItem(),
                             new GenericNotificationArguments(new PlayerWalkCancelPacket(player.Direction.GetClientSafeDirection())));
 
                         context.Scheduler.ScheduleEvent(cancelMovementNotification);
@@ -549,7 +564,7 @@ namespace Fibula.Server.Operations.Movements
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
                 }
             }
             else if (thingMoving is IItem item)
@@ -591,7 +606,7 @@ namespace Fibula.Server.Operations.Movements
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(OperationType.Turn, new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
                 }
 
                 // TODO: Check if the item is an IContainerItem and, if it got moved, check if there are players that have it open that now are too far away from it.
@@ -603,24 +618,24 @@ namespace Fibula.Server.Operations.Movements
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
         /// <param name="item">The item being moved.</param>
-        /// <param name="fromCylinder">The cylinder from which the movement is being performed.</param>
-        /// <param name="toCylinder">The cylinder to which the movement is being performed.</param>
+        /// <param name="fromThingContainer">The container from which the movement is being performed.</param>
+        /// <param name="toThingContainer">The container to which the movement is being performed.</param>
         /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
         /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        private bool PerformItemMovement(IOperationContext context, IItem item, ICylinder fromCylinder, ICylinder toCylinder, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
+        private bool PerformItemMovement(IOperationContext context, IItem item, IThingContainer fromThingContainer, IThingContainer toThingContainer, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
         {
             const byte FallbackIndex = 0xFF;
 
-            if (item == null || fromCylinder == null || toCylinder == null)
+            if (item == null || fromThingContainer == null || toThingContainer == null)
             {
                 return false;
             }
 
-            var sameCylinder = fromCylinder == toCylinder;
+            var sameCylinder = fromThingContainer == toThingContainer;
 
             if (sameCylinder && fromIndex == toIndex)
             {
@@ -629,14 +644,14 @@ namespace Fibula.Server.Operations.Movements
             }
 
             // Edge case, check if the moving item is the target container.
-            if (item is IContainerItem containerItem && toCylinder is IContainerItem targetContainer && targetContainer.IsChildOf(containerItem))
+            if (item is IContainerItem containerItem && toThingContainer is IContainerItem targetContainer && targetContainer.IsChildOf(containerItem))
             {
                 return false;
             }
 
             IThing itemAsThing = item as IThing;
 
-            (bool removeSuccessful, IThing removeRemainder) = fromCylinder.RemoveContent(context.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
+            (bool removeSuccessful, IThing removeRemainder) = fromThingContainer.RemoveContent(context.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
 
             if (!removeSuccessful)
             {
@@ -644,17 +659,16 @@ namespace Fibula.Server.Operations.Movements
                 return false;
             }
 
-            if (fromCylinder is ITile fromTile)
+            if (fromThingContainer is ITile fromTile)
             {
                 // TODO: formally introduce async/synchronous notifications.
                 new TileUpdatedNotification(
-                    context.CreatureFinder,
-                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location),
+                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, fromTile.Location),
                     new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
-                .Execute(context);
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromCylinder.Location, item, requestorCreature));
+            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromThingContainer.Location, item, requestorCreature));
 
             IThing addRemainder = itemAsThing;
 
@@ -664,12 +678,12 @@ namespace Fibula.Server.Operations.Movements
                 toIndex--;
             }
 
-            if (!this.AddContentToCylinderOrFallback(context, toCylinder, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
+            if (!this.AddContentToCylinderOrFallback(context, toThingContainer, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
             {
                 // There is some rollback to do, as we failed to add the entire thing.
                 IThing rollbackRemainder = addRemainder ?? item;
 
-                if (!this.AddContentToCylinderOrFallback(context, fromCylinder, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
+                if (!this.AddContentToCylinderOrFallback(context, fromThingContainer, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
                 {
                     context.Logger.Error($"Rollback failed on {nameof(this.PerformItemMovement)}. Thing: {rollbackRemainder.DescribeForLogger()}");
                 }
@@ -690,7 +704,7 @@ namespace Fibula.Server.Operations.Movements
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         private bool PerformCreatureMovement(IOperationContext context, ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null)
         {
-            if (creature == null || !(creature.ParentCylinder is ITile fromTile) || !context.TileAccessor.GetTileAt(toLocation, out ITile toTile))
+            if (creature == null || !(creature.ParentContainer is ITile fromTile) || !context.TileAccessor.GetTileAt(toLocation, out ITile toTile))
             {
                 return false;
             }
@@ -737,17 +751,15 @@ namespace Fibula.Server.Operations.Movements
 
             var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
-            creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime);
+            //creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime);
 
             if (toStackPosition != byte.MaxValue)
             {
                 // TODO: formally introduce async/synchronous notifications.
                 new CreatureMovedNotification(
-                    context.MapDescriptor,
-                    context.CreatureFinder,
-                    () => context.ConnectionFinder.PlayersThatCanSee(context.CreatureFinder, fromTile.Location, toLocation),
+                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, fromTile.Location, toLocation),
                     new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
-                .Execute(context);
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 
             if (creature is IPlayer player)
@@ -768,64 +780,64 @@ namespace Fibula.Server.Operations.Movements
 
                         if (containerId != IContainerManager.UnsetContainerPosition)
                         {
-                            context.ContainerManager.CloseContainer(player, container, containerId);
+                            context.ContainerManager.CloseContainer(player.Id, container, containerId);
                         }
                     }
                 }
             }
 
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
+            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
+            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
+            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
 
-            if (creature is ICombatant combatant)
-            {
-                // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
-                foreach (var attackerId in combatant.AttackedBy)
-                {
-                    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
-                    {
-                        continue;
-                    }
+            //if (creature is ICombatant combatant)
+            //{
+            //    // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
+            //    foreach (var attackerId in combatant.AttackedBy)
+            //    {
+            //        if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
+            //        {
+            //            continue;
+            //        }
 
-                    context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
-                }
+            //        context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
+            //    }
 
-                // And check if it walked into new combatants view range.
-                var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
-                var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
+            //    // And check if it walked into new combatants view range.
+            //    var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
+            //    var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
 
-                var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
-                var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
+            //    var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
+            //    var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
 
-                foreach (var spectator in spectatorsAdded)
-                {
-                    if (spectator == combatant)
-                    {
-                        continue;
-                    }
+            //    foreach (var spectator in spectatorsAdded)
+            //    {
+            //        if (spectator == combatant)
+            //        {
+            //            continue;
+            //        }
 
-                    if (spectator is ICombatant newCombatant)
-                    {
-                        newCombatant.CombatantNowInView(combatant);
-                        combatant.CombatantNowInView(newCombatant);
-                    }
-                }
+            //        if (spectator is ICombatant newCombatant)
+            //        {
+            //            newCombatant.CombatantNowInView(combatant);
+            //            combatant.CombatantNowInView(newCombatant);
+            //        }
+            //    }
 
-                foreach (var spectator in spectatorsLost)
-                {
-                    if (spectator == combatant)
-                    {
-                        continue;
-                    }
+            //    foreach (var spectator in spectatorsLost)
+            //    {
+            //        if (spectator == combatant)
+            //        {
+            //            continue;
+            //        }
 
-                    if (spectator is ICombatant oldCombatant)
-                    {
-                        oldCombatant.CombatantNoLongerInView(combatant);
-                        combatant.CombatantNoLongerInView(oldCombatant);
-                    }
-                }
-            }
+            //        if (spectator is ICombatant oldCombatant)
+            //        {
+            //            oldCombatant.CombatantNoLongerInView(combatant);
+            //            combatant.CombatantNoLongerInView(oldCombatant);
+            //        }
+            //    }
+            //}
 
             return true;
         }
@@ -886,7 +898,7 @@ namespace Fibula.Server.Operations.Movements
             var deltaZ = Math.Abs(fromLocation.Z - toLocation.Z);
 
             // distance checks
-            if (deltaX - deltaZ >= (IMap.DefaultWindowSizeX / 2) || deltaY - deltaZ >= (IMap.DefaultWindowSizeY / 2))
+            if (deltaX - deltaZ >= (MapConstants.DefaultWindowSizeX / 2) || deltaY - deltaZ >= (MapConstants.DefaultWindowSizeY / 2))
             {
                 return false;
             }

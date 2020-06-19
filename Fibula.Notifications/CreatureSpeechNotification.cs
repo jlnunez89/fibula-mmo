@@ -17,7 +17,7 @@ namespace Fibula.Server.Notifications
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Server.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Notifications.Contracts.Abstractions;
 
@@ -31,7 +31,7 @@ namespace Fibula.Server.Notifications
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
         /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureSpeechNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureSpokeNotificationArguments arguments)
+        public CreatureSpeechNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureSpeechNotificationArguments arguments)
             : base(findTargetPlayers)
         {
             arguments.ThrowIfNull(nameof(arguments));
@@ -42,7 +42,7 @@ namespace Fibula.Server.Notifications
         /// <summary>
         /// Gets this notification's arguments.
         /// </summary>
-        public CreatureSpokeNotificationArguments Arguments { get; }
+        public CreatureSpeechNotificationArguments Arguments { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.

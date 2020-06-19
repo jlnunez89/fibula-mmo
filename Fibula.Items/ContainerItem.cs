@@ -17,6 +17,7 @@ namespace Fibula.Items
     using System.Linq;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Delegates;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
@@ -304,7 +305,7 @@ namespace Fibula.Items
                 return 0;
             }
 
-            return (sbyte)Math.Min(existingItem.Amount, (byte)100);
+            return (sbyte)Math.Min(existingItem.Amount, ItemConstants.MaximumAmountOfCummulativeItems);
         }
 
         /// <summary>

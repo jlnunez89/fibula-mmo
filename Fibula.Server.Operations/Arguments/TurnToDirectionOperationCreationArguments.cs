@@ -13,9 +13,10 @@
 namespace Fibula.Server.Operations.Arguments
 {
     using Fibula.Common.Utilities;
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Operations.Contracts.Abstractions;
+    using Fibula.Server.Operations.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents creation arguments for a <see cref="TurnToDirectionOperation"/>.
@@ -35,6 +36,11 @@ namespace Fibula.Server.Operations.Arguments
             this.Creature = creature;
             this.Direction = direction;
         }
+
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
+        public OperationType Type => OperationType.Turn;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.

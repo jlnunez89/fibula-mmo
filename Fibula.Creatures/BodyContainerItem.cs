@@ -22,7 +22,6 @@ namespace Fibula.Creatures
     using Fibula.Server.Contracts.Constants;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Items;
 
     /// <summary>
     /// Class that represents a container item for body slots.
