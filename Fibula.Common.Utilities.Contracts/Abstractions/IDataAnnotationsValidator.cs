@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts.Abstractions
+namespace Fibula.Common.Utilities.Contracts.Abstractions
 {
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;

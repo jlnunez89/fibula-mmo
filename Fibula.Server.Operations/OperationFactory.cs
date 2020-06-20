@@ -140,6 +140,7 @@ namespace Fibula.Server.Operations
                     {
                         return new LogInOperation(
                             NoRequestorId,
+                            logInOpArgs.Client,
                             logInOpArgs.CreationMetadata,
                             logInOpArgs.WorldLightLevel,
                             logInOpArgs.WorldLightColor);

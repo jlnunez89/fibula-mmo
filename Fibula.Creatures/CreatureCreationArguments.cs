@@ -16,10 +16,19 @@ namespace Fibula.Creatures
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Server.Contracts.Abstractions;
 
+    /// <summary>
+    /// Class that represents creation arguments for creatures.
+    /// </summary>
     public class CreatureCreationArguments : IThingCreationArguments
     {
+        /// <summary>
+        /// Gets or sets the type of creature being created.
+        /// </summary>
         public CreatureType Type { get; set; }
 
+        /// <summary>
+        /// Gets or sets the metadata for the creature being created.
+        /// </summary>
         public ICreatureCreationMetadata Metadata { get; set; }
     }
 }

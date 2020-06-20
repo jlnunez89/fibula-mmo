@@ -18,7 +18,7 @@ namespace Fibula.Common.Utilities
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text;
-    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Utilities.Contracts.Abstractions;
 
     /// <summary>
     /// Class that implements a standard <see cref="IDataAnnotationsValidator"/>.

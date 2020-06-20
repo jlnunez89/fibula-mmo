@@ -17,6 +17,7 @@ namespace Fibula.Server.Mechanics
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
@@ -35,7 +36,6 @@ namespace Fibula.Server.Mechanics
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
-    using Microsoft.Azure.Cosmos;
     using Serilog;
 
     /// <summary>
@@ -100,25 +100,19 @@ namespace Fibula.Server.Mechanics
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapLoader">A reference to the map loader in use.</param>
-        /// <param name="mapDescriptor">A reference to the map descriptor to use.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor to use.</param>
-        /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
-        /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
         /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
-        /// <param name="creatureFactory">A reference to the creature factory in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
+        /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
             IMapLoader mapLoader,
-            IMapDescriptor mapDescriptor,
-            ITileAccessor tileAccessor,
-            ICreatureManager creatureManager,               // TODO: declare in-house
-            IItemFactory itemFactory,
-            ICreatureFactory creatureFactory,
-            IOperationFactory operationFactory,
+            IMapDescriptor mapDescriptor,           // TODO: declare in-house
+            ITileAccessor tileAccessor,             // TODO: declare in-house
+            ICreatureManager creatureManager,       // TODO: declare in-house
+            IItemFactory itemFactory,               // TODO: declare in-house
+            ICreatureFactory creatureFactory,       // TODO: declare in-house
+            IOperationFactory operationFactory,     // TODO: declare in-house
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -203,13 +197,15 @@ namespace Fibula.Server.Mechanics
             this.DispatchOperation(new SpeechOperationCreationArguments(creatureId, speechType, channelType, content, receiver));
         }
 
-        public void LogPlayerIn(IPlayerCreationMetadata playerCreationMetadata)
+        public void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata)
         {
-            playerCreationMetadata.ThrowIfNull(nameof(playerCreationMetadata));
+            client.ThrowIfNull(nameof(client));
+            creatureCreationMetadata.ThrowIfNull(nameof(creatureCreationMetadata));
 
             this.DispatchOperation(
                 new LogInOperationCreationArguments(
-                    playerCreationMetadata,
+                    client,
+                    creatureCreationMetadata,
                     this.WorldInfo.LightLevel,
                     this.WorldInfo.LightColor));
         }

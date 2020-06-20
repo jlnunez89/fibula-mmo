@@ -40,7 +40,6 @@
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Notifications.Contracts\Fibula.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Contracts\Fibula.Server.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

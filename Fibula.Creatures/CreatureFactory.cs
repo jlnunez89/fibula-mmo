@@ -89,20 +89,22 @@ namespace Fibula.Creatures
 
                 case CreatureType.Player:
 
-                    if (creatureCreationArguments.Metadata == null || !(creatureCreationArguments.Metadata is IPlayerCreationMetadata playerCreationMetadata))
+                    if (creatureCreationArguments == null ||
+                        creatureCreationArguments.Metadata == null ||
+                        !(creatureCreationArguments is PlayerCreationArguments playerCreationArguments))
                     {
-                        throw new ArgumentException("Invalid metadata supplied in creation arguments", nameof(creatureCreationArguments.Metadata));
+                        throw new ArgumentException("Invalid creation arguments for a player.", nameof(creatureCreationArguments));
                     }
 
                     return new Player(
-                        playerCreationMetadata.Client,
-                        playerCreationMetadata.Identifier,
-                        playerCreationMetadata.Name,
-                        playerCreationMetadata.MaxHitpoints,
-                        playerCreationMetadata.MaxManapoints,
-                        playerCreationMetadata.Corpse,
-                        playerCreationMetadata.MaxHitpoints,      // TODO: current hitpoints.
-                        playerCreationMetadata.MaxManapoints);    // TODO: current mana points.
+                        playerCreationArguments.Client,
+                        playerCreationArguments.Metadata.Identifier,
+                        playerCreationArguments.Metadata.Name,
+                        playerCreationArguments.Metadata.MaxHitpoints,
+                        playerCreationArguments.Metadata.MaxManapoints,
+                        playerCreationArguments.Metadata.Corpse,
+                        playerCreationArguments.Metadata.MaxHitpoints,      // TODO: current hitpoints.
+                        playerCreationArguments.Metadata.MaxManapoints);    // TODO: current mana points.
 
                     //case CreatureType.Monster:
                     //    // Find the actual monster type to init with.

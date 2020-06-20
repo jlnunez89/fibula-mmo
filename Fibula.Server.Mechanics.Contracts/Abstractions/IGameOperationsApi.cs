@@ -12,7 +12,7 @@
 
 namespace Fibula.Server.Mechanics.Contracts.Abstractions
 {
-    using System.Threading.Channels;
+    using Fibula.Client.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
@@ -72,13 +72,13 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
 
         //bool IsSpecificItem(IThing thing, ushort typeId);
 
-        void LogPlayerIn(IPlayerCreationMetadata playerCreationMetadata);
-
-        void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
-
         void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "");
 
+        void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata);
+
         void LogPlayerOut(IPlayer player);
+
+        void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
 
         //void MoveTo(IThing thingToMove, Location targetLocation);
 

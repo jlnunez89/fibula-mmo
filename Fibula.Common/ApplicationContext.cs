@@ -17,6 +17,7 @@ namespace Fibula.Common
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
+    using Fibula.Common.Utilities.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;

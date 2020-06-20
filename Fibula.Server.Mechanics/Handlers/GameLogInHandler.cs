@@ -159,7 +159,7 @@ namespace Fibula.Server.Mechanics.Handlers
             client.ClientInformation.Version = loginInfo.ClientVersion.ToString();
 
             // TODO: pull these values from the character record.
-            this.Game.LogPlayerIn(new PlayerCreationMetadata(client, character.Id, character.Name, 100, 100, 100, 100, 4240));
+            this.Game.LogPlayerIn(client, character);
 
             // save any changes to the entities.
             unitOfWork.Complete();

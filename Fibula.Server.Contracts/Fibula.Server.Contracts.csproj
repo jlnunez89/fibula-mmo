@@ -41,10 +41,6 @@
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemOnEventRule.cs" />
-    <Compile Remove="Extensions\ConnectionFinderExtensions.cs" />
-    <Compile Remove="Extensions\EventExtensions.cs" />
-    <Compile Remove="Extensions\LocationExtensions.cs" />
-    <Compile Remove="Extensions\ScriptExtensions.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -75,7 +71,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Delegates\" />
+    <Folder Include="Abstractions\" />
+    <Folder Include="Enumerations\" />
   </ItemGroup>
 
 </Project>

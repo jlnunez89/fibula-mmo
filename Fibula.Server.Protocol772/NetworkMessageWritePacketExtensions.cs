@@ -12,10 +12,7 @@
 
 namespace Fibula.Server.Protocol772
 {
-    using System;
-    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Communications.Packets.Outgoing;
 
     /// <summary>
     /// Static class that defines extension methods which allow to write the packets in

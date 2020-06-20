@@ -23,6 +23,7 @@ namespace Fibula.Server.Standalone
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
+    using Fibula.Common.Utilities.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures;
@@ -193,9 +194,6 @@ namespace Fibula.Server.Standalone
 
             services.AddSingleton<IApplicationContext, ApplicationContext>();
             services.AddSingleton<IScheduler, Scheduler>();
-
-            //services.AddSingleton<IConnectionManager, ConnectionManager>();
-            //services.AddSingleton<IConnectionFinder>(s => s.GetService<IConnectionManager>());
 
             services.AddSingleton<IGame, Game>();
 

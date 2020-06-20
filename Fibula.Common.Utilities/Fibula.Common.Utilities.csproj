@@ -43,7 +43,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common.Contracts\Fibula.Common.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Common.Utilities.Contracts\Fibula.Common.Utilities.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IPlayerCreationMetadata.cs" company="2Dudes">
+// <copyright file="PlayerCreationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,18 +10,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.Contracts.Abstractions
+namespace Fibula.Creatures
 {
     using Fibula.Client.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for player creation metadata information.
+    /// Class that represents creation arguments for players.
     /// </summary>
-    public interface IPlayerCreationMetadata : ICreatureCreationMetadata
+    public class PlayerCreationArguments : CreatureCreationArguments
     {
         /// <summary>
-        /// Gets the client that this player links to.
+        /// Gets or sets the client to initialize the player with.
         /// </summary>
-        IClient Client { get; }
+        public IClient Client { get; set; }
     }
 }

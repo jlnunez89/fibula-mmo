@@ -31,7 +31,6 @@
     <ProjectReference Include="..\Fibula.Items.Contracts\Fibula.Items.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items\Fibula.Items.csproj" />
     <ProjectReference Include="..\Fibula.Map.Contracts\Fibula.Map.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Contracts\Fibula.Server.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

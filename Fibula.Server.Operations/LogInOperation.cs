@@ -12,6 +12,7 @@
 
 namespace Fibula.Server.Operations
 {
+    using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures;
@@ -33,17 +34,24 @@ namespace Fibula.Server.Operations
         /// Initializes a new instance of the <see cref="LogInOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the action.</param>
+        /// <param name="client">The client requesting the log in.</param>
         /// <param name="playerMetadata">The creation metadata of the player that is logging in.</param>
         /// <param name="worldLightLevel">The level of the world light to send to the player.</param>
         /// <param name="worldLightColor">The color of the world light to send to the player.</param>
-        public LogInOperation(uint requestorId, IPlayerCreationMetadata playerMetadata, byte worldLightLevel, byte worldLightColor)
+        public LogInOperation(uint requestorId, IClient client, ICreatureCreationMetadata playerMetadata, byte worldLightLevel, byte worldLightColor)
             : base(requestorId)
         {
+            this.Client = client;
             this.CurrentWorldLightLevel = worldLightLevel;
             this.CurrentWorldLightColor = worldLightColor;
 
             this.PlayerMetadata = playerMetadata;
         }
+
+        /// <summary>
+        /// Gets the client requesting the log in.
+        /// </summary>
+        public IClient Client { get; }
 
         /// <summary>
         /// Gets the current light level of the world, to send with the login information.
@@ -71,8 +79,14 @@ namespace Fibula.Server.Operations
             var thaisMark = new Location { X = 32369, Y = 32241, Z = 7 };
 
             var targetLocation = thaisMark;
+            var creationArguments = new PlayerCreationArguments()
+            {
+                Client = this.Client,
+                Type = CreatureType.Player,
+                Metadata = this.PlayerMetadata,
+            };
 
-            if (!(context.CreatureFactory.CreateCreature(new CreatureCreationArguments() { Type = CreatureType.Player, Metadata = this.PlayerMetadata }) is IPlayer player))
+            if (!(context.CreatureFactory.CreateCreature(creationArguments) is IPlayer player))
             {
                 context.Logger.Warning($"Unable to create player instance for {this.PlayerMetadata.Name}, aborting log in.");
 

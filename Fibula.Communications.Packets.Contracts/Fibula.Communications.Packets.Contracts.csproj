@@ -49,7 +49,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Communications.Contracts\Fibula.Communications.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Contracts\Fibula.Server.Contracts.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Models\" />

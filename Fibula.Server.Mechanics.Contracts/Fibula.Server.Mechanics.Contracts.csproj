@@ -9,14 +9,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Abstractions\IActionOperation.cs" />
     <Compile Remove="Abstractions\ICollisionEventRule.cs" />
     <Compile Remove="Abstractions\ICombatant.cs" />
     <Compile Remove="Abstractions\ICombatApi.cs" />
-    <Compile Remove="Abstractions\ICombatOperation.cs" />
-    <Compile Remove="Abstractions\IContainerManager.cs" />
-    <Compile Remove="Abstractions\IElevatedOperation.cs" />
-    <Compile Remove="Abstractions\IElevatedOperationContext.cs" />
     <Compile Remove="Abstractions\IEventRule.cs" />
     <Compile Remove="Abstractions\IEventRuleArguments.cs" />
     <Compile Remove="Abstractions\IEventRuleContext.cs" />
@@ -25,16 +20,6 @@
     <Compile Remove="Abstractions\IEventRulesApi.cs" />
     <Compile Remove="Abstractions\IEventRulesFactory.cs" />
     <Compile Remove="Abstractions\IEventRulesLoader.cs" />
-    <Compile Remove="Abstractions\IItemTypeLoader.cs" />
-    <Compile Remove="Abstractions\IMonster.cs" />
-    <Compile Remove="Abstractions\IMonsterSpawnLoader.cs" />
-    <Compile Remove="Abstractions\IMonsterType.cs" />
-    <Compile Remove="Abstractions\IMonsterTypeLoader.cs" />
-    <Compile Remove="Abstractions\IMovementOperation.cs" />
-    <Compile Remove="Abstractions\IOperation.cs" />
-    <Compile Remove="Abstractions\IOperationContext.cs" />
-    <Compile Remove="Abstractions\IOperationCreationArguments.cs" />
-    <Compile Remove="Abstractions\IOperationFactory.cs" />
     <Compile Remove="Abstractions\IPathFinder.cs" />
     <Compile Remove="Abstractions\ISeparationEventRule.cs" />
     <Compile Remove="Abstractions\ISkill.cs" />
@@ -42,7 +27,6 @@
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemOnEventRule.cs" />
-    <Compile Remove="Constants\CombatConstants.cs" />
     <Compile Remove="Delegates\ChaseModeChanged.cs" />
     <Compile Remove="Delegates\CombatCreditConsumed.cs" />
     <Compile Remove="Delegates\CombatEnded.cs" />
@@ -51,7 +35,6 @@
     <Compile Remove="Delegates\FightModeChanged.cs" />
     <Compile Remove="Delegates\OnAttackTargetChange.cs" />
     <Compile Remove="Delegates\OnInventorySlotChanged.cs" />
-    <Compile Remove="Delegates\OnThingStateChanged.cs" />
     <Compile Remove="Delegates\SkillLevelAdvance.cs" />
     <Compile Remove="Enumerations\AttackType.cs" />
     <Compile Remove="Enumerations\ChaseMode.cs" />
@@ -60,14 +43,9 @@
     <Compile Remove="Enumerations\EventRuleType.cs" />
     <Compile Remove="Enumerations\ExhaustionType.cs" />
     <Compile Remove="Enumerations\FightMode.cs" />
-    <Compile Remove="Enumerations\SquareColor.cs" />
-    <Compile Remove="Enumerations\TextColor.cs" />
-    <Compile Remove="Extensions\ConnectionFinderExtensions.cs" />
     <Compile Remove="Extensions\EventExtensions.cs" />
     <Compile Remove="Extensions\LocationExtensions.cs" />
     <Compile Remove="Extensions\ScriptExtensions.cs" />
-    <Compile Remove="Structs\Spawn.cs" />
-    <Compile Remove="ThingStateChangedEventArgs.cs" />
   </ItemGroup>
 
   <ItemGroup>

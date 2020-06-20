@@ -33,7 +33,6 @@
     <ProjectReference Include="..\Fibula.Data.Contracts\Fibula.Data.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Data.Entities\Fibula.Data.Entities.csproj" />
     <ProjectReference Include="..\Fibula.Providers.Contracts\Fibula.Providers.Contracts.csproj" />
-    <ProjectReference Include="..\OpenTibia.Providers.Contracts\Fibula.Providers.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

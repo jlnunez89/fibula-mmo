@@ -28,11 +28,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fibula.Common\Fibula.Common.csproj" />
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Notifications\Fibula.Notifications.csproj" />
-    <ProjectReference Include="..\Fibula.Server.Contracts\Fibula.Server.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items.Contracts\Fibula.Items.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Server\Fibula.Server.csproj" />
   </ItemGroup>
 
 </Project>

@@ -12,6 +12,7 @@
 
 namespace Fibula.Server.Operations.Arguments
 {
+    using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Operations.Contracts.Abstractions;
@@ -25,13 +26,16 @@ namespace Fibula.Server.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="LogInOperationCreationArguments"/> class.
         /// </summary>
+        /// <param name="client"></param>
         /// <param name="metadata"></param>
         /// <param name="currentWorldLightLevel"></param>
         /// <param name="currentWorldLightColor"></param>
-        public LogInOperationCreationArguments(IPlayerCreationMetadata metadata, byte currentWorldLightLevel, byte currentWorldLightColor)
+        public LogInOperationCreationArguments(IClient client, ICreatureCreationMetadata metadata, byte currentWorldLightLevel, byte currentWorldLightColor)
         {
+            client.ThrowIfNull(nameof(client));
             metadata.ThrowIfNull(nameof(metadata));
 
+            this.Client = client;
             this.CreationMetadata = metadata;
             this.WorldLightLevel = currentWorldLightLevel;
             this.WorldLightColor = currentWorldLightColor;
@@ -42,12 +46,14 @@ namespace Fibula.Server.Operations.Arguments
         /// </summary>
         public OperationType Type => OperationType.LogIn;
 
-        public IPlayerCreationMetadata CreationMetadata { get; }
-
         /// <summary>
         /// Gets the id of the requestor of the operation.
         /// </summary>
         public uint RequestorId { get; }
+
+        public IClient Client { get; }
+
+        public ICreatureCreationMetadata CreationMetadata { get; }
 
         public byte WorldLightLevel { get; }
 

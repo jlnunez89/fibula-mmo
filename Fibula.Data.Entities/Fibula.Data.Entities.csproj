@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Data.Entities.Contracts\Fibula.Data.Entities.Contracts.csproj" />
   </ItemGroup>
 

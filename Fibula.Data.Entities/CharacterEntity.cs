@@ -13,12 +13,13 @@
 namespace Fibula.Data.Entities
 {
     using System;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a character entity.
     /// </summary>
-    public class CharacterEntity : BaseEntity, ICharacterEntity
+    public class CharacterEntity : BaseEntity, ICharacterEntity, ICreatureCreationMetadata
     {
         /// <summary>
         /// Gets or sets the character's name.
@@ -65,5 +66,13 @@ namespace Fibula.Data.Entities
         /// Gets or sets a value indicating whether this character is currently online.
         /// </summary>
         public bool IsOnline { get; set; }
+
+        public string Identifier => this.Id;
+
+        public ushort MaxHitpoints => 100;
+
+        public ushort MaxManapoints => 0;
+
+        public ushort Corpse => 4240;
     }
 }
