@@ -10,12 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the creature being removed notification.

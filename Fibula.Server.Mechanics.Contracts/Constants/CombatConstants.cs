@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Constants
+namespace Fibula.Server.Mechanics.Contracts.Constants
 {
     /// <summary>
     /// Static class that contains constants regarding combat.

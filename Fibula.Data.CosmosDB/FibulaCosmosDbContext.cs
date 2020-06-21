@@ -12,7 +12,6 @@
 
 namespace Fibula.Data.CosmosDB
 {
-    using System.ComponentModel.DataAnnotations;
     using System.Security;
     using Fibula.Common.Utilities;
     using Fibula.Data.Contracts.Abstractions;
@@ -68,7 +67,7 @@ namespace Fibula.Data.CosmosDB
             cosmosDbContextOptions.ThrowIfNull(nameof(cosmosDbContextOptions));
             secretsProvider.ThrowIfNull(nameof(secretsProvider));
 
-            Validator.ValidateObject(cosmosDbContextOptions, new ValidationContext(cosmosDbContextOptions), validateAllProperties: true);
+            DataAnnotationsValidator.ValidateObjectRecursive(cosmosDbContextOptions.Value);
 
             this.Options = cosmosDbContextOptions.Value;
             this.SecretsProvider = secretsProvider;

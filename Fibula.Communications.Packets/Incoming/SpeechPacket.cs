@@ -15,29 +15,44 @@ namespace Fibula.Communications.Packets.Incoming
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a speech packet.
+    /// </summary>
     public class SpeechPacket : ISpeechInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SpeechPacket"/> class.
         /// </summary>
-        /// <param name="type"></param>
-        /// <param name="channelId"></param>
-        /// <param name="content"></param>
-        /// <param name="receiver"></param>
+        /// <param name="type">The type of speech.</param>
+        /// <param name="channelId">The channel type.</param>
+        /// <param name="content">The content spoken.</param>
+        /// <param name="receiver">Optional. The receiver of the message, if any.</param>
         public SpeechPacket(SpeechType type, ChatChannelType channelId, string content, string receiver = "")
         {
-            this.Type = type;
+            this.SpeechType = type;
             this.ChannelType = channelId;
             this.Content = content;
             this.Receiver = receiver;
         }
 
-        public SpeechType Type { get; }
+        /// <summary>
+        /// Gets the type of speech.
+        /// </summary>
+        public SpeechType SpeechType { get; }
 
+        /// <summary>
+        /// Gets the channel type.
+        /// </summary>
         public ChatChannelType ChannelType { get; }
 
-        public string Receiver { get; }
-
+        /// <summary>
+        /// Gets the content of the message.
+        /// </summary>
         public string Content { get; }
+
+        /// <summary>
+        /// Gets the receiver of the message.
+        /// </summary>
+        public string Receiver { get; }
     }
 }

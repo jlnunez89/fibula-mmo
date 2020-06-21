@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="INotification.cs" company="2Dudes">
+// <copyright file="StopAllActionsPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,19 +10,19 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Notifications.Contracts.Abstractions
+namespace Fibula.Communications.Packets.Incoming
 {
-    using Fibula.Scheduling.Contracts.Abstractions;
+    using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for all notifications.
+    /// Class that represents a stop everything packet routed to the game server.
     /// </summary>
-    public interface INotification : IEvent
+    public sealed class StopAllActionsPacket : IActionWithoutContentInfo
     {
         /// <summary>
-        /// Sends the notification to the players intented.
+        /// Gets the action to do.
         /// </summary>
-        /// <param name="context">The context for this notification.</param>
-        void Send(INotificationContext context);
+        public IncomingGamePacketType Action => IncomingGamePacketType.StopAllActions;
     }
 }

@@ -68,18 +68,12 @@ namespace Fibula.Server.Protocol772
             return result;
         }
 
-        public static bool PrepareToSendWithoutEncryption(this INetworkMessage message, bool insertOnlyOneLength = false)
-        {
-            if (!insertOnlyOneLength)
-            {
-                message.InsertPacketLength();
-            }
-
-            message.InsertTotalLength();
-
-            return true;
-        }
-
+        /// <summary>
+        /// Prepares an <see cref="INetworkMessage"/> to be sent, encrypting it with the supplied key.
+        /// </summary>
+        /// <param name="message">The message to prepare.</param>
+        /// <param name="xteaKey">The XTea key to encrypt with.</param>
+        /// <returns>True if the message is prepared successfully, false otherwise.</returns>
         public static bool PrepareToSend(this INetworkMessage message, uint[] xteaKey)
         {
             // Must be before Xtea, because the packet length is encrypted as well

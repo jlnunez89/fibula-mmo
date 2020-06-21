@@ -17,6 +17,6 @@ namespace Fibula.Server.Contracts.Enumerations
         Hitpoints,
         GoStrength,
         CarryStrength,
-        FistFighting
+        FistFighting,
     }
 }

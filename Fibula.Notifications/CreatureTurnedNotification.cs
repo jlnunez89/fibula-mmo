@@ -18,9 +18,9 @@ namespace Fibula.Server.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Notifications.Arguments;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Notifications.Arguments;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for when a creature has turned.

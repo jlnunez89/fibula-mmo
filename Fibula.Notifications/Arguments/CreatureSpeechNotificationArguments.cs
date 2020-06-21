@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the creature speech notification.
@@ -25,30 +25,42 @@ namespace Fibula.Server.Notifications.Arguments
         /// Initializes a new instance of the <see cref="CreatureSpeechNotificationArguments"/> class.
         /// </summary>
         /// <param name="creature">The creature that spoke.</param>
-        /// <param name="speechType"></param>
-        /// <param name="channelId"></param>
-        /// <param name="text"></param>
-        /// <param name="receiver"></param>
-        public CreatureSpeechNotificationArguments(ICreature creature, SpeechType speechType, ChatChannelType channelId, string text, string receiver = "")
+        /// <param name="speechType">The type of speech.</param>
+        /// <param name="channelType">The channel type.</param>
+        /// <param name="text">The message content.</param>
+        /// <param name="receiver">Optional. The receiver of the message.</param>
+        public CreatureSpeechNotificationArguments(ICreature creature, SpeechType speechType, ChatChannelType channelType, string text, string receiver = "")
         {
             this.Creature = creature;
             this.SpeechType = speechType;
-            this.ChannelId = channelId;
+            this.ChannelType = channelType;
             this.Text = text;
             this.Receiver = receiver;
         }
 
         /// <summary>
-        /// Gets the id of the creature that turned.
+        /// Gets the id of the creature that spoke.
         /// </summary>
         public ICreature Creature { get; }
 
-        public SpeechType SpeechType { get; internal set; }
+        /// <summary>
+        /// Gets the type of speech.
+        /// </summary>
+        public SpeechType SpeechType { get; }
 
-        public string Text { get; internal set; }
+        /// <summary>
+        /// Gets the type of channel.
+        /// </summary>
+        public ChatChannelType ChannelType { get; }
 
+        /// <summary>
+        /// Gets the text of the speech.
+        /// </summary>
+        public string Text { get; }
+
+        /// <summary>
+        /// Gets the receiver of the speech, if this is a private channel message.
+        /// </summary>
         public string Receiver { get; }
-
-        public ChatChannelType ChannelId { get; internal set; }
     }
 }

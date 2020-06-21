@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Contracts.Abstractions
+namespace Fibula.Notifications.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for all notification arguments.

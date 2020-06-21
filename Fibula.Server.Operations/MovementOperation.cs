@@ -22,12 +22,12 @@ namespace Fibula.Server.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
     using Fibula.Notifications;
+    using Fibula.Notifications.Arguments;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Extensions;
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
 

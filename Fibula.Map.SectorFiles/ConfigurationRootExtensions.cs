@@ -9,12 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Map.SectorFiles
+namespace Fibula.Map.SectorFiles
 {
+    using Fibula.Common.Utilities;
+    using Fibula.Map.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.

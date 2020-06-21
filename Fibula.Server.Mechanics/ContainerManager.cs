@@ -20,13 +20,13 @@ namespace Fibula.Server.Mechanics
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
+    using Fibula.Notifications.Arguments;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Server.Contracts;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Mechanics.Contracts.Extensions;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Arguments;
     using Serilog;
 
     /// <summary>

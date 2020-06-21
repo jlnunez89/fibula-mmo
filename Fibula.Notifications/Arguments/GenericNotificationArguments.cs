@@ -10,13 +10,13 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents generic notification arguments.

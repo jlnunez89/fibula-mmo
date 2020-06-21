@@ -11,6 +11,7 @@
   <ItemGroup>
     <Compile Remove="Abstractions\IHasSkills.cs" />
     <Compile Remove="Abstractions\ISkill.cs" />
+    <Compile Remove="Enumerations\MonsterSkillType.cs" />
   </ItemGroup>
 
   <ItemGroup>

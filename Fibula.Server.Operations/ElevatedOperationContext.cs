@@ -30,7 +30,6 @@ namespace Fibula.Server.Operations
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
-        /// <param name="connectionManager">A reference to the connection manager in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="pathFinder">A reference to the path finder helper in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
@@ -45,7 +44,6 @@ namespace Fibula.Server.Operations
             ILogger logger,
             IMapDescriptor mapDescriptor,
             ITileAccessor tileAccessor,
-            //IConnectionManager connectionManager,
             ICreatureManager creatureManager,
             //IPathFinder pathFinder,
             IItemFactory itemFactory,
@@ -59,11 +57,6 @@ namespace Fibula.Server.Operations
             : base(logger, mapDescriptor, tileAccessor, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
         {
         }
-
-        /// <summary>
-        /// Gets the reference to the connection manager in use.
-        /// </summary>
-        //public IConnectionManager ConnectionManager => this.ConnectionFinder as IConnectionManager;
 
         /// <summary>
         /// Gets the reference to the creature manager in use.

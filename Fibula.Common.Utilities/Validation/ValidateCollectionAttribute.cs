@@ -23,6 +23,9 @@ namespace Fibula.Common.Utilities
     /// </summary>
     public class ValidateCollectionAttribute : ValidationAttribute
     {
+        /// <summary>
+        /// Gets or sets the type of validation performed.
+        /// </summary>
         public Type ValidationType { get; set; }
 
         /// <summary>

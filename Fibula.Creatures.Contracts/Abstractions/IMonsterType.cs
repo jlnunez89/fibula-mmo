@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Creatures.Contracts.Abstractions
+namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Server.Contracts.Structs;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Structs;
 
     /// <summary>
     /// Inferface for a monster type.

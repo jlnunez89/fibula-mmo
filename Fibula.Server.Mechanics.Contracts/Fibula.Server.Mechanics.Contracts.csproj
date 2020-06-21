@@ -27,6 +27,7 @@
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemOnEventRule.cs" />
+    <Compile Remove="Constants\CombatConstants.cs" />
     <Compile Remove="Delegates\ChaseModeChanged.cs" />
     <Compile Remove="Delegates\CombatCreditConsumed.cs" />
     <Compile Remove="Delegates\CombatEnded.cs" />

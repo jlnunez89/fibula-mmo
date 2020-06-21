@@ -9,18 +9,22 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Map.SectorFiles
+namespace Fibula.Map.SectorFiles
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Delegates;
+    using Fibula.Parsing.CipFiles;
+    using Fibula.Server.Contracts.Structs;
     using Microsoft.Extensions.Options;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
-    using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>
@@ -74,6 +78,11 @@ namespace OpenTibia.Server.Map.SectorFiles
         public const int SectorZMax = 15;
 
         /// <summary>
+        /// The size of a square Sector.
+        /// </summary>
+        private const int SquareSectorSize = 32;
+
+        /// <summary>
         /// Holds the map directory info.
         /// </summary>
         private readonly DirectoryInfo mapDirInfo;
@@ -120,14 +129,25 @@ namespace OpenTibia.Server.Map.SectorFiles
         /// <param name="creatureFinder">A reference to the creature finder.</param>
         /// <param name="itemFactory">A reference to the item factory.</param>
         /// <param name="sectorMapLoaderOptions">The options for this map loader.</param>
-        public SectorMapLoader(ILogger logger, ICreatureFinder creatureFinder, IItemFactory itemFactory, IOptions<SectorMapLoaderOptions> sectorMapLoaderOptions)
+        public SectorMapLoader(
+            ILogger logger,
+            ICreatureFinder creatureFinder,
+            IItemFactory itemFactory,
+            IOptions<SectorMapLoaderOptions> sectorMapLoaderOptions)
         {
             logger.ThrowIfNull(nameof(logger));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             sectorMapLoaderOptions.ThrowIfNull(nameof(sectorMapLoaderOptions));
 
+            DataAnnotationsValidator.ValidateObjectRecursive(sectorMapLoaderOptions.Value);
+
             this.mapDirInfo = new DirectoryInfo(sectorMapLoaderOptions.Value.LiveMapDirectory);
+
+            if (!this.mapDirInfo.Exists)
+            {
+                throw new ApplicationException($"The map directory '{sectorMapLoaderOptions.Value.LiveMapDirectory}' could not be found.");
+            }
 
             this.Logger = logger.ForContext<SectorMapLoader>();
             this.CreatureFinder = creatureFinder;
@@ -181,8 +201,8 @@ namespace OpenTibia.Server.Map.SectorFiles
         {
             var convertToSector = x > SectorXMax;
 
-            var probeX = convertToSector ? (x / 32) - SectorXMin : x - SectorXMin;
-            var probeY = convertToSector ? (y / 32) - SectorYMin : y - SectorYMin;
+            var probeX = convertToSector ? (x / SquareSectorSize) - SectorXMin : x - SectorXMin;
+            var probeY = convertToSector ? (y / SquareSectorSize) - SectorYMin : y - SectorYMin;
             var probeZ = z - SectorZMin;
 
             if (probeX >= 0 && probeX < this.sectorsLengthX && probeY >= 0 && probeY < this.sectorsLengthY && probeZ >= 0 && probeZ < this.sectorsLengthZ)
@@ -208,10 +228,10 @@ namespace OpenTibia.Server.Map.SectorFiles
         /// <returns>A collection of ordered pairs containing the <see cref="Location"/> and its corresponding <see cref="ITile"/>.</returns>
         public IEnumerable<(Location Location, ITile Tile)> Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
-            var fromSectorX = fromX / 32;
-            var toSectorX = toX / 32;
-            var fromSectorY = fromY / 32;
-            var toSectorY = toY / 32;
+            var fromSectorX = fromX / SquareSectorSize;
+            var toSectorX = toX / SquareSectorSize;
+            var fromSectorY = fromY / SquareSectorSize;
+            var toSectorY = toY / SquareSectorSize;
 
             if (toSectorX < fromSectorX || toSectorY < fromSectorY || toZ < fromZ)
             {
@@ -220,7 +240,7 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             var tuplesAdded = new List<(Location loc, ITile tile)>();
 
-            this.totalTileCount = (toSectorX - fromSectorX + 1) * 32 * (toSectorY - fromSectorY + 1) * 32 * (toZ - fromZ + 1);
+            this.totalTileCount = (toSectorX - fromSectorX + 1) * SquareSectorSize * (toSectorY - fromSectorY + 1) * SquareSectorSize * (toZ - fromZ + 1);
             this.totalLoadedCount = default;
 
             lock (this.loadLock)
@@ -240,7 +260,7 @@ namespace OpenTibia.Server.Map.SectorFiles
                             {
                                 using var streamReader = sectorFileInfo.OpenText();
 
-                                var tuplesLoaded = SectorFileReader.ReadSector(this.Logger, this.ItemFactory, sectorFileName, streamReader.ReadToEnd(), (ushort)(sectorX * 32), (ushort)(sectorY * 32), (sbyte)sectorZ);
+                                var tuplesLoaded = this.ReadSector(sectorFileName, streamReader.ReadToEnd(), (ushort)(sectorX * SquareSectorSize), (ushort)(sectorY * SquareSectorSize), (sbyte)sectorZ);
 
                                 tuplesAdded.AddRange(tuplesLoaded);
                             }
@@ -258,9 +278,55 @@ namespace OpenTibia.Server.Map.SectorFiles
 
             this.totalLoadedCount = this.totalTileCount;
 
-            this.WindowLoaded?.Invoke(fromSectorX * 32, (toSectorX * 32) + 32, fromSectorY * 32, (toSectorY * 32) + 32, fromZ, toZ);
+            this.WindowLoaded?.Invoke(fromSectorX * SquareSectorSize, (toSectorX * SquareSectorSize) + SquareSectorSize, fromSectorY * SquareSectorSize, (toSectorY * SquareSectorSize) + SquareSectorSize, fromZ, toZ);
 
             return tuplesAdded;
+        }
+
+        private IList<(Location, ITile)> ReadSector(string fileName, string sectorFileContents, ushort xOffset, ushort yOffset, sbyte z)
+        {
+            var loadedTilesList = new List<(Location, ITile)>();
+
+            var lines = sectorFileContents.Split("\r\n".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (var readLine in lines)
+            {
+                var inLine = readLine?.Split(new[] { CommentSymbol }, 2).FirstOrDefault();
+
+                // ignore comments and empty lines.
+                if (string.IsNullOrWhiteSpace(inLine))
+                {
+                    continue;
+                }
+
+                var data = inLine.Split(new[] { SectorSeparator }, 2);
+
+                if (data.Length != 2)
+                {
+                    throw new InvalidDataException($"Malformed line [{inLine}] in sector file: [{fileName}]");
+                }
+
+                var tileInfo = data[0].Split(new[] { PositionSeparator }, 2);
+                var tileData = data[1];
+
+                var location = new Location
+                {
+                    X = (ushort)(xOffset + Convert.ToUInt16(tileInfo[0])),
+                    Y = (ushort)(yOffset + Convert.ToUInt16(tileInfo[1])),
+                    Z = z,
+                };
+
+                // start off with a tile that has no ground in it.
+                ITile newTile = new Tile(location, null);
+
+                newTile.AddContent(this.Logger, this.ItemFactory, CipFileParser.Parse(tileData));
+
+                loadedTilesList.Add((location, newTile));
+            }
+
+            this.Logger.Verbose($"Sector file {fileName}: {loadedTilesList.Count} tiles loaded.");
+
+            return loadedTilesList;
         }
     }
 }

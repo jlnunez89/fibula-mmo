@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="GameLogOutPacketReader.cs" company="2Dudes">
+// <copyright file="StopAllActionsPacketReader.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -19,15 +19,15 @@ namespace Fibula.Server.Protocol772.PacketReaders
     using Serilog;
 
     /// <summary>
-    /// Class that represents a log out packet reader for the game server.
+    /// Class that represents a stop all actions packet reader for the game server.
     /// </summary>
-    public sealed class GameLogOutPacketReader : BasePacketReader
+    public sealed class StopAllActionsPacketReader : BasePacketReader
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GameLogOutPacketReader"/> class.
+        /// Initializes a new instance of the <see cref="StopAllActionsPacketReader"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        public GameLogOutPacketReader(ILogger logger)
+        public StopAllActionsPacketReader(ILogger logger)
             : base(logger)
         {
         }
@@ -42,7 +42,7 @@ namespace Fibula.Server.Protocol772.PacketReaders
             message.ThrowIfNull(nameof(message));
 
             // Nothing to read!
-            return new GameLogOutPacket();
+            return new StopAllActionsPacket();
         }
     }
 }

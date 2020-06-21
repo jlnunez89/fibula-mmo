@@ -19,9 +19,9 @@ namespace Fibula.Server.Notifications
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Abstract class that represents a notification to a player's connection.

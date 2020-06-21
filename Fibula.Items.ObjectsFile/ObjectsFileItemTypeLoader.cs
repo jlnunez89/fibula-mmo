@@ -61,6 +61,8 @@ namespace Fibula.Items.ObjectsFile
             logger.ThrowIfNull(nameof(logger));
             options.ThrowIfNull(nameof(options));
 
+            DataAnnotationsValidator.ValidateObjectRecursive(options.Value);
+
             this.LoaderOptions = options.Value;
             this.Logger = logger.ForContext<ObjectsFileItemTypeLoader>();
         }

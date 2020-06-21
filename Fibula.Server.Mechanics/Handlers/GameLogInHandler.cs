@@ -22,7 +22,6 @@ namespace Fibula.Server.Mechanics.Handlers
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Data;
     using Fibula.Data.Entities;
-    using Fibula.Server.Mechanics;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Serilog;

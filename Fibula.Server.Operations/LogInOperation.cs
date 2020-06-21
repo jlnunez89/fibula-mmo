@@ -19,10 +19,10 @@ namespace Fibula.Server.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Notifications.Arguments;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
 
     /// <summary>
@@ -78,7 +78,7 @@ namespace Fibula.Server.Operations
             var rookMark = new Location { X = 32097, Y = 32219, Z = 7 };
             var thaisMark = new Location { X = 32369, Y = 32241, Z = 7 };
 
-            var targetLocation = thaisMark;
+            var targetLocation = rookMark;
             var creationArguments = new PlayerCreationArguments()
             {
                 Client = this.Client,

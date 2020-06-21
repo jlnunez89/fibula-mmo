@@ -10,10 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the world light changed notification.

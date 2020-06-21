@@ -15,12 +15,22 @@ namespace Fibula.Notifications
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Abstractions;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
     using Serilog;
 
+    /// <summary>
+    /// Class that represents a context for notifications.
+    /// </summary>
     public class NotificationContext : INotificationContext
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="NotificationContext"/> class.
+        /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
+        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
+        /// <param name="scheduler">A reference to the scheduler in use.</param>
         public NotificationContext(
             ILogger logger,
             IMapDescriptor mapDescriptor,
@@ -38,12 +48,24 @@ namespace Fibula.Notifications
             this.Scheduler = scheduler;
         }
 
-        public IMapDescriptor MapDescriptor { get; set; }
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
-        public ICreatureFinder CreatureFinder { get; set; }
+        /// <summary>
+        /// Gets the map descriptor in use.
+        /// </summary>
+        public IMapDescriptor MapDescriptor { get; }
 
-        public IScheduler Scheduler { get; set; }
+        /// <summary>
+        /// Gets the creature finder in use.
+        /// </summary>
+        public ICreatureFinder CreatureFinder { get; }
 
-        public ILogger Logger { get; set; }
+        /// <summary>
+        /// Gets the scheduler in use.
+        /// </summary>
+        public IScheduler Scheduler { get; }
     }
 }

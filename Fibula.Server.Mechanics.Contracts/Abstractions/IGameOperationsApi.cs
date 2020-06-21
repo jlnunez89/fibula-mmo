@@ -72,6 +72,8 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
 
         //bool IsSpecificItem(IThing thing, ushort typeId);
 
+        void CancelPlayerActions(IPlayer player);
+
         void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "");
 
         void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata);

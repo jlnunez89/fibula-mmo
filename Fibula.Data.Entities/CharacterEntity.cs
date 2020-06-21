@@ -67,8 +67,6 @@ namespace Fibula.Data.Entities
         /// </summary>
         public bool IsOnline { get; set; }
 
-        public string Identifier => this.Id;
-
         public ushort MaxHitpoints => 100;
 
         public ushort MaxManapoints => 0;

@@ -18,12 +18,11 @@ namespace Fibula.Common.Utilities
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Text;
-    using Fibula.Common.Utilities.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that implements a standard <see cref="IDataAnnotationsValidator"/>.
+    /// Class that represents a helper for dana annotations validator.
     /// </summary>
-    public class DataAnnotationsValidator : IDataAnnotationsValidator
+    public static class DataAnnotationsValidator
     {
         /// <summary>
         /// Performs validation on an object and all of it's primitive properties.
@@ -32,7 +31,7 @@ namespace Fibula.Common.Utilities
         /// <param name="results">The results of the validation.</param>
         /// <param name="validationContextItems">Auxiliary items to initialize validation context with.</param>
         /// <returns>True if the validation passes, false otherwise.</returns>
-        public bool TryValidateObject(object obj, out IList<ValidationResult> results, IDictionary<object, object> validationContextItems = null)
+        public static bool TryValidateObject(object obj, out IList<ValidationResult> results, IDictionary<object, object> validationContextItems = null)
         {
             results = new List<ValidationResult>();
 
@@ -47,9 +46,9 @@ namespace Fibula.Common.Utilities
         /// <param name="results">The results of the validation.</param>
         /// <param name="validationContextItems">Auxiliary items to initialize validation context with.</param>
         /// <returns>True if the validation passes, false otherwise.</returns>
-        public bool TryValidateObjectRecursive<T>(T obj, out IList<ValidationResult> results, IDictionary<object, object> validationContextItems = null)
+        public static bool TryValidateObjectRecursive<T>(T obj, out IList<ValidationResult> results, IDictionary<object, object> validationContextItems = null)
         {
-            return this.TryValidateObjectRecursive(obj, out results, new HashSet<object>(), validationContextItems);
+            return TryValidateObjectRecursive(obj, out results, new HashSet<object>(), validationContextItems);
         }
 
         /// <summary>
@@ -58,9 +57,9 @@ namespace Fibula.Common.Utilities
         /// <typeparam name="T">The type of object.</typeparam>
         /// <param name="obj">The object to validate.</param>
         /// <param name="validationContextItems">Auxiliary items to initialize validation context with.</param>
-        public void ValidateObjectRecursive<T>(T obj, IDictionary<object, object> validationContextItems = null)
+        public static void ValidateObjectRecursive<T>(T obj, IDictionary<object, object> validationContextItems = null)
         {
-            this.TryValidateObjectRecursive(obj, out IList<ValidationResult> results, validationContextItems);
+            TryValidateObjectRecursive(obj, out IList<ValidationResult> results, validationContextItems);
 
             if (results.Any())
             {
@@ -76,7 +75,7 @@ namespace Fibula.Common.Utilities
             }
         }
 
-        private bool TryValidateObjectRecursive<T>(T obj, out IList<ValidationResult> results, ISet<object> validatedObjects, IDictionary<object, object> validationContextItems = null)
+        private static bool TryValidateObjectRecursive<T>(T obj, out IList<ValidationResult> results, ISet<object> validatedObjects, IDictionary<object, object> validationContextItems = null)
         {
             results = new List<ValidationResult>();
 
@@ -88,7 +87,7 @@ namespace Fibula.Common.Utilities
 
             validatedObjects.Add(obj);
 
-            bool validationPassed = this.TryValidateObject(obj, out results, validationContextItems);
+            bool validationPassed = TryValidateObject(obj, out results, validationContextItems);
 
             var propertiesInfo = obj.GetType().GetProperties()
                     .Where(prop => prop.CanRead && !prop.GetCustomAttributes(typeof(SkipRecursiveValidation), false).Any() && prop.GetIndexParameters().Length == 0)
@@ -118,7 +117,7 @@ namespace Fibula.Common.Utilities
                             continue;
                         }
 
-                        if (!this.TryValidateObjectRecursive(enumObj, out IList<ValidationResult> nestedResults, validatedObjects, validationContextItems))
+                        if (!TryValidateObjectRecursive(enumObj, out IList<ValidationResult> nestedResults, validatedObjects, validationContextItems))
                         {
                             validationPassed = false;
 
@@ -131,7 +130,7 @@ namespace Fibula.Common.Utilities
                 }
 
                 // Or as an indivitual object.
-                else if (!this.TryValidateObjectRecursive(value, out IList<ValidationResult> nestedResults, validatedObjects, validationContextItems))
+                else if (!TryValidateObjectRecursive(value, out IList<ValidationResult> nestedResults, validatedObjects, validationContextItems))
                 {
                     validationPassed = false;
 

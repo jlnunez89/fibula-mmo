@@ -20,7 +20,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the identifier to use when creating the creature.
         /// </summary>
-        string Identifier { get; }
+        string Id { get; }
 
         /// <summary>
         /// Gets the name to use for the creature.

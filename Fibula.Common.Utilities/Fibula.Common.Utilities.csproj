@@ -42,8 +42,4 @@
     <Folder Include="Pathfinding\" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common.Utilities.Contracts\Fibula.Common.Utilities.Contracts.csproj" />
-  </ItemGroup>
-
 </Project>

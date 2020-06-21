@@ -10,14 +10,14 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
     using System;
     using System.Buffers;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents arguments for the <see cref="TileUpdatedNotification"/>.

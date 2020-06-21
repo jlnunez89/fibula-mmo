@@ -19,11 +19,6 @@ namespace Fibula.Server.Operations.Contracts.Abstractions
     /// </summary>
     public interface IElevatedOperationContext : IOperationContext
     {
-        ///// <summary>
-        ///// Gets the reference to the connection manager in use.
-        ///// </summary>
-        //IConnectionManager ConnectionManager { get; }
-
         /// <summary>
         /// Gets the reference to the creature manager in use.
         /// </summary>

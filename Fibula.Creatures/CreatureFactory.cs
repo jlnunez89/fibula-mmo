@@ -98,7 +98,7 @@ namespace Fibula.Creatures
 
                     return new Player(
                         playerCreationArguments.Client,
-                        playerCreationArguments.Metadata.Identifier,
+                        playerCreationArguments.Metadata.Id,
                         playerCreationArguments.Metadata.Name,
                         playerCreationArguments.Metadata.MaxHitpoints,
                         playerCreationArguments.Metadata.MaxManapoints,

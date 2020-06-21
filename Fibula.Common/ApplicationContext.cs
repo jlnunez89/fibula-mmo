@@ -17,7 +17,6 @@ namespace Fibula.Common
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
-    using Fibula.Common.Utilities.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
@@ -37,30 +36,26 @@ namespace Fibula.Common
         /// Initializes a new instance of the <see cref="ApplicationContext"/> class.
         /// </summary>
         /// <param name="options">A reference to the application configuration.</param>
-        /// <param name="dataAnnotationsValidator">A reference to the data annotations validator in use.</param>
         /// <param name="rsaDecryptor">A reference to the RSA decryptor in use.</param>
         /// <param name="cancellationTokenSource">A reference to the master cancellation token source.</param>
         /// <param name="telemetryClient">A reference to the telemetry client.</param>
         /// <param name="openTibiaDbContextGenerationFunc">A reference to a function to generate the OpenTibia database context.</param>
         public ApplicationContext(
             IOptions<ApplicationContextOptions> options,
-            IDataAnnotationsValidator dataAnnotationsValidator,
             IRsaDecryptor rsaDecryptor,
             CancellationTokenSource cancellationTokenSource,
             TelemetryClient telemetryClient,
             Func<IFibulaDbContext> openTibiaDbContextGenerationFunc)
         {
             options.ThrowIfNull(nameof(options));
-            dataAnnotationsValidator.ThrowIfNull(nameof(dataAnnotationsValidator));
             rsaDecryptor.ThrowIfNull(nameof(rsaDecryptor));
             cancellationTokenSource.ThrowIfNull(nameof(cancellationTokenSource));
             telemetryClient.ThrowIfNull(nameof(telemetryClient));
             openTibiaDbContextGenerationFunc.ThrowIfNull(nameof(openTibiaDbContextGenerationFunc));
 
-            dataAnnotationsValidator.ValidateObjectRecursive(options.Value);
+            DataAnnotationsValidator.ValidateObjectRecursive(options.Value);
 
             this.Options = options.Value;
-            this.Validator = dataAnnotationsValidator;
             this.RsaDecryptor = rsaDecryptor;
             this.CancellationTokenSource = cancellationTokenSource;
             this.TelemetryClient = telemetryClient;
@@ -72,11 +67,6 @@ namespace Fibula.Common
         /// Gets the configuration for the application.
         /// </summary>
         public ApplicationContextOptions Options { get; }
-
-        /// <summary>
-        /// Gets the validator to use.
-        /// </summary>
-        public IDataAnnotationsValidator Validator { get; }
 
         /// <summary>
         /// Gets the RSA decryptor to use.

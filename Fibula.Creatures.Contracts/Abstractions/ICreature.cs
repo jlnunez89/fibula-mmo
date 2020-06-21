@@ -22,7 +22,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures in the game.
     /// </summary>
-    public interface ICreature : IThing, IThingContainer, IEquatable<ICreature>//, IHasSkills, IHasInventory
+    public interface ICreature : IThing, IThingContainer, IEquatable<ICreature>
     {
         /// <summary>
         /// The id for things that are creatures.
@@ -136,7 +136,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets this creature's shield status.
         /// </summary>
         // TODO: implement or decide what to do with this.
-        byte Shield { get; } // TODO: implement.
+        byte Shield { get; }
 
         /// <summary>
         /// Gets the inventory for the entity.

@@ -23,7 +23,7 @@ namespace Fibula.Communications.Packets.Contracts.Abstractions
         /// <summary>
         /// Gets the speech type.
         /// </summary>
-        SpeechType Type { get; }
+        SpeechType SpeechType { get; }
 
         /// <summary>
         /// Gets the channel type.

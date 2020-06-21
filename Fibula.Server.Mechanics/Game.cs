@@ -23,6 +23,8 @@ namespace Fibula.Server.Mechanics
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications;
+    using Fibula.Notifications.Arguments;
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
@@ -31,8 +33,6 @@ namespace Fibula.Server.Mechanics
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Enumerations;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Arguments;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
     using Fibula.Server.Operations;
     using Fibula.Server.Operations.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
@@ -218,6 +218,16 @@ namespace Fibula.Server.Mechanics
             }
 
             this.DispatchOperation(new LogOutOperationCreationArguments(player));
+        }
+
+        public void CancelPlayerActions(IPlayer player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            this.DispatchOperation(new CancelActionsOperationCreationArguments(player));
         }
 
         public void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)

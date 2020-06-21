@@ -73,6 +73,15 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
+                case OperationType.CancelActions:
+                    if (arguments is CancelActionsOperationCreationArguments cancelActionsOpArguments)
+                    {
+                        return new CancelActionsOperation(
+                            cancelActionsOpArguments.RequestorId,
+                            cancelActionsOpArguments.Creature);
+                    }
+
+                    break;
                 //case OperationType.ChangeItem:
                 //    if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
                 //    {

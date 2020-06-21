@@ -2,23 +2,23 @@
 // <copyright file="MonsterType.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
+// jlnunez89@gmail.com
 // http://linkedin.com/in/jlnunez89
 //
 // Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// See LICENSE.txt file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Monsters
+namespace Fibula.Creatures
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Contracts.Structs;
-    using OpenTibia.Server.Parsing.Contracts.Abstractions;
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a monster type.

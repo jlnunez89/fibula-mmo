@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications.Arguments
+namespace Fibula.Notifications.Arguments
 {
+    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// public class that represents arguments for an animated text notification.

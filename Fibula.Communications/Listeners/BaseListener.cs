@@ -13,7 +13,6 @@
 namespace Fibula.Communications.Listeners
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
     using System.Net;
     using System.Net.Sockets;
     using System.Threading;
@@ -60,7 +59,7 @@ namespace Fibula.Communications.Listeners
             options.ThrowIfNull(nameof(options));
             socketConnectionFactory.ThrowIfNull(nameof(socketConnectionFactory));
 
-            Validator.ValidateObject(options, new ValidationContext(options), validateAllProperties: true);
+            DataAnnotationsValidator.ValidateObjectRecursive(options);
 
             this.dosDefender = dosDefender;
             this.keepConnectionOpen = keepConnectionOpen;

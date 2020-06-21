@@ -23,7 +23,6 @@ namespace Fibula.Server.Standalone
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
-    using Fibula.Common.Utilities.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures;
@@ -35,7 +34,7 @@ namespace Fibula.Server.Standalone
     using Fibula.Items.ObjectsFile;
     using Fibula.Map;
     using Fibula.Map.Contracts.Abstractions;
-    using Fibula.Map.GrassOnly;
+    using Fibula.Map.SectorFiles;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;
@@ -190,8 +189,6 @@ namespace Fibula.Server.Standalone
             services.AddSingleton(Log.Logger);
             services.AddSingleton<TelemetryClient>();
 
-            services.AddSingleton<IDataAnnotationsValidator, DataAnnotationsValidator>();
-
             services.AddSingleton<IApplicationContext, ApplicationContext>();
             services.AddSingleton<IScheduler, Scheduler>();
 
@@ -318,8 +315,8 @@ namespace Fibula.Server.Standalone
             services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
 
             // Chose a type of map loader:
-            //services.AddSectorFilesMapLoader(hostingContext.Configuration);
-            services.AddGrassOnlyDummyMapLoader(hostingContext.Configuration);
+            // services.AddGrassOnlyDummyMapLoader(hostingContext.Configuration);
+            services.AddSectorFilesMapLoader(hostingContext.Configuration);
         }
 
         //private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)

@@ -61,11 +61,5 @@ namespace Fibula.Server.Contracts.Enumerations
         /// The fishing level.
         /// </summary>
         Fishing,
-
-        //// monster skills
-        // HitPoints,
-        // GoStrength,
-        // CarryStrength,
-        // FistFighting
     }
 }

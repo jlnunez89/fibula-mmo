@@ -12,14 +12,44 @@
 
 namespace Fibula.Server.Contracts.Enumerations
 {
+    /// <summary>
+    /// Enumerates the chat channel types.
+    /// </summary>
     public enum ChatChannelType : ushort
     {
+        /// <summary>
+        /// The rule violations channel.
+        /// </summary>
         RuleViolations = 0x03,
+
+        /// <summary>
+        /// The default game channel.
+        /// </summary>
         Game = 0x04,
+
+        /// <summary>
+        /// The trade channel.
+        /// </summary>
         Trade = 0x05,
+
+        /// <summary>
+        /// The real-life channel.
+        /// </summary>
         RealLife = 0x06,
+
+        /// <summary>
+        /// The help channel.
+        /// </summary>
         Help = 0x08,
+
+        /// <summary>
+        /// A private chat channel.
+        /// </summary>
         Private = 0xFFFF,
-        None = 0xAAAA
+
+        /// <summary>
+        /// No channel type.
+        /// </summary>
+        None = 0xAAAA,
     }
 }

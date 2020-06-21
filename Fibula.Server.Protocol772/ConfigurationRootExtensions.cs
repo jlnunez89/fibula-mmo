@@ -52,6 +52,7 @@ namespace Fibula.Server.Protocol772
                 { IncomingGamePacketType.LogIn, typeof(GameLogInPacketReader) },
                 { IncomingGamePacketType.LogOut, typeof(GameLogOutPacketReader) },
                 { IncomingGamePacketType.Speech, typeof(SpeechPacketReader) },
+                { IncomingGamePacketType.StopAllActions, typeof(StopAllActionsPacketReader) },
                 { IncomingGamePacketType.WalkNorth, typeof(WalkNorthPacketReader) },
                 { IncomingGamePacketType.WalkNortheast, typeof(WalkNortheastPacketReader) },
                 { IncomingGamePacketType.WalkEast, typeof(WalkEastPacketReader) },
@@ -97,6 +98,7 @@ namespace Fibula.Server.Protocol772
                 { OutgoingGamePacketType.SelfAppear, typeof(SelfAppearPacketWriter) },
                 { OutgoingGamePacketType.TextMessage, typeof(TextMessagePacketWriter) },
                 { OutgoingGamePacketType.TileUpdate, typeof(TileUpdatePacketWriter) },
+                { OutgoingGamePacketType.WalkCancel, typeof(PlayerWalkCancelPacketWriter) },
                 { OutgoingGamePacketType.WorldLight, typeof(WorldLightPacketWriter) },
             };
 

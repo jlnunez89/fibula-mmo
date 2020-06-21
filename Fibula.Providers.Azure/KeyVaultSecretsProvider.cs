@@ -14,7 +14,6 @@ namespace Fibula.Providers.Azure
 {
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
@@ -48,7 +47,7 @@ namespace Fibula.Providers.Azure
             secretsProviderOptions.ThrowIfNull(nameof(secretsProviderOptions));
             tokenProvider.ThrowIfNull(nameof(tokenProvider));
 
-            Validator.ValidateObject(secretsProviderOptions.Value, new ValidationContext(secretsProviderOptions.Value), validateAllProperties: true);
+            DataAnnotationsValidator.ValidateObjectRecursive(secretsProviderOptions.Value);
 
             this.BaseUri = new Uri(secretsProviderOptions.Value.VaultBaseUrl);
             this.keyVaultClient = new KeyVaultClient(new KeyVaultClient.AuthenticationCallback(tokenProvider.TokenCallback));

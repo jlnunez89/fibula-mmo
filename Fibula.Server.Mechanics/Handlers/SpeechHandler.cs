@@ -53,7 +53,7 @@ namespace Fibula.Server.Mechanics.Handlers
                 return null;
             }
 
-            this.Game.CreatureSpeech(client.PlayerId, speechInfo.Type, speechInfo.ChannelType, speechInfo.Content, speechInfo.Receiver);
+            this.Game.CreatureSpeech(client.PlayerId, speechInfo.SpeechType, speechInfo.ChannelType, speechInfo.Content, speechInfo.Receiver);
 
             return null;
         }

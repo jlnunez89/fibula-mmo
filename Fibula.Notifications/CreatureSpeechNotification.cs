@@ -18,8 +18,8 @@ namespace Fibula.Server.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Server.Notifications.Arguments;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
+    using Fibula.Notifications.Arguments;
+    using Fibula.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a creature speech.
@@ -58,7 +58,7 @@ namespace Fibula.Server.Notifications
                 this.Arguments.SpeechType,
                 this.Arguments.Text,
                 this.Arguments.Creature.Location,
-                this.Arguments.ChannelId,
+                this.Arguments.ChannelType,
                 (uint)DateTimeOffset.Now.ToUnixTimeMilliseconds()).YieldSingleItem();
         }
     }

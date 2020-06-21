@@ -16,6 +16,7 @@ namespace Fibula.Server.Operations
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Notifications.Arguments;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Server.Contracts.Abstractions;
@@ -23,7 +24,6 @@ namespace Fibula.Server.Operations
     using Fibula.Server.Contracts.Extensions;
     using Fibula.Server.Mechanics.Contracts.Extensions;
     using Fibula.Server.Notifications;
-    using Fibula.Server.Notifications.Arguments;
     using Fibula.Server.Operations.Contracts.Abstractions;
 
     /// <summary>

@@ -13,7 +13,6 @@
 namespace Fibula.Security.Encryption
 {
     using System;
-    using System.ComponentModel.DataAnnotations;
     using System.IO;
     using Fibula.Common.Utilities;
     using Fibula.Security.Contracts;
@@ -40,7 +39,7 @@ namespace Fibula.Security.Encryption
         {
             options.ThrowIfNull(nameof(options));
 
-            Validator.ValidateObject(options.Value, new ValidationContext(options.Value), validateAllProperties: true);
+            DataAnnotationsValidator.ValidateObjectRecursive(options.Value);
 
             this.Options = options.Value;
             this.rsaEngine = new RsaEngine();

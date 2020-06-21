@@ -17,8 +17,8 @@ namespace Fibula.Server.Notifications
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Server.Notifications.Arguments;
-    using Fibula.Server.Notifications.Contracts.Abstractions;
+    using Fibula.Notifications.Arguments;
+    using Fibula.Notifications.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a generic notification.

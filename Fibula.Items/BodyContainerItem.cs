@@ -10,13 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures
+namespace Fibula.Items
 {
     using System;
     using System.Linq;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Constants;

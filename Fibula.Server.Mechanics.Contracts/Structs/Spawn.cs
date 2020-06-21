@@ -10,9 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Structs
+namespace Fibula.Server.Mechanics.Contracts.Structs
 {
     using System;
+    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Structure that represents spawns.

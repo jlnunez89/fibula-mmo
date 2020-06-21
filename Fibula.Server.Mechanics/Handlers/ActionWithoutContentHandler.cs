@@ -77,6 +77,15 @@ namespace Fibula.Server.Mechanics.Handlers
                 case IncomingGamePacketType.LogOut:
                     this.Game.LogPlayerOut(player);
                     break;
+                case IncomingGamePacketType.StopAllActions:
+                    this.Game.CancelPlayerActions(player);
+                    break;
+                case IncomingGamePacketType.CancelAutoWalk:
+                    // this.Game.CancelPlayerActions(player, /* some type of action */);
+                    break;
+                case IncomingGamePacketType.StartOutfitChange:
+                    // this.Game.RequestPlayerOutfitChange(player);
+                    break;
             }
 
             return null;

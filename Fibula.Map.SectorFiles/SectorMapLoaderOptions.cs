@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Map.SectorFiles
+namespace Fibula.Map.SectorFiles
 {
     using System.ComponentModel.DataAnnotations;
 

@@ -10,6 +10,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="CombatantCreature.cs" />
+    <Compile Remove="Monster.cs" />
+    <Compile Remove="MonsterCreationMetadata.cs" />
+    <Compile Remove="MonsterInventory.cs" />
+    <Compile Remove="MonsterSkill.cs" />
+    <Compile Remove="MonsterType.cs" />
+    <Compile Remove="Skill.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
