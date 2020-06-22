@@ -16,6 +16,7 @@ namespace Fibula.Server.Mechanics.Handlers
     using System.Collections.Generic;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
@@ -154,7 +155,7 @@ namespace Fibula.Server.Mechanics.Handlers
             character.IsOnline = true;
 
             // TODO: possibly a friendly name conversion here.
-            client.ClientInformation.Agent = loginInfo.ClientOs.ToString();
+            client.ClientInformation.Type = Enum.IsDefined(typeof(AgentType), loginInfo.ClientOs) ? (AgentType)loginInfo.ClientOs : AgentType.Windows;
             client.ClientInformation.Version = loginInfo.ClientVersion.ToString();
 
             // TODO: pull these values from the character record.

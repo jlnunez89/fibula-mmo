@@ -17,6 +17,7 @@ namespace Fibula.Client
     using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Client.Contracts.Models;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
 
@@ -41,7 +42,7 @@ namespace Fibula.Client
             this.Connection = socketConnection;
             this.ClientInformation = new ClientInformation()
             {
-                Agent = "Unknown",
+                Type = AgentType.Undefined,
                 Version = "Unknown",
             };
         }

@@ -28,14 +28,14 @@ namespace Fibula.Communications.Contracts.Enumerations
         Disconnect = 0x14,
 
         /// <summary>
-        /// A server initiated ping.
+        /// A heartbeat response.
         /// </summary>
-        Ping = 0x1D,
+        HeartbeatResponse = 0x1D,
 
         /// <summary>
-        /// Response for a ping.
+        /// A heartbeat request.
         /// </summary>
-        Pong = 0x1E,
+        Heartbeat = 0x1E,
 
         /// <summary>
         /// Adding an unknown creature description.

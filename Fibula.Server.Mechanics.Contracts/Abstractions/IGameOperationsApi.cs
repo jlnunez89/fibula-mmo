@@ -97,5 +97,9 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
         void LogPlayerOut(IPlayer player);
 
         void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
+
+        void SendHeartbeat(IPlayer player);
+
+        void SendHeartbeatResponse(IPlayer player);
     }
 }

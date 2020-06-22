@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ClientInformation.cs" company="2Dudes">
+// <copyright file="AgentType.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,23 +10,31 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Client.Contracts.Models
+namespace Fibula.Common.Contracts.Enumerations
 {
-    using Fibula.Common.Contracts.Enumerations;
-
     /// <summary>
-    /// Class that represents inforamtion about the client.
+    /// Enumeration of the possible type of client agents.
     /// </summary>
-    public class ClientInformation
+    public enum AgentType : ushort
     {
         /// <summary>
-        /// Gets or sets the operating system.
+        /// Undefined.
         /// </summary>
-        public AgentType Type { get; set; }
+        Undefined = 0,
 
         /// <summary>
-        /// Gets or sets the version.
+        /// The Linux client.
         /// </summary>
-        public string Version { get; set; }
+        Linux = 1,
+
+        /// <summary>
+        /// The Windows client.
+        /// </summary>
+        Windows = 2,
+
+        /// <summary>
+        /// The flash client.
+        /// </summary>
+        Flash = 3,
     }
 }

@@ -51,7 +51,8 @@ namespace Fibula.Server.Protocol772
             {
                 { IncomingGamePacketType.Attack, typeof(AttackPacketReader) },
                 { IncomingGamePacketType.ChangeModes, typeof(ChangeModesPacketReader) },
-                // { IncomingGamePacketType.KeepAlive, typeof(KeepAlivePacketReader) },
+                { IncomingGamePacketType.Heartbeat, typeof(HeartbeatPacketReader) },
+                { IncomingGamePacketType.HeartbeatResponse, typeof(HeartbeatResponsePacketReader) },
                 { IncomingGamePacketType.LogIn, typeof(GameLogInPacketReader) },
                 { IncomingGamePacketType.LogOut, typeof(GameLogOutPacketReader) },
                 { IncomingGamePacketType.LookAt, typeof(LookAtPacketReader) },
@@ -90,6 +91,8 @@ namespace Fibula.Server.Protocol772
                 { OutgoingGamePacketType.TransformThing, typeof(CreatureTurnedPacketWriter) },
                 { OutgoingGamePacketType.CreatureSpeech, typeof(CreatureSpeechPacketWriter) },
                 { OutgoingGamePacketType.Disconnect, typeof(GameServerDisconnectPacketWriter) },
+                { OutgoingGamePacketType.Heartbeat, typeof(HeartbeatPacketWriter) },
+                { OutgoingGamePacketType.HeartbeatResponse, typeof(HeartbeatResponsePacketWriter) },
                 { OutgoingGamePacketType.MagicEffect, typeof(MagicEffectPacketWriter) },
                 { OutgoingGamePacketType.MapDescription, typeof(MapDescriptionPacketWriter) },
                 { OutgoingGamePacketType.MapSliceNorth, typeof(MapPartialDescriptionPacketWriter) },

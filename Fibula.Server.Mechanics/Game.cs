@@ -20,6 +20,8 @@ namespace Fibula.Server.Mechanics
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
@@ -29,7 +31,6 @@ namespace Fibula.Server.Mechanics
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
-    using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
@@ -48,7 +49,7 @@ namespace Fibula.Server.Mechanics
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for idle players and connections.
         /// </summary>
-        private static readonly TimeSpan IdleCheckDelay = TimeSpan.FromMinutes(1);
+        private static readonly TimeSpan IdleCheckDelay = TimeSpan.FromSeconds(30);
 
         /// <summary>
         /// A reference to the logger in use.
@@ -269,6 +270,26 @@ namespace Fibula.Server.Mechanics
                     amount));
         }
 
+        public void SendHeartbeat(IPlayer player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatPacket())));
+        }
+
+        public void SendHeartbeatResponse(IPlayer player)
+        {
+            if (player == null)
+            {
+                return;
+            }
+
+            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatResponsePacket())));
+        }
+
         private void DispatchOperation(IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
         {
             IOperation newOperation = this.operationFactory.Create(operationArguments);
@@ -310,6 +331,8 @@ namespace Fibula.Server.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
+                        this.SendHeartbeat(player);
+
                         continue;
                     }
 

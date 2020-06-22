@@ -28,14 +28,14 @@ namespace Fibula.Communications.Contracts.Enumerations
         LogOut = 0x14,
 
         /// <summary>
-        /// Keep alive check packet.
+        /// A heartbeat response.
         /// </summary>
-        KeepAliveCheck = 0x1D,
+        HeartbeatResponse = 0x1D,
 
         /// <summary>
-        /// Keep alive packet.
+        /// A heartbeat request.
         /// </summary>
-        KeepAlive = 0x1E,
+        Heartbeat = 0x1E,
 
         /// <summary>
         /// Move with autowalk.

@@ -25,7 +25,6 @@ namespace Fibula.Server.Standalone
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
-    using Fibula.Communications.Packets.Incoming;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;

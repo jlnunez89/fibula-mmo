@@ -69,22 +69,25 @@ namespace Fibula.Server.Mechanics.Handlers
                 return null;
             }
 
-            // player.ClearAllLocationBasedOperations();
-            // this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
-
             switch (actionInfo.Action)
             {
-                case IncomingGamePacketType.LogOut:
-                    this.Game.LogPlayerOut(player);
-                    break;
-                case IncomingGamePacketType.StopAllActions:
-                    this.Game.CancelPlayerActions(player);
-                    break;
                 case IncomingGamePacketType.CancelAutoWalk:
                     // this.Game.CancelPlayerActions(player, /* some type of action */);
                     break;
+                case IncomingGamePacketType.HeartbeatResponse:
+                    // NO-OP.
+                    break;
+                case IncomingGamePacketType.Heartbeat:
+                    this.Game.SendHeartbeatResponse(player);
+                    break;
+                case IncomingGamePacketType.LogOut:
+                    this.Game.LogPlayerOut(player);
+                    break;
                 case IncomingGamePacketType.StartOutfitChange:
                     // this.Game.RequestPlayerOutfitChange(player);
+                    break;
+                case IncomingGamePacketType.StopAllActions:
+                    this.Game.CancelPlayerActions(player);
                     break;
             }
 

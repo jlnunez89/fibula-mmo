@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IGame.cs" company="2Dudes">
+// <copyright file="HeartbeatPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,21 +10,19 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Abstractions
+namespace Fibula.Communications.Packets.Incoming
 {
-    using Fibula.Creatures.Contracts.Abstractions;
-    using Microsoft.Extensions.Hosting;
+    using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for the game service.
+    /// Class that represents a heartbeat packet routed to the game server.
     /// </summary>
-    public interface IGame : IHostedService, IGameOperationsApi
+    public sealed class HeartbeatPacket : IActionWithoutContentInfo
     {
         /// <summary>
-        /// Gets the game world's information.
+        /// Gets the action to do.
         /// </summary>
-        IWorldInformation WorldInfo { get; }
-
-        // void OnPlayerInventoryChanged(IInventory inventory, Slot slot, IItem item);
+        public IncomingGamePacketType Action => IncomingGamePacketType.Heartbeat;
     }
 }
