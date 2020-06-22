@@ -12,9 +12,9 @@
 
 namespace Fibula.Notifications.Arguments
 {
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// public class that represents arguments for an animated text notification.

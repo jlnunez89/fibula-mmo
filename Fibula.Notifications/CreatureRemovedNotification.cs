@@ -10,17 +10,17 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications
+namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a notification for a creature being removed.

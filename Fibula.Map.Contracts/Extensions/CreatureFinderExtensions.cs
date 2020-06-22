@@ -10,15 +10,15 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Extensions
+namespace Fibula.Map.Contracts.Extensions
 {
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Helper class that provides extensions for the <see cref="ICreatureFinder"/> implementations.
@@ -87,7 +87,7 @@ namespace Fibula.Server.Contracts.Extensions
         /// <returns>A collection of connections.</returns>
         public static IEnumerable<IPlayer> PlayersThatCanSee(this ICreatureFinder creatureFinder, ITileAccessor tileAccessor, params Location[] locations)
         {
-            var creaturesThatCanSee = CreaturesThatCanSee(creatureFinder, tileAccessor, locations);
+            var creaturesThatCanSee = creatureFinder.CreaturesThatCanSee(tileAccessor, locations);
 
             return creaturesThatCanSee.OfType<IPlayer>();
         }

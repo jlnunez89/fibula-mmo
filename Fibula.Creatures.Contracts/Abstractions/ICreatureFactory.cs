@@ -12,7 +12,7 @@
 
 namespace Fibula.Creatures.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for an <see cref="ICreature"/> factory.

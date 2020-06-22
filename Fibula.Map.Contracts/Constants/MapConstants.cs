@@ -12,8 +12,8 @@
 
 namespace Fibula.Map.Contracts.Constants
 {
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Structs;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Structs;
 
     /// <summary>
     /// Static class that contains constants regarding the map.

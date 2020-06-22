@@ -14,12 +14,12 @@ namespace OpenTibia.Server.Monsters.MonFiles
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.MonFiles;
+    using Fibula.Parsing.CipFiles;
     using Microsoft.Extensions.Options;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
-    using OpenTibia.Server.Monsters;
-    using OpenTibia.Server.Parsing.CipFiles;
     using Serilog;
 
     /// <summary>

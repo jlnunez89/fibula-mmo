@@ -13,11 +13,11 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Interface for all creatures in the game.

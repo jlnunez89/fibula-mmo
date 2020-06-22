@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Spawns.MonstersDbFile
+namespace Fibula.Creatures.MonstersDbFile
 {
     using System.ComponentModel.DataAnnotations;
 

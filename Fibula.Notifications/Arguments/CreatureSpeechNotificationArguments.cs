@@ -12,9 +12,9 @@
 
 namespace Fibula.Notifications.Arguments
 {
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents arguments for the creature speech notification.

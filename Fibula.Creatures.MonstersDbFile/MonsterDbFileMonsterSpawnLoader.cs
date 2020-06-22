@@ -9,15 +9,15 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Spawns.MonstersDbFile
+namespace Fibula.Creatures.MonstersDbFile
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
+    using Fibula.Common.Contracts.Structs;
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Microsoft.Extensions.Options;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>

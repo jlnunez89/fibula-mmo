@@ -10,12 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts
+namespace Fibula.Common.Contracts
 {
     using System;
     using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a converter for a location.

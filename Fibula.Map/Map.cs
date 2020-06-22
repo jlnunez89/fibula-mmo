@@ -18,15 +18,15 @@ namespace Fibula.Map
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Extensions;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Extensions;
-    using Fibula.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>

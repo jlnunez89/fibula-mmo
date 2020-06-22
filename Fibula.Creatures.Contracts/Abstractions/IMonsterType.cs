@@ -13,6 +13,7 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
 

@@ -14,10 +14,10 @@ namespace Fibula.Items.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
     using Serilog;
 
     /// <summary>

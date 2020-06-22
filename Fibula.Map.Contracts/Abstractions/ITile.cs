@@ -14,11 +14,11 @@ namespace Fibula.Map.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for all tiles.

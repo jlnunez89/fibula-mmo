@@ -15,12 +15,12 @@ namespace Fibula.Map.GrassOnly
     using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Delegates;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a dummy map loader that yields all grass tiles.

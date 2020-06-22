@@ -14,14 +14,14 @@ namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
-    using Fibula.Server;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>

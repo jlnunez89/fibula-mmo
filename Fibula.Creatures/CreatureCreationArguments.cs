@@ -12,9 +12,9 @@
 
 namespace Fibula.Creatures
 {
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents creation arguments for creatures.

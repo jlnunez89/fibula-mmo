@@ -13,8 +13,8 @@
 namespace Fibula.Items.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Items.Contracts.Delegates;
-    using Fibula.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for <see cref="IItem"/>s that are containers for other <see cref="IItem"/>s.

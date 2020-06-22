@@ -14,10 +14,9 @@ namespace Fibula.Notifications.Arguments
 {
     using System;
     using System.Buffers;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Structs;
-    using Fibula.Server.Notifications;
 
     /// <summary>
     /// Class that represents arguments for the <see cref="TileUpdatedNotification"/>.

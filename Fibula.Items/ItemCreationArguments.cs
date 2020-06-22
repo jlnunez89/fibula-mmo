@@ -12,7 +12,7 @@
 
 namespace Fibula.Items
 {
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
 
     /// <summary>
     /// Class that implements <see cref="IThingCreationArguments"/>, for the creation of an item.

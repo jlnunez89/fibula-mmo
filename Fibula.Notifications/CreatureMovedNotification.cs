@@ -10,11 +10,13 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications
+namespace Fibula.Notifications
 {
     using System;
     using System.Buffers;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
@@ -23,8 +25,6 @@ namespace Fibula.Server.Notifications
     using Fibula.Map.Contracts.Constants;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a notification for when a creature has moved.

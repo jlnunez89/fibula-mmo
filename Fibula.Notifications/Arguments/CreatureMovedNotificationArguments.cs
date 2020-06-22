@@ -12,8 +12,8 @@
 
 namespace Fibula.Notifications.Arguments
 {
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents arguments for the creature moving notification.

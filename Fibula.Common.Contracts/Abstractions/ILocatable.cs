@@ -10,9 +10,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Structs;
+    using Fibula.Common.Contracts.Structs;
 
     /// <summary>
     /// Interface for all entities with a location.

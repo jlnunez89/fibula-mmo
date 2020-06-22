@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Notifications
+namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;

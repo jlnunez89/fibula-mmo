@@ -14,11 +14,11 @@ namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents an <see cref="IItem"/> factory.

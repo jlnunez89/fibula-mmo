@@ -15,6 +15,9 @@ namespace Fibula.Map
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
@@ -23,9 +26,6 @@ namespace Fibula.Map
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>

@@ -10,9 +10,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Extensions
+namespace Fibula.Common.Contracts.Extensions
 {
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Static class that contains extension methods for a <see cref="Direction"/>.

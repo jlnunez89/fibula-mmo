@@ -10,12 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Creatures.Contracts.Abstractions
+namespace Fibula.Creatures.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for all monsters.
     /// </summary>
-    public interface IMonster : ICombatant
+    public interface IMonster : ICreature
     {
         /// <summary>
         /// The default attack range for melee figthing in monsters.

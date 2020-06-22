@@ -17,13 +17,13 @@ namespace Fibula.Map.SectorFiles
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Delegates;
     using Fibula.Parsing.CipFiles;
-    using Fibula.Server.Contracts.Structs;
     using Microsoft.Extensions.Options;
     using Serilog;
 

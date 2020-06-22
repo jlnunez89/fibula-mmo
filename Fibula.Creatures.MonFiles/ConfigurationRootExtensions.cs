@@ -11,6 +11,7 @@
 
 namespace OpenTibia.Server.Monsters.MonFiles
 {
+    using Fibula.Creatures.MonFiles;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using OpenTibia.Common.Utilities;

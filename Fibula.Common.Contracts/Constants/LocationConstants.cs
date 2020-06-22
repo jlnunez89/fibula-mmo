@@ -10,9 +10,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Constants
+namespace Fibula.Common.Contracts.Constants
 {
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Static class that containts constants related to locations.

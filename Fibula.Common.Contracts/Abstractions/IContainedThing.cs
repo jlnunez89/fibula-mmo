@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for all entities that keep track of a parent container.

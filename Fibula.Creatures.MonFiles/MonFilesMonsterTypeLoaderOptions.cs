@@ -9,7 +9,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Monsters.MonFiles
+using OpenTibia.Server.Monsters.MonFiles;
+
+namespace Fibula.Creatures.MonFiles
 {
     using System.ComponentModel.DataAnnotations;
 

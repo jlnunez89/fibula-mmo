@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
     /// <summary>
     /// Interface for arguments used during creation of things.

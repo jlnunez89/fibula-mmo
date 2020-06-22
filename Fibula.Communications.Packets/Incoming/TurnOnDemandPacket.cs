@@ -12,8 +12,8 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Communications.Packets.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a turn packet routed to the game server.

@@ -10,9 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Delegates
+namespace Fibula.Common.Contracts.Delegates
 {
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Common.Contracts;
+    using Fibula.Common.Contracts.Abstractions;
 
     /// <summary>
     /// Delegate for <see cref="IThing"/> state changing.

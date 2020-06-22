@@ -12,8 +12,8 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Interface for a thing movement information.

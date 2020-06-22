@@ -12,9 +12,9 @@
 
 namespace Fibula.Communications.Packets.Outgoing
 {
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
 
     public class CreatureMovedPacket : IOutboundPacket
     {

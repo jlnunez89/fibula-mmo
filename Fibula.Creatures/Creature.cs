@@ -15,16 +15,16 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using Fibula.Common;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Parsing.Contracts.Abstractions;
-    using Fibula.Server;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
     using Serilog;
 
     /// <summary>
@@ -442,16 +442,6 @@ namespace Fibula.Creatures
 
             return null;
         }
-
-        ///// <summary>
-        ///// Gets the description of this creature as seen by the given player.
-        ///// </summary>
-        ///// <param name="forPlayer">The player as which to get the description.</param>
-        ///// <returns>The description string.</returns>
-        //public override string GetDescription(IPlayer forPlayer)
-        //{
-        //    return $"{this.Article} {this.Name}.";
-        //}
 
         /// <summary>
         /// Provides a string describing the current creature for logging purposes.

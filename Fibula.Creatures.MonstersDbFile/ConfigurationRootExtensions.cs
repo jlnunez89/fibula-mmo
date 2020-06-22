@@ -9,12 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Spawns.MonstersDbFile
+namespace Fibula.Creatures.MonstersDbFile
 {
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.

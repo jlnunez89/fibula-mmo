@@ -15,12 +15,12 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents an inventory for players.

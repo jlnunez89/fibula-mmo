@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Structs
+namespace Fibula.Common.Contracts.Structs
 {
     using System;
-    using Fibula.Server.Contracts.Constants;
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Constants;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Structure for all locations in the game.

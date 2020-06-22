@@ -13,9 +13,9 @@
 namespace Fibula.Map.Contracts.Abstractions
 {
     using System.Buffers;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Interface for map descriptors.

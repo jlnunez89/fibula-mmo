@@ -12,7 +12,7 @@
 
 namespace Fibula.Map.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Structs;
+    using Fibula.Common.Contracts.Structs;
 
     /// <summary>
     /// Interface for a tile accessor.

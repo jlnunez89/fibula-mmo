@@ -10,10 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts
+namespace Fibula.Common.Contracts
 {
     using System;
-    using Fibula.Server.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents event arguments for a <see cref="IThing"/> state changed event.

@@ -14,13 +14,13 @@ namespace Fibula.Items
 {
     using System;
     using System.Linq;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Constants;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Constants;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a container item for body slots.

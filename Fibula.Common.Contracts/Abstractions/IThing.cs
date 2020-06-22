@@ -10,9 +10,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Delegates;
+    using Fibula.Common.Contracts.Delegates;
 
     /// <summary>
     /// Interface for all things in the game.

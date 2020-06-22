@@ -16,10 +16,10 @@ namespace Fibula.Creatures
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents all players in the game.

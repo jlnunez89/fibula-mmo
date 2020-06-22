@@ -10,10 +10,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Creatures.Contracts.Abstractions
+namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Interface for an <see cref="IMonsterSpawnLoader"/> loader.

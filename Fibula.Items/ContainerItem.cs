@@ -15,13 +15,13 @@ namespace Fibula.Items
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Delegates;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>

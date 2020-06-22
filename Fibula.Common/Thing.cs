@@ -10,13 +10,13 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server
+namespace Fibula.Common
 {
+    using Fibula.Common.Contracts;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Delegates;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
-    using Fibula.Server.Contracts;
-    using Fibula.Server.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Delegates;
-    using Fibula.Server.Contracts.Structs;
 
     /// <summary>
     /// Class that represents all things in the game.

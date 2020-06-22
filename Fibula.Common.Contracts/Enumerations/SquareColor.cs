@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Enumerations
+namespace Fibula.Common.Contracts.Enumerations
 {
     /// <summary>
     /// Enumerates the possible colors of the creature square.

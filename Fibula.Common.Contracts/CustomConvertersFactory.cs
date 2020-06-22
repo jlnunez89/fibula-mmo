@@ -10,11 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts
+namespace Fibula.Common.Contracts
 {
     using System;
     using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Server.Contracts.Structs;
+    using Fibula.Common.Contracts.Structs;
 
     /// <summary>
     /// Static class that represents a factory for converters.
