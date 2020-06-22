@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Contracts.Structs
+namespace Fibula.Creatures.Contracts.Structs
 {
     using System;
     using Fibula.Common.Contracts.Structs;
