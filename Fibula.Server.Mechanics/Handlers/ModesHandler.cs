@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="LookAtHandler.cs" company="2Dudes">
+// <copyright file="ModesHandler.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -13,36 +13,27 @@
 namespace Fibula.Server.Mechanics.Handlers
 {
     using System.Collections.Generic;
-    using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>
-    /// Class that represents a look at handler for the game server.
+    /// Class that represents a handler for changing modes.
     /// </summary>
-    public class LookAtHandler : GameHandler
+    public class ModesHandler : GameHandler
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="LookAtHandler"/> class.
+        /// Initializes a new instance of the <see cref="ModesHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="gameInstance">A reference to the game instance.</param>
-        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        public LookAtHandler(ILogger logger, IGame gameInstance, ICreatureFinder creatureFinder)
+        public ModesHandler(ILogger logger, IGame gameInstance)
             : base(logger, gameInstance)
         {
-            this.CreatureFinder = creatureFinder;
         }
-
-        /// <summary>
-        /// Gets the creature finder to use.
-        /// </summary>
-        public ICreatureFinder CreatureFinder { get; }
 
         /// <summary>
         /// Handles the contents of a network message.
@@ -55,21 +46,14 @@ namespace Fibula.Server.Mechanics.Handlers
             incomingPacket.ThrowIfNull(nameof(incomingPacket));
             client.ThrowIfNull(nameof(client));
 
-            if (!(incomingPacket is ILookAtInfo lookAtInfo))
+            if (!(incomingPacket is IModesInfo modesInfo))
             {
-                this.Logger.Error($"Expected packet info of type {nameof(ILookAtInfo)} but got {incomingPacket.GetType().Name}.");
+                this.Logger.Error($"Expected packet info of type {nameof(IModesInfo)} but got {incomingPacket.GetType().Name}.");
 
                 return null;
             }
 
-            if (!(this.CreatureFinder.FindCreatureById(client.PlayerId) is IPlayer player))
-            {
-                this.Logger.Warning($"Client's associated player could not be found. [Id={client.PlayerId}]");
-
-                return null;
-            }
-
-            this.Game.DescribeFor(lookAtInfo.ThingId, lookAtInfo.Location, lookAtInfo.StackPosition, player);
+            this.Game.CreatureChangeModes(client.PlayerId, modesInfo.FightMode, modesInfo.ChaseMode, modesInfo.SafeModeOn);
 
             return null;
         }

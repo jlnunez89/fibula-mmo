@@ -18,6 +18,7 @@ namespace Fibula.Server.Mechanics
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
@@ -28,6 +29,7 @@ namespace Fibula.Server.Mechanics
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
+    using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
     using Fibula.Server.Mechanics.Contracts.Abstractions;
@@ -107,12 +109,13 @@ namespace Fibula.Server.Mechanics
         public Game(
             ILogger logger,
             IMapLoader mapLoader,
-            IMapDescriptor mapDescriptor,           // TODO: declare in-house
-            ITileAccessor tileAccessor,             // TODO: declare in-house
-            ICreatureManager creatureManager,       // TODO: declare in-house
-            IItemFactory itemFactory,               // TODO: declare in-house
-            ICreatureFactory creatureFactory,       // TODO: declare in-house
-            IOperationFactory operationFactory,     // TODO: declare in-house
+            IMapDescriptor mapDescriptor,
+            ITileAccessor tileAccessor,
+            ICreatureManager creatureManager,
+            IItemFactory itemFactory,
+            ICreatureFactory creatureFactory,
+            IOperationFactory operationFactory,
+            IContainerManager containerManager,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -123,6 +126,7 @@ namespace Fibula.Server.Mechanics
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
+            containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -132,9 +136,8 @@ namespace Fibula.Server.Mechanics
             this.itemFactory = itemFactory;
             this.creatureFactory = creatureFactory;
             this.operationFactory = operationFactory;
+            this.containerManager = containerManager;
             this.scheduler = scheduler;
-
-            this.containerManager = new ContainerManager(this.logger, this.creatureManager, this.scheduler);
 
             // Load some catalogs.
 
@@ -192,9 +195,31 @@ namespace Fibula.Server.Mechanics
             return Task.CompletedTask;
         }
 
+        public void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
+        {
+            this.DispatchOperation(new ChangeModesOperationCreationArguments(creatureId, fightMode, chaseMode, safeModeOn));
+        }
+
         public void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "")
         {
             this.DispatchOperation(new SpeechOperationCreationArguments(creatureId, speechType, channelType, content, receiver));
+        }
+
+        public void CreatureTurn(uint requestorId, ICreature creature, Direction direction)
+        {
+            this.DispatchOperation(new TurnToDirectionOperationCreationArguments(requestorId, creature, direction));
+        }
+
+        /// <summary>
+        /// Attempts to get the description of a thing.
+        /// </summary>
+        /// <param name="thingId"></param>
+        /// <param name="location"></param>
+        /// <param name="stackPosition"></param>
+        /// <param name="player"></param>
+        public void DescribeFor(ushort thingId, Location location, byte stackPosition, IPlayer player)
+        {
+            this.DispatchOperation(new DescribeThingOperationCreationArguments(thingId, location, stackPosition, player));
         }
 
         public void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata)
@@ -401,11 +426,11 @@ namespace Fibula.Server.Mechanics
 
                 sw.Stop();
 
-                this.logger.Verbose($"Processed event {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
+                this.logger.Verbose($"Processed {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
             catch (Exception ex)
             {
-                this.logger.Error($"Error in event {evt.GetType().Name} with id: {evt.EventId}: {ex.Message}.");
+                this.logger.Error($"Error in {evt.GetType().Name} with id: {evt.EventId}: {ex.Message}.");
                 this.logger.Error(ex.StackTrace);
             }
 

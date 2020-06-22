@@ -25,6 +25,7 @@ namespace Fibula.Server.Standalone
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
+    using Fibula.Communications.Packets.Incoming;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
@@ -34,6 +35,7 @@ namespace Fibula.Server.Standalone
     using Fibula.Items.ObjectsFile;
     using Fibula.Map;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.GrassOnly;
     using Fibula.Map.SectorFiles;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
@@ -194,13 +196,10 @@ namespace Fibula.Server.Standalone
 
             services.AddSingleton<IGame, Game>();
 
-            services.AddProtocol772GameComponents(hostingContext.Configuration);
-            services.AddProtocol772GatewayComponents(hostingContext.Configuration);
-
             services.AddSimpleDosDefender(hostingContext.Configuration);
             services.AddLocalPemFileRsaDecryptor(hostingContext.Configuration);
 
-            ConfigureHandlers(hostingContext, services);
+            services.AddHandlers();
 
             //ConfigureEventRules(hostingContext, services);
 
@@ -219,20 +218,28 @@ namespace Fibula.Server.Standalone
             ConfigureHostedServices(services, hostingContext.Configuration);
 
             //ConfigureExtraServices(hostingContext, services);
+
+            // Choose a server version here.
+            services.AddProtocol772GameComponents(hostingContext.Configuration);
+            services.AddProtocol772GatewayComponents(hostingContext.Configuration);
         }
 
-        private static void ConfigureHandlers(HostBuilderContext hostingContext, IServiceCollection services)
+        private static void AddHandlers(this IServiceCollection services)
         {
             // Add all handlers
             services.TryAddSingleton<DefaultRequestHandler>();
 
             var packetTypeToHandlersMap = new Dictionary<Type, Type>()
             {
+                // { typeof(IAttackInfo), typeof(AttackHandler) },
                 { typeof(IActionWithoutContentInfo), typeof(ActionWithoutContentHandler) },
                 { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
                 { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },
-                { typeof(IWalkOnDemandInfo), typeof(WalkOnDemandHandler) },
+                { typeof(ILookAtInfo), typeof(LookAtHandler) },
+                { typeof(IModesInfo), typeof(ModesHandler) },
                 { typeof(ISpeechInfo), typeof(SpeechHandler) },
+                { typeof(ITurnOnDemandInfo), typeof(TurnOnDemandHandler) },
+                { typeof(IWalkOnDemandInfo), typeof(WalkOnDemandHandler) },
             };
 
             foreach (var (packetType, type) in packetTypeToHandlersMap)
@@ -303,6 +310,8 @@ namespace Fibula.Server.Standalone
         private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)
         {
             services.AddSingleton<IItemFactory, ItemFactory>();
+
+            services.AddSingleton<IContainerManager, ContainerManager>();
 
             // Chose a type of item types (catalog) loader:
             services.AddObjectsFileItemTypeLoader(hostingContext.Configuration);

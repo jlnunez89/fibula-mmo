@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Enumerations
+namespace Fibula.Common.Contracts.Enumerations
 {
     /// <summary>
     /// Enumeration of the possible fighting modes.

@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Operations.Actions
+namespace Fibula.Server.Operations
 {
     using System;
     using Fibula.Creatures.Contracts.Abstractions;

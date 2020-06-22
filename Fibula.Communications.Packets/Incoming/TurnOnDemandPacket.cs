@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="WalkOnDemandPacket.cs" company="2Dudes">
+// <copyright file="TurnOnDemandPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -16,15 +16,15 @@ namespace Fibula.Communications.Packets.Incoming
     using Fibula.Server.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents a walk packet routed to the game server.
+    /// Class that represents a turn packet routed to the game server.
     /// </summary>
-    public sealed class WalkOnDemandPacket : IWalkOnDemandInfo
+    public sealed class TurnOnDemandPacket : ITurnOnDemandInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WalkOnDemandPacket"/> class.
+        /// Initializes a new instance of the <see cref="TurnOnDemandPacket"/> class.
         /// </summary>
-        /// <param name="direction">The direction to walk to.</param>
-        public WalkOnDemandPacket(Direction direction)
+        /// <param name="direction">The direction to turn to.</param>
+        public TurnOnDemandPacket(Direction direction)
         {
             this.Direction = direction;
         }

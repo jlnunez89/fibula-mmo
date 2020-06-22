@@ -28,6 +28,11 @@ namespace Fibula.Communications.Contracts.Enumerations
         LogOut = 0x14,
 
         /// <summary>
+        /// Keep alive check packet.
+        /// </summary>
+        KeepAliveCheck = 0x1D,
+
+        /// <summary>
         /// Keep alive packet.
         /// </summary>
         KeepAlive = 0x1E,
@@ -35,7 +40,7 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Move with autowalk.
         /// </summary>
-        AutoMove = 0x64,
+        AutoWalk = 0x64,
 
         /// <summary>
         /// Walking north.
@@ -138,9 +143,9 @@ namespace Fibula.Communications.Contracts.Enumerations
         ItemUseOn = 0x83,
 
         /// <summary>
-        /// Use an item on the battle window.
+        /// Use an item on a creature in the battle window.
         /// </summary>
-        ItemBattleWindow = 0x84,
+        ItemUseThroughBattleWindow = 0x84,
 
         /// <summary>
         /// Rotate an item.
@@ -171,6 +176,11 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// Look at something.
         /// </summary>
         LookAt = 0x8C,
+
+        /// <summary>
+        /// Look at a creature in the battle window.
+        /// </summary>
+        LookThroughBattleWindow = 0x8D,
 
         /// <summary>
         /// Speech.
@@ -282,6 +292,11 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// </summary>
         /// <remarks>Happens when you store more than container max size.</remarks>
         ResendContainer = 0xCA,
+
+        /// <summary>
+        /// Request to find something in a container.
+        /// </summary>
+        FindInContainer = 0xCC,
 
         /// <summary>
         /// Request outfit change.

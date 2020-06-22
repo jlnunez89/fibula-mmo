@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ChaseMode.cs" company="2Dudes">
+// <copyright file="ITurnOnDemandInfo.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,26 +10,19 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Enumerations
+namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
+    using Fibula.Communications.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Enumerations;
+
     /// <summary>
-    /// Enumeration of the possible chasing modes.
+    /// Interface for turning on demand information supplied on a game server request.
     /// </summary>
-    public enum ChaseMode : byte
+    public interface ITurnOnDemandInfo : IIncomingPacket
     {
         /// <summary>
-        /// Does not chase the target.
+        /// Gets the direction to turn to.
         /// </summary>
-        Stand = 0x00,
-
-        /// <summary>
-        /// Chases the target closely.
-        /// </summary>
-        Chase = 0x01,
-
-        /// <summary>
-        /// Maintains a constant distance to the target.
-        /// </summary>
-        KeepDistance = 0x02,
+        Direction Direction { get; }
     }
 }

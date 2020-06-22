@@ -285,7 +285,7 @@ namespace Fibula.Server.Operations
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
             }
         }
 
@@ -376,7 +376,7 @@ namespace Fibula.Server.Operations
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
             }
         }
 
@@ -565,7 +565,7 @@ namespace Fibula.Server.Operations
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
                 }
             }
             else if (thingMoving is IItem item)
@@ -607,7 +607,7 @@ namespace Fibula.Server.Operations
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
                 }
 
                 // TODO: Check if the item is an IContainerItem and, if it got moved, check if there are players that have it open that now are too far away from it.

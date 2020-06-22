@@ -22,8 +22,6 @@
     <Compile Remove="Handlers\ContainerCloseHandler.cs" />
     <Compile Remove="Handlers\ContainerMoveUpHandler.cs" />
     <Compile Remove="Handlers\KeepAliveRequestHandler.cs" />
-    <Compile Remove="Handlers\LogOutHandler.cs" />
-    <Compile Remove="Handlers\LookAtHandler.cs" />
     <Compile Remove="Handlers\MoveThingHandler.cs" />
     <Compile Remove="Handlers\RotateItemHandler.cs" />
     <Compile Remove="Handlers\SetModeHandler.cs" />
@@ -31,7 +29,6 @@
     <Compile Remove="Handlers\TurnEastHandler.cs" />
     <Compile Remove="Handlers\TurnNorthHandler.cs" />
     <Compile Remove="Handlers\TurnSouthHandler.cs" />
-    <Compile Remove="Handlers\TurnToDirectionHandler.cs" />
     <Compile Remove="Handlers\TurnWestHandler.cs" />
     <Compile Remove="Handlers\UseItemHandler.cs" />
     <Compile Remove="Handlers\UseItemOnHandler.cs" />

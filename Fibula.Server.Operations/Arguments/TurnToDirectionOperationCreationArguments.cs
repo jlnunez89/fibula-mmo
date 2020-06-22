@@ -15,6 +15,7 @@ namespace Fibula.Server.Operations.Arguments
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Server.Operations;
     using Fibula.Server.Operations.Contracts.Abstractions;
     using Fibula.Server.Operations.Contracts.Enumerations;
 
@@ -26,13 +27,14 @@ namespace Fibula.Server.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnToDirectionOperationCreationArguments"/> class.
         /// </summary>
+        /// <param name="requestorId"></param>
         /// <param name="creature"></param>
         /// <param name="direction"></param>
-        public TurnToDirectionOperationCreationArguments(ICreature creature, Direction direction)
+        public TurnToDirectionOperationCreationArguments(uint requestorId, ICreature creature, Direction direction)
         {
             creature.ThrowIfNull(nameof(creature));
 
-            this.RequestorId = creature.Id;
+            this.RequestorId = requestorId;
             this.Creature = creature;
             this.Direction = direction;
         }

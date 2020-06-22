@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IModesInfo.cs" company="2Dudes">
+// <copyright file="ChaseMode.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,29 +10,26 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Communications.Packets.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Enumerations
 {
-    using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
-
     /// <summary>
-    /// Interface for fight and chase modes information.
+    /// Enumeration of the possible chasing modes.
     /// </summary>
-    public interface IModesInfo : IIncomingPacket
+    public enum ChaseMode : byte
     {
         /// <summary>
-        /// Gets the fight mode.
+        /// Does not chase the target.
         /// </summary>
-        FightMode FightMode { get; }
+        Stand = 0x00,
 
         /// <summary>
-        /// Gets the chase mode.
+        /// Chases the target closely.
         /// </summary>
-        ChaseMode ChaseMode { get; }
+        Chase = 0x01,
 
         /// <summary>
-        /// Gets a value indicating whether the safe mode is on.
+        /// Maintains a constant distance to the target.
         /// </summary>
-        bool SafeModeOn { get; }
+        KeepDistance = 0x02,
     }
 }

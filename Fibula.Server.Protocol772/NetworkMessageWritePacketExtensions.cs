@@ -60,28 +60,6 @@ namespace Fibula.Server.Protocol772
         //}
 
         ///// <summary>
-        ///// Writes the contents of the <see cref="CharacterListPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WriteCharacterListPacket(this INetworkMessage message, CharacterListPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
-
-        //    message.AddByte((byte)packet.Characters.Count());
-
-        //    foreach (CharacterInfo character in packet.Characters)
-        //    {
-        //        message.AddString(character.Name);
-        //        message.AddString(character.World);
-        //        message.AddBytes(character.Ip);
-        //        message.AddUInt16(character.Port);
-        //    }
-
-        //    message.AddUInt16(packet.PremiumDaysLeft);
-        //}
-
-        ///// <summary>
         ///// Writes the contents of the <see cref="ClearOnlinePlayersResultPacket"/> into the message.
         ///// </summary>
         ///// <param name="message">The message to write to.</param>
@@ -149,31 +127,6 @@ namespace Fibula.Server.Protocol772
         //        message.AddString(house.WinnerName);
         //        message.AddUInt32(house.Bid);
         //    }
-        //}
-
-        ///// <summary>
-        ///// Writes the contents of the <see cref="PlayerInventoryClearSlotPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WriteInventoryClearSlotPacket(this INetworkMessage message, PlayerInventoryClearSlotPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
-
-        //    message.AddByte((byte)packet.Slot);
-        //}
-
-        ///// <summary>
-        ///// Writes the contents of the <see cref="PlayerInventorySetSlotPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WriteInventorySetSlotPacket(this INetworkMessage message, PlayerInventorySetSlotPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
-
-        //    message.AddByte((byte)packet.Slot);
-        //    message.AddItem(packet.Item);
         //}
 
         ///// <summary>
@@ -279,18 +232,6 @@ namespace Fibula.Server.Protocol772
         //    }
 
         //    message.AddByte((byte)(packet.RecentlyActivatedPremmium ? 0x01 : 0x00));
-        //}
-
-        ///// <summary>
-        ///// Writes the contents of the <see cref="PlayerWalkCancelPacket"/> into the message.
-        ///// </summary>
-        ///// <param name="message">The message to write to.</param>
-        ///// <param name="packet">The packet to write in the message.</param>
-        //public static void WritePlayerWalkCancelPacket(this INetworkMessage message, PlayerWalkCancelPacket packet)
-        //{
-        //    packet.ThrowIfNull(nameof(packet));
-
-        //    message.AddByte((byte)packet.ResultingDirection);
         //}
 
         ///// <summary>

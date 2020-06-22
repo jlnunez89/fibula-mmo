@@ -10,8 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Communications.Contracts.Abstractions.RequestInfo
+namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
+    using Fibula.Communications.Contracts.Abstractions;
+
     /// <summary>
     /// Interface that represents attack information.
     /// </summary>

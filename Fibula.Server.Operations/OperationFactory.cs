@@ -94,6 +94,17 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
+                case OperationType.ChangeModes:
+                    if (arguments is ChangeModesOperationCreationArguments changeModesOpArguments)
+                    {
+                        return new ChangeModesOperation(
+                            changeModesOpArguments.RequestorId,
+                            changeModesOpArguments.FightMode,
+                            changeModesOpArguments.ChaseMode,
+                            changeModesOpArguments.IsSafeModeOn);
+                    }
+
+                    break;
                 //case OperationType.ContainerOpen:
                 //    if (arguments is OpenContainerOperationCreationArguments openContainerOpArgs)
                 //    {
@@ -134,6 +145,17 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
+                case OperationType.DescribeThing:
+                    if (arguments is DescribeThingOperationCreationArguments describeThingOpArgs)
+                    {
+                        return new DescribeThingOperation(
+                                describeThingOpArgs.ThingId,
+                                describeThingOpArgs.Location,
+                                describeThingOpArgs.StackPosition,
+                                describeThingOpArgs.PlayerToDescribeFor);
+                    }
+
+                    break;
                 //case OperationType.DeleteItem:
                 //    if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
                 //    {
@@ -233,13 +255,13 @@ namespace Fibula.Server.Operations
                 //    }
 
                 //    break;
-                //case OperationType.Turn:
-                //    if (arguments is TurnToDirectionOperationCreationArguments turnToDirectionOpArgs)
-                //    {
-                //        return new TurnToDirectionOperation(turnToDirectionOpArgs.Creature, turnToDirectionOpArgs.Direction);
-                //    }
+                case OperationType.Turn:
+                    if (arguments is TurnToDirectionOperationCreationArguments turnToDirectionOpArgs)
+                    {
+                        return new TurnToDirectionOperation(turnToDirectionOpArgs.Creature, turnToDirectionOpArgs.Direction);
+                    }
 
-                //    break;
+                    break;
                 //case OperationType.UseItem:
                 //    if (arguments is UseItemOperationCreationArguments useItemOpArgs)
                 //    {

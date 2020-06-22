@@ -12,7 +12,7 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
-    using Fibula.Communications.Contracts.Abstractions.RequestInfo;
+    using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents and attack packet.

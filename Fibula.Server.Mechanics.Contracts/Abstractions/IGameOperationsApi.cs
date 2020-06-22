@@ -13,7 +13,9 @@
 namespace Fibula.Server.Mechanics.Contracts.Abstractions
 {
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Server.Contracts.Abstractions;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
 
@@ -39,8 +41,6 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
         //void Delete(IThing thing);
 
         //void DeleteOnMap(Location location, ushort itemId);
-
-        //void DescribeFor(IThing thingToDescribe, ICreature user);
 
         //void DisplayAnimatedEffectAt(Location location, byte effectByte);
 
@@ -72,16 +72,6 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
 
         //bool IsSpecificItem(IThing thing, ushort typeId);
 
-        void CancelPlayerActions(IPlayer player);
-
-        void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "");
-
-        void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata);
-
-        void LogPlayerOut(IPlayer player);
-
-        void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
-
         //void MoveTo(IThing thingToMove, Location targetLocation);
 
         //void MoveTo(ushort itemId, Location fromLocation, Location toLocation);
@@ -91,5 +81,21 @@ namespace Fibula.Server.Mechanics.Contracts.Abstractions
         //void PlaceMonsterAt(Location location, ushort monsterId);
 
         //void TagThing(IPlayer player, string format, IThing targetThing);
+
+        void CancelPlayerActions(IPlayer player);
+
+        void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn);
+
+        void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "");
+
+        void CreatureTurn(uint requestorId, ICreature creature, Direction direction);
+
+        void DescribeFor(ushort thingId, Location location, byte stackPosition, IPlayer player);
+
+        void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata);
+
+        void LogPlayerOut(IPlayer player);
+
+        void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
     }
 }

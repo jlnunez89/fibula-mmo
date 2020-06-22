@@ -49,10 +49,18 @@ namespace Fibula.Server.Protocol772
 
             var packetReadersToAdd = new Dictionary<IncomingGamePacketType, Type>()
             {
+                { IncomingGamePacketType.Attack, typeof(AttackPacketReader) },
+                { IncomingGamePacketType.ChangeModes, typeof(ChangeModesPacketReader) },
+                // { IncomingGamePacketType.KeepAlive, typeof(KeepAlivePacketReader) },
                 { IncomingGamePacketType.LogIn, typeof(GameLogInPacketReader) },
                 { IncomingGamePacketType.LogOut, typeof(GameLogOutPacketReader) },
+                { IncomingGamePacketType.LookAt, typeof(LookAtPacketReader) },
                 { IncomingGamePacketType.Speech, typeof(SpeechPacketReader) },
                 { IncomingGamePacketType.StopAllActions, typeof(StopAllActionsPacketReader) },
+                { IncomingGamePacketType.TurnNorth, typeof(TurnNorthPacketReader) },
+                { IncomingGamePacketType.TurnEast, typeof(TurnEastPacketReader) },
+                { IncomingGamePacketType.TurnSouth, typeof(TurnSouthPacketReader) },
+                { IncomingGamePacketType.TurnWest, typeof(TurnWestPacketReader) },
                 { IncomingGamePacketType.WalkNorth, typeof(WalkNorthPacketReader) },
                 { IncomingGamePacketType.WalkNortheast, typeof(WalkNortheastPacketReader) },
                 { IncomingGamePacketType.WalkEast, typeof(WalkEastPacketReader) },

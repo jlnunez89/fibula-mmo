@@ -19,6 +19,7 @@ namespace Fibula.Server.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Notifications.Arguments;
     using Fibula.Server.Contracts.Enumerations;
     using Fibula.Server.Contracts.Structs;
@@ -74,11 +75,9 @@ namespace Fibula.Server.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IElevatedOperationContext context)
         {
-            // TODO: should be something like character.location
-            var rookMark = new Location { X = 32097, Y = 32219, Z = 7 };
-            var thaisMark = new Location { X = 32369, Y = 32241, Z = 7 };
+            // This will eventually come from the character, or fall back.
+            var targetLoginLocation = MapConstants.RookgaardTempleMark;
 
-            var targetLocation = rookMark;
             var creationArguments = new PlayerCreationArguments()
             {
                 Client = this.Client,
@@ -93,7 +92,7 @@ namespace Fibula.Server.Operations
                 return;
             }
 
-            if (!context.TileAccessor.GetTileAt(targetLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
+            if (!context.TileAccessor.GetTileAt(targetLoginLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
             {
                 // Unable to place the player in the map.
                 context.Scheduler.ScheduleEvent(

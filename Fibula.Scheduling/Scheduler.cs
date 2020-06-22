@@ -185,7 +185,7 @@ namespace Fibula.Scheduling
 
                                 if (!shouldBeSkipped)
                                 {
-                                    this.Logger.Verbose($"Firing event {evt.GetType().Name} with id {evt.EventId}, at {priorityDue}.");
+                                    this.Logger.Verbose($"Firing {evt.GetType().Name} with id {evt.EventId}, at {priorityDue}.");
 
                                     this.EventFired?.Invoke(this, new EventFiredEventArgs(evt));
                                 }
@@ -248,7 +248,7 @@ namespace Fibula.Scheduling
                         {
                             this.CancelEvent(eventId);
 
-                            this.Logger.Verbose($"Cancelled event {eventId} of type {specificType.Name}.");
+                            this.Logger.Verbose($"Cancelled {specificType.Name} with id {eventId}.");
                         }
                     }
 
@@ -308,7 +308,7 @@ namespace Fibula.Scheduling
 
                 this.priorityQueue.Enqueue(castedEvent, milliseconds);
 
-                this.Logger.Verbose($"Scheduled event {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
+                this.Logger.Verbose($"Scheduled {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
 
                 // check and add event attribution to the requestor
                 if (castedEvent.RequestorId > 0)

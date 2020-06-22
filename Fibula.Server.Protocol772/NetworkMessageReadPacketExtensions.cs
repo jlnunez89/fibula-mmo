@@ -21,16 +21,6 @@ namespace Fibula.Server.Protocol772
     public static class NetworkMessageReadPacketExtensions
     {
         ///// <summary>
-        ///// Reads the attack information from the network message.
-        ///// </summary>
-        ///// <param name="message">The message to read from.</param>
-        ///// <returns>The attack information.</returns>
-        //public static IAttackInfo ReadAttackInfo(this INetworkMessage message)
-        //{
-        //    return new AttackPacket(targetCreatureId: message.GetUInt32());
-        //}
-
-        ///// <summary>
         ///// Reads the automove directions information sent in the message.
         ///// </summary>
         ///// <param name="message">The message to read from.</param>
@@ -160,38 +150,6 @@ namespace Fibula.Server.Protocol772
         //}
 
         ///// <summary>
-        ///// Reads fight and chase modes information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The fight and chase modes information.</returns>
-        //public static IModesInfo ReadModesInfo(this INetworkMessage message)
-        //{
-        //    // 1 - offensive, 2 - balanced, 3 - defensive
-        //    var rawFightMode = message.GetByte();
-
-        //    // 0 - stand while fightning, 1 - chase opponent
-        //    var rawChaseMode = message.GetByte();
-
-        //    // 0 - safe mode, 1 - free mode
-        //    var rawSafeMode = message.GetByte();
-
-        //    FightMode fightMode = FightMode.Balanced;
-        //    ChaseMode chaseMode = ChaseMode.Stand;
-
-        //    if (Enum.IsDefined(typeof(FightMode), rawFightMode))
-        //    {
-        //        fightMode = (FightMode)rawFightMode;
-        //    }
-
-        //    if (Enum.IsDefined(typeof(ChaseMode), rawChaseMode))
-        //    {
-        //        chaseMode = (ChaseMode)rawChaseMode;
-        //    }
-
-        //    return new ModesPacket(fightMode, chaseMode, isSafetyEnabled: rawSafeMode > 0);
-        //}
-
-        ///// <summary>
         ///// Reads the item used on information sent in the message.
         ///// </summary>
         ///// <param name="message">The mesage to read the information from.</param>
@@ -252,24 +210,6 @@ namespace Fibula.Server.Protocol772
         //        },
         //        clientId: message.GetUInt16(),
         //        index: message.GetByte());
-        //}
-
-        ///// <summary>
-        ///// Reads the look at information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The look at information.</returns>
-        //public static ILookAtInfo ReadLookAtInfo(this INetworkMessage message)
-        //{
-        //    return new LookAtPacket(
-        //        location: new Location
-        //        {
-        //            X = message.GetUInt16(),
-        //            Y = message.GetUInt16(),
-        //            Z = (sbyte)message.GetByte(),
-        //        },
-        //        thingId: message.GetUInt16(),
-        //        stackPos: message.GetByte());
         //}
 
         ///// <summary>
@@ -349,31 +289,6 @@ namespace Fibula.Server.Protocol772
         //        reason: message.GetString(),
         //        comment: message.GetString());
         // }
-
-        ///// <summary>
-        ///// Reads speech information sent in the message.
-        ///// </summary>
-        ///// <param name="message">The mesage to read the information from.</param>
-        ///// <returns>The speech information.</returns>
-        //public static ISpeechInfo ReadSpeechInfo(this INetworkMessage message)
-        //{
-        //    SpeechType type = (SpeechType)message.GetByte();
-
-        //    switch (type)
-        //    {
-        //        case SpeechType.Private:
-        //        // case SpeechType.PrivateRed:
-        //        case SpeechType.RuleViolationAnswer:
-        //            return new SpeechPacket(type, ChatChannelType.Private, receiver: message.GetString(), content: message.GetString());
-        //        case SpeechType.ChannelYellow:
-        //            // case SpeechType.ChannelRed:
-        //            // case SpeechType.ChannelRedAnonymous:
-        //            // case SpeechType.ChannelWhite:
-        //            return new SpeechPacket(type, channelId: (ChatChannelType)message.GetUInt16(), content: message.GetString());
-        //        default:
-        //            return new SpeechPacket(type, channelId: ChatChannelType.None, content: message.GetString());
-        //    }
-        //}
 
         ///// <summary>
         ///// Reads statements list information sent in the message.

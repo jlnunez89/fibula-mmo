@@ -17,6 +17,8 @@ namespace Fibula.Server.Operations.Contracts.Enumerations
         Thinking,
         Speech,
         CancelActions,
+        ChangeModes,
+        DescribeThing,
 
         // Actions
         ContainerOpen,
