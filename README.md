@@ -1,6 +1,6 @@
 ![.NET Core](https://github.com/jlnunez89/fibula-mmo/workflows/.NET%20Core/badge.svg)
 
-### A C# NetCore opensource server for that-other-leg-bone-game which must not be named.
+### A C# NetCore opensource server for that other leg-bone game (one which must not be named).
 
 # Repo guidelines and content map:
 
