@@ -1,6 +1,6 @@
 ![.NET Core](https://github.com/jlnunez89/fibula-mmo/workflows/.NET%20Core/badge.svg)
 
-### A C# NetCore OpenTibia server, for client version 7.72.
+### A C# NetCore opensource server for that-other-leg-bone-game which must not be named.
 
 # Repo guidelines and content map:
 
@@ -26,7 +26,7 @@ It's also what half the industry uses and, well, I happen to be part of that hal
 _And lastly, yeah- generally whoever starts coding something from scratch gets to pick..._
 
 ## Why choose version 7.72?
-There was an infamous CipSoft breach back on 2007 in which all files and assets required to run the original game at the time were leaked, and those files were finally released to the public about 10 years later on OTLand.
+There was an infamous breach back on 2007 in which all files and assets required to run the original game at the time were leaked, and those files were finally released to the public about 10 years later on OTLand.
 
 Having access to the original game files and assets simplifies our goal to mimic and reverse engineer the original game, leaving us with an implementation that is as closest to the real game as it gets. 
 
