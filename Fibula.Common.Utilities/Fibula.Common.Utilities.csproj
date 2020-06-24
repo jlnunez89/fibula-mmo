@@ -1,0 +1,43 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="BinaryHeap.cs" />
+    <Compile Remove="BytePair.cs" />
+    <Compile Remove="DuplicateIntegerComparer.cs" />
+    <Compile Remove="Extensions\ByteExtensions.cs" />
+    <Compile Remove="Extensions\FlagExtensions.cs" />
+    <Compile Remove="Extensions\SortedListExtensions.cs" />
+    <Compile Remove="Pathfinding\AStar.cs" />
+    <Compile Remove="Pathfinding\INode.cs" />
+    <Compile Remove="Pathfinding\INodeCreationArguments.cs" />
+    <Compile Remove="Pathfinding\INodeFactory.cs" />
+    <Compile Remove="Pathfinding\ISearchContext.cs" />
+    <Compile Remove="Pathfinding\SearchState.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Pathfinding\" />
+  </ItemGroup>
+
+</Project>

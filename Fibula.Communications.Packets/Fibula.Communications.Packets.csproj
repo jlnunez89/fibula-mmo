@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Incoming\AuthenticationPacket.cs" />
+    <Compile Remove="Incoming\AutoMovePacket.cs" />
+    <Compile Remove="Incoming\CharacterDeathPacket.cs" />
+    <Compile Remove="Incoming\ContainerCloseRequestPacket.cs" />
+    <Compile Remove="Incoming\ContainerMoveUpPacket.cs" />
+    <Compile Remove="Incoming\CreatePlayerListPacket.cs" />
+    <Compile Remove="Incoming\DebugAssertionPacket.cs" />
+    <Compile Remove="Incoming\FinishAuctionsPacket.cs" />
+    <Compile Remove="Incoming\InsertHousePacket.cs" />
+    <Compile Remove="Incoming\ManagementPlayerLoginPacket.cs" />
+    <Compile Remove="Incoming\ManagementPlayerLogoutPacket.cs" />
+    <Compile Remove="Incoming\OutfitChangedPacket.cs" />
+    <Compile Remove="Incoming\RotateItemPacket.cs" />
+    <Compile Remove="Incoming\RuleViolationPacket.cs" />
+    <Compile Remove="Incoming\StatementPacket.cs" />
+    <Compile Remove="Incoming\UseItemOnPacket.cs" />
+    <Compile Remove="Incoming\UseItemPacket.cs" />
+    <Compile Remove="Outgoing\CreatureChangedOutfitPacket.cs" />
+    <Compile Remove="Outgoing\DefaultErrorPacket.cs" />
+    <Compile Remove="Outgoing\DefaultNoErrorPacket.cs" />
+    <Compile Remove="Outgoing\PlayerInventoryPacket.cs" />
+    <Compile Remove="Outgoing\PongPacket.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Fibula.Communications.Packets.Contracts\Fibula.Communications.Packets.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
+  </ItemGroup>
+</Project>

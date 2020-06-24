@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Fibula.Standalone</name>
+    </assembly>
+    <members>
+        <member name="T:Fibula.Standalone.Program">
+            <summary>
+            Class that represents a standalone Fibula server instance.
+            </summary>
+        </member>
+        <member name="F:Fibula.Standalone.Program.MasterCancellationTokenSource">
+            <summary>
+            The cancellation token source for the entire application.
+            </summary>
+        </member>
+        <member name="F:Fibula.Standalone.Program.handlerSelector">
+            <summary>
+            The handler selector used to bind incoming packets to handlers, and process them.
+            </summary>
+        </member>
+        <member name="F:Fibula.Standalone.Program.clientMap">
+            <summary>
+            Stores a mapping of conenctions to their respective clients.
+            </summary>
+        </member>
+        <member name="M:Fibula.Standalone.Program.Main(System.String[])">
+            <summary>
+            The main entry point for the program.
+            </summary>
+            <param name="args">The arguments for this program.</param>
+            <returns>A <see cref="T:System.Threading.Tasks.Task"/> representing the asynchronous operation.</returns>
+        </member>
+        <member name="M:Fibula.Standalone.Program.ConfigureServices(Microsoft.Extensions.Hosting.HostBuilderContext,Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configuration root, where services are configured and added into the service collection, often depending on the configuration set.
+            </summary>
+            <param name="hostingContext">The hosting context.</param>
+            <param name="services">The services collection.</param>
+        </member>
+    </members>
+</doc>

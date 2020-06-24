@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+  
+  <ItemGroup>
+    <Compile Remove="Abstractions\IAuctionResult.cs" />
+    <Compile Remove="Abstractions\IAuthenticationInfo.cs" />
+    <Compile Remove="Abstractions\IAutoMovementInfo.cs" />
+    <Compile Remove="Abstractions\ICharacterDeathInfo.cs" />
+    <Compile Remove="Abstractions\IContainerInfo.cs" />
+    <Compile Remove="Abstractions\IDebugAssertionInfo.cs" />
+    <Compile Remove="Abstractions\IInsertHouseInfo.cs" />
+    <Compile Remove="Abstractions\IManagementPlayerLoginInfo.cs" />
+    <Compile Remove="Abstractions\INamelockInfo.cs" />
+    <Compile Remove="Abstractions\IOnlinePlayer.cs" />
+    <Compile Remove="Abstractions\IOnlinePlayerListInfo.cs" />
+    <Compile Remove="Abstractions\IOutfitInfo.cs" />
+    <Compile Remove="Abstractions\IPlayerLoaded.cs" />
+    <Compile Remove="Abstractions\IPlayerLogoutInfo.cs" />
+    <Compile Remove="Abstractions\IRotateItemInfo.cs" />
+    <Compile Remove="Abstractions\IRuleViolationInfo.cs" />
+    <Compile Remove="Abstractions\IStatement.cs" />
+    <Compile Remove="Abstractions\IStatementListInfo.cs" />
+    <Compile Remove="Abstractions\IUseItemInfo.cs" />
+    <Compile Remove="Abstractions\IUseItemOnInfo.cs" />
+    <Compile Remove="Abstractions\IVipContact.cs" />
+    <Compile Remove="OnlinePlayer.cs" />
+    <Compile Remove="Statement.cs" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
+    <ProjectReference Include="..\Fibula.Communications.Contracts\Fibula.Communications.Contracts.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Models\" />
+  </ItemGroup>
+</Project>
