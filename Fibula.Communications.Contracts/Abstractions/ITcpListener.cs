@@ -12,17 +12,28 @@
 
 namespace Fibula.Communications.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Delegates;
-    using Microsoft.Extensions.Hosting;
+    using System.Net.Sockets;
+    using System.Threading.Tasks;
 
     /// <summary>
-    /// Common interface of all TCP listeners.
+    /// Common interface for TCP listeners.
     /// </summary>
-    public interface ITcpListener : IHostedService
+    public interface ITcpListener
     {
         /// <summary>
-        /// Event fired when a new connection is enstablished.
+        /// Starts listening for internal connection requests.
         /// </summary>
-        event NewConnectionDelegate NewConnection;
+        void Start();
+
+        /// <summary>
+        /// Closes the listener.
+        /// </summary>
+        void Stop();
+
+        /// <summary>
+        /// Accepts a pending connection request as an asynchronous operation.
+        /// </summary>
+        /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
+        Task<Socket> AcceptSocketAsync();
     }
 }

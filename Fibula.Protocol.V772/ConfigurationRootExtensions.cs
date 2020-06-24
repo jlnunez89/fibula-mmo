@@ -139,7 +139,7 @@ namespace Fibula.Protocol.V772
             services.TryAddSingleton<ISocketConnectionFactory>(s => s.GetService<ClientConnectionFactory<GameProtocol_v772>>());
 
             services.TryAddSingleton<GameListener<ClientConnectionFactory<GameProtocol_v772>>>();
-            services.AddSingleton<ITcpListener>(s => s.GetService<GameListener<ClientConnectionFactory<GameProtocol_v772>>>());
+            services.AddSingleton<IListener>(s => s.GetService<GameListener<ClientConnectionFactory<GameProtocol_v772>>>());
 
             // Since they are derived from IHostedService should be also registered as such.
             services.AddHostedService(s => s.GetService<GameListener<ClientConnectionFactory<GameProtocol_v772>>>());
@@ -191,7 +191,7 @@ namespace Fibula.Protocol.V772
             services.TryAddSingleton<ISocketConnectionFactory>(s => s.GetService<ClientConnectionFactory<GatewayProtocol_v772>>());
 
             services.TryAddSingleton<GatewayListener<ClientConnectionFactory<GatewayProtocol_v772>>>();
-            services.AddSingleton<ITcpListener>(s => s.GetService<GatewayListener<ClientConnectionFactory<GatewayProtocol_v772>>>());
+            services.AddSingleton<IListener>(s => s.GetService<GatewayListener<ClientConnectionFactory<GatewayProtocol_v772>>>());
 
             // Since they are derived from IHostedService should be also registered as such.
             services.AddHostedService(s => s.GetService<GatewayListener<ClientConnectionFactory<GatewayProtocol_v772>>>());

@@ -153,7 +153,7 @@ namespace Fibula.Standalone
                 connection.Closed += OnConnectionClosed;
             }
 
-            foreach (var tcpListener in host.Services.GetServices<ITcpListener>())
+            foreach (var tcpListener in host.Services.GetServices<IListener>())
             {
                 tcpListener.NewConnection += OnNewConnection;
             }
@@ -161,7 +161,7 @@ namespace Fibula.Standalone
             await host.RunAsync(Program.MasterCancellationTokenSource.Token).ConfigureAwait(false);
 
             // Clean up.
-            foreach (var tcpListener in host.Services.GetServices<ITcpListener>())
+            foreach (var tcpListener in host.Services.GetServices<IListener>())
             {
                 tcpListener.NewConnection -= OnNewConnection;
             }

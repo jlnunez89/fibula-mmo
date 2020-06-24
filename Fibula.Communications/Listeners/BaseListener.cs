@@ -26,8 +26,13 @@ namespace Fibula.Communications.Listeners
     /// <summary>
     /// Class that is the base implementation for all TCP listeners.
     /// </summary>
-    public abstract class BaseListener : TcpListener, ITcpListener
+    public abstract class BaseListener : IListener
     {
+        /// <summary>
+        /// The TCP listener to use internally.
+        /// </summary>
+        private readonly ITcpListener tcpListener;
+
         /// <summary>
         /// The DoS defender to use.
         /// </summary>
@@ -51,8 +56,8 @@ namespace Fibula.Communications.Listeners
         /// <param name="socketConnectionFactory">A reference to the socekt connection factory in use.</param>
         /// <param name="dosDefender">A reference to a DoS defender service implementation.</param>
         /// <param name="keepConnectionOpen">Optional. A value indicating whether to maintain the connection open after processing a message in the connection.</param>
-        protected BaseListener(ILogger logger, BaseListenerOptions options, ISocketConnectionFactory socketConnectionFactory, IDoSDefender dosDefender, bool keepConnectionOpen = true)
-            : base(IPAddress.Any, options?.Port ?? 0)
+        /// <param name="tcpListener">Optional. An intance to use as the TCP listener, useful for unit testing.</param>
+        protected BaseListener(ILogger logger, BaseListenerOptions options, ISocketConnectionFactory socketConnectionFactory, IDoSDefender dosDefender, bool keepConnectionOpen = true, ITcpListener tcpListener = null)
         {
             logger.ThrowIfNull(nameof(logger));
             options.ThrowIfNull(nameof(options));
@@ -63,6 +68,8 @@ namespace Fibula.Communications.Listeners
             this.dosDefender = dosDefender;
             this.keepConnectionOpen = keepConnectionOpen;
             this.socketConnectionFactory = socketConnectionFactory;
+
+            this.tcpListener = tcpListener ?? new FibulaTcpListener(IPAddress.Any, options?.Port ?? 0);
 
             this.Logger = logger.ForContext(this.GetType());
         }
@@ -88,18 +95,18 @@ namespace Fibula.Communications.Listeners
             {
                 try
                 {
-                    this.Start();
+                    this.tcpListener.Start();
 
                     // Stop() makes AcceptSocketAsync() throw an ObjectDisposedException.
                     // This means that when the token is cancelled, the callback action here will be to Stop() the listener,
                     // which in turn throws the exception and it gets caught below, exiting gracefully.
-                    cancellationToken.Register(() => this.Stop());
+                    cancellationToken.Register(() => this.tcpListener.Stop());
 
                     while (!cancellationToken.IsCancellationRequested)
                     {
                         try
                         {
-                            var socket = await this.AcceptSocketAsync().ConfigureAwait(false);
+                            var socket = await this.tcpListener.AcceptSocketAsync().ConfigureAwait(false);
 
                             ISocketConnection socketConnection = this.socketConnectionFactory.Create(socket);
 
@@ -145,7 +152,7 @@ namespace Fibula.Communications.Listeners
         /// <returns>A <see cref="Task"/> representing the asynchronous operation.</returns>
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            this.Stop();
+            this.tcpListener.Stop();
 
             return Task.CompletedTask;
         }

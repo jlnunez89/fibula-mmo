@@ -88,19 +88,21 @@ namespace Fibula.Communications.Listeners.Tests
         }
 
         /// <summary>
-        /// Checks that the <see cref="GameListener{T}"/> invokes the <see cref="ITcpListener.NewConnection"/> event.
+        /// Checks that the <see cref="GameListener{T}"/> invokes the <see cref="IListener.NewConnection"/> event.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [TestMethod]
-        public async Task Listener_CallsNewConnectionEvent()
+        public async Task GameListener_CallsNewConnectionEvent()
         {
             const ushort AnyEphemerealPort = 7171;
             const int ExpectedConnectionCount = 1;
+            const int NewConnectionsToEmulate = 1;
 
-            TimeSpan overheadDelay = TimeSpan.FromMilliseconds(100);
+            TimeSpan waitForConnectionDelay = TimeSpan.FromSeconds(1);
 
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<IDoSDefender> defenderMock = new Mock<IDoSDefender>();
+            Mock<ITcpListener> tcpListenerMock = this.SetupTcpListenerMock(NewConnectionsToEmulate);
 
             Mock<ISocketConnectionFactory> connectionFactoryMock = this.SetupSocketConnectionFactory();
 
@@ -109,11 +111,12 @@ namespace Fibula.Communications.Listeners.Tests
                 Port = AnyEphemerealPort,
             };
 
-            ITcpListener gameListener = new GameListener<ISocketConnectionFactory>(
+            IListener gameListener = new GameListener<ISocketConnectionFactory>(
                 loggerMock.Object,
                 Options.Create(gameListenerOptions),
                 connectionFactoryMock.Object,
-                defenderMock.Object);
+                defenderMock.Object,
+                tcpListenerMock.Object);
 
             var connectionCount = 0;
             var listenerTask = gameListener.StartAsync(CancellationToken.None);
@@ -123,16 +126,34 @@ namespace Fibula.Communications.Listeners.Tests
                 connectionCount++;
             };
 
-            // Now make a connection to the listener.
-            using var tcpClient = new TcpClient();
-
-            tcpClient.Connect(IPAddress.Loopback, AnyEphemerealPort);
-
-            // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has gone up on connections count.
-            await Task.Delay(overheadDelay).ContinueWith(prev =>
+            // Delay for a second and check that the counter has gone up on connections count.
+            await Task.Delay(waitForConnectionDelay).ContinueWith(prev =>
             {
                 Assert.AreEqual(ExpectedConnectionCount, connectionCount, "New connections events counter does not match.");
             });
+        }
+
+        private Mock<ITcpListener> SetupTcpListenerMock(int newConnectionsToEmulate)
+        {
+            Mock<ITcpListener> tcpListenerMock = new Mock<ITcpListener>();
+
+            var bigEnoughTimeToWaitAfterGoal = TimeSpan.FromMinutes(1);
+            var emulatedConnectionsCount = 0;
+
+            async Task<Socket> WaitForSocketMock()
+            {
+                if (emulatedConnectionsCount++ == newConnectionsToEmulate)
+                {
+                    // Wait for a minute if we've reached the target count of connections to emulate.
+                    await Task.Delay(bigEnoughTimeToWaitAfterGoal);
+                }
+
+                return new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            }
+
+            tcpListenerMock.Setup(l => l.AcceptSocketAsync()).Returns(WaitForSocketMock);
+
+            return tcpListenerMock;
         }
 
         private Mock<ISocketConnectionFactory> SetupSocketConnectionFactory()
