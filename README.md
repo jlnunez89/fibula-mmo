@@ -1,3 +1,5 @@
+![.NET Core](https://github.com/jlnunez89/fibula-mmo/workflows/.NET%20Core/badge.svg)
+
 ### A C# NetCore OpenTibia server, for client version 7.72.
 
 # Repo guidelines and content map:
