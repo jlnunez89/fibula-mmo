@@ -27,9 +27,9 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnToDirectionOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="creature"></param>
-        /// <param name="direction"></param>
+        /// <param name="requestorId">The id of the creature requesting the operation.</param>
+        /// <param name="creature">The creature that is turning.</param>
+        /// <param name="direction">The direction to which the creature is turning.</param>
         public TurnToDirectionOperationCreationArguments(uint requestorId, ICreature creature, Direction direction)
         {
             creature.ThrowIfNull(nameof(creature));
@@ -49,8 +49,14 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// </summary>
         public uint RequestorId { get; }
 
+        /// <summary>
+        /// Gets the creature that is turning.
+        /// </summary>
         public ICreature Creature { get; }
 
+        /// <summary>
+        /// Gets the direction to which the creature is turning.
+        /// </summary>
         public Direction Direction { get; }
     }
 }

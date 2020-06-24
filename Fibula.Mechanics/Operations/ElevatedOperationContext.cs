@@ -31,29 +31,21 @@ namespace Fibula.Mechanics.Operations
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
-        /// <param name="pathFinder">A reference to the path finder helper in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
-        /// <param name="combatApi">A reference to the combat API.</param>
-        /// <param name="gameApi">A reference to the game API.</param>
-        /// <param name="eventRulesApi">A reference to the event rules API.</param>
         public ElevatedOperationContext(
             ILogger logger,
             IMapDescriptor mapDescriptor,
             ITileAccessor tileAccessor,
             ICreatureManager creatureManager,
-            //IPathFinder pathFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
             IScheduler scheduler)
-            //ICombatApi combatApi,
-            //IGameApi gameApi,
-            //IEventRulesApi eventRulesApi)
             : base(logger, mapDescriptor, tileAccessor, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
         {
         }

@@ -13,7 +13,6 @@
 namespace Fibula.Creatures
 {
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common;
     using Fibula.Common.Contracts.Abstractions;
@@ -24,8 +23,6 @@ namespace Fibula.Creatures
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents all creatures in the game.
@@ -50,7 +47,7 @@ namespace Fibula.Creatures
         ///// <summary>
         ///// Lock object to semaphore interaction with the exhaustion dictionary.
         ///// </summary>
-        //private readonly object exhaustionLock;
+        // private readonly object exhaustionLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -91,9 +88,8 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
-            //this.exhaustionLock = new object();
-            //this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
-
+            // this.exhaustionLock = new object();
+            // this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
             this.Outfit = new Outfit
             {
                 Id = 0,
@@ -102,7 +98,7 @@ namespace Fibula.Creatures
 
             this.Speed = 200;
 
-            //this.Skills = new Dictionary<SkillType, ISkill>();
+            // this.Skills = new Dictionary<SkillType, ISkill>();
 
             // Subscribe any attack-impacting conditions here
             // this.OnThingChanged += this.CheckAutoAttack;             // Are we in range with our target now/still?
@@ -167,6 +163,9 @@ namespace Fibula.Creatures
             }
         }
 
+        /// <summary>
+        /// Gets or sets the creature's strength to carry stuff.
+        /// </summary>
         public decimal CarryStrength { get; protected set; }
 
         /// <summary>
@@ -207,7 +206,7 @@ namespace Fibula.Creatures
         ///// <summary>
         ///// Gets this creature's skills.
         ///// </summary>
-        //public IDictionary<SkillType, ISkill> Skills { get; }
+        // public IDictionary<SkillType, ISkill> Skills { get; }
 
         ///// <summary>
         ///// Gets the current exhaustion information for the entity.
@@ -216,91 +215,12 @@ namespace Fibula.Creatures
         ///// The key is a <see cref="ExhaustionType"/>, and the value is a <see cref="DateTimeOffset"/>: the date and time
         ///// at which exhaustion is completely recovered.
         ///// </remarks>
-        //public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
-
-        // public IList<Condition> Conditions { get; protected set; } // TODO: implement.
-
-        public bool IsInvisible { get; protected set; } // TODO: implement.
-
-        public bool CanSeeInvisible { get; } // TODO: implement.
-
-        public byte Skull { get; protected set; } // TODO: implement.
-
-        public byte Shield { get; protected set; } // TODO: implement.
+        // public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
 
         /// <summary>
         /// Gets or sets the inventory for the creature.
         /// </summary>
         public abstract IInventory Inventory { get; protected set; }
-
-        public abstract bool IsThinking { get; }
-
-        ///// <summary>
-        ///// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
-        ///// </summary>
-        ///// <param name="type">The type of exhaustion.</param>
-        ///// <param name="currentTime">The current time to calculate from.</param>
-        ///// <returns>The <see cref="TimeSpan"/> result.</returns>
-        //public TimeSpan CalculateRemainingCooldownTime(ExhaustionType type, DateTimeOffset currentTime)
-        //{
-        //    lock (this.exhaustionLock)
-        //    {
-        //        if (!this.ExhaustionInformation.TryGetValue(type, out DateTimeOffset readyAtTime))
-        //        {
-        //            return TimeSpan.Zero;
-        //        }
-
-        //        var timeLeft = readyAtTime - currentTime;
-
-        //        if (timeLeft < TimeSpan.Zero)
-        //        {
-        //            this.ExhaustionInformation.Remove(type);
-        //            return TimeSpan.Zero;
-        //        }
-
-        //        return timeLeft;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Adds exhaustion of the given type.
-        ///// </summary>
-        ///// <param name="type">The type of exhaustion to add.</param>
-        ///// <param name="fromTime">The reference time from which to add.</param>
-        ///// <param name="timeSpan">The amount of time to add exhaustion for.</param>
-        //public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, TimeSpan timeSpan)
-        //{
-        //    lock (this.exhaustionLock)
-        //    {
-        //        if (this.ExhaustionInformation.ContainsKey(type) && this.ExhaustionInformation[type] > fromTime)
-        //        {
-        //            fromTime = this.ExhaustionInformation[type];
-        //        }
-
-        //        this.ExhaustionInformation[type] = fromTime + timeSpan;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Adds exhaustion of the given type.
-        ///// </summary>
-        ///// <param name="type">The type of exhaustion to add.</param>
-        ///// <param name="fromTime">The reference time from which to add.</param>
-        ///// <param name="milliseconds">The amount of time in milliseconds to add exhaustion for.</param>
-        //public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, uint milliseconds)
-        //{
-        //    this.AddExhaustion(type, fromTime, TimeSpan.FromMilliseconds(milliseconds));
-        //}
-
-        ///// <summary>
-        ///// Calculates the current percentual value between current and target counts for the given skill.
-        ///// </summary>
-        ///// <param name="type">The type of skill to calculate for.</param>
-        ///// <returns>A value between [0, 99] representing the current percentual value.</returns>
-        //public byte CalculateSkillPercent(SkillType type)
-        //{
-        //    return (byte)Math.Min(100, this.Skills[type].Count * 100 / (this.Skills[type].Target + 1));
-        //}
 
         /// <summary>
         /// Turns this creature to a given direction.
@@ -329,7 +249,8 @@ namespace Fibula.Creatures
         {
             otherCreature.ThrowIfNull(nameof(otherCreature));
 
-            return (!otherCreature.IsInvisible || this.CanSeeInvisible) && this.CanSee(otherCreature.Location);
+            // (!otherCreature.IsInvisible || this.CanSeeInvisible) &&
+            return this.CanSee(otherCreature.Location);
         }
 
         /// <summary>
@@ -367,19 +288,6 @@ namespace Fibula.Creatures
             }
 
             return false;
-        }
-
-        /// <summary>
-        /// Forcefully adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="thingFactory">A reference to the factory of things to use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        // TODO: move to somewhere else to decouple.
-        public void AddContent(ILogger logger, IThingFactory thingFactory, IEnumerable<IParsedElement> contentElements)
-        {
-            // TODO: iterate all body containers and try to add there.
-            throw new NotImplementedException();
         }
 
         /// <summary>

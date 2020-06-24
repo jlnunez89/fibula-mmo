@@ -24,10 +24,10 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeModesOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="fightMode"></param>
-        /// <param name="chaseMode"></param>
-        /// <param name="safeModeOn"></param>
+        /// <param name="requestorId">The id of the creature requesting the operation.</param>
+        /// <param name="fightMode">The fight mode to set.</param>
+        /// <param name="chaseMode">The chase mode to set.</param>
+        /// <param name="safeModeOn">The value to set for the safety lock.</param>
         public ChangeModesOperationCreationArguments(uint requestorId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
         {
             this.RequestorId = requestorId;
@@ -37,6 +37,9 @@ namespace Fibula.Mechanics.Operations.Arguments
             this.IsSafeModeOn = safeModeOn;
         }
 
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
         public OperationType Type => OperationType.ChangeModes;
 
         /// <summary>
@@ -44,10 +47,19 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// </summary>
         public uint RequestorId { get; }
 
+        /// <summary>
+        /// Gets the fight mode to set.
+        /// </summary>
         public FightMode FightMode { get; }
 
+        /// <summary>
+        /// Gets the chase mode to set.
+        /// </summary>
         public ChaseMode ChaseMode { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the safety lock is on.
+        /// </summary>
         public bool IsSafeModeOn { get; }
     }
 }

@@ -24,18 +24,18 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="MovementOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="clientId"></param>
-        /// <param name="fromLocation"></param>
-        /// <param name="fromIndex"></param>
-        /// <param name="fromCreatureId"></param>
-        /// <param name="toLocation"></param>
-        /// <param name="toCreatureId"></param>
-        /// <param name="amount"></param>
-        public MovementOperationCreationArguments(uint requestorId, ushort clientId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
+        /// <param name="requestorId">The id of the creature requesting the movement.</param>
+        /// <param name="thingId">The id of the thing moving.</param>
+        /// <param name="fromLocation">The location from which the movement is happening.</param>
+        /// <param name="fromIndex">The index within the location from which the movement is happening.</param>
+        /// <param name="fromCreatureId">The id of the creature from which the movement is happening, if applicable.</param>
+        /// <param name="toLocation">The location to which the movement is happening.</param>
+        /// <param name="toCreatureId">The creature to which the movement is happening, if applicable.</param>
+        /// <param name="amount">Optional. The amount of the thing being moved.</param>
+        public MovementOperationCreationArguments(uint requestorId, ushort thingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
         {
             this.RequestorId = requestorId;
-            this.ThingId = clientId;
+            this.ThingId = thingId;
             this.FromLocation = fromLocation;
             this.FromIndex = fromIndex;
             this.FromCreatureId = fromCreatureId;

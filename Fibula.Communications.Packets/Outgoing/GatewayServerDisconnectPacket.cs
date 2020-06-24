@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="LoginServerDisconnectPacket.cs" company="2Dudes">
+// <copyright file="GatewayServerDisconnectPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com

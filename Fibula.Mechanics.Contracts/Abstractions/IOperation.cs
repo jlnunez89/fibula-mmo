@@ -23,7 +23,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //ExhaustionType ExhaustionType { get; }
+        // ExhaustionType ExhaustionType { get; }
 
         /// <summary>
         /// Gets the exhaustion cost of this operation.

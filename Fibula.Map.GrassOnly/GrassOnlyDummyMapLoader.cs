@@ -10,6 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
+#pragma warning disable 67
 namespace Fibula.Map.GrassOnly
 {
     using System.Collections.Concurrent;
@@ -116,3 +117,4 @@ namespace Fibula.Map.GrassOnly
         }
     }
 }
+#pragma warning restore 67

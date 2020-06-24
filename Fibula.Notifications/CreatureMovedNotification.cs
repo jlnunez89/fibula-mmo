@@ -67,7 +67,7 @@ namespace Fibula.Notifications
                     if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                     {
                         // Since this was described to the client before, we send a packet that lets them know the thing must be removed from that Tile's stack.
-                        packets.Add(new RemoveAtPositionPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                        packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                     }
 
                     // Then send the entire description at the new location.
@@ -80,7 +80,7 @@ namespace Fibula.Notifications
                 {
                     if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                     {
-                        packets.Add(new RemoveAtPositionPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                        packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                     }
                 }
                 else
@@ -240,7 +240,7 @@ namespace Fibula.Notifications
                     {
                         if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                         {
-                            packets.Add(new RemoveAtPositionPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                            packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                         }
 
                         packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
@@ -255,7 +255,7 @@ namespace Fibula.Notifications
             {
                 if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                 {
-                    packets.Add(new RemoveAtPositionPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                    packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                 }
             }
             else if (player.CanSee(this.Arguments.NewLocation) && player.CanSee(creature))

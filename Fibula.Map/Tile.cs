@@ -25,8 +25,6 @@ namespace Fibula.Map
     using Fibula.Items.Contracts.Constants;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Enumerations;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents a tile in the map.
@@ -566,89 +564,6 @@ namespace Fibula.Map
         }
 
         /// <summary>
-        /// Forcefully adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="thingFactory">A reference to the factory of things to use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        // TODO: move to somewhere else to decouple.
-        public void AddContent(ILogger logger, IThingFactory thingFactory, IEnumerable<IParsedElement> contentElements)
-        {
-            logger.ThrowIfNull(nameof(logger));
-            thingFactory.ThrowIfNull(nameof(thingFactory));
-            contentElements.ThrowIfNull(nameof(contentElements));
-
-            if (!(thingFactory is IItemFactory itemFactory))
-            {
-                throw new ArgumentException($"The {nameof(thingFactory)} must be derived of type {nameof(IItemFactory)}.");
-            }
-
-            // load and add tile flags and contents.
-            foreach (var e in contentElements)
-            {
-                foreach (var attribute in e.Attributes)
-                {
-                    if (attribute.Name.Equals("Content"))
-                    {
-                        if (attribute.Value is IEnumerable<IParsedElement> elements)
-                        {
-                            var thingStack = new Stack<IThing>();
-
-                            foreach (var element in elements)
-                            {
-                                if (element.IsFlag)
-                                {
-                                    // A flag is unexpected in this context.
-                                    logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
-
-                                    continue;
-                                }
-
-                                IItem item = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
-
-                                if (item == null)
-                                {
-                                    logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
-
-                                    continue;
-                                }
-
-                                item.SetAttributes(logger.ForContext<IItem>(), itemFactory, element.Attributes);
-
-                                thingStack.Push(item);
-                            }
-
-                            // Add them in reversed order.
-                            while (thingStack.Count > 0)
-                            {
-                                var thing = thingStack.Pop();
-
-                                this.AddContent(itemFactory, thing);
-
-                                if (thing is IContainedThing thingWithParentCylinder)
-                                {
-                                    thingWithParentCylinder.ParentContainer = this;
-                                }
-                            }
-                        }
-                    }
-                    else
-                    {
-                        // it's a flag
-                        if (Enum.TryParse(attribute.Name, out TileFlag flagMatch))
-                        {
-                            this.SetFlag(flagMatch);
-                        }
-                        else
-                        {
-                            logger.Warning($"Unknown flag [{attribute.Name}] found on tile at location {this.Location}.");
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
         /// Attempts to add a <see cref="IThing"/> to this container.
         /// </summary>
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
@@ -719,7 +634,7 @@ namespace Fibula.Map
                             // Modify the existing item with the new amount, or the maximum permitted.
                             var newExistingAmount = Math.Min(remainingAmountToAdd, ItemConstants.MaximumAmountOfCummulativeItems);
 
-                            existingItem.SetAmount(newExistingAmount);
+                            existingItem.Amount = newExistingAmount;
 
                             remainingAmountToAdd -= newExistingAmount;
 
@@ -730,7 +645,7 @@ namespace Fibula.Map
 
                             item = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = item.Type.TypeId });
 
-                            item.SetAmount(remainingAmountToAdd);
+                            item.Amount = remainingAmountToAdd;
 
                             item.ParentContainer = this;
                         }
@@ -821,14 +736,14 @@ namespace Fibula.Map
                             // We're removing less than the entire amount, so we need to calculate the remainder to add back.
                             var newExistingAmount = (byte)(item.Amount - amount);
 
-                            item.SetAmount(newExistingAmount);
+                            item.Amount = newExistingAmount;
 
                             // item amount is left wrong.
 
                             // Create a new item as the remainder.
                             remainder = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = item.Type.TypeId });
 
-                            remainder.SetAmount(amount);
+                            remainder.Amount = amount;
 
                             thing = remainder;
                             remainder = item;

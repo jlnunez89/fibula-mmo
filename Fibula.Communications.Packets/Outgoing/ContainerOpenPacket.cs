@@ -17,21 +17,24 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
 
+    /// <summary>
+    /// Class that represents a packet for a container being opened.
+    /// </summary>
     public class ContainerOpenPacket : IOutboundPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerOpenPacket"/> class.
         /// </summary>
-        /// <param name="containerId"></param>
-        /// <param name="clientItemId"></param>
-        /// <param name="name"></param>
-        /// <param name="volume"></param>
-        /// <param name="hasParent"></param>
-        /// <param name="contents"></param>
+        /// <param name="containerId">The id of the container, as seen by the target player.</param>
+        /// <param name="clientItemId">The id of the type of the container.</param>
+        /// <param name="name">The name of the container.</param>
+        /// <param name="volume">The capacity of the container.</param>
+        /// <param name="hasParent">A value indicating whether the container has a parent.</param>
+        /// <param name="contents">The contents of the container.</param>
         public ContainerOpenPacket(byte containerId, ushort clientItemId, string name, byte volume, bool hasParent, IList<IItem> contents)
         {
             this.ContainerId = containerId;
-            this.ClientItemId = clientItemId;
+            this.TypeId = clientItemId;
             this.Name = name;
             this.Volume = volume;
             this.HasParent = hasParent;
@@ -43,16 +46,34 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.ContainerOpen;
 
+        /// <summary>
+        /// Gets the id of the container, as seen by the target player.
+        /// </summary>
         public byte ContainerId { get; }
 
-        public ushort ClientItemId { get; }
+        /// <summary>
+        /// Gets the id of the type of container.
+        /// </summary>
+        public ushort TypeId { get; }
 
+        /// <summary>
+        /// Gets the name of the container.
+        /// </summary>
         public string Name { get; }
 
+        /// <summary>
+        /// Gets the capacity of the container.
+        /// </summary>
         public byte Volume { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the container has a parent.
+        /// </summary>
         public bool HasParent { get; }
 
+        /// <summary>
+        /// Gets the contents of the container.
+        /// </summary>
         public IList<IItem> Contents { get; }
     }
 }

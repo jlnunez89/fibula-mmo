@@ -16,14 +16,17 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a packet for when a creature has moved.
+    /// </summary>
     public class CreatureMovedPacket : IOutboundPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureMovedPacket"/> class.
         /// </summary>
-        /// <param name="fromLocation"></param>
-        /// <param name="fromStackpos"></param>
-        /// <param name="toLocation"></param>
+        /// <param name="fromLocation">The location from which the move happened.</param>
+        /// <param name="fromStackpos">The position in the stack within the location from which the move happened.</param>
+        /// <param name="toLocation">The location to which the move happened.</param>
         public CreatureMovedPacket(Location fromLocation, byte fromStackpos, Location toLocation)
         {
             this.FromLocation = fromLocation;
@@ -37,7 +40,7 @@ namespace Fibula.Communications.Packets.Outgoing
         public byte PacketType => (byte)OutgoingGamePacketType.CreatureMoved;
 
         /// <summary>
-        /// Gets the tile source location.
+        /// Gets the location from which the creature moved from.
         /// </summary>
         public Location FromLocation { get; }
 
@@ -47,7 +50,7 @@ namespace Fibula.Communications.Packets.Outgoing
         public byte FromStackpos { get; }
 
         /// <summary>
-        /// Gets the tile target location.
+        /// Gets the location to which the creature moved.
         /// </summary>
         public Location ToLocation { get; }
     }

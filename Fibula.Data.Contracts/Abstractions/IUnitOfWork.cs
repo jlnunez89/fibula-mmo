@@ -18,8 +18,8 @@ namespace Fibula.Data.Contracts.Abstractions
     /// <summary>
     /// Interface for units of work that target the OpenTibia project.
     /// </summary>
-    /// <typeparam name="TAccounts"></typeparam>
-    /// <typeparam name="TCharacters"></typeparam>
+    /// <typeparam name="TAccounts">The type of account entities.</typeparam>
+    /// <typeparam name="TCharacters">The type of character entities.</typeparam>
     public interface IUnitOfWork
         <TAccounts,
         TCharacters> : IDisposable

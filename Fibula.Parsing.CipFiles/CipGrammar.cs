@@ -231,7 +231,7 @@ namespace Fibula.Parsing.CipFiles
         ///// <summary>
         ///// Parses the raw event rules.
         ///// </summary>
-        //public static readonly Parser<ParsedEventRule> EventRule =
+        // public static readonly Parser<ParsedEventRule> EventRule =
         //    from conditions in Conditions
         //    from leading in Parse.WhiteSpace.Optional().Many()
         //    from separator in ConditionsActionsSeparator

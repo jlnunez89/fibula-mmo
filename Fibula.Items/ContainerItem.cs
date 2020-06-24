@@ -21,8 +21,6 @@ namespace Fibula.Items
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Delegates;
     using Fibula.Items.Contracts.Enumerations;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents all container items in the game.
@@ -306,50 +304,6 @@ namespace Fibula.Items
             }
 
             return (sbyte)Math.Min(existingItem.Amount, ItemConstants.MaximumAmountOfCummulativeItems);
-        }
-
-        /// <summary>
-        /// Forcefully adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="thingFactory">A reference to the factory of things to use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        // TODO: move to somewhere else to decouple.
-        public void AddContent(ILogger logger, IThingFactory thingFactory, IEnumerable<IParsedElement> contentElements)
-        {
-            logger.ThrowIfNull(nameof(logger));
-            thingFactory.ThrowIfNull(nameof(thingFactory));
-            contentElements.ThrowIfNull(nameof(contentElements));
-
-            if (!(thingFactory is IItemFactory itemFactory))
-            {
-                throw new ArgumentException($"The {nameof(thingFactory)} must be derived of type {nameof(IItemFactory)}.");
-            }
-
-            foreach (var element in contentElements)
-            {
-                if (element.IsFlag)
-                {
-                    // A flag is unexpected in this context.
-                    logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
-
-                    continue;
-                }
-
-                IItem item = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
-
-                if (item == null)
-                {
-                    logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
-
-                    continue;
-                }
-
-                item.SetAttributes(logger.ForContext<IItem>(), itemFactory, element.Attributes);
-
-                // TODO: we should be able to go over capacity here.
-                this.AddContent(itemFactory, item, 0xFF);
-            }
         }
 
         /// <summary>

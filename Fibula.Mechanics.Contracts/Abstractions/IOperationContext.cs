@@ -37,11 +37,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         ICreatureFinder CreatureFinder { get; }
 
-        ///// <summary>
-        ///// Gets the reference to the path finder helper in use.
-        ///// </summary>
-        //IPathFinder PathFinder { get; }
-
         /// <summary>
         /// Gets a reference to the item factory in use.
         /// </summary>
@@ -66,20 +61,5 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the combat api.
-        ///// </summary>
-        //ICombatApi CombatApi { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the game api.
-        ///// </summary>
-        //IGameOperationsApi GameApi { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the event rules api.
-        ///// </summary>
-        //IEventRulesApi EventRulesApi { get; }
     }
 }

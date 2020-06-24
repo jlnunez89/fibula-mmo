@@ -16,6 +16,9 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
 
+    /// <summary>
+    /// Class that represents a packet for when a creature has turned.
+    /// </summary>
     public class CreatureTurnedPacket : IOutboundPacket
     {
         /// <summary>

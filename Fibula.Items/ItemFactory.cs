@@ -76,7 +76,7 @@ namespace Fibula.Items
             }
 
             // TODO: chest actually means a quest chest...
-            if (this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.Container) || this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.Chest))
+            if (this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.IsContainer) || this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.IsQuestChest))
             {
                 return new ContainerItem(this.itemTypesCatalog[itemCreationArguments.TypeId]);
             }

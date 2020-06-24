@@ -48,7 +48,7 @@ namespace Fibula.Mechanics.Operations
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //public abstract ExhaustionType ExhaustionType { get; }
+        // public abstract ExhaustionType ExhaustionType { get; }
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -138,10 +138,10 @@ namespace Fibula.Mechanics.Operations
                             new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
                         .Execute(context);
 
-                        //context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetCylinder.Location, lastAddedThing, requestorCreature));
+                        // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetCylinder.Location, lastAddedThing, requestorCreature));
                     }
 
-                    //context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(lastAddedThing, requestorCreature));
+                    // context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(lastAddedThing, requestorCreature));
                 }
 
                 if (success && remainder == null)

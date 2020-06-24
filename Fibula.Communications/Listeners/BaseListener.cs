@@ -48,7 +48,6 @@ namespace Fibula.Communications.Listeners
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="options">The options for this listener.</param>
-        /// <param name="protocol">A reference to the protocol in play here.</param>
         /// <param name="socketConnectionFactory">A reference to the socekt connection factory in use.</param>
         /// <param name="dosDefender">A reference to a DoS defender service implementation.</param>
         /// <param name="keepConnectionOpen">Optional. A value indicating whether to maintain the connection open after processing a message in the connection.</param>

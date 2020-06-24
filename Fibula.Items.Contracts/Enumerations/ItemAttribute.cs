@@ -12,79 +12,64 @@
 
 namespace Fibula.Items.Contracts.Enumerations
 {
-    using Fibula.Items.Contracts.Abstractions;
-
     /// <summary>
-    /// Enumerates the different attributes of an <see cref="IItemType"/>.
+    /// Enumerates all known item attributes.
     /// </summary>
-    public enum ItemAttribute : byte
+    public enum ItemAttribute
     {
-        AbsTeleportEffect,
-        AmmoAttackValue,
-        AmmoEffectStrength,
-        AmmoMissile,
-        AmmoSpecialEffect,
-        AmmoType,
+        /// <summary>
+        /// Tracks the amount for a cumulative item.
+        /// </summary>
         Amount,
-        ArmorValue,
-        AvoidDamageTypes,
-        BodyPosition,
-        BowAmmoType,
-        BowRange,
-        Brightness,
+
+        /// <summary>
+        /// The capacity available in a container item.
+        /// </summary>
         Capacity,
-        ChangeTarget,
-        ContainerLiquidType,
-        CorpseType,
-        DamageReduction,
-        DestroyTarget,
-        DisguiseTarget,
-        Elevation,
-        ExpireTarget,
-        FontSize,
-        InformationType,
-        KeydoorTarget,
-        LeveldoorTarget,
-        LightColor,
-        MaxLength,
-        MaxLengthOnce,
-        Meaning,
-        MinimumLevel,
-        NamedoorTarget,
-        Nutrition,
-        PoolLiquidType,
-        Professions,
-        ProtectionDamageTypes,
-        QuestdoorTarget,
-        RelTeleportDisplacement,
-        RelTeleportEffect,
-        RotateTarget,
-        SavedExpireTime,
-        ShieldDefendValue,
-        SkillModification,
-        SkillNumber,
-        SourceLiquidType,
-        String,
-        ThrowAttackValue,
-        ThrowDefendValue,
-        ThrowEffectStrength,
-        ThrowFragility,
-        ThrowMissile,
-        ThrowRange,
-        ThrowSpecialEffect,
-        TotalExpireTime,
-        TotalUses,
-        WandAttackStrength,
-        WandAttackVariation,
-        WandDamageType,
-        WandManaConsumption,
-        WandMissile,
-        WandRange,
-        Waypoints,
-        WeaponAttackValue,
-        WeaponDefendValue,
-        WeaponType,
-        WearoutTarget,
-        Weight,
+
+        /// <summary>
+        /// The id of the item to change to on use.
+        /// </summary>
+        ChangeOnUseTo,
+
+        /// <summary>
+        /// The type of liquid that a liquid container, pool or source is of.
+        /// </summary>
+        LiquidType,
+
+        /// <summary>
+        /// The types of damage to avoid.
+        /// </summary>
+        DamageTypesToAvoid,
+
+        /// <summary>
+        /// The id of the item to disguise as.
+        /// </summary>
+        DisguiseAs,
+
+        /// <summary>
+        /// The position at which a dressable item can go.
+        /// </summary>
+        DressPosition,
+
+        /// <summary>
+        /// The movement penalty that a ground item has.
+        /// </summary>
+        MovementPenalty,
+
+        /// <summary>
+        /// The id of the item to rotate to.
+        /// </summary>
+        RotateTo,
+
+        /// <summary>
+        /// The content of a readable item.
+        /// </summary>
+        Text,
+
+        /// <summary>
+        /// The range that a readable item can be read within.
+        /// </summary>
+        ReadRange,
     }
 }

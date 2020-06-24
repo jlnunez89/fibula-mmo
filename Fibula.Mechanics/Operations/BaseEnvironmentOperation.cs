@@ -48,7 +48,7 @@ namespace Fibula.Mechanics.Operations
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //public override ExhaustionType ExhaustionType => ExhaustionType.None;
+        // public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -73,19 +73,21 @@ namespace Fibula.Mechanics.Operations
             {
                 context.CreatureManager.RegisterCreature(creature);
 
-                //if (creature is ICombatant combatant)
-                //{
-                //    combatant.CombatStarted += context.CombatApi.OnCombatantCombatStarted;
-                //    combatant.CombatEnded += context.CombatApi.OnCombatantCombatEnded;
-                //    combatant.TargetChanged += context.CombatApi.OnCombatantTargetChanged;
-                //    combatant.ChaseModeChanged += context.CombatApi.OnCombatantChaseModeChanged;
-                //    combatant.CombatCreditsConsumed += context.CombatApi.OnCombatCreditsConsumed;
-                //}
+                /*
+                if (creature is ICombatant combatant)
+                {
+                    combatant.CombatStarted += context.CombatApi.OnCombatantCombatStarted;
+                    combatant.CombatEnded += context.CombatApi.OnCombatantCombatEnded;
+                    combatant.TargetChanged += context.CombatApi.OnCombatantTargetChanged;
+                    combatant.ChaseModeChanged += context.CombatApi.OnCombatantChaseModeChanged;
+                    combatant.CombatCreditsConsumed += context.CombatApi.OnCombatCreditsConsumed;
+                }
 
-                //if (creature is IPlayer player)
-                //{
-                //    player.Inventory.SlotChanged += context.GameApi.OnPlayerInventoryChanged;
-                //}
+                if (creature is IPlayer player)
+                {
+                    player.Inventory.SlotChanged += context.GameApi.OnPlayerInventoryChanged;
+                }
+                */
 
                 context.Logger.Debug($"Placed {creature.Name} at {targetTile.Location}.");
 
@@ -129,19 +131,21 @@ namespace Fibula.Mechanics.Operations
 
             if (removedFromTile)
             {
-                //if (creature is ICombatant combatant)
-                //{
-                //    combatant.CombatStarted -= context.CombatApi.OnCombatantCombatStarted;
-                //    combatant.CombatEnded -= context.CombatApi.OnCombatantCombatEnded;
-                //    combatant.TargetChanged -= context.CombatApi.OnCombatantTargetChanged;
-                //    combatant.ChaseModeChanged -= context.CombatApi.OnCombatantChaseModeChanged;
-                //    combatant.CombatCreditsConsumed -= context.CombatApi.OnCombatCreditsConsumed;
-                //}
+                /*
+                if (creature is ICombatant combatant)
+                {
+                    combatant.CombatStarted -= context.CombatApi.OnCombatantCombatStarted;
+                    combatant.CombatEnded -= context.CombatApi.OnCombatantCombatEnded;
+                    combatant.TargetChanged -= context.CombatApi.OnCombatantTargetChanged;
+                    combatant.ChaseModeChanged -= context.CombatApi.OnCombatantChaseModeChanged;
+                    combatant.CombatCreditsConsumed -= context.CombatApi.OnCombatCreditsConsumed;
+                }
 
-                //if (creature is IPlayer player)
-                //{
-                //    player.Inventory.SlotChanged -= context.GameApi.OnPlayerInventoryChanged;
-                //}
+                if (creature is IPlayer player)
+                {
+                    player.Inventory.SlotChanged -= context.GameApi.OnPlayerInventoryChanged;
+                }
+                */
 
                 context.Scheduler.ScheduleEvent(
                     new CreatureRemovedNotification(

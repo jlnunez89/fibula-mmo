@@ -39,7 +39,7 @@ namespace Fibula.Protocol.V772.PacketWriters
         /// <param name="message">The message to write into.</param>
         public override void WriteToMessage(IOutboundPacket packet, ref INetworkMessage message)
         {
-            if (!(packet is RemoveAtPositionPacket removeAtPositionPacket))
+            if (!(packet is RemoveAtLocationPacket removeAtPositionPacket))
             {
                 this.Logger.Warning($"Invalid packet {packet.GetType().Name} routed to {this.GetType().Name}");
 

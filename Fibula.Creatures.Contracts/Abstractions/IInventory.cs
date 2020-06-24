@@ -19,35 +19,10 @@ namespace Fibula.Creatures.Contracts.Abstractions
     /// </summary>
     public interface IInventory
     {
-        ///// <summary>
-        ///// A delegate to invoke when a slot in the inventory is changed.
-        ///// </summary>
-        //event OnInventorySlotChanged SlotChanged;
-
         /// <summary>
         /// Gets a reference to the owner of this inventory.
         /// </summary>
         ICreature Owner { get; }
-
-        /// <summary>
-        /// Gets the attack range suggested by equiped weapons in this inventory.
-        /// </summary>
-        byte EquipmentAttackRange { get; }
-
-        /// <summary>
-        /// Gets the attack power suggested by equiped weapons in this inventory.
-        /// </summary>
-        ushort EquipmentAttackPower { get; }
-
-        /// <summary>
-        /// Gets the defense power suggested by equiped weapons in this inventory.
-        /// </summary>
-        ushort EquipmentDefensePower { get; }
-
-        /// <summary>
-        /// Gets the armor rating suggested by equiped weapons in this inventory.
-        /// </summary>
-        ushort EquipmentArmorRating { get; }
 
         /// <summary>
         /// Gets the <see cref="IItem"/> at a given position of this inventory.

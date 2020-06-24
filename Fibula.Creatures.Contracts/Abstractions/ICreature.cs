@@ -110,35 +110,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         uint Flags { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this creature is currently thinking.
-        /// </summary>
-        bool IsThinking { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this creature is currently invisible from any source.
-        /// </summary>
-        // TODO: rethink this one? might want to make creatures invisible depending on who's querying.
-        bool IsInvisible { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this creature can perceive all invisible creatures.
-        /// </summary>
-        // TODO: rethink this one?
-        bool CanSeeInvisible { get; }
-
-        /// <summary>
-        /// Gets this creature's skull status.
-        /// </summary>
-        // TODO: implement or decide what to do with this.
-        byte Skull { get; }
-
-        /// <summary>
-        /// Gets this creature's shield status.
-        /// </summary>
-        // TODO: implement or decide what to do with this.
-        byte Shield { get; }
-
-        /// <summary>
         /// Gets the inventory for the entity.
         /// </summary>
         IInventory Inventory { get; }

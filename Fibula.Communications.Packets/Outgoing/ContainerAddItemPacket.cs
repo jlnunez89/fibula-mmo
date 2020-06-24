@@ -16,13 +16,16 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
 
+    /// <summary>
+    /// Class that represents a packet for an item added to a container.
+    /// </summary>
     public class ContainerAddItemPacket : IOutboundPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerAddItemPacket"/> class.
         /// </summary>
-        /// <param name="containerId"></param>
-        /// <param name="item"></param>
+        /// <param name="containerId">The id of the container.</param>
+        /// <param name="item">The item being added.</param>
         public ContainerAddItemPacket(byte containerId, IItem item)
         {
             this.ContainerId = containerId;
@@ -34,8 +37,14 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.ContainerAddItem;
 
+        /// <summary>
+        /// Gets the id of the container, as seen by the target player.
+        /// </summary>
         public byte ContainerId { get; }
 
+        /// <summary>
+        /// Gets the item being added.
+        /// </summary>
         public IItem Item { get; }
     }
 }

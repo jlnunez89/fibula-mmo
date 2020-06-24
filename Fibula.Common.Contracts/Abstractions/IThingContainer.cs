@@ -12,10 +12,6 @@
 
 namespace Fibula.Common.Contracts.Abstractions
 {
-    using System.Collections.Generic;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
-
     /// <summary>
     /// Interface for all containers of <see cref="IThing"/>s.
     /// </summary>
@@ -27,15 +23,6 @@ namespace Fibula.Common.Contracts.Abstractions
         /// <param name="index">The index at which to look for the <see cref="IThing"/>.</param>
         /// <returns>The <see cref="IThing"/> found at the index, if any was found.</returns>
         IThing FindThingAtIndex(byte index);
-
-        /// <summary>
-        /// Forcefully adds parsed content elements to this container.
-        /// </summary>
-        /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="thingFactory">A reference to the factory of things to use.</param>
-        /// <param name="contentElements">The content elements to add.</param>
-        // TODO: move to somewhere else to decouple.
-        void AddContent(ILogger logger, IThingFactory thingFactory, IEnumerable<IParsedElement> contentElements);
 
         /// <summary>
         /// Attempts to add a <see cref="IThing"/> to this container.

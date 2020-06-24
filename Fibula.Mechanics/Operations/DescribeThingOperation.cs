@@ -144,16 +144,16 @@ namespace Fibula.Mechanics.Operations
         {
             string description = $"{itemToDescribe.Type.Name}";
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.LiquidPool) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.PoolLiquidType))
+            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsLiquidPool) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
             {
-                var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.PoolLiquidType]).ToString().ToLower();
+                var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.LiquidType]).ToString().ToLower();
 
                 description += $" of {liquidTypeName}";
             }
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.LiquidContainer) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.ContainerLiquidType))
+            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsLiquidContainer) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
             {
-                var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.ContainerLiquidType]).ToString().ToLower();
+                var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.LiquidType]).ToString().ToLower();
 
                 description += $" of {liquidTypeName}";
             }
@@ -171,10 +171,10 @@ namespace Fibula.Mechanics.Operations
                 description += $"\n{itemToDescribe.Type.Description}";
             }
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.Text) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.String) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.FontSize))
+            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsReadable) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.Text) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.ReadRange))
             {
-                var text = itemToDescribe.Attributes[ItemAttribute.String] as string;
-                var fontSize = itemToDescribe.Attributes[ItemAttribute.FontSize] as int? ?? 0;
+                var text = itemToDescribe.Attributes[ItemAttribute.Text] as string;
+                var fontSize = itemToDescribe.Attributes[ItemAttribute.ReadRange] as int? ?? 0;
 
                 var locationDiff = itemToDescribe.Location - this.PlayerToDescribeFor.Location;
                 var readingDistance = itemToDescribe.CarryLocation != null ? 0 : itemToDescribe.Location.Type != LocationType.Map ? 0 : locationDiff.MaxValueIn2D + Math.Abs(locationDiff.Z * 10);

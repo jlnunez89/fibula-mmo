@@ -49,7 +49,7 @@ namespace Fibula.Protocol.V772.PacketWriters
             message.AddByte(containerOpenPacket.PacketType);
 
             message.AddByte(containerOpenPacket.ContainerId);
-            message.AddUInt16(containerOpenPacket.ClientItemId);
+            message.AddUInt16(containerOpenPacket.TypeId);
             message.AddString(containerOpenPacket.Name);
             message.AddByte(containerOpenPacket.Volume);
             message.AddByte(Convert.ToByte(containerOpenPacket.HasParent ? 0x01 : 0x00));

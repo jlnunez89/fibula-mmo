@@ -67,10 +67,19 @@ namespace Fibula.Data.Entities
         /// </summary>
         public bool IsOnline { get; set; }
 
+        /// <summary>
+        /// Gets the max hitpoints to create the creature with.
+        /// </summary>
         public ushort MaxHitpoints => 100;
 
+        /// <summary>
+        /// Gets the max manapoints to create the creature with.
+        /// </summary>
         public ushort MaxManapoints => 0;
 
+        /// <summary>
+        /// Gets the corpse id to give to the creature.
+        /// </summary>
         public ushort Corpse => 4240;
     }
 }

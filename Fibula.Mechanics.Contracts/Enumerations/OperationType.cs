@@ -12,38 +12,71 @@
 
 namespace Fibula.Mechanics.Contracts.Enumerations
 {
+    /// <summary>
+    /// Class that enumerates the different types of operations available.
+    /// </summary>
     public enum OperationType
     {
-        Thinking,
+        /// <summary>
+        /// A speech operation.
+        /// </summary>
         Speech,
-        CancelActions,
+
+        /// <summary>
+        /// An operation to cancel other operations.
+        /// </summary>
+        CancelOperations,
+
+        /// <summary>
+        /// An operation to change modes.
+        /// </summary>
         ChangeModes,
+
+        /// <summary>
+        /// An operation to describe a thing.
+        /// </summary>
         DescribeThing,
 
-        // Actions
+        /// <summary>
+        /// A movement operation.
+        /// </summary>
+        Movement,
+
+        /// <summary>
+        /// The operation of logging in.
+        /// </summary>
+        LogIn,
+
+        /// <summary>
+        /// The operation of logging out.
+        /// </summary>
+        LogOut,
+
+        /// <summary>
+        /// An operation of a creature turn.
+        /// </summary>
+        Turn,
+
+        /*
+        Thinking,
+
         ContainerOpen,
         ContainerClose,
         ContainerMoveUp,
-        Turn,
         UseItem,
         UseItemOn,
 
-        // Combat
         AutoAttack,
         RestoreCombatCredit,
 
-        // Movement
         AutoWalk,
-        Movement,
 
-        // Elevated
         ChangeItem,
         CreateItem,
         DeleteItem,
-        LogIn,
-        LogOut,
         PlaceCreature,
         RemoveCreature,
         SpawnMonsters,
+        */
     }
 }

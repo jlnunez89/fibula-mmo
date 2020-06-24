@@ -12,78 +12,124 @@
 
 namespace Fibula.Items.Contracts.Enumerations
 {
-    using Fibula.Items.Contracts.Abstractions;
-
     /// <summary>
-    /// Enumerates all known <see cref="IItemType"/> flags.
+    /// Enumerates all known item flags.
     /// </summary>
-    public enum ItemFlag : byte
+    public enum ItemFlag
     {
-        Ammo,
-        Armor,
-        Avoid,
-        Bank,
-        Bed,
-        Bottom,
-        Bow,
-        ChangeUse,
-        Chest,
-        Clip,
-        Clothes,
-        CollisionEvent,
-        Container,
-        Corpse,
-        Cumulative,
-        Destroy,
-        Disguise,
-        DistUse,
-        Expire,
-        ExpireStop,
-        Food,
-        ForceUse,
-        Hang,
-        Height,
-        HookEast,
-        HookSouth,
-        Information,
-        Key,
-        KeyDoor,
-        LevelDoor,
-        Light,
-        LiquidContainer,
-        LiquidPool,
-        LiquidSource,
-        MagicField,
-        MovementEvent,
-        MultiUse,
-        NameDoor,
-        Protection,
-        QuestDoor,
-        RestrictLevel,
-        RestrictProfession,
-        RopeSpot,
-        Rotate,
-        Rune,
-        SeparationEvent,
-        Shield,
-        ShowDetail,
-        SkillBoost,
-        Special,
-        Take,
-        TeleportAbsolute,
-        TeleportRelative,
-        Text,
-        Throw,
-        Top,
-        Unlay,
-        Unmove,
-        Unpass,
-        Unthrow,
-        UseEvent,
-        Wand,
-        Weapon,
-        WearOut,
-        Write,
-        WriteOnce,
+        /// <summary>
+        /// An item that blocks other items to be laid on top of it.
+        /// </summary>
+        BlocksLay,
+
+        /// <summary>
+        /// An item that blocks walking on it.
+        /// </summary>
+        BlocksWalk,
+
+        /// <summary>
+        /// An item that blocks throwing or projectiles throught it.
+        /// </summary>
+        BlocksThrow,
+
+        /// <summary>
+        /// An item that can be picked up.
+        /// </summary>
+        CanBePickedUp,
+
+        /// <summary>
+        /// An item that can be rotated.
+        /// </summary>
+        CanBeRotated,
+
+        /// <summary>
+        /// An item that changes when used.
+        /// </summary>
+        ChangesOnUse,
+
+        /// <summary>
+        /// An item that is clipped to another.
+        /// </summary>
+        IsClipped,
+
+        /// <summary>
+        /// An item that is a container.
+        /// </summary>
+        IsContainer,
+
+        /// <summary>
+        /// An item that is cumulative.
+        /// </summary>
+        IsCumulative,
+
+        /// <summary>
+        /// An item that disguises as another.
+        /// </summary>
+        IsDisguised,
+
+        /// <summary>
+        /// An item that is dressable.
+        /// </summary>
+        IsDressable,
+
+        /// <summary>
+        /// An item that is ground.
+        /// </summary>
+        IsGround,
+
+        /// <summary>
+        /// An item that is a container for liquids.
+        /// </summary>
+        IsLiquidContainer,
+
+        /// <summary>
+        /// An item that is a pool of liquid.
+        /// </summary>
+        IsLiquidPool,
+
+        /// <summary>
+        /// An item that is a source of a certain liquid.
+        /// </summary>
+        IsLiquidSource,
+
+        /// <summary>
+        /// An item that contains text and is readable.
+        /// </summary>
+        IsReadable,
+
+        /// <summary>
+        /// An item that is a quest chest.
+        /// </summary>
+        IsQuestChest,
+
+        /// <summary>
+        /// An item that cannot be moved.
+        /// </summary>
+        IsUnmoveable,
+
+        /// <summary>
+        /// An item that should be avoided by certain damage types, but does not actually <see cref="BlocksWalk"/>.
+        /// </summary>
+        ShouldBeAvoided,
+
+        /// <summary>
+        /// An item that stays on bottom of the stack.
+        /// </summary>
+        StaysOnBottom,
+
+        /// <summary>
+        /// An item that stays on top of the stack.
+        /// </summary>
+        StaysOnTop,
+
+        /// <summary>
+        /// An item that triggers collision.
+        /// </summary>
+        TriggersCollision,
+
+        /// <summary>
+        /// An item that triggers separation.
+        /// </summary>
+        TriggersSeparation,
     }
 }

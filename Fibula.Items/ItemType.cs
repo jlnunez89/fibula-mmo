@@ -14,7 +14,6 @@ namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;
-    using System.IO;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
 
@@ -69,7 +68,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets the client id of the type of this item.
         /// </summary>
-        public ushort ClientId => this.Flags.Contains(ItemFlag.Disguise) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseTarget]) : this.TypeId;
+        public ushort ClientId => this.Flags.Contains(ItemFlag.IsDisguised) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseAs]) : this.TypeId;
 
         /// <summary>
         /// Locks the type, preventing it from accepting changes.
@@ -138,18 +137,13 @@ namespace Fibula.Items
         /// <summary>
         /// Sets an attribute in this type.
         /// </summary>
-        /// <param name="attributeName">The name of the attribute to set in the type.</param>
+        /// <param name="attribute">The attribute to set in the type.</param>
         /// <param name="attributeValue">The value of the attribute to set in the type.</param>
-        public void SetAttribute(string attributeName, int attributeValue)
+        public void SetAttribute(ItemAttribute attribute, int attributeValue)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetAttribute)}({nameof(attributeName)}={attributeName},{nameof(attributeValue)}={attributeValue}");
-            }
-
-            if (!Enum.TryParse(attributeName, out ItemAttribute attribute))
-            {
-                throw new InvalidDataException($"Attempted to set an unknown item attribute [{attributeName}].");
+                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetAttribute)}({nameof(attribute)}={attribute},{nameof(attributeValue)}={attributeValue}");
             }
 
             this.DefaultAttributes[attribute] = attributeValue;

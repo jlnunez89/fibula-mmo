@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="TcpClient.cs" company="2Dudes">
+// <copyright file="Client.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -12,7 +12,6 @@
 
 namespace Fibula.Client
 {
-    using System;
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
@@ -22,24 +21,19 @@ namespace Fibula.Client
     using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that implements an <see cref="IClient"/> for Tcp connections.
+    /// Class that implements an <see cref="IClient"/> for any sort of connection.
     /// </summary>
-    public class TcpClient : IClient
+    public class Client : IClient
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TcpClient"/> class.
+        /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
         /// <param name="connection">The connection that this client uses.</param>
-        public TcpClient(IConnection connection)
+        public Client(IConnection connection)
         {
             connection.ThrowIfNull(nameof(connection));
 
-            if (!(connection is ISocketConnection socketConnection))
-            {
-                throw new ArgumentException($"This client requires a {nameof(connection)} derived of type {nameof(ISocketConnection)}.");
-            }
-
-            this.Connection = socketConnection;
+            this.Connection = connection;
             this.ClientInformation = new ClientInformation()
             {
                 Type = AgentType.Undefined,

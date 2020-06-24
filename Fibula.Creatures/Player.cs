@@ -36,10 +36,6 @@ namespace Fibula.Creatures
         /// </summary>
         private readonly IDictionary<uint, long> knownCreatures;
 
-        //private ChaseMode chaseMode;
-
-        //private FightMode fightMode;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
         /// </summary>
@@ -85,19 +81,20 @@ namespace Fibula.Creatures
 
             this.SoulPoints = 0;
 
-            //this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, 1.0, 100, 100, 150);
-            //this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 1, 1.0, 10, 1, 150);
-            //this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Axe] = new Skill(SkillType.Axe, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Club] = new Skill(SkillType.Club, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Sword] = new Skill(SkillType.Sword, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
-            //this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
+            /*
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, 1.0, 100, 100, 150);
+            this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 1, 1.0, 10, 1, 150);
+            this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Axe] = new Skill(SkillType.Axe, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Club] = new Skill(SkillType.Club, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Sword] = new Skill(SkillType.Sword, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
+            this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
+            */
 
             this.Speed = this.CalculateMovementBaseSpeed();
 
-            // this.VipList = new Dictionary<string, bool>();
             this.Inventory = new PlayerInventory(this);
         }
 
@@ -119,7 +116,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the player's soul points.
         /// </summary>
-        // TODO: nobody likes soulpoints... figure out what to do with them :)
+        // TODO: nobody likes soulpoints... figure out what to do with them.
         public byte SoulPoints { get; }
 
         /// <summary>
@@ -132,77 +129,9 @@ namespace Fibula.Creatures
         /// </summary>
         public sealed override IInventory Inventory { get; protected set; }
 
-        ///// <summary>
-        ///// Gets the range that the auto attack has.
-        ///// </summary>
-        //public override byte AutoAttackRange => this.Inventory.EquipmentAttackRange;
-
-        ///// <summary>
-        ///// Gets the attack power of this combatant.
-        ///// </summary>
-        //public override ushort AttackPower => this.Inventory.EquipmentAttackPower;
-
-        ///// <summary>
-        ///// Gets the defense power of this combatant.
-        ///// </summary>
-        //public override ushort DefensePower => this.Inventory.EquipmentDefensePower;
-
-        ///// <summary>
-        ///// Gets the armor rating of this combatant.
-        ///// </summary>
-        //public override ushort ArmorRating => this.Inventory.EquipmentArmorRating;
-
-        ///// <summary>
-        ///// Gets or sets the chase mode selected by this combatant.
-        ///// </summary>
-        //public override ChaseMode ChaseMode
-        //{
-        //    get
-        //    {
-        //        return this.chaseMode;
-        //    }
-
-        //    set
-        //    {
-        //        var oldMode = this.chaseMode;
-
-        //        this.chaseMode = value;
-
-        //        if (oldMode != this.chaseMode)
-        //        {
-        //            this.InvokeChaseModeChanged(oldMode);
-        //        }
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Gets or sets the fight mode selected by this combatant.
-        ///// </summary>
-        //public override FightMode FightMode
-        //{
-        //    get
-        //    {
-        //        return this.fightMode;
-        //    }
-
-        //    set
-        //    {
-        //        var oldMode = this.fightMode;
-
-        //        this.fightMode = value;
-
-        //        if (oldMode != this.fightMode)
-        //        {
-        //            this.InvokeFightModeChanged(oldMode);
-        //        }
-        //    }
-        //}
-
         /// <summary>
-        /// Gets a value indicating whether this player is thinking, which is always true.
+        /// Gets the client associated to this player.
         /// </summary>
-        public override bool IsThinking => true;
-
         public IClient Client { get; }
 
         /// <summary>
@@ -252,24 +181,6 @@ namespace Fibula.Creatures
 
             return uint.MinValue;
         }
-
-        ///// <summary>
-        ///// Sets a <see cref="ICombatant"/> now in view for this combatant.
-        ///// </summary>
-        ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        //public override void CombatantNowInView(ICombatant otherCombatant)
-        //{
-        //    return;
-        //}
-
-        ///// <summary>
-        ///// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
-        ///// </summary>
-        ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        //public override void CombatantNoLongerInView(ICombatant otherCombatant)
-        //{
-        //    return;
-        //}
 
         private ushort CalculateMovementBaseSpeed()
         {

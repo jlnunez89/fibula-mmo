@@ -17,13 +17,20 @@ namespace Fibula.Map.SectorFiles
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Delegates;
+    using Fibula.Map.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles;
+    using Fibula.Parsing.CipFiles.Enumerations;
+    using Fibula.Parsing.CipFiles.Extensions;
+    using Fibula.Parsing.Contracts.Abstractions;
     using Microsoft.Extensions.Options;
     using Serilog;
 
@@ -319,7 +326,7 @@ namespace Fibula.Map.SectorFiles
                 // start off with a tile that has no ground in it.
                 ITile newTile = new Tile(location, null);
 
-                newTile.AddContent(this.Logger, this.ItemFactory, CipFileParser.Parse(tileData));
+                this.AddContent(newTile, CipFileParser.Parse(tileData));
 
                 loadedTilesList.Add((location, newTile));
             }
@@ -327,6 +334,143 @@ namespace Fibula.Map.SectorFiles
             this.Logger.Verbose($"Sector file {fileName}: {loadedTilesList.Count} tiles loaded.");
 
             return loadedTilesList;
+        }
+
+        /// <summary>
+        /// Forcefully adds parsed content elements to this container.
+        /// </summary>
+        /// <param name="tile">The tile to add content to.</param>
+        /// <param name="contentElements">The content elements to add.</param>
+        private void AddContent(ITile tile, IEnumerable<IParsedElement> contentElements)
+        {
+            contentElements.ThrowIfNull(nameof(contentElements));
+
+            // load and add tile flags and contents.
+            foreach (var e in contentElements)
+            {
+                foreach (var attribute in e.Attributes)
+                {
+                    if (attribute.Name.Equals("Content"))
+                    {
+                        if (attribute.Value is IEnumerable<IParsedElement> elements)
+                        {
+                            var thingStack = new Stack<IThing>();
+
+                            foreach (var element in elements)
+                            {
+                                if (element.IsFlag)
+                                {
+                                    // A flag is unexpected in this context.
+                                    this.Logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
+
+                                    continue;
+                                }
+
+                                IItem item = this.ItemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
+
+                                if (item == null)
+                                {
+                                    this.Logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
+
+                                    continue;
+                                }
+
+                                this.SetItemAttributes(item, element.Attributes);
+
+                                thingStack.Push(item);
+                            }
+
+                            // Add them in reversed order.
+                            while (thingStack.Count > 0)
+                            {
+                                var thing = thingStack.Pop();
+
+                                tile.AddContent(this.ItemFactory, thing);
+
+                                if (thing is IContainedThing thingWithParentCylinder)
+                                {
+                                    thingWithParentCylinder.ParentContainer = tile;
+                                }
+                            }
+                        }
+                    }
+                    else
+                    {
+                        // it's a flag
+                        if (Enum.TryParse(attribute.Name, out TileFlag flagMatch))
+                        {
+                            tile.SetFlag(flagMatch);
+                        }
+                        else
+                        {
+                            this.Logger.Warning($"Unknown flag [{attribute.Name}] found on tile at location {tile.Location}.");
+                        }
+                    }
+                }
+            }
+        }
+
+        private void SetItemAttributes(IItem item, IList<IParsedAttribute> attributes)
+        {
+            if (attributes == null)
+            {
+                return;
+            }
+
+            foreach (var attribute in attributes)
+            {
+                if ("Content".Equals(attribute.Name) && this is IContainerItem containerItem)
+                {
+                    if (!(attribute.Value is IEnumerable<IParsedElement> contentElements) || !contentElements.Any())
+                    {
+                        continue;
+                    }
+
+                    foreach (var element in contentElements)
+                    {
+                        if (element.IsFlag)
+                        {
+                            // A flag is unexpected in this context.
+                            this.Logger.Warning($"Unexpected flag {element.Attributes?.First()?.Name}, ignoring.");
+
+                            continue;
+                        }
+
+                        IItem contentItem = this.ItemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
+
+                        if (contentItem == null)
+                        {
+                            this.Logger.Warning($"Item with id {element.Id} not found in the catalog, skipping.");
+
+                            continue;
+                        }
+
+                        this.SetItemAttributes(contentItem, element.Attributes);
+
+                        // TODO: we should be able to go over capacity here.
+                        containerItem.AddContent(this.ItemFactory, contentItem, 0xFF);
+                    }
+
+                    continue;
+                }
+
+                // These are safe to add as Attributes of the item.
+                if (!Enum.TryParse(attribute.Name, out CipItemAttribute cipAttr) || !(cipAttr.ToItemAttribute() is ItemAttribute itemAttribute))
+                {
+                    this.Logger.Warning($"Unsupported attribute {attribute.Name} on {item.Type.Name}, ignoring.");
+
+                    continue;
+                }
+
+                try
+                {
+                    item.Attributes[itemAttribute] = attribute.Value as IConvertible;
+                }
+                catch
+                {
+                    this.Logger.Warning($"Unexpected attribute {attribute.Name} with illegal value {attribute.Value} on item {item.Type.Name}, ignoring.");
+                }
+            }
         }
     }
 }

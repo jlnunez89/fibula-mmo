@@ -26,10 +26,10 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="LogInOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="client"></param>
-        /// <param name="metadata"></param>
-        /// <param name="currentWorldLightLevel"></param>
-        /// <param name="currentWorldLightColor"></param>
+        /// <param name="client">The client calling the log in operation.</param>
+        /// <param name="metadata">The creation metadata for the player instance being created.</param>
+        /// <param name="currentWorldLightLevel">The initial world light level to send to the player on log in.</param>
+        /// <param name="currentWorldLightColor">The initial world light color to send to the player on log in.</param>
         public LogInOperationCreationArguments(IClient client, ICreatureCreationMetadata metadata, byte currentWorldLightLevel, byte currentWorldLightColor)
         {
             client.ThrowIfNull(nameof(client));
@@ -51,12 +51,24 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// </summary>
         public uint RequestorId { get; }
 
+        /// <summary>
+        /// Gets the client requesting the log in.
+        /// </summary>
         public IClient Client { get; }
 
+        /// <summary>
+        /// Gets the creation metadata for the creature instance to create.
+        /// </summary>
         public ICreatureCreationMetadata CreationMetadata { get; }
 
+        /// <summary>
+        /// Gets the initial world light level to send to the player logging in.
+        /// </summary>
         public byte WorldLightLevel { get; }
 
+        /// <summary>
+        /// Gets the initial world light color to send to the player logging in.
+        /// </summary>
         public byte WorldLightColor { get; }
     }
 }

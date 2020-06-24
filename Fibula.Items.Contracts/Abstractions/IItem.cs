@@ -17,18 +17,12 @@ namespace Fibula.Items.Contracts.Abstractions
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Items.Contracts.Enumerations;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Interface for all items in the game.
     /// </summary>
     public interface IItem : IThing, IContainedThing
     {
-        // event ItemHolderChangeEvent OnHolderChanged;
-
-        // event ItemAmountChangeEvent OnAmountChanged;
-
         /// <summary>
         /// Gets the unique id of this item.
         /// </summary>
@@ -45,14 +39,28 @@ namespace Fibula.Items.Contracts.Abstractions
         IDictionary<ItemAttribute, IConvertible> Attributes { get; }
 
         /// <summary>
+        /// Gets or sets the amount of this item.
+        /// </summary>
+        byte Amount { get; set; }
+
+        /// <summary>
         /// Gets a value indicating whether this item is ground floor.
         /// </summary>
         bool IsGround { get; }
 
+        /// <summary>
+        /// Gets the movement cost for walking over this item, assuming it <see cref="IsGround"/>.
+        /// </summary>
         byte MovementPenalty { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item stays on top of the stack.
+        /// </summary>
         bool StaysOnTop { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item stays on the bottom of the stack.
+        /// </summary>
         bool StaysOnBottom { get; }
 
         /// <summary>
@@ -77,22 +85,39 @@ namespace Fibula.Items.Contracts.Abstractions
         /// </summary>
         ushort RotateTo { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid pool.
+        /// </summary>
         bool IsLiquidPool { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid source.
+        /// </summary>
         bool IsLiquidSource { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid container.
+        /// </summary>
         bool IsLiquidContainer { get; }
 
+        /// <summary>
+        /// Gets the type of liquid in this item, assuming it: <see cref="IsLiquidPool"/>, <see cref="IsLiquidSource"/>, or <see cref="IsLiquidContainer"/>.
+        /// </summary>
         LiquidType LiquidType { get; }
 
-        bool HasCollision { get; }
-
-        bool HasSeparation { get; }
-
+        /// <summary>
+        /// Gets a value indicating whether the item blocks throwing through it.
+        /// </summary>
         bool BlocksThrow { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the item blocks walking on it.
+        /// </summary>
         bool BlocksPass { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the item blocks laying anything on it.
+        /// </summary>
         bool BlocksLay { get; }
 
         /// <summary>
@@ -110,28 +135,20 @@ namespace Fibula.Items.Contracts.Abstractions
         /// </summary>
         bool CanBeDressed { get; }
 
+        /// <summary>
+        /// Gets the position at which the item can be dressed.
+        /// </summary>
         Slot DressPosition { get; }
 
-        // byte DressPosition { get; }
-
-        // byte Attack { get; }
-
-        // byte Defense { get; }
-
-        // byte Armor { get; }
-
-        // int Range { get; }
-
-        // decimal Weight { get; }
+        /// <summary>
+        /// Gets a value indicating whether this item triggers a collision event.
+        /// </summary>
+        bool HasCollision { get; }
 
         /// <summary>
-        /// Gets the amount of this item.
+        /// Gets a value indicating whether this item triggers a separation event.
         /// </summary>
-        byte Amount { get; }
-
-        void SetAmount(byte remainingCount);
-
-        void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes);
+        bool HasSeparation { get; }
 
         /// <summary>
         /// Attempts to join an item to this item's content at the default index.
@@ -148,6 +165,11 @@ namespace Fibula.Items.Contracts.Abstractions
         /// <returns>True if the operation was successful, false otherwise, along with the item produced, if any.</returns>
         (bool success, IItem itemProduced) Split(IItemFactory itemFactory, byte amount);
 
+        /// <summary>
+        /// Determines if this item is blocks pathfinding.
+        /// </summary>
+        /// <param name="avoidTypes">The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</param>
+        /// <returns>True if the tile is considered path blocking, false otherwise.</returns>
         bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All);
     }
 }

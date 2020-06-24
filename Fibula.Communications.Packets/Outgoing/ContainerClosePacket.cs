@@ -15,12 +15,15 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a packet for a container being closed.
+    /// </summary>
     public class ContainerClosePacket : IOutboundPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerClosePacket"/> class.
         /// </summary>
-        /// <param name="containerId"></param>
+        /// <param name="containerId">The id of the container being closed.</param>
         public ContainerClosePacket(byte containerId)
         {
             this.ContainerId = containerId;
@@ -31,6 +34,9 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.ContainerClose;
 
+        /// <summary>
+        /// Gets the id of the container, as seen by the target player.
+        /// </summary>
         public byte ContainerId { get; }
     }
 }

@@ -60,7 +60,7 @@ namespace Fibula.Notifications
 
             var packets = new List<IOutboundPacket>
             {
-                new RemoveAtPositionPacket(this.Arguments.Creature.Location, this.Arguments.OldStackPosition),
+                new RemoveAtLocationPacket(this.Arguments.Creature.Location, this.Arguments.OldStackPosition),
             };
 
             if (this.Arguments.RemoveEffect != AnimatedEffect.None)

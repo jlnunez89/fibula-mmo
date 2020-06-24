@@ -53,27 +53,159 @@ namespace Fibula.Mechanics.Operations
 
             switch (arguments.Type)
             {
-                //case OperationType.AutoAttack:
-                //    if (arguments is AutoAttackCombatOperationCreationArguments autoAttackOpArgs)
-                //    {
-                //        return new AutoAttackCombatOperation(
-                //            autoAttackOpArgs.Attacker,
-                //            autoAttackOpArgs.Target,
-                //            autoAttackOpArgs.ExhaustionCost);
-                //    }
+                /*
+                case OperationType.AutoAttack:
+                    if (arguments is AutoAttackCombatOperationCreationArguments autoAttackOpArgs)
+                    {
+                        return new AutoAttackCombatOperation(
+                            autoAttackOpArgs.Attacker,
+                            autoAttackOpArgs.Target,
+                            autoAttackOpArgs.ExhaustionCost);
+                    }
 
-                //    break;
-                //case OperationType.AutoWalk:
-                //    if (arguments is AutoWalkOperationCreationArguments autoWalkOpArgs)
-                //    {
-                //        return new AutoWalkOperation(
-                //            autoWalkOpArgs.RequestorId,
-                //            autoWalkOpArgs.Creature,
-                //            autoWalkOpArgs.Directions);
-                //    }
+                    break;
+                case OperationType.AutoWalk:
+                    if (arguments is AutoWalkOperationCreationArguments autoWalkOpArgs)
+                    {
+                        return new AutoWalkOperation(
+                            autoWalkOpArgs.RequestorId,
+                            autoWalkOpArgs.Creature,
+                            autoWalkOpArgs.Directions);
+                    }
 
-                //    break;
-                case OperationType.CancelActions:
+                    break;
+                case OperationType.ChangeItem:
+                    if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
+                    {
+                        return new ChangeItemOperation(
+                            changeItemOpArgs.RequestorId,
+                            changeItemOpArgs.ItemTypeId,
+                            changeItemOpArgs.FromLocation,
+                            changeItemOpArgs.ToTypeId,
+                            changeItemOpArgs.Carrier);
+                    }
+
+                    break;
+                case OperationType.ContainerOpen:
+                    if (arguments is OpenContainerOperationCreationArguments openContainerOpArgs)
+                    {
+                        return new OpenContainerOperation(
+                            openContainerOpArgs.Player,
+                            openContainerOpArgs.Container,
+                            openContainerOpArgs.ContainerId);
+                    }
+
+                    break;
+                case OperationType.ContainerClose:
+                    if (arguments is CloseContainerOperationCreationArguments closeContainerOpArgs)
+                    {
+                        return new CloseContainerOperation(
+                            closeContainerOpArgs.Player,
+                            closeContainerOpArgs.Container,
+                            closeContainerOpArgs.ContainerId);
+                    }
+
+                    break;
+                case OperationType.ContainerMoveUp:
+                    if (arguments is MoveUpContainerOperationCreationArguments moveUpContainerOpArgs)
+                    {
+                        return new MoveUpContainerOperation(
+                            moveUpContainerOpArgs.Player,
+                            moveUpContainerOpArgs.Container,
+                            moveUpContainerOpArgs.AsContainerId);
+                    }
+
+                    break;
+                case OperationType.CreateItem:
+                    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
+                    {
+                        return new CreateItemOperation(
+                            createItemOpArgs.RequestorId,
+                            createItemOpArgs.ItemTypeId,
+                            createItemOpArgs.AtLocation);
+                    }
+
+                    break;
+                case OperationType.DeleteItem:
+                    if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
+                    {
+                        return new DeleteItemOperation(
+                            deleteItemOpArgs.RequestorId,
+                            deleteItemOpArgs.ItemTypeId,
+                            deleteItemOpArgs.AtLocation);
+                    }
+
+                    break;
+                case OperationType.PlaceCreature:
+                    if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
+                    {
+                        return new PlaceCreatureOperation(
+                            placeCreatureOpArgs.RequestorId,
+                            placeCreatureOpArgs.AtTile,
+                            placeCreatureOpArgs.Creature);
+                    }
+
+                    break;
+                case OperationType.RemoveCreature:
+                    if (arguments is RemoveCreatureOperationCreationArguments removeCreatureOpArgs)
+                    {
+                        return new RemoveCreatureOperation(
+                            removeCreatureOpArgs.RequestorId,
+                            removeCreatureOpArgs.Creature);
+                    }
+
+                    break;
+                case OperationType.RestoreCombatCredit:
+                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
+                    {
+                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
+                    }
+
+                    break;
+                case OperationType.SpawnMonsters:
+                    if (arguments is SpawnMonstersOperationCreationArguments spawnMonstersOpArgs)
+                    {
+                        return new SpawnMonstersOperation(
+                            NoRequestorId,
+                            spawnMonstersOpArgs.Spawn,
+                            spawnMonstersOpArgs.MonsterCreationMetadata);
+                    }
+
+                    break;
+                case OperationType.Thinking:
+                    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
+                    {
+                        return new ThinkingOperation(thinkingOpArgs.Creature, thinkingOpArgs.Cadence);
+                    }
+
+                    break;
+                case OperationType.UseItem:
+                    if (arguments is UseItemOperationCreationArguments useItemOpArgs)
+                    {
+                        return new UseItemOperation(
+                            useItemOpArgs.RequestorId,
+                            useItemOpArgs.ItemTypeId,
+                            useItemOpArgs.FromLocation,
+                            useItemOpArgs.FromIndex);
+                    }
+
+                    break;
+                case OperationType.UseItemOn:
+                    if (arguments is UseItemOnOperationCreationArguments useItemOnOpArgs)
+                    {
+                        return new UseItemOnOperation(
+                            useItemOnOpArgs.RequestorId,
+                            useItemOnOpArgs.FromItemTypeId,
+                            useItemOnOpArgs.FromLocation,
+                            useItemOnOpArgs.FromIndex,
+                            useItemOnOpArgs.ToThingId,
+                            useItemOnOpArgs.ToLocation,
+                            useItemOnOpArgs.ToIndex);
+                    }
+
+                    break;
+                */
+                case OperationType.CancelOperations:
                     if (arguments is CancelActionsOperationCreationArguments cancelActionsOpArguments)
                     {
                         return new CancelActionsOperation(
@@ -82,18 +214,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                //case OperationType.ChangeItem:
-                //    if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
-                //    {
-                //        return new ChangeItemOperation(
-                //            changeItemOpArgs.RequestorId,
-                //            changeItemOpArgs.ItemTypeId,
-                //            changeItemOpArgs.FromLocation,
-                //            changeItemOpArgs.ToTypeId,
-                //            changeItemOpArgs.Carrier);
-                //    }
-
-                //    break;
                 case OperationType.ChangeModes:
                     if (arguments is ChangeModesOperationCreationArguments changeModesOpArguments)
                     {
@@ -105,46 +225,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                //case OperationType.ContainerOpen:
-                //    if (arguments is OpenContainerOperationCreationArguments openContainerOpArgs)
-                //    {
-                //        return new OpenContainerOperation(
-                //            openContainerOpArgs.Player,
-                //            openContainerOpArgs.Container,
-                //            openContainerOpArgs.ContainerId);
-                //    }
-
-                //    break;
-                //case OperationType.ContainerClose:
-                //    if (arguments is CloseContainerOperationCreationArguments closeContainerOpArgs)
-                //    {
-                //        return new CloseContainerOperation(
-                //            closeContainerOpArgs.Player,
-                //            closeContainerOpArgs.Container,
-                //            closeContainerOpArgs.ContainerId);
-                //    }
-
-                //    break;
-                //case OperationType.ContainerMoveUp:
-                //    if (arguments is MoveUpContainerOperationCreationArguments moveUpContainerOpArgs)
-                //    {
-                //        return new MoveUpContainerOperation(
-                //            moveUpContainerOpArgs.Player,
-                //            moveUpContainerOpArgs.Container,
-                //            moveUpContainerOpArgs.AsContainerId);
-                //    }
-
-                //    break;
-                //case OperationType.CreateItem:
-                //    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
-                //    {
-                //        return new CreateItemOperation(
-                //            createItemOpArgs.RequestorId,
-                //            createItemOpArgs.ItemTypeId,
-                //            createItemOpArgs.AtLocation);
-                //    }
-
-                //    break;
                 case OperationType.DescribeThing:
                     if (arguments is DescribeThingOperationCreationArguments describeThingOpArgs)
                     {
@@ -156,16 +236,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                //case OperationType.DeleteItem:
-                //    if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
-                //    {
-                //        return new DeleteItemOperation(
-                //            deleteItemOpArgs.RequestorId,
-                //            deleteItemOpArgs.ItemTypeId,
-                //            deleteItemOpArgs.AtLocation);
-                //    }
-
-                //    break;
                 case OperationType.LogIn:
                     if (arguments is LogInOperationCreationArguments logInOpArgs)
                     {
@@ -200,61 +270,18 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                //case OperationType.PlaceCreature:
-                //    if (arguments is PlaceCreatureOperationCreationArguments placeCreatureOpArgs)
-                //    {
-                //        return new PlaceCreatureOperation(
-                //            placeCreatureOpArgs.RequestorId,
-                //            placeCreatureOpArgs.AtTile,
-                //            placeCreatureOpArgs.Creature);
-                //    }
-
-                //    break;
-                //case OperationType.RemoveCreature:
-                //    if (arguments is RemoveCreatureOperationCreationArguments removeCreatureOpArgs)
-                //    {
-                //        return new RemoveCreatureOperation(
-                //            removeCreatureOpArgs.RequestorId,
-                //            removeCreatureOpArgs.Creature);
-                //    }
-
-                //    break;
-                //case OperationType.RestoreCombatCredit:
-                //    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
-                //    {
-                //        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
-                //    }
-
-                //    break;
                 case OperationType.Speech:
                     if (arguments is SpeechOperationCreationArguments speechOperationOpArgs)
                     {
                         return new SpeechOperation(
                             speechOperationOpArgs.RequestorId,
                             speechOperationOpArgs.SpeechType,
-                            speechOperationOpArgs.ChannelId,
+                            speechOperationOpArgs.ChannelType,
                             speechOperationOpArgs.Content,
                             speechOperationOpArgs.Receiver);
                     }
 
                     break;
-                //case OperationType.SpawnMonsters:
-                //    if (arguments is SpawnMonstersOperationCreationArguments spawnMonstersOpArgs)
-                //    {
-                //        return new SpawnMonstersOperation(
-                //            NoRequestorId,
-                //            spawnMonstersOpArgs.Spawn,
-                //            spawnMonstersOpArgs.MonsterCreationMetadata);
-                //    }
-
-                //    break;
-                //case OperationType.Thinking:
-                //    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
-                //    {
-                //        return new ThinkingOperation(thinkingOpArgs.Creature, thinkingOpArgs.Cadence);
-                //    }
-
-                //    break;
                 case OperationType.Turn:
                     if (arguments is TurnToDirectionOperationCreationArguments turnToDirectionOpArgs)
                     {
@@ -262,32 +289,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                //case OperationType.UseItem:
-                //    if (arguments is UseItemOperationCreationArguments useItemOpArgs)
-                //    {
-                //        return new UseItemOperation(
-                //            useItemOpArgs.RequestorId,
-                //            useItemOpArgs.ItemTypeId,
-                //            useItemOpArgs.FromLocation,
-                //            useItemOpArgs.FromIndex);
-                //    }
-
-                //    break;
-                //case OperationType.UseItemOn:
-                //    if (arguments is UseItemOnOperationCreationArguments useItemOnOpArgs)
-                //    {
-                //        return new UseItemOnOperation(
-                //            useItemOnOpArgs.RequestorId,
-                //            useItemOnOpArgs.FromItemTypeId,
-                //            useItemOnOpArgs.FromLocation,
-                //            useItemOnOpArgs.FromIndex,
-                //            useItemOnOpArgs.ToThingId,
-                //            useItemOnOpArgs.ToLocation,
-                //            useItemOnOpArgs.ToIndex);
-                //    }
-
-                //    break;
-
                 default:
                     throw new NotSupportedException($"Unsupported operation type {arguments.Type}.");
             }

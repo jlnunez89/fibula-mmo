@@ -24,10 +24,10 @@ namespace Fibula.Mechanics.Operations
         /// <summary>
         /// Initializes a new instance of the <see cref="ChangeModesOperation"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="fightMode"></param>
-        /// <param name="chaseMode"></param>
-        /// <param name="safeModeOn"></param>
+        /// <param name="requestorId">The id of the creature setting the modes.</param>
+        /// <param name="fightMode">The fight mode to set.</param>
+        /// <param name="chaseMode">The chase mode to set.</param>
+        /// <param name="safeModeOn">A value indicating whether the safety mode is on.</param>
         public ChangeModesOperation(uint requestorId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
             : base(requestorId)
         {
@@ -39,17 +39,26 @@ namespace Fibula.Mechanics.Operations
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
+        // public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
         public override TimeSpan ExhaustionCost { get; protected set; }
 
+        /// <summary>
+        /// Gets the fight mode to set.
+        /// </summary>
         public FightMode FightMode { get; }
 
+        /// <summary>
+        /// Gets the chase mode to set.
+        /// </summary>
         public ChaseMode ChaseMode { get; }
 
+        /// <summary>
+        /// Gets a value indicating whether the safety mode should be set to on.
+        /// </summary>
         public bool IsSafeModeOn { get; }
 
         /// <summary>

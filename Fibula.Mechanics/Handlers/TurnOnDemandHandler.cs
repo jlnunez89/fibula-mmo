@@ -68,9 +68,7 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            // player.ClearAllLocationBasedOperations();
-            // this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
-
+            // TODO: cancel other pending actions.
             this.Game.CreatureTurn(player.Id, player, turnOnDemandInfo.Direction);
 
             return null;

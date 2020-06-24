@@ -21,8 +21,6 @@ namespace Fibula.Items
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
-    using Fibula.Parsing.Contracts.Abstractions;
-    using Serilog;
 
     /// <summary>
     /// Class that represents all items in the game.
@@ -66,7 +64,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item changes on use.
         /// </summary>
-        public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangeUse);
+        public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangesOnUse);
 
         /// <summary>
         /// Gets the Id of the item into which this will change upon use.
@@ -77,19 +75,19 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.ChangeUse))
+                if (!this.Type.Flags.Contains(ItemFlag.ChangesOnUse))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ChangeOnUseTo)} on an item which doesn't have a target: {this.ThingId}");
                 }
 
-                return Convert.ToUInt16(this.Attributes[ItemAttribute.ChangeTarget]);
+                return Convert.ToUInt16(this.Attributes[ItemAttribute.ChangeOnUseTo]);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether this item can be rotated.
         /// </summary>
-        public bool CanBeRotated => this.Type.Flags.Contains(ItemFlag.Rotate);
+        public bool CanBeRotated => this.Type.Flags.Contains(ItemFlag.CanBeRotated);
 
         /// <summary>
         /// Gets the Id of the item into which this will rotate to.
@@ -100,28 +98,34 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.Rotate))
+                if (!this.Type.Flags.Contains(ItemFlag.CanBeRotated))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.RotateTo)} on an item which doesn't have a target: {this.ThingId}");
                 }
 
-                return Convert.ToUInt16(this.Attributes[ItemAttribute.RotateTarget]);
+                return Convert.ToUInt16(this.Attributes[ItemAttribute.RotateTo]);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether this item can be moved.
         /// </summary>
-        public override bool CanBeMoved => !this.Type.Flags.Contains(ItemFlag.Unmove);
+        public override bool CanBeMoved => !this.Type.Flags.Contains(ItemFlag.IsUnmoveable);
 
-        public bool HasCollision => this.Type.Flags.Contains(ItemFlag.CollisionEvent);
+        /// <summary>
+        /// Gets a value indicating whether this item triggers a collision event.
+        /// </summary>
+        public bool HasCollision => this.Type.Flags.Contains(ItemFlag.TriggersCollision);
 
-        public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.SeparationEvent);
+        /// <summary>
+        /// Gets a value indicating whether this item triggers a separation event.
+        /// </summary>
+        public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.TriggersSeparation);
 
         /// <summary>
         /// Gets a value indicating whether this item can be accumulated.
         /// </summary>
-        public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.Cumulative);
+        public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.IsCumulative);
 
         /// <summary>
         /// Gets or sets the amount of this item.
@@ -140,34 +144,43 @@ namespace Fibula.Items
 
             set
             {
-                this.Attributes[ItemAttribute.Amount] = value;
+                this.Attributes[ItemAttribute.Amount] = Math.Min(ItemConstants.MaximumAmountOfCummulativeItems, value);
             }
         }
 
         /// <summary>
         /// Gets a value indicating whether this item is a container.
         /// </summary>
-        public bool IsContainer => this.Type.Flags.Contains(ItemFlag.Container);
+        public bool IsContainer => this.Type.Flags.Contains(ItemFlag.IsContainer);
 
         /// <summary>
         /// Gets a value indicating whether this item can be dressed.
         /// </summary>
-        public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.Clothes);
+        public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.IsDressable);
 
-        public Slot DressPosition => this.Attributes.ContainsKey(ItemAttribute.BodyPosition) && Enum.TryParse(this.Attributes[ItemAttribute.BodyPosition].ToString(), out Slot parsedSlot) ? parsedSlot : Slot.Anywhere;
+        /// <summary>
+        /// Gets the position at which the item can be dressed.
+        /// </summary>
+        public Slot DressPosition => this.Attributes.ContainsKey(ItemAttribute.DressPosition) && Enum.TryParse(this.Attributes[ItemAttribute.DressPosition].ToString(), out Slot parsedSlot) ? parsedSlot : Slot.Anywhere;
 
-        public bool IsGround => this.Type.Flags.Contains(ItemFlag.Bank);
+        /// <summary>
+        /// Gets a value indicating whether this item is ground floor.
+        /// </summary>
+        public bool IsGround => this.Type.Flags.Contains(ItemFlag.IsGround);
 
+        /// <summary>
+        /// Gets the movement cost for walking over this item, assuming it <see cref="IsGround"/>.
+        /// </summary>
         public byte MovementPenalty
         {
             get
             {
-                if (!this.IsGround || !this.Attributes.ContainsKey(ItemAttribute.Waypoints))
+                if (!this.IsGround || !this.Attributes.ContainsKey(ItemAttribute.MovementPenalty))
                 {
                     return 0;
                 }
 
-                return Convert.ToByte(this.Attributes[ItemAttribute.Waypoints]);
+                return Convert.ToByte(this.Attributes[ItemAttribute.MovementPenalty]);
             }
         }
 
@@ -182,24 +195,41 @@ namespace Fibula.Items
             }
         }
 
-        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.Top) || this.Type.Flags.Contains(ItemFlag.Clip);
+        /// <summary>
+        /// Gets a value indicating whether this item stays on top of the stack.
+        /// </summary>
+        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop) || this.Type.Flags.Contains(ItemFlag.IsClipped);
 
-        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.Bottom);
+        /// <summary>
+        /// Gets a value indicating whether this item stays on the bottom of the stack.
+        /// </summary>
+        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
 
-        public bool IsLiquidPool => this.Type.Flags.Contains(ItemFlag.LiquidPool);
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid pool.
+        /// </summary>
+        public bool IsLiquidPool => this.Type.Flags.Contains(ItemFlag.IsLiquidPool);
 
-        public bool IsLiquidSource => this.Type.Flags.Contains(ItemFlag.LiquidSource);
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid source.
+        /// </summary>
+        public bool IsLiquidSource => this.Type.Flags.Contains(ItemFlag.IsLiquidSource);
 
-        public bool IsLiquidContainer => this.Type.Flags.Contains(ItemFlag.LiquidContainer);
+        /// <summary>
+        /// Gets a value indicating whether this item is a liquid container.
+        /// </summary>
+        public bool IsLiquidContainer => this.Type.Flags.Contains(ItemFlag.IsLiquidContainer);
 
+        /// <summary>
+        /// Gets the type of liquid in this item, assuming it: <see cref="IsLiquidPool"/>, <see cref="IsLiquidSource"/>, or <see cref="IsLiquidContainer"/>.
+        /// </summary>
         public LiquidType LiquidType
         {
             get
             {
-                if (((this.Type.Flags.Contains(ItemFlag.LiquidSource) && this.Attributes.TryGetValue(ItemAttribute.SourceLiquidType, out IConvertible typeValue)) ||
-                     (this.Type.Flags.Contains(ItemFlag.LiquidContainer) && this.Attributes.TryGetValue(ItemAttribute.ContainerLiquidType, out typeValue)) ||
-                     (this.Type.Flags.Contains(ItemFlag.LiquidPool) && this.Attributes.TryGetValue(ItemAttribute.PoolLiquidType, out typeValue))) &&
-                     Enum.IsDefined(typeof(LiquidType), typeValue))
+                if ((this.Type.Flags.Contains(ItemFlag.IsLiquidSource) || this.Type.Flags.Contains(ItemFlag.IsLiquidContainer) || this.Type.Flags.Contains(ItemFlag.IsLiquidPool)) &&
+                    this.Attributes.TryGetValue(ItemAttribute.LiquidType, out IConvertible typeValue) &&
+                    Enum.IsDefined(typeof(LiquidType), typeValue))
                 {
                     return (LiquidType)typeValue;
                 }
@@ -208,86 +238,26 @@ namespace Fibula.Items
             }
         }
 
-        public byte Attack
-        {
-            get
-            {
-                if (this.Type.Flags.Contains(ItemFlag.Weapon))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.WeaponAttackValue]);
-                }
+        /// <summary>
+        /// Gets a value indicating whether the item blocks throwing through it.
+        /// </summary>
+        public bool BlocksThrow => this.Type.Flags.Contains(ItemFlag.BlocksThrow);
 
-                if (this.Type.Flags.Contains(ItemFlag.Throw))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.ThrowAttackValue]);
-                }
+        /// <summary>
+        /// Gets a value indicating whether the item blocks walking on it.
+        /// </summary>
+        public bool BlocksPass => this.Type.Flags.Contains(ItemFlag.BlocksWalk);
 
-                return 0;
-            }
-        }
+        /// <summary>
+        /// Gets a value indicating whether the item blocks laying anything on it.
+        /// </summary>
+        public bool BlocksLay => this.Type.Flags.Contains(ItemFlag.BlocksLay);
 
-        public byte Defense
-        {
-            get
-            {
-                if (this.Type.Flags.Contains(ItemFlag.Shield))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.ShieldDefendValue]);
-                }
-
-                if (this.Type.Flags.Contains(ItemFlag.Weapon))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.WeaponAttackValue]);
-                }
-
-                if (this.Type.Flags.Contains(ItemFlag.Throw))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.ThrowDefendValue]);
-                }
-
-                return 0;
-            }
-        }
-
-        public byte Armor
-        {
-            get
-            {
-                if (this.Type.Flags.Contains(ItemFlag.Armor))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.ArmorValue]);
-                }
-
-                return 0;
-            }
-        }
-
-        public int Range
-        {
-            get
-            {
-                if (this.Type.Flags.Contains(ItemFlag.Throw))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.ThrowRange]);
-                }
-
-                if (this.Type.Flags.Contains(ItemFlag.Bow))
-                {
-                    return Convert.ToByte(this.Attributes[ItemAttribute.BowRange]);
-                }
-
-                return 0x01;
-            }
-        }
-
-        public bool BlocksThrow => this.Type.Flags.Contains(ItemFlag.Unthrow);
-
-        public bool BlocksPass => this.Type.Flags.Contains(ItemFlag.Unpass);
-
-        public bool BlocksLay => this.Type.Flags.Contains(ItemFlag.Unlay);
-
-        public decimal Weight => (this.Type.Flags.Contains(ItemFlag.Take) ? Convert.ToDecimal(this.Attributes[ItemAttribute.Weight]) / 100 : default) * this.Amount;
-
+        /// <summary>
+        /// Determines if this item is blocks pathfinding.
+        /// </summary>
+        /// <param name="avoidTypes">The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</param>
+        /// <returns>True if the tile is considered path blocking, false otherwise.</returns>
         public bool IsPathBlocking(byte avoidTypes = (byte)AvoidDamageType.All)
         {
             var blocking = this.BlocksPass;
@@ -297,50 +267,9 @@ namespace Fibula.Items
                 return true;
             }
 
-            blocking |= this.Type.Flags.Contains(ItemFlag.Avoid) && (Convert.ToByte(this.Attributes[ItemAttribute.AvoidDamageTypes]) ^ avoidTypes) > 0;
+            blocking |= this.Type.Flags.Contains(ItemFlag.ShouldBeAvoided) && (Convert.ToByte(this.Attributes[ItemAttribute.DamageTypesToAvoid]) ^ avoidTypes) > 0;
 
             return blocking;
-        }
-
-        public void SetAmount(byte amount)
-        {
-            this.Amount = Math.Min(ItemConstants.MaximumAmountOfCummulativeItems, amount);
-        }
-
-        public void SetAttributes(ILogger logger, IItemFactory itemFactory, IList<IParsedAttribute> attributes)
-        {
-            logger.ThrowIfNull(nameof(logger));
-
-            if (attributes == null)
-            {
-                return;
-            }
-
-            foreach (var attribute in attributes)
-            {
-                if ("Content".Equals(attribute.Name) && this is IContainerItem containerItem)
-                {
-                    containerItem.AddContent(logger, itemFactory, attribute.Value as IEnumerable<IParsedElement>);
-
-                    continue;
-                }
-
-                // These are safe to add as Attributes of the item.
-                if (!Enum.TryParse(attribute.Name, out ItemAttribute itemAttr))
-                {
-                    logger.Warning($"Unsupported attribute {attribute.Name} on {this.Type.Name}, ignoring.");
-                    continue;
-                }
-
-                try
-                {
-                    this.Attributes[itemAttr] = attribute.Value as IConvertible;
-                }
-                catch
-                {
-                    logger.Warning($"Unexpected attribute {attribute.Name} with illegal value {attribute.Value} on item {this.Type.Name}, ignoring.");
-                }
-            }
         }
 
         /// <summary>
@@ -366,7 +295,7 @@ namespace Fibula.Items
             }
 
             // We've gone over the limit, send back a remainder.
-            otherItem.SetAmount(Convert.ToByte(this.Amount + otherItem.Amount - ItemConstants.MaximumAmountOfCummulativeItems));
+            otherItem.Amount = Convert.ToByte(this.Amount + otherItem.Amount - ItemConstants.MaximumAmountOfCummulativeItems);
 
             this.Amount = ItemConstants.MaximumAmountOfCummulativeItems;
 
@@ -392,7 +321,7 @@ namespace Fibula.Items
 
             var remainder = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = this.Type.TypeId });
 
-            remainder.SetAmount(amount);
+            remainder.Amount = amount;
 
             return (true, remainder);
         }

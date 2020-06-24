@@ -34,7 +34,7 @@ namespace Fibula.Mechanics.Operations
     /// <summary>
     /// Class that represents a common base between movements.
     /// </summary>
-    public class MovementOperation : Operation //, IMovementOperation
+    public class MovementOperation : Operation
     {
         private const int DefaultGroundMovementPenaltyInMs = 200;
 
@@ -77,7 +77,7 @@ namespace Fibula.Mechanics.Operations
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
+        // public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
 
         /// <summary>
         /// Gets the id of the thing moving.
@@ -580,7 +580,7 @@ namespace Fibula.Mechanics.Operations
                                                     sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
                                                     item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-                var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.Flags.Contains(ItemFlag.Unpass) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
+                var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.Flags.Contains(ItemFlag.BlocksWalk) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
 
                 if (!itemCanBeMoved)
                 {
@@ -669,7 +669,7 @@ namespace Fibula.Mechanics.Operations
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 
-            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromThingContainer.Location, item, requestorCreature));
+            /* context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromThingContainer.Location, item, requestorCreature)); */
 
             IThing addRemainder = itemAsThing;
 
@@ -752,7 +752,7 @@ namespace Fibula.Mechanics.Operations
 
             var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
 
-            //creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime);
+            /* creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime); */
 
             if (toStackPosition != byte.MaxValue)
             {
@@ -787,58 +787,60 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
-            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
-            //context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
+            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
+            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
+            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
 
-            //if (creature is ICombatant combatant)
-            //{
-            //    // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
-            //    foreach (var attackerId in combatant.AttackedBy)
-            //    {
-            //        if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
-            //        {
-            //            continue;
-            //        }
+            /*
+            if (creature is ICombatant combatant)
+            {
+                // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
+                foreach (var attackerId in combatant.AttackedBy)
+                {
+                    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
+                    {
+                        continue;
+                    }
 
-            //        context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
-            //    }
+                    context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
+                }
 
-            //    // And check if it walked into new combatants view range.
-            //    var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
-            //    var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
+                // And check if it walked into new combatants view range.
+                var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
+                var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
 
-            //    var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
-            //    var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
+                var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
+                var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
 
-            //    foreach (var spectator in spectatorsAdded)
-            //    {
-            //        if (spectator == combatant)
-            //        {
-            //            continue;
-            //        }
+                foreach (var spectator in spectatorsAdded)
+                {
+                    if (spectator == combatant)
+                    {
+                        continue;
+                    }
 
-            //        if (spectator is ICombatant newCombatant)
-            //        {
-            //            newCombatant.CombatantNowInView(combatant);
-            //            combatant.CombatantNowInView(newCombatant);
-            //        }
-            //    }
+                    if (spectator is ICombatant newCombatant)
+                    {
+                        newCombatant.CombatantNowInView(combatant);
+                        combatant.CombatantNowInView(newCombatant);
+                    }
+                }
 
-            //    foreach (var spectator in spectatorsLost)
-            //    {
-            //        if (spectator == combatant)
-            //        {
-            //            continue;
-            //        }
+                foreach (var spectator in spectatorsLost)
+                {
+                    if (spectator == combatant)
+                    {
+                        continue;
+                    }
 
-            //        if (spectator is ICombatant oldCombatant)
-            //        {
-            //            oldCombatant.CombatantNoLongerInView(combatant);
-            //            combatant.CombatantNoLongerInView(oldCombatant);
-            //        }
-            //    }
-            //}
+                    if (spectator is ICombatant oldCombatant)
+                    {
+                        oldCombatant.CombatantNoLongerInView(combatant);
+                        combatant.CombatantNoLongerInView(oldCombatant);
+                    }
+                }
+            }
+            */
 
             return true;
         }

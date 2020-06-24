@@ -21,6 +21,8 @@ namespace Fibula.Items.ObjectsFile
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles;
+    using Fibula.Parsing.CipFiles.Enumerations;
+    using Fibula.Parsing.CipFiles.Extensions;
     using Microsoft.Extensions.Options;
     using Serilog;
 
@@ -86,7 +88,7 @@ namespace Fibula.Items.ObjectsFile
             var itemDictionary = new Dictionary<ushort, IItemType>();
             var objectsFilePath = Path.Combine(Environment.CurrentDirectory, this.LoaderOptions.FilePath);
 
-            var current = new ItemType();
+            var currentType = new ItemType();
 
             foreach (var readLine in File.ReadLines(objectsFilePath))
             {
@@ -101,15 +103,15 @@ namespace Fibula.Items.ObjectsFile
                 if (string.IsNullOrWhiteSpace(inLine))
                 {
                     // wrap up the current ItemType and add it if it has enough properties set:
-                    if (current.TypeId == 0 || string.IsNullOrWhiteSpace(current.Name))
+                    if (currentType.TypeId == 0 || string.IsNullOrWhiteSpace(currentType.Name))
                     {
                         continue;
                     }
 
-                    current.LockChanges();
-                    itemDictionary.Add(current.TypeId, current);
+                    currentType.LockChanges();
+                    itemDictionary.Add(currentType.TypeId, currentType);
 
-                    current = new ItemType();
+                    currentType = new ItemType();
                     continue;
                 }
 
@@ -126,26 +128,30 @@ namespace Fibula.Items.ObjectsFile
                 switch (propName)
                 {
                     case "typeid":
-                        current.SetId(Convert.ToUInt16(propData));
+                        currentType.SetId(Convert.ToUInt16(propData));
                         break;
                     case "name":
-                        current.SetName(propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)));
+                        currentType.SetName(propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)));
                         break;
                     case "description":
-                        current.SetDescription(propData);
+                        currentType.SetDescription(propData);
                         break;
                     case "flags":
                         foreach (var element in CipFileParser.Parse(propData))
                         {
                             var flagName = element.Attributes.First().Name;
 
-                            if (Enum.TryParse(flagName, out ItemFlag flagMatch))
+                            if (Enum.TryParse(flagName, out CipItemFlag flagMatch))
                             {
-                                current.SetFlag(flagMatch);
+                                if (flagMatch.ToItemFlag() is ItemFlag itemflag)
+                                {
+                                    currentType.SetFlag(itemflag);
+                                }
+
                                 continue;
                             }
 
-                            this.Logger.Warning($"Unknown flag [{flagName}] found on item with TypeID [{current.TypeId}].");
+                            this.Logger.Warning($"Unknown flag [{flagName}] found on item with TypeID [{currentType.TypeId}].");
                         }
 
                         break;
@@ -161,7 +167,20 @@ namespace Fibula.Items.ObjectsFile
                                 continue;
                             }
 
-                            current.SetAttribute(attrPair[0], Convert.ToInt32(attrPair[1]));
+                            var attributeName = attrPair[0];
+                            var attributeValue = Convert.ToInt32(attrPair[1]);
+
+                            if (Enum.TryParse(attributeName, out CipItemAttribute cipAttribute))
+                            {
+                                if (cipAttribute.ToItemAttribute() is ItemAttribute itemAttribute)
+                                {
+                                    currentType.SetAttribute(itemAttribute, attributeValue);
+                                }
+
+                                continue;
+                            }
+
+                            this.Logger.Warning($"Attempted to set an unknown item attribute [{attributeName}].");
                         }
 
                         break;
@@ -169,10 +188,10 @@ namespace Fibula.Items.ObjectsFile
             }
 
             // wrap up the last ItemType and add it if it has enough properties set:
-            if (current.TypeId != 0 && !string.IsNullOrWhiteSpace(current.Name))
+            if (currentType.TypeId != 0 && !string.IsNullOrWhiteSpace(currentType.Name))
             {
-                current.LockChanges();
-                itemDictionary.Add(current.TypeId, current);
+                currentType.LockChanges();
+                itemDictionary.Add(currentType.TypeId, currentType);
             }
 
             return itemDictionary;

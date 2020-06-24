@@ -75,26 +75,28 @@ namespace Fibula.Protocol.V772.PacketWriters
             message.AddByte(10);
             message.AddByte(0);
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.NoWeapon].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.NoWeapon));
+            /*
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.NoWeapon].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.NoWeapon));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Club].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Club));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Club].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Club));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Sword].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Sword));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Sword].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Sword));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Axe].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Axe));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Axe].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Axe));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Ranged].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Ranged));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Ranged].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Ranged));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Shield].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Shield));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Shield].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Shield));
 
-            //message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Fishing].Level));
-            //message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Fishing));
+            message.AddByte((byte)Math.Min(byte.MaxValue, playerSkillsPacket.Player.Skills[SkillType.Fishing].Level));
+            message.AddByte(playerSkillsPacket.Player.CalculateSkillPercent(SkillType.Fishing));
+            */
         }
     }
 }

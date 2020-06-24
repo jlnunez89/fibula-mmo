@@ -105,6 +105,8 @@ namespace Fibula.Mechanics.Operations
 
             player.Client.AssociateToPlayer(player.Id);
 
+            // TODO: In addition, we need to send the player's inventory, the first time login message + outfit window here if applicable.
+            // And any VIP records here.
             context.Scheduler.ScheduleEvent(
                 new GenericNotification(
                     () => player.YieldSingleItem(),
@@ -112,14 +114,11 @@ namespace Fibula.Mechanics.Operations
                         new SelfAppearPacket(player.Id, true, player),
                         new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
                         new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
-                        // new PlayerInventoryPacket(player),
                         new PlayerStatsPacket(player),
                         new PlayerSkillsPacket(player),
                         new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
                         new CreatureLightPacket(player),
                         new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
-                        // TODO: Send first time login message + outfit window here if needed.
-                        // TODO: Send any Buddies here.
                         new PlayerConditionsPacket(player))));
         }
     }

@@ -430,8 +430,8 @@ namespace Fibula.Map
 
                         creatureBytes.AddRange(BitConverter.GetBytes(creature.Speed));
 
-                        creatureBytes.Add(creature.Skull);
-                        creatureBytes.Add(creature.Shield);
+                        creatureBytes.Add(0x00); // Skull
+                        creatureBytes.Add(0x00); // Shield
                     }
 
                     segments.Add(new MapDescriptionSegment(creatureBytes.ToArray()));

@@ -33,56 +33,40 @@ namespace Fibula.Mechanics.Operations
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        /// <param name="pathFinder">A reference to the path finder helper in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
-        /// <param name="combatApi">A refrence to the combat API.</param>
-        /// <param name="gameApi">A reference to the game API.</param>
-        /// <param name="eventRulesApi">A reference to the event rules API.</param>
         public OperationContext(
             ILogger logger,
             IMapDescriptor mapDescriptor,
             ITileAccessor tileAccessor,
             ICreatureFinder creatureFinder,
-            //IPathFinder pathFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
             IScheduler scheduler)
-            //ICombatApi combatApi,
-            //IGameApi gameApi,
-            //IEventRulesApi eventRulesApi)
             : base(logger)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             tileAccessor.ThrowIfNull(nameof(tileAccessor));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
-            //pathFinder.ThrowIfNull(nameof(pathFinder));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
             scheduler.ThrowIfNull(nameof(scheduler));
-            //combatApi.ThrowIfNull(nameof(combatApi));
-            //gameApi.ThrowIfNull(nameof(gameApi));
-            //eventRulesApi.ThrowIfNull(nameof(eventRulesApi));
 
             this.MapDescriptor = mapDescriptor;
             this.TileAccessor = tileAccessor;
             this.CreatureFinder = creatureFinder;
-            //this.PathFinder = pathFinder;
             this.ItemFactory = itemFactory;
             this.CreatureFactory = creatureFactory;
             this.OperationFactory = operationFactory;
             this.ContainerManager = containerManager;
             this.Scheduler = scheduler;
-            //this.CombatApi = combatApi;
-            //this.GameApi = gameApi;
-            //this.EventRulesApi = eventRulesApi;
         }
 
         /// <summary>
@@ -99,11 +83,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets the reference to the creature finder in use.
         /// </summary>
         public ICreatureFinder CreatureFinder { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the path finder helper in use.
-        ///// </summary>
-        //public IPathFinder PathFinder { get; }
 
         /// <summary>
         /// Gets a reference to the item factory in use.
@@ -129,20 +108,5 @@ namespace Fibula.Mechanics.Operations
         /// Gets a reference to the scheduler in use.
         /// </summary>
         public IScheduler Scheduler { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the combat api.
-        ///// </summary>
-        //public ICombatApi CombatApi { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the game api.
-        ///// </summary>
-        //public IGameApi GameApi { get; }
-
-        ///// <summary>
-        ///// Gets the reference to the event rules api.
-        ///// </summary>
-        //public IEventRulesApi EventRulesApi { get; }
     }
 }

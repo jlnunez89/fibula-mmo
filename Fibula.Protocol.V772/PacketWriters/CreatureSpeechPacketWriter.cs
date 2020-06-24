@@ -58,19 +58,22 @@ namespace Fibula.Protocol.V772.PacketWriters
                 case SpeechType.Whisper:
                 case SpeechType.Yell:
                 case SpeechType.MonsterSay:
-                    // case SpeechType.MonsterYell:
+                // case SpeechType.MonsterYell:
                     message.AddLocation(creatureSpeechPacket.Location);
                     break;
+
                 // case SpeechType.ChannelRed:
                 // case SpeechType.ChannelRedAnonymous:
                 // case SpeechType.ChannelOrange:
                 case SpeechType.ChannelYellow:
                     // case SpeechType.ChannelWhite:
-                    message.AddUInt16((ushort)creatureSpeechPacket.ChannelId);
+                    message.AddUInt16((ushort)creatureSpeechPacket.Channel);
                     break;
+
                 case SpeechType.RuleViolationReport:
                     message.AddUInt32(creatureSpeechPacket.Time);
                     break;
+
                 default:
                     break;
             }

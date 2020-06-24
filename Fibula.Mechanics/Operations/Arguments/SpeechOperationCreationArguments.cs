@@ -24,21 +24,24 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Initializes a new instance of the <see cref="SpeechOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="speechType"></param>
-        /// <param name="channelId"></param>
-        /// <param name="receiver"></param>
-        /// <param name="content"></param>
-        public SpeechOperationCreationArguments(uint requestorId, SpeechType speechType, ChatChannelType channelId, string content, string receiver)
+        /// <param name="requestorId">The id of the creature requesting the operation.</param>
+        /// <param name="speechType">The type of speech.</param>
+        /// <param name="channelType">The type of channel that the speech is happens in.</param>
+        /// <param name="content">The content of the speech.</param>
+        /// <param name="receiver">The receiver of the speech, if applicable.</param>
+        public SpeechOperationCreationArguments(uint requestorId, SpeechType speechType, ChatChannelType channelType, string content, string receiver)
         {
             this.RequestorId = requestorId;
 
             this.SpeechType = speechType;
-            this.ChannelId = channelId;
+            this.ChannelType = channelType;
             this.Content = content;
             this.Receiver = receiver;
         }
 
+        /// <summary>
+        /// Gets the type of operation being created.
+        /// </summary>
         public OperationType Type => OperationType.Speech;
 
         /// <summary>
@@ -46,12 +49,24 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// </summary>
         public uint RequestorId { get; }
 
+        /// <summary>
+        /// Gets the type of speech.
+        /// </summary>
         public SpeechType SpeechType { get; }
 
-        public ChatChannelType ChannelId { get; }
+        /// <summary>
+        /// Gets the type of channel of the speech.
+        /// </summary>
+        public ChatChannelType ChannelType { get; }
 
+        /// <summary>
+        /// Gets the content of the speech.
+        /// </summary>
         public string Content { get; }
 
+        /// <summary>
+        /// Gets the receiver of the speech, if any.
+        /// </summary>
         public string Receiver { get; }
     }
 }

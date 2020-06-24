@@ -16,6 +16,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -129,12 +130,12 @@ namespace Fibula.Protocol.V772
             message.AddByte(Convert.ToByte(Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints))); // health bar, needs a percentage.
             message.AddByte(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
 
-            if (creature.IsInvisible)
+            /* if (creature.IsInvisible)
             {
                 message.AddUInt16(0x00);
                 message.AddUInt16(0x00);
             }
-            else
+            else */
             {
                 message.AddOutfit(creature.Outfit);
             }
@@ -143,8 +144,8 @@ namespace Fibula.Protocol.V772
             message.AddByte(creature.EmittedLightColor);
             message.AddUInt16(creature.Speed);
 
-            message.AddByte(creature.Skull);
-            message.AddByte(creature.Shield);
+            message.AddByte(0x00); // Skull
+            message.AddByte(0x00); // Shield
         }
 
         /// <summary>
@@ -177,12 +178,7 @@ namespace Fibula.Protocol.V772
         /// <param name="item">The item to describe and add.</param>
         public static void AddItem(this INetworkMessage message, IItem item)
         {
-            if (item == null)
-            {
-                // TODO: log this.
-                Console.WriteLine("Add: Null item passed.");
-                return;
-            }
+            item.ThrowIfNull(nameof(item));
 
             message.AddUInt16(item.Type.ClientId);
 

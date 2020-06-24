@@ -23,26 +23,6 @@ namespace Fibula.Creatures
     /// </summary>
     public class CreatureFactory : ICreatureFactory
     {
-        ///// <summary>
-        ///// Stores the catalog of monster types, which is a mapping of the raceId and the type.
-        ///// </summary>
-        //private readonly IDictionary<ushort, IMonsterType> monsterTypeCatalog;
-
-        ///// <summary>
-        ///// Initializes a new instance of the <see cref="CreatureFactory"/> class.
-        ///// </summary>
-        ///// <param name="monsterLoader">A reference to the monster type loader in use.</param>
-        ///// <param name="itemFactory">A reference to the item factory in use.</param>
-        //public CreatureFactory(IMonsterTypeLoader monsterLoader, IItemFactory itemFactory)
-        //{
-        //    monsterLoader.ThrowIfNull(nameof(monsterLoader));
-        //    itemFactory.ThrowIfNull(nameof(itemFactory));
-
-        //    this.monsterTypeCatalog = monsterLoader.LoadTypes();
-
-        //    this.ItemFactory = itemFactory;
-        //}
-
         /// <summary>
         /// Gets the item factory in use.
         /// </summary>
@@ -72,21 +52,9 @@ namespace Fibula.Creatures
 
             switch (creatureCreationArguments.Type)
             {
-                case CreatureType.NonPlayerCharacter:
-                // if (creatureMetadata is NonPlayerCharacterMetadata npcMetadata)
-                // {
-                //    return new NonPlayerCharacter(
-                //        npcMetadata.CreatureId,
-                //        npcMetadata.Name,
-                //        npcMetadata.MaxHitpoints,
-                //        npcMetadata.MaxManapoints,
-                //        npcMetadata.Corpse,
-                //        npcMetadata.Hitpoints,
-                //        npcMetadata.Manapoints);
-                // }
-
-                // throw new InvalidCastException($"{nameof(creatureMetadata)} must be castable to {nameof(NonPlayerCharacterMetadata)} when {type} is used.");
-
+                // TODO: suppport other types
+                // case CreatureType.NonPlayerCharacter:
+                // case CreatureType.Monster:
                 case CreatureType.Player:
 
                     if (creatureCreationArguments == null ||
@@ -105,17 +73,6 @@ namespace Fibula.Creatures
                         playerCreationArguments.Metadata.Corpse,
                         playerCreationArguments.Metadata.MaxHitpoints,      // TODO: current hitpoints.
                         playerCreationArguments.Metadata.MaxManapoints);    // TODO: current mana points.
-
-                    //case CreatureType.Monster:
-                    //    // Find the actual monster type to init with.
-                    //    var raceId = Convert.ToUInt16(creatureMetadata.Identifier);
-
-                    //    if (this.monsterTypeCatalog.TryGetValue(raceId, out IMonsterType monsterType))
-                    //    {
-                    //        return new Monster(monsterType, this.ItemFactory);
-                    //    }
-
-                    //    throw new InvalidOperationException($"{nameof(creatureMetadata)} has an invalid race Id {creatureMetadata.Identifier}. No monster could be created.");
             }
 
             throw new NotSupportedException($"{nameof(CreatureFactory)} does not support creation of creatures with type {creatureCreationArguments.Type}.");

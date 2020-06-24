@@ -15,13 +15,16 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
 
+    /// <summary>
+    /// Class that represents a packet for an item being removed to a container.
+    /// </summary>
     public class ContainerRemoveItemPacket : IOutboundPacket
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerRemoveItemPacket"/> class.
         /// </summary>
-        /// <param name="index"></param>
-        /// <param name="containerId"></param>
+        /// <param name="index">The index within the container, at which the item is being removed.</param>
+        /// <param name="containerId">The id of the container.</param>
         public ContainerRemoveItemPacket(byte index, byte containerId)
         {
             this.Index = index;
@@ -33,8 +36,14 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.ContainerRemoveItem;
 
+        /// <summary>
+        /// Gets the index within the container, at which the item is being removed.
+        /// </summary>
         public byte Index { get; }
 
+        /// <summary>
+        /// Gets the id of the container.
+        /// </summary>
         public byte ContainerId { get; }
     }
 }

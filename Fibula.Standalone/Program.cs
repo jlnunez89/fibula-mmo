@@ -146,7 +146,7 @@ namespace Fibula.Standalone
                     return;
                 }
 
-                clientMap.Add(connection, new TcpClient(connection));
+                clientMap.Add(connection, new Client(connection));
 
                 connection.PacketReady += OnPacketReady;
 
@@ -198,15 +198,11 @@ namespace Fibula.Standalone
 
             services.AddHandlers();
 
-            //ConfigureEventRules(hostingContext, services);
-
             ConfigureMap(hostingContext, services);
 
             ConfigureItems(hostingContext, services);
 
-            ConfigureCreatures(hostingContext, services);
-
-            //ConfigurePathFindingAlgorithm(hostingContext, services);
+            ConfigureCreatures(services);
 
             ConfigureDatabaseContext(hostingContext, services);
 
@@ -214,7 +210,9 @@ namespace Fibula.Standalone
 
             ConfigureHostedServices(services);
 
-            //ConfigureExtraServices(hostingContext, services);
+            // ConfigureEventRules(hostingContext, services);
+            // ConfigurePathFindingAlgorithm(hostingContext, services);
+            // ConfigureExtraServices(hostingContext, services);
 
             // Choose a server version here.
             services.AddProtocol772GameComponents(hostingContext.Configuration);
@@ -268,6 +266,7 @@ namespace Fibula.Standalone
         {
             services.AddSingleton<Game>();
             services.AddSingleton<IGame>(s => s.GetService<Game>());
+
             // services.AddSingleton<ICombatApi>(s => s.GetService<Game>());
 
             // Those executing should derive from IHostedService and be added using AddHostedService.
@@ -286,22 +285,24 @@ namespace Fibula.Standalone
             services.AddSingleton<Func<IFibulaDbContext>>(s => s.GetService<IFibulaDbContext>);
         }
 
-        //private static void ConfigurePathFindingAlgorithm(HostBuilderContext hostingContext, IServiceCollection services)
-        //{
-        //    services.AddAStarPathFinder(hostingContext.Configuration);
-        //}
+        /*
+        private static void ConfigurePathFindingAlgorithm(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            services.AddAStarPathFinder(hostingContext.Configuration);
+        }
+        */
 
-        private static void ConfigureCreatures(HostBuilderContext hostingContext, IServiceCollection services)
+        private static void ConfigureCreatures(IServiceCollection services)
         {
             services.AddSingleton<ICreatureFactory, CreatureFactory>();
             services.AddSingleton<ICreatureManager, CreatureManager>();
             services.AddSingleton<ICreatureFinder>(s => s.GetService<ICreatureManager>());
 
             //// Chose a type of monster types (catalog) loader:
-            //services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
+            // services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
 
             //// Chose a type of monster spawns loader:
-            //services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
+            // services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
         }
 
         private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)
@@ -325,18 +326,18 @@ namespace Fibula.Standalone
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
         }
 
-        //private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)
-        //{
+        // private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)
+        // {
         //    // Azure providers for Azure VM hosting and storing secrets in KeyVault.
         //    services.AddAzureProviders(hostingContext.Configuration);
-        //}
+        // }
 
-        //private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
-        //{
+        // private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
+        // {
         //    services.AddSingleton<IEventRulesApi>(s => s.GetService<Game>());
 
-        //    // Chose a type of event rules loader:
+        //// Chose a type of event rules loader:
         //    services.AddMoveUseEventRulesLoader(hostingContext.Configuration);
-        //}
+        // }
     }
 }

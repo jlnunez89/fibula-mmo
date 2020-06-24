@@ -27,17 +27,17 @@ namespace Fibula.Mechanics.Operations
         /// <summary>
         /// Initializes a new instance of the <see cref="SpeechOperation"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="speechType"></param>
-        /// <param name="channelId"></param>
-        /// <param name="content"></param>
-        /// <param name="receiver"></param>
-        public SpeechOperation(uint requestorId, SpeechType speechType, ChatChannelType channelId, string content, string receiver)
+        /// <param name="requestorId">The id of the creature speaking.</param>
+        /// <param name="speechType">The type of speech.</param>
+        /// <param name="channelType">The type of channel where the speech happens.</param>
+        /// <param name="content">The content of the speech.</param>
+        /// <param name="receiver">The receiver of the speech, if applicable.</param>
+        public SpeechOperation(uint requestorId, SpeechType speechType, ChatChannelType channelType, string content, string receiver)
             : base(requestorId)
         {
             // this.ExhaustionCost = TimeSpan.FromSeconds(1);
             this.Type = speechType;
-            this.ChannelId = channelId;
+            this.ChannelId = channelType;
             this.Content = content;
             this.Receiver = receiver;
         }
@@ -45,20 +45,32 @@ namespace Fibula.Mechanics.Operations
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
-        //public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
+        // public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
         /// </summary>
         public override TimeSpan ExhaustionCost { get; protected set; }
 
+        /// <summary>
+        /// Gets the type of speech.
+        /// </summary>
         public SpeechType Type { get; }
 
+        /// <summary>
+        /// Gets the type of channel where the speech happens.
+        /// </summary>
         public ChatChannelType ChannelId { get; }
 
-        public string Receiver { get; }
-
+        /// <summary>
+        /// Gets the content of the speech.
+        /// </summary>
         public string Content { get; }
+
+        /// <summary>
+        /// Gets the receiver of the speech, if any.
+        /// </summary>
+        public string Receiver { get; }
 
         /// <summary>
         /// Executes the operation's logic.

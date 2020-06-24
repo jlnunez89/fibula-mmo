@@ -37,7 +37,7 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Gets the type of operation being created.
         /// </summary>
-        public OperationType Type => OperationType.CancelActions;
+        public OperationType Type => OperationType.CancelOperations;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.

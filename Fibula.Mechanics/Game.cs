@@ -14,7 +14,6 @@ namespace Fibula.Mechanics
 {
     using System;
     using System.Diagnostics;
-    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
@@ -99,16 +98,13 @@ namespace Fibula.Mechanics
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapLoader">A reference to the map loader in use.</param>
-        /// <param name="mapDescriptor"></param>
-        /// <param name="tileAccessor"></param>
-        /// <param name="creatureManager"></param>
-        /// <param name="itemFactory"></param>
-        /// <param name="creatureFactory"></param>
-        /// <param name="operationFactory"></param>
-        /// <param name="containerManager"></param>
-        /// <param name="eventRulesLoader">A reference to the event rules loader.</param>
-        /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
-        /// <param name="pathFinder">A reference to the pathfinder algorithm helper instance.</param>
+        /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
+        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="creatureManager">A reference to the creature manager in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="creatureFactory">A reference to the creature factory in use.</param>
+        /// <param name="operationFactory">A referecne to the operation factory in use.</param>
+        /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
@@ -175,7 +171,6 @@ namespace Fibula.Mechanics
             {
                 var connectionSweepperTask = Task.Factory.StartNew(this.IdlePlayerSweep, cancellationToken, TaskCreationOptions.LongRunning);
                 var miscellaneusEventsTask = Task.Factory.StartNew(this.MiscellaneousEventsLoop, cancellationToken, TaskCreationOptions.LongRunning);
-                var creatureThinkingTask = Task.Factory.StartNew(this.CreatureThinkingLoop, cancellationToken, TaskCreationOptions.LongRunning);
 
                 // start the scheduler.
                 var schedulerTask = this.scheduler.RunAsync(cancellationToken);
@@ -199,6 +194,10 @@ namespace Fibula.Mechanics
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Cancels all actions that a player has pending.
+        /// </summary>
+        /// <param name="player">The player to cancel actions for.</param>
         public void CancelPlayerActions(IPlayer player)
         {
             if (player == null)
@@ -209,33 +208,59 @@ namespace Fibula.Mechanics
             this.DispatchOperation(new CancelActionsOperationCreationArguments(player));
         }
 
+        /// <summary>
+        /// Changes the fight, chase and safety modes of a creature.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="fightMode">The fight mode to change to.</param>
+        /// <param name="chaseMode">The chase mode to change to.</param>
+        /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
         public void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
         {
             this.DispatchOperation(new ChangeModesOperationCreationArguments(creatureId, fightMode, chaseMode, safeModeOn));
         }
 
+        /// <summary>
+        /// Handles creature speech.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="speechType">The type of speech.</param>
+        /// <param name="channelType">The type of channel of the speech.</param>
+        /// <param name="content">The content of the speech.</param>
+        /// <param name="receiver">Optional. The receiver of the speech, if any.</param>
         public void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "")
         {
             this.DispatchOperation(new SpeechOperationCreationArguments(creatureId, speechType, channelType, content, receiver));
         }
 
+        /// <summary>
+        /// Turns a creature to a direction.
+        /// </summary>
+        /// <param name="requestorId">The id of the creature.</param>
+        /// <param name="creature">The creature to turn.</param>
+        /// <param name="direction">The direction to turn to.</param>
         public void CreatureTurn(uint requestorId, ICreature creature, Direction direction)
         {
             this.DispatchOperation(new TurnToDirectionOperationCreationArguments(requestorId, creature, direction));
         }
 
         /// <summary>
-        /// Attempts to get the description of a thing.
+        /// Describes a thing for a player.
         /// </summary>
-        /// <param name="thingId"></param>
-        /// <param name="location"></param>
-        /// <param name="stackPosition"></param>
-        /// <param name="player"></param>
+        /// <param name="thingId">The id of the thing to describe.</param>
+        /// <param name="location">The location of the thing to describe.</param>
+        /// <param name="stackPosition">The position in the stack within the location of the thing to describe.</param>
+        /// <param name="player">The player for which to describe the thing for.</param>
         public void DescribeFor(ushort thingId, Location location, byte stackPosition, IPlayer player)
         {
             this.DispatchOperation(new DescribeThingOperationCreationArguments(thingId, location, stackPosition, player));
         }
 
+        /// <summary>
+        /// Logs a player into the game.
+        /// </summary>
+        /// <param name="client">The client from which the player is connecting.</param>
+        /// <param name="creatureCreationMetadata">The metadata for the player's creation.</param>
         public void LogPlayerIn(IClient client, ICreatureCreationMetadata creatureCreationMetadata)
         {
             client.ThrowIfNull(nameof(client));
@@ -249,6 +274,10 @@ namespace Fibula.Mechanics
                     this.WorldInfo.LightColor));
         }
 
+        /// <summary>
+        /// Logs a player out of the game.
+        /// </summary>
+        /// <param name="player">The player to log out.</param>
         public void LogPlayerOut(IPlayer player)
         {
             if (player == null)
@@ -259,6 +288,17 @@ namespace Fibula.Mechanics
             this.DispatchOperation(new LogOutOperationCreationArguments(player));
         }
 
+        /// <summary>
+        /// Moves a thing.
+        /// </summary>
+        /// <param name="requestorId">The id of the creature requesting the move.</param>
+        /// <param name="clientThingId">The id of the thing being moved.</param>
+        /// <param name="fromLocation">The location from which the thing is being moved.</param>
+        /// <param name="fromIndex">The index within the location from which the thing is being moved.</param>
+        /// <param name="fromCreatureId">The id of the creature from which the thing is being moved, if any.</param>
+        /// <param name="toLocation">The location to which the thing is being moved.</param>
+        /// <param name="toCreatureId">The id of the creature to which the thing is being moved.</param>
+        /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
         public void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
         {
             this.DispatchOperation(
@@ -273,6 +313,10 @@ namespace Fibula.Mechanics
                     amount));
         }
 
+        /// <summary>
+        /// Sends a heartbeat to the player's client.
+        /// </summary>
+        /// <param name="player">The player which to send the heartbeat to.</param>
         public void SendHeartbeat(IPlayer player)
         {
             if (player == null)
@@ -283,6 +327,10 @@ namespace Fibula.Mechanics
             this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatPacket())));
         }
 
+        /// <summary>
+        /// Sends a heartbeat response to the player's client.
+        /// </summary>
+        /// <param name="player">The player which to send the heartbeat response to.</param>
         public void SendHeartbeatResponse(IPlayer player)
         {
             if (player == null)
@@ -292,11 +340,6 @@ namespace Fibula.Mechanics
 
             this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatResponsePacket())));
         }
-
-        //public void BeginCombat(ICombatant combatant, ICombatant target)
-        //{
-        //    throw new NotImplementedException();
-        //}
 
         private void DispatchOperation(IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
         {
@@ -310,13 +353,15 @@ namespace Fibula.Mechanics
             // Normalize delay to protect against negative time spans.
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
 
-            //// Add delay from current exhaustion of the requestor, if any.
-            //if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ISuffersExhaustion creatureWithExhaustion)
-            //{
-            //    TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
+            // Add delay from current exhaustion of the requestor, if any.
+            /*
+            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ISuffersExhaustion creatureWithExhaustion)
+            {
+                TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
 
-            //    operationDelay += cooldownRemaining;
-            //}
+                operationDelay += cooldownRemaining;
+            }
+            */
 
             this.scheduler.ScheduleEvent(newOperation, operationDelay);
         }
@@ -344,40 +389,15 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    //if (player is ICombatant playerAsCombatant)
-                    //{
-                    //    playerAsCombatant.SetAttackTarget(null);
-                    //}
+                    /*
+                    if (player is ICombatant playerAsCombatant)
+                    {
+                        playerAsCombatant.SetAttackTarget(null);
+                    }
+                    */
 
                     this.DispatchOperation(new LogOutOperationCreationArguments(player));
                 }
-            }
-        }
-
-        /// <summary>
-        /// Handles creature 'thinking' in the game.
-        /// </summary>
-        /// <param name="tokenState">The state object which gets casted into a <see cref="CancellationToken"/>.</param>.
-        private void CreatureThinkingLoop(object tokenState)
-        {
-            var cancellationToken = (tokenState as CancellationToken?).Value;
-
-            // TODO: seed pseudo-RNGs.
-            var rng = new Random();
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                // Thread.Sleep here is OK because CreatureThinkingLoop runs on it's own thread.
-                Thread.Sleep(TimeSpan.FromSeconds(1));
-
-                // Get all the creatures in the game that are 'thinking' and randomize the order to make it fair.
-                var allActiveCreatures = this.creatureManager.FindAllCreatures().Where(c => c.IsThinking).OrderBy(c => rng.Next());
-
-                //foreach (var creature in allActiveCreatures)
-                //{
-                //    // Dispatch a thinking operation for them.
-                //    this.DispatchOperation(OperationType.Thinking, new ThinkingOperationCreationArguments(creature.Id, creature));
-                //}
             }
         }
 
@@ -466,8 +486,8 @@ namespace Fibula.Mechanics
             }
 
             // TODO: this should be added to the BaseOperation rather than check the type here...
-            //finally
-            //{
+            // finally
+            // {
             //    if (evt is IOperation operation)
             //    {
             //        // Add any exhaustion for the requestor of the operation, if any.
@@ -476,7 +496,7 @@ namespace Fibula.Mechanics
             //            requestor.AddExhaustion(operation.ExhaustionType, this.scheduler.CurrentTime, operation.ExhaustionCost);
             //        }
             //    }
-            //}
+            // }
         }
 
         private IEventContext GetContextForEventType(Type type)
@@ -488,7 +508,6 @@ namespace Fibula.Mechanics
                     this.mapDescriptor,
                     this.tileAccessor,
                     this.creatureManager,
-                    //this.pathFinder,
                     this.itemFactory,
                     this.creatureFactory,
                     this.operationFactory,
@@ -502,7 +521,6 @@ namespace Fibula.Mechanics
                     this.mapDescriptor,
                     this.tileAccessor,
                     this.creatureManager,
-                    //this.pathFinder,
                     this.itemFactory,
                     this.creatureFactory,
                     this.operationFactory,
