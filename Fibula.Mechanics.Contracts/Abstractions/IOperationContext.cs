@@ -28,9 +28,9 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         IMapDescriptor MapDescriptor { get; }
 
         /// <summary>
-        /// Gets the reference to the tile accessor in use.
+        /// Gets the reference to the map.
         /// </summary>
-        ITileAccessor TileAccessor { get; }
+        IMap Map { get; }
 
         /// <summary>
         /// Gets the reference to the creature finder in use.

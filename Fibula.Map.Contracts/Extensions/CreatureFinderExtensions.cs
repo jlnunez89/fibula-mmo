@@ -29,13 +29,13 @@ namespace Fibula.Map.Contracts.Extensions
         /// Gets the ids of any creatures that can see the given locations.
         /// </summary>
         /// <param name="creatureFinder">The reference to the creature finder.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="locations">The locations to check if players can see.</param>
         /// <returns>A collection of connections.</returns>
-        public static IEnumerable<ICreature> CreaturesThatCanSee(this ICreatureFinder creatureFinder, ITileAccessor tileAccessor, params Location[] locations)
+        public static IEnumerable<ICreature> CreaturesThatCanSee(this ICreatureFinder creatureFinder, IMap map, params Location[] locations)
         {
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            map.ThrowIfNull(nameof(map));
 
             var creatureIds = new HashSet<uint>();
 
@@ -52,7 +52,7 @@ namespace Fibula.Map.Contracts.Extensions
                     {
                         var loc = new Location() { X = x, Y = y, Z = location.Z };
 
-                        if (!tileAccessor.GetTileAt(loc, out ITile tile, loadAsNeeded: false))
+                        if (!map.GetTileAt(loc, out ITile tile, loadAsNeeded: false))
                         {
                             continue;
                         }
@@ -82,12 +82,12 @@ namespace Fibula.Map.Contracts.Extensions
         /// Gets the ids of any players that can see the given locations.
         /// </summary>
         /// <param name="creatureFinder">The reference to the creature finder.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="locations">The locations to check if players can see.</param>
         /// <returns>A collection of connections.</returns>
-        public static IEnumerable<IPlayer> PlayersThatCanSee(this ICreatureFinder creatureFinder, ITileAccessor tileAccessor, params Location[] locations)
+        public static IEnumerable<IPlayer> PlayersThatCanSee(this ICreatureFinder creatureFinder, IMap map, params Location[] locations)
         {
-            var creaturesThatCanSee = creatureFinder.CreaturesThatCanSee(tileAccessor, locations);
+            var creaturesThatCanSee = creatureFinder.CreaturesThatCanSee(map, locations);
 
             return creaturesThatCanSee.OfType<IPlayer>();
         }

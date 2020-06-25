@@ -57,7 +57,7 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            if (!context.TileAccessor.GetTileAt(this.Player.Location, out ITile tile))
+            if (!context.Map.GetTileAt(this.Player.Location, out ITile tile))
             {
                 return;
             }

@@ -14,6 +14,7 @@ namespace Fibula.Map
 {
     using System;
     using System.Buffers;
+    using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
@@ -22,6 +23,7 @@ namespace Fibula.Map
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
+    using Serilog;
 
     /// <summary>
     /// Class that implements a standard map descriptor.
@@ -34,46 +36,145 @@ namespace Fibula.Map
         private readonly IMap map;
 
         /// <summary>
+        /// A reference to the tile descriptor in use.
+        /// </summary>
+        private readonly IProtocolTileDescriptor tileDescriptor;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="MapDescriptor"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="map">The reference to the map in use.</param>
-        public MapDescriptor(IMap map)
+        /// <param name="tileDescriptor">A reference to the tile descriptor in use.</param>
+        public MapDescriptor(ILogger logger, IMap map, IProtocolTileDescriptor tileDescriptor)
         {
+            logger.ThrowIfNull(nameof(logger));
             map.ThrowIfNull(nameof(map));
+            tileDescriptor.ThrowIfNull(nameof(tileDescriptor));
+
+            this.Logger = logger.ForContext<MapDescriptor>();
 
             this.map = map;
+            this.tileDescriptor = tileDescriptor;
         }
+
+        /// <summary>
+        /// Gets the reference to the current logger.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the description bytes of the map in behalf of a given player at a given location.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
-        /// <param name="location">The center location from which the description is being retrieved.</param>
+        /// <param name="centerLocation">The center location from which the description is being retrieved.</param>
         /// <returns>A sequence of bytes representing the description.</returns>
-        public ReadOnlySequence<byte> DescribeAt(IPlayer player, Location location)
+        public ReadOnlySequence<byte> DescribeAt(IPlayer player, Location centerLocation)
         {
             player.ThrowIfNull(nameof(player));
 
-            return this.map.DescribeForPlayer(player, location);
+            ushort fromX = (ushort)(centerLocation.X - 8);
+            ushort fromY = (ushort)(centerLocation.Y - 6);
+
+            sbyte fromZ = (sbyte)(centerLocation.Z > 7 ? centerLocation.Z - 2 : 7);
+            sbyte toZ = (sbyte)(centerLocation.Z > 7 ? centerLocation.Z + 2 : 0);
+
+            return this.DescribeWindow(player, fromX, fromY, fromZ, toZ);
         }
 
         /// <summary>
         /// Gets the description bytes of the map in behalf of a given player for the specified window.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
-        /// <param name="startX">The starting X coordinate of the window.</param>
-        /// <param name="startY">The starting Y coordinate of the window.</param>
-        /// <param name="startZ">The starting Z coordinate of the window.</param>
-        /// <param name="endZ">The ending Z coordinate of the window.</param>
+        /// <param name="fromX">The starting X coordinate of the window.</param>
+        /// <param name="fromY">The starting Y coordinate of the window.</param>
+        /// <param name="fromZ">The starting Z coordinate of the window.</param>
+        /// <param name="toZ">The ending Z coordinate of the window.</param>
         /// <param name="windowSizeX">The size of the window in X.</param>
         /// <param name="windowSizeY">The size of the window in Y.</param>
-        /// <param name="startingZOffset">Optional. A starting offset for Z.</param>
+        /// <param name="customOffsetZ">Optional. A custom Z offset value used mainly for partial floor changing windows. Defaults to 0.</param>
         /// <returns>A sequence of bytes representing the description.</returns>
-        public ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte startingZOffset = 0)
+        public ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort fromX, ushort fromY, sbyte fromZ, sbyte toZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte customOffsetZ = 0)
         {
             player.ThrowIfNull(nameof(player));
 
-            return this.map.DescribeForPlayer(player, startX, (ushort)(startX + windowSizeX), startY, (ushort)(startY + windowSizeY), startZ, endZ, startingZOffset);
+            ushort toX = (ushort)(fromX + windowSizeX);
+            ushort toY = (ushort)(fromY + windowSizeY);
+
+            var firstSegment = new MapDescriptionSegment(ReadOnlyMemory<byte>.Empty);
+
+            MapDescriptionSegment lastSegment = firstSegment;
+
+            sbyte stepZ = 1;
+            byte currentSkipCount = byte.MaxValue;
+
+            if (fromZ > toZ)
+            {
+                // we're going up!
+                stepZ = -1;
+            }
+
+            customOffsetZ = customOffsetZ != 0 ? customOffsetZ : (sbyte)(player.Location.Z - fromZ);
+
+            if (windowSizeX > MapConstants.DefaultWindowSizeX)
+            {
+                this.Logger.Debug($"{nameof(this.DescribeWindow)} {nameof(windowSizeX)} is over {nameof(MapConstants.DefaultWindowSizeX)} ({MapConstants.DefaultWindowSizeX}).");
+            }
+
+            if (windowSizeY > MapConstants.DefaultWindowSizeY)
+            {
+                this.Logger.Debug($"{nameof(this.DescribeWindow)} {nameof(windowSizeY)} is over {nameof(MapConstants.DefaultWindowSizeY)} ({MapConstants.DefaultWindowSizeY}).");
+            }
+
+            for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
+            {
+                var zOffset = fromZ - currentZ + customOffsetZ;
+
+                for (var nx = 0; nx < windowSizeX; nx++)
+                {
+                    for (var ny = 0; ny < windowSizeY; ny++)
+                    {
+                        Location targetLocation = new Location
+                        {
+                            X = (ushort)(fromX + nx + zOffset),
+                            Y = (ushort)(fromY + ny + zOffset),
+                            Z = currentZ,
+                        };
+
+                        var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(targetLocation));
+
+                        // See if we actually have segments to append.
+                        if (segmentsFromTile != null && segmentsFromTile.Any())
+                        {
+                            if (currentSkipCount < byte.MaxValue)
+                            {
+                                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
+                            }
+
+                            foreach (var segment in segmentsFromTile)
+                            {
+                                lastSegment.Append(segment);
+                                lastSegment = segment;
+                            }
+
+                            currentSkipCount = byte.MinValue;
+                            continue;
+                        }
+
+                        if (++currentSkipCount == byte.MaxValue)
+                        {
+                            lastSegment = lastSegment.Append(new byte[] { byte.MaxValue, 0xFF });
+                        }
+                    }
+                }
+            }
+
+            if (++currentSkipCount < byte.MaxValue)
+            {
+                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
+            }
+
+            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
         }
 
         /// <summary>
@@ -95,7 +196,7 @@ namespace Fibula.Map
 
             MapDescriptionSegment lastSegment = firstSegment;
 
-            var segmentsFromTile = this.map.DescribeTileForPlayer(player, location);
+            var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(location));
 
             // See if we actually have segments to append.
             if (segmentsFromTile != null && segmentsFromTile.Any())

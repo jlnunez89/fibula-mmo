@@ -87,7 +87,7 @@ namespace Fibula.Mechanics.Operations
 
             context.Scheduler.ScheduleEvent(
                 new CreatureSpeechNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, requestor.Location),
+                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, requestor.Location),
                     new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content)));
         }
     }

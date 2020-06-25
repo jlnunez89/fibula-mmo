@@ -98,10 +98,10 @@ namespace Fibula.Mechanics.Operations
                     {
                         if (creature is IPlayer player)
                         {
-                            return context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, creature.Location).Except(player.YieldSingleItem());
+                            return context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location).Except(player.YieldSingleItem());
                         }
 
-                        return context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, creature.Location);
+                        return context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location);
                     },
                     new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, creature.Location, placedAtStackPos, wasTeleport: true))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
@@ -118,7 +118,7 @@ namespace Fibula.Mechanics.Operations
         /// <returns>True if the creature is successfully removed from the map, false otherwise.</returns>
         protected bool RemoveCreature(IElevatedOperationContext context, ICreature creature)
         {
-            if (!context.TileAccessor.GetTileAt(creature.Location, out ITile fromTile))
+            if (!context.Map.GetTileAt(creature.Location, out ITile fromTile))
             {
                 return false;
             }
@@ -149,7 +149,7 @@ namespace Fibula.Mechanics.Operations
 
                 context.Scheduler.ScheduleEvent(
                     new CreatureRemovedNotification(
-                        () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, creature.Location),
+                        () => context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location),
                         new CreatureRemovedNotificationArguments(creature, oldStackpos, AnimatedEffect.Puff)));
             }
 

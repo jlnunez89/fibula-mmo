@@ -59,9 +59,9 @@ namespace Fibula.Mechanics
         private readonly IMapDescriptor mapDescriptor;
 
         /// <summary>
-        /// The current <see cref="ITileAccessor"/> instance.
+        /// The current map instance.
         /// </summary>
-        private readonly ITileAccessor tileAccessor;
+        private readonly IMap map;
 
         /// <summary>
         /// The creature manager instance.
@@ -99,7 +99,7 @@ namespace Fibula.Mechanics
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapLoader">A reference to the map loader in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
@@ -110,7 +110,7 @@ namespace Fibula.Mechanics
             ILogger logger,
             IMapLoader mapLoader,
             IMapDescriptor mapDescriptor,
-            ITileAccessor tileAccessor,
+            IMap map,
             ICreatureManager creatureManager,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
@@ -121,7 +121,7 @@ namespace Fibula.Mechanics
             logger.ThrowIfNull(nameof(logger));
             mapLoader.ThrowIfNull(nameof(mapLoader));
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            map.ThrowIfNull(nameof(map));
             creatureManager.ThrowIfNull(nameof(creatureManager));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
@@ -131,7 +131,7 @@ namespace Fibula.Mechanics
 
             this.logger = logger.ForContext<Game>();
             this.mapDescriptor = mapDescriptor;
-            this.tileAccessor = tileAccessor;
+            this.map = map;
             this.creatureManager = creatureManager;
             this.itemFactory = itemFactory;
             this.creatureFactory = creatureFactory;
@@ -506,7 +506,7 @@ namespace Fibula.Mechanics
                 return new ElevatedOperationContext(
                     this.logger,
                     this.mapDescriptor,
-                    this.tileAccessor,
+                    this.map,
                     this.creatureManager,
                     this.itemFactory,
                     this.creatureFactory,
@@ -519,7 +519,7 @@ namespace Fibula.Mechanics
                 return new OperationContext(
                     this.logger,
                     this.mapDescriptor,
-                    this.tileAccessor,
+                    this.map,
                     this.creatureManager,
                     this.itemFactory,
                     this.creatureFactory,

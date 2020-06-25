@@ -29,7 +29,7 @@ namespace Fibula.Mechanics.Operations
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
@@ -39,14 +39,14 @@ namespace Fibula.Mechanics.Operations
         public ElevatedOperationContext(
             ILogger logger,
             IMapDescriptor mapDescriptor,
-            ITileAccessor tileAccessor,
+            IMap map,
             ICreatureManager creatureManager,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
             IScheduler scheduler)
-            : base(logger, mapDescriptor, tileAccessor, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
+            : base(logger, mapDescriptor, map, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
         {
         }
 

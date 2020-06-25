@@ -91,7 +91,7 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            if (!context.TileAccessor.GetTileAt(targetLoginLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
+            if (!context.Map.GetTileAt(targetLoginLocation, out ITile targetTile) || !this.PlaceCreature(context, targetTile, player))
             {
                 // Unable to place the player in the map.
                 context.Scheduler.ScheduleEvent(

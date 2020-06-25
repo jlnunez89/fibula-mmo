@@ -31,7 +31,7 @@ namespace Fibula.Mechanics.Operations
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
@@ -41,7 +41,7 @@ namespace Fibula.Mechanics.Operations
         public OperationContext(
             ILogger logger,
             IMapDescriptor mapDescriptor,
-            ITileAccessor tileAccessor,
+            IMap map,
             ICreatureFinder creatureFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
@@ -51,7 +51,7 @@ namespace Fibula.Mechanics.Operations
             : base(logger)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            map.ThrowIfNull(nameof(map));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
@@ -60,7 +60,7 @@ namespace Fibula.Mechanics.Operations
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.MapDescriptor = mapDescriptor;
-            this.TileAccessor = tileAccessor;
+            this.Map = map;
             this.CreatureFinder = creatureFinder;
             this.ItemFactory = itemFactory;
             this.CreatureFactory = creatureFactory;
@@ -75,9 +75,9 @@ namespace Fibula.Mechanics.Operations
         public IMapDescriptor MapDescriptor { get; }
 
         /// <summary>
-        /// Gets the reference to the tile accessor in use.
+        /// Gets the reference to the map.
         /// </summary>
-        public ITileAccessor TileAccessor { get; }
+        public IMap Map { get; }
 
         /// <summary>
         /// Gets the reference to the creature finder in use.

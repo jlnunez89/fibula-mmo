@@ -317,9 +317,10 @@ namespace Fibula.Standalone
 
         private static void ConfigureMap(HostBuilderContext hostingContext, IServiceCollection services)
         {
+            // Note that IProtocolTileDescriptor implementations are, by definition, protocol specific and
+            // should be injected by the protocol library selected.
             services.AddSingleton<IMap, Map>();
             services.AddSingleton<IMapDescriptor, MapDescriptor>();
-            services.AddSingleton<ITileAccessor>(s => s.GetService<IMap>());
 
             // Chose a type of map loader:
             // services.AddGrassOnlyDummyMapLoader(hostingContext.Configuration);

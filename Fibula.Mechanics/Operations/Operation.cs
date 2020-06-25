@@ -134,7 +134,7 @@ namespace Fibula.Mechanics.Operations
                     if (targetCylinder is ITile targetTile)
                     {
                         new TileUpdatedNotification(
-                            () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, targetTile.Location),
+                            () => context.CreatureFinder.PlayersThatCanSee(context.Map, targetTile.Location),
                             new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
                         .Execute(context);
 

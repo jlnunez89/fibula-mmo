@@ -63,13 +63,13 @@ namespace Fibula.Mechanics.Operations
             this.Creature.TurnToDirection(this.Direction);
 
             // Send the notification if applicable.
-            if (context.TileAccessor.GetTileAt(this.Creature.Location, out ITile playerTile))
+            if (context.Map.GetTileAt(this.Creature.Location, out ITile playerTile))
             {
                 var playerStackPos = playerTile.GetStackPositionOfThing(this.Creature);
 
                 context.Scheduler.ScheduleEvent(
                     new CreatureTurnedNotification(
-                        () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, this.Creature.Location),
+                        () => context.CreatureFinder.PlayersThatCanSee(context.Map, this.Creature.Location),
                         new CreatureTurnedNotificationArguments(this.Creature, playerStackPos)));
             }
         }

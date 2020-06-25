@@ -128,7 +128,7 @@ namespace Fibula.Mechanics.Operations
             switch (this.FromLocation.Type)
             {
                 case LocationType.Map:
-                    var fromTile = context.TileAccessor.GetTileAt(this.FromLocation);
+                    var fromTile = context.Map.GetTileAt(this.FromLocation);
 
                     if (fromTile == null)
                     {
@@ -141,7 +141,7 @@ namespace Fibula.Mechanics.Operations
                     switch (this.ToLocation.Type)
                     {
                         case LocationType.Map:
-                            this.MapToMapMovement(context, fromTile, context.TileAccessor.GetTileAt(this.ToLocation), isTeleport: false);
+                            this.MapToMapMovement(context, fromTile, context.Map.GetTileAt(this.ToLocation), isTeleport: false);
 
                             break;
                         case LocationType.InsideContainer:
@@ -164,7 +164,7 @@ namespace Fibula.Mechanics.Operations
                     switch (this.ToLocation.Type)
                     {
                         case LocationType.Map:
-                            this.ContainerToMap(context, sourceContainer, context.TileAccessor.GetTileAt(this.ToLocation));
+                            this.ContainerToMap(context, sourceContainer, context.Map.GetTileAt(this.ToLocation));
 
                             break;
                         case LocationType.InsideContainer:
@@ -196,7 +196,7 @@ namespace Fibula.Mechanics.Operations
                     switch (this.ToLocation.Type)
                     {
                         case LocationType.Map:
-                            this.BodyToMap(context, sourceBodyContainer, context.TileAccessor.GetTileAt(this.ToLocation));
+                            this.BodyToMap(context, sourceBodyContainer, context.Map.GetTileAt(this.ToLocation));
 
                             break;
                         case LocationType.InsideContainer:
@@ -266,7 +266,7 @@ namespace Fibula.Mechanics.Operations
             // Declare some pre-conditions.
             var destinationHasGround = destinationTile?.Ground != null;
             var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.TileAccessor, sourceContainer.Location, this.ToLocation, checkLineOfSight: true);
+            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.Map, sourceContainer.Location, this.ToLocation, checkLineOfSight: true);
 
             if (!destinationHasGround || !canThrowBetweenLocations)
             {
@@ -353,7 +353,7 @@ namespace Fibula.Mechanics.Operations
             var destinationHasGround = destinationTile?.Ground != null;
             var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
             var creatureHasSourceContainerOpen = sourceContainer != null;
-            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.TileAccessor, sourceContainer.Location, this.ToLocation, checkLineOfSight: true);
+            var canThrowBetweenLocations = this.CanThrowBetweenMapLocations(context.Map, sourceContainer.Location, this.ToLocation, checkLineOfSight: true);
 
             if (!destinationHasGround || !canThrowBetweenLocations)
             {
@@ -498,7 +498,7 @@ namespace Fibula.Mechanics.Operations
             var locationsMatch = thingMoving?.Location == this.FromLocation;
             var isIntendedThing = thingMoving?.ThingId == this.ThingMovingId;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
-            var canThrowBetweenLocations = isTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.TileAccessor, this.FromLocation, this.ToLocation, checkLineOfSight: true);
+            var canThrowBetweenLocations = isTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.Map, this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
@@ -664,7 +664,7 @@ namespace Fibula.Mechanics.Operations
             {
                 // TODO: formally introduce async/synchronous notifications.
                 new TileUpdatedNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, fromTile.Location),
+                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, fromTile.Location),
                     new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
@@ -705,7 +705,7 @@ namespace Fibula.Mechanics.Operations
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
         private bool PerformCreatureMovement(IOperationContext context, ICreature creature, Location toLocation, bool isTeleport = false, ICreature requestorCreature = null)
         {
-            if (creature == null || !(creature.ParentContainer is ITile fromTile) || !context.TileAccessor.GetTileAt(toLocation, out ITile toTile))
+            if (creature == null || !(creature.ParentContainer is ITile fromTile) || !context.Map.GetTileAt(toLocation, out ITile toTile))
             {
                 return false;
             }
@@ -758,7 +758,7 @@ namespace Fibula.Mechanics.Operations
             {
                 // TODO: formally introduce async/synchronous notifications.
                 new CreatureMovedNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.TileAccessor, fromTile.Location, toLocation),
+                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, fromTile.Location, toLocation),
                     new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
@@ -871,14 +871,14 @@ namespace Fibula.Mechanics.Operations
         /// <summary>
         /// Checks if a throw between two map locations is valid.
         /// </summary>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="fromLocation">The first location.</param>
         /// <param name="toLocation">The second location.</param>
         /// <param name="checkLineOfSight">Optional. A value indicating whether to consider line of sight.</param>
         /// <returns>True if the throw is valid, false otherwise.</returns>
-        private bool CanThrowBetweenMapLocations(ITileAccessor tileAccessor, Location fromLocation, Location toLocation, bool checkLineOfSight = true)
+        private bool CanThrowBetweenMapLocations(IMap map, Location fromLocation, Location toLocation, bool checkLineOfSight = true)
         {
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            map.ThrowIfNull(nameof(map));
 
             if (fromLocation.Type != LocationType.Map || toLocation.Type != LocationType.Map)
             {
@@ -906,19 +906,19 @@ namespace Fibula.Mechanics.Operations
                 return false;
             }
 
-            return !checkLineOfSight || this.InLineOfSight(tileAccessor, fromLocation, toLocation) || this.InLineOfSight(tileAccessor, toLocation, fromLocation);
+            return !checkLineOfSight || this.InLineOfSight(map, fromLocation, toLocation) || this.InLineOfSight(map, toLocation, fromLocation);
         }
 
         /// <summary>
         /// Checks if a map location is in the line of sight of another map location.
         /// </summary>
-        /// <param name="tileAccessor">A reference to the tile accessor in use.</param>
+        /// <param name="map">A reference to the map.</param>
         /// <param name="firstLocation">The first location.</param>
         /// <param name="secondLocation">The second location.</param>
         /// <returns>True if the second location is considered within the line of sight of the first location, false otherwise.</returns>
-        private bool InLineOfSight(ITileAccessor tileAccessor, Location firstLocation, Location secondLocation)
+        private bool InLineOfSight(IMap map, Location firstLocation, Location secondLocation)
         {
-            tileAccessor.ThrowIfNull(nameof(tileAccessor));
+            map.ThrowIfNull(nameof(map));
 
             if (firstLocation.Type != LocationType.Map || secondLocation.Type != LocationType.Map)
             {
@@ -958,7 +958,7 @@ namespace Fibula.Mechanics.Operations
                     origin.X += stepX;
                 }
 
-                if (tileAccessor.GetTileAt(origin, out ITile tile) && tile.BlocksThrow)
+                if (map.GetTileAt(origin, out ITile tile) && tile.BlocksThrow)
                 {
                     return false;
                 }
@@ -967,7 +967,7 @@ namespace Fibula.Mechanics.Operations
             while (origin.Z != target.Z)
             {
                 // now we need to perform a jump between floors to see if everything is clear (literally)
-                if (tileAccessor.GetTileAt(origin, out ITile tile) && tile.Ground != null)
+                if (map.GetTileAt(origin, out ITile tile) && tile.Ground != null)
                 {
                     return false;
                 }

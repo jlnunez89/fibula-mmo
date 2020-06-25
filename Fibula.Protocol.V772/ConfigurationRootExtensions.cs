@@ -18,6 +18,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Listeners;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Protocol.V772.PacketReaders;
     using Fibula.Protocol.V772.PacketWriters;
     using Microsoft.Extensions.Configuration;
@@ -134,6 +135,8 @@ namespace Fibula.Protocol.V772
 
                 return protocol;
             });
+
+            services.TryAddSingleton<IProtocolTileDescriptor, TileDescriptor_v772>();
 
             services.TryAddSingleton<ClientConnectionFactory<GameProtocol_v772>>();
             services.TryAddSingleton<ISocketConnectionFactory>(s => s.GetService<ClientConnectionFactory<GameProtocol_v772>>());
