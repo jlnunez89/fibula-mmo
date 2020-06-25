@@ -110,7 +110,7 @@ namespace Fibula.Protocol.V772
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            preCreatureDataBytes.Add((byte)Find772LiquidColorForLiquidType(item.LiquidType));
+                            preCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = preCreatureDataBytes.Count;
@@ -132,7 +132,7 @@ namespace Fibula.Protocol.V772
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            preCreatureDataBytes.Add((byte)Find772LiquidColorForLiquidType(item.LiquidType));
+                            preCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = preCreatureDataBytes.Count;
@@ -162,7 +162,7 @@ namespace Fibula.Protocol.V772
                         }
                         else if (item.IsLiquidPool || item.IsLiquidContainer)
                         {
-                            postCreatureDataBytes.Add((byte)Find772LiquidColorForLiquidType(item.LiquidType));
+                            postCreatureDataBytes.Add((byte)item.LiquidType.ToLiquidColor());
                         }
 
                         dataPointers[currentPointer++] = postCreatureDataBytes.Count;
@@ -265,41 +265,6 @@ namespace Fibula.Protocol.V772
                 segments.Add(new MapDescriptionSegment(cachedTileData.postCreatureData.Slice(0, cachedTileData.dataPointers[(cachedTileData.dataPointers.Length / 2) + Math.Max(MapConstants.MaximumNumberOfThingsToDescribePerTile - 1 - tile.CreatureCount, 0)])));
 
                 return segments;
-            }
-        }
-
-        /// <summary>
-        /// Finds the <see cref="LiquidColor"/> of the <see cref="LiquidType"/> to send to the 7.72 client.
-        /// </summary>
-        /// <param name="liquidType">The type of liquid.</param>
-        /// <returns>The color supported by the 7.72 client.</returns>
-        /// <remarks>This whole method is a HACK and should be removed.</remarks>
-        private static LiquidColor Find772LiquidColorForLiquidType(LiquidType liquidType)
-        {
-            switch (liquidType)
-            {
-                default:
-                case LiquidType.None:
-                    return LiquidColor.None;
-                case LiquidType.Water:
-                    return LiquidColor.Blue;
-                case LiquidType.Wine:
-                case LiquidType.ManaFluid:
-                    return LiquidColor.Purple;
-                case LiquidType.Beer:
-                case LiquidType.Mud:
-                case LiquidType.Oil:
-                    return LiquidColor.Brown;
-                case LiquidType.Blood:
-                case LiquidType.LifeFluid:
-                    return LiquidColor.Red;
-                case LiquidType.Slime:
-                case LiquidType.Lemonade:
-                    return LiquidColor.Green;
-                case LiquidType.Urine:
-                    return LiquidColor.Yellow;
-                case LiquidType.Milk:
-                    return LiquidColor.White;
             }
         }
     }
