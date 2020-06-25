@@ -223,10 +223,7 @@ namespace Fibula.Map
                 lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
             }
 
-            // HACK: add a last segment to seal the deal.
-            lastSegment = lastSegment.Append(ReadOnlyMemory<byte>.Empty);
-
-            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, 0);
+            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
         }
 
         /// <summary>

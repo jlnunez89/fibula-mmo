@@ -107,10 +107,7 @@ namespace Fibula.Map
                 }
             }
 
-            // HACK: add a last segment to seal the deal.
-            lastSegment = lastSegment.Append(ReadOnlyMemory<byte>.Empty);
-
-            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, 0);
+            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
         }
     }
 }

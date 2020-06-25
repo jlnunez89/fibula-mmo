@@ -23,7 +23,7 @@ namespace Fibula.Map.Contracts.Abstractions
     public interface IMapDescriptor
     {
         /// <summary>
-        /// Gets the description bytes of the map in behalf of a given player at a given location.
+        /// Gets the description bytes of the map on behalf of a given player at a given location.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
         /// <param name="location">The center location from which the description is being retrieved.</param>
@@ -31,7 +31,7 @@ namespace Fibula.Map.Contracts.Abstractions
         ReadOnlySequence<byte> DescribeAt(IPlayer player, Location location);
 
         /// <summary>
-        /// Gets the description bytes of the map in behalf of a given player for the specified window.
+        /// Gets the description bytes of the map on behalf of a given player for the specified window.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
         /// <param name="startX">The starting X coordinate of the window.</param>
@@ -45,7 +45,7 @@ namespace Fibula.Map.Contracts.Abstractions
         ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort startX, ushort startY, sbyte startZ, sbyte endZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte startingZOffset = 0);
 
         /// <summary>
-        /// Gets the description bytes of a single tile of the map in behalf of a given player at a given location.
+        /// Gets the description bytes of a single tile of the map on behalf of a given player at a given location.
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
         /// <param name="location">The location from which the description of the tile is being retrieved.</param>
