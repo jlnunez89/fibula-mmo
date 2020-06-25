@@ -12,7 +12,6 @@
 
 namespace Fibula.Parsing.CipFiles.Extensions
 {
-    using System;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles.Enumerations;
 

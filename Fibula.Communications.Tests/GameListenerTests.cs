@@ -14,7 +14,6 @@ namespace Fibula.Communications.Listeners.Tests
 {
     using System;
     using System.ComponentModel.DataAnnotations;
-    using System.Net;
     using System.Net.Sockets;
     using System.Threading;
     using System.Threading.Tasks;

@@ -13,7 +13,6 @@
 namespace Fibula.Map.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>

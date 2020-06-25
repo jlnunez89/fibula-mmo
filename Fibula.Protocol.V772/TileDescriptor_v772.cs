@@ -16,7 +16,6 @@ namespace Fibula.Protocol.V772
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -25,6 +24,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
+    using Serilog;
 
     /// <summary>
     /// Class that represents a tile descriptor for protocol 7.72.
@@ -44,16 +44,24 @@ namespace Fibula.Protocol.V772
         /// <summary>
         /// Initializes a new instance of the <see cref="TileDescriptor_v772"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
-        public TileDescriptor_v772(ICreatureFinder creatureFinder)
+        public TileDescriptor_v772(ILogger logger, ICreatureFinder creatureFinder)
         {
+            logger.ThrowIfNull(nameof(logger));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
             this.tilesCache = new Dictionary<Location, (DateTimeOffset, ReadOnlyMemory<byte>, ReadOnlyMemory<byte>, int[])>();
             this.tilesCacheLock = new object();
 
+            this.Logger = logger;
             this.CreatureFinder = creatureFinder;
         }
+
+        /// <summary>
+        /// Gets the logger in use.
+        /// </summary>
+        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the creature finder in use.
@@ -181,7 +189,7 @@ namespace Fibula.Protocol.V772
 
                     this.tilesCache[tile.Location] = cachedTileData;
 
-                    // this.Logger.Verbose($"Regenerated description for tile at {location}.");
+                    this.Logger.Verbose($"Regenerated description for tile at {tile.Location}.");
                 }
 
                 // Add a slice of the bytes, using the pointer that corresponds to the location in the memory of the number of items to describe.
@@ -202,7 +210,7 @@ namespace Fibula.Protocol.V772
                             continue;
                         }
 
-                        if (player.KnowsCreatureWithId(creatureId))
+                        if (player.Client.KnowsCreatureWithId(creatureId))
                         {
                             creatureBytes.Add((byte)OutgoingGamePacketType.AddKnownCreature);
                             creatureBytes.Add(0x00);
@@ -212,13 +220,14 @@ namespace Fibula.Protocol.V772
                         {
                             creatureBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
                             creatureBytes.Add(0x00);
-                            creatureBytes.AddRange(BitConverter.GetBytes(player.ChooseCreatureToRemoveFromKnownSet()));
+                            creatureBytes.AddRange(BitConverter.GetBytes(player.Client.ChooseCreatureToRemoveFromKnownSet()));
                             creatureBytes.AddRange(BitConverter.GetBytes(creatureId));
 
                             // TODO: is this the best spot for this ?
-                            player.AddKnownCreature(creatureId);
+                            player.Client.AddKnownCreature(creatureId);
 
                             var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
+
                             creatureBytes.AddRange(BitConverter.GetBytes((ushort)creatureNameBytes.Length));
                             creatureBytes.AddRange(creatureNameBytes);
                         }

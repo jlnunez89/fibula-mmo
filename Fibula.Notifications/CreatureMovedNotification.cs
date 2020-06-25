@@ -243,7 +243,7 @@ namespace Fibula.Notifications
                             packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                         }
 
-                        packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
+                        packets.Add(new AddCreaturePacket(creature, player.Client.KnowsCreatureWithId(this.Arguments.CreatureId), player.Client.ChooseCreatureToRemoveFromKnownSet()));
                     }
                     else
                     {
@@ -262,7 +262,7 @@ namespace Fibula.Notifications
             {
                 if (this.Arguments.NewStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                 {
-                    packets.Add(new AddCreaturePacket(creature, player.KnowsCreatureWithId(this.Arguments.CreatureId), player.ChooseCreatureToRemoveFromKnownSet()));
+                    packets.Add(new AddCreaturePacket(creature, player.Client.KnowsCreatureWithId(this.Arguments.CreatureId), player.Client.ChooseCreatureToRemoveFromKnownSet()));
                 }
             }
 

@@ -17,7 +17,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for the game service.
     /// </summary>
-    public interface IGame : IHostedService, IGameOperationsApi// , ICombatApi
+    public interface IGame : IHostedService, IGameOperationsApi, ICombatOperationsApi
     {
         /// <summary>
         /// Gets the game world's information.

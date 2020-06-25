@@ -19,37 +19,37 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreature // , ISuffersExhaustion
+    public interface ICombatant : ICreature
     {
         ///// <summary>
         ///// Event to call when the attack target changes.
         ///// </summary>
-        //event OnAttackTargetChange TargetChanged;
+        // event OnAttackTargetChange TargetChanged;
 
         ///// <summary>
         ///// Event to call when the fight mode changes.
         ///// </summary>
-        //event FightModeChanged FightModeChanged;
+        // event FightModeChanged FightModeChanged;
 
         ///// <summary>
         ///// Event to call when the chase mode changes.
         ///// </summary>
-        //event ChaseModeChanged ChaseModeChanged;
+        // event ChaseModeChanged ChaseModeChanged;
 
         ///// <summary>
         ///// Event to call when a combat credit is consumed.
         ///// </summary>
-        //event CombatCreditConsumed CombatCreditsConsumed;
+        // event CombatCreditConsumed CombatCreditsConsumed;
 
         ///// <summary>
         ///// Event to call when combat starts for this combatant.
         ///// </summary>
-        //event CombatStarted CombatStarted;
+        // event CombatStarted CombatStarted;
 
         ///// <summary>
         ///// Event to call when combat ends for this combatant.
         ///// </summary>
-        //event CombatEnded CombatEnded;
+        // event CombatEnded CombatEnded;
 
         /// <summary>
         /// Gets the set of creatures currently in view for this combatant.
@@ -162,37 +162,37 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ///// </summary>
         ///// <param name="creditType">The type of combat credits.</param>
         ///// <param name="amount">The amount of credits.</param>
-        //void ConsumeCredits(CombatCreditType creditType, byte amount);
+        // void ConsumeCredits(CombatCreditType creditType, byte amount);
 
         ///// <summary>
         ///// Restores combat credits to the combatant.
         ///// </summary>
         ///// <param name="creditType">The type of combat credits.</param>
         ///// <param name="amount">The amount of credits.</param>
-        //void RestoreCredits(CombatCreditType creditType, byte amount);
+        // void RestoreCredits(CombatCreditType creditType, byte amount);
 
         ///// <summary>
         ///// Tracks damage taken by a combatant.
         ///// </summary>
         ///// <param name="fromCombatantId">The combatant from which to track the damage.</param>
         ///// <param name="damage">The value of the damage.</param>
-        //void RecordDamageTaken(uint fromCombatantId, int damage);
+        // void RecordDamageTaken(uint fromCombatantId, int damage);
 
         ///// <summary>
         ///// Clears the tracking store of damage taken from other combatants.
         ///// </summary>
-        //void ClearDamageTaken();
+        // void ClearDamageTaken();
 
         ///// <summary>
         ///// Sets a <see cref="ICombatant"/> now in view for this combatant.
         ///// </summary>
         ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        //void CombatantNowInView(ICombatant otherCombatant);
+        // void CombatantNowInView(ICombatant otherCombatant);
 
         ///// <summary>
         ///// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
         ///// </summary>
         ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        //void CombatantNoLongerInView(ICombatant otherCombatant);
+        // void CombatantNoLongerInView(ICombatant otherCombatant);
     }
 }

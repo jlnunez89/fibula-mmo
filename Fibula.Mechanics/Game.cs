@@ -39,7 +39,7 @@ namespace Fibula.Mechanics
     /// <summary>
     /// Class that represents the game instance.
     /// </summary>
-    public class Game : IGame// , IEventRulesApi, ICombatApi
+    public class Game : IGame
     {
         /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for idle players and connections.
@@ -192,6 +192,19 @@ namespace Fibula.Mechanics
 
             // TODO: probably save game state here.
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Begins combat between the attacker and it's target.
+        /// </summary>
+        /// <param name="attacker">The attacker.</param>
+        /// <param name="target">The target.</param>
+        public void BeginCombatBetween(ICombatant attacker, ICombatant target)
+        {
+            if (attacker != null && target != null)
+            {
+                attacker.SetAttackTarget(target);
+            }
         }
 
         /// <summary>

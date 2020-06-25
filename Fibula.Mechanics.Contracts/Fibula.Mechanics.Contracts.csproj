@@ -9,8 +9,6 @@
   <ItemGroup>
     <Compile Remove="Abstractions\IActionOperation.cs" />
     <Compile Remove="Abstractions\ICollisionEventRule.cs" />
-    <Compile Remove="Abstractions\ICombatant.cs" />
-    <Compile Remove="Abstractions\ICombatApi.cs" />
     <Compile Remove="Abstractions\ICombatOperation.cs" />
     <Compile Remove="Abstractions\IEventRule.cs" />
     <Compile Remove="Abstractions\IEventRuleArguments.cs" />

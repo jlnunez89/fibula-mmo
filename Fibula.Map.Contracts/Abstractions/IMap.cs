@@ -12,12 +12,7 @@
 
 namespace Fibula.Map.Contracts.Abstractions
 {
-    using System.Buffers;
-    using System.Collections.Generic;
     using Fibula.Common.Contracts.Structs;
-    using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Map.Contracts;
-    using Fibula.Map.Contracts.Constants;
 
     /// <summary>
     /// Interface for a map.

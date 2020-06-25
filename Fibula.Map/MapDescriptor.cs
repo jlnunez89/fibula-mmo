@@ -14,7 +14,6 @@ namespace Fibula.Map
 {
     using System;
     using System.Buffers;
-    using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;

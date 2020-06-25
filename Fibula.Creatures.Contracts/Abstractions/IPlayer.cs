@@ -44,24 +44,5 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
         bool IsAllowedToLogOut { get; }
-
-        /// <summary>
-        /// Checks if this player knows the given creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature to check.</param>
-        /// <returns>True if the player knows the creature, false otherwise.</returns>
-        bool KnowsCreatureWithId(uint creatureId);
-
-        /// <summary>
-        /// Adds the given creature to this player's known collection.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature to add to the known creatures collection.</param>
-        void AddKnownCreature(uint creatureId);
-
-        /// <summary>
-        /// Chooses a creature to remove from this player's known creatures collection, if it has reached the collection size limit.
-        /// </summary>
-        /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
-        uint ChooseCreatureToRemoveFromKnownSet();
     }
 }

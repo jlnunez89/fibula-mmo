@@ -87,16 +87,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void CancelPlayerActions(IPlayer player);
 
         /// <summary>
-        /// Changes the fight, chase and safety modes of a creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
-        /// <param name="fightMode">The fight mode to change to.</param>
-        /// <param name="chaseMode">The chase mode to change to.</param>
-        /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
-        // TODO: move to combat api.
-        void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn);
-
-        /// <summary>
         /// Handles creature speech.
         /// </summary>
         /// <param name="creatureId">The id of the creature.</param>

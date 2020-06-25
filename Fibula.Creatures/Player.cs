@@ -12,9 +12,6 @@
 
 namespace Fibula.Creatures
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
@@ -26,16 +23,6 @@ namespace Fibula.Creatures
     /// </summary>
     public class Player : Creature, IPlayer
     {
-        /// <summary>
-        /// The limit of creatures that a player's client can keep track of.
-        /// </summary>
-        private const int KnownCreatureLimit = 150;
-
-        /// <summary>
-        /// Stores the set of creatures that are known to this player.
-        /// </summary>
-        private readonly IDictionary<uint, long> knownCreatures;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
         /// </summary>
@@ -60,8 +47,6 @@ namespace Fibula.Creatures
         {
             client.ThrowIfNull(nameof(client));
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
-
-            this.knownCreatures = new Dictionary<uint, long>();
 
             this.Client = client;
             this.CharacterId = characterId;
@@ -133,54 +118,6 @@ namespace Fibula.Creatures
         /// Gets the client associated to this player.
         /// </summary>
         public IClient Client { get; }
-
-        /// <summary>
-        /// Checks if this player knows the given creature.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature to check.</param>
-        /// <returns>True if the player knows the creature, false otherwise.</returns>
-        public bool KnowsCreatureWithId(uint creatureId)
-        {
-            return this.knownCreatures.ContainsKey(creatureId);
-        }
-
-        /// <summary>
-        /// Adds the given creature to this player's known collection.
-        /// </summary>
-        /// <param name="creatureId">The id of the creature to add to the known creatures collection.</param>
-        public void AddKnownCreature(uint creatureId)
-        {
-            try
-            {
-                this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
-            }
-            catch
-            {
-                // happens when 2 try to add at the same time, which we don't care about.
-            }
-        }
-
-        /// <summary>
-        /// Chooses a creature to remove from this player's known creatures collection, if it has reached the collection size limit.
-        /// </summary>
-        /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
-        public uint ChooseCreatureToRemoveFromKnownSet()
-        {
-            // If the buffer is full we need to choose a victim.
-            while (this.knownCreatures.Count == KnownCreatureLimit)
-            {
-                // ToList() prevents modifiying an enumerating collection in the rare case we hit an exception down there.
-                foreach (var candidate in this.knownCreatures.OrderBy(kvp => kvp.Value).ToList())
-                {
-                    if (this.knownCreatures.Remove(candidate.Key))
-                    {
-                        return candidate.Key;
-                    }
-                }
-            }
-
-            return uint.MinValue;
-        }
 
         private ushort CalculateMovementBaseSpeed()
         {
