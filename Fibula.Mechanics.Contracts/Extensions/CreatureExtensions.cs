@@ -40,11 +40,14 @@ namespace Fibula.Mechanics.Contracts.Extensions
 
             var tilePenalty = fromTile?.Ground?.MovementPenalty ?? MechanicsConstants.DefaultGroundMovementPenaltyInMs;
 
-            var totalPenalty = tilePenalty * (stepDirection.IsDiagonal() ? 3 : 1);
+            const uint Epsilon = 25;
+            decimal totalPenalty = 1000 * tilePenalty;
+            decimal stepSpeed = Math.Max(1u, creature.Speed);
 
-            var durationInMs = Math.Ceiling(1000 * totalPenalty / (double)Math.Max(1u, creature.Speed) / 50) * 50;
+            var durationInMs = (uint)Math.Ceiling(totalPenalty / stepSpeed / Epsilon) * Epsilon;
+            var adjustedDurationInMs = durationInMs * (stepDirection.IsDiagonal() ? 2 : 1);
 
-            return TimeSpan.FromMilliseconds(durationInMs);
+            return TimeSpan.FromMilliseconds(adjustedDurationInMs);
         }
     }
 }

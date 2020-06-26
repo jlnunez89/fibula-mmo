@@ -25,6 +25,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         public HeartbeatPacket()
         {
+            // TODO: take the OS version here to adjust the packet to send later.
         }
 
         /// <summary>

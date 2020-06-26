@@ -184,9 +184,9 @@ namespace Fibula.Creatures
         public byte EmittedLightColor { get; protected set; }
 
         /// <summary>
-        /// Gets this creature's speed.
+        /// Gets or sets this creature's speed.
         /// </summary>
-        public abstract ushort Speed { get; }
+        public abstract ushort Speed { get; protected set; }
 
         /// <summary>
         /// Gets or sets this creature's variable speed.

@@ -44,7 +44,13 @@ namespace Fibula.Mechanics.Operations
         protected Operation(uint requestorId)
             : base(requestorId)
         {
+            this.CanBeCancelled = true;
         }
+
+        /// <summary>
+        /// Gets or sets a value indicating whether the event can be cancelled.
+        /// </summary>
+        public override bool CanBeCancelled { get; protected set; }
 
         /// <summary>
         /// Gets the type of exhaustion that this operation produces.

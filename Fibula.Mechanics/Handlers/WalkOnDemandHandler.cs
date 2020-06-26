@@ -20,6 +20,7 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Operations;
     using Serilog;
 
     /// <summary>
@@ -69,10 +70,10 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            // player.ClearAllLocationBasedOperations();
-            // this.Context.Scheduler.CancelAllFor(player.Id, typeof(IMovementOperation));
+            // player.ClearAllLocationBasedOperations
             var nextLocation = player.Location.LocationAt(walkOnDemandInfo.Direction);
 
+            // this.Game.CancelPlayerActions(player, typeof(MovementOperation));
             this.Game.Movement(player.Id, CreatureConstants.CreatureThingId, player.Location, fromIndex: 0xFF, player.Id, nextLocation, player.Id);
 
             return null;

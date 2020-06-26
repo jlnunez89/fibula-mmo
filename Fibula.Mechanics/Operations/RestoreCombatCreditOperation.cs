@@ -35,6 +35,8 @@ namespace Fibula.Mechanics.Operations
         {
             combatant.ThrowIfNull(nameof(combatant));
 
+            this.CanBeCancelled = false;
+
             this.Combatant = combatant;
             this.CreditType = creditType;
         }

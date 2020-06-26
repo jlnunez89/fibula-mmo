@@ -22,6 +22,26 @@ namespace Fibula.Creatures.Contracts.Constants
         /// <summary>
         /// The id for things that are creatures.
         /// </summary>
-        public const ushort CreatureThingId = 0x63;
+        public const ushort CreatureThingId = 99;
+
+        /// <summary>
+        /// The maximum speed allowed for creatures.
+        /// </summary>
+        public const ushort MaxCreatureSpeed = 1500;
+
+        /// <summary>
+        /// The minimum speed allowed for creatures.
+        /// </summary>
+        public const ushort MinCreatureSpeed = 0;
+
+        /// <summary>
+        /// The maximum speed allowed for players.
+        /// </summary>
+        public const ushort MaxPlayerSpeed = MaxCreatureSpeed;
+
+        /// <summary>
+        /// The minimum speed allowed for players.
+        /// </summary>
+        public const ushort MinPlayerSpeed = 10;
     }
 }

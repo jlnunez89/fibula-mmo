@@ -451,14 +451,12 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    /*
+                    this.DispatchOperation(new LogOutOperationCreationArguments(player));
+
                     if (player is ICombatant playerAsCombatant)
                     {
                         playerAsCombatant.SetAttackTarget(null);
                     }
-                    */
-
-                    this.DispatchOperation(new LogOutOperationCreationArguments(player));
                 }
             }
         }

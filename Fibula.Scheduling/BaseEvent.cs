@@ -61,6 +61,11 @@ namespace Fibula.Scheduling
         public bool HasExpeditionHandler => this.Expedited != null;
 
         /// <summary>
+        /// Gets or sets a value indicating whether the event can be cancelled.
+        /// </summary>
+        public abstract bool CanBeCancelled { get; protected set; }
+
+        /// <summary>
         /// Executes the event logic.
         /// </summary>
         /// <param name="context">The execution context.</param>

@@ -36,6 +36,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         uint RequestorId { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the event can be cancelled.
+        /// </summary>
+        bool CanBeCancelled { get; }
+
+        /// <summary>
         /// Gets the time after which this event should be repeated.
         /// The event is not repeated if the value is not positive.
         /// </summary>
