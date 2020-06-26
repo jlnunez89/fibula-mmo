@@ -88,6 +88,8 @@ namespace Fibula.Scheduling.Tests
 
             Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(RequestorId);
 
+            bEventMockForScheduled.SetupGet(e => e.CanBeCancelled).Returns(true);
+
             Scheduler scheduler = this.SetupSchedulerWithLoggerMock();
 
             using CancellationTokenSource cts = new CancellationTokenSource();
@@ -223,11 +225,16 @@ namespace Fibula.Scheduling.Tests
 
             var scheduledEventFiredCounter = 0;
 
-            Mock<BaseEvent> bEventMockForScheduled1 = new Mock<BaseEvent>(anyRequestorId);
-            Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(anyRequestorId);
-            Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(anyOtherRequestorId);
-            Mock<BaseEvent> bEventMockForScheduled4 = new Mock<BaseEvent>(anyRequestorId);
+            Mock<BaseEvent> bEventMock1 = new Mock<BaseEvent>(anyRequestorId);
+            Mock<BaseEvent> bEventMock2 = new Mock<BaseEvent>(anyRequestorId);
+            Mock<BaseEvent> bEventMock3 = new Mock<BaseEvent>(anyOtherRequestorId);
+            Mock<BaseEvent> bEventMockUncancellable = new Mock<BaseEvent>(anyRequestorId);
             ConcreteMockedEvent testConcreteEvent = new ConcreteMockedEvent(anyRequestorId, true);
+
+            bEventMock1.SetupGet(e => e.CanBeCancelled).Returns(true);
+            bEventMock2.SetupGet(e => e.CanBeCancelled).Returns(true);
+            bEventMock3.SetupGet(e => e.CanBeCancelled).Returns(true);
+            bEventMockUncancellable.SetupGet(e => e.CanBeCancelled).Returns(false);
 
             Scheduler scheduler = this.SetupSchedulerWithLoggerMock();
 
@@ -248,9 +255,9 @@ namespace Fibula.Scheduling.Tests
             Task schedulerTask = scheduler.RunAsync(cts.Token);
 
             // fire a scheduled event that shall be fired only after one second.
-            scheduler.ScheduleEvent(bEventMockForScheduled1.Object, oneSecondDelay);
-            scheduler.ScheduleEvent(bEventMockForScheduled2.Object, oneSecondDelay);
-            scheduler.ScheduleEvent(bEventMockForScheduled3.Object, oneSecondDelay);
+            scheduler.ScheduleEvent(bEventMock1.Object, oneSecondDelay);
+            scheduler.ScheduleEvent(bEventMock2.Object, oneSecondDelay);
+            scheduler.ScheduleEvent(bEventMock3.Object, oneSecondDelay);
 
             // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
             await Task.Delay(overheadDelay).ContinueWith(prev =>
@@ -267,7 +274,7 @@ namespace Fibula.Scheduling.Tests
                 Assert.AreEqual(ExpectedCounterValueAfterRun, scheduledEventFiredCounter, $"Expected scheduler's events counter {scheduledEventFiredCounter} to match {ExpectedCounterValueAfterRun} after the first run.");
             });
 
-            scheduler.ScheduleEvent(bEventMockForScheduled4.Object, oneSecondDelay);
+            scheduler.ScheduleEvent(bEventMockUncancellable.Object, oneSecondDelay);
             scheduler.ScheduleEvent(testConcreteEvent, oneSecondDelay);
 
             // delay for 100 ms (to account for setup overhead and multi threading) and check that the counter has NOT gone up for scheduled
