@@ -20,6 +20,7 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Operations;
     using Serilog;
 
     /// <summary>
@@ -71,8 +72,8 @@ namespace Fibula.Mechanics.Handlers
 
             switch (actionInfo.Action)
             {
-                case IncomingGamePacketType.CancelAutoWalk:
-                    // this.Game.CancelPlayerActions(player, /* some type of action */);
+                case IncomingGamePacketType.AutoMoveCancel:
+                    this.Game.CancelPlayerActions(player, typeof(MovementOperation));
                     break;
                 case IncomingGamePacketType.HeartbeatResponse:
                     // NO-OP.

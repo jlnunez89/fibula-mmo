@@ -21,7 +21,7 @@ namespace Fibula.Creatures
     /// <summary>
     /// Class that represents all players in the game.
     /// </summary>
-    public class Player : Creature, IPlayer
+    public class Player : CombatantCreature, IPlayer
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="Player"/> class.
@@ -78,8 +78,7 @@ namespace Fibula.Creatures
             this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
             */
 
-            this.Speed = this.CalculateMovementBaseSpeed();
-
+            this.BaseSpeed = 220;
             this.Inventory = new PlayerInventory(this);
         }
 
@@ -107,7 +106,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets a value indicating whether this player is allowed to logout.
         /// </summary>
-        public bool IsAllowedToLogOut => true; // this.AutoAttackTarget == null;
+        public bool IsAllowedToLogOut => this.AutoAttackTarget == null;
 
         /// <summary>
         /// Gets or sets the inventory for the player.
@@ -115,15 +114,39 @@ namespace Fibula.Creatures
         public sealed override IInventory Inventory { get; protected set; }
 
         /// <summary>
+        /// Gets the range that the auto attack has.
+        /// </summary>
+        public override byte AutoAttackRange => 1;
+
+        /// <summary>
+        /// Gets or sets the chase mode selected by this combatant.
+        /// </summary>
+        public override ChaseMode ChaseMode { get; set; }
+
+        /// <summary>
+        /// Gets or sets the fight mode selected by this combatant.
+        /// </summary>
+        public override FightMode FightMode { get; set; }
+
+        /// <summary>
         /// Gets the client associated to this player.
         /// </summary>
         public IClient Client { get; }
 
-        private ushort CalculateMovementBaseSpeed()
+        /// <summary>
+        /// Gets this player's speed.
+        /// </summary>
+        public override ushort Speed => this.CalculateMovementBaseSpeed();
+
+        /// <summary>
+        /// Calculates the base movement speed of the player.
+        /// </summary>
+        /// <returns>The base movement speed of the player.</returns>
+        protected override ushort CalculateMovementBaseSpeed()
         {
             var expLevel = 1; // this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 
-            return (ushort)(220 + (2 * (expLevel - 1)));
+            return (ushort)(this.BaseSpeed + (2 * (expLevel - 1)));
         }
     }
 }

@@ -15,6 +15,7 @@ namespace Fibula.Mechanics.Operations
     using System;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a change modes operation.
@@ -36,10 +37,10 @@ namespace Fibula.Mechanics.Operations
             this.IsSafeModeOn = safeModeOn;
         }
 
-        ///// <summary>
-        ///// Gets the type of exhaustion that this operation produces.
-        ///// </summary>
-        // public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
+        /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -69,14 +70,17 @@ namespace Fibula.Mechanics.Operations
         {
             var onCreature = this.GetRequestor(context.CreatureFinder);
 
-            if (onCreature == null)
+            if (onCreature == null || !(onCreature is ICombatant combatantCreature))
             {
                 return;
             }
 
             context.Logger.Debug($"{onCreature.Name} changed modes to {this.FightMode} and {this.ChaseMode}, safety: {this.IsSafeModeOn}.");
 
-            // TODO: update creature modes here.
+            combatantCreature.FightMode = this.FightMode;
+            combatantCreature.ChaseMode = this.ChaseMode;
+
+            // combatantCreature.SafeMode = this.IsSafeModeOn;
         }
     }
 }

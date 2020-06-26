@@ -25,6 +25,7 @@ namespace Fibula.Standalone
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
+    using Fibula.Communications.Packets.Incoming;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
@@ -227,6 +228,7 @@ namespace Fibula.Standalone
             var packetTypeToHandlersMap = new Dictionary<Type, Type>()
             {
                 { typeof(IAttackInfo), typeof(AttackHandler) },
+                { typeof(IAutoMovementInfo), typeof(AutoMoveHandler) },
                 { typeof(IActionWithoutContentInfo), typeof(ActionWithoutContentHandler) },
                 { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
                 { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },

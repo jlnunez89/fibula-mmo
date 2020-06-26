@@ -13,6 +13,7 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System;
+    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
@@ -24,11 +25,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
     /// </summary>
     public interface ICreature : IThing, IThingContainer, IEquatable<ICreature>
     {
-        /// <summary>
-        /// The id for things that are creatures.
-        /// </summary>
-        public const ushort CreatureThingId = 0x63;
-
         /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>
@@ -113,6 +109,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets the inventory for the entity.
         /// </summary>
         IInventory Inventory { get; }
+
+        /// <summary>
+        /// Gets or sets this creature's walk plan.
+        /// </summary>
+        WalkPlan? WalkPlan { get; set; }
 
         /// <summary>
         /// Checks if this creature can see a given creature.

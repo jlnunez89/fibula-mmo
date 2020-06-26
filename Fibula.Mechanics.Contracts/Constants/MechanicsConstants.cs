@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CombatCreditType.cs" company="2Dudes">
+// <copyright file="MechanicsConstants.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,21 +10,16 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Contracts.Combat.Enumerations
+namespace Fibula.Mechanics.Contracts.Constants
 {
     /// <summary>
-    /// Enumerates the possible blood types.
+    /// Static class that contains mechanics constants.
     /// </summary>
-    public enum CombatCreditType : byte
+    public static class MechanicsConstants
     {
         /// <summary>
-        /// Attack.
+        /// A default value to use when calculating movement penalty.
         /// </summary>
-        Attack,
-
-        /// <summary>
-        /// Defense.
-        /// </summary>
-        Defense,
+        public const int DefaultGroundMovementPenaltyInMs = 150;
     }
 }

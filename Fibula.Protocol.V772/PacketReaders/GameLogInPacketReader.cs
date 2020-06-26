@@ -60,6 +60,7 @@ namespace Fibula.Protocol.V772.PacketReaders
 
             decryptedBytes.CopyTo(targetSpan);
 
+            // Note: there are 92 bytes that follow the password, and I have no idea what they contain.
             return new GameLogInPacket(
                 xteaKey: new uint[]
                 {

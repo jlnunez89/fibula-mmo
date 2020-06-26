@@ -16,6 +16,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
 
@@ -42,10 +43,10 @@ namespace Fibula.Mechanics.Operations
             this.Receiver = receiver;
         }
 
-        ///// <summary>
-        ///// Gets the type of exhaustion that this operation produces.
-        ///// </summary>
-        // public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
+        /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -83,6 +84,29 @@ namespace Fibula.Mechanics.Operations
             if (requestor == null)
             {
                 return;
+            }
+
+            if (requestor is ICombatant combatant)
+            {
+                switch (this.Content)
+                {
+                    case "increase atk speed":
+                        combatant.IncreaseAttackSpeed(0.1m);
+                        context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
+                        return;
+                    case "decrease atk speed":
+                        combatant.DecreaseAttackSpeed(0.1m);
+                        context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
+                        return;
+                    case "increase def speed":
+                        combatant.IncreaseDefenseSpeed(0.1m);
+                        context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
+                        return;
+                    case "decrease def speed":
+                        combatant.DecreaseDefenseSpeed(0.1m);
+                        context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
+                        return;
+                }
             }
 
             context.Scheduler.ScheduleEvent(

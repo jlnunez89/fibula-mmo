@@ -13,10 +13,13 @@
 namespace Fibula.Mechanics
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -195,30 +198,73 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Begins combat between the attacker and it's target.
+        /// Re-sets the combat target of the attacker and it's (possibly new) target.
         /// </summary>
         /// <param name="attacker">The attacker.</param>
-        /// <param name="target">The target.</param>
-        public void BeginCombatBetween(ICombatant attacker, ICombatant target)
+        /// <param name="target">The new target.</param>
+        public void ResetCombatTarget(ICombatant attacker, ICombatant target)
         {
-            if (attacker != null && target != null)
+            if (attacker == null)
             {
-                attacker.SetAttackTarget(target);
+                return;
             }
+
+            if (attacker.SetAttackTarget(target))
+            {
+                this.scheduler.CancelAllFor(attacker.Id, typeof(AutoAttackOrchestratorOperation));
+
+                if (attacker.AutoAttackTarget != null)
+                {
+                    this.DispatchOperation(new AutoAttackOrchestratorOperationCreationArguments(attacker));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Re-sets a given creature's walk plan and kicks it off.
+        /// </summary>
+        /// <param name="creature">The creature to reset the walk plan of.</param>
+        /// <param name="directions">The directions for the new plan.</param>
+        public void ResetCreatureWalkPlan(ICreature creature, Direction[] directions)
+        {
+            if (creature == null || !directions.Any())
+            {
+                return;
+            }
+
+            var lastLoc = creature.Location;
+            var waypoints = new List<Location>()
+            {
+                creature.Location,
+            };
+
+            // Build the waypoints.
+            for (int i = 0; i < directions.Length; i++)
+            {
+                var nextLoc = lastLoc.LocationAt(directions[i]);
+
+                waypoints.Add(nextLoc);
+                lastLoc = nextLoc;
+            }
+
+            creature.WalkPlan = new WalkPlan(WalkStrategy.GiveUpOnInterruption, () => lastLoc, waypoints.ToArray());
+
+            this.DispatchOperation(new AutoWalkOrchestratorOperationCreationArguments(creature));
         }
 
         /// <summary>
         /// Cancels all actions that a player has pending.
         /// </summary>
         /// <param name="player">The player to cancel actions for.</param>
-        public void CancelPlayerActions(IPlayer player)
+        /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
+        public void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null)
         {
-            if (player == null)
+            if (player == null || (typeOfActionToCancel != null && !typeof(IOperation).IsAssignableFrom(typeOfActionToCancel)))
             {
                 return;
             }
 
-            this.DispatchOperation(new CancelActionsOperationCreationArguments(player));
+            this.DispatchOperation(new CancelActionsOperationCreationArguments(player, typeOfActionToCancel));
         }
 
         /// <summary>
@@ -354,6 +400,11 @@ namespace Fibula.Mechanics
             this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatResponsePacket())));
         }
 
+        /// <summary>
+        /// Dispatches a new operation created using the supplied parameters.
+        /// </summary>
+        /// <param name="operationArguments">The parameters used to create the operation.</param>
+        /// <param name="withDelay">Optional. A delay to dispatch the operation with.</param>
         private void DispatchOperation(IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
         {
             IOperation newOperation = this.operationFactory.Create(operationArguments);
@@ -367,14 +418,12 @@ namespace Fibula.Mechanics
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
 
             // Add delay from current exhaustion of the requestor, if any.
-            /*
-            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ISuffersExhaustion creatureWithExhaustion)
+            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ICreatureWithExhaustion creatureWithExhaustion)
             {
                 TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
 
                 operationDelay += cooldownRemaining;
             }
-            */
 
             this.scheduler.ScheduleEvent(newOperation, operationDelay);
         }
@@ -497,19 +546,6 @@ namespace Fibula.Mechanics
                 this.logger.Error($"Error in {evt.GetType().Name} with id: {evt.EventId}: {ex.Message}.");
                 this.logger.Error(ex.StackTrace);
             }
-
-            // TODO: this should be added to the BaseOperation rather than check the type here...
-            // finally
-            // {
-            //    if (evt is IOperation operation)
-            //    {
-            //        // Add any exhaustion for the requestor of the operation, if any.
-            //        if (this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
-            //        {
-            //            requestor.AddExhaustion(operation.ExhaustionType, this.scheduler.CurrentTime, operation.ExhaustionCost);
-            //        }
-            //    }
-            // }
         }
 
         private IEventContext GetContextForEventType(Type type)

@@ -2,31 +2,64 @@
 // <copyright file="CombatantCreature.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
+// jlnunez89@gmail.com
 // http://linkedin.com/in/jlnunez89
 //
 // Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// See LICENSE.txt file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace Fibula.Creatures
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Constants;
-    using OpenTibia.Server.Contracts.Delegates;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Combat.Enumerations;
+    using Fibula.Mechanics.Contracts.Constants;
+    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents all creatures in the game.
     /// </summary>
     public abstract class CombatantCreature : Creature, ICombatant
     {
+        /// <summary>
+        /// An object to use as a lock to semaphone changes to the <see cref="damageTakenFromOthers"/> dictionary.
+        /// </summary>
         private readonly object damageTakenFromOthersLock;
 
+        /// <summary>
+        /// Lock object to semaphore interaction with the exhaustion dictionary.
+        /// </summary>
+        private readonly object exhaustionLock;
+
+        /// <summary>
+        /// Stores the map of other combatants to the damage taken from them.
+        /// </summary>
         private readonly Dictionary<uint, uint> damageTakenFromOthers;
+
+        /// <summary>
+        /// The base of how fast a combatant can earn an attack credit per combat round.
+        /// </summary>
+        private readonly decimal baseAttackSpeed;
+
+        /// <summary>
+        /// The base of how fast a combatant can earn a defense credit per combat round.
+        /// </summary>
+        private readonly decimal baseDefenseSpeed;
+
+        /// <summary>
+        /// The buff for attack speed.
+        /// </summary>
+        private decimal attackSpeedBuff;
+
+        /// <summary>
+        /// The buff for defense speed.
+        /// </summary>
+        private decimal defenseSpeedBuff;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CombatantCreature"/> class.
@@ -61,77 +94,18 @@ namespace OpenTibia.Server
             : base(name, article, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
         {
             // Normalize combat speeds.
-            this.BaseAttackSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseAttackSpeed));
-            this.BaseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
+            this.baseAttackSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseAttackSpeed));
+            this.baseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
 
             this.AutoAttackCredits = this.AutoAttackMaximumCredits;
             this.AutoDefenseCredits = this.AutoDefenseMaximumCredits;
 
+            this.exhaustionLock = new object();
+            this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
+
             this.damageTakenFromOthersLock = new object();
             this.damageTakenFromOthers = new Dictionary<uint, uint>();
-
-            this.HostilesInView = new HashSet<uint>();
-            this.NeutralsInView = new HashSet<uint>();
-            this.FriendlyInView = new HashSet<uint>();
         }
-
-        /// <summary>
-        /// Event to call when the attack target changes.
-        /// </summary>
-        public event OnAttackTargetChange TargetChanged;
-
-        /// <summary>
-        /// Event to call when the fight mode changes.
-        /// </summary>
-        public event FightModeChanged FightModeChanged;
-
-        /// <summary>
-        /// Event to call when the chase mode changes.
-        /// </summary>
-        public event ChaseModeChanged ChaseModeChanged;
-
-        /// <summary>
-        /// Event to call when a combat credit is consumed.
-        /// </summary>
-        public event CombatCreditConsumed CombatCreditsConsumed;
-
-        /// <summary>
-        /// Event to call when combat starts for this combatant.
-        /// </summary>
-        public event CombatStarted CombatStarted;
-
-        /// <summary>
-        /// Event to call when combat ends for this combatant.
-        /// </summary>
-        public event CombatEnded CombatEnded;
-
-        /// <summary>
-        /// Gets the set of creatures currently in view for this combatant.
-        /// </summary>
-        public IEnumerable<uint> CreaturesInView
-        {
-            get
-            {
-                return this.HostilesInView
-                    .Union(this.NeutralsInView)
-                    .Union(this.FriendlyInView);
-            }
-        }
-
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
-        /// </summary>
-        public ISet<uint> HostilesInView { get; }
-
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers neutral.
-        /// </summary>
-        public ISet<uint> NeutralsInView { get; }
-
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
-        /// </summary>
-        public ISet<uint> FriendlyInView { get; }
 
         /// <summary>
         /// Gets the current target combatant.
@@ -141,32 +115,32 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets the number of attack credits available.
         /// </summary>
-        public byte AutoAttackCredits { get; private set; }
+        public int AutoAttackCredits { get; private set; }
 
         /// <summary>
         /// Gets the number of maximum attack credits.
         /// </summary>
-        public byte AutoAttackMaximumCredits => CombatConstants.DefaultMaximumAttackCredits;
+        public ushort AutoAttackMaximumCredits => CombatConstants.DefaultMaximumAttackCredits;
 
         /// <summary>
         /// Gets the number of auto defense credits available.
         /// </summary>
-        public byte AutoDefenseCredits { get; private set; }
+        public int AutoDefenseCredits { get; private set; }
 
         /// <summary>
         /// Gets the number of maximum defense credits.
         /// </summary>
-        public byte AutoDefenseMaximumCredits => CombatConstants.DefaultMaximumDefenseCredits;
+        public ushort AutoDefenseMaximumCredits => CombatConstants.DefaultMaximumDefenseCredits;
 
         /// <summary>
-        /// Gets a metric of how fast an Actor can earn a new AutoAttack credit per second.
+        /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
         /// </summary>
-        public decimal BaseAttackSpeed { get; }
+        public decimal AttackSpeed => this.baseAttackSpeed + this.attackSpeedBuff;
 
         /// <summary>
-        /// Gets a metric of how fast an Actor can earn a new AutoDefense credit per second.
+        /// Gets a metric of how fast a combatant can earn a defense credit per combat round.
         /// </summary>
-        public decimal BaseDefenseSpeed { get; }
+        public decimal DefenseSpeed => this.baseDefenseSpeed + this.defenseSpeedBuff;
 
         /// <summary>
         /// Gets the target being chased, if any.
@@ -187,21 +161,6 @@ namespace OpenTibia.Server
         /// Gets the range that the auto attack has.
         /// </summary>
         public abstract byte AutoAttackRange { get; }
-
-        /// <summary>
-        /// Gets the attack power of this combatant.
-        /// </summary>
-        public abstract ushort AttackPower { get; }
-
-        /// <summary>
-        /// Gets the defense power of this combatant.
-        /// </summary>
-        public abstract ushort DefensePower { get; }
-
-        /// <summary>
-        /// Gets the armor rating of this combatant.
-        /// </summary>
-        public abstract ushort ArmorRating { get; }
 
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
@@ -232,74 +191,29 @@ namespace OpenTibia.Server
         }
 
         /// <summary>
-        /// Clears the tracking store of damage taken from other combatants.
+        /// Gets the current exhaustion information for the entity.
         /// </summary>
-        public void ClearDamageTaken()
-        {
-            lock (this.damageTakenFromOthersLock)
-            {
-                this.damageTakenFromOthers.Clear();
-            }
-        }
-
-        /// <summary>
-        /// Tracks damage taken by a combatant.
-        /// </summary>
-        /// <param name="fromCombatantId">The combatant from which to track the damage.</param>
-        /// <param name="damage">The value of the damage.</param>
-        public void RecordDamageTaken(uint fromCombatantId, int damage)
-        {
-            if (fromCombatantId == 0 || damage < 0)
-            {
-                return;
-            }
-
-            lock (this.damageTakenFromOthersLock)
-            {
-                if (!this.damageTakenFromOthers.ContainsKey(fromCombatantId))
-                {
-                    this.damageTakenFromOthers[fromCombatantId] = 0u;
-                }
-
-                // Add to the Hostiles list so that this creature can choose to attack them.
-                // TOOD: should we check for Friends here and avoid adding them?
-                this.HostilesInView.Add(fromCombatantId);
-
-                this.damageTakenFromOthers[fromCombatantId] = this.damageTakenFromOthers[fromCombatantId] + (uint)damage;
-            }
-        }
+        /// <remarks>
+        /// The key is a <see cref="ExhaustionType"/>, and the value is a <see cref="DateTimeOffset"/>: the date and time
+        /// at which exhaustion is completely recovered.
+        /// </remarks>
+        public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
 
         /// <summary>
         /// Consumes combat credits to the combatant.
         /// </summary>
-        /// <param name="creditType">The type of combat credits.</param>
-        /// <param name="amount">The amount of credits.</param>
+        /// <param name="creditType">The type of combat credits to consume.</param>
+        /// <param name="amount">The amount of credits to consume.</param>
         public void ConsumeCredits(CombatCreditType creditType, byte amount)
         {
             switch (creditType)
             {
                 case CombatCreditType.Attack:
-                    var oldAttackCredits = this.AutoAttackCredits;
-
-                    this.AutoAttackCredits = (byte)Math.Max(0, this.AutoAttackCredits - amount);
-
-                    if (this.AutoAttackCredits != oldAttackCredits)
-                    {
-                        this.CombatCreditsConsumed?.Invoke(this, creditType, amount);
-                    }
-
+                    this.AutoAttackCredits -= amount;
                     break;
 
                 case CombatCreditType.Defense:
-                    var oldDefenseCredits = this.AutoDefenseCredits;
-
-                    this.AutoDefenseCredits = (byte)Math.Max(0, this.AutoDefenseCredits - amount);
-
-                    if (this.AutoDefenseCredits != oldDefenseCredits)
-                    {
-                        this.CombatCreditsConsumed?.Invoke(this, creditType, amount);
-                    }
-
+                    this.AutoDefenseCredits -= amount;
                     break;
             }
         }
@@ -307,18 +221,18 @@ namespace OpenTibia.Server
         /// <summary>
         /// Restores combat credits to the combatant.
         /// </summary>
-        /// <param name="creditType">The type of combat credits.</param>
-        /// <param name="amount">The amount of credits.</param>
+        /// <param name="creditType">The type of combat credits to restore.</param>
+        /// <param name="amount">The amount of credits to restore.</param>
         public void RestoreCredits(CombatCreditType creditType, byte amount)
         {
             switch (creditType)
             {
                 case CombatCreditType.Attack:
-                    this.AutoAttackCredits = (byte)Math.Min(this.AutoAttackMaximumCredits, this.AutoAttackCredits + amount);
+                    this.AutoAttackCredits = Math.Min(this.AutoAttackMaximumCredits, this.AutoAttackCredits + amount);
                     break;
 
                 case CombatCreditType.Defense:
-                    this.AutoDefenseCredits = (byte)Math.Min(this.AutoDefenseMaximumCredits, this.AutoDefenseCredits + amount);
+                    this.AutoDefenseCredits = Math.Min(this.AutoDefenseMaximumCredits, this.AutoDefenseCredits + amount);
                     break;
             }
         }
@@ -327,8 +241,11 @@ namespace OpenTibia.Server
         /// Sets the attack target of this combatant.
         /// </summary>
         /// <param name="otherCombatant">The other target combatant, if any.</param>
-        public void SetAttackTarget(ICombatant otherCombatant)
+        /// <returns>True if the target was actually changed, false otherwise.</returns>
+        public bool SetAttackTarget(ICombatant otherCombatant)
         {
+            bool targetWasChanged = false;
+
             if (otherCombatant != this.AutoAttackTarget)
             {
                 var oldTarget = this.AutoAttackTarget;
@@ -340,54 +257,105 @@ namespace OpenTibia.Server
                     this.ChasingTarget = otherCombatant;
                 }
 
-                this.TargetChanged?.Invoke(this, oldTarget);
+                // this.TargetChanged?.Invoke(this, oldTarget);
+                targetWasChanged = true;
+            }
+
+            return targetWasChanged;
+        }
+
+        /// <summary>
+        /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
+        /// </summary>
+        /// <param name="type">The type of exhaustion.</param>
+        /// <param name="currentTime">The current time to calculate from.</param>
+        /// <returns>The <see cref="TimeSpan"/> result.</returns>
+        public TimeSpan CalculateRemainingCooldownTime(ExhaustionType type, DateTimeOffset currentTime)
+        {
+            lock (this.exhaustionLock)
+            {
+                if (!this.ExhaustionInformation.TryGetValue(type, out DateTimeOffset readyAtTime))
+                {
+                    return TimeSpan.Zero;
+                }
+
+                var timeLeft = readyAtTime - currentTime;
+
+                if (timeLeft < TimeSpan.Zero)
+                {
+                    this.ExhaustionInformation.Remove(type);
+
+                    return TimeSpan.Zero;
+                }
+
+                return timeLeft;
             }
         }
 
         /// <summary>
-        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
+        /// Adds exhaustion of the given type.
         /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public abstract void CombatantNowInView(ICombatant otherCombatant);
-
-        /// <summary>
-        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
-        /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public abstract void CombatantNoLongerInView(ICombatant otherCombatant);
-
-        /// <summary>
-        /// Invokes the fight mode changed event.
-        /// </summary>
-        /// <param name="oldMode">The mode from which the combatant changed.</param>
-        protected void InvokeFightModeChanged(FightMode oldMode)
+        /// <param name="type">The type of exhaustion to add.</param>
+        /// <param name="fromTime">The reference time from which to add.</param>
+        /// <param name="timeSpan">The amount of time to add exhaustion for.</param>
+        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, TimeSpan timeSpan)
         {
-            this.FightModeChanged?.Invoke(this, oldMode);
+            lock (this.exhaustionLock)
+            {
+                if (this.ExhaustionInformation.ContainsKey(type) && this.ExhaustionInformation[type] > fromTime)
+                {
+                    fromTime = this.ExhaustionInformation[type];
+                }
+
+                this.ExhaustionInformation[type] = fromTime + timeSpan;
+            }
         }
 
         /// <summary>
-        /// Invokes the chase mode changed event.
+        /// Adds exhaustion of the given type.
         /// </summary>
-        /// <param name="oldMode">The mode from which the combatant changed.</param>
-        protected void InvokeChaseModeChanged(ChaseMode oldMode)
+        /// <param name="type">The type of exhaustion to add.</param>
+        /// <param name="fromTime">The reference time from which to add.</param>
+        /// <param name="milliseconds">The amount of time in milliseconds to add exhaustion for.</param>
+        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, uint milliseconds)
         {
-            this.ChaseModeChanged?.Invoke(this, oldMode);
+            this.AddExhaustion(type, fromTime, TimeSpan.FromMilliseconds(milliseconds));
         }
 
         /// <summary>
-        /// Invokes the combat started event.
+        /// Increases the attack speed of this combatant.
         /// </summary>
-        protected void InvokeCombatStarted()
+        /// <param name="increaseAmount">The amount by which to increase.</param>
+        public void IncreaseAttackSpeed(decimal increaseAmount)
         {
-            this.CombatStarted?.Invoke(this);
+            this.attackSpeedBuff = Math.Min(CombatConstants.MaximumCombatSpeed - this.baseAttackSpeed, this.attackSpeedBuff + increaseAmount);
         }
 
         /// <summary>
-        /// Invokes the combat ended event.
+        /// Decreases the attack speed of this combatant.
         /// </summary>
-        protected void InvokeCombatEnded()
+        /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        public void DecreaseAttackSpeed(decimal decreaseAmount)
         {
-            this.CombatEnded?.Invoke(this);
+            this.attackSpeedBuff = Math.Max(0, this.attackSpeedBuff - decreaseAmount);
+        }
+
+        /// <summary>
+        /// Increases the defense speed of this combatant.
+        /// </summary>
+        /// <param name="increaseAmount">The amount by which to increase.</param>
+        public void IncreaseDefenseSpeed(decimal increaseAmount)
+        {
+            this.defenseSpeedBuff = Math.Min(CombatConstants.MaximumCombatSpeed - this.baseDefenseSpeed, this.defenseSpeedBuff + increaseAmount);
+        }
+
+        /// <summary>
+        /// Decreases the defense speed of this combatant.
+        /// </summary>
+        /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        public void DecreaseDefenseSpeed(decimal decreaseAmount)
+        {
+            this.defenseSpeedBuff = Math.Max(0, this.defenseSpeedBuff - decreaseAmount);
         }
     }
 }

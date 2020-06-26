@@ -14,12 +14,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Combat.Enumerations;
 
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreature
+    public interface ICombatant : ICreatureWithExhaustion
     {
         ///// <summary>
         ///// Event to call when the attack target changes.
@@ -51,25 +51,25 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ///// </summary>
         // event CombatEnded CombatEnded;
 
-        /// <summary>
-        /// Gets the set of creatures currently in view for this combatant.
-        /// </summary>
-        IEnumerable<uint> CreaturesInView { get; }
+        ///// <summary>
+        ///// Gets the set of creatures currently in view for this combatant.
+        ///// </summary>
+        // IEnumerable<uint> CreaturesInView { get; }
 
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
-        /// </summary>
-        ISet<uint> HostilesInView { get; }
+        ///// <summary>
+        ///// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
+        ///// </summary>
+        // ISet<uint> HostilesInView { get; }
 
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers neutral.
-        /// </summary>
-        ISet<uint> NeutralsInView { get; }
+        ///// <summary>
+        ///// Gets the set of ids of creatures that this combatant considers neutral.
+        ///// </summary>
+        // ISet<uint> NeutralsInView { get; }
 
-        /// <summary>
-        /// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
-        /// </summary>
-        ISet<uint> FriendlyInView { get; }
+        ///// <summary>
+        ///// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
+        ///// </summary>
+        // ISet<uint> FriendlyInView { get; }
 
         /// <summary>
         /// Gets the current target combatant, if any.
@@ -89,47 +89,47 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Gets the number of attack credits available.
         /// </summary>
-        byte AutoAttackCredits { get; }
+        int AutoAttackCredits { get; }
 
         /// <summary>
         /// Gets the number of maximum attack credits.
         /// </summary>
-        byte AutoAttackMaximumCredits { get; }
+        ushort AutoAttackMaximumCredits { get; }
 
         /// <summary>
         /// Gets the number of auto defense credits available.
         /// </summary>
-        byte AutoDefenseCredits { get; }
+        int AutoDefenseCredits { get; }
 
         /// <summary>
         /// Gets the number of maximum defense credits.
         /// </summary>
-        byte AutoDefenseMaximumCredits { get; }
+        ushort AutoDefenseMaximumCredits { get; }
 
         /// <summary>
-        /// Gets a metric of how fast an Actor can earn a new AutoAttack credit per second.
+        /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
         /// </summary>
-        decimal BaseAttackSpeed { get; }
+        decimal AttackSpeed { get; }
 
         /// <summary>
-        /// Gets a metric of how fast an Actor can earn a new AutoDefense credit per second.
+        /// Gets a metric of how fast a combatant can earn a defense credit per combat round.
         /// </summary>
-        decimal BaseDefenseSpeed { get; }
+        decimal DefenseSpeed { get; }
 
-        /// <summary>
-        /// Gets the attack power of this combatant.
-        /// </summary>
-        ushort AttackPower { get; }
+        ///// <summary>
+        ///// Gets the attack power of this combatant.
+        ///// </summary>
+        // ushort AttackPower { get; }
 
-        /// <summary>
-        /// Gets the defense power of this combatant.
-        /// </summary>
-        ushort DefensePower { get; }
+        ///// <summary>
+        ///// Gets the defense power of this combatant.
+        ///// </summary>
+        // ushort DefensePower { get; }
 
-        /// <summary>
-        /// Gets the armor rating of this combatant.
-        /// </summary>
-        ushort ArmorRating { get; }
+        ///// <summary>
+        ///// Gets the armor rating of this combatant.
+        ///// </summary>
+        // ushort ArmorRating { get; }
 
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
@@ -155,21 +155,46 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Sets the attack target of this combatant.
         /// </summary>
         /// <param name="otherCombatant">The other target combatant, if any.</param>
-        void SetAttackTarget(ICombatant otherCombatant);
+        /// <returns>True if the target was actually changed, false otherwise.</returns>
+        bool SetAttackTarget(ICombatant otherCombatant);
 
-        ///// <summary>
-        ///// Consumes combat credits to the combatant.
-        ///// </summary>
-        ///// <param name="creditType">The type of combat credits.</param>
-        ///// <param name="amount">The amount of credits.</param>
-        // void ConsumeCredits(CombatCreditType creditType, byte amount);
+        /// <summary>
+        /// Consumes combat credits to the combatant.
+        /// </summary>
+        /// <param name="creditType">The type of combat credits to consume.</param>
+        /// <param name="amount">The amount of credits to consume.</param>
+        void ConsumeCredits(CombatCreditType creditType, byte amount);
 
-        ///// <summary>
-        ///// Restores combat credits to the combatant.
-        ///// </summary>
-        ///// <param name="creditType">The type of combat credits.</param>
-        ///// <param name="amount">The amount of credits.</param>
-        // void RestoreCredits(CombatCreditType creditType, byte amount);
+        /// <summary>
+        /// Restores combat credits to the combatant.
+        /// </summary>
+        /// <param name="creditType">The type of combat credits to restore.</param>
+        /// <param name="amount">The amount of credits to restore.</param>
+        void RestoreCredits(CombatCreditType creditType, byte amount);
+
+        /// <summary>
+        /// Increases the attack speed of this combatant.
+        /// </summary>
+        /// <param name="increaseAmount">The amount by which to increase.</param>
+        void IncreaseAttackSpeed(decimal increaseAmount);
+
+        /// <summary>
+        /// Increases the defense speed of this combatant.
+        /// </summary>
+        /// <param name="increaseAmount">The amount by which to increase.</param>
+        void IncreaseDefenseSpeed(decimal increaseAmount);
+
+        /// <summary>
+        /// Decreases the attack speed of this combatant.
+        /// </summary>
+        /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        void DecreaseAttackSpeed(decimal decreaseAmount);
+
+        /// <summary>
+        /// Decreases the defense speed of this combatant.
+        /// </summary>
+        /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        void DecreaseDefenseSpeed(decimal decreaseAmount);
 
         ///// <summary>
         ///// Tracks damage taken by a combatant.

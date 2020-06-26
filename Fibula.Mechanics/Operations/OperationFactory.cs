@@ -54,26 +54,6 @@ namespace Fibula.Mechanics.Operations
             switch (arguments.Type)
             {
                 /*
-                case OperationType.AutoAttack:
-                    if (arguments is AutoAttackCombatOperationCreationArguments autoAttackOpArgs)
-                    {
-                        return new AutoAttackCombatOperation(
-                            autoAttackOpArgs.Attacker,
-                            autoAttackOpArgs.Target,
-                            autoAttackOpArgs.ExhaustionCost);
-                    }
-
-                    break;
-                case OperationType.AutoWalk:
-                    if (arguments is AutoWalkOperationCreationArguments autoWalkOpArgs)
-                    {
-                        return new AutoWalkOperation(
-                            autoWalkOpArgs.RequestorId,
-                            autoWalkOpArgs.Creature,
-                            autoWalkOpArgs.Directions);
-                    }
-
-                    break;
                 case OperationType.ChangeItem:
                     if (arguments is ChangeItemOperationCreationArguments changeItemOpArgs)
                     {
@@ -155,13 +135,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                case OperationType.RestoreCombatCredit:
-                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
-                    {
-                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
-                    }
-
-                    break;
                 case OperationType.SpawnMonsters:
                     if (arguments is SpawnMonstersOperationCreationArguments spawnMonstersOpArgs)
                     {
@@ -205,6 +178,30 @@ namespace Fibula.Mechanics.Operations
 
                     break;
                 */
+                case OperationType.AutoAttack:
+                    if (arguments is AutoAttackOperationCreationArguments autoAttackOpArgs)
+                    {
+                        return new AutoAttackOperation(
+                            autoAttackOpArgs.Attacker,
+                            autoAttackOpArgs.Target,
+                            autoAttackOpArgs.ExhaustionCost);
+                    }
+
+                    break;
+                case OperationType.AutoAttackOrchestrator:
+                    if (arguments is AutoAttackOrchestratorOperationCreationArguments autoAttackOnCadenceOpArgs)
+                    {
+                        return new AutoAttackOrchestratorOperation(autoAttackOnCadenceOpArgs.Combatant);
+                    }
+
+                    break;
+                case OperationType.AutoWalkOrchestrator:
+                    if (arguments is AutoWalkOrchestratorOperationCreationArguments autoWalkOrchOpArgs)
+                    {
+                        return new AutoWalkOrchestratorOperation(autoWalkOrchOpArgs.Creature);
+                    }
+
+                    break;
                 case OperationType.CancelOperations:
                     if (arguments is CancelActionsOperationCreationArguments cancelActionsOpArguments)
                     {
@@ -267,6 +264,13 @@ namespace Fibula.Mechanics.Operations
                             movementOpArgs.ToLocation,
                             movementOpArgs.ToCreatureId,
                             movementOpArgs.Amount);
+                    }
+
+                    break;
+                case OperationType.RestoreCombatCredit:
+                    if (arguments is RestoreCombatCreditOperationCreationArguments restoreCreditOpArgs)
+                    {
+                        return new RestoreCombatCreditOperation(restoreCreditOpArgs.Combatant, restoreCreditOpArgs.CreditType);
                     }
 
                     break;

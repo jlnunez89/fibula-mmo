@@ -12,11 +12,13 @@
 
 namespace Fibula.Mechanics.Operations
 {
+    using System;
     using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
 
@@ -30,11 +32,18 @@ namespace Fibula.Mechanics.Operations
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the cancellation.</param>
         /// <param name="creature">The creature who's actions are being cancelled.</param>
-        public CancelActionsOperation(uint requestorId, ICreature creature)
+        /// <param name="typeToCancel">Optional. The specific type of operation to cancel.</param>
+        public CancelActionsOperation(uint requestorId, ICreature creature, Type typeToCancel = null)
             : base(requestorId)
         {
             this.Creature = creature;
+            this.TypeToCancel = typeToCancel ?? typeof(IOperation);
         }
+
+        /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
         /// <summary>
         /// Gets the creature who's actions are being cancelled.
@@ -42,13 +51,17 @@ namespace Fibula.Mechanics.Operations
         public ICreature Creature { get; }
 
         /// <summary>
+        /// Gets the type of operation to cancel.
+        /// </summary>
+        public Type TypeToCancel { get; }
+
+        /// <summary>
         /// Executes the operation's logic.
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IElevatedOperationContext context)
         {
-            // TODO: filter by type of actions to cancel.
-            context.Scheduler.CancelAllFor(this.Creature.Id, typeof(IOperation));
+            context.Scheduler.CancelAllFor(this.Creature.Id, this.TypeToCancel);
 
             if (this.Creature is IPlayer player)
             {

@@ -55,7 +55,7 @@ namespace Fibula.Protocol.V772.PacketReaders
             var operatingSystem = message.GetUInt16();
             var version = message.GetUInt16();
 
-            // unknown bytes.
+            // Skip dat, spr, and pic signatures (4 bytes each)?
             message.SkipBytes(12);
 
             var targetSpan = message.Buffer[message.Cursor..message.Length];

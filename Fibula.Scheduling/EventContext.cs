@@ -29,7 +29,7 @@ namespace Fibula.Scheduling
         {
             logger.ThrowIfNull(nameof(logger));
 
-            this.Logger = logger;
+            this.Logger = logger.ForContext(this.GetType());
         }
 
         /// <summary>

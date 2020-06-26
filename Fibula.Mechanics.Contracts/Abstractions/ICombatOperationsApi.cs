@@ -30,11 +30,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode);
 
         /// <summary>
-        /// Begins combat between the attacker and it's target.
+        /// Re-sets the combat target of the attacker and it's (possibly new) target.
         /// </summary>
         /// <param name="attacker">The attacker.</param>
         /// <param name="target">The target.</param>
-        void BeginCombatBetween(ICombatant attacker, ICombatant target);
+        void ResetCombatTarget(ICombatant attacker, ICombatant target);
 
         /// <summary>
         /// Changes the fight, chase and safety modes of a creature.

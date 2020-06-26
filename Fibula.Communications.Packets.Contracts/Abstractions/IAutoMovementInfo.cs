@@ -10,9 +10,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Communications.Contracts.Abstractions.RequestInfo
+namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface that represents the auto movement information.

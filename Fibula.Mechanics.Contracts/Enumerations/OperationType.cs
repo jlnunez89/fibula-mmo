@@ -57,6 +57,26 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         /// </summary>
         Turn,
 
+        /// <summary>
+        /// The operationthat orchestrates auto attacking.
+        /// </summary>
+        AutoAttackOrchestrator,
+
+        /// <summary>
+        /// The actual attack operation when auto attacking.
+        /// </summary>
+        AutoAttack,
+
+        /// <summary>
+        /// An operation that restores combat credits to a combatant.
+        /// </summary>
+        RestoreCombatCredit,
+
+        /// <summary>
+        /// The operation that orchestrates auto walking.
+        /// </summary>
+        AutoWalkOrchestrator,
+
         /*
         Thinking,
 
@@ -65,11 +85,6 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         ContainerMoveUp,
         UseItem,
         UseItemOn,
-
-        AutoAttack,
-        RestoreCombatCredit,
-
-        AutoWalk,
 
         ChangeItem,
         CreateItem,

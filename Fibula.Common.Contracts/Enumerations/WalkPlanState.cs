@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IOperation.cs" company="2Dudes">
+// <copyright file="WalkPlanState.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,25 +10,27 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Enumerations
 {
-    using System;
-    using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Scheduling.Contracts.Abstractions;
-
     /// <summary>
-    /// Interface for a game operation.
+    /// Enumeration of the possible states of a walk plan.
     /// </summary>
-    public interface IOperation : IEvent
+    public enum WalkPlanState
     {
         /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
+        /// The plan is in progress and we should continue.
         /// </summary>
-        ExhaustionType ExhaustionType { get; }
+        InProgress,
 
         /// <summary>
-        /// Gets the exhaustion cost of this operation.
+        /// The plan was successfully traversed and we're now
+        /// at the goal location.
         /// </summary>
-        TimeSpan ExhaustionCost { get; }
+        AtGoal,
+
+        /// <summary>
+        /// The plan was aborted.
+        /// </summary>
+        Aborted,
     }
 }

@@ -50,6 +50,12 @@ namespace Fibula.Scheduling
         public uint RequestorId { get; }
 
         /// <summary>
+        /// Gets or sets the time after which this event should be repeated.
+        /// The event is not repeated if the value is not positive.
+        /// </summary>
+        public TimeSpan RepeatAfter { get; protected set; }
+
+        /// <summary>
         /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Expedited"/> event.
         /// </summary>
         public bool HasExpeditionHandler => this.Expedited != null;

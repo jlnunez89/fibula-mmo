@@ -12,6 +12,7 @@
 
 namespace Fibula.Scheduling.Contracts.Abstractions
 {
+    using System;
     using Fibula.Scheduling.Contracts.Delegates;
 
     /// <summary>
@@ -33,6 +34,12 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// Gets the id of the requestor of this event, if available.
         /// </summary>
         uint RequestorId { get; }
+
+        /// <summary>
+        /// Gets the time after which this event should be repeated.
+        /// The event is not repeated if the value is not positive.
+        /// </summary>
+        TimeSpan RepeatAfter { get; }
 
         /// <summary>
         /// Executes the event logic.

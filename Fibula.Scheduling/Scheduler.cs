@@ -20,6 +20,7 @@ namespace Fibula.Scheduling
     using Fibula.Common.Utilities;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
+    using Fibula.Scheduling.Contracts.Extensions;
     using Priority_Queue;
     using Serilog;
 
@@ -32,6 +33,11 @@ namespace Fibula.Scheduling
         /// The default processing wait time on the processing queue thread.
         /// </summary>
         private static readonly TimeSpan DefaultProcessWaitTime = TimeSpan.FromSeconds(5);
+
+        /// <summary>
+        /// The time span to round time by when scheduling.
+        /// </summary>
+        private static readonly TimeSpan TimeToRoundBy = TimeSpan.FromMilliseconds(20);
 
         /// <summary>
         /// The start time of the scheduler.
@@ -175,15 +181,15 @@ namespace Fibula.Scheduling
                             // The first item always points to the next-in-time event available.
                             var evt = this.priorityQueue.First;
                             var isDue = evt.Priority <= priorityDue;
-                            var shouldBeSkipped = this.cancelledEvents.Contains(evt.EventId);
+                            var wasCancelled = this.cancelledEvents.Contains(evt.EventId);
 
                             // Check if this event has been cancelled or is due.
-                            if (isDue || shouldBeSkipped)
+                            if (isDue || wasCancelled)
                             {
                                 // Actually dequeue the event.
                                 this.priorityQueue.Dequeue();
 
-                                if (!shouldBeSkipped)
+                                if (!wasCancelled)
                                 {
                                     this.Logger.Verbose($"Firing {evt.GetType().Name} with id {evt.EventId}, at {priorityDue}.");
 
@@ -195,6 +201,12 @@ namespace Fibula.Scheduling
 
                                 // And clean up the expedition hook.
                                 evt.Expedited -= this.HandleEventExpedition;
+
+                                // Repeat the event if it applicable.
+                                if (!wasCancelled && evt.RepeatAfter > TimeSpan.Zero)
+                                {
+                                    this.ScheduleEvent(evt, evt.RepeatAfter);
+                                }
                             }
                             else
                             {
@@ -371,7 +383,7 @@ namespace Fibula.Scheduling
         /// <returns>The milliseconds value.</returns>
         private long GetMillisecondsAfterReferenceTime(DateTimeOffset dateTime)
         {
-            return Convert.ToInt64((dateTime - this.startTime).TotalMilliseconds);
+            return Convert.ToInt64((dateTime - this.startTime).Round(TimeToRoundBy).TotalMilliseconds);
         }
 
         /// <summary>

@@ -14,7 +14,6 @@
 
   <ItemGroup>
     <Compile Remove="Handlers\AutoMoveCancelHandler.cs" />
-    <Compile Remove="Handlers\AutoMoveHandler.cs" />
     <Compile Remove="Handlers\ContainerCloseHandler.cs" />
     <Compile Remove="Handlers\ContainerMoveUpHandler.cs" />
     <Compile Remove="Handlers\KeepAliveRequestHandler.cs" />
@@ -98,7 +97,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Operations\Unused\" />
     <Folder Include="Operations\Unused\Arguments\" />
   </ItemGroup>
 

@@ -7,7 +7,6 @@
   
   <ItemGroup>
     <Compile Remove="Incoming\AuthenticationPacket.cs" />
-    <Compile Remove="Incoming\AutoMovePacket.cs" />
     <Compile Remove="Incoming\CharacterDeathPacket.cs" />
     <Compile Remove="Incoming\ContainerCloseRequestPacket.cs" />
     <Compile Remove="Incoming\ContainerMoveUpPacket.cs" />

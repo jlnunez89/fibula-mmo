@@ -20,6 +20,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
@@ -45,10 +46,10 @@ namespace Fibula.Mechanics.Operations
         {
         }
 
-        ///// <summary>
-        ///// Gets the type of exhaustion that this operation produces.
-        ///// </summary>
-        // public abstract ExhaustionType ExhaustionType { get; }
+        /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public abstract ExhaustionType ExhaustionType { get; }
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -85,7 +86,15 @@ namespace Fibula.Mechanics.Operations
                 throw new ArgumentException($"{nameof(context)} must be an {nameof(IOperationContext)}.");
             }
 
-            this.Execute(context as IOperationContext);
+            var operationContext = context as IOperationContext;
+
+            this.Execute(operationContext);
+
+            // Add any exhaustion for the requestor of the operation, if any.
+            if (this.GetRequestor(operationContext.CreatureFinder) is ICreatureWithExhaustion requestor)
+            {
+                requestor.AddExhaustion(this.ExhaustionType, operationContext.Scheduler.CurrentTime, this.ExhaustionCost);
+            }
         }
 
         /// <summary>

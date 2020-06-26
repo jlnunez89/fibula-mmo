@@ -20,6 +20,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Constants;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
@@ -27,6 +28,8 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Constants;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Operations.Arguments;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
@@ -36,8 +39,9 @@ namespace Fibula.Mechanics.Operations
     /// </summary>
     public class MovementOperation : Operation
     {
-        private const int DefaultGroundMovementPenaltyInMs = 200;
-
+        /// <summary>
+        /// The default exhaustion cost for movements.
+        /// </summary>
         private static readonly TimeSpan DefaultMovementExhaustionCost = TimeSpan.Zero;
 
         /// <summary>
@@ -74,10 +78,10 @@ namespace Fibula.Mechanics.Operations
             this.ExhaustionCost = movementExhaustionCost ?? DefaultMovementExhaustionCost;
         }
 
-        ///// <summary>
-        ///// Gets the type of exhaustion that this operation produces.
-        ///// </summary>
-        // public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
+        /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
 
         /// <summary>
         /// Gets the id of the thing moving.
@@ -486,7 +490,7 @@ namespace Fibula.Mechanics.Operations
             IThing thingMoving = this.FromIndex != 0xFF ?
                 sourceTile.GetTopThingByOrder(context.CreatureFinder, this.FromIndex)
                 :
-                this.ThingMovingId != ICreature.CreatureThingId ?
+                this.ThingMovingId != CreatureConstants.CreatureThingId ?
                     (IThing)sourceTile.FindItemWithId(this.ThingMovingId)
                     :
                     context.CreatureFinder.FindCreatureById(this.FromCreatureId);
@@ -750,9 +754,7 @@ namespace Fibula.Mechanics.Operations
             // Then deal with the consequences of the move.
             creature.TurnToDirection(moveDirection.GetClientSafeDirection());
 
-            var stepDurationTime = this.CalculateStepDuration(creature, moveDirection, fromTile);
-
-            /* creature.AddExhaustion(this.ExhaustionType, context.Scheduler.CurrentTime, stepDurationTime); */
+            this.ExhaustionCost = creature.CalculateStepDuration(moveDirection, fromTile);
 
             if (toStackPosition != byte.MaxValue)
             {
@@ -843,29 +845,6 @@ namespace Fibula.Mechanics.Operations
             */
 
             return true;
-        }
-
-        /// <summary>
-        /// Calculates the step duration of a creature moving from a given tile in the given direction.
-        /// </summary>
-        /// <param name="creature">The creature that's moving.</param>
-        /// <param name="stepDirection">The direction of the step.</param>
-        /// <param name="fromTile">The tile which the creature is moving from.</param>
-        /// <returns>The duration time of the step.</returns>
-        private TimeSpan CalculateStepDuration(ICreature creature, Direction stepDirection, ITile fromTile)
-        {
-            if (creature == null)
-            {
-                return TimeSpan.Zero;
-            }
-
-            var tilePenalty = fromTile?.Ground?.MovementPenalty ?? DefaultGroundMovementPenaltyInMs;
-
-            var totalPenalty = tilePenalty * (stepDirection.IsDiagonal() ? 2 : 1);
-
-            var durationInMs = Math.Ceiling(1000 * totalPenalty / (double)Math.Max(1u, creature.Speed) / 50) * 50;
-
-            return TimeSpan.FromMilliseconds(durationInMs);
         }
 
         /// <summary>

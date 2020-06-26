@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="CombatantCreature.cs" />
     <Compile Remove="Monster.cs" />
     <Compile Remove="MonsterCreationMetadata.cs" />
     <Compile Remove="MonsterInventory.cs" />
@@ -35,10 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common\Fibula.Common.csproj" />
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items.Contracts\Fibula.Items.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items\Fibula.Items.csproj" />
+    <ProjectReference Include="..\Fibula.Mechanics.Contracts\Fibula.Mechanics.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

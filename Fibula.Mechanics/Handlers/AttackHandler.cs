@@ -68,15 +68,12 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            // var playerAsCombatant = player as ICombatant;
-            // var combatantTarget = this.CreatureFinder.FindCreatureById(attackInfo.TargetCreatureId) as ICombatant;
-
-            /*
-            if (playerAsCombatant != null)
+            if (player is ICombatant playerAsCombatant)
             {
-                this.Game.BeginCombat(playerAsCombatant, combatantTarget);
+                var combatantTarget = this.CreatureFinder.FindCreatureById(attackInfo.TargetCreatureId) as ICombatant;
+
+                this.Game.ResetCombatTarget(playerAsCombatant, combatantTarget);
             }
-            */
 
             return null;
         }

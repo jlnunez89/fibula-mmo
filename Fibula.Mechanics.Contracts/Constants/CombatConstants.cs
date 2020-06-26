@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Constants
+namespace Fibula.Mechanics.Contracts.Constants
 {
     /// <summary>
     /// Static class that contains constants regarding combat.
@@ -40,11 +40,16 @@ namespace Fibula.Server.Mechanics.Contracts.Constants
         /// <summary>
         /// The default maximum attack credits that a combatant has.
         /// </summary>
-        public const byte DefaultMaximumAttackCredits = 1;
+        public const ushort DefaultMaximumAttackCredits = 1;
 
         /// <summary>
         /// The default maximum defense credits that a combatant has.
         /// </summary>
-        public const byte DefaultMaximumDefenseCredits = 2;
+        public const ushort DefaultMaximumDefenseCredits = 2;
+
+        /// <summary>
+        /// The default combat round time in milliseconds.
+        /// </summary>
+        public const int DefaultCombatRoundTimeInMs = 2000;
     }
 }

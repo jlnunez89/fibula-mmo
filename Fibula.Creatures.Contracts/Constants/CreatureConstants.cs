@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CombatCreditType.cs" company="2Dudes">
+// <copyright file="CreatureConstants.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,21 +10,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Contracts.Combat.Enumerations
+namespace Fibula.Creatures.Contracts.Constants
 {
+    using Fibula.Creatures.Contracts.Abstractions;
+
     /// <summary>
-    /// Enumerates the possible blood types.
+    /// Static class that contains contants for <see cref="ICreature"/> derived clases.
     /// </summary>
-    public enum CombatCreditType : byte
+    public static class CreatureConstants
     {
         /// <summary>
-        /// Attack.
+        /// The id for things that are creatures.
         /// </summary>
-        Attack,
-
-        /// <summary>
-        /// Defense.
-        /// </summary>
-        Defense,
+        public const ushort CreatureThingId = 0x63;
     }
 }

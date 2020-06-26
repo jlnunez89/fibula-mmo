@@ -51,6 +51,8 @@ namespace Fibula.Protocol.V772
             var packetReadersToAdd = new Dictionary<IncomingGamePacketType, Type>()
             {
                 { IncomingGamePacketType.Attack, typeof(AttackPacketReader) },
+                { IncomingGamePacketType.AutoMove, typeof(AutoMovePacketReader) },
+                { IncomingGamePacketType.AutoMoveCancel, typeof(AutoMoveCancelPacketReader) },
                 { IncomingGamePacketType.ChangeModes, typeof(ChangeModesPacketReader) },
                 { IncomingGamePacketType.Heartbeat, typeof(HeartbeatPacketReader) },
                 { IncomingGamePacketType.HeartbeatResponse, typeof(HeartbeatResponsePacketReader) },

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CancelActionsOperationCreationArguments.cs" company="2Dudes">
+// <copyright file="AutoWalkOrchestratorOperationCreationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -12,35 +12,31 @@
 
 namespace Fibula.Mechanics.Operations.Arguments
 {
-    using System;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Mechanics.Operations;
 
     /// <summary>
-    /// Class that represents creation arguments for a <see cref="CancelActionsOperation"/>.
+    /// Class that represents creation arguments for a <see cref="AutoWalkOrchestratorOperation"/>.
     /// </summary>
-    public class CancelActionsOperationCreationArguments : IOperationCreationArguments
+    public class AutoWalkOrchestratorOperationCreationArguments : IOperationCreationArguments
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CancelActionsOperationCreationArguments"/> class.
+        /// Initializes a new instance of the <see cref="AutoWalkOrchestratorOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="creature">The creature to cancel actions for.</param>
-        /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
-        public CancelActionsOperationCreationArguments(ICreature creature, Type typeOfActionToCancel = null)
+        /// <param name="creature">The combatant to trigger auto attacks for.</param>
+        public AutoWalkOrchestratorOperationCreationArguments(ICreature creature)
         {
             creature.ThrowIfNull(nameof(creature));
 
             this.Creature = creature;
-            this.TypeToCancel = typeOfActionToCancel;
         }
 
         /// <summary>
         /// Gets the type of operation being created.
         /// </summary>
-        public OperationType Type => OperationType.CancelOperations;
+        public OperationType Type => OperationType.AutoWalkOrchestrator;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.
@@ -48,13 +44,8 @@ namespace Fibula.Mechanics.Operations.Arguments
         public uint RequestorId => this.Creature.Id;
 
         /// <summary>
-        /// Gets the creature cancelling actions for.
+        /// Gets the creature that's auto walking.
         /// </summary>
         public ICreature Creature { get; }
-
-        /// <summary>
-        /// Gets the type of actions to cancel.
-        /// </summary>
-        public Type TypeToCancel { get; }
     }
 }

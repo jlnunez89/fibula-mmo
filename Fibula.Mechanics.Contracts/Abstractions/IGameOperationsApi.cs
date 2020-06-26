@@ -12,6 +12,7 @@
 
 namespace Fibula.Mechanics.Contracts.Abstractions
 {
+    using System;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
@@ -84,7 +85,8 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Cancels all actions that a player has pending.
         /// </summary>
         /// <param name="player">The player to cancel actions for.</param>
-        void CancelPlayerActions(IPlayer player);
+        /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
+        void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null);
 
         /// <summary>
         /// Handles creature speech.
@@ -138,6 +140,13 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="toCreatureId">The id of the creature to which the thing is being moved.</param>
         /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
         void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
+
+        /// <summary>
+        /// Re-sets a given creature's walk plan.
+        /// </summary>
+        /// <param name="creature">The creature to reset the walk plan of.</param>
+        /// <param name="directions">The directions for the new plan.</param>
+        void ResetCreatureWalkPlan(ICreature creature, Direction[] directions);
 
         /// <summary>
         /// Sends a heartbeat to the player's client.

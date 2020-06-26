@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ISuffersExhaustion.cs" company="2Dudes">
+// <copyright file="ICreatureWithExhaustion.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -10,16 +10,17 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
-    /// Interface for any entity in the game that can suffer from exhaustion and thus, has cooldown periods.
+    /// Interface for any <see cref="ICreature"/> in the game that can suffer from exhaustion and thus, has cooldown periods.
     /// </summary>
-    public interface ISuffersExhaustion
+    public interface ICreatureWithExhaustion : ICreature
     {
         /// <summary>
         /// Gets the current exhaustion information for the entity.

@@ -15,11 +15,13 @@ namespace Fibula.Creatures
     using System;
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common;
+    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Constants;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
@@ -43,11 +45,6 @@ namespace Fibula.Creatures
         /// Counter to assign new ids to new creatures created.
         /// </summary>
         private static uint idCounter = 1;
-
-        ///// <summary>
-        ///// Lock object to semaphore interaction with the exhaustion dictionary.
-        ///// </summary>
-        // private readonly object exhaustionLock;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -88,15 +85,13 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
-            // this.exhaustionLock = new object();
-            // this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
             this.Outfit = new Outfit
             {
                 Id = 0,
                 ItemIdLookAlike = 0,
             };
 
-            this.Speed = 200;
+            this.BaseSpeed = 70;
 
             // this.Skills = new Dictionary<SkillType, ISkill>();
 
@@ -110,7 +105,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the id of this creature.
         /// </summary>
-        public override ushort ThingId => ICreature.CreatureThingId;
+        public override ushort ThingId => CreatureConstants.CreatureThingId;
 
         /// <summary>
         /// Gets the creature's in-game id.
@@ -189,9 +184,19 @@ namespace Fibula.Creatures
         public byte EmittedLightColor { get; protected set; }
 
         /// <summary>
-        /// Gets or sets this creature's speed.
+        /// Gets this creature's speed.
         /// </summary>
-        public ushort Speed { get; protected set; }
+        public abstract ushort Speed { get; }
+
+        /// <summary>
+        /// Gets or sets this creature's variable speed.
+        /// </summary>
+        public int VariableSpeed { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets this creature's base speed.
+        /// </summary>
+        public int BaseSpeed { get; protected set; }
 
         /// <summary>
         /// Gets this creature's flags.
@@ -208,19 +213,15 @@ namespace Fibula.Creatures
         ///// </summary>
         // public IDictionary<SkillType, ISkill> Skills { get; }
 
-        ///// <summary>
-        ///// Gets the current exhaustion information for the entity.
-        ///// </summary>
-        ///// <remarks>
-        ///// The key is a <see cref="ExhaustionType"/>, and the value is a <see cref="DateTimeOffset"/>: the date and time
-        ///// at which exhaustion is completely recovered.
-        ///// </remarks>
-        // public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
-
         /// <summary>
         /// Gets or sets the inventory for the creature.
         /// </summary>
         public abstract IInventory Inventory { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets this creature's walk plan.
+        /// </summary>
+        public WalkPlan? WalkPlan { get; set; }
 
         /// <summary>
         /// Turns this creature to a given direction.
@@ -368,6 +369,15 @@ namespace Fibula.Creatures
         public bool Equals([AllowNull] ICreature other)
         {
             return this.Id == other?.Id;
+        }
+
+        /// <summary>
+        /// Calculates the base movement speed of the creature.
+        /// </summary>
+        /// <returns>The base movement speed of the creature.</returns>
+        protected virtual ushort CalculateMovementBaseSpeed()
+        {
+            return (ushort)((2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
         }
     }
 }

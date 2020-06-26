@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Mechanics.Contracts.Enumerations
+namespace Fibula.Mechanics.Contracts.Enumerations
 {
     /// <summary>
     /// Enumerates the possible sources of creature exhaustion.

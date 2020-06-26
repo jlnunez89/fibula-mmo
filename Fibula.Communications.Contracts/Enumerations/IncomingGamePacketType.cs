@@ -40,7 +40,7 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Move with autowalk.
         /// </summary>
-        AutoWalk = 0x64,
+        AutoMove = 0x64,
 
         /// <summary>
         /// Walking north.
@@ -65,7 +65,7 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Stop auto-walking.
         /// </summary>
-        CancelAutoWalk = 0x69,
+        AutoMoveCancel = 0x69,
 
         /// <summary>
         /// Walking north east.
