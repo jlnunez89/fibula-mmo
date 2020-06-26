@@ -13,6 +13,7 @@
 namespace Fibula.Scheduling
 {
     using System;
+    using System.Diagnostics.CodeAnalysis;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
     using Priority_Queue;
@@ -20,7 +21,7 @@ namespace Fibula.Scheduling
     /// <summary>
     /// Abstract class that represents the base event for scheduling.
     /// </summary>
-    public abstract class BaseEvent : StablePriorityQueueNode, IEvent
+    public abstract class BaseEvent : StablePriorityQueueNode, IEvent, IEquatable<BaseEvent>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="BaseEvent"/> class.
@@ -83,6 +84,16 @@ namespace Fibula.Scheduling
             }
 
             return this.Expedited.Invoke(this);
+        }
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">The other object to compare against.</param>
+        /// <returns>True if the current object is equal to the other parameter, false otherwise.</returns>
+        public bool Equals([AllowNull] BaseEvent other)
+        {
+            return this.EventId == other?.EventId;
         }
     }
 }

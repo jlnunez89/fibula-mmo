@@ -249,6 +249,8 @@ namespace Fibula.Mechanics
 
             creature.WalkPlan = new WalkPlan(WalkStrategy.GiveUpOnInterruption, () => lastLoc, waypoints.ToArray());
 
+            this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
+
             this.DispatchOperation(new AutoWalkOrchestratorOperationCreationArguments(creature));
         }
 

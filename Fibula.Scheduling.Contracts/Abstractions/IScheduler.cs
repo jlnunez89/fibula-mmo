@@ -40,10 +40,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null);
 
         /// <summary>
-        /// Cancels a specific event by it's id.
+        /// Cancels an event.
         /// </summary>
-        /// <param name="eventId">The event to cancel.</param>
-        void CancelEvent(string eventId);
+        /// <param name="evt">The event to cancel.</param>
+        /// <returns>True if the event is cancelled, false otherwise.</returns>
+        bool CancelEvent(IEvent evt);
 
         /// <summary>
         /// Cancels all events attributed to the specified requestor.

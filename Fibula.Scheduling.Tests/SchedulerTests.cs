@@ -70,7 +70,7 @@ namespace Fibula.Scheduling.Tests
         }
 
         /// <summary>
-        /// Checks that <see cref="Scheduler.CancelEvent(string)"/> does what it should.
+        /// Checks that <see cref="Scheduler.CancelEvent(IEvent)"/> does what it should.
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [TestMethod]
@@ -119,7 +119,7 @@ namespace Fibula.Scheduling.Tests
             });
 
             // cancel this event.
-            scheduler.CancelEvent(bEventMockForScheduled.Object.EventId);
+            scheduler.CancelEvent(bEventMockForScheduled.Object);
 
             // delay for three seconds and check that the counter has NOT gone up for scheduled.
             await Task.Delay(threeSecondsTimeSpan).ContinueWith(prev =>
@@ -149,7 +149,7 @@ namespace Fibula.Scheduling.Tests
             var scheduledEventFiredCounter = 0;
 
             Mock<BaseEvent> bEventMockForScheduled = new Mock<BaseEvent>(RequestorId);
-            ConcreteMockedEvent testConcreteEvent = new ConcreteMockedEvent(RequestorId);
+            ConcreteMockedEvent testConcreteEvent = new ConcreteMockedEvent(RequestorId, true);
 
             Scheduler scheduler = this.SetupSchedulerWithLoggerMock();
 
@@ -227,7 +227,7 @@ namespace Fibula.Scheduling.Tests
             Mock<BaseEvent> bEventMockForScheduled2 = new Mock<BaseEvent>(anyRequestorId);
             Mock<BaseEvent> bEventMockForScheduled3 = new Mock<BaseEvent>(anyOtherRequestorId);
             Mock<BaseEvent> bEventMockForScheduled4 = new Mock<BaseEvent>(anyRequestorId);
-            ConcreteMockedEvent testConcreteEvent = new ConcreteMockedEvent(anyRequestorId);
+            ConcreteMockedEvent testConcreteEvent = new ConcreteMockedEvent(anyRequestorId, true);
 
             Scheduler scheduler = this.SetupSchedulerWithLoggerMock();
 
@@ -378,10 +378,17 @@ namespace Fibula.Scheduling.Tests
             /// Initializes a new instance of the <see cref="ConcreteMockedEvent"/> class.
             /// </summary>
             /// <param name="requestorId">A requestor id to pass down to the base class.</param>
-            public ConcreteMockedEvent(uint requestorId)
+            /// <param name="canBeCancelled">A value indicating whether this event can be cancelled.</param>
+            public ConcreteMockedEvent(uint requestorId, bool canBeCancelled)
                 : base(requestorId)
             {
+                this.CanBeCancelled = canBeCancelled;
             }
+
+            /// <summary>
+            /// Gets or sets a value indicating whether the event can be cancelled.
+            /// </summary>
+            public override bool CanBeCancelled { get; protected set; }
 
             /// <summary>
             /// Not implemented.

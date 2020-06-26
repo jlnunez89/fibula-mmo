@@ -57,12 +57,7 @@ namespace Fibula.Scheduling
         /// <summary>
         /// A dictionary to keep track of who requested which events.
         /// </summary>
-        private readonly IDictionary<uint, ISet<string>> eventsPerRequestor;
-
-        /// <summary>
-        /// A dictionary to keep track of the type of events.
-        /// </summary>
-        private readonly IDictionary<string, Type> eventTypes;
+        private readonly IDictionary<uint, ISet<BaseEvent>> eventsIndexedByRequestor;
 
         /// <summary>
         /// A lock object to monitor when new events are added to the queue.
@@ -95,8 +90,7 @@ namespace Fibula.Scheduling
             this.startTime = this.CurrentTime;
             this.priorityQueue = new StablePriorityQueue<BaseEvent>(this.maxQueueNodes);
             this.cancelledEvents = new HashSet<string>();
-            this.eventsPerRequestor = new Dictionary<uint, ISet<string>>();
-            this.eventTypes = new Dictionary<string, Type>();
+            this.eventsIndexedByRequestor = new Dictionary<uint, ISet<BaseEvent>>();
         }
 
         /// <summary>
@@ -197,7 +191,7 @@ namespace Fibula.Scheduling
                                 }
 
                                 // Clean the processed event.
-                                this.CleanUp(evt.EventId, evt.RequestorId);
+                                this.CleanUp(evt, evt.RequestorId);
 
                                 // And clean up the expedition hook.
                                 evt.Expedited -= this.HandleEventExpedition;
@@ -249,22 +243,23 @@ namespace Fibula.Scheduling
             {
                 lock (this.eventsPerRequestorLock)
                 {
-                    if (!this.eventsPerRequestor.ContainsKey(requestorId) || this.eventsPerRequestor[requestorId].Count == 0)
+                    if (!this.eventsIndexedByRequestor.ContainsKey(requestorId) || this.eventsIndexedByRequestor[requestorId].Count == 0)
                     {
                         return;
                     }
 
-                    foreach (var eventId in this.eventsPerRequestor[requestorId])
+                    foreach (var evt in this.eventsIndexedByRequestor[requestorId])
                     {
-                        if (!this.eventTypes.TryGetValue(eventId, out Type evetType) || specificType.IsAssignableFrom(evetType))
+                        if (specificType.IsAssignableFrom(evt.GetType()))
                         {
-                            this.CancelEvent(eventId);
-
-                            this.Logger.Verbose($"Cancelled {specificType.Name} with id {eventId}.");
+                            if (this.CancelEvent(evt))
+                            {
+                                this.Logger.Verbose($"Cancelled {specificType.Name} with id {evt.EventId}.");
+                            }
                         }
                     }
 
-                    this.eventsPerRequestor.Remove(requestorId);
+                    this.eventsIndexedByRequestor.Remove(requestorId);
                 }
             }
         }
@@ -272,16 +267,24 @@ namespace Fibula.Scheduling
         /// <summary>
         /// Cancels an event.
         /// </summary>
-        /// <param name="eventId">The id of the event to cancel.</param>
-        public void CancelEvent(string eventId)
+        /// <param name="evt">The event to cancel.</param>
+        /// <returns>True if the event is cancelled, false otherwise.</returns>
+        public bool CancelEvent(IEvent evt)
         {
-            eventId.ThrowIfNullOrWhiteSpace();
+            evt.ThrowIfNull();
+
+            if (!evt.CanBeCancelled)
+            {
+                return false;
+            }
 
             // Lock on the events available to prevent race conditions on cancel vs firing.
             lock (this.eventsAvailableLock)
             {
-                this.cancelledEvents.Add(eventId);
+                this.cancelledEvents.Add(evt.EventId);
             }
+
+            return true;
         }
 
         /// <summary>
@@ -327,17 +330,12 @@ namespace Fibula.Scheduling
                 {
                     lock (this.eventsPerRequestorLock)
                     {
-                        if (!this.eventsPerRequestor.ContainsKey(castedEvent.RequestorId))
+                        if (!this.eventsIndexedByRequestor.ContainsKey(castedEvent.RequestorId))
                         {
-                            this.eventsPerRequestor.Add(castedEvent.RequestorId, new HashSet<string>());
+                            this.eventsIndexedByRequestor.Add(castedEvent.RequestorId, new HashSet<BaseEvent>());
                         }
 
-                        this.eventsPerRequestor[castedEvent.RequestorId].Add(castedEvent.EventId);
-
-                        if (!this.eventTypes.ContainsKey(castedEvent.EventId))
-                        {
-                            this.eventTypes[castedEvent.EventId] = eventToSchedule.GetType();
-                        }
+                        this.eventsIndexedByRequestor[castedEvent.RequestorId].Add(castedEvent);
                     }
                 }
 
@@ -389,13 +387,11 @@ namespace Fibula.Scheduling
         /// <summary>
         /// Cleans all events attributed to the specified event or requestor id.
         /// </summary>
-        /// <param name="eventId">The id of the event to cancel.</param>
+        /// <param name="evt">The event to cancel.</param>
         /// <param name="eventRequestor">The id of the requestor.</param>
-        private void CleanUp(string eventId, uint eventRequestor = 0)
+        private void CleanUp(BaseEvent evt, uint eventRequestor = 0)
         {
-            this.cancelledEvents.Remove(eventId);
-
-            this.eventTypes.Remove(eventId);
+            this.cancelledEvents.Remove(evt.EventId);
 
             if (eventRequestor == 0)
             {
@@ -405,16 +401,16 @@ namespace Fibula.Scheduling
 
             lock (this.eventsPerRequestorLock)
             {
-                if (!this.eventsPerRequestor.ContainsKey(eventRequestor))
+                if (!this.eventsIndexedByRequestor.ContainsKey(eventRequestor))
                 {
                     return;
                 }
 
-                this.eventsPerRequestor[eventRequestor].Remove(eventId);
+                this.eventsIndexedByRequestor[eventRequestor].Remove(evt);
 
-                if (this.eventsPerRequestor[eventRequestor].Count == 0)
+                if (this.eventsIndexedByRequestor[eventRequestor].Count == 0)
                 {
-                    this.eventsPerRequestor.Remove(eventRequestor);
+                    this.eventsIndexedByRequestor.Remove(eventRequestor);
                 }
             }
         }

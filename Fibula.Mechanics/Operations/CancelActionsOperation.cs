@@ -65,6 +65,11 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Creature is IPlayer player)
             {
+                if (player is ICombatant playerAsCombatant)
+                {
+                    playerAsCombatant.SetAttackTarget(null);
+                }
+
                 context.Scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),

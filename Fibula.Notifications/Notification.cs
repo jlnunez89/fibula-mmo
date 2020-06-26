@@ -39,6 +39,11 @@ namespace Fibula.Notifications
         }
 
         /// <summary>
+        /// Gets or sets a value indicating whether the event can be cancelled.
+        /// </summary>
+        public override bool CanBeCancelled { get; protected set; }
+
+        /// <summary>
         /// Gets the function for determining target players for this notification.
         /// </summary>
         private Func<IEnumerable<IPlayer>> FindTargetPlayers { get; }
