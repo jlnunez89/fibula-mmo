@@ -83,7 +83,7 @@ namespace Fibula.Protocol.V772
             var packetWritersToAdd = new Dictionary<OutgoingGamePacketType, Type>()
             {
                 { OutgoingGamePacketType.AnimatedText, typeof(AnimatedTextPacketWriter) },
-                { OutgoingGamePacketType.AddAtStackpos, typeof(AddCreaturePacketWriter) },
+                { OutgoingGamePacketType.AddThing, typeof(AddCreaturePacketWriter) },
                 { OutgoingGamePacketType.ContainerClose, typeof(ContainerClosePacketWriter) },
                 { OutgoingGamePacketType.ContainerOpen, typeof(ContainerOpenPacketWriter) },
                 { OutgoingGamePacketType.ContainerAddItem, typeof(ContainerAddItemPacketWriter) },
@@ -91,7 +91,7 @@ namespace Fibula.Protocol.V772
                 { OutgoingGamePacketType.ContainerUpdateItem, typeof(ContainerUpdateItemPacketWriter) },
                 { OutgoingGamePacketType.CreatureLight, typeof(CreatureLightPacketWriter) },
                 { OutgoingGamePacketType.CreatureMoved, typeof(CreatureMovedPacketWriter) },
-                { OutgoingGamePacketType.TransformThing, typeof(CreatureTurnedPacketWriter) },
+                { OutgoingGamePacketType.UpdateThing, typeof(CreatureTurnedPacketWriter) },
                 { OutgoingGamePacketType.CreatureSpeech, typeof(CreatureSpeechPacketWriter) },
                 { OutgoingGamePacketType.Disconnect, typeof(GameServerDisconnectPacketWriter) },
                 { OutgoingGamePacketType.Heartbeat, typeof(HeartbeatPacketWriter) },
@@ -107,12 +107,12 @@ namespace Fibula.Protocol.V772
                 { OutgoingGamePacketType.InventoryItem, typeof(PlayerInventorySetSlotPacketWriter) },
                 { OutgoingGamePacketType.PlayerSkills, typeof(PlayerSkillsPacketWriter) },
                 { OutgoingGamePacketType.PlayerStats, typeof(PlayerStatsPacketWriter) },
-                { OutgoingGamePacketType.RemoveAtStackpos, typeof(RemoveAtPositionPacketWriter) },
+                { OutgoingGamePacketType.RemoveThing, typeof(RemoveAtPositionPacketWriter) },
                 { OutgoingGamePacketType.Square, typeof(SquarePacketWriter) },
-                { OutgoingGamePacketType.SelfAppear, typeof(SelfAppearPacketWriter) },
+                { OutgoingGamePacketType.PlayerLogin, typeof(PlayerLoginPacketWriter) },
                 { OutgoingGamePacketType.TextMessage, typeof(TextMessagePacketWriter) },
                 { OutgoingGamePacketType.TileUpdate, typeof(TileUpdatePacketWriter) },
-                { OutgoingGamePacketType.WalkCancel, typeof(PlayerWalkCancelPacketWriter) },
+                { OutgoingGamePacketType.CancelWalk, typeof(PlayerCancelWalkPacketWriter) },
                 { OutgoingGamePacketType.WorldLight, typeof(WorldLightPacketWriter) },
             };
 

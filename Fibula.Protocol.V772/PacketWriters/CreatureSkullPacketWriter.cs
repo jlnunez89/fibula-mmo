@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="PlayerWalkCancelPacketWriter.cs" company="2Dudes">
+// <copyright file="CreatureSkullPacketWriter.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -18,15 +18,15 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Serilog;
 
     /// <summary>
-    /// Class that represents a player stats packet writer for the game server.
+    /// Class that represents a creature skull packet writer for the game server.
     /// </summary>
-    public class PlayerWalkCancelPacketWriter : BasePacketWriter
+    public class CreatureSkullPacketWriter : BasePacketWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerWalkCancelPacketWriter"/> class.
+        /// Initializes a new instance of the <see cref="CreatureSkullPacketWriter"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        public PlayerWalkCancelPacketWriter(ILogger logger)
+        public CreatureSkullPacketWriter(ILogger logger)
             : base(logger)
         {
         }
@@ -38,16 +38,17 @@ namespace Fibula.Protocol.V772.PacketWriters
         /// <param name="message">The message to write into.</param>
         public override void WriteToMessage(IOutboundPacket packet, ref INetworkMessage message)
         {
-            if (!(packet is PlayerWalkCancelPacket playerWalkCancelPacket))
+            if (!(packet is CreatureSkullPacket creatureSkullPacket))
             {
                 this.Logger.Warning($"Invalid packet {packet.GetType().Name} routed to {this.GetType().Name}");
 
                 return;
             }
 
-            message.AddByte(playerWalkCancelPacket.PacketType);
+            message.AddByte(creatureSkullPacket.PacketType);
 
-            message.AddByte((byte)playerWalkCancelPacket.ResultingDirection);
+            message.AddUInt32(creatureSkullPacket.Creature.Id);
+            message.AddByte(0x00); // creatureSpeedChangePacket.Creature.Skull
         }
     }
 }

@@ -117,7 +117,7 @@ namespace Fibula.Mechanics.Operations
                 new GenericNotification(
                     () => player.YieldSingleItem(),
                     new GenericNotificationArguments(
-                        new SelfAppearPacket(player.Id, true, player),
+                        new PlayerLoginPacket(player.Id, player),
                         new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
                         new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
                         new PlayerStatsPacket(player),

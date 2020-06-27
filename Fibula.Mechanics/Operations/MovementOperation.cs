@@ -545,7 +545,7 @@ namespace Fibula.Mechanics.Operations
                     {
                         var cancelMovementNotification = new GenericNotification(
                             () => context.CreatureFinder.FindPlayerById(player.Id).YieldSingleItem(),
-                            new GenericNotificationArguments(new PlayerWalkCancelPacket(player.Direction.GetClientSafeDirection())));
+                            new GenericNotificationArguments(new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection())));
 
                         context.Scheduler.ScheduleEvent(cancelMovementNotification);
                     }

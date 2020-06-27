@@ -73,7 +73,7 @@ namespace Fibula.Mechanics.Operations
                 context.Scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),
-                        new GenericNotificationArguments(new PlayerWalkCancelPacket(this.Creature.Direction.GetClientSafeDirection()))));
+                        new GenericNotificationArguments(new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection()))));
             }
         }
     }

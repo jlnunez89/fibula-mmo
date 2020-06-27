@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SelfAppearPacket.cs" company="2Dudes">
+// <copyright file="PlayerLoginPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -17,27 +17,25 @@ namespace Fibula.Communications.Packets.Outgoing
     using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a self appear packet.
+    /// Class that represents a player login packet.
     /// </summary>
-    public class SelfAppearPacket : IOutboundPacket
+    public class PlayerLoginPacket : IOutboundPacket
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelfAppearPacket"/> class.
+        /// Initializes a new instance of the <see cref="PlayerLoginPacket"/> class.
         /// </summary>
         /// <param name="creatureId">The id of the creature.</param>
-        /// <param name="isLogin">A value indicating whether this packet is being sent because of a login.</param>
         /// <param name="player">A reference to the player.</param>
-        public SelfAppearPacket(uint creatureId, bool isLogin, IPlayer player)
+        public PlayerLoginPacket(uint creatureId, IPlayer player)
         {
             this.CreatureId = creatureId;
-            this.IsLogin = isLogin;
             this.Player = player;
         }
 
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.SelfAppear;
+        public byte PacketType => (byte)OutgoingGamePacketType.PlayerLogin;
 
         /// <summary>
         /// Gets the id of this creature.
@@ -54,11 +52,6 @@ namespace Fibula.Communications.Packets.Outgoing
         /// Gets a value indicating whether the player can report bugs.
         /// </summary>
         public byte CanReportBugs => 0x00;
-
-        /// <summary>
-        /// Gets a value indicating whether this packet is the first packet being sent to the client.
-        /// </summary>
-        public bool IsLogin { get; }
 
         /// <summary>
         /// Gets a reference to the player.

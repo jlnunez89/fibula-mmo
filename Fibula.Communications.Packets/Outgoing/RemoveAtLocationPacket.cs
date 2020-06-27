@@ -35,7 +35,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.RemoveAtStackpos;
+        public byte PacketType => (byte)OutgoingGamePacketType.RemoveThing;
 
         /// <summary>
         /// Gets the location at which the removal happened.

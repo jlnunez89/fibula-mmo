@@ -18,14 +18,24 @@ namespace Fibula.Communications.Contracts.Enumerations
     public enum OutgoingGamePacketType : byte
     {
         /// <summary>
-        /// Self description about the player.
+        /// Player login.
         /// </summary>
-        SelfAppear = 0x0A,
+        PlayerLogin = 0x0A,
+
+        /// <summary>
+        /// Gamemaster flags.
+        /// </summary>
+        GamemasterFlags = 0x0B,
 
         /// <summary>
         /// Disconnection information.
         /// </summary>
         Disconnect = 0x14,
+
+        /// <summary>
+        /// Character placed on the waitlist for the world.
+        /// </summary>
+        WaitingList = 0x16,
 
         /// <summary>
         /// A heartbeat response.
@@ -78,19 +88,19 @@ namespace Fibula.Communications.Contracts.Enumerations
         TileUpdate = 0x69,
 
         /// <summary>
-        /// Add item description at stack position.
+        /// Add a thing.
         /// </summary>
-        AddAtStackpos = 0x6A,
+        AddThing = 0x6A,
 
         /// <summary>
-        /// Thing transformation.
+        /// Update a thing.
         /// </summary>
-        TransformThing = 0x6B,
+        UpdateThing = 0x6B,
 
         /// <summary>
-        /// Remove item at stack position.
+        /// Remove a thing.
         /// </summary>
-        RemoveAtStackpos = 0x6C,
+        RemoveThing = 0x6C,
 
         /// <summary>
         /// A creature moving in the map.
@@ -158,6 +168,11 @@ namespace Fibula.Communications.Contracts.Enumerations
         Square = 0x86,
 
         /// <summary>
+        /// Update creature health.
+        /// </summary>
+        CreatureHealth = 0x8C,
+
+        /// <summary>
         /// Update creature light.
         /// </summary>
         CreatureLight = 0x8D,
@@ -171,6 +186,26 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// Update creature speed.
         /// </summary>
         CreatureSpeedChange = 0x8F,
+
+        /// <summary>
+        /// Update creature skull.
+        /// </summary>
+        CreatureSkull = 0x90,
+
+        /// <summary>
+        /// Update creature shield.
+        /// </summary>
+        CreatureShield = 0x91,
+
+        /// <summary>
+        /// Sends a text window.
+        /// </summary>
+        TextWindow = 0x96,
+
+        /// <summary>
+        /// Sends a house window.
+        /// </summary>
+        HouseWindow = 0x97,
 
         /// <summary>
         /// Send a player stats.
@@ -190,7 +225,12 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Cancel an attack target.
         /// </summary>
-        CancelTarget = 0xA3,
+        CancelAttack = 0xA3,
+
+        /// <summary>
+        /// Updates a player's modes.
+        /// </summary>
+        PlayerModes = 0xA7,
 
         /// <summary>
         /// A creature speech shown on the map.
@@ -205,7 +245,7 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// Cancel walking.
         /// </summary>
-        WalkCancel = 0xB5,
+        CancelWalk = 0xB5,
 
         /// <summary>
         /// Going up a floor.
@@ -221,5 +261,20 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// Show the outfit window.
         /// </summary>
         OutfitWindow = 0xC8,
+
+        /// <summary>
+        /// The details of a Vip contact.
+        /// </summary>
+        VipDetails = 0xD2,
+
+        /// <summary>
+        /// Update when a Vip contact goes online.
+        /// </summary>
+        VipOnline = 0xD3,
+
+        /// <summary>
+        /// Update when a Vip contact goes offline.
+        /// </summary>
+        VipOffline = 0xD4,
     }
 }

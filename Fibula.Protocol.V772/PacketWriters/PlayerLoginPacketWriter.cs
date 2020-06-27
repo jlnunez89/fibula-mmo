@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="SelfAppearPacketWriter.cs" company="2Dudes">
+// <copyright file="PlayerLoginPacketWriter.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -15,19 +15,20 @@ namespace Fibula.Protocol.V772.PacketWriters
     using System;
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
+    using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Outgoing;
     using Serilog;
 
     /// <summary>
-    /// Class that represents a self appear packet writer for the game server.
+    /// Class that represents a player login packet writer for the game server.
     /// </summary>
-    public class SelfAppearPacketWriter : BasePacketWriter
+    public class PlayerLoginPacketWriter : BasePacketWriter
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SelfAppearPacketWriter"/> class.
+        /// Initializes a new instance of the <see cref="PlayerLoginPacketWriter"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        public SelfAppearPacketWriter(ILogger logger)
+        public PlayerLoginPacketWriter(ILogger logger)
             : base(logger)
         {
         }
@@ -39,28 +40,28 @@ namespace Fibula.Protocol.V772.PacketWriters
         /// <param name="message">The message to write into.</param>
         public override void WriteToMessage(IOutboundPacket packet, ref INetworkMessage message)
         {
-            if (!(packet is SelfAppearPacket selfAppearPacket))
+            if (!(packet is PlayerLoginPacket playerLoginPacket))
             {
                 this.Logger.Warning($"Invalid packet {packet.GetType().Name} routed to {this.GetType().Name}");
 
                 return;
             }
 
-            message.AddByte(selfAppearPacket.PacketType);
+            message.AddByte(playerLoginPacket.PacketType);
 
-            message.AddUInt32(selfAppearPacket.CreatureId);
-            message.AddByte(selfAppearPacket.GraphicsSpeed);
-            message.AddByte(selfAppearPacket.CanReportBugs);
+            message.AddUInt32(playerLoginPacket.CreatureId);
+            message.AddByte(playerLoginPacket.GraphicsSpeed);
+            message.AddByte(playerLoginPacket.CanReportBugs);
 
-            message.AddByte(Math.Min((byte)0x01, selfAppearPacket.Player.PermissionsLevel));
+            message.AddByte(Math.Min((byte)0x01, playerLoginPacket.Player.PermissionsLevel));
 
-            if (selfAppearPacket.Player.PermissionsLevel > 0)
+            if (playerLoginPacket.Player.PermissionsLevel > 0)
             {
-                // TODO: WTF are these, permissions flags?
-                message.AddByte(0x0B);
+                message.AddByte((byte)OutgoingGamePacketType.GamemasterFlags);
 
                 for (var i = 0; i < 32; i++)
                 {
+                    // TODO: Actually send individual permissions flags
                     message.AddByte(0xFF);
                 }
             }

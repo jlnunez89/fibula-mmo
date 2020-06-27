@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="PlayerWalkCancelPacket.cs" company="2Dudes">
+// <copyright file="CreatureSkullPacket.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -12,32 +12,32 @@
 
 namespace Fibula.Communications.Packets.Outgoing
 {
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a packet for cancelling a player's walk.
+    /// Class that represents a creature skull packet.
     /// </summary>
-    public class PlayerWalkCancelPacket : IOutboundPacket
+    public class CreatureSkullPacket : IOutboundPacket
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerWalkCancelPacket"/> class.
+        /// Initializes a new instance of the <see cref="CreatureSkullPacket"/> class.
         /// </summary>
-        /// <param name="turnToDirection">The direction to leave the player facing after cancellation.</param>
-        public PlayerWalkCancelPacket(Direction turnToDirection)
+        /// <param name="creature">The creature reference.</param>
+        public CreatureSkullPacket(ICreature creature)
         {
-            this.ResultingDirection = turnToDirection;
+            this.Creature = creature;
         }
 
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.WalkCancel;
+        public byte PacketType => (byte)OutgoingGamePacketType.CreatureSkull;
 
         /// <summary>
-        /// Gets the direction in which the creature will be left facing.
+        /// Gets the creature reference.
         /// </summary>
-        public Direction ResultingDirection { get; }
+        public ICreature Creature { get; }
     }
 }
