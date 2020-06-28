@@ -59,9 +59,10 @@ namespace Fibula.Common
 
                 this.parentContainer = value;
 
+                // Note that this.Location accounts for the parent container's location
+                // That's why we check if these are now considered different.
                 if (oldLocation != this.Location)
                 {
-                    // The things's location changed since the parent changed.
                     this.InvokePropertyChanged(nameof(this.Location));
                 }
             }

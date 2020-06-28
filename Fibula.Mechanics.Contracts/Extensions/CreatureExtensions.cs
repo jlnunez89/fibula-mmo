@@ -38,6 +38,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
                 return TimeSpan.Zero;
             }
 
+            // TODO: incorporate last step (i.e. if diagonal) into this calculation.
             var tilePenalty = fromTile?.Ground?.MovementPenalty ?? MechanicsConstants.DefaultGroundMovementPenaltyInMs;
 
             const uint Epsilon = 25;

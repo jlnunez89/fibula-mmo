@@ -36,6 +36,11 @@ namespace Fibula.Scheduling
         }
 
         /// <summary>
+        /// Fired when this event is cancelled.
+        /// </summary>
+        public event EventCancelledDelegate Cancelled;
+
+        /// <summary>
         /// Fired when this event is expedited.
         /// </summary>
         public event EventExpeditedDelegate Expedited;
@@ -57,6 +62,11 @@ namespace Fibula.Scheduling
         public TimeSpan RepeatAfter { get; protected set; }
 
         /// <summary>
+        /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Cancelled"/> event.
+        /// </summary>
+        public bool HasCancellationHandler => this.Cancelled != null;
+
+        /// <summary>
         /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Expedited"/> event.
         /// </summary>
         public bool HasExpeditionHandler => this.Expedited != null;
@@ -71,6 +81,20 @@ namespace Fibula.Scheduling
         /// </summary>
         /// <param name="context">The execution context.</param>
         public abstract void Execute(IEventContext context);
+
+        /// <summary>
+        /// Attempts to cancel this event.
+        /// </summary>
+        /// <returns>True if the event is successfully cancelled, false otherwise.</returns>
+        public bool Cancel()
+        {
+            if (this.Cancelled == null)
+            {
+                return false;
+            }
+
+            return this.Cancelled.Invoke(this);
+        }
 
         /// <summary>
         /// Attempts to expedite this event, in other words, requesting it to be fired immediately.

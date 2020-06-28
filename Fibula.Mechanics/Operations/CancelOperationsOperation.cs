@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CancelActionsOperation.cs" company="2Dudes">
+// <copyright file="CancelOperationsOperation.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -23,17 +23,17 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Notifications.Arguments;
 
     /// <summary>
-    /// Class that represents an operation that cancels other pending operations.
+    /// Class that represents an operation that cancels other operations.
     /// </summary>
-    public class CancelActionsOperation : BaseEnvironmentOperation
+    public class CancelOperationsOperation : BaseEnvironmentOperation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CancelActionsOperation"/> class.
+        /// Initializes a new instance of the <see cref="CancelOperationsOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the cancellation.</param>
         /// <param name="creature">The creature who's actions are being cancelled.</param>
         /// <param name="typeToCancel">Optional. The specific type of operation to cancel.</param>
-        public CancelActionsOperation(uint requestorId, ICreature creature, Type typeToCancel = null)
+        public CancelOperationsOperation(uint requestorId, ICreature creature, Type typeToCancel = null)
             : base(requestorId)
         {
             this.Creature = creature;

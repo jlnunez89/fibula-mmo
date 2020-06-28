@@ -121,16 +121,6 @@ namespace Fibula.Creatures
         public override byte AutoAttackRange => 1;
 
         /// <summary>
-        /// Gets or sets the chase mode selected by this combatant.
-        /// </summary>
-        public override ChaseMode ChaseMode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fight mode selected by this combatant.
-        /// </summary>
-        public override FightMode FightMode { get; set; }
-
-        /// <summary>
         /// Gets the client associated to this player.
         /// </summary>
         public IClient Client { get; }

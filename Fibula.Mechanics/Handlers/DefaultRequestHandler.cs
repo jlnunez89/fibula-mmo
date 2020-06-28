@@ -28,18 +28,10 @@ namespace Fibula.Mechanics.Handlers
         /// Initializes a new instance of the <see cref="DefaultRequestHandler"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="packetType">The type of the packet.</param>
-        public DefaultRequestHandler(ILogger logger, byte packetType)
+        public DefaultRequestHandler(ILogger logger)
             : base(logger)
         {
-            // Set the type of packet first.
-            this.IncomingPacketType = packetType;
         }
-
-        /// <summary>
-        /// Gets the packet type that resulted in this handler being picked.
-        /// </summary>
-        public byte IncomingPacketType { get; }
 
         /// <summary>
         /// Handles the contents of a network message.
@@ -66,7 +58,7 @@ namespace Fibula.Mechanics.Handlers
                 sb.AppendFormat("{0:x2} ", b);
             }
 
-            this.Logger.Information($"Default handler drained packet of type {this.IncomingPacketType:X2} with content:\n\n{sb}");
+            this.Logger.Information($"Default handler drained packet with content:\n\n{sb}");
 
             return null;
         }

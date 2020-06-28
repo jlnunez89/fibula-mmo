@@ -789,6 +789,23 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
+            if (creature is ICombatant combatant)
+            {
+                // Check if we are in range to perform the attack operation, if any.
+                if (combatant.PendingAutoAttackOperation != null && combatant.PendingAutoAttackOperation is AutoAttackOperation autoAttackOperation)
+                {
+                    var distanceBetweenCombatants = (autoAttackOperation.Attacker?.Location ?? autoAttackOperation.Target.Location) - autoAttackOperation.Target.Location;
+                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= autoAttackOperation.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+
+                    if (inRange)
+                    {
+                        autoAttackOperation.Expedite();
+                    }
+                }
+
+                // TODO: Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
+            }
+
             // context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
             // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
             // context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
@@ -796,17 +813,6 @@ namespace Fibula.Mechanics.Operations
             /*
             if (creature is ICombatant combatant)
             {
-                // If the creature is a combatant, we must check if the movement caused it to walk into the range of any other combatant attacking it.
-                foreach (var attackerId in combatant.AttackedBy)
-                {
-                    if (!(context.CreatureFinder.FindCreatureById(attackerId) is ICombatant otherCombatant))
-                    {
-                        continue;
-                    }
-
-                    context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(otherCombatant, otherCombatant));
-                }
-
                 // And check if it walked into new combatants view range.
                 var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
                 var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);

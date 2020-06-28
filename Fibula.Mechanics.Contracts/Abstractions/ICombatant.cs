@@ -37,21 +37,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // event ChaseModeChanged ChaseModeChanged;
 
         ///// <summary>
-        ///// Event to call when a combat credit is consumed.
-        ///// </summary>
-        // event CombatCreditConsumed CombatCreditsConsumed;
-
-        ///// <summary>
-        ///// Event to call when combat starts for this combatant.
-        ///// </summary>
-        // event CombatStarted CombatStarted;
-
-        ///// <summary>
-        ///// Event to call when combat ends for this combatant.
-        ///// </summary>
-        // event CombatEnded CombatEnded;
-
-        ///// <summary>
         ///// Gets the set of creatures currently in view for this combatant.
         ///// </summary>
         // IEnumerable<uint> CreaturesInView { get; }
@@ -97,6 +82,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ushort AutoAttackMaximumCredits { get; }
 
         /// <summary>
+        /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
+        /// </summary>
+        decimal AttackSpeed { get; }
+
+        /// <summary>
         /// Gets the number of auto defense credits available.
         /// </summary>
         int AutoDefenseCredits { get; }
@@ -105,11 +95,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Gets the number of maximum defense credits.
         /// </summary>
         ushort AutoDefenseMaximumCredits { get; }
-
-        /// <summary>
-        /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
-        /// </summary>
-        decimal AttackSpeed { get; }
 
         /// <summary>
         /// Gets a metric of how fast a combatant can earn a defense credit per combat round.
@@ -130,6 +115,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ///// Gets the armor rating of this combatant.
         ///// </summary>
         // ushort ArmorRating { get; }
+
+        /// <summary>
+        /// Gets or sets the current auto attack operation that this combatant has pending, if any.
+        /// </summary>
+        IOperation PendingAutoAttackOperation { get; set; }
 
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.

@@ -21,6 +21,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
     public interface IEvent
     {
         /// <summary>
+        /// Delegate fired when this event is cancelled.
+        /// </summary>
+        event EventCancelledDelegate Cancelled;
+
+        /// <summary>
         /// Delegate fired when this event is expedited.
         /// </summary>
         event EventExpeditedDelegate Expedited;
@@ -45,6 +50,12 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// The event is not repeated if the value is not positive.
         /// </summary>
         TimeSpan RepeatAfter { get; }
+
+        /// <summary>
+        /// Attempts to cancel this event.
+        /// </summary>
+        /// <returns>True if the event is successfully cancelled, false otherwise.</returns>
+        bool Cancel();
 
         /// <summary>
         /// Executes the event logic.

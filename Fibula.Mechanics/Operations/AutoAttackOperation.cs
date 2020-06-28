@@ -49,6 +49,8 @@ namespace Fibula.Mechanics.Operations
             this.Target = target;
             this.Attacker = attacker;
 
+            this.RepeatAfter = TimeSpan.Zero;
+
             this.ExhaustionCost = exhaustionCost;
             this.TargetIdAtScheduleTime = attacker?.AutoAttackTarget?.Id ?? 0;
         }
@@ -99,6 +101,16 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
+            // We should try to stop any pending attack operation before carrying this one out.
+            if (this.Attacker.PendingAutoAttackOperation != null && this.Attacker.PendingAutoAttackOperation != this)
+            {
+                // Attempt to cancel it first, and remove the pointer to it.
+                if (this.Attacker.PendingAutoAttackOperation.Cancel())
+                {
+                    this.Attacker.PendingAutoAttackOperation = null;
+                }
+            }
+
             var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;
 
             // Pre-checks.
@@ -117,35 +129,49 @@ namespace Fibula.Mechanics.Operations
                     return;
                 }
 
-                if (inRange)
+                if (!inRange)
                 {
-                    // context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
-                    attackPerformed = enoughCredits && this.PerformAttack(context);
-                }
-                else if (!nullAttacker)
-                {
-                    /*
-                    context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
-
-                    // Setup as a movement rule, so that it gets expedited when the combatant is in range from it's target.
-                    var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
+                    if (!nullAttacker)
                     {
-                        (context) =>
+                        // Set the pending attack operation as this operation.
+                        this.Attacker.PendingAutoAttackOperation = this;
+
+                        // And set this operation to repeat after some time (we chose it to be 2x the normalized attack speed), so that it can actually
+                        // be expedited (or else it's just processed as usual).
+                        this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed) * 2);
+
+                        /*
+                        context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
+
+                        // Setup as a movement rule, so that it gets expedited when the combatant is in range from it's target.
+                        var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
                         {
-                            if (!(context.Arguments is MovementEventRuleArguments movementEventRuleArguments) ||
-                                !(movementEventRuleArguments.ThingMoving is ICombatant attacker) ||
-                                !(attacker.AutoAttackTarget is ICombatant target))
+                            (context) =>
                             {
-                                return false;
-                            }
+                                if (!(context.Arguments is MovementEventRuleArguments movementEventRuleArguments) ||
+                                    !(movementEventRuleArguments.ThingMoving is ICombatant attacker) ||
+                                    !(attacker.AutoAttackTarget is ICombatant target))
+                                {
+                                    return false;
+                                }
 
-                            return (target.Location - attacker.Location).MaxValueIn2D <= attacker.AutoAttackRange;
-                        },
-                    };
+                                return (target.Location - attacker.Location).MaxValueIn2D <= attacker.AutoAttackRange;
+                            },
+                        };
 
-                    context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), this.GetPartitionKey());
-                    */
+                        context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), this.GetPartitionKey());
+                        */
+                    }
+
+                    return;
                 }
+
+                if (!enoughCredits)
+                {
+                    return;
+                }
+
+                attackPerformed = this.PerformAttack(context);
             }
             finally
             {

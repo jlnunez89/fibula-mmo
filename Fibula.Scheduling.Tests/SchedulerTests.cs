@@ -181,7 +181,7 @@ namespace Fibula.Scheduling.Tests
                 Assert.AreEqual(ExpectedCounterValueBeforeRun, scheduledEventFiredCounter, $"Expected events counter to be {ExpectedCounterValueBeforeRun} before first run but got {scheduledEventFiredCounter}.");
             });
 
-            // cancel this event.
+            // expedite this event.
             var expedited = testConcreteEvent.Expedite();
 
             Assert.IsTrue(expedited, "Expected event to confirm being expedited.");

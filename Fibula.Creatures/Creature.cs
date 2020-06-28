@@ -154,6 +154,7 @@ namespace Fibula.Creatures
         {
             get
             {
+                // Creatures cannot be carried, so this should always be null!
                 return null;
             }
         }

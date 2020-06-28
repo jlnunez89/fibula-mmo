@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CancelActionsOperationCreationArguments.cs" company="2Dudes">
+// <copyright file="CancelOperationsOperationCreationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -20,16 +20,16 @@ namespace Fibula.Mechanics.Operations.Arguments
     using Fibula.Mechanics.Operations;
 
     /// <summary>
-    /// Class that represents creation arguments for a <see cref="CancelActionsOperation"/>.
+    /// Class that represents creation arguments for a <see cref="CancelOperationsOperation"/>.
     /// </summary>
-    public class CancelActionsOperationCreationArguments : IOperationCreationArguments
+    public class CancelOperationsOperationCreationArguments : IOperationCreationArguments
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CancelActionsOperationCreationArguments"/> class.
+        /// Initializes a new instance of the <see cref="CancelOperationsOperationCreationArguments"/> class.
         /// </summary>
-        /// <param name="creature">The creature to cancel actions for.</param>
-        /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
-        public CancelActionsOperationCreationArguments(ICreature creature, Type typeOfActionToCancel = null)
+        /// <param name="creature">The creature to cancel operations for.</param>
+        /// <param name="typeOfActionToCancel">Optional. The specific type of operation to cancel.</param>
+        public CancelOperationsOperationCreationArguments(ICreature creature, Type typeOfActionToCancel = null)
         {
             creature.ThrowIfNull(nameof(creature));
 

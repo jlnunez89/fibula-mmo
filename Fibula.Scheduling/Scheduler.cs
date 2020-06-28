@@ -321,6 +321,11 @@ namespace Fibula.Scheduling
                     castedEvent.Expedited += this.HandleEventExpedition;
                 }
 
+                if (!castedEvent.HasCancellationHandler)
+                {
+                    castedEvent.Cancelled += this.HandleEventCancellation;
+                }
+
                 this.priorityQueue.Enqueue(castedEvent, milliseconds);
 
                 this.Logger.Verbose($"Scheduled {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
@@ -341,6 +346,20 @@ namespace Fibula.Scheduling
 
                 Monitor.Pulse(this.eventsAvailableLock);
             }
+        }
+
+        /// <summary>
+        /// Handles a call from an event cancellation.
+        /// </summary>
+        /// <param name="evt">The event that was cancelled.</param>
+        private bool HandleEventCancellation(IEvent evt)
+        {
+            if (evt == null)
+            {
+                return false;
+            }
+
+            return this.CancelEvent(evt);
         }
 
         /// <summary>

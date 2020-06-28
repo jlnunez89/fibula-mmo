@@ -150,12 +150,12 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
-        public abstract ChaseMode ChaseMode { get; set; }
+        public ChaseMode ChaseMode { get; set; }
 
         /// <summary>
         /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
-        public abstract FightMode FightMode { get; set; }
+        public FightMode FightMode { get; set; }
 
         /// <summary>
         /// Gets the range that the auto attack has.
@@ -198,6 +198,11 @@ namespace Fibula.Creatures
         /// at which exhaustion is completely recovered.
         /// </remarks>
         public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
+
+        /// <summary>
+        /// Gets or sets the pending auto attack operation of this player, if any.
+        /// </summary>
+        public IOperation PendingAutoAttackOperation { get; set; }
 
         /// <summary>
         /// Consumes combat credits to the combatant.

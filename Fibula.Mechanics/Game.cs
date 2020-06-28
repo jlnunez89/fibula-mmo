@@ -266,7 +266,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            this.DispatchOperation(new CancelActionsOperationCreationArguments(player, typeOfActionToCancel));
+            this.DispatchOperation(new CancelOperationsOperationCreationArguments(player, typeOfActionToCancel));
         }
 
         /// <summary>

@@ -203,9 +203,9 @@ namespace Fibula.Mechanics.Operations
 
                     break;
                 case OperationType.CancelOperations:
-                    if (arguments is CancelActionsOperationCreationArguments cancelActionsOpArguments)
+                    if (arguments is CancelOperationsOperationCreationArguments cancelActionsOpArguments)
                     {
-                        return new CancelActionsOperation(
+                        return new CancelOperationsOperation(
                             cancelActionsOpArguments.RequestorId,
                             cancelActionsOpArguments.Creature);
                     }

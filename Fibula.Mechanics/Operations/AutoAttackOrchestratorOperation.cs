@@ -57,9 +57,9 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
+            // We should stop this recurrent operation if there is no longer a target.
             if (this.Attacker.AutoAttackTarget == null)
             {
-                // If the attacker no longer has a target, we should stop this recurrent operation.
                 return;
             }
 
@@ -70,6 +70,7 @@ namespace Fibula.Mechanics.Operations
             var operationDelay = TimeSpan.Zero;
 
             // Add delay from current exhaustion of the requestor, if any.
+            // Notice that this exhaustion comes from the actual attack operation, not *this* operation.
             if (this.Attacker is ICreatureWithExhaustion creatureWithExhaustion)
             {
                 TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(autoAttackOp.ExhaustionType, context.Scheduler.CurrentTime);

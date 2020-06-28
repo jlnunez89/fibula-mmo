@@ -222,14 +222,12 @@ namespace Fibula.Standalone
 
         private static void AddHandlers(this IServiceCollection services)
         {
-            // Add all handlers
-            services.TryAddSingleton<DefaultRequestHandler>();
-
             var packetTypeToHandlersMap = new Dictionary<Type, Type>()
             {
                 { typeof(IAttackInfo), typeof(AttackHandler) },
                 { typeof(IAutoMovementInfo), typeof(AutoMoveHandler) },
                 { typeof(IActionWithoutContentInfo), typeof(ActionWithoutContentHandler) },
+                { typeof(IBytesInfo), typeof(DefaultRequestHandler) },
                 { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
                 { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },
                 { typeof(ILookAtInfo), typeof(LookAtHandler) },

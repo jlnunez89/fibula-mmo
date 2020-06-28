@@ -51,7 +51,7 @@ namespace Fibula.Protocol.V772.PacketWriters
             ushort manapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.Manapoints);
             ushort maxManapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.MaxManapoints);
 
-            ushort capacity = Convert.ToUInt16(playerStatsPacket.Player.CarryStrength);
+            ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, playerStatsPacket.Player.CarryStrength * 100));
 
             // Experience: 7.7x Client debugs after 0x7FFFFFFF (2,147,483,647) exp
             uint experience = 0; // Math.Min(0x7FFFFFFF, Convert.ToUInt32(playerStatsPacket.Player.Skills[SkillType.Experience].Count));
