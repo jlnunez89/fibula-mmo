@@ -253,22 +253,6 @@ namespace Fibula.Map
         }
 
         /// <summary>
-        /// Gets or sets the parent cylinder of this tile.
-        /// </summary>
-        public IThingContainer Parent
-        {
-            get
-            {
-                return null;
-            }
-
-            set
-            {
-                throw new InvalidOperationException($"{nameof(Tile)}s cannot have a parent cylinder.");
-            }
-        }
-
-        /// <summary>
         /// Sets a flag on this tile.
         /// </summary>
         /// <param name="flag">The flag to set.</param>

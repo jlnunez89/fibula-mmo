@@ -198,7 +198,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item stays on top of the stack.
         /// </summary>
-        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop) || this.Type.Flags.Contains(ItemFlag.IsClipped);
+        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop) || this.Type.Flags.Contains(ItemFlag.IsClipped) || this.IsLiquidPool;
 
         /// <summary>
         /// Gets a value indicating whether this item stays on the bottom of the stack.
@@ -229,7 +229,7 @@ namespace Fibula.Items
             {
                 if ((this.Type.Flags.Contains(ItemFlag.IsLiquidSource) || this.Type.Flags.Contains(ItemFlag.IsLiquidContainer) || this.Type.Flags.Contains(ItemFlag.IsLiquidPool)) &&
                     this.Attributes.TryGetValue(ItemAttribute.LiquidType, out IConvertible typeValue) &&
-                    Enum.IsDefined(typeof(LiquidType), typeValue))
+                    Enum.IsDefined(typeof(LiquidType), typeValue.ToInt32(null)))
                 {
                     return (LiquidType)typeValue;
                 }

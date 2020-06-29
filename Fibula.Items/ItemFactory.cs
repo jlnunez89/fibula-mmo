@@ -81,7 +81,17 @@ namespace Fibula.Items
                 return new ContainerItem(this.itemTypesCatalog[itemCreationArguments.TypeId]);
             }
 
-            return new Item(this.itemTypesCatalog[itemCreationArguments.TypeId]);
+            var newItem = new Item(this.itemTypesCatalog[itemCreationArguments.TypeId]);
+
+            if (itemCreationArguments.Attributes != null)
+            {
+                foreach (var attribute in itemCreationArguments.Attributes)
+                {
+                    newItem.Attributes[attribute.Key] = attribute.Value;
+                }
+            }
+
+            return newItem;
         }
     }
 }

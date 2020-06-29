@@ -127,7 +127,7 @@ namespace Fibula.Protocol.V772
                 message.AddString(creature.Name);
             }
 
-            message.AddByte(Convert.ToByte(Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints))); // health bar, needs a percentage.
+            message.AddByte(creature.HitpointPercentage);
             message.AddByte(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
 
             /* if (creature.IsInvisible)

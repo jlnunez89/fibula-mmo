@@ -19,7 +19,9 @@ namespace Fibula.Creatures
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
+    using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
     /// Class that represents all creatures in the game.
@@ -106,6 +108,11 @@ namespace Fibula.Creatures
             this.damageTakenFromOthersLock = new object();
             this.damageTakenFromOthers = new Dictionary<uint, uint>();
         }
+
+        /// <summary>
+        /// Event to call when the combatant's health changes.
+        /// </summary>
+        public event OnHealthChange HealthChanged;
 
         /// <summary>
         /// Gets the current target combatant.
@@ -328,6 +335,49 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
+        /// Applies damage to the combatant, which is expected to apply reductions and protections.
+        /// </summary>
+        /// <param name="damageInfo">The information of the damage to make, without reductions.</param>
+        /// <param name="fromCombatantId">The combatant from which to track the damage, if any.</param>
+        /// <returns>The information about the damage actually done.</returns>
+        public DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0)
+        {
+            var oldHitpointsValue = this.Hitpoints;
+
+            this.ApplyDamageModifiers(ref damageInfo);
+
+            if (damageInfo.Damage < 0)
+            {
+                // heal for the amount of damage.
+                this.Hitpoints = (ushort)Math.Min(this.MaxHitpoints, this.Hitpoints - damageInfo.Damage);
+            }
+            else if (damageInfo.Damage > 0)
+            {
+                this.Hitpoints = (ushort)Math.Max(0, this.Hitpoints - damageInfo.Damage);
+            }
+
+            if (this.Hitpoints != oldHitpointsValue)
+            {
+                this.HealthChanged?.Invoke(this, oldHitpointsValue);
+            }
+
+            if (fromCombatantId > 0 && damageInfo.Damage > 0)
+            {
+                lock (this.damageTakenFromOthersLock)
+                {
+                    if (!this.damageTakenFromOthers.ContainsKey(fromCombatantId))
+                    {
+                        this.damageTakenFromOthers.Add(fromCombatantId, 0);
+                    }
+
+                    this.damageTakenFromOthers[fromCombatantId] += (uint)damageInfo.Damage;
+                }
+            }
+
+            return damageInfo;
+        }
+
+        /// <summary>
         /// Increases the attack speed of this combatant.
         /// </summary>
         /// <param name="increaseAmount">The amount by which to increase.</param>
@@ -362,5 +412,11 @@ namespace Fibula.Creatures
         {
             this.defenseSpeedBuff = Math.Max(0, this.defenseSpeedBuff - decreaseAmount);
         }
+
+        /// <summary>
+        /// Applies damage modifiers to the damage information provided.
+        /// </summary>
+        /// <param name="damageInfo">The damage information.</param>
+        protected abstract void ApplyDamageModifiers(ref DamageInfo damageInfo);
     }
 }

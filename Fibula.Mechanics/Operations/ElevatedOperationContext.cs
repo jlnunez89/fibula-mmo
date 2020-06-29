@@ -35,6 +35,8 @@ namespace Fibula.Mechanics.Operations
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
+        /// <param name="gameOperationsApi">A reference to the game operations api.</param>
+        /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public ElevatedOperationContext(
             ILogger logger,
@@ -45,8 +47,10 @@ namespace Fibula.Mechanics.Operations
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
+            IGameOperationsApi gameOperationsApi,
+            ICombatOperationsApi combatOperationsApi,
             IScheduler scheduler)
-            : base(logger, mapDescriptor, map, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, scheduler)
+            : base(logger, mapDescriptor, map, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, gameOperationsApi, combatOperationsApi, scheduler)
         {
         }
 

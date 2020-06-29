@@ -15,12 +15,19 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
+    using Fibula.Mechanics.Contracts.Delegates;
+    using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
     public interface ICombatant : ICreatureWithExhaustion
     {
+        /// <summary>
+        /// Event to call when the combatant's health changes.
+        /// </summary>
+        event OnHealthChange HealthChanged;
+
         ///// <summary>
         ///// Event to call when the attack target changes.
         ///// </summary>
@@ -186,12 +193,13 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="decreaseAmount">The amount by which to decrease.</param>
         void DecreaseDefenseSpeed(decimal decreaseAmount);
 
-        ///// <summary>
-        ///// Tracks damage taken by a combatant.
-        ///// </summary>
-        ///// <param name="fromCombatantId">The combatant from which to track the damage.</param>
-        ///// <param name="damage">The value of the damage.</param>
-        // void RecordDamageTaken(uint fromCombatantId, int damage);
+        /// <summary>
+        /// Applies damage to the combatant, which is expected to apply reductions and protections.
+        /// </summary>
+        /// <param name="damageInfo">The information of the damage to make, without reductions.</param>
+        /// <param name="fromCombatantId">The combatant from which to track the damage, if any.</param>
+        /// <returns>The information about the damage actually done.</returns>
+        DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0);
 
         ///// <summary>
         ///// Clears the tracking store of damage taken from other combatants.

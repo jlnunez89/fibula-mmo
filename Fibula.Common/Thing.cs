@@ -44,7 +44,7 @@ namespace Fibula.Common
         public abstract bool CanBeMoved { get; }
 
         /// <summary>
-        /// Gets or sets the parent cylinder of this thing.
+        /// Gets or sets the parent container of this thing.
         /// </summary>
         public IThingContainer ParentContainer
         {

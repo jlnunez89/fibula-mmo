@@ -89,6 +89,7 @@ namespace Fibula.Protocol.V772
                 { OutgoingGamePacketType.ContainerAddItem, typeof(ContainerAddItemPacketWriter) },
                 { OutgoingGamePacketType.ContainerRemoveItem, typeof(ContainerRemoveItemPacketWriter) },
                 { OutgoingGamePacketType.ContainerUpdateItem, typeof(ContainerUpdateItemPacketWriter) },
+                { OutgoingGamePacketType.CreatureHealth, typeof(CreatureHealthPacketWriter) },
                 { OutgoingGamePacketType.CreatureLight, typeof(CreatureLightPacketWriter) },
                 { OutgoingGamePacketType.CreatureMoved, typeof(CreatureMovedPacketWriter) },
                 { OutgoingGamePacketType.UpdateThing, typeof(CreatureTurnedPacketWriter) },
@@ -112,6 +113,7 @@ namespace Fibula.Protocol.V772
                 { OutgoingGamePacketType.PlayerLogin, typeof(PlayerLoginPacketWriter) },
                 { OutgoingGamePacketType.TextMessage, typeof(TextMessagePacketWriter) },
                 { OutgoingGamePacketType.TileUpdate, typeof(TileUpdatePacketWriter) },
+                { OutgoingGamePacketType.CancelAttack, typeof(PlayerCancelAttackPacketWriter) },
                 { OutgoingGamePacketType.CancelWalk, typeof(PlayerCancelWalkPacketWriter) },
                 { OutgoingGamePacketType.WorldLight, typeof(WorldLightPacketWriter) },
             };

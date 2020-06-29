@@ -58,6 +58,16 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         IContainerManager ContainerManager { get; }
 
         /// <summary>
+        /// Gets a reference to the game's api.
+        /// </summary>
+        IGameOperationsApi GameApi { get; }
+
+        /// <summary>
+        /// Gets a reference to the combat api.
+        /// </summary>
+        ICombatOperationsApi CombatApi { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

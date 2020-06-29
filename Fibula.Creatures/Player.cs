@@ -12,11 +12,13 @@
 
 namespace Fibula.Creatures
 {
+    using System;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
     /// Class that represents all players in the game.
@@ -129,6 +131,34 @@ namespace Fibula.Creatures
         /// Gets or sets this player's speed.
         /// </summary>
         public override ushort Speed { get; protected set; }
+
+        /// <summary>
+        /// Applies damage modifiers to the damage information provided.
+        /// </summary>
+        /// <param name="damageInfo">The damage information.</param>
+        protected override void ApplyDamageModifiers(ref DamageInfo damageInfo)
+        {
+            var rng = new Random();
+
+            // 75% chance to block it?
+            if (this.AutoDefenseCredits > 0 && rng.Next(4) > 0)
+            {
+                damageInfo.Effect = AnimatedEffect.Puff;
+                damageInfo.Damage = 0;
+            }
+
+            // 25% chance to hit the armor...
+            if (rng.Next(4) == 0)
+            {
+                damageInfo.Effect = AnimatedEffect.SparkYellow;
+                damageInfo.Damage = 0;
+            }
+
+            if (damageInfo.Damage > 0 && damageInfo.Dealer != null && damageInfo.Dealer is IPlayer)
+            {
+                damageInfo.Damage = (int)Math.Ceiling((decimal)damageInfo.Damage / 2);
+            }
+        }
 
         /// <summary>
         /// Calculates the base movement speed of the player.

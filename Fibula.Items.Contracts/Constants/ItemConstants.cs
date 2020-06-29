@@ -12,6 +12,8 @@
 
 namespace Fibula.Items.Contracts.Constants
 {
+    using Fibula.Common.Contracts.Enumerations;
+
     /// <summary>
     /// Static class that contains constants regarding items.
     /// </summary>
@@ -31,5 +33,11 @@ namespace Fibula.Items.Contracts.Constants
         /// The maximum number of containers to maintain per creature.
         /// </summary>
         public const int MaxContainersPerCreature = 16;
+
+        /// <summary>
+        /// The id of the type for a blood splatter on the floor.
+        /// </summary>
+        // TODO: this id is version specific (7.72), and should be moved to somewhwere else.
+        public const ushort BloodSplatterTypeId = 2898;
     }
 }

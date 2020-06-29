@@ -37,6 +37,8 @@ namespace Fibula.Mechanics.Operations
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
+        /// <param name="gameOperationsApi">A reference to the game operations api.</param>
+        /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public OperationContext(
             ILogger logger,
@@ -47,6 +49,8 @@ namespace Fibula.Mechanics.Operations
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
+            IGameOperationsApi gameOperationsApi,
+            ICombatOperationsApi combatOperationsApi,
             IScheduler scheduler)
             : base(logger)
         {
@@ -57,6 +61,8 @@ namespace Fibula.Mechanics.Operations
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
+            gameOperationsApi.ThrowIfNull(nameof(gameOperationsApi));
+            combatOperationsApi.ThrowIfNull(nameof(combatOperationsApi));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.MapDescriptor = mapDescriptor;
@@ -66,6 +72,8 @@ namespace Fibula.Mechanics.Operations
             this.CreatureFactory = creatureFactory;
             this.OperationFactory = operationFactory;
             this.ContainerManager = containerManager;
+            this.GameApi = gameOperationsApi;
+            this.CombatApi = combatOperationsApi;
             this.Scheduler = scheduler;
         }
 
@@ -103,6 +111,16 @@ namespace Fibula.Mechanics.Operations
         /// Gets a reference to the container manager in use.
         /// </summary>
         public IContainerManager ContainerManager { get; }
+
+        /// <summary>
+        /// Gets a reference to the game's api.
+        /// </summary>
+        public IGameOperationsApi GameApi { get; }
+
+        /// <summary>
+        /// Gets a reference to the combat api.
+        /// </summary>
+        public ICombatOperationsApi CombatApi { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

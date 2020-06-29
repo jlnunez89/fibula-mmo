@@ -110,16 +110,16 @@ namespace Fibula.Mechanics.Operations
         protected abstract void Execute(IOperationContext context);
 
         /// <summary>
-        /// Attempts to add content to the first possible cylinder that accepts it, on a chain of cylinders.
+        /// Attempts to add content to the first possible parent container that accepts it, on a chain of parent containers.
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
         /// <param name="thingContainer">The first thing container to add to.</param>
-        /// <param name="addIndex">The index at which to attempt to add, only for the first attempted cylinder.</param>
-        /// <param name="remainder">The remainder content to add, which overflows to the next cylinder in the chain.</param>
+        /// <param name="addIndex">The index at which to attempt to add, only for the first attempted container.</param>
+        /// <param name="remainder">The remainder content to add, which overflows to the next container in the chain.</param>
         /// <param name="includeTileAsFallback">Optional. A value for whether to include tiles in the fallback chain.</param>
         /// <param name="requestorCreature">Optional. The creature requesting the addition of content.</param>
         /// <returns>True if the content was successfully added, false otherwise.</returns>
-        protected bool AddContentToCylinderOrFallback(IOperationContext context, IThingContainer thingContainer, byte addIndex, ref IThing remainder, bool includeTileAsFallback = true, ICreature requestorCreature = null)
+        protected bool AddContentToContainerOrFallback(IOperationContext context, IThingContainer thingContainer, byte addIndex, ref IThing remainder, bool includeTileAsFallback = true, ICreature requestorCreature = null)
         {
             context.ThrowIfNull(nameof(context));
             thingContainer.ThrowIfNull(nameof(thingContainer));
@@ -129,31 +129,31 @@ namespace Fibula.Mechanics.Operations
             bool success = false;
             bool firstAttempt = true;
 
-            foreach (var targetCylinder in thingContainer.GetParentContainerHierarchy(includeTileAsFallback))
+            foreach (var targetContainer in thingContainer.GetParentContainerHierarchy(includeTileAsFallback))
             {
                 IThing lastAddedThing = remainder;
 
                 if (!success)
                 {
-                    (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder, firstAttempt ? addIndex : FallbackIndex);
+                    (success, remainder) = targetContainer.AddContent(context.ItemFactory, remainder, firstAttempt ? addIndex : FallbackIndex);
                 }
                 else if (remainder != null)
                 {
-                    (success, remainder) = targetCylinder.AddContent(context.ItemFactory, remainder);
+                    (success, remainder) = targetContainer.AddContent(context.ItemFactory, remainder);
                 }
 
                 firstAttempt = false;
 
                 if (success)
                 {
-                    if (targetCylinder is ITile targetTile)
+                    if (targetContainer is ITile targetTile)
                     {
                         new TileUpdatedNotification(
                             () => context.CreatureFinder.PlayersThatCanSee(context.Map, targetTile.Location),
                             new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
-                        .Execute(context);
+                       .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
 
-                        // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetCylinder.Location, lastAddedThing, requestorCreature));
+                        // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetContainer.Location, lastAddedThing, requestorCreature));
                     }
 
                     // context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(lastAddedThing, requestorCreature));

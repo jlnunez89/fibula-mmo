@@ -77,9 +77,12 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         /// </summary>
         AutoWalkOrchestrator,
 
-        /*
-        Thinking,
+        /// <summary>
+        /// An operation that creates an item.
+        /// </summary>
+        CreateItem,
 
+        /*
         ContainerOpen,
         ContainerClose,
         ContainerMoveUp,
@@ -87,7 +90,6 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         UseItemOn,
 
         ChangeItem,
-        CreateItem,
         DeleteItem,
         PlaceCreature,
         RemoveCreature,

@@ -40,7 +40,6 @@
     <Compile Remove="Enumerations\EventRuleType.cs" />
     <Compile Remove="Enumerations\FightMode.cs" />
     <Compile Remove="Extensions\EventExtensions.cs" />
-    <Compile Remove="Extensions\LocationExtensions.cs" />
     <Compile Remove="Extensions\ScriptExtensions.cs" />
   </ItemGroup>
 
@@ -63,10 +62,6 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Delegates\" />
   </ItemGroup>
 
   <ItemGroup>

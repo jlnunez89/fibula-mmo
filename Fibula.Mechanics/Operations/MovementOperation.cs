@@ -619,14 +619,14 @@ namespace Fibula.Mechanics.Operations
         }
 
         /// <summary>
-        /// Immediately attempts to perform an item movement between two cylinders.
+        /// Immediately attempts to perform an item movement between two containers.
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
         /// <param name="item">The item being moved.</param>
         /// <param name="fromThingContainer">The container from which the movement is being performed.</param>
         /// <param name="toThingContainer">The container to which the movement is being performed.</param>
-        /// <param name="fromIndex">Optional. The index within the cylinder to move the item from.</param>
-        /// <param name="toIndex">Optional. The index within the cylinder to move the item to.</param>
+        /// <param name="fromIndex">Optional. The index within the container to move the item from.</param>
+        /// <param name="toIndex">Optional. The index within the container to move the item to.</param>
         /// <param name="amountToMove">Optional. The amount of the thing to move. Defaults to 1.</param>
         /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
@@ -640,9 +640,9 @@ namespace Fibula.Mechanics.Operations
                 return false;
             }
 
-            var sameCylinder = fromThingContainer == toThingContainer;
+            var sameContainer = fromThingContainer == toThingContainer;
 
-            if (sameCylinder && fromIndex == toIndex)
+            if (sameContainer && fromIndex == toIndex)
             {
                 // no change at all.
                 return true;
@@ -660,7 +660,7 @@ namespace Fibula.Mechanics.Operations
 
             if (!removeSuccessful)
             {
-                // Failing to remove the item from the original cylinder stops the entire operation.
+                // Failing to remove the item from the original container stops the entire operation.
                 return false;
             }
 
@@ -677,18 +677,18 @@ namespace Fibula.Mechanics.Operations
 
             IThing addRemainder = itemAsThing;
 
-            if (sameCylinder && removeRemainder == null && fromIndex < toIndex)
+            if (sameContainer && removeRemainder == null && fromIndex < toIndex)
             {
-                // If the move happens within the same cylinder, we need to adjust the index of where we're adding, depending if it is before or after.
+                // If the move happens within the same container, we need to adjust the index of where we're adding, depending if it is before or after.
                 toIndex--;
             }
 
-            if (!this.AddContentToCylinderOrFallback(context, toThingContainer, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
+            if (!this.AddContentToContainerOrFallback(context, toThingContainer, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
             {
                 // There is some rollback to do, as we failed to add the entire thing.
                 IThing rollbackRemainder = addRemainder ?? item;
 
-                if (!this.AddContentToCylinderOrFallback(context, fromThingContainer, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
+                if (!this.AddContentToContainerOrFallback(context, fromThingContainer, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
                 {
                     context.Logger.Error($"Rollback failed on {nameof(this.PerformItemMovement)}. Thing: {rollbackRemainder.DescribeForLogger()}");
                 }
@@ -803,7 +803,27 @@ namespace Fibula.Mechanics.Operations
                     }
                 }
 
-                // TODO: Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
+                // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
+                foreach (var otherCombatantId in combatant.AttackedBy)
+                {
+                    if (context.CreatureFinder.FindCreatureById(otherCombatantId) is ICombatant otherCombatant)
+                    {
+                        if (otherCombatant.PendingAutoAttackOperation == null ||
+                            !(otherCombatant.PendingAutoAttackOperation is AutoAttackOperation otherCombatantAutoAttackOperation) ||
+                            otherCombatantAutoAttackOperation.Target != combatant)
+                        {
+                            continue;
+                        }
+
+                        var distanceBetweenCombatants = (otherCombatantAutoAttackOperation.Attacker?.Location ?? otherCombatantAutoAttackOperation.Target.Location) - otherCombatantAutoAttackOperation.Target.Location;
+                        var inRange = distanceBetweenCombatants.MaxValueIn2D <= otherCombatantAutoAttackOperation.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+
+                        if (inRange)
+                        {
+                            otherCombatant.PendingAutoAttackOperation.Expedite();
+                        }
+                    }
+                }
             }
 
             // context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));

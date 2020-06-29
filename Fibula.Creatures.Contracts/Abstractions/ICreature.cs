@@ -51,6 +51,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         ushort Corpse { get; }
 
         /// <summary>
+        /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
+        /// </summary>
+        byte HitpointPercentage { get; }
+
+        /// <summary>
         /// Gets the creature's current hitpoints.
         /// </summary>
         ushort Hitpoints { get; }

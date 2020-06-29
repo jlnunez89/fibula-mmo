@@ -96,16 +96,6 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                case OperationType.CreateItem:
-                    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
-                    {
-                        return new CreateItemOperation(
-                            createItemOpArgs.RequestorId,
-                            createItemOpArgs.ItemTypeId,
-                            createItemOpArgs.AtLocation);
-                    }
-
-                    break;
                 case OperationType.DeleteItem:
                     if (arguments is DeleteItemOperationCreationArguments deleteItemOpArgs)
                     {
@@ -142,13 +132,6 @@ namespace Fibula.Mechanics.Operations
                             NoRequestorId,
                             spawnMonstersOpArgs.Spawn,
                             spawnMonstersOpArgs.MonsterCreationMetadata);
-                    }
-
-                    break;
-                case OperationType.Thinking:
-                    if (arguments is ThinkingOperationCreationArguments thinkingOpArgs)
-                    {
-                        return new ThinkingOperation(thinkingOpArgs.Creature, thinkingOpArgs.Cadence);
                     }
 
                     break;
@@ -219,6 +202,17 @@ namespace Fibula.Mechanics.Operations
                             changeModesOpArguments.FightMode,
                             changeModesOpArguments.ChaseMode,
                             changeModesOpArguments.IsSafeModeOn);
+                    }
+
+                    break;
+                case OperationType.CreateItem:
+                    if (arguments is CreateItemOperationCreationArguments createItemOpArgs)
+                    {
+                        return new CreateItemOperation(
+                            createItemOpArgs.RequestorId,
+                            createItemOpArgs.ItemTypeId,
+                            createItemOpArgs.AtLocation,
+                            createItemOpArgs.Attributes);
                     }
 
                     break;

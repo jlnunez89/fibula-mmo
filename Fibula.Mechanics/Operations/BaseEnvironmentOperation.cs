@@ -73,6 +73,11 @@ namespace Fibula.Mechanics.Operations
             {
                 context.CreatureManager.RegisterCreature(creature);
 
+                if (creature is ICombatant combatant)
+                {
+                    combatant.HealthChanged += context.CombatApi.CombatantsHealthChanged;
+                }
+
                 /*
                 if (creature is ICombatant combatant)
                 {
@@ -131,6 +136,11 @@ namespace Fibula.Mechanics.Operations
 
             if (removedFromTile)
             {
+                if (creature is ICombatant combatant)
+                {
+                    combatant.HealthChanged -= context.CombatApi.CombatantsHealthChanged;
+                }
+
                 /*
                 if (creature is ICombatant combatant)
                 {

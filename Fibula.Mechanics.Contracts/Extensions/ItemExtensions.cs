@@ -36,9 +36,9 @@ namespace Fibula.Mechanics.Contracts.Extensions
 
             while (container != null)
             {
-                if (container is ICreature creatureCylinder)
+                if (container is ICreature creatureCarrier)
                 {
-                    return creatureCylinder;
+                    return creatureCarrier;
                 }
 
                 if (container is IContainedThing containedContainer)

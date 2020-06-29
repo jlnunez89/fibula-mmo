@@ -26,7 +26,9 @@ namespace Fibula.Mechanics
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Operations;
@@ -195,6 +197,34 @@ namespace Fibula.Mechanics
 
             // TODO: probably save game state here.
             return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Creates a new item at the specified location.
+        /// </summary>
+        /// <param name="location">The location at which to create the item.</param>
+        /// <param name="itemTypeId">The type id of the item to create.</param>
+        /// <param name="itemAttributes">Optional. Item attributes to set on the new item.</param>
+        public void CreateItemAtLocation(Location location, ushort itemTypeId, params KeyValuePair<ItemAttribute, IConvertible>[] itemAttributes)
+        {
+            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location, new Dictionary<ItemAttribute, IConvertible>(itemAttributes)));
+        }
+
+        /// <summary>
+        /// Handles a health change from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant who's health changed.</param>
+        /// <param name="oldHealthValue">The old value of the combatant's health.</param>
+        public void CombatantsHealthChanged(ICombatant combatant, ushort oldHealthValue)
+        {
+            if (combatant is IPlayer playerCombatant)
+            {
+                this.scheduler.ScheduleEvent(
+                    new GenericNotification(
+                        () => this.creatureManager.PlayersThatCanSee(this.map, playerCombatant.Location),
+                        new GenericNotificationArguments(
+                            new CreatureHealthPacket(playerCombatant))));
+            }
         }
 
         /// <summary>
@@ -561,6 +591,8 @@ namespace Fibula.Mechanics
                     this.creatureFactory,
                     this.operationFactory,
                     this.containerManager,
+                    this,
+                    this,
                     this.scheduler);
             }
             else if (typeof(IOperation).IsAssignableFrom(type))
@@ -574,6 +606,8 @@ namespace Fibula.Mechanics
                     this.creatureFactory,
                     this.operationFactory,
                     this.containerManager,
+                    this,
+                    this,
                     this.scheduler);
             }
             else if (typeof(INotification).IsAssignableFrom(type))

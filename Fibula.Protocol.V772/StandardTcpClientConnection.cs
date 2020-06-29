@@ -167,16 +167,16 @@ namespace Fibula.Protocol.V772
 
             foreach (var outPacket in responsePackets)
             {
-                var handler = this.protocol.SelectPacketWriter(outPacket.PacketType);
+                var writer = this.protocol.SelectPacketWriter(outPacket.PacketType);
 
-                if (handler == null)
+                if (writer == null)
                 {
-                    this.logger.Warning($"Unsupported response packet type {outPacket.PacketType} without a handler. Packet was not added to the message.");
+                    this.logger.Warning($"Unsupported response packet type {outPacket.PacketType} without a writer. Packet was not added to the message.");
 
                     continue;
                 }
 
-                handler.WriteToMessage(outPacket, ref outboundMessage);
+                writer.WriteToMessage(outPacket, ref outboundMessage);
 
                 var thisPacketLen = outboundMessage.Length - readAlready;
                 var packetBytes = outboundMessage.Buffer.Slice(readAlready, thisPacketLen)

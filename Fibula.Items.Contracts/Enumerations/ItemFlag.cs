@@ -108,6 +108,11 @@ namespace Fibula.Items.Contracts.Enumerations
         IsUnmoveable,
 
         /// <summary>
+        /// And item that is hung.
+        /// </summary>
+        IsHung,
+
+        /// <summary>
         /// An item that should be avoided by certain damage types, but does not actually <see cref="BlocksWalk"/>.
         /// </summary>
         ShouldBeAvoided,

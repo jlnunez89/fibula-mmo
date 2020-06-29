@@ -30,11 +30,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode);
 
         /// <summary>
-        /// Re-sets the combat target of the attacker and it's (possibly new) target.
+        /// Handles a health change from a combatant.
         /// </summary>
-        /// <param name="attacker">The attacker.</param>
-        /// <param name="target">The target.</param>
-        void ResetCombatTarget(ICombatant attacker, ICombatant target);
+        /// <param name="combatant">The combatant who's health changed.</param>
+        /// <param name="oldHealthValue">The old value of the combatant's health.</param>
+        void CombatantsHealthChanged(ICombatant combatant, ushort oldHealthValue);
 
         /// <summary>
         /// Changes the fight, chase and safety modes of a creature.
@@ -44,5 +44,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="chaseMode">The chase mode to change to.</param>
         /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
         void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn);
+
+        /// <summary>
+        /// Re-sets the combat target of the attacker and it's (possibly new) target.
+        /// </summary>
+        /// <param name="attacker">The attacker.</param>
+        /// <param name="target">The target.</param>
+        void ResetCombatTarget(ICombatant attacker, ICombatant target);
     }
 }

@@ -387,9 +387,9 @@ namespace Fibula.Map.SectorFiles
 
                                 tile.AddContent(this.ItemFactory, thing);
 
-                                if (thing is IContainedThing thingWithParentCylinder)
+                                if (thing is IContainedThing containedThing)
                                 {
-                                    thingWithParentCylinder.ParentContainer = tile;
+                                    containedThing.ParentContainer = tile;
                                 }
                             }
                         }

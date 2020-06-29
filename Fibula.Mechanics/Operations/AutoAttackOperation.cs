@@ -20,11 +20,14 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Constants;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Structs;
     using Fibula.Mechanics.Operations.Arguments;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
@@ -185,80 +188,49 @@ namespace Fibula.Mechanics.Operations
 
         private bool PerformAttack(IOperationContext context)
         {
-            int CalculateInflictedDamage(out bool armorBlock, out bool wasShielded)
+            var rng = new Random();
+
+            // Calculate the damage to inflict without any protections and reductions,
+            // i.e. the amount of damage that the attacker can generate as it is.
+            var attackPower = rng.Next(10) + 1;
+
+            var damageToApplyInfo = new DamageInfo(attackPower);
+            var damageDoneInfo = this.Target.ApplyDamage(damageToApplyInfo, this.Attacker?.Id ?? 0);
+
+            var packetsToSend = new List<IOutboundPacket>
             {
-                armorBlock = false;
-                wasShielded = false;
+                new MagicEffectPacket(this.Target.Location, damageDoneInfo.Effect),
+            };
 
-                if (this.Target.AutoDefenseCredits > 0)
-                {
-                    wasShielded = true;
-
-                    return 0;
-                }
-
-                var rng = new Random();
-
-                // 25% chance to hit the armor...
-                if (rng.Next(4) > 0)
-                {
-                    return rng.Next(10) + 1;
-                }
-
-                armorBlock = true;
-
-                return 0;
-            }
-
-            AnimatedEffect GetEffect(int damage, bool wasBlockedByArmor)
+            if (damageDoneInfo.Damage != 0)
             {
-                if (damage < 0)
+                TextColor damageTextColor = TextColor.White;
+
+                if (damageDoneInfo.Damage < 0)
                 {
-                    return AnimatedEffect.GlitterBlue;
-                }
-                else if (damage == 0)
-                {
-                    return wasBlockedByArmor ? AnimatedEffect.SparkYellow : AnimatedEffect.Puff;
+                    damageTextColor = TextColor.Blue;
                 }
 
-                return this.Target.Blood switch
-                {
-                    BloodType.Bones => AnimatedEffect.XGray,
-                    BloodType.Slime => AnimatedEffect.Poison,
-                    _ => AnimatedEffect.XBlood,
-                };
-            }
-
-            TextColor GetTextColor(int damage)
-            {
-                if (damage < 0)
-                {
-                    return TextColor.Blue;
-                }
-
-                return this.Target.Blood switch
+                damageTextColor = damageDoneInfo.Blood switch
                 {
                     BloodType.Bones => TextColor.LightGrey,
                     BloodType.Fire => TextColor.Orange,
                     BloodType.Slime => TextColor.Green,
                     _ => TextColor.Red,
                 };
-            }
 
-            var damageToApply = CalculateInflictedDamage(out bool wasArmorBlock, out bool wasShielded);
-
-            var packetsToSend = new List<IOutboundPacket>()
-            {
-                new MagicEffectPacket(this.Target.Location, GetEffect(damageToApply, wasArmorBlock)),
-            };
-
-            if (damageToApply != 0)
-            {
-                // TODO: actually apply dmg.
-                packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, GetTextColor(damageToApply), Math.Abs(damageToApply).ToString()));
+                packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
             }
 
             this.Target.ConsumeCredits(CombatCreditType.Defense, 1);
+
+            if (damageDoneInfo.ApplyBloodToEnvironment)
+            {
+                context.GameApi.CreateItemAtLocation(
+                    this.Target.Location,
+                    ItemConstants.BloodSplatterTypeId,
+                    new KeyValuePair<ItemAttribute, IConvertible>(ItemAttribute.LiquidType, LiquidType.Blood));
+            }
 
             // Normalize the attacker's defense speed based on the global round time and round that up.
             context.Scheduler.ScheduleEvent(

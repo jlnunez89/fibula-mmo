@@ -72,7 +72,7 @@ namespace Fibula.Mechanics.Operations
             var current = this.CreditType == CombatCreditType.Attack ? this.Combatant.AutoAttackCredits : this.Combatant.AutoDefenseCredits;
             var max = this.CreditType == CombatCreditType.Attack ? this.Combatant.AutoAttackMaximumCredits : this.Combatant.AutoDefenseMaximumCredits;
 
-            context.Logger.Debug($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{max}]");
+            context.Logger.Verbose($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{max}]");
         }
     }
 }

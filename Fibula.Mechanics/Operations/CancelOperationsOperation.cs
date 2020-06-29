@@ -65,7 +65,7 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Creature is IPlayer player)
             {
-                if (player is ICombatant playerAsCombatant)
+                if (this.TypeToCancel == typeof(IOperation) && player is ICombatant playerAsCombatant)
                 {
                     playerAsCombatant.SetAttackTarget(null);
                 }
@@ -73,7 +73,9 @@ namespace Fibula.Mechanics.Operations
                 context.Scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),
-                        new GenericNotificationArguments(new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection()))));
+                        new GenericNotificationArguments(
+                            new PlayerCancelAttackPacket(),
+                            new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection()))));
             }
         }
     }

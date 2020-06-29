@@ -128,9 +128,14 @@ namespace Fibula.Creatures
         public ushort Corpse { get; }
 
         /// <summary>
-        /// Gets thre current hitpoints.
+        /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
         /// </summary>
-        public ushort Hitpoints { get; }
+        public byte HitpointPercentage => Convert.ToByte(Math.Min(100, Math.Max(0, this.Hitpoints * 100 / this.MaxHitpoints)));
+
+        /// <summary>
+        /// Gets or sets thre current hitpoints.
+        /// </summary>
+        public ushort Hitpoints { get; protected set; }
 
         /// <summary>
         /// Gets the maximum hitpoints.

@@ -42,7 +42,7 @@ namespace Fibula.Common.Contracts.Structs
         public bool IsUnderground => this.Z > 7;
 
         /// <summary>
-        /// Gets this location's parent cylinder type.
+        /// Gets this location's type.
         /// </summary>
         public LocationType Type
         {
