@@ -7,11 +7,67 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'
+  name: Azure Pipelines
+  vmImage: windows-latest
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
+  
+jobs:
+- job: Build
+  variables:
+    BuildSolution: FibulaMMO.sln
+    BuildPlatform: Any CPU
+  strategy:
+    matrix:
+      Debug:
+        BuildConfiguration: Debug
+        _debugArg: '-Debug'
+      Release:
+        BuildConfiguration: Release
+        _debugArg: ''
+  steps:
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 5.3.1'
+    inputs:
+      versionSpec: 5.3.1
 
-variables:
-  buildConfiguration: 'Release'
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+    inputs:
+      restoreSolution: '$(BuildSolution)'
+      feedsToUse: 'config'
+      nugetConfigPath: 'NuGet.config'
+  
+  - task: VSBuild@1
+    displayName: 'Build solution FibulaMMO.sln'
+    inputs:
+      solution: '$(BuildSolution)'
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
+      msbuildArgs: '/bl'
+      
+  - task: PowerShell@2
+    displayName: Run Tests
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)/build'
+      filePath: build/opencover-report.ps1
+      arguments: '$(_debugArg) -NoBuild -NoReport -Azure'
 
-steps:
-- script: dotnet build --configuration $(buildConfiguration)
-  displayName: 'dotnet build $(buildConfiguration)'
+  - task: PublishTestResults@2
+    displayName: Publish test results
+    inputs:
+      testResultsFormat: xUnit
+      testResultsFiles: 'build/*.xml'
+
+  - task: PowerShell@2
+    displayName: Upload coverage reports to codecov.io
+    condition: eq(variables['BuildConfiguration'], 'Debug')
+    inputs:
+      workingDirectory: '$(Build.SourcesDirectory)/build'
+      script: |
+        $packageConfig = [xml](Get-Content ..\.nuget\packages.config)
+        $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
+        $codecov = "..\packages\Codecov.$codecov_version\tools\codecov.exe"
+        &$codecov -f '..\build\OpenCover.Reports\OpenCover.FibulaMMO.xml'
