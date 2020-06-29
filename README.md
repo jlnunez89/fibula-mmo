@@ -1,4 +1,13 @@
+[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
+
 ![.NET Core](https://github.com/jlnunez89/fibula-mmo/workflows/.NET%20Core/badge.svg)
+[![codecov](https://codecov.io/gh/jlnunez89/fibula-mmo/branch/master/graph/badge.svg)](https://codecov.io/gh/jlnunez89/fibula-mmo)
+
+[![Discord](https://img.shields.io/discord/288399552581468162?label=Discord)](https://discord.com/invite/cJeVygB)
+[![GitHub stars](https://img.shields.io/github/stars/jlnunez89/fibula-mmo?label=stargazers&logoColor=yellow&style=social)](https://github.com/jlnunez89/fibula-mmo/stargazers)
+
+[![Donate](https://img.shields.io/badge/$-.buyCoffee(Providers.PayPal)-5f69b7.svg)](https://paypal.me/jlnunez89)
+[![Donate](https://img.shields.io/badge/$-.buyCoffee(Providers.Venmo)-d16d9c.svg)](https://venmo.com/jlnunez89)
 
 ### A C# NetCore opensource server for that other leg-bone game (one which must not be named).
 
@@ -11,8 +20,6 @@ For more complex setup and configuration information check out the [server confi
 For some ramblings about me, and why I started this project, visit this [project's motivation](docs/Motivation.md) page.
 
 And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](docs/Roadmap.md).
-
-Amiroslo was kind enough to set up a channel on his Discord server: so join the conversation there: https://discord.gg/cJeVygB
 
 ###### More docs to (probably) come soon!
 
