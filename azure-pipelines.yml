@@ -64,8 +64,8 @@ steps:
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
-    codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
   
 - script: codecov -f $(System.DefaultWorkingDirectory)/TestResults/Coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
