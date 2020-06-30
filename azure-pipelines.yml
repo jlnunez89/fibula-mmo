@@ -7,67 +7,54 @@ trigger:
 - master
 
 pool:
-  name: Azure Pipelines
-  vmImage: windows-latest
-  demands:
-  - msbuild
-  - visualstudio
-  - vstest
-  
-jobs:
-- job: Build
-  variables:
-    BuildSolution: FibulaMMO.sln
-    BuildPlatform: Any CPU
-  strategy:
-    matrix:
-      Debug:
-        BuildConfiguration: Debug
-        _debugArg: '-Debug'
-      Release:
-        BuildConfiguration: Release
-        _debugArg: ''
-  steps:
-  - task: NuGetToolInstaller@0
-    displayName: 'Use NuGet 5.3.1'
-    inputs:
-      versionSpec: 5.3.1
+  vmImage: 'ubuntu-latest'                    # other valid values include: 'windows-latest' | 'macOS-latest'
 
-  - task: NuGetCommand@2
-    displayName: 'NuGet restore'
-    inputs:
-      restoreSolution: '$(BuildSolution)'
-      feedsToUse: 'config'
-      nugetConfigPath: 'NuGet.config'
-  
-  - task: VSBuild@1
-    displayName: 'Build solution FibulaMMO.sln'
-    inputs:
-      solution: '$(BuildSolution)'
-      platform: '$(BuildPlatform)'
-      configuration: '$(BuildConfiguration)'
-      msbuildArgs: '/bl'
-      
-  - task: PowerShell@2
-    displayName: Run Tests
-    inputs:
-      workingDirectory: '$(Build.SourcesDirectory)'
-      filePath: opencover-report.ps1
-      arguments: '$(_debugArg) -NoBuild -NoReport -Azure'
+variables:
+  BuildConfiguration: 'Release'
 
-  - task: PublishTestResults@2
-    displayName: Publish test results
-    inputs:
-      testResultsFormat: xUnit
-      testResultsFiles: 'build/*.xml'
+steps:
+- task: UseDotNet@2
+  displayName: 'Install .NET Core SDK'
+  inputs:
+    version: '3.0.x'
+    packageType: runtime
+    performMultiLevelLookup: true
+    includePreviewVersions: true              # Required for preview versions
 
-  - task: PowerShell@2
-    displayName: Upload coverage reports to codecov.io
-    condition: eq(variables['BuildConfiguration'], 'Debug')
-    inputs:
-      workingDirectory: '$(Build.SourcesDirectory)'
-      script: |
-        $packageConfig = [xml](Get-Content ..\.nuget\packages.config)
-        $codecov_version = $packageConfig.SelectSingleNode('/packages/package[@id="Codecov"]').version
-        $codecov = "..\packages\Codecov.$codecov_version\tools\codecov.exe"
-        &$codecov -f '..\build\OpenCover.Reports\OpenCover.FibulaMMO.xml'
+- task: NuGetToolInstaller@0
+  displayName: 'Use NuGet 5.3.1'
+  inputs:
+    versionSpec: 5.3.1
+
+- task: NuGetCommand@2
+  displayName: 'NuGet restore'
+  inputs:
+    restoreSolution: '$(BuildSolution)'
+    feedsToUse: 'config'
+    nugetConfigPath: 'NuGet.config'
+
+- task: DotNetCoreCLI@2
+  displayName: Build
+  inputs:
+    command: build
+    projects: '**/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(BuildConfiguration)'
+
+- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
+- task: PublishTestResults@2
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: '**/*.trx'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
