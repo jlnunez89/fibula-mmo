@@ -58,21 +58,21 @@ steps:
   displayName: 'Run Tests'
   inputs:
     command: test
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(System.DefaultWorkingDirectory)/TestResults/Coverage/'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     projects: '**/*.Tests/*.csproj'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/cobertura/coverage.xml'
-  
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/Coverage/Cobertura/Cobertura.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/TestResults/Coverage/Cobertura'
-
-- script: codecov -f $(System.DefaultWorkingDirectory)/TestResults/cobertura/coverage.xml
+    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
+  
+- script: codecov -f $(Build.SourcesDirectory)/TestResults/Coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
