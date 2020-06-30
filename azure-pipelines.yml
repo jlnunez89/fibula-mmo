@@ -59,7 +59,8 @@ steps:
     displayName: 'Run Tests'
     inputs:
       command: test
-      projects: '**/*.Tests/*.csproj'
+      projects: |
+        **/*.Tests/*.csproj
       arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover --logger trx'
       nobuild: true
       publishTestResults: false
@@ -74,7 +75,7 @@ steps:
     testRunner: VSTest
     testResultsFiles: "**/*.opencover.xml"
 
-- powershell: .codecov -f $(Agent.BuildDirectory)\coverage.opencover.xml
+- script: codecov -f $(Agent.BuildDirectory)\coverage.opencover.xml
   displayName: 'Upload to CodeCov.io'
 
 - task: PublishCodeCoverageResults@1
