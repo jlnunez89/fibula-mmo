@@ -56,7 +56,7 @@ steps:
 
 - task: DotNetCoreCLI@2
     condition: succeededOrFailed()
-    displayName: Testing **/*.Tests/*.csproj
+    displayName: 'Run Tests'
     inputs:
       command: test
       projects: '**/*.Tests/*.csproj'
