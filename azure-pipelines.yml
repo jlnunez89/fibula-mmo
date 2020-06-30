@@ -35,6 +35,13 @@ steps:
     custom: tool
     arguments: 'install -g Codecov.Tool'
 
+- task: DotNetCoreCLI@2
+  displayName: 'Install ReportGenerator'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'install -g dotnet-reportgenerator-globaltool'
+
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 5.3.1'
   inputs:
@@ -58,7 +65,7 @@ steps:
   displayName: 'Run Tests'
   inputs:
     command: test
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
     projects: '**/*.Tests/*.csproj'
 
 - task: PublishCodeCoverageResults@1
@@ -67,12 +74,11 @@ steps:
     codeCoverageTool: 'Cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
 
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish code coverage report'
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/coverage.cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage'
+- script: reportgenerator "-reports:$(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml" "-targetdir:$(Build.SourcesDirectory)\CodeCoverage -reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  displayName: 'Create Code coverage report'
   
+- script: ls -R
+  displayName: 'debug contents'
+
 - script: codecov -f $(Build.SourcesDirectory)/TestResults/Coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
