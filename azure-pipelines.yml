@@ -40,16 +40,11 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
 
-- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover TestResults
+- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
   displayName: 'Run tests and collect Code Coverage'
 
 - task: DotNetCoreCLI@2
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
-
-- task: DotNetCoreCLI@2
+  displayName: 'Publish artifact'
   inputs:
     command: publish
     publishWebProjects: True
