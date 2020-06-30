@@ -65,14 +65,14 @@ steps:
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/**/coverage.cobertura.xml'
   
-- script: codecov -f $(Build.SourcesDirectory)/TestResults/Coverage/coverage.covertura.xml
+- script: codecov -f $(System.DefaultWorkingDirectory)/TestResults/Coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
     codecoverageTool: cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/Coverage/Cobertura/Cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/TestResults/Coverage/Cobertura'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/TestResults/Coverage/Cobertura/Cobertura.xml'
+    reportDirectory: '$(System.DefaultWorkingDirectory)/TestResults/Coverage/Cobertura'
