@@ -61,18 +61,18 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
     command: test
     projects: '**/*.Tests/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/coverage/'
+    arguments: '--logger trx --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/coverage/'
     nobuild: true
 
+- script: reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/coverage.opencover.xml" "-targetdir:$(Build.SourcesDirectory)/coverage/Cobertura" "-reporttypes:Cobertura;HTMLInline;HTMLChart"
+  displayName: 'Create Code coverage report'
+  
 - task: PublishTestResults@2
   displayName: 'Publish test results'
   condition: succeededOrFailed()
   inputs:
     testRunner: VSTest
-    testResultsFiles: "**/*.trx"
-
-- script: reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/coverage.opencover.xml" "-targetdir:coverage/Cobertura" "-reporttypes:Cobertura;HTMLInline;HTMLChart"
-  displayName: 'Create Code coverage report'
+    testResultsFiles: '**/*.trx'
 
 - script: codecov -f $(Build.SourcesDirectory)/coverage/coverage.opencover.xml
   displayName: 'Upload to CodeCov.io'
@@ -80,6 +80,6 @@ steps:
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
-    codeCoverageTool: Cobertura
-    summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+    codecoverageTool: cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/coverage/Cobertura/Cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/coverage/Cobertura'
