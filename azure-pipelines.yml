@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'               # Data collector 'Code Coverage' is currently supported only on Windows..
+  vmImage: 'ubuntu-latest'                    # other valid values include: 'windows-latest' | 'macOS-latest'
 
 variables:
   BuildConfiguration: 'Release'
@@ -19,7 +19,7 @@ steps:
     version: '3.0.x'
     packageType: runtime
     performMultiLevelLookup: true
-    includePreviewVersions: true          # Required for preview versions
+    includePreviewVersions: true              # Required for preview versions
 
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 5.3.1'
@@ -40,21 +40,18 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
 
-- task: DotNetCoreCLI@2
-  inputs:
-    command: test
-    projects: '**/*Tests/*.csproj'
-    arguments: '--configuration $(BuildConfiguration)'
-
-- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-- task: PublishTestResults@2
-  condition: succeededOrFailed()
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: '**/*.trx'
+- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover TestResults
+  displayName: 'Run tests and collect Code Coverage'
 
 - task: DotNetCoreCLI@2
   inputs:
     command: test
     projects: '**/*Tests/*.csproj'
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+
+- task: DotNetCoreCLI@2
+  inputs:
+    command: publish
+    publishWebProjects: True
+    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
+    zipAfterPublish: True    
