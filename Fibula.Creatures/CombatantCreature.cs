@@ -361,7 +361,7 @@ namespace Fibula.Creatures
                 this.HealthChanged?.Invoke(this, oldHitpointsValue);
             }
 
-            if (fromCombatantId > 0 && damageInfo.Damage > 0)
+            if (fromCombatantId > 0)
             {
                 lock (this.damageTakenFromOthersLock)
                 {

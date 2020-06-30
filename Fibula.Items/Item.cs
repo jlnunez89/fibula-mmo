@@ -198,12 +198,12 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item stays on top of the stack.
         /// </summary>
-        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop) || this.Type.Flags.Contains(ItemFlag.IsClipped) || this.IsLiquidPool;
+        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop);
 
         /// <summary>
         /// Gets a value indicating whether this item stays on the bottom of the stack.
         /// </summary>
-        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
+        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.IsClipped) || this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
 
         /// <summary>
         /// Gets a value indicating whether this item is a liquid pool.

@@ -478,8 +478,7 @@ namespace Fibula.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
-                        this.SendHeartbeat(player);
-
+                        // this.SendHeartbeat(player);
                         continue;
                     }
 
