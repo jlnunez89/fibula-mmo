@@ -21,6 +21,20 @@ steps:
     performMultiLevelLookup: true
     includePreviewVersions: true              # Required for preview versions
 
+- task: DotNetCoreCLI@2
+  displayName: 'Install ReportGenerator'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'install -g dotnet-reportgenerator-globaltool'
+    
+- task: DotNetCoreCLI@2
+  displayName: 'Install Codecov.Tool'
+  inputs:
+    command: custom
+    custom: tool
+    arguments: 'install -g Codecov.Tool'
+
 - task: NuGetToolInstaller@0
   displayName: 'Use NuGet 5.3.1'
   inputs:
@@ -40,13 +54,30 @@ steps:
     projects: '**/*.csproj'
     arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
 
-- script: dotnet test --logger trx /p:CollectCoverage=true /p:CoverletOutputFormat=opencover
-  displayName: 'Run tests and collect Code Coverage'
-
 - task: DotNetCoreCLI@2
-  displayName: 'Publish artifact'
-  inputs:
-    command: publish
-    publishWebProjects: True
-    arguments: '--configuration $(BuildConfiguration) --output $(Build.ArtifactStagingDirectory)'
-    zipAfterPublish: True    
+    condition: succeededOrFailed()
+    displayName: Testing **/*.Tests/*.csproj
+    inputs:
+      command: test
+      projects: '**/*.Tests/*.csproj'
+      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover  --logger trx'
+      nobuild: true
+      publishTestResults: false
+
+- script: reportgenerator "-reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml" "-targetdir:$(Build.SourcesDirectory)/CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  displayName: Create Code coverage report
+
+  - task: PublishTestResults@2
+    condition: succeededOrFailed()
+    inputs:
+      testRunner: VSTest
+      testResultsFiles: "**/*.opencover.xml"
+  - powershell: .codecov -f $(Agent.BuildDirectory)\coverage.opencover.xml
+    displayName: Upload to CodeCov.io
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
+      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
