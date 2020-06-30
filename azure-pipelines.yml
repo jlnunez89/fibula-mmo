@@ -72,7 +72,7 @@ steps:
     testResultsFiles: "**/*.trx"
 
 - script: reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/coverage.opencover.xml" "-targetdir:coverage/Cobertura" "-reporttypes:Cobertura;HTMLInline;HTMLChart"
-  displayName:'' Create Code coverage report'
+  displayName: 'Create Code coverage report'
 
 - script: codecov -f $(Build.SourcesDirectory)/coverage/coverage.opencover.xml
   displayName: 'Upload to CodeCov.io'
