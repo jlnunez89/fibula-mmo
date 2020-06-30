@@ -55,15 +55,14 @@ steps:
     arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
 
 - task: DotNetCoreCLI@2
-    condition: succeededOrFailed()
-    displayName: 'Run Tests'
-    inputs:
-      command: test
-      projects: |
-        **/*.Tests/*.csproj
-      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover --logger trx'
-      nobuild: true
-      publishTestResults: false
+  condition: succeededOrFailed()
+  displayName: 'Run Tests'
+  inputs:
+    command: test
+    projects: '**/*.Tests/*.csproj'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover --logger trx'
+    nobuild: true
+    publishTestResults: false
 
 - script: reportgenerator "-reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml" "-targetdir:$(Build.SourcesDirectory)/CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
   displayName: Create Code coverage report
