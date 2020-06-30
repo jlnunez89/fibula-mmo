@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'ubuntu-latest'                    # other valid values include: 'windows-latest' | 'macOS-latest'
+  vmImage: 'windows-latest'                    # other valid values include: 'ubuntu-latest' | 'macOS-latest'
 
 variables:
   BuildConfiguration: 'Release'
