@@ -22,11 +22,11 @@ steps:
     includePreviewVersions: true              # Required for preview versions
 
 - task: DotNetCoreCLI@2
-  displayName: 'Install ReportGenerator'
+  displayName: 'Install Coverlet.Console'
   inputs:
     command: custom
     custom: tool
-    arguments: 'install -g dotnet-reportgenerator-globaltool'
+    arguments: 'install -g coverlet.console'
     
 - task: DotNetCoreCLI@2
   displayName: 'Install Codecov.Tool'
@@ -52,7 +52,7 @@ steps:
   inputs:
     command: build
     projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration)' # Update this to match your need
+    arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
   condition: succeededOrFailed()
@@ -61,11 +61,14 @@ steps:
     workingDirectory: '$(Build.SourcesDirectory)'
     command: test
     projects: '**/*.Tests/*.csproj'
-    arguments: '--logger trx --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=opencover /p:CoverletOutput=$(Build.SourcesDirectory)/coverage/'
+    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     nobuild: true
 
-- script: reportgenerator "-reports:$(Build.SourcesDirectory)/coverage/coverage.opencover.xml" "-targetdir:$(Build.SourcesDirectory)/coverage/Cobertura" "-reporttypes:Cobertura;HTMLInline;HTMLChart"
-  displayName: 'Create Code coverage report'
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage report'
+  inputs:
+    codeCoverageTool: 'Cobertura'
+    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
   
 - task: PublishTestResults@2
   displayName: 'Publish test results'
@@ -74,7 +77,7 @@ steps:
     testRunner: VSTest
     testResultsFiles: '**/*.trx'
 
-- script: codecov -f $(Build.SourcesDirectory)/coverage/coverage.opencover.xml
+- script: codecov -f $(Build.SourcesDirectory)/coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
 
 - task: PublishCodeCoverageResults@1
