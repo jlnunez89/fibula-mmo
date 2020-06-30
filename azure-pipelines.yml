@@ -55,28 +55,18 @@ steps:
     arguments: '--configuration $(BuildConfiguration)'
 
 - task: DotNetCoreCLI@2
-  condition: succeededOrFailed()
   displayName: 'Run Tests'
   inputs:
-    workingDirectory: '$(Build.SourcesDirectory)'
     command: test
+    arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
     projects: '**/*.Tests/*.csproj'
-    arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/TestResults/Coverage/'
-    nobuild: true
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
-    codeCoverageTool: 'Cobertura'
+    codeCoverageTool: 'cobertura'
     summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
   
-- task: PublishTestResults@2
-  displayName: 'Publish test results'
-  condition: succeededOrFailed()
-  inputs:
-    testRunner: VSTest
-    testResultsFiles: '**/*.trx'
-
 - script: codecov -f $(Build.SourcesDirectory)/coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
 
