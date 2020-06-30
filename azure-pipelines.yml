@@ -60,24 +60,26 @@ steps:
     inputs:
       command: test
       projects: '**/*.Tests/*.csproj'
-      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover  --logger trx'
+      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.BuildDirectory)\coverage /p:CoverletOutputFormat=opencover --logger trx'
       nobuild: true
       publishTestResults: false
 
 - script: reportgenerator "-reports:$(Build.SourcesDirectory)/**/coverage.opencover.xml" "-targetdir:$(Build.SourcesDirectory)/CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
   displayName: Create Code coverage report
 
-  - task: PublishTestResults@2
-    condition: succeededOrFailed()
-    inputs:
-      testRunner: VSTest
-      testResultsFiles: "**/*.opencover.xml"
-  - powershell: .codecov -f $(Agent.BuildDirectory)\coverage.opencover.xml
-    displayName: Upload to CodeCov.io
+- task: PublishTestResults@2
+  displayName: 'Publish test results'
+  condition: succeededOrFailed()
+  inputs:
+    testRunner: VSTest
+    testResultsFiles: "**/*.opencover.xml"
 
-  - task: PublishCodeCoverageResults@1
-    displayName: 'Publish code coverage'
-    inputs:
-      codeCoverageTool: Cobertura
-      summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
-      reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
+- powershell: .codecov -f $(Agent.BuildDirectory)\coverage.opencover.xml
+  displayName: 'Upload to CodeCov.io'
+
+- task: PublishCodeCoverageResults@1
+  displayName: 'Publish code coverage report'
+  inputs:
+    codeCoverageTool: Cobertura
+    summaryFileLocation: '$(Build.SourcesDirectory)/CodeCoverage/Cobertura.xml'
+    reportDirectory: '$(Build.SourcesDirectory)/CodeCoverage'
