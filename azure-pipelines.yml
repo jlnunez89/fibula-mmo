@@ -72,14 +72,14 @@ steps:
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'TestResults/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage.cobertura.xml'
 
-- script: reportgenerator "-reports:TestResults\Coverage\coverage.cobertura.xml" "-targetdir:CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+- script: reportgenerator "-reports:$(System.DefaultWorkingDirectory)\coverage.cobertura.xml" "-targetdir:CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
   displayName: 'Create Code coverage report'
   
 - script: ls -R
   condition: succeededOrFailed()
   displayName: 'debug contents'
 
-- script: codecov -f TestResults/Coverage/coverage.covertura.xml
+- script: codecov -f $(System.DefaultWorkingDirectory)/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
