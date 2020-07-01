@@ -10,7 +10,6 @@ pool:
   name: Azure Pipelines
   vmImage: windows-latest                     # other valid values include: 'windows-latest' | 'macOS-latest'
   demands:
-  - choco
   - msbuild
   - visualstudio
   - vstest
