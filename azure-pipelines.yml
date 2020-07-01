@@ -89,6 +89,6 @@ jobs:
       reportDirectory: $(Agent.TempDirectory)\TestResults
       summaryFileLocation: $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml
 
-  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml 
+  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml -t $(CodeCov_Token)
     condition: succeededOrFailed()
     displayName: 'Upload Code Coverage report to CodeCov.io'
