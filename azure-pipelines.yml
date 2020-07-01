@@ -44,6 +44,13 @@ jobs:
       custom: tool
       arguments: 'install -g Codecov.Tool'
 
+  - task: DotNetCoreCLI@2
+    displayName: 'Install ReportGenerator'
+    inputs:
+      command: custom
+      custom: tool
+      arguments: 'install -g dotnet-reportgenerator-globaltool'
+
   - task: NuGetToolInstaller@0
     displayName: 'Use NuGet 5.3.1'
     inputs:
@@ -68,13 +75,17 @@ jobs:
     displayName: 'Run Tests'
     inputs:
       command: test
-      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.TempDirectory)/TestResults/ /p:CoverletOutputFormat=opencover'
+      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.TempDirectory)/TestResults/ /p:CoverletOutputFormat=cobertura'
       projects: '**/*.Tests/*.csproj'
+
+  - script: reportgenerator "-reports:$(Agent.TempDirectory)\TestResults\**\coverage.cobertura.xml" "-targetdir:$(Agent.TempDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+    condition: succeededOrFailed()
+    displayName: 'Create Code coverage report'
 
   - script: ls -R
     condition: succeededOrFailed()
     displayName: 'debug contents'
 
-  - script: codecov -f $(Agent.TempDirectory)/TestResults/**/*opencover*.xml
+  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Corbertura.xml
     condition: succeededOrFailed()
     displayName: 'Upload to CodeCov.io'
