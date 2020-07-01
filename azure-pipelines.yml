@@ -7,7 +7,7 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'                    # other valid values include: 'ubuntu-latest' | 'macOS-latest'
+  vmImage: 'ubuntu-latest'                    # other valid values include: 'windows-latest' | 'macOS-latest'
 
 variables:
   BuildConfiguration: 'Release'
@@ -65,21 +65,21 @@ steps:
   displayName: 'Run Tests'
   inputs:
     command: test
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)\TestResults\Coverage\'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.TempDirectory)\TestResults\Coverage\'
     projects: '**/*.Tests/*.csproj'
 
 - task: PublishCodeCoverageResults@1
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.SourcesDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(Build.TempDirectory)/**/coverage.cobertura.xml'
 
-- script: reportgenerator "-reports:$(Build.SourcesDirectory)\TestResults\Coverage\coverage.cobertura.xml" "-targetdir:$(Build.SourcesDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+- script: reportgenerator "-reports:$(Build.TempDirectory)\TestResults\Coverage\coverage.cobertura.xml" "-targetdir:$(Build.TempDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
   displayName: 'Create Code coverage report'
   
 - script: ls -R
   condition: succeededOrFailed()
   displayName: 'debug contents'
 
-- script: codecov -f $(Build.SourcesDirectory)/TestResults/Coverage/coverage.covertura.xml
+- script: codecov -f $(Build.TempDirectory)/TestResults/Coverage/coverage.covertura.xml
   displayName: 'Upload to CodeCov.io'
