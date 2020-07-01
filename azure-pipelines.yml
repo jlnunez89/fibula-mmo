@@ -7,158 +7,74 @@ trigger:
 - master
 
 pool:
-  vmImage: 'windows-latest'                    # other valid values include: 'ubuntu-latest' | 'macOS-latest'
+  name: Azure Pipelines
+  vmImage: windows-latest                     # other valid values include: 'windows-latest' | 'macOS-latest'
+  demands:
+  - msbuild
+  - visualstudio
+  - vstest
 
-variables:
-  BuildConfiguration: 'Release'
+jobs:
+- job: Build
+  variables:
+    BuildSolution: FibulaMMO.sln
+    BuildPlatform: Any CPU
+  strategy:
+    matrix:
+      Debug:
+        BuildConfiguration: Debug
+        _debugArg: '-Debug'
+      Release:
+        BuildConfiguration: Release
+        _debugArg: ''
 
-steps:
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
-  inputs:
-    version: '3.0.x'
-    packageType: runtime
-    performMultiLevelLookup: true
-    includePreviewVersions: true              # Required for preview versions
+  steps:
+  - task: UseDotNet@2
+    displayName: 'Install .NET Core SDK'
+    inputs:
+      version: '3.0.x'
+      packageType: runtime
+      performMultiLevelLookup: true
+      includePreviewVersions: true              # Required for preview versions
 
-- task: DotNetCoreCLI@2
-  displayName: 'Install Coverlet.Console'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g coverlet.console'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'Install Codecov.Tool'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g Codecov.Tool'
+  - task: DotNetCoreCLI@2
+    displayName: 'Install Codecov.Tool'
+    inputs:
+      command: custom
+      custom: tool
+      arguments: 'install -g Codecov.Tool'
 
-- task: DotNetCoreCLI@2
-  displayName: 'Install ReportGenerator'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g dotnet-reportgenerator-globaltool'
+  - task: NuGetToolInstaller@0
+    displayName: 'Use NuGet 5.3.1'
+    inputs:
+      versionSpec: 5.3.1
 
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.3.1'
-  inputs:
-    versionSpec: 5.3.1
-
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '$(BuildSolution)'
-    feedsToUse: 'config'
-    nugetConfigPath: 'NuGet.config'
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Run Tests'
-  inputs:
-    command: test
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
-    projects: '**/*.Tests/*.csproj'
-
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish code coverage report'
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'TestResults/**/coverage.cobertura.xml'
-
-- script: reportgenerator "-reports:TestResults\Coverage\coverage.cobertura.xml" "-targetdir:CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
-  displayName: 'Create Code coverage report'
+  - task: NuGetCommand@2
+    displayName: 'NuGet restore'
+    inputs:
+      restoreSolution: '$(BuildSolution)'
+      feedsToUse: 'config'
+      nugetConfigPath: 'NuGet.config'
   
-- script: ls -R# ASP.NET Core
-# Build and test ASP.NET Core projects targeting .NET Core.
-# Add steps that run tests, create a NuGet package, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/dotnet-core
+  - task: VSBuild@1
+    displayName: 'Build solution FibulaMMO.sln'
+    inputs:
+      solution: '$(BuildSolution)'
+      platform: '$(BuildPlatform)'
+      configuration: '$(BuildConfiguration)'
+      msbuildArgs: '/bl'
 
-trigger:
-- master
+  - task: DotNetCoreCLI@2
+    displayName: 'Run Tests'
+    inputs:
+      command: test
+      arguments: '--configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutput=$(Agent.TempDirectory)/TestResults/ /p:CoverletOutputFormat=opencover'
+      projects: '**/*.Tests/*.csproj'
 
-pool:
-  vmImage: 'windows-latest'                    # other valid values include: 'ubuntu-latest' | 'macOS-latest'
+  - script: ls -R
+    condition: succeededOrFailed()
+    displayName: 'debug contents'
 
-variables:
-  BuildConfiguration: 'Release'
-
-steps:
-- task: UseDotNet@2
-  displayName: 'Install .NET Core SDK'
-  inputs:
-    version: '3.0.x'
-    packageType: runtime
-    performMultiLevelLookup: true
-    includePreviewVersions: true              # Required for preview versions
-
-- task: DotNetCoreCLI@2
-  displayName: 'Install Coverlet.Console'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g coverlet.console'
-    
-- task: DotNetCoreCLI@2
-  displayName: 'Install Codecov.Tool'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g Codecov.Tool'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Install ReportGenerator'
-  inputs:
-    command: custom
-    custom: tool
-    arguments: 'install -g dotnet-reportgenerator-globaltool'
-
-- task: NuGetToolInstaller@0
-  displayName: 'Use NuGet 5.3.1'
-  inputs:
-    versionSpec: 5.3.1
-
-- task: NuGetCommand@2
-  displayName: 'NuGet restore'
-  inputs:
-    restoreSolution: '$(BuildSolution)'
-    feedsToUse: 'config'
-    nugetConfigPath: 'NuGet.config'
-
-- task: DotNetCoreCLI@2
-  displayName: Build
-  inputs:
-    command: build
-    projects: '**/*.csproj'
-    arguments: '--configuration $(BuildConfiguration)'
-
-- task: DotNetCoreCLI@2
-  displayName: 'Run Tests'
-  inputs:
-    command: test
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
-    projects: '**/*.Tests/*.csproj'
-
-- task: PublishCodeCoverageResults@1
-  displayName: 'Publish code coverage report'
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: 'TestResults/**/coverage.cobertura.xml'
-
-- script: reportgenerator "-reports:TestResults\Coverage\coverage.cobertura.xml" "-targetdir:CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
-  displayName: 'Create Code coverage report'
-  
-- script: ls -R
-  condition: succeededOrFailed()
-  displayName: 'debug contents'
-
-- script: codecov -f TestResults/Coverage/coverage.covertura.xml
-  displayName: 'Upload to CodeCov.io'
+  - script: codecov -f $(Agent.TempDirectory)/TestResults/**/*opencover*.xml
+    condition: succeededOrFailed()
+    displayName: 'Upload to CodeCov.io'
