@@ -82,10 +82,6 @@ jobs:
     condition: succeededOrFailed()
     displayName: 'Create Code coverage report'
 
-  - script: ls -R
-    condition: succeededOrFailed()
-    displayName: 'debug contents'
-
-  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Corbertura.xml
+  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml
     condition: succeededOrFailed()
     displayName: 'Upload to CodeCov.io'
