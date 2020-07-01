@@ -38,13 +38,6 @@ jobs:
       includePreviewVersions: true              # Required for preview versions
 
   - task: DotNetCoreCLI@2
-    displayName: 'Install Codecov.Tool'
-    inputs:
-      command: custom
-      custom: tool
-      arguments: 'install -g Codecov.Tool'
-
-  - task: DotNetCoreCLI@2
     displayName: 'Install ReportGenerator'
     inputs:
       command: custom
@@ -82,6 +75,6 @@ jobs:
     condition: succeededOrFailed()
     displayName: 'Create Code coverage report'
 
-  - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml
+  - script: bash <(curl -s https://codecov.io/bash)
     condition: succeededOrFailed()
     displayName: 'Upload to CodeCov.io'
