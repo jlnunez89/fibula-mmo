@@ -86,7 +86,7 @@ jobs:
     displayName: 'Upload Code Coverage report to Azure Pipelines'
     inputs:
       codecoverageTool: cobertura
-      reportDirectory: $(Agent.TempDirectory)\TestResults
+      failIfCoverageEmpty: true
       summaryFileLocation: $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml
 
   - script: codecov -f $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml -t $(CodeCov_Token)
