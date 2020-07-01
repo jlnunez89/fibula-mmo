@@ -74,7 +74,14 @@ jobs:
   - script: reportgenerator "-reports:$(Agent.TempDirectory)\TestResults\**\coverage.cobertura.xml" "-targetdir:$(Agent.TempDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
     condition: succeededOrFailed()
     displayName: 'Create Code coverage report'
+    
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Upload Code Coverage report to Azure Pipelines'
+    inputs:
+      codecoverageTool: cobertura
+      reportDirectory: $(Agent.TempDirectory)\TestResults
+      summaryFileLocation: $(Agent.TempDirectory)\CodeCoverage\Cobertura.xml
 
   - script: bash <(curl -s https://codecov.io/bash)
     condition: succeededOrFailed()
-    displayName: 'Upload to CodeCov.io'
+    displayName: 'Upload Code Coverage report to CodeCov.io'
