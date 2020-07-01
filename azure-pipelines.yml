@@ -65,21 +65,24 @@ steps:
   displayName: 'Run Tests'
   inputs:
     command: test
-    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage" /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.TempDirectory)\TestResults\Coverage\'
+    arguments: '--configuration $(BuildConfiguration) --collect:"XPlat Code Coverage"'
     projects: '**/*.Tests/*.csproj'
 
 - task: PublishCodeCoverageResults@1
+  condition: succeededOrFailed()
   displayName: 'Publish code coverage report'
   inputs:
     codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(Build.TempDirectory)/**/coverage.cobertura.xml'
+    summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
 
-- script: reportgenerator "-reports:$(Build.TempDirectory)\TestResults\Coverage\coverage.cobertura.xml" "-targetdir:$(Build.TempDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+- script: reportgenerator "-reports:$(Agent.TempDirectory)\**\coverage.cobertura.xml" "-targetdir:$(Agent.TempDirectory)\CodeCoverage" "-reporttypes:HtmlInline_AzurePipelines;Cobertura"
+  condition: succeededOrFailed()
   displayName: 'Create Code coverage report'
   
 - script: ls -R
   condition: succeededOrFailed()
   displayName: 'debug contents'
 
-- script: codecov -f $(Build.TempDirectory)/TestResults/Coverage/coverage.covertura.xml
+- script: codecov -f $(Agent.TempDirectory)\CodeCoverage\*coverage.xml
+  condition: succeededOrFailed()
   displayName: 'Upload to CodeCov.io'
