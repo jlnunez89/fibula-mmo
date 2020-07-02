@@ -230,6 +230,11 @@ namespace Fibula.Creatures
         public WalkPlan? WalkPlan { get; set; }
 
         /// <summary>
+        /// Gets a value indicating whether the creature is dead.
+        /// </summary>
+        public bool IsDead => this.Hitpoints == 0;
+
+        /// <summary>
         /// Turns this creature to a given direction.
         /// </summary>
         /// <param name="direction">The direction to turn the creature to.</param>

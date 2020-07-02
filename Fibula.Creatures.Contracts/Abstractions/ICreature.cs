@@ -116,6 +116,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         IInventory Inventory { get; }
 
         /// <summary>
+        /// Gets a value indicating whether the creature is dead.
+        /// </summary>
+        bool IsDead { get; }
+
+        /// <summary>
         /// Gets or sets this creature's walk plan.
         /// </summary>
         WalkPlan? WalkPlan { get; set; }

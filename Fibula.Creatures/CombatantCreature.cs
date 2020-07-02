@@ -115,6 +115,11 @@ namespace Fibula.Creatures
         public event OnHealthChange HealthChanged;
 
         /// <summary>
+        /// Event to call when the combatant dies.
+        /// </summary>
+        public event OnDeath Death;
+
+        /// <summary>
         /// Gets the current target combatant.
         /// </summary>
         public ICombatant AutoAttackTarget { get; private set; }
@@ -348,12 +353,16 @@ namespace Fibula.Creatures
 
             if (damageInfo.Damage < 0)
             {
-                // heal for the amount of damage.
-                this.Hitpoints = (ushort)Math.Min(this.MaxHitpoints, this.Hitpoints - damageInfo.Damage);
+                // heal instead.
+                damageInfo.Damage = Math.Max(damageInfo.Damage, this.Hitpoints - this.MaxHitpoints);
+
+                this.Hitpoints = (ushort)(this.Hitpoints - damageInfo.Damage);
             }
             else if (damageInfo.Damage > 0)
             {
-                this.Hitpoints = (ushort)Math.Max(0, this.Hitpoints - damageInfo.Damage);
+                damageInfo.Damage = Math.Min(damageInfo.Damage, this.Hitpoints);
+
+                this.Hitpoints = (ushort)(this.Hitpoints - damageInfo.Damage);
             }
 
             if (this.Hitpoints != oldHitpointsValue)
@@ -372,6 +381,11 @@ namespace Fibula.Creatures
 
                     this.damageTakenFromOthers[fromCombatantId] += (uint)damageInfo.Damage;
                 }
+            }
+
+            if (this.Hitpoints == 0)
+            {
+                this.Death?.Invoke(this);
             }
 
             return damageInfo;

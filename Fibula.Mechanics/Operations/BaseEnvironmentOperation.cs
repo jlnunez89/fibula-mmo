@@ -75,7 +75,8 @@ namespace Fibula.Mechanics.Operations
 
                 if (creature is ICombatant combatant)
                 {
-                    combatant.HealthChanged += context.CombatApi.CombatantsHealthChanged;
+                    combatant.HealthChanged += context.CombatApi.CombatantHealthChanged;
+                    combatant.Death += context.CombatApi.CombatantDeath;
                 }
 
                 /*
@@ -138,7 +139,8 @@ namespace Fibula.Mechanics.Operations
             {
                 if (creature is ICombatant combatant)
                 {
-                    combatant.HealthChanged -= context.CombatApi.CombatantsHealthChanged;
+                    combatant.HealthChanged -= context.CombatApi.CombatantHealthChanged;
+                    combatant.Death -= context.CombatApi.CombatantDeath;
                 }
 
                 /*
@@ -160,7 +162,7 @@ namespace Fibula.Mechanics.Operations
                 context.Scheduler.ScheduleEvent(
                     new CreatureRemovedNotification(
                         () => context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location),
-                        new CreatureRemovedNotificationArguments(creature, oldStackpos, AnimatedEffect.Puff)));
+                        new CreatureRemovedNotificationArguments(creature, oldStackpos)));
             }
 
             return removedFromTile;

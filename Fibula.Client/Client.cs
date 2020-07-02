@@ -108,14 +108,7 @@ namespace Fibula.Client
         /// <param name="creatureId">The id of the creature to add to the known creatures collection.</param>
         public void AddKnownCreature(uint creatureId)
         {
-            try
-            {
-                this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
-            }
-            catch
-            {
-                // happens when 2 try to add at the same time, which we don't care about.
-            }
+            this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
         }
 
         /// <summary>

@@ -28,6 +28,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         event OnHealthChange HealthChanged;
 
+        /// <summary>
+        /// Event to call when the combatant dies.
+        /// </summary>
+        event OnDeath Death;
+
         ///// <summary>
         ///// Event to call when the attack target changes.
         ///// </summary>

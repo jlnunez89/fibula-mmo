@@ -41,10 +41,10 @@ namespace Fibula.Communications.Tests
         }
 
         /// <summary>
-        /// Checks that the <see cref="DefaultPacketReader"/> calls <see cref="IPacketReader.ReadFromMessage(INetworkMessage)"/>.
+        /// Checks that the <see cref="DefaultPacketReader"/> calls <see cref="INetworkMessage.ReadAsBytesInfo"/>.
         /// </summary>
         [TestMethod]
-        public void DefaultPacketReader_CallsReadFromMessage()
+        public void DefaultPacketReader_CallsReadAsBytesInfo()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<INetworkMessage> networkMessageMock = new Mock<INetworkMessage>();
@@ -60,6 +60,8 @@ namespace Fibula.Communications.Tests
 
             Assert.IsNotNull(resultInfo);
             Assert.AreSame(bytesInfoMock.Object, resultInfo, "The information returned doesn't match.");
+
+            networkMessageMock.Verify(n => n.ReadAsBytesInfo(), Times.Once, $"Expected ReadAsBytesInfo to have been called once.");
         }
     }
 }

@@ -30,11 +30,17 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode);
 
         /// <summary>
-        /// Handles a health change from a combatant.
+        /// Handles a health change event from a combatant.
         /// </summary>
         /// <param name="combatant">The combatant who's health changed.</param>
         /// <param name="oldHealthValue">The old value of the combatant's health.</param>
-        void CombatantsHealthChanged(ICombatant combatant, ushort oldHealthValue);
+        void CombatantHealthChanged(ICombatant combatant, ushort oldHealthValue);
+
+        /// <summary>
+        /// Handles a death from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that died.</param>
+        void CombatantDeath(ICombatant combatant);
 
         /// <summary>
         /// Changes the fight, chase and safety modes of a creature.

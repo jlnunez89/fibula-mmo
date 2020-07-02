@@ -82,6 +82,11 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         /// </summary>
         CreateItem,
 
+        /// <summary>
+        /// An operation to deal with a creature's death.
+        /// </summary>
+        Death,
+
         /*
         ContainerOpen,
         ContainerClose,

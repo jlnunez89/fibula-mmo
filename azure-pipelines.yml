@@ -83,6 +83,7 @@ jobs:
     displayName: 'Create Code coverage report'
     
   - task: PublishCodeCoverageResults@1
+    condition: succeededOrFailed()
     displayName: 'Upload Code Coverage report to Azure Pipelines'
     inputs:
       codecoverageTool: cobertura

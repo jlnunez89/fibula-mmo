@@ -216,6 +216,13 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
+                case OperationType.Death:
+                    if (arguments is DeathOperationCreationArguments deathOpArgs)
+                    {
+                        return new DeathOperation(deathOpArgs.RequestorId, deathOpArgs.Creature);
+                    }
+
+                    break;
                 case OperationType.DescribeThing:
                     if (arguments is DescribeThingOperationCreationArguments describeThingOpArgs)
                     {

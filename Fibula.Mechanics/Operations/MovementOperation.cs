@@ -759,6 +759,7 @@ namespace Fibula.Mechanics.Operations
             if (toStackPosition != byte.MaxValue)
             {
                 // TODO: formally introduce async/synchronous notifications.
+                // context.Dispatcher.SendNotificationAsync(new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport));
                 new CreatureMovedNotification(
                     () => context.CreatureFinder.PlayersThatCanSee(context.Map, fromTile.Location, toLocation),
                     new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))

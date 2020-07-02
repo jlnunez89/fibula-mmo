@@ -14,8 +14,10 @@ namespace Fibula.Mechanics.Operations
 {
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
@@ -71,16 +73,25 @@ namespace Fibula.Mechanics.Operations
             // TODO: more validations missing
 
             // At this point, we're allowed to log this player out, so go for it.
+            var playerLocation = this.Player.Location;
             var removedFromMap = this.RemoveCreature(context, this.Player);
 
-            if (removedFromMap)
+            if (removedFromMap || this.Player.IsDead)
             {
-                context.CreatureManager.UnregisterCreature(this.Player);
-
                 if (this.Player.Client.Connection != null)
                 {
                     this.Player.Client.Connection.Close();
                 }
+
+                if (!this.Player.IsDead)
+                {
+                    context.Scheduler.ScheduleEvent(
+                        new GenericNotification(
+                            () => context.CreatureFinder.PlayersThatCanSee(context.Map, playerLocation),
+                            new GenericNotificationArguments(new MagicEffectPacket(playerLocation, AnimatedEffect.Puff))));
+                }
+
+                context.CreatureManager.UnregisterCreature(this.Player);
             }
         }
     }

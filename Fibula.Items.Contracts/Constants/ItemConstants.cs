@@ -35,9 +35,15 @@ namespace Fibula.Items.Contracts.Constants
         public const int MaxContainersPerCreature = 16;
 
         /// <summary>
+        /// The id of the type for a blood pool on the floor.
+        /// </summary>
+        // TODO: this id is version specific (7.72), and should be moved to somewhwere else.
+        public const ushort BloodPoolTypeId = 2886;
+
+        /// <summary>
         /// The id of the type for a blood splatter on the floor.
         /// </summary>
         // TODO: this id is version specific (7.72), and should be moved to somewhwere else.
-        public const ushort BloodSplatterTypeId = 2898;
+        public const ushort BloodSplatterTypeId = 2889;
     }
 }

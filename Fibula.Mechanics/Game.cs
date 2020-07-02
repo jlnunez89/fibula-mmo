@@ -215,16 +215,39 @@ namespace Fibula.Mechanics
         /// </summary>
         /// <param name="combatant">The combatant who's health changed.</param>
         /// <param name="oldHealthValue">The old value of the combatant's health.</param>
-        public void CombatantsHealthChanged(ICombatant combatant, ushort oldHealthValue)
+        public void CombatantHealthChanged(ICombatant combatant, ushort oldHealthValue)
         {
             if (combatant is IPlayer playerCombatant)
             {
+                // This updates the health as seen by others.
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => this.creatureManager.PlayersThatCanSee(this.map, playerCombatant.Location),
-                        new GenericNotificationArguments(
-                            new CreatureHealthPacket(playerCombatant))));
+                        new GenericNotificationArguments(new CreatureHealthPacket(playerCombatant))));
+
+                // And this updates the health of the player.
+                this.scheduler.ScheduleEvent(
+                    new GenericNotification(
+                        () => playerCombatant.YieldSingleItem(),
+                        new GenericNotificationArguments(new PlayerStatsPacket(playerCombatant))));
             }
+        }
+
+        /// <summary>
+        /// Handles a death from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that died.</param>
+        public void CombatantDeath(ICombatant combatant)
+        {
+            if (combatant is IPlayer playerCombatant)
+            {
+                this.CancelPlayerActions(playerCombatant);
+            }
+
+            var rng = new Random();
+            var deathDelay = TimeSpan.FromMilliseconds(rng.Next(2000));
+
+            this.DispatchOperation(new DeathOperationCreationArguments(requestorId: 0, combatant), deathDelay);
         }
 
         /// <summary>
@@ -478,7 +501,7 @@ namespace Fibula.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
-                        // this.SendHeartbeat(player);
+                        this.SendHeartbeat(player);
                         continue;
                     }
 
