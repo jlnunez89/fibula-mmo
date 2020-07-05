@@ -96,7 +96,7 @@ namespace Fibula.Mechanics.Operations
                 switch (this.Location.Type)
                 {
                     case LocationType.Map:
-                        thing = context.Map.GetTileAt(this.Location, out ITile targetTile) ? targetTile.ThingOnTop : null;
+                        thing = context.Map.GetTileAt(this.Location, out ITile targetTile) ? targetTile.TopThing : null;
                         break;
                     case LocationType.InsideContainer:
                         container = context.ContainerManager.FindForCreature(this.PlayerToDescribeFor.Id, this.Location.ContainerId);

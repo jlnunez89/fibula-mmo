@@ -69,17 +69,17 @@ namespace Fibula.Map.Contracts.Abstractions
         /// <summary>
         /// Gets the thing that is on top based on the tile's stack order.
         /// </summary>
-        IThing ThingOnTop { get; }
+        IThing TopThing { get; }
 
         /// <summary>
         /// Gets the creature that is on top based on the tile's stack order.
         /// </summary>
-        ICreature CreatureOnTop { get; }
+        ICreature TopCreature { get; }
 
         /// <summary>
         /// Gets the item that is on top based on the tile's stack order.
         /// </summary>
-        IItem ItemOnTop { get; }
+        IItem TopItem { get; }
 
         /// <summary>
         /// Attempts to get the tile's items to describe prioritized and ordered by their stack order.

@@ -162,18 +162,18 @@ namespace Fibula.Map
         /// <summary>
         /// Gets the thing that is on top based on the tile's stack order.
         /// </summary>
-        public IThing ThingOnTop
+        public IThing TopThing
         {
             get
             {
-                return (IThing)this.CreatureOnTop ?? this.ItemOnTop;
+                return (IThing)this.TopCreature ?? this.TopItem;
             }
         }
 
         /// <summary>
         /// Gets the creature that is on top based on the tile's stack order.
         /// </summary>
-        public ICreature CreatureOnTop
+        public ICreature TopCreature
         {
             get
             {
@@ -184,7 +184,7 @@ namespace Fibula.Map
         /// <summary>
         /// Gets the item that is on top based on the tile's stack order.
         /// </summary>
-        public IItem ItemOnTop
+        public IItem TopItem
         {
             get
             {
@@ -388,49 +388,7 @@ namespace Fibula.Map
         /// <returns>The <see cref="IThing"/> found at the index, if any was found.</returns>
         public IThing FindThingAtIndex(byte index)
         {
-            var i = this.Ground == null ? 0 : 1;
-
-            if (this.groundBorders.Any() && index < i + this.groundBorders.Count)
-            {
-                return this.groundBorders.ElementAt(index - i);
-            }
-
-            i += this.groundBorders.Count;
-
-            if (this.LiquidPool != null && index < ++i)
-            {
-                return this.LiquidPool;
-            }
-
-            if (this.stayOnTopItems.Any() && index < i + this.stayOnTopItems.Count)
-            {
-                return this.stayOnTopItems.ElementAt(index - i);
-            }
-
-            i += this.stayOnTopItems.Count;
-
-            if (this.stayOnBottomItems.Any() && index < i + this.stayOnBottomItems.Count)
-            {
-                return this.stayOnBottomItems.ElementAt(index - i);
-            }
-
-            i += this.stayOnBottomItems.Count;
-
-            if (this.creaturesOnTile.Any() && index < i + this.creaturesOnTile.Count)
-            {
-                return this.creaturesOnTile.ElementAt(index - i);
-            }
-
-            i += this.creaturesOnTile.Count;
-
-            if (this.itemsOnTile.Any() && index < i + this.itemsOnTile.Count)
-            {
-                return this.itemsOnTile.ElementAt(index - i);
-            }
-
-            i += this.itemsOnTile.Count;
-
-            return null;
+            throw new NotImplementedException();
         }
 
         /// <summary>

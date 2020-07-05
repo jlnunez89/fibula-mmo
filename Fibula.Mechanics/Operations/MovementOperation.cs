@@ -387,7 +387,7 @@ namespace Fibula.Mechanics.Operations
         private void MapToBody(IOperationContext context, ITile sourceTile, IContainerItem destinationContainer)
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
-            var itemMoving = sourceTile.ItemOnTop;
+            var itemMoving = sourceTile.TopItem;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
@@ -423,7 +423,7 @@ namespace Fibula.Mechanics.Operations
         private void MapToContainer(IOperationContext context, ITile sourceTile, IContainerItem destinationContainer)
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
-            var itemMoving = sourceTile.ItemOnTop;
+            var itemMoving = sourceTile.TopItem;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
@@ -465,7 +465,7 @@ namespace Fibula.Mechanics.Operations
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
 
-            IThing thingMoving = this.ThingMovingId != CreatureConstants.CreatureThingId ? sourceTile.ItemOnTop as IThing : sourceTile.CreatureOnTop as IThing;
+            IThing thingMoving = this.ThingMovingId != CreatureConstants.CreatureThingId ? sourceTile.TopItem as IThing : sourceTile.TopCreature as IThing;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
