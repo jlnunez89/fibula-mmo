@@ -114,17 +114,17 @@ namespace Fibula.Mechanics.Operations
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
         /// <param name="thingContainer">The first thing container to add to.</param>
-        /// <param name="addIndex">The index at which to attempt to add, only for the first attempted container.</param>
         /// <param name="remainder">The remainder content to add, which overflows to the next container in the chain.</param>
+        /// <param name="addIndex">The index at which to attempt to add, only for the first attempted container.</param>
         /// <param name="includeTileAsFallback">Optional. A value for whether to include tiles in the fallback chain.</param>
         /// <param name="requestorCreature">Optional. The creature requesting the addition of content.</param>
         /// <returns>True if the content was successfully added, false otherwise.</returns>
-        protected bool AddContentToContainerOrFallback(IOperationContext context, IThingContainer thingContainer, byte addIndex, ref IThing remainder, bool includeTileAsFallback = true, ICreature requestorCreature = null)
+        protected bool AddContentToContainerOrFallback(IOperationContext context, IThingContainer thingContainer, ref IThing remainder, byte addIndex = byte.MaxValue, bool includeTileAsFallback = true, ICreature requestorCreature = null)
         {
             context.ThrowIfNull(nameof(context));
             thingContainer.ThrowIfNull(nameof(thingContainer));
 
-            const byte FallbackIndex = 0xFF;
+            const byte FallbackIndex = byte.MaxValue;
 
             bool success = false;
             bool firstAttempt = true;
@@ -149,7 +149,7 @@ namespace Fibula.Mechanics.Operations
                     if (targetContainer is ITile targetTile)
                     {
                         new TileUpdatedNotification(
-                            () => context.CreatureFinder.PlayersThatCanSee(context.Map, targetTile.Location),
+                            () => context.Map.PlayersThatCanSee(targetTile.Location),
                             new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
                        .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
 
@@ -182,10 +182,10 @@ namespace Fibula.Mechanics.Operations
 
             message.ThrowIfNullOrWhiteSpace();
 
-            context.Scheduler.ScheduleEvent(
-                new TextMessageNotification(
-                    () => player.YieldSingleItem(),
-                    new TextMessageNotificationArguments(MessageType.StatusSmall, message)));
+            new TextMessageNotification(
+                () => player.YieldSingleItem(),
+                new TextMessageNotificationArguments(MessageType.StatusSmall, message))
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
         }
     }
 }

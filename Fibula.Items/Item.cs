@@ -196,6 +196,11 @@ namespace Fibula.Items
         }
 
         /// <summary>
+        /// Gets a value indicating whether this item is a ground aesthetic fix.
+        /// </summary>
+        public bool IsGroundFix => this.Type.Flags.Contains(ItemFlag.IsGroundFix);
+
+        /// <summary>
         /// Gets a value indicating whether this item stays on top of the stack.
         /// </summary>
         public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop);
@@ -203,7 +208,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item stays on the bottom of the stack.
         /// </summary>
-        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.IsClipped) || this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
+        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
 
         /// <summary>
         /// Gets a value indicating whether this item is a liquid pool.

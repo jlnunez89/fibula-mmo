@@ -18,6 +18,7 @@ namespace Fibula.Map.Contracts.Abstractions
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Map.Contracts.Enumerations;
 
     /// <summary>
@@ -26,14 +27,9 @@ namespace Fibula.Map.Contracts.Abstractions
     public interface ITile : IThingContainer
     {
         /// <summary>
-        /// Gets the count of creatures in this tile.
+        /// Gets the tile's creatures.
         /// </summary>
-        int CreatureCount { get; }
-
-        /// <summary>
-        /// Gets the tile's creature ids.
-        /// </summary>
-        IEnumerable<uint> CreatureIds { get; }
+        IEnumerable<ICreature> Creatures { get; }
 
         /// <summary>
         /// Gets the flags from this tile.
@@ -51,39 +47,9 @@ namespace Fibula.Map.Contracts.Abstractions
         IItem Ground { get; }
 
         /// <summary>
-        /// Gets the tile's normal items.
+        /// Gets the single liquid pool item that a tile may have.
         /// </summary>
-        IEnumerable<IItem> Items { get; }
-
-        /// <summary>
-        /// Gets the tile's 'stay-on-top' items.
-        /// </summary>
-        IEnumerable<IItem> StayOnTopItems { get; }
-
-        /// <summary>
-        /// Gets the tile's 'stay-on-bottom' items.
-        /// </summary>
-        IEnumerable<IItem> StayOnBottomItems { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this tile has events that are triggered via separation events.
-        /// </summary>
-        bool HasSeparationEvents { get; }
-
-        /// <summary>
-        /// Gets any items in the tile that have a separation event flag.
-        /// </summary>
-        IEnumerable<IItem> ItemsWithSeparation { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this tile has events that are triggered via collision evaluation.
-        /// </summary>
-        bool HasCollisionEvents { get; }
-
-        /// <summary>
-        /// Gets any items in the tile that have a collision event flag.
-        /// </summary>
-        IEnumerable<IItem> ItemsWithCollision { get; }
+        IItem LiquidPool { get; }
 
         /// <summary>
         /// Gets a value indicating whether items in this tile block throwing.
@@ -101,11 +67,26 @@ namespace Fibula.Map.Contracts.Abstractions
         bool BlocksLay { get; }
 
         /// <summary>
-        /// Checks if the tile has an item with the given type.
+        /// Gets the thing that is on top based on the tile's stack order.
         /// </summary>
-        /// <param name="typeId">The type to check for.</param>
-        /// <returns>True if the tile contains at least one item with such id, false otherwise.</returns>
-        bool HasItemWithId(ushort typeId);
+        IThing ThingOnTop { get; }
+
+        /// <summary>
+        /// Gets the creature that is on top based on the tile's stack order.
+        /// </summary>
+        ICreature CreatureOnTop { get; }
+
+        /// <summary>
+        /// Gets the item that is on top based on the tile's stack order.
+        /// </summary>
+        IItem ItemOnTop { get; }
+
+        /// <summary>
+        /// Attempts to get the tile's items to describe prioritized and ordered by their stack order.
+        /// </summary>
+        /// <param name="maxItemsToGet">The maximum number of items to include in the result.</param>
+        /// <returns>The items in the tile, split by those which are fixed and those considered normal.</returns>
+        (IEnumerable<IItem> fixedItems, IEnumerable<IItem> normalItems) GetItemsToDescribeByPriority(int maxItemsToGet = MapConstants.MaximumNumberOfThingsToDescribePerTile);
 
         /// <summary>
         /// Attempts to find an item in the tile with the given type.
@@ -115,26 +96,11 @@ namespace Fibula.Map.Contracts.Abstractions
         IItem FindItemWithId(ushort typeId);
 
         /// <summary>
-        /// Attempts to get the position in the stack for the given type id.
-        /// </summary>
-        /// <param name="typeId">The type id of the item to find.</param>
-        /// <returns>The position in the stack for the item found, or <see cref="byte.MaxValue"/> if it's not found.</returns>
-        byte GetPositionOfItemWithId(ushort typeId);
-
-        /// <summary>
         /// Attempts to get the position in the stack for the given <see cref="IThing"/>.
         /// </summary>
         /// <param name="thing">The thing to find.</param>
         /// <returns>The position in the stack for the <see cref="IThing"/>, or <see cref="byte.MaxValue"/> if its not found.</returns>
-        byte GetStackPositionOfThing(IThing thing);
-
-        /// <summary>
-        /// Attempts to get the tile's top <see cref="IThing"/> depending on the given order.
-        /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <param name="order">The order in the stack to return.</param>
-        /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
-        IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte order);
+        byte GetStackOrderOfThing(IThing thing);
 
         /// <summary>
         /// Sets a flag on this tile.

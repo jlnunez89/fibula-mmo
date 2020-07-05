@@ -48,9 +48,9 @@ namespace Fibula.Items.Contracts.Enumerations
         ChangesOnUse,
 
         /// <summary>
-        /// An item that is clipped to another.
+        /// An item that is an aesthetic fix to the ground tile.
         /// </summary>
-        IsClipped,
+        IsGroundFix,
 
         /// <summary>
         /// An item that is a container.

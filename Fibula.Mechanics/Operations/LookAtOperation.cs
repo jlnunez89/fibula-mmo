@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="DescribeThingOperation.cs" company="2Dudes">
+// <copyright file="LookAtOperation.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -32,16 +32,16 @@ namespace Fibula.Mechanics.Operations
     /// <summary>
     /// Class that represents an event for a thing description.
     /// </summary>
-    public class DescribeThingOperation : Operation
+    public class LookAtOperation : Operation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DescribeThingOperation"/> class.
+        /// Initializes a new instance of the <see cref="LookAtOperation"/> class.
         /// </summary>
         /// <param name="thingId">The id of the thing to describe.</param>
         /// <param name="location">The location where the thing to describe is.</param>
         /// <param name="stackPosition">The position in the stack at the location of the thing to describe is.</param>
         /// <param name="playerToDescribeFor">The player to describe the thing for.</param>
-        public DescribeThingOperation(ushort thingId, Location location, byte stackPosition, IPlayer playerToDescribeFor)
+        public LookAtOperation(ushort thingId, Location location, byte stackPosition, IPlayer playerToDescribeFor)
             : base(playerToDescribeFor?.Id ?? 0)
         {
             this.ThingId = thingId;
@@ -96,7 +96,7 @@ namespace Fibula.Mechanics.Operations
                 switch (this.Location.Type)
                 {
                     case LocationType.Map:
-                        thing = context.Map.GetTileAt(this.Location, out ITile targetTile) ? targetTile.GetTopThingByOrder(context.CreatureFinder, this.StackPosition) : null;
+                        thing = context.Map.GetTileAt(this.Location, out ITile targetTile) ? targetTile.ThingOnTop : null;
                         break;
                     case LocationType.InsideContainer:
                         container = context.ContainerManager.FindForCreature(this.PlayerToDescribeFor.Id, this.Location.ContainerId);
@@ -140,10 +140,10 @@ namespace Fibula.Mechanics.Operations
 
             description = $"You see {description}";
 
-            context.Scheduler.ScheduleEvent(
-                new TextMessageNotification(
-                    () => this.PlayerToDescribeFor.YieldSingleItem(),
-                    new TextMessageNotificationArguments(MessageType.DescriptionGreen, description)));
+            new TextMessageNotification(
+                () => this.PlayerToDescribeFor.YieldSingleItem(),
+                new TextMessageNotificationArguments(MessageType.DescriptionGreen, description))
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
         }
 
         private string DescribeItem(IItem itemToDescribe)

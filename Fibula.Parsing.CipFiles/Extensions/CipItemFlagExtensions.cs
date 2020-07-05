@@ -32,7 +32,7 @@ namespace Fibula.Parsing.CipFiles.Extensions
                 CipItemFlag.Bank => ItemFlag.IsGround,
                 CipItemFlag.Top => ItemFlag.StaysOnTop,
                 CipItemFlag.Bottom => ItemFlag.StaysOnBottom,
-                CipItemFlag.Clip => ItemFlag.IsClipped,
+                CipItemFlag.Clip => ItemFlag.IsGroundFix,
                 CipItemFlag.Hang => ItemFlag.IsHung,
                 CipItemFlag.Unmove => ItemFlag.IsUnmoveable,
                 CipItemFlag.Unpass => ItemFlag.BlocksWalk,

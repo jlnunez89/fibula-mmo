@@ -57,10 +57,10 @@ namespace Fibula.Mechanics.Operations
         {
             if (!this.Player.IsAllowedToLogOut)
             {
-                context.Scheduler.ScheduleEvent(
-                    new TextMessageNotification(
-                        () => this.Player.YieldSingleItem(),
-                        new TextMessageNotificationArguments(MessageType.StatusSmall, "You may not logout at this time.")));
+                new TextMessageNotification(
+                    () => this.Player.YieldSingleItem(),
+                    new TextMessageNotificationArguments(MessageType.StatusSmall, "You may not logout at this time."))
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
 
                 return;
             }
@@ -85,10 +85,10 @@ namespace Fibula.Mechanics.Operations
 
                 if (!this.Player.IsDead)
                 {
-                    context.Scheduler.ScheduleEvent(
-                        new GenericNotification(
-                            () => context.CreatureFinder.PlayersThatCanSee(context.Map, playerLocation),
-                            new GenericNotificationArguments(new MagicEffectPacket(playerLocation, AnimatedEffect.Puff))));
+                    new GenericNotification(
+                        () => context.Map.PlayersThatCanSee(playerLocation),
+                        new GenericNotificationArguments(new MagicEffectPacket(playerLocation, AnimatedEffect.Puff)))
+                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
                 }
 
                 context.CreatureManager.UnregisterCreature(this.Player);

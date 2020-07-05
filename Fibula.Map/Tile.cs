@@ -24,6 +24,7 @@ namespace Fibula.Map
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Constants;
     using Fibula.Map.Contracts.Enumerations;
 
     /// <summary>
@@ -32,9 +33,14 @@ namespace Fibula.Map
     public class Tile : ITile
     {
         /// <summary>
-        /// Stores the ids of the creatures in the tile.
+        /// The object to use as the tile lock.
         /// </summary>
-        private readonly Stack<uint> creatureIdsOnTile;
+        private readonly object tileLock;
+
+        /// <summary>
+        /// Stores the creatures on the tile.
+        /// </summary>
+        private readonly Stack<ICreature> creaturesOnTile;
 
         /// <summary>
         /// Stores the 'top' items on the tile.
@@ -47,9 +53,14 @@ namespace Fibula.Map
         private readonly Stack<IItem> stayOnBottomItems;
 
         /// <summary>
-        /// Stores the down items on the tile.
+        /// Stores the items on the tile.
         /// </summary>
         private readonly Stack<IItem> itemsOnTile;
+
+        /// <summary>
+        /// Stores the items on the tile that are ground borders.
+        /// </summary>
+        private readonly Stack<IItem> groundBorders;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Tile"/> class.
@@ -69,7 +80,9 @@ namespace Fibula.Map
             this.Flags = (byte)TileFlag.None;
             this.LastModified = DateTimeOffset.UtcNow;
 
-            this.creatureIdsOnTile = new Stack<uint>();
+            this.tileLock = new object();
+            this.groundBorders = new Stack<IItem>();
+            this.creaturesOnTile = new Stack<ICreature>();
             this.stayOnTopItems = new Stack<IItem>();
             this.stayOnBottomItems = new Stack<IItem>();
             this.itemsOnTile = new Stack<IItem>();
@@ -83,13 +96,7 @@ namespace Fibula.Map
         /// <summary>
         /// Gets the location where this entity is being carried at, which is null for tiles.
         /// </summary>
-        public Location? CarryLocation
-        {
-            get
-            {
-                return null;
-            }
-        }
+        public Location? CarryLocation => null;
 
         /// <summary>
         /// Gets the single ground item that a tile may have.
@@ -97,24 +104,14 @@ namespace Fibula.Map
         public IItem Ground { get; private set; }
 
         /// <summary>
+        /// Gets the single liquid pool item that a tile may have.
+        /// </summary>
+        public IItem LiquidPool { get; private set; }
+
+        /// <summary>
         /// Gets the tile's creature ids.
         /// </summary>
-        public IEnumerable<uint> CreatureIds => this.creatureIdsOnTile;
-
-        /// <summary>
-        /// Gets the tile's 'stay-on-top' items.
-        /// </summary>
-        public IEnumerable<IItem> StayOnTopItems => this.stayOnTopItems;
-
-        /// <summary>
-        /// Gets the tile's 'stay-on-bottom' items.
-        /// </summary>
-        public IEnumerable<IItem> StayOnBottomItems => this.stayOnBottomItems;
-
-        /// <summary>
-        /// Gets the tile's normal items.
-        /// </summary>
-        public IEnumerable<IItem> Items => this.itemsOnTile;
+        public IEnumerable<ICreature> Creatures => this.creaturesOnTile;
 
         /// <summary>
         /// Gets the flags from this tile.
@@ -127,106 +124,14 @@ namespace Fibula.Map
         public DateTimeOffset LastModified { get; private set; }
 
         /// <summary>
-        /// Gets the count of creatures in this tile.
-        /// </summary>
-        public int CreatureCount => this.creatureIdsOnTile.Count;
-
-        /// <summary>
-        /// Gets a value indicating whether this tile has events that are triggered via collision evaluation.
-        /// </summary>
-        public bool HasCollisionEvents
-        {
-            get
-            {
-                return (this.Ground != null && this.Ground.HasCollision) || this.StayOnTopItems.Any(i => i.HasCollision) || this.stayOnBottomItems.Any(i => i.HasCollision) || this.Items.Any(i => i.HasCollision);
-            }
-        }
-
-        /// <summary>
-        /// Gets any items in the tile that have a collision event flag.
-        /// </summary>
-        public IEnumerable<IItem> ItemsWithCollision
-        {
-            get
-            {
-                var items = new List<IItem>();
-
-                if (this.Ground.HasCollision)
-                {
-                    items.Add(this.Ground);
-                }
-
-                lock (this.stayOnTopItems)
-                {
-                    items.AddRange(this.stayOnTopItems.Where(i => i.HasCollision));
-                }
-
-                lock (this.stayOnBottomItems)
-                {
-                    items.AddRange(this.stayOnBottomItems.Where(i => i.HasCollision));
-                }
-
-                lock (this.itemsOnTile)
-                {
-                    items.AddRange(this.itemsOnTile.Where(i => i.HasCollision));
-                }
-
-                return items;
-            }
-        }
-
-        /// <summary>
-        /// Gets a value indicating whether this tile has events that are triggered via separation events.
-        /// </summary>
-        public bool HasSeparationEvents
-        {
-            get
-            {
-                return (this.Ground != null && this.Ground.HasSeparation) || this.StayOnTopItems.Any(i => i.HasSeparation) || this.stayOnBottomItems.Any(i => i.HasSeparation) || this.Items.Any(i => i.HasSeparation);
-            }
-        }
-
-        /// <summary>
-        /// Gets any items in the tile that have a separation event flag.
-        /// </summary>
-        public IEnumerable<IItem> ItemsWithSeparation
-        {
-            get
-            {
-                var items = new List<IItem>();
-
-                if (this.Ground.HasSeparation)
-                {
-                    items.Add(this.Ground);
-                }
-
-                lock (this.stayOnTopItems)
-                {
-                    items.AddRange(this.stayOnTopItems.Where(i => i.HasSeparation));
-                }
-
-                lock (this.stayOnBottomItems)
-                {
-                    items.AddRange(this.stayOnBottomItems.Where(i => i.HasSeparation));
-                }
-
-                lock (this.itemsOnTile)
-                {
-                    items.AddRange(this.itemsOnTile.Where(i => i.HasSeparation));
-                }
-
-                return items;
-            }
-        }
-
-        /// <summary>
         /// Gets a value indicating whether items in this tile block throwing.
         /// </summary>
         public bool BlocksThrow
         {
             get
             {
-                return (this.Ground != null && this.Ground.BlocksThrow) || this.StayOnTopItems.Any(i => i.BlocksThrow) || this.StayOnBottomItems.Any(i => i.BlocksThrow) || this.Items.Any(i => i.BlocksThrow);
+                // TODO: handle setting this as the items get added/removed to avoid constant calculation.
+                return (this.Ground != null && this.Ground.BlocksThrow) || this.stayOnTopItems.Any(i => i.BlocksThrow) || this.stayOnBottomItems.Any(i => i.BlocksThrow) || this.itemsOnTile.Any(i => i.BlocksThrow);
             }
         }
 
@@ -237,7 +142,8 @@ namespace Fibula.Map
         {
             get
             {
-                return (this.Ground != null && this.Ground.BlocksPass) || this.CreatureIds.Any() || this.StayOnTopItems.Any(i => i.BlocksPass) || this.StayOnBottomItems.Any(i => i.BlocksPass) || this.Items.Any(i => i.BlocksPass);
+                // TODO: handle setting this as the items get added/removed to avoid constant calculation.
+                return (this.Ground != null && this.Ground.BlocksPass) || this.Creatures.Any() || this.stayOnTopItems.Any(i => i.BlocksPass) || this.stayOnBottomItems.Any(i => i.BlocksPass) || this.itemsOnTile.Any(i => i.BlocksPass);
             }
         }
 
@@ -248,8 +154,120 @@ namespace Fibula.Map
         {
             get
             {
-                return (this.Ground != null && this.Ground.BlocksLay) || this.StayOnTopItems.Any(i => i.BlocksLay) || this.StayOnBottomItems.Any(i => i.BlocksLay) || this.Items.Any(i => i.BlocksLay);
+                // TODO: handle setting this as the items get added/removed to avoid constant calculation.
+                return (this.Ground != null && this.Ground.BlocksLay) || this.stayOnTopItems.Any(i => i.BlocksLay) || this.stayOnBottomItems.Any(i => i.BlocksLay) || this.itemsOnTile.Any(i => i.BlocksLay);
             }
+        }
+
+        /// <summary>
+        /// Gets the thing that is on top based on the tile's stack order.
+        /// </summary>
+        public IThing ThingOnTop
+        {
+            get
+            {
+                return (IThing)this.CreatureOnTop ?? this.ItemOnTop;
+            }
+        }
+
+        /// <summary>
+        /// Gets the creature that is on top based on the tile's stack order.
+        /// </summary>
+        public ICreature CreatureOnTop
+        {
+            get
+            {
+                return this.creaturesOnTile.FirstOrDefault();
+            }
+        }
+
+        /// <summary>
+        /// Gets the item that is on top based on the tile's stack order.
+        /// </summary>
+        public IItem ItemOnTop
+        {
+            get
+            {
+                return this.itemsOnTile.FirstOrDefault() ??
+                       this.stayOnBottomItems.FirstOrDefault() ??
+                       this.stayOnTopItems.FirstOrDefault() ??
+                       this.LiquidPool ??
+                       this.groundBorders.FirstOrDefault() ??
+                       this.Ground;
+            }
+        }
+
+        /// <summary>
+        /// Attempts to get the tile's items to describe prioritized and ordered by their stack order.
+        /// </summary>
+        /// <param name="maxItemsToGet">The maximum number of items to include in the result.</param>
+        /// <returns>The items in the tile, split by those which are fixed and those considered normal.</returns>
+        /// <remarks>
+        /// The algorithm prioritizes the returned items in the following order:
+        /// 1) Ground item.
+        /// 2) Clipped items.
+        /// 3) Stay-on-bottom items.
+        /// 4) Stay-on-top items.
+        /// 5) Normal items.
+        /// </remarks>
+        public (IEnumerable<IItem> fixedItems, IEnumerable<IItem> normalItems) GetItemsToDescribeByPriority(int maxItemsToGet = MapConstants.MaximumNumberOfThingsToDescribePerTile)
+        {
+            var fixedItemList = new List<IItem>();
+            var itemList = new List<IItem>();
+            var addedCount = 0;
+
+            lock (this.tileLock)
+            {
+                if (this.Ground != null)
+                {
+                    fixedItemList.Add(this.Ground);
+                    addedCount++;
+                }
+
+                if (addedCount < maxItemsToGet && this.groundBorders.Any())
+                {
+                    var itemsToAdd = this.groundBorders.Take(maxItemsToGet - addedCount);
+
+                    fixedItemList.AddRange(itemsToAdd);
+
+                    addedCount += itemsToAdd.Count();
+                }
+
+                if (this.LiquidPool != null)
+                {
+                    fixedItemList.Add(this.LiquidPool);
+                    addedCount++;
+                }
+
+                if (addedCount < maxItemsToGet && this.stayOnTopItems.Any())
+                {
+                    var itemsToAdd = this.stayOnTopItems.Take(maxItemsToGet - addedCount);
+
+                    fixedItemList.AddRange(itemsToAdd);
+
+                    addedCount += itemsToAdd.Count();
+                }
+
+                if (addedCount < maxItemsToGet && this.stayOnBottomItems.Any())
+                {
+                    var itemsToAdd = this.stayOnBottomItems.Take(maxItemsToGet - addedCount);
+
+                    fixedItemList.AddRange(itemsToAdd);
+
+                    addedCount += itemsToAdd.Count();
+                }
+
+                if (addedCount < maxItemsToGet && this.itemsOnTile.Any())
+                {
+                    var itemsToAdd = this.itemsOnTile.Take(maxItemsToGet - addedCount);
+
+                    itemList.AddRange(itemsToAdd);
+
+                    addedCount += itemsToAdd.Count();
+                }
+            }
+
+            return (fixedItemList, itemList);
         }
 
         /// <summary>
@@ -259,63 +277,6 @@ namespace Fibula.Map
         public void SetFlag(TileFlag flag)
         {
             this.Flags |= (byte)flag;
-        }
-
-        /// <summary>
-        /// Checks if the tile has an item with the given type.
-        /// </summary>
-        /// <param name="typeId">The type to check for.</param>
-        /// <returns>True if the tile contains at least one item with such id, false otherwise.</returns>
-        public bool HasItemWithId(ushort typeId)
-        {
-            if (this.Ground != null && this.Ground.ThingId == typeId)
-            {
-                return true;
-            }
-
-            lock (this.stayOnTopItems)
-            {
-                if (this.stayOnTopItems.Any())
-                {
-                    foreach (var item in this.stayOnTopItems)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            lock (this.stayOnBottomItems)
-            {
-                if (this.stayOnBottomItems.Any())
-                {
-                    foreach (var item in this.stayOnBottomItems)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            lock (this.itemsOnTile)
-            {
-                if (this.itemsOnTile.Any())
-                {
-                    foreach (var item in this.itemsOnTile)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return true;
-                        }
-                    }
-                }
-            }
-
-            return false;
         }
 
         /// <summary>
@@ -330,124 +291,15 @@ namespace Fibula.Map
                 return this.Ground;
             }
 
-            lock (this.stayOnTopItems)
+            if (this.LiquidPool != null && this.LiquidPool.ThingId == typeId)
             {
-                if (this.stayOnTopItems.Any())
-                {
-                    foreach (var item in this.stayOnTopItems)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return item;
-                        }
-                    }
-                }
+                return this.LiquidPool;
             }
 
-            lock (this.stayOnBottomItems)
+            lock (this.tileLock)
             {
-                if (this.stayOnBottomItems.Any())
-                {
-                    foreach (var item in this.stayOnBottomItems)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return item;
-                        }
-                    }
-                }
+                return this.groundBorders.FirstOrDefault(i => i.ThingId == typeId) ?? this.stayOnTopItems.FirstOrDefault(i => i.ThingId == typeId) ?? this.stayOnBottomItems.FirstOrDefault(i => i.ThingId == typeId) ?? this.itemsOnTile.FirstOrDefault(i => i.ThingId == typeId);
             }
-
-            lock (this.itemsOnTile)
-            {
-                if (this.itemsOnTile.Any())
-                {
-                    foreach (var item in this.itemsOnTile)
-                    {
-                        if (item.ThingId == typeId)
-                        {
-                            return item;
-                        }
-                    }
-                }
-            }
-
-            return null;
-        }
-
-        /// <summary>
-        /// Attempts to remove an item with a given type in this tile.
-        /// </summary>
-        /// <param name="typeId">The type to look for an remove.</param>
-        /// <returns>True if such an item was found and removed, false otherwise.</returns>
-        public bool RemoveItemWithId(ushort typeId)
-        {
-            bool itemRemoved = false;
-
-            if (this.Ground != null && this.Ground.ThingId == typeId)
-            {
-                this.Ground = null;
-
-                itemRemoved = true;
-            }
-            else if (this.InternalRemoveStayOnTopItemById(typeId) || this.InternalRemoveStayOnBottomItemById(typeId) || this.InternalRemoveItemById(typeId))
-            {
-                itemRemoved = true;
-            }
-
-            if (itemRemoved)
-            {
-                // Update the tile's version so that it invalidates the cache.
-                this.LastModified = DateTimeOffset.UtcNow;
-            }
-
-            return itemRemoved;
-        }
-
-        /// <summary>
-        /// Attempts to get the position in the stack for the given type id.
-        /// </summary>
-        /// <param name="typeId">The type id of the item to find.</param>
-        /// <returns>The position in the stack for the item found, or <see cref="byte.MaxValue"/> if it's not found.</returns>
-        public byte GetPositionOfItemWithId(ushort typeId)
-        {
-            byte n = 0;
-
-            if (this.Ground != null && typeId == this.Ground.Type.TypeId)
-            {
-                return n;
-            }
-
-            foreach (var item in this.StayOnTopItems)
-            {
-                ++n;
-                if (typeId == item.Type.TypeId)
-                {
-                    return n;
-                }
-            }
-
-            foreach (var item in this.StayOnBottomItems)
-            {
-                ++n;
-                if (typeId == item.Type.TypeId)
-                {
-                    return n;
-                }
-            }
-
-            n += (byte)this.CreatureIds.Count();
-
-            foreach (var item in this.Items)
-            {
-                ++n;
-                if (typeId == item.Type.TypeId)
-                {
-                    return n;
-                }
-            }
-
-            return byte.MaxValue;
         }
 
         /// <summary>
@@ -455,96 +307,130 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="thing">The thing to find.</param>
         /// <returns>The position in the stack for the <see cref="IThing"/>, or <see cref="byte.MaxValue"/> if its not found.</returns>
-        public byte GetStackPositionOfThing(IThing thing)
+        public byte GetStackOrderOfThing(IThing thing)
         {
             thing.ThrowIfNull(nameof(thing));
 
-            byte n = 0;
+            byte i = (byte)(this.Ground != null ? 1 : 0);
 
             if (this.Ground != null && thing == this.Ground)
             {
-                return n;
+                return i;
             }
 
-            foreach (var item in this.StayOnTopItems)
+            foreach (var item in this.groundBorders)
             {
-                ++n;
                 if (thing == item)
                 {
-                    return n;
+                    return i;
                 }
+
+                i++;
             }
 
-            foreach (var item in this.StayOnBottomItems)
+            if (this.LiquidPool != null)
             {
-                ++n;
+                if (thing == this.LiquidPool)
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            foreach (var item in this.stayOnTopItems)
+            {
                 if (thing == item)
                 {
-                    return n;
+                    return i;
                 }
+
+                i++;
             }
 
-            foreach (var creatureId in this.CreatureIds)
+            foreach (var item in this.stayOnBottomItems)
             {
-                ++n;
-                if (thing is ICreature creature && creature.Id == creatureId)
-                {
-                    return n;
-                }
-            }
-
-            foreach (var item in this.Items)
-            {
-                ++n;
                 if (thing == item)
                 {
-                    return n;
+                    return i;
                 }
+
+                i++;
+            }
+
+            foreach (var creatureOnTile in this.creaturesOnTile)
+            {
+                if (thing is ICreature creature && creature == creatureOnTile)
+                {
+                    return i;
+                }
+
+                i++;
+            }
+
+            foreach (var item in this.itemsOnTile)
+            {
+                if (thing == item)
+                {
+                    return i;
+                }
+
+                i++;
             }
 
             return byte.MaxValue;
         }
 
         /// <summary>
-        /// Attempts to get the tile's top <see cref="IThing"/> depending on the given position.
+        /// Attempts to find an <see cref="IThing"/> whitin this container.
         /// </summary>
-        /// <param name="creatureFinder">A reference to the creature finder.</param>
-        /// <param name="stackPos">The zero-based position in the full stack to return.</param>
-        /// <returns>A reference to the <see cref="IThing"/>, or null if nothing corresponds to that position.</returns>
-        public IThing GetTopThingByOrder(ICreatureFinder creatureFinder, byte stackPos)
+        /// <param name="index">The index at which to look for the <see cref="IThing"/>.</param>
+        /// <returns>The <see cref="IThing"/> found at the index, if any was found.</returns>
+        public IThing FindThingAtIndex(byte index)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
-
             var i = this.Ground == null ? 0 : 1;
 
-            if (this.stayOnTopItems.Any() && stackPos < i + this.stayOnTopItems.Count)
+            if (this.groundBorders.Any() && index < i + this.groundBorders.Count)
             {
-                return this.stayOnTopItems.ElementAt(Math.Max(0, stackPos - i));
+                return this.groundBorders.ElementAt(index - i);
+            }
+
+            i += this.groundBorders.Count;
+
+            if (this.LiquidPool != null && index < ++i)
+            {
+                return this.LiquidPool;
+            }
+
+            if (this.stayOnTopItems.Any() && index < i + this.stayOnTopItems.Count)
+            {
+                return this.stayOnTopItems.ElementAt(index - i);
             }
 
             i += this.stayOnTopItems.Count;
 
-            if (this.stayOnBottomItems.Any() && stackPos < i + this.stayOnBottomItems.Count)
+            if (this.stayOnBottomItems.Any() && index < i + this.stayOnBottomItems.Count)
             {
-                return this.stayOnBottomItems.ElementAt(Math.Max(0, stackPos - i));
+                return this.stayOnBottomItems.ElementAt(index - i);
             }
 
             i += this.stayOnBottomItems.Count;
 
-            if (this.creatureIdsOnTile.Any() && stackPos < i + this.creatureIdsOnTile.Count)
+            if (this.creaturesOnTile.Any() && index < i + this.creaturesOnTile.Count)
             {
-                return creatureFinder.FindCreatureById(this.creatureIdsOnTile.ElementAt(Math.Max(0, stackPos - i)));
+                return this.creaturesOnTile.ElementAt(index - i);
             }
 
-            i += this.creatureIdsOnTile.Count;
+            i += this.creaturesOnTile.Count;
 
-            if (this.itemsOnTile.Any() && stackPos < i + this.itemsOnTile.Count)
+            if (this.itemsOnTile.Any() && index < i + this.itemsOnTile.Count)
             {
-                return this.itemsOnTile.ElementAt(Math.Max(0, stackPos - i));
+                return this.itemsOnTile.ElementAt(index - i);
             }
 
-            // when nothing else works, return the ground (if any).
-            return this.Ground;
+            i += this.itemsOnTile.Count;
+
+            return null;
         }
 
         /// <summary>
@@ -552,9 +438,9 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
         /// <param name="thing">The <see cref="IThing"/> to add to the container.</param>
-        /// <param name="index">Optional. The index at which to add the <see cref="IThing"/>. Defaults to 0xFF, which instructs to add the <see cref="IThing"/> at any free index.</param>
+        /// <param name="index">Optional. The index at which to add the <see cref="IThing"/>. Defaults to byte.MaxValue, which instructs to add the <see cref="IThing"/> at any free index.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</returns>
-        public (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = 0xFF)
+        public (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = byte.MaxValue)
         {
             thingFactory.ThrowIfNull(nameof(thingFactory));
 
@@ -563,36 +449,35 @@ namespace Fibula.Map
                 throw new ArgumentException($"The {nameof(thingFactory)} must be derived of type {nameof(IItemFactory)}.");
             }
 
-            if (thing is ICreature creature)
+            lock (this.tileLock)
             {
-                lock (this.creatureIdsOnTile)
+                if (thing is ICreature creature)
                 {
-                    this.creatureIdsOnTile.Push(creature.Id);
+                    this.creaturesOnTile.Push(creature);
                 }
-            }
-            else if (thing is IItem item)
-            {
-                if (item.IsGround)
+                else if (thing is IItem item)
                 {
-                    this.Ground = item;
-                }
-                else if (item.StaysOnTop)
-                {
-                    lock (this.stayOnTopItems)
+                    if (item.IsGround)
+                    {
+                        this.Ground = item;
+                    }
+                    else if (item.IsGroundFix)
+                    {
+                        this.groundBorders.Push(item);
+                    }
+                    else if (item.IsLiquidPool)
+                    {
+                        this.LiquidPool = item;
+                    }
+                    else if (item.StaysOnTop)
                     {
                         this.stayOnTopItems.Push(item);
                     }
-                }
-                else if (item.StaysOnBottom)
-                {
-                    lock (this.stayOnBottomItems)
+                    else if (item.StaysOnBottom)
                     {
                         this.stayOnBottomItems.Push(item);
                     }
-                }
-                else
-                {
-                    lock (this.itemsOnTile)
+                    else
                     {
                         var remainingAmountToAdd = item.Amount;
 
@@ -604,7 +489,7 @@ namespace Fibula.Map
                                 break;
                             }
 
-                            var existingItem = this.itemsOnTile.Count > 0 ? this.itemsOnTile.Peek() as IItem : null;
+                            var existingItem = this.itemsOnTile.Count > 0 ? this.itemsOnTile.Peek() : null;
 
                             // Check if there is an existing top item and if it is of the same type.
                             if (existingItem == null || existingItem.Type != item.Type || existingItem.Amount >= ItemConstants.MaximumAmountOfCummulativeItems)
@@ -634,11 +519,11 @@ namespace Fibula.Map
                             item.ParentContainer = this;
                         }
                     }
-                }
 
-                // Update the tile's version so that it invalidates the cache.
-                // TOOD: if we start caching creatures, move to outer scope.
-                this.LastModified = DateTimeOffset.UtcNow;
+                    // Update the tile's version so that it invalidates the cache.
+                    // TOOD: if we start caching creatures, move to outer scope.
+                    this.LastModified = DateTimeOffset.UtcNow;
+                }
             }
 
             if (thing != null && thing is IContainedThing containedThing)
@@ -654,10 +539,10 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
         /// <param name="thing">The <see cref="IThing"/> to remove from the container.</param>
-        /// <param name="index">Optional. The index from which to remove the <see cref="IThing"/>. Defaults to 0xFF, which instructs to remove the <see cref="IThing"/> if found at any index.</param>
+        /// <param name="index">Optional. The index from which to remove the <see cref="IThing"/>. Defaults to byte.MaxValue, which instructs to remove the <see cref="IThing"/> if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="thing"/> to remove.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</returns>
-        public (bool result, IThing remainder) RemoveContent(IThingFactory thingFactory, ref IThing thing, byte index = 0xFF, byte amount = 1)
+        public (bool result, IThing remainder) RemoveContent(IThingFactory thingFactory, ref IThing thing, byte index = byte.MaxValue, byte amount = 1)
         {
             thingFactory.ThrowIfNull(nameof(thingFactory));
 
@@ -675,7 +560,7 @@ namespace Fibula.Map
 
             if (thing is ICreature creature)
             {
-                return (this.RemoveCreature(creature.Id), null);
+                return (this.InternalRemoveCreature(creature), null);
             }
             else if (thing is IItem item)
             {
@@ -703,7 +588,7 @@ namespace Fibula.Map
                 }
                 else
                 {
-                    lock (this.itemsOnTile)
+                    lock (this.tileLock)
                     {
                         if ((!item.IsCumulative && amount > 1) || (item.IsCumulative && item.Amount < amount))
                         {
@@ -752,10 +637,10 @@ namespace Fibula.Map
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
         /// <param name="fromThing">The <see cref="IThing"/> to remove from the container.</param>
         /// <param name="toThing">The <see cref="IThing"/> to add to the container.</param>
-        /// <param name="index">Optional. The index from which to replace the <see cref="IThing"/>. Defaults to 0xFF, which instructs to replace the <see cref="IThing"/> if found at any index.</param>
+        /// <param name="index">Optional. The index from which to replace the <see cref="IThing"/>. Defaults to byte.MaxValue, which instructs to replace the <see cref="IThing"/> if found at any index.</param>
         /// <param name="amount">Optional. The amount of the <paramref name="fromThing"/> to replace.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</returns>
-        public (bool result, IThing remainderToChange) ReplaceContent(IThingFactory thingFactory, IThing fromThing, IThing toThing, byte index = 0xFF, byte amount = 1)
+        public (bool result, IThing remainderToChange) ReplaceContent(IThingFactory thingFactory, IThing fromThing, IThing toThing, byte index = byte.MaxValue, byte amount = 1)
         {
             (bool removeSuccessful, IThing removeRemainder) = this.RemoveContent(thingFactory, ref fromThing, index, amount);
 
@@ -766,7 +651,7 @@ namespace Fibula.Map
 
             if (removeRemainder != null)
             {
-                (bool addedRemainder, IThing remainderOfRemainder) = this.AddContent(thingFactory, removeRemainder, 0xFF);
+                (bool addedRemainder, IThing remainderOfRemainder) = this.AddContent(thingFactory, removeRemainder, byte.MaxValue);
 
                 if (!addedRemainder)
                 {
@@ -792,88 +677,48 @@ namespace Fibula.Map
             }
 
             blocking |= (this.Ground != null && this.Ground.IsPathBlocking(avoidTypes)) ||
-                        this.CreatureIds.Any() ||
-                        this.StayOnTopItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
-                        this.StayOnBottomItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
-                        this.Items.Any(i => i.IsPathBlocking(avoidTypes));
+                        this.Creatures.Any() ||
+                        this.stayOnTopItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
+                        this.stayOnBottomItems.Any(i => i.IsPathBlocking(avoidTypes)) ||
+                        this.itemsOnTile.Any(i => i.IsPathBlocking(avoidTypes));
 
             return blocking;
         }
 
         /// <summary>
-        /// Attempts to find an <see cref="IThing"/> whitin this container.
-        /// </summary>
-        /// <param name="index">The index at which to look for the <see cref="IThing"/>.</param>
-        /// <returns>The <see cref="IThing"/> found at the index, if any was found.</returns>
-        public IThing FindThingAtIndex(byte index)
-        {
-            var i = this.Ground == null ? 0 : 1;
-
-            if (this.stayOnTopItems.Any() && index < i + this.stayOnTopItems.Count)
-            {
-                return this.stayOnTopItems.ElementAt(Math.Max(0, index - i));
-            }
-
-            i += this.stayOnTopItems.Count;
-
-            if (this.stayOnBottomItems.Any() && index < i + this.stayOnBottomItems.Count)
-            {
-                return this.stayOnBottomItems.ElementAt(Math.Max(0, index - i));
-            }
-
-            i += this.stayOnBottomItems.Count;
-
-            if (this.creatureIdsOnTile.Any() && index < i + this.creatureIdsOnTile.Count)
-            {
-                // Not an item.
-                return null;
-            }
-
-            i += this.creatureIdsOnTile.Count;
-
-            if (this.itemsOnTile.Any() && index < i + this.itemsOnTile.Count)
-            {
-                return this.itemsOnTile.ElementAt(Math.Max(0, index - i));
-            }
-
-            // when nothing else works, return the ground (if any).
-            return this.Ground;
-        }
-
-        /// <summary>
         /// Attempts to remove the given creature id from the stack of this tile.
         /// </summary>
-        /// <param name="creatureId">The id of the creature to remove.</param>
+        /// <param name="creature">The creature to attempt to remove.</param>
         /// <returns>True if the id is found and removed, false otherwise.</returns>
-        private bool RemoveCreature(uint creatureId)
+        private bool InternalRemoveCreature(ICreature creature)
         {
-            var tempStack = new Stack<uint>();
+            var tempStack = new Stack<ICreature>();
 
-            uint removedCreatureId = default;
+            ICreature removedCreature = null;
 
-            lock (this.creatureIdsOnTile)
+            lock (this.tileLock)
             {
-                while (removedCreatureId == default && this.creatureIdsOnTile.Count > 0)
+                while (removedCreature == default && this.creaturesOnTile.Count > 0)
                 {
-                    var temp = this.creatureIdsOnTile.Pop();
+                    var tempCreature = this.creaturesOnTile.Pop();
 
-                    if (creatureId == temp)
+                    if (creature == tempCreature)
                     {
-                        removedCreatureId = creatureId;
+                        removedCreature = creature;
                     }
                     else
                     {
-                        tempStack.Push(temp);
+                        tempStack.Push(tempCreature);
                     }
                 }
 
                 while (tempStack.Count > 0)
                 {
-                    this.creatureIdsOnTile.Push(tempStack.Pop());
+                    this.creaturesOnTile.Push(tempStack.Pop());
                 }
             }
 
-            return removedCreatureId != default;
+            return removedCreature != null;
         }
 
         /// <summary>
@@ -892,7 +737,7 @@ namespace Fibula.Map
 
             bool wasRemoved = false;
 
-            lock (this.stayOnTopItems)
+            lock (this.tileLock)
             {
                 while (!wasRemoved && this.stayOnTopItems.Count > 0)
                 {
@@ -940,7 +785,7 @@ namespace Fibula.Map
 
             bool wasRemoved = false;
 
-            lock (this.stayOnBottomItems)
+            lock (this.tileLock)
             {
                 while (!wasRemoved && this.stayOnBottomItems.Count > 0)
                 {
@@ -988,7 +833,7 @@ namespace Fibula.Map
 
             bool wasRemoved = false;
 
-            lock (this.stayOnTopItems)
+            lock (this.tileLock)
             {
                 while (!wasRemoved && this.stayOnTopItems.Count > 0)
                 {
@@ -1036,7 +881,7 @@ namespace Fibula.Map
 
             bool wasRemoved = false;
 
-            lock (this.stayOnBottomItems)
+            lock (this.tileLock)
             {
                 while (!wasRemoved && this.stayOnBottomItems.Count > 0)
                 {
@@ -1084,7 +929,7 @@ namespace Fibula.Map
 
             bool wasRemoved = false;
 
-            lock (this.itemsOnTile)
+            lock (this.tileLock)
             {
                 while (!wasRemoved && this.itemsOnTile.Count > 0)
                 {

@@ -71,12 +71,12 @@ namespace Fibula.Mechanics.Operations
             // Send the notification if applicable.
             if (context.Map.GetTileAt(this.Creature.Location, out ITile playerTile))
             {
-                var playerStackPos = playerTile.GetStackPositionOfThing(this.Creature);
+                var playerStackPos = playerTile.GetStackOrderOfThing(this.Creature);
 
-                context.Scheduler.ScheduleEvent(
-                    new CreatureTurnedNotification(
-                        () => context.CreatureFinder.PlayersThatCanSee(context.Map, this.Creature.Location),
-                        new CreatureTurnedNotificationArguments(this.Creature, playerStackPos)));
+                new CreatureTurnedNotification(
+                    () => context.Map.PlayersThatCanSee(this.Creature.Location),
+                    new CreatureTurnedNotificationArguments(this.Creature, playerStackPos))
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
         }
     }

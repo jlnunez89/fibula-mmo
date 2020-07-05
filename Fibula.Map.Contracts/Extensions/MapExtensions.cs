@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CreatureFinderExtensions.cs" company="2Dudes">
+// <copyright file="MapExtensions.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -21,23 +21,21 @@ namespace Fibula.Map.Contracts.Extensions
     using Fibula.Map.Contracts.Constants;
 
     /// <summary>
-    /// Helper class that provides extensions for the <see cref="ICreatureFinder"/> implementations.
+    /// Helper class that provides extensions for the <see cref="IMap"/> implementations.
     /// </summary>
-    public static class CreatureFinderExtensions
+    public static class MapExtensions
     {
         /// <summary>
         /// Gets the ids of any creatures that can see the given locations.
         /// </summary>
-        /// <param name="creatureFinder">The reference to the creature finder.</param>
         /// <param name="map">A reference to the map.</param>
         /// <param name="locations">The locations to check if players can see.</param>
         /// <returns>A collection of connections.</returns>
-        public static IEnumerable<ICreature> CreaturesThatCanSee(this ICreatureFinder creatureFinder, IMap map, params Location[] locations)
+        public static IEnumerable<ICreature> CreaturesThatCanSee(this IMap map, params Location[] locations)
         {
-            creatureFinder.ThrowIfNull(nameof(creatureFinder));
             map.ThrowIfNull(nameof(map));
 
-            var creatureIds = new HashSet<uint>();
+            var creatures = new HashSet<ICreature>();
 
             foreach (var location in locations)
             {
@@ -57,18 +55,16 @@ namespace Fibula.Map.Contracts.Extensions
                             continue;
                         }
 
-                        foreach (var creatureId in tile.CreatureIds)
+                        foreach (var creature in tile.Creatures)
                         {
-                            creatureIds.Add(creatureId);
+                            creatures.Add(creature);
                         }
                     }
                 }
             }
 
-            foreach (var creatureId in creatureIds)
+            foreach (var creature in creatures)
             {
-                var creature = creatureFinder.FindCreatureById(creatureId);
-
                 if (creature == null || !locations.Any(loc => creature.CanSee(loc)))
                 {
                     continue;
@@ -81,13 +77,12 @@ namespace Fibula.Map.Contracts.Extensions
         /// <summary>
         /// Gets the ids of any players that can see the given locations.
         /// </summary>
-        /// <param name="creatureFinder">The reference to the creature finder.</param>
         /// <param name="map">A reference to the map.</param>
         /// <param name="locations">The locations to check if players can see.</param>
         /// <returns>A collection of connections.</returns>
-        public static IEnumerable<IPlayer> PlayersThatCanSee(this ICreatureFinder creatureFinder, IMap map, params Location[] locations)
+        public static IEnumerable<IPlayer> PlayersThatCanSee(this IMap map, params Location[] locations)
         {
-            var creaturesThatCanSee = creatureFinder.CreaturesThatCanSee(map, locations);
+            var creaturesThatCanSee = map.CreaturesThatCanSee(locations);
 
             return creaturesThatCanSee.OfType<IPlayer>();
         }

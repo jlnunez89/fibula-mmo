@@ -104,10 +104,10 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
-            // We should try to stop any pending attack operation before carrying this one out.
+            // We should stop any pending attack operation before carrying this one out.
             if (this.Attacker.PendingAutoAttackOperation != null && this.Attacker.PendingAutoAttackOperation != this)
             {
-                // Attempt to cancel it first, and remove the pointer to it.
+                // Cancel it first, and remove the pointer to it.
                 if (this.Attacker.PendingAutoAttackOperation.Cancel())
                 {
                     this.Attacker.PendingAutoAttackOperation = null;
@@ -118,6 +118,7 @@ namespace Fibula.Mechanics.Operations
 
             // Pre-checks.
             var nullAttacker = this.Attacker == null;
+            var isTargetAlreadyDead = this.Target.IsDead;
             var isCorrectTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
             var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= 1;
             var inRange = nullAttacker || (distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0);
@@ -126,7 +127,7 @@ namespace Fibula.Mechanics.Operations
 
             try
             {
-                if (!isCorrectTarget)
+                if (!isCorrectTarget || isTargetAlreadyDead)
                 {
                     // We're not attacking the correct target, so stop right here.
                     return;
@@ -255,16 +256,19 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            context.Scheduler.ScheduleEvent(
-                new GenericNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, this.Target.Location),
-                    new GenericNotificationArguments(packetsToSend.ToArray())));
+            new GenericNotification(
+                () => context.Map.PlayersThatCanSee(this.Target.Location),
+                new GenericNotificationArguments(packetsToSend.ToArray()))
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
 
             if (this.Target is IPlayer targetPlayer)
             {
                 var squarePacket = new SquarePacket(this.Attacker.Id, SquareColor.Black);
 
-                context.Scheduler.ScheduleEvent(new GenericNotification(() => targetPlayer.YieldSingleItem(), new GenericNotificationArguments(squarePacket)));
+                new GenericNotification(
+                    () => targetPlayer.YieldSingleItem(),
+                    new GenericNotificationArguments(squarePacket))
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 
             return true;

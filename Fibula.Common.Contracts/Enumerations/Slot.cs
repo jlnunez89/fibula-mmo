@@ -81,6 +81,6 @@ namespace Fibula.Common.Contracts.Enumerations
         /// <summary>
         /// Special slot that is an unset or invalid value.
         /// </summary>
-        UnsetInvalid = 0xFF,
+        UnsetInvalid = byte.MaxValue,
     }
 }

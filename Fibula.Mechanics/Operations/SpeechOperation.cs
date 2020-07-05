@@ -109,10 +109,10 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            context.Scheduler.ScheduleEvent(
-                new CreatureSpeechNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, requestor.Location),
-                    new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content)));
+            new CreatureSpeechNotification(
+                    () => context.Map.PlayersThatCanSee(requestor.Location),
+                    new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content))
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
         }
     }
 }

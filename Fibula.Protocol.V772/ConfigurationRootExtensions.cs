@@ -33,12 +33,12 @@ namespace Fibula.Protocol.V772
     public static class ConfigurationRootExtensions
     {
         /// <summary>
-        /// Adds all the game components related to protocol 7.72 contained in this library to the services collection.
+        /// Adds all the game server components related to protocol 7.72 contained in this library to the services collection.
         /// It also configures any <see cref="IOptions{T}"/> required by any such components.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration loaded.</param>
-        public static void AddProtocol772GameComponents(this IServiceCollection services, IConfiguration configuration)
+        public static void AddProtocol772GameServerComponents(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
@@ -153,12 +153,12 @@ namespace Fibula.Protocol.V772
         }
 
         /// <summary>
-        /// Adds all the management components related to protocol 7.72 contained in this library to the services collection.
+        /// Adds all the gateway server components related to protocol 7.72 contained in this library to the services collection.
         /// It also configures any <see cref="IOptions{T}"/> required by any such components.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration loaded.</param>
-        public static void AddProtocol772GatewayComponents(this IServiceCollection services, IConfiguration configuration)
+        public static void AddProtocol772GatewayServerComponents(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 

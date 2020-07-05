@@ -60,7 +60,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 message.AddByte(0x01); // skip count
             }
 
-            message.AddByte(0xFF);
+            message.AddByte(byte.MaxValue);
         }
     }
 }

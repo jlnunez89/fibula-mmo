@@ -16,17 +16,14 @@ namespace Fibula.Mechanics.Operations
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
-    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
 
@@ -69,34 +66,30 @@ namespace Fibula.Mechanics.Operations
         {
             if (this.Creature is IPlayer player)
             {
-                context.Scheduler.ScheduleEvent(
-                    new TextMessageNotification(
-                        () => player.YieldSingleItem(),
-                        new TextMessageNotificationArguments(MessageType.EventAdvance, "You are dead.")));
+                new TextMessageNotification(
+                    () => player.YieldSingleItem(),
+                    new TextMessageNotificationArguments(MessageType.EventAdvance, "You are dead."))
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
 
             // Remove the creature...
             if (context.Map.GetTileAt(this.Creature.Location) is ITile creatureTile)
             {
-                var removedFromMap = this.RemoveCreature(context, this.Creature);
-
-                if (removedFromMap)
+                // Add the corpse.
+                var corpseCreationArguments = new ItemCreationArguments()
                 {
-                    // Add the corpse.
-                    var corpseCreationArguments = new ItemCreationArguments()
-                    {
-                        TypeId = this.Creature.Corpse,
-                    };
+                    TypeId = this.Creature.Corpse,
+                };
 
-                    if (context.ItemFactory.Create(corpseCreationArguments) is IThing corpseCreated &&
-                        this.AddContentToContainerOrFallback(context, creatureTile, 0xFF, ref corpseCreated))
-                    {
-                        context.GameApi.CreateItemAtLocation(
-                            creatureTile.Location,
-                            ItemConstants.BloodPoolTypeId,
-                            new KeyValuePair<ItemAttribute, IConvertible>(ItemAttribute.LiquidType, LiquidType.Blood));
-                    }
+                if (context.ItemFactory.Create(corpseCreationArguments) is IThing corpseCreated && this.AddContentToContainerOrFallback(context, creatureTile, ref corpseCreated))
+                {
+                    context.GameApi.CreateItemAtLocation(
+                        creatureTile.Location,
+                        ItemConstants.BloodPoolTypeId,
+                        new KeyValuePair<ItemAttribute, IConvertible>(ItemAttribute.LiquidType, LiquidType.Blood));
                 }
+
+                this.RemoveCreature(context, this.Creature);
             }
         }
     }

@@ -156,6 +156,6 @@ namespace Fibula.Common.Contracts.Enumerations
         /// No animation.
         /// Don't send to client.
         /// </summary>
-        None = 0xFF,
+        None = byte.MaxValue,
     }
 }

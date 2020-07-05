@@ -387,25 +387,14 @@ namespace Fibula.Mechanics.Operations
         private void MapToBody(IOperationContext context, ITile sourceTile, IContainerItem destinationContainer)
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
-            var thingMoving = sourceTile.GetTopThingByOrder(context.CreatureFinder, this.FromIndex);
-
-            if (!(thingMoving is IItem item))
-            {
-                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
-
-                return;
-            }
-
-            var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+            var itemMoving = sourceTile.ItemOnTop;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
-            var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
-            var locationsMatch = thingMoving?.Location == this.FromLocation;
+            var thingCanBeMoved = itemMoving != null && (itemMoving == requestor || itemMoving.CanBeMoved);
+            var locationsMatch = itemMoving?.Location == this.FromLocation;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
-            var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
-                                                item.Amount >= this.Amount;
+            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.ThingId && itemMoving.Amount >= this.Amount;
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
@@ -424,7 +413,7 @@ namespace Fibula.Mechanics.Operations
             {
                 this.DispatchTextNotification(context, OperationMessage.TooFarAway);
             }
-            else if (!this.PerformItemMovement(context, item, sourceTile, destinationContainer, toIndex: 0, amountToMove: this.Amount, requestorCreature: requestor))
+            else if (!this.PerformItemMovement(context, itemMoving, sourceTile, destinationContainer, toIndex: 0, amountToMove: this.Amount, requestorCreature: requestor))
             {
                 // Something else went wrong.
                 this.DispatchTextNotification(context);
@@ -434,26 +423,15 @@ namespace Fibula.Mechanics.Operations
         private void MapToContainer(IOperationContext context, ITile sourceTile, IContainerItem destinationContainer)
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
-            var thingMoving = sourceTile.GetTopThingByOrder(context.CreatureFinder, this.FromIndex);
-
-            if (!(thingMoving is IItem item))
-            {
-                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
-
-                return;
-            }
-
-            var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+            var itemMoving = sourceTile.ItemOnTop;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
-            var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
-            var locationsMatch = thingMoving?.Location == this.FromLocation;
+            var thingCanBeMoved = itemMoving != null && itemMoving.CanBeMoved;
+            var locationsMatch = itemMoving?.Location == this.FromLocation;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var creatureHasDestinationContainerOpen = destinationContainer != null;
-            var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
-                                                item.Amount >= this.Amount;
+            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.ThingId && itemMoving.Amount >= this.Amount;
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
@@ -476,7 +454,7 @@ namespace Fibula.Mechanics.Operations
             {
                 this.DispatchTextNotification(context, OperationMessage.TooFarAway);
             }
-            else if (!this.PerformItemMovement(context, item, sourceTile, destinationContainer, toIndex: this.ToLocation.ContainerIndex, amountToMove: this.Amount, requestorCreature: requestor))
+            else if (!this.PerformItemMovement(context, itemMoving, sourceTile, destinationContainer, toIndex: this.ToLocation.ContainerIndex, amountToMove: this.Amount, requestorCreature: requestor))
             {
                 // Something else went wrong.
                 this.DispatchTextNotification(context);
@@ -487,20 +465,14 @@ namespace Fibula.Mechanics.Operations
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
 
-            IThing thingMoving = this.FromIndex != 0xFF ?
-                sourceTile.GetTopThingByOrder(context.CreatureFinder, this.FromIndex)
-                :
-                this.ThingMovingId != CreatureConstants.CreatureThingId ?
-                    (IThing)sourceTile.FindItemWithId(this.ThingMovingId)
-                    :
-                    context.CreatureFinder.FindCreatureById(this.FromCreatureId);
+            IThing thingMoving = this.ThingMovingId != CreatureConstants.CreatureThingId ? sourceTile.ItemOnTop as IThing : sourceTile.CreatureOnTop as IThing;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
             var destinationHasGround = destinationTile?.Ground != null;
             var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
             var locationsMatch = thingMoving?.Location == this.FromLocation;
-            var isIntendedThing = thingMoving?.ThingId == this.ThingMovingId;
+            var isIntendedThing = this.ThingMovingId != CreatureConstants.CreatureThingId ? thingMoving?.ThingId == this.ThingMovingId : (thingMoving as ICreature)?.Id == this.FromCreatureId;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var canThrowBetweenLocations = isTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.Map, this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
@@ -520,22 +492,13 @@ namespace Fibula.Mechanics.Operations
             else if (thingMoving is ICreature creature)
             {
                 var distanceBetweenLocations = this.FromLocation - this.ToLocation;
-                var creatureStackPos = sourceTile?.GetStackPositionOfThing(creature);
 
                 // More pre-conditions.
                 var canThrowThatFar = isTeleport || requestor == null || (distanceBetweenLocations.MaxValueIn2D <= 1 && distanceBetweenLocations.Z == 0);
                 var creatureAvoidsDestination = !isTeleport && requestor != null && requestor != creature && destinationTile.IsPathBlocking(/*this.Requestor.DamageTypesToAvoid*/);
                 var destinationIsObstructed = !isTeleport && distanceBetweenLocations.Z == 0 && (destinationTile.BlocksLay || destinationTile.BlocksPass);
-                var sourceTileHasThing = creatureStackPos != byte.MaxValue &&
-                                         sourceTile.GetTopThingByOrder(context.CreatureFinder, creatureStackPos.Value) is ICreature &&
-                                         this.Amount == 1;
 
-                if (!sourceTileHasThing)
-                {
-                    // Silent fail.
-                    return;
-                }
-                else if (creatureAvoidsDestination)
+                if (creatureAvoidsDestination)
                 {
                     this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
                 }
@@ -574,15 +537,13 @@ namespace Fibula.Mechanics.Operations
             }
             else if (thingMoving is IItem item)
             {
-                var itemStackPos = sourceTile?.GetStackPositionOfThing(item);
+                var itemStackPos = sourceTile?.GetStackOrderOfThing(item);
                 var distanceBetweenLocations = (requestor?.Location ?? this.FromLocation) - this.ToLocation;
                 var distanceFromSource = (requestor?.Location ?? this.FromLocation) - this.FromLocation;
 
                 // More pre-conditions.
                 var itemCanBeMoved = item.CanBeMoved;
-                var sourceTileHasEnoughItemAmount = itemStackPos != byte.MaxValue &&
-                                                    sourceTile.GetTopThingByOrder(context.CreatureFinder, itemStackPos.Value) == item &&
-                                                    item.Amount >= this.Amount;
+                var sourceTileHasEnoughItemAmount = this.ThingMovingId == item.ThingId && item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
                 var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.Flags.Contains(ItemFlag.BlocksWalk) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
 
@@ -631,9 +592,9 @@ namespace Fibula.Mechanics.Operations
         /// <param name="requestorCreature">Optional. The creature that this movement is being performed in behalf of, if any.</param>
         /// <returns>True if the movement was successfully performed, false otherwise.</returns>
         /// <remarks>Changes game state, should only be performed after all pertinent validations happen.</remarks>
-        private bool PerformItemMovement(IOperationContext context, IItem item, IThingContainer fromThingContainer, IThingContainer toThingContainer, byte fromIndex = 0xFF, byte toIndex = 0xFF, byte amountToMove = 1, ICreature requestorCreature = null)
+        private bool PerformItemMovement(IOperationContext context, IItem item, IThingContainer fromThingContainer, IThingContainer toThingContainer, byte fromIndex = byte.MaxValue, byte toIndex = byte.MaxValue, byte amountToMove = 1, ICreature requestorCreature = null)
         {
-            const byte FallbackIndex = 0xFF;
+            const byte FallbackIndex = byte.MaxValue;
 
             if (item == null || fromThingContainer == null || toThingContainer == null)
             {
@@ -654,7 +615,7 @@ namespace Fibula.Mechanics.Operations
                 return false;
             }
 
-            IThing itemAsThing = item as IThing;
+            IThing itemAsThing = item;
 
             (bool removeSuccessful, IThing removeRemainder) = fromThingContainer.RemoveContent(context.ItemFactory, ref itemAsThing, fromIndex, amount: amountToMove);
 
@@ -668,7 +629,7 @@ namespace Fibula.Mechanics.Operations
             {
                 // TODO: formally introduce async/synchronous notifications.
                 new TileUpdatedNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, fromTile.Location),
+                    () => context.Map.PlayersThatCanSee(fromTile.Location),
                     new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }
@@ -683,12 +644,12 @@ namespace Fibula.Mechanics.Operations
                 toIndex--;
             }
 
-            if (!this.AddContentToContainerOrFallback(context, toThingContainer, toIndex, ref addRemainder, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
+            if (!this.AddContentToContainerOrFallback(context, toThingContainer, ref addRemainder, toIndex, includeTileAsFallback: false, requestorCreature) || addRemainder != null)
             {
                 // There is some rollback to do, as we failed to add the entire thing.
                 IThing rollbackRemainder = addRemainder ?? item;
 
-                if (!this.AddContentToContainerOrFallback(context, fromThingContainer, FallbackIndex, ref rollbackRemainder, includeTileAsFallback: true, requestorCreature))
+                if (!this.AddContentToContainerOrFallback(context, fromThingContainer, ref rollbackRemainder, FallbackIndex, includeTileAsFallback: true, requestorCreature))
                 {
                     context.Logger.Error($"Rollback failed on {nameof(this.PerformItemMovement)}. Thing: {rollbackRemainder.DescribeForLogger()}");
                 }
@@ -717,7 +678,7 @@ namespace Fibula.Mechanics.Operations
             var moveDirection = fromTile.Location.DirectionTo(toLocation, true);
 
             // Try to figure out the position in the stack of the creature.
-            var fromTileStackPos = fromTile.GetStackPositionOfThing(creature);
+            var fromTileStackPos = fromTile.GetStackOrderOfThing(creature);
 
             if (fromTileStackPos == byte.MaxValue)
             {
@@ -725,7 +686,7 @@ namespace Fibula.Mechanics.Operations
                 return false;
             }
 
-            IThing creatureAsThing = creature as IThing;
+            IThing creatureAsThing = creature;
 
             // Do the actual move first.
             (bool removeSuccessful, IThing removeRemainder) = fromTile.RemoveContent(context.ItemFactory, ref creatureAsThing);
@@ -749,7 +710,7 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            var toStackPosition = toTile.GetStackPositionOfThing(creature);
+            var toStackPosition = toTile.GetStackOrderOfThing(creature);
 
             // Then deal with the consequences of the move.
             creature.TurnToDirection(moveDirection.GetClientSafeDirection());
@@ -761,7 +722,7 @@ namespace Fibula.Mechanics.Operations
                 // TODO: formally introduce async/synchronous notifications.
                 // context.Dispatcher.SendNotificationAsync(new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport));
                 new CreatureMovedNotification(
-                    () => context.CreatureFinder.PlayersThatCanSee(context.Map, fromTile.Location, toLocation),
+                    () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
                     new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
             }

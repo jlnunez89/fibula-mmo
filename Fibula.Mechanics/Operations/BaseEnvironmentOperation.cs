@@ -15,7 +15,6 @@ namespace Fibula.Mechanics.Operations
     using System;
     using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
@@ -97,17 +96,17 @@ namespace Fibula.Mechanics.Operations
 
                 context.Logger.Debug($"Placed {creature.Name} at {targetTile.Location}.");
 
-                var placedAtStackPos = targetTile.GetStackPositionOfThing(creature);
+                var placedAtStackPos = targetTile.GetStackOrderOfThing(creature);
 
                 new CreatureMovedNotification(
                     () =>
                     {
                         if (creature is IPlayer player)
                         {
-                            return context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location).Except(player.YieldSingleItem());
+                            return context.Map.PlayersThatCanSee(creature.Location).Except(player.YieldSingleItem());
                         }
 
-                        return context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location);
+                        return context.Map.PlayersThatCanSee(creature.Location);
                     },
                     new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, creature.Location, placedAtStackPos, wasTeleport: true))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
@@ -129,9 +128,9 @@ namespace Fibula.Mechanics.Operations
                 return false;
             }
 
-            var oldStackpos = fromTile.GetStackPositionOfThing(creature);
+            var oldStackpos = fromTile.GetStackOrderOfThing(creature);
 
-            IThing creatureAsThing = creature as IThing;
+            IThing creatureAsThing = creature;
 
             var removedFromTile = fromTile.RemoveContent(context.ItemFactory, ref creatureAsThing).result;
 
@@ -159,10 +158,21 @@ namespace Fibula.Mechanics.Operations
                 }
                 */
 
-                context.Scheduler.ScheduleEvent(
+                // TODO: formally introduce async/synchronous notifications.
+                if (creature is IPlayer player)
+                {
                     new CreatureRemovedNotification(
-                        () => context.CreatureFinder.PlayersThatCanSee(context.Map, creature.Location),
-                        new CreatureRemovedNotificationArguments(creature, oldStackpos)));
+                            () => context.Map.PlayersThatCanSee(creature.Location).Union(player.YieldSingleItem()),
+                            new CreatureRemovedNotificationArguments(creature, oldStackpos))
+                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                }
+                else
+                {
+                    new CreatureRemovedNotification(
+                            () => context.Map.PlayersThatCanSee(creature.Location),
+                            new CreatureRemovedNotificationArguments(creature, oldStackpos))
+                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                }
             }
 
             return removedFromTile;

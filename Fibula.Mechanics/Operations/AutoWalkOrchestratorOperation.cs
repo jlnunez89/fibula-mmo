@@ -61,17 +61,18 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             if (this.Creature == null ||
+                this.Creature.IsDead ||
                 this.Creature.WalkPlan == null ||
                 this.Creature.WalkPlan.Value.State != WalkPlanState.InProgress ||
                 !this.Creature.WalkPlan.Value.GoingAsIntended(this.Creature.Location) ||
                 this.Creature.WalkPlan.Value.Waypoints.Count == 0)
             {
+                this.RepeatAfter = TimeSpan.Zero;
+
                 return;
             }
 
             var nextLocation = this.Creature.WalkPlan.Value.Waypoints.First.Value;
-
-            // Normalize delay to protect against negative time spans.
             var scheduleDelay = TimeSpan.Zero;
 
             var autoWalkOp = context.OperationFactory.Create(
@@ -79,7 +80,7 @@ namespace Fibula.Mechanics.Operations
                     this.Creature.Id,
                     CreatureConstants.CreatureThingId,
                     this.Creature.Location,
-                    0xFF,
+                    byte.MaxValue,
                     this.Creature.Id,
                     nextLocation,
                     this.Creature.Id));

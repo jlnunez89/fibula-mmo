@@ -147,7 +147,7 @@ namespace Fibula.Map
                         {
                             if (currentSkipCount < byte.MaxValue)
                             {
-                                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
+                                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, byte.MaxValue });
                             }
 
                             foreach (var segment in segmentsFromTile)
@@ -162,7 +162,7 @@ namespace Fibula.Map
 
                         if (++currentSkipCount == byte.MaxValue)
                         {
-                            lastSegment = lastSegment.Append(new byte[] { byte.MaxValue, 0xFF });
+                            lastSegment = lastSegment.Append(new byte[] { byte.MaxValue, byte.MaxValue });
                         }
                     }
                 }
@@ -170,7 +170,7 @@ namespace Fibula.Map
 
             if (++currentSkipCount < byte.MaxValue)
             {
-                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, 0xFF });
+                lastSegment = lastSegment.Append(new byte[] { currentSkipCount, byte.MaxValue });
             }
 
             return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);

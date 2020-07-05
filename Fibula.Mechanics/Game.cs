@@ -61,6 +61,9 @@ namespace Fibula.Mechanics
         /// </summary>
         private readonly IScheduler scheduler;
 
+        /// <summary>
+        /// The current map descriptor.
+        /// </summary>
         private readonly IMapDescriptor mapDescriptor;
 
         /// <summary>
@@ -102,7 +105,6 @@ namespace Fibula.Mechanics
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
-        /// <param name="mapLoader">A reference to the map loader in use.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="map">A reference to the map.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
@@ -113,7 +115,6 @@ namespace Fibula.Mechanics
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
-            IMapLoader mapLoader,
             IMapDescriptor mapDescriptor,
             IMap map,
             ICreatureManager creatureManager,
@@ -124,7 +125,6 @@ namespace Fibula.Mechanics
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
-            mapLoader.ThrowIfNull(nameof(mapLoader));
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             map.ThrowIfNull(nameof(map));
             creatureManager.ThrowIfNull(nameof(creatureManager));
@@ -144,8 +144,6 @@ namespace Fibula.Mechanics
             this.containerManager = containerManager;
             this.scheduler = scheduler;
 
-            // Load some catalogs.
-
             // Initialize game vars.
             this.worldInfo = new WorldInformation()
             {
@@ -157,7 +155,7 @@ namespace Fibula.Mechanics
             // Hook some event handlers.
             this.scheduler.EventFired += this.ProcessFiredEvent;
 
-            // mapLoader.WindowLoaded += this.OnMapWindowLoaded;
+            // this.map.Loader.WindowLoaded += this.OnMapWindowLoaded;
         }
 
         /// <summary>
@@ -222,7 +220,7 @@ namespace Fibula.Mechanics
                 // This updates the health as seen by others.
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
-                        () => this.creatureManager.PlayersThatCanSee(this.map, playerCombatant.Location),
+                        () => this.map.PlayersThatCanSee(playerCombatant.Location),
                         new GenericNotificationArguments(new CreatureHealthPacket(playerCombatant))));
 
                 // And this updates the health of the player.
@@ -359,15 +357,15 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Describes a thing for a player.
+        /// Describes a thing for a player that is looking at it.
         /// </summary>
         /// <param name="thingId">The id of the thing to describe.</param>
         /// <param name="location">The location of the thing to describe.</param>
         /// <param name="stackPosition">The position in the stack within the location of the thing to describe.</param>
         /// <param name="player">The player for which to describe the thing for.</param>
-        public void DescribeFor(ushort thingId, Location location, byte stackPosition, IPlayer player)
+        public void LookAt(ushort thingId, Location location, byte stackPosition, IPlayer player)
         {
-            this.DispatchOperation(new DescribeThingOperationCreationArguments(thingId, location, stackPosition, player));
+            this.DispatchOperation(new LookAtOperationCreationArguments(thingId, location, stackPosition, player));
         }
 
         /// <summary>
@@ -501,7 +499,7 @@ namespace Fibula.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
-                        this.SendHeartbeat(player);
+                        // this.SendHeartbeat(player);
                         continue;
                     }
 

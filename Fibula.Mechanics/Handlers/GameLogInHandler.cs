@@ -140,7 +140,7 @@ namespace Fibula.Mechanics.Handlers
                     else if (otherCharacterOnline != null)
                     {
                         // TODO: hardcoded messages.
-                        return new GameServerDisconnectPacket("Another character in your account is online.").YieldSingleItem();
+                        // return new GameServerDisconnectPacket("Another character in your account is online.").YieldSingleItem();
                     }
                     else if (this.Game.WorldInfo.Status == WorldState.Closed)
                     {
@@ -158,7 +158,6 @@ namespace Fibula.Mechanics.Handlers
             client.ClientInformation.Type = Enum.IsDefined(typeof(AgentType), loginInfo.ClientOs) ? (AgentType)loginInfo.ClientOs : AgentType.Windows;
             client.ClientInformation.Version = loginInfo.ClientVersion.ToString();
 
-            // TODO: pull these values from the character record.
             this.Game.LogPlayerIn(client, character);
 
             // save any changes to the entities.

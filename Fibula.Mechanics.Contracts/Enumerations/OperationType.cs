@@ -35,7 +35,7 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         /// <summary>
         /// An operation to describe a thing.
         /// </summary>
-        DescribeThing,
+        LookAt,
 
         /// <summary>
         /// A movement operation.

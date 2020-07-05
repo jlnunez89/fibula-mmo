@@ -121,7 +121,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="location">The location of the thing to describe.</param>
         /// <param name="stackPosition">The position in the stack within the location of the thing to describe.</param>
         /// <param name="player">The player for which to describe the thing for.</param>
-        void DescribeFor(ushort thingId, Location location, byte stackPosition, IPlayer player);
+        void LookAt(ushort thingId, Location location, byte stackPosition, IPlayer player);
 
         /// <summary>
         /// Logs a player into the game.

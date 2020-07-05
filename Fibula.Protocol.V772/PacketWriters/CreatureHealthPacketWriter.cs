@@ -12,7 +12,6 @@
 
 namespace Fibula.Protocol.V772.PacketWriters
 {
-    using System;
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;

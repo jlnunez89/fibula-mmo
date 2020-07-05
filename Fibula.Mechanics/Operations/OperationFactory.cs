@@ -223,14 +223,14 @@ namespace Fibula.Mechanics.Operations
                     }
 
                     break;
-                case OperationType.DescribeThing:
-                    if (arguments is DescribeThingOperationCreationArguments describeThingOpArgs)
+                case OperationType.LookAt:
+                    if (arguments is LookAtOperationCreationArguments lookAtOpArgs)
                     {
-                        return new DescribeThingOperation(
-                                describeThingOpArgs.ThingId,
-                                describeThingOpArgs.Location,
-                                describeThingOpArgs.StackPosition,
-                                describeThingOpArgs.PlayerToDescribeFor);
+                        return new LookAtOperation(
+                                lookAtOpArgs.ThingId,
+                                lookAtOpArgs.Location,
+                                lookAtOpArgs.StackPosition,
+                                lookAtOpArgs.PlayerToDescribeFor);
                     }
 
                     break;

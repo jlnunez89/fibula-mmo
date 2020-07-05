@@ -151,6 +151,11 @@ namespace Fibula.Items.Contracts.Abstractions
         bool HasSeparation { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this item is clipped to the ground.
+        /// </summary>
+        bool IsGroundFix { get; }
+
+        /// <summary>
         /// Attempts to join an item to this item's content at the default index.
         /// </summary>
         /// <param name="otherItem">The item to join with.</param>

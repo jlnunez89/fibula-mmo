@@ -85,9 +85,9 @@ namespace Fibula.Items
         /// </summary>
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
         /// <param name="thing">The <see cref="IThing"/> to add to the container.</param>
-        /// <param name="index">Optional. The index at which to add the <see cref="IThing"/>. Defaults to 0xFF, which instructs to add the <see cref="IThing"/> at any free index.</param>
+        /// <param name="index">Optional. The index at which to add the <see cref="IThing"/>. Defaults to byte.MaxValue, which instructs to add the <see cref="IThing"/> at any free index.</param>
         /// <returns>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</returns>
-        public override (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = 0xFF)
+        public override (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = byte.MaxValue)
         {
             thingFactory.ThrowIfNull(nameof(thingFactory));
             thing.ThrowIfNull(nameof(thing));

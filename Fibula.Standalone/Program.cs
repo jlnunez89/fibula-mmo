@@ -25,7 +25,6 @@ namespace Fibula.Standalone
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
-    using Fibula.Communications.Packets.Incoming;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
@@ -216,8 +215,8 @@ namespace Fibula.Standalone
             // ConfigureExtraServices(hostingContext, services);
 
             // Choose a server version here.
-            services.AddProtocol772GameComponents(hostingContext.Configuration);
-            services.AddProtocol772GatewayComponents(hostingContext.Configuration);
+            services.AddProtocol772GameServerComponents(hostingContext.Configuration);
+            services.AddProtocol772GatewayServerComponents(hostingContext.Configuration);
         }
 
         private static void AddHandlers(this IServiceCollection services)
@@ -266,8 +265,6 @@ namespace Fibula.Standalone
         {
             services.AddSingleton<Game>();
             services.AddSingleton<IGame>(s => s.GetService<Game>());
-
-            // services.AddSingleton<ICombatApi>(s => s.GetService<Game>());
 
             // Those executing should derive from IHostedService and be added using AddHostedService.
             services.AddHostedService(s => s.GetService<Game>());

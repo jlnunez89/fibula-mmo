@@ -13,7 +13,7 @@
 namespace Fibula.Common.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the possible blood types.
+    /// Enumerates the possible damage types to avoid.
     /// </summary>
     public enum AvoidDamageType : byte
     {

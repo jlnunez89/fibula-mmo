@@ -68,7 +68,7 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            this.Game.DescribeFor(lookAtInfo.ThingId, lookAtInfo.Location, lookAtInfo.StackPosition, player);
+            this.Game.LookAt(lookAtInfo.ThingId, lookAtInfo.Location, lookAtInfo.StackPosition, player);
 
             return null;
         }

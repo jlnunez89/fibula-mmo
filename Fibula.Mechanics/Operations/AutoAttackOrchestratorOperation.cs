@@ -57,9 +57,18 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
-            // We should stop this recurrent operation if there is no longer a target.
+            // We should stop this recurrent operation if there is no longer a target or it is dead.
             if (this.Attacker.AutoAttackTarget == null)
             {
+                this.RepeatAfter = TimeSpan.Zero;
+
+                return;
+            }
+
+            if (this.Attacker.AutoAttackTarget.IsDead)
+            {
+                this.Attacker.SetAttackTarget(null);
+
                 return;
             }
 

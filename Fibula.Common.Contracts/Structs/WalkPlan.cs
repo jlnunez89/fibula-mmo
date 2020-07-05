@@ -16,7 +16,6 @@ namespace Fibula.Common.Contracts
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
-    using Microsoft.EntityFrameworkCore.Internal;
 
     /// <summary>
     /// Class that represents a walk plan.

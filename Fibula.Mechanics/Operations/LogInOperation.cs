@@ -113,19 +113,19 @@ namespace Fibula.Mechanics.Operations
 
             // TODO: In addition, we need to send the player's inventory, the first time login message + outfit window here if applicable.
             // And any VIP records here.
-            context.Scheduler.ScheduleEvent(
-                new GenericNotification(
-                    () => player.YieldSingleItem(),
-                    new GenericNotificationArguments(
-                        new PlayerLoginPacket(player.Id, player),
-                        new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
-                        new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
-                        new PlayerStatsPacket(player),
-                        new PlayerSkillsPacket(player),
-                        new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
-                        new CreatureLightPacket(player),
-                        new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
-                        new PlayerConditionsPacket(player))));
+            new GenericNotification(
+                () => player.YieldSingleItem(),
+                new GenericNotificationArguments(
+                    new PlayerLoginPacket(player.Id, player),
+                    new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
+                    new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
+                    new PlayerStatsPacket(player),
+                    new PlayerSkillsPacket(player),
+                    new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
+                    new CreatureLightPacket(player),
+                    new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
+                    new PlayerConditionsPacket(player)))
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
         }
     }
 }

@@ -62,7 +62,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 for (var i = 0; i < 32; i++)
                 {
                     // TODO: Actually send individual permissions flags
-                    message.AddByte(0xFF);
+                    message.AddByte(byte.MaxValue);
                 }
             }
         }

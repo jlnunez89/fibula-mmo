@@ -23,7 +23,7 @@ namespace Fibula.Map.Contracts.Constants
         /// <summary>
         /// The maximum number of <see cref="IThing"/>s to describe per tile.
         /// </summary>
-        public const int MaximumNumberOfThingsToDescribePerTile = 9;
+        public const int MaximumNumberOfThingsToDescribePerTile = 10;
 
         /// <summary>
         /// The default window size in the X coordinate.

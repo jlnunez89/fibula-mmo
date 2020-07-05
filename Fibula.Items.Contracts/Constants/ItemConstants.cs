@@ -12,8 +12,6 @@
 
 namespace Fibula.Items.Contracts.Constants
 {
-    using Fibula.Common.Contracts.Enumerations;
-
     /// <summary>
     /// Static class that contains constants regarding items.
     /// </summary>
@@ -27,7 +25,7 @@ namespace Fibula.Items.Contracts.Constants
         /// <summary>
         /// The position to use for unset or new containers.
         /// </summary>
-        public const byte UnsetContainerPosition = 0xFF;
+        public const byte UnsetContainerPosition = byte.MaxValue;
 
         /// <summary>
         /// The maximum number of containers to maintain per creature.

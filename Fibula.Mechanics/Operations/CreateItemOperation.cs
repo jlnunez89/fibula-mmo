@@ -17,7 +17,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Items;
-    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -89,7 +88,7 @@ namespace Fibula.Mechanics.Operations
             }
 
             // At this point, we were able to generate the new one, let's proceed to add it.
-            this.AddContentToContainerOrFallback(context, inThingContainer, index, ref thingCreated, includeTileAsFallback: true, requestor);
+            this.AddContentToContainerOrFallback(context, inThingContainer, ref thingCreated, index, includeTileAsFallback: true, requestor);
         }
     }
 }

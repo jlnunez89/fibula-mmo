@@ -25,6 +25,6 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// <summary>
         /// A request for information about the game server.
         /// </summary>
-        ServerStatus = 0xFF,
+        ServerStatus = byte.MaxValue,
     }
 }

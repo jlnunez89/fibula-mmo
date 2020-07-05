@@ -78,7 +78,7 @@ namespace Fibula.Data.InMemoryDatabase
                 .HasData(new CharacterEntity()
                 {
                     Id = Guid.NewGuid().ToString(),
-                    Name = "Player One",
+                    Name = $"Player {Guid.NewGuid().ToString().Substring(0, 4)}",
                     AccountId = accountId,
                     Vocation = "None",
                     World = "OpenTibia",
@@ -86,7 +86,37 @@ namespace Fibula.Data.InMemoryDatabase
                     Gender = 0,
                     Creation = DateTimeOffset.UtcNow,
                     LastLogin = DateTimeOffset.UtcNow,
-                    IsOnline = true,
+                    IsOnline = false,
+                });
+
+            modelBuilder.Entity<CharacterEntity>()
+                .HasData(new CharacterEntity()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = $"Player {Guid.NewGuid().ToString().Substring(0, 4)}",
+                    AccountId = accountId,
+                    Vocation = "None",
+                    World = "OpenTibia",
+                    Level = 1,
+                    Gender = 0,
+                    Creation = DateTimeOffset.UtcNow,
+                    LastLogin = DateTimeOffset.UtcNow,
+                    IsOnline = false,
+                });
+
+            modelBuilder.Entity<CharacterEntity>()
+                .HasData(new CharacterEntity()
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    Name = $"Player {Guid.NewGuid().ToString().Substring(0, 4)}",
+                    AccountId = accountId,
+                    Vocation = "None",
+                    World = "OpenTibia",
+                    Level = 1,
+                    Gender = 0,
+                    Creation = DateTimeOffset.UtcNow,
+                    LastLogin = DateTimeOffset.UtcNow,
+                    IsOnline = false,
                 });
         }
     }

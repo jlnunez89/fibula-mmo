@@ -21,13 +21,6 @@ namespace Fibula.Communications.Packets.Outgoing
     public class PlayerCancelAttackPacket : IOutboundPacket
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="PlayerCancelAttackPacket"/> class.
-        /// </summary>
-        public PlayerCancelAttackPacket()
-        {
-        }
-
-        /// <summary>
         /// Gets the type of this packet.
         /// </summary>
         public byte PacketType => (byte)OutgoingGamePacketType.CancelAttack;

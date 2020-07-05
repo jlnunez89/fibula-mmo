@@ -337,6 +337,6 @@ namespace Fibula.Communications.Contracts.Enumerations
         /// Wildcard.
         /// </summary>
         /// <remarks>Do not send.</remarks>
-        Any = 0xFF,
+        Any = byte.MaxValue,
     }
 }

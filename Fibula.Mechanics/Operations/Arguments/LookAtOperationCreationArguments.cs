@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="DescribeThingOperationCreationArguments.cs" company="2Dudes">
+// <copyright file="LookAtOperationCreationArguments.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
 // jlnunez89@gmail.com
@@ -19,18 +19,18 @@ namespace Fibula.Mechanics.Operations.Arguments
     using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
-    /// Class that represents creation arguments for a <see cref="DescribeThingOperation"/>.
+    /// Class that represents creation arguments for a <see cref="LookAtOperation"/>.
     /// </summary>
-    public class DescribeThingOperationCreationArguments : IOperationCreationArguments
+    public class LookAtOperationCreationArguments : IOperationCreationArguments
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="DescribeThingOperationCreationArguments"/> class.
+        /// Initializes a new instance of the <see cref="LookAtOperationCreationArguments"/> class.
         /// </summary>
         /// <param name="thingId">The id of the thing to describe.</param>
         /// <param name="location">The location where the thing to describe is.</param>
         /// <param name="stackPosition">The position in the stack at the location of the thing to describe is.</param>
         /// <param name="playerToDescribeFor">The player to describe the thing for.</param>
-        public DescribeThingOperationCreationArguments(ushort thingId, Location location, byte stackPosition, IPlayer playerToDescribeFor)
+        public LookAtOperationCreationArguments(ushort thingId, Location location, byte stackPosition, IPlayer playerToDescribeFor)
         {
             playerToDescribeFor.ThrowIfNull(nameof(playerToDescribeFor));
 
@@ -44,7 +44,7 @@ namespace Fibula.Mechanics.Operations.Arguments
         /// <summary>
         /// Gets the type of operation being created.
         /// </summary>
-        public OperationType Type => OperationType.DescribeThing;
+        public OperationType Type => OperationType.LookAt;
 
         /// <summary>
         /// Gets the id of the requestor of the operation.

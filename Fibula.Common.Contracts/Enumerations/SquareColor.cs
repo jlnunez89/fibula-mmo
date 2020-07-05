@@ -30,7 +30,7 @@ namespace Fibula.Common.Contracts.Enumerations
         /// <summary>
         /// A white square.
         /// </summary>
-        White = 0xFF,
+        White = byte.MaxValue,
 
         /// <summary>
         /// A pointer to the last valid value in this enumeration.
