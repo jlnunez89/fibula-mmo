@@ -14,6 +14,7 @@ namespace Fibula.Notifications.Arguments
 {
     using System;
     using System.Buffers;
+    using System.Collections.Generic;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Notifications.Contracts.Abstractions;
@@ -28,7 +29,7 @@ namespace Fibula.Notifications.Arguments
         /// </summary>
         /// <param name="location">The location of the updated tile.</param>
         /// <param name="descriptionFunction">The function used to get the description of the updated tile.</param>
-        public TileUpdatedNotificationArguments(Location location, Func<IPlayer, Location, ReadOnlySequence<byte>> descriptionFunction)
+        public TileUpdatedNotificationArguments(Location location, Func<IPlayer, Location, (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData)> descriptionFunction)
         {
             this.Location = location;
             this.TileDescriptionFunction = descriptionFunction;
@@ -42,6 +43,6 @@ namespace Fibula.Notifications.Arguments
         /// <summary>
         /// Gets the function that decribes the tile.
         /// </summary>
-        public Func<IPlayer, Location, ReadOnlySequence<byte>> TileDescriptionFunction { get; }
+        public Func<IPlayer, Location, (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData)> TileDescriptionFunction { get; }
     }
 }

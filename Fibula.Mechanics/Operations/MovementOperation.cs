@@ -631,7 +631,7 @@ namespace Fibula.Mechanics.Operations
                 new TileUpdatedNotification(
                     () => context.Map.PlayersThatCanSee(fromTile.Location),
                     new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
             /* context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromThingContainer.Location, item, requestorCreature)); */
@@ -724,7 +724,7 @@ namespace Fibula.Mechanics.Operations
                 new CreatureMovedNotification(
                     () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
                     new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
             if (creature is IPlayer player)

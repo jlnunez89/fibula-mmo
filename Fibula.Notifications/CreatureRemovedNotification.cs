@@ -60,12 +60,12 @@ namespace Fibula.Notifications
 
             var packets = new List<IOutboundPacket>
             {
-                new RemoveAtLocationPacket(this.Arguments.Creature.Location, this.Arguments.OldStackPosition),
+                new RemoveAtLocationPacket(this.Arguments.Creature.Location, this.Arguments.StackPosition),
             };
 
             if (this.Arguments.RemoveEffect != AnimatedEffect.None)
             {
-                packets.Add(new MagicEffectPacket(this.Arguments.Creature.Location, AnimatedEffect.Puff));
+                packets.Add(new MagicEffectPacket(this.Arguments.Creature.Location, this.Arguments.RemoveEffect));
             }
 
             return packets;

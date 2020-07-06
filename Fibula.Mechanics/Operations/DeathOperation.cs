@@ -69,7 +69,7 @@ namespace Fibula.Mechanics.Operations
                 new TextMessageNotification(
                     () => player.YieldSingleItem(),
                     new TextMessageNotificationArguments(MessageType.EventAdvance, "You are dead."))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
             // Remove the creature...

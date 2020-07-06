@@ -14,6 +14,7 @@ namespace Fibula.Map
 {
     using System;
     using System.Buffers;
+    using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
@@ -67,8 +68,8 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
         /// <param name="centerLocation">The center location from which the description is being retrieved.</param>
-        /// <returns>A sequence of bytes representing the description.</returns>
-        public ReadOnlySequence<byte> DescribeAt(IPlayer player, Location centerLocation)
+        /// <returns>A tuple containing the description metadata: a map of string to objects, and the description data: a sequence of bytes representing the description.</returns>
+        public (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) DescribeAt(IPlayer player, Location centerLocation)
         {
             player.ThrowIfNull(nameof(player));
 
@@ -92,8 +93,8 @@ namespace Fibula.Map
         /// <param name="windowSizeX">The size of the window in X.</param>
         /// <param name="windowSizeY">The size of the window in Y.</param>
         /// <param name="customOffsetZ">Optional. A custom Z offset value used mainly for partial floor changing windows. Defaults to 0.</param>
-        /// <returns>A sequence of bytes representing the description.</returns>
-        public ReadOnlySequence<byte> DescribeWindow(IPlayer player, ushort fromX, ushort fromY, sbyte fromZ, sbyte toZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte customOffsetZ = 0)
+        /// <returns>A tuple containing the description metadata: a map of string to objects, and the description data: a sequence of bytes representing the description.</returns>
+        public (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) DescribeWindow(IPlayer player, ushort fromX, ushort fromY, sbyte fromZ, sbyte toZ, byte windowSizeX = MapConstants.DefaultWindowSizeX, byte windowSizeY = MapConstants.DefaultWindowSizeY, sbyte customOffsetZ = 0)
         {
             player.ThrowIfNull(nameof(player));
 
@@ -125,6 +126,9 @@ namespace Fibula.Map
                 this.Logger.Debug($"{nameof(this.DescribeWindow)} {nameof(windowSizeY)} is over {nameof(MapConstants.DefaultWindowSizeY)} ({MapConstants.DefaultWindowSizeY}).");
             }
 
+            var allCreatureIdsToLearn = new List<uint>();
+            var allCreatureIdsToForget = new List<uint>();
+
             for (sbyte currentZ = fromZ; currentZ != toZ + stepZ; currentZ += stepZ)
             {
                 var zOffset = fromZ - currentZ + customOffsetZ;
@@ -140,7 +144,10 @@ namespace Fibula.Map
                             Z = currentZ,
                         };
 
-                        var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(targetLocation));
+                        var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(targetLocation), out ISet<uint> creatureIdsToLearn, out ISet<uint> creatureIdsToForget);
+
+                        allCreatureIdsToLearn.AddRange(creatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(creatureIdsToForget);
 
                         // See if we actually have segments to append.
                         if (segmentsFromTile != null && segmentsFromTile.Any())
@@ -173,7 +180,13 @@ namespace Fibula.Map
                 lastSegment = lastSegment.Append(new byte[] { currentSkipCount, byte.MaxValue });
             }
 
-            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
+            return (
+                new Dictionary<string, object>()
+                {
+                    { IMapDescriptor.CreatureIdsToLearnMetadataKeyName, allCreatureIdsToLearn.ToHashSet() },
+                    { IMapDescriptor.CreatureIdsToForgetMetadataKeyName, allCreatureIdsToForget.ToHashSet() },
+                },
+                new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length));
         }
 
         /// <summary>
@@ -181,8 +194,8 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="player">The player for which the description is being retrieved for.</param>
         /// <param name="location">The location from which the description of the tile is being retrieved.</param>
-        /// <returns>A sequence of bytes representing the tile's description.</returns>
-        public ReadOnlySequence<byte> DescribeTile(IPlayer player, Location location)
+        /// <returns>A tuple containing the description metadata: a map of string to objects, and the description data: a sequence of bytes representing the tile's description.</returns>
+        public (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) DescribeTile(IPlayer player, Location location)
         {
             player.ThrowIfNull(nameof(player));
 
@@ -195,7 +208,7 @@ namespace Fibula.Map
 
             MapDescriptionSegment lastSegment = firstSegment;
 
-            var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(location));
+            var segmentsFromTile = this.tileDescriptor.DescribeTileForPlayer(player, this.map.GetTileAt(location), out ISet<uint> creatureIdsToLearn, out ISet<uint> creatureIdsToForget);
 
             // See if we actually have segments to append.
             if (segmentsFromTile != null && segmentsFromTile.Any())
@@ -207,7 +220,13 @@ namespace Fibula.Map
                 }
             }
 
-            return new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length);
+            return (
+                new Dictionary<string, object>()
+                {
+                    { IMapDescriptor.CreatureIdsToLearnMetadataKeyName, creatureIdsToLearn },
+                    { IMapDescriptor.CreatureIdsToForgetMetadataKeyName, creatureIdsToForget },
+                },
+                new ReadOnlySequence<byte>(firstSegment, 0, lastSegment, lastSegment.Memory.Length));
         }
     }
 }

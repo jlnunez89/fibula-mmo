@@ -635,8 +635,7 @@ namespace Fibula.Mechanics
                 return new NotificationContext(
                     this.logger,
                     this.mapDescriptor,
-                    this.creatureManager,
-                    this.scheduler);
+                    this.creatureManager);
             }
 
             return new EventContext(this.logger);

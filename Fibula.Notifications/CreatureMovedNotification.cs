@@ -22,6 +22,7 @@ namespace Fibula.Notifications
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
@@ -60,6 +61,9 @@ namespace Fibula.Notifications
             var packets = new List<IOutboundPacket>();
             var creature = context.CreatureFinder.FindCreatureById(this.Arguments.CreatureId);
 
+            var allCreatureIdsToLearn = new List<uint>();
+            var allCreatureIdsToForget = new List<uint>();
+
             if (this.Arguments.CreatureId == player.Id)
             {
                 if (this.Arguments.WasTeleport)
@@ -71,7 +75,9 @@ namespace Fibula.Notifications
                     }
 
                     // Then send the entire description at the new location.
-                    packets.Add(new MapDescriptionPacket(this.Arguments.NewLocation, context.MapDescriptor.DescribeAt(player, this.Arguments.NewLocation)));
+                    var (descriptionMetadata, descriptionBytes) = context.MapDescriptor.DescribeAt(player, this.Arguments.NewLocation);
+
+                    packets.Add(new MapDescriptionPacket(this.Arguments.NewLocation, descriptionBytes));
 
                     return packets;
                 }
@@ -98,7 +104,7 @@ namespace Fibula.Notifications
                         Z = this.Arguments.NewLocation.Z,
                     };
 
-                    ReadOnlySequence<byte> description;
+                    (IDictionary<string, object> Metadata, ReadOnlySequence<byte> Data) description;
 
                     // going from surface to underground
                     if (this.Arguments.NewLocation.Z == 8)
@@ -133,20 +139,39 @@ namespace Fibula.Notifications
                     // going down but still above surface, so client has all floors.
                     else
                     {
-                        description = new ReadOnlySequence<byte>(new byte[0]);
+                        description = (new Dictionary<string, object>(), ReadOnlySequence<byte>.Empty);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, description));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, description.Data));
 
                     // moving down a floor makes us out of sync, include east and south
-                    packets.Add(
-                        this.EastSliceDescription(
+                    var (eastDescriptionMetadata, eastDescriptionBytes) = this.EastSliceDescription(
                             context,
                             player,
                             this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
-                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z));
+                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z);
 
-                    packets.Add(this.SouthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    if (eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object eastCreatureIdsToLearnBoxed) &&
+                        eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object eastCreatureIdsToForgetBoxed) &&
+                        eastCreatureIdsToLearnBoxed is IEnumerable<uint> eastCreatureIdsToLearn && eastCreatureIdsToForgetBoxed is IEnumerable<uint> eastCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(eastCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(eastCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
+
+                    var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y);
+
+                    if (southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object southCreatureIdsToLearnBoxed) &&
+                        southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object southCreatureIdsToForgetBoxed) &&
+                        southCreatureIdsToLearnBoxed is IEnumerable<uint> southCreatureIdsToLearn && southCreatureIdsToForgetBoxed is IEnumerable<uint> southCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(southCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(southCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceSouth, southDescriptionBytes));
                 }
 
                 // floor change up
@@ -159,7 +184,7 @@ namespace Fibula.Notifications
                         Z = this.Arguments.NewLocation.Z,
                     };
 
-                    ReadOnlySequence<byte> description;
+                    (IDictionary<string, object> Metadata, ReadOnlySequence<byte> Data) description;
 
                     // going to surface
                     if (this.Arguments.NewLocation.Z == 7)
@@ -194,42 +219,101 @@ namespace Fibula.Notifications
                     // already above surface, so client has all floors.
                     else
                     {
-                        description = new ReadOnlySequence<byte>(ReadOnlyMemory<byte>.Empty);
+                        description = (new Dictionary<string, object>(), ReadOnlySequence<byte>.Empty);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, description));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, description.Data));
 
                     // moving up a floor up makes us out of sync, include west and north
-                    packets.Add(
-                        this.WestSliceDescription(
+                    var (westDescriptionMetadata, westDescriptionBytes) = this.WestSliceDescription(
                             context,
                             player,
                             this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
-                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z));
+                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z);
 
-                    packets.Add(this.NorthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y));
+                    if (westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object westCreatureIdsToLearnBoxed) &&
+                        westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object westCreatureIdsToForgetBoxed) &&
+                        westCreatureIdsToLearnBoxed is IEnumerable<uint> westCreatureIdsToLearn && westCreatureIdsToForgetBoxed is IEnumerable<uint> westCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(westCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(westCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
+
+                    var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y);
+
+                    if (northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object northCreatureIdsToLearnBoxed) &&
+                        northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object northCreatureIdsToForgetBoxed) &&
+                        northCreatureIdsToLearnBoxed is IEnumerable<uint> northCreatureIdsToLearn && northCreatureIdsToForgetBoxed is IEnumerable<uint> northCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(northCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(northCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
                 }
 
                 if (this.Arguments.OldLocation.Y > this.Arguments.NewLocation.Y)
                 {
                     // Creature is moving north, so we need to send the additional north bytes.
-                    packets.Add(this.NorthSliceDescription(context, player));
+                    var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player);
+
+                    if (northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object northCreatureIdsToLearnBoxed) &&
+                        northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object northCreatureIdsToForgetBoxed) &&
+                        northCreatureIdsToLearnBoxed is IEnumerable<uint> northCreatureIdsToLearn && northCreatureIdsToForgetBoxed is IEnumerable<uint> northCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(northCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(northCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
                 }
                 else if (this.Arguments.OldLocation.Y < this.Arguments.NewLocation.Y)
                 {
                     // Creature is moving south, so we need to send the additional south bytes.
-                    packets.Add(this.SouthSliceDescription(context, player));
+                    var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player);
+
+                    if (southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object southCreatureIdsToLearnBoxed) &&
+                        southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object southCreatureIdsToForgetBoxed) &&
+                        southCreatureIdsToLearnBoxed is IEnumerable<uint> southCreatureIdsToLearn && southCreatureIdsToForgetBoxed is IEnumerable<uint> southCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(southCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(southCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceSouth, southDescriptionBytes));
                 }
 
                 if (this.Arguments.OldLocation.X < this.Arguments.NewLocation.X)
                 {
                     // Creature is moving east, so we need to send the additional east bytes.
-                    packets.Add(this.EastSliceDescription(context, player));
+                    var (eastDescriptionMetadata, eastDescriptionBytes) = this.EastSliceDescription(context, player);
+
+                    if (eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object eastCreatureIdsToLearnBoxed) &&
+                        eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object eastCreatureIdsToForgetBoxed) &&
+                        eastCreatureIdsToLearnBoxed is IEnumerable<uint> eastCreatureIdsToLearn && eastCreatureIdsToForgetBoxed is IEnumerable<uint> eastCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(eastCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(eastCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
                 }
                 else if (this.Arguments.OldLocation.X > this.Arguments.NewLocation.X)
                 {
                     // Creature is moving west, so we need to send the additional west bytes.
-                    packets.Add(this.WestSliceDescription(context, player));
+                    var (westDescriptionMetadata, westDescriptionBytes) = this.WestSliceDescription(context, player);
+
+                    if (westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object westCreatureIdsToLearnBoxed) &&
+                        westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object westCreatureIdsToForgetBoxed) &&
+                        westCreatureIdsToLearnBoxed is IEnumerable<uint> westCreatureIdsToLearn && westCreatureIdsToForgetBoxed is IEnumerable<uint> westCreatureIdsToForget)
+                    {
+                        allCreatureIdsToLearn.AddRange(westCreatureIdsToLearn);
+                        allCreatureIdsToForget.AddRange(westCreatureIdsToForget);
+                    }
+
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
                 }
             }
             else if (player.CanSee(this.Arguments.OldLocation) && player.CanSee(this.Arguments.NewLocation))
@@ -243,7 +327,20 @@ namespace Fibula.Notifications
                             packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
                         }
 
-                        packets.Add(new AddCreaturePacket(creature, player.Client.KnowsCreatureWithId(this.Arguments.CreatureId), player.Client.ChooseCreatureToRemoveFromKnownSet()));
+                        var creatureIsKnown = player.Client.KnowsCreatureWithId(this.Arguments.CreatureId);
+                        var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet();
+
+                        if (!creatureIsKnown)
+                        {
+                            allCreatureIdsToLearn.Add(this.Arguments.CreatureId);
+                        }
+
+                        if (creatureIdToForget > uint.MinValue)
+                        {
+                            allCreatureIdsToForget.Add(creatureIdToForget);
+                        }
+
+                        packets.Add(new AddCreaturePacket(creature, creatureIsKnown, creatureIdToForget));
                     }
                     else
                     {
@@ -262,7 +359,20 @@ namespace Fibula.Notifications
             {
                 if (this.Arguments.NewStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                 {
-                    packets.Add(new AddCreaturePacket(creature, player.Client.KnowsCreatureWithId(this.Arguments.CreatureId), player.Client.ChooseCreatureToRemoveFromKnownSet()));
+                    var creatureIsKnown = player.Client.KnowsCreatureWithId(this.Arguments.CreatureId);
+                    var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet();
+
+                    if (!creatureIsKnown)
+                    {
+                        allCreatureIdsToLearn.Add(this.Arguments.CreatureId);
+                    }
+
+                    if (creatureIdToForget > uint.MinValue)
+                    {
+                        allCreatureIdsToForget.Add(creatureIdToForget);
+                    }
+
+                    packets.Add(new AddCreaturePacket(creature, creatureIsKnown, creatureIdToForget));
                 }
             }
 
@@ -271,14 +381,27 @@ namespace Fibula.Notifications
                 packets.Add(new MagicEffectPacket(this.Arguments.NewLocation, AnimatedEffect.BubbleBlue));
             }
 
+            this.Sent += (client) =>
+            {
+                foreach (var creatureId in allCreatureIdsToLearn)
+                {
+                    client.AddKnownCreature(creatureId);
+                }
+
+                foreach (var creatureId in allCreatureIdsToForget)
+                {
+                    client.RemoveKnownCreature(creatureId);
+                }
+            };
+
             return packets;
         }
 
-        private IOutboundPacket NorthSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffset = 0)
+        private (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) NorthSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location.
             //
-            //       |---------- MapConstants.DefaultWindowSizeX = 18 ----------|
+            //       |------ MapConstants.DefaultWindowSizeX = 18 ------|
             //                           as seen by A
             //       x  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~  ~
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
@@ -308,23 +431,21 @@ namespace Fibula.Notifications
                 Z = this.Arguments.NewLocation.Z,
             };
 
-            return new MapPartialDescriptionPacket(
-                OutgoingGamePacketType.MapSliceNorth,
-                notificationContext.MapDescriptor.DescribeWindow(
+            return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     MapConstants.DefaultWindowSizeX,
-                    1));
+                    1);
         }
 
-        private IOutboundPacket SouthSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffset = 0)
+        private (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) SouthSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffset = 0)
         {
             // A = old location, B = new location
             //
-            //       |---------- MapConstants.DefaultWindowSizeX = 18 ----------|
+            //       |------ MapConstants.DefaultWindowSizeX = 18 ------|
             //                           as seen by A
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .     ---
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .      |
@@ -354,23 +475,21 @@ namespace Fibula.Notifications
                 Z = this.Arguments.NewLocation.Z,
             };
 
-            return new MapPartialDescriptionPacket(
-                OutgoingGamePacketType.MapSliceSouth,
-                notificationContext.MapDescriptor.DescribeWindow(
+            return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     MapConstants.DefaultWindowSizeX,
-                    1));
+                    1);
         }
 
-        private IOutboundPacket EastSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
+        private (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) EastSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
         {
             // A = old location, B = new location
             //
-            //       |---------- MapConstants.DefaultWindowSizeX = 18 ----------|
+            //       |------ MapConstants.DefaultWindowSizeX = 18 ------|
             //                           as seen by A
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  x  ---
             //       .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ~   |
@@ -399,23 +518,21 @@ namespace Fibula.Notifications
                 Z = this.Arguments.NewLocation.Z,
             };
 
-            return new MapPartialDescriptionPacket(
-                OutgoingGamePacketType.MapSliceEast,
-                notificationContext.MapDescriptor.DescribeWindow(
+            return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     1,
-                    MapConstants.DefaultWindowSizeY));
+                    MapConstants.DefaultWindowSizeY);
         }
 
-        private IOutboundPacket WestSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
+        private (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData) WestSliceDescription(INotificationContext notificationContext, IPlayer player, int floorChangeOffsetX = 0, int floorChangeOffsetY = 0)
         {
             // A = old location, B = new location
             //
-            //          |---------- MapConstants.DefaultWindowSizeX = 18 ----------|
+            //          |------ MapConstants.DefaultWindowSizeX = 18 ------|
             //                           as seen by A
             //       x  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  ---
             //       ~  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .  .   |
@@ -444,16 +561,14 @@ namespace Fibula.Notifications
                 Z = this.Arguments.NewLocation.Z,
             };
 
-            return new MapPartialDescriptionPacket(
-                OutgoingGamePacketType.MapSliceWest,
-                notificationContext.MapDescriptor.DescribeWindow(
+            return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
                     (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
                     1,
-                    MapConstants.DefaultWindowSizeY));
+                    MapConstants.DefaultWindowSizeY);
         }
     }
 }

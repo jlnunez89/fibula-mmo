@@ -143,7 +143,7 @@ namespace Fibula.Mechanics.Operations
             new TextMessageNotification(
                 () => this.PlayerToDescribeFor.YieldSingleItem(),
                 new TextMessageNotificationArguments(MessageType.DescriptionGreen, description))
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
 
         private string DescribeItem(IItem itemToDescribe)

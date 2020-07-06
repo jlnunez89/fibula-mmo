@@ -75,7 +75,7 @@ namespace Fibula.Mechanics.Operations
                     new GenericNotificationArguments(
                         new PlayerCancelAttackPacket(),
                         new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection())))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
         }
     }

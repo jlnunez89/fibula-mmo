@@ -76,7 +76,7 @@ namespace Fibula.Mechanics.Operations
                 new CreatureTurnedNotification(
                     () => context.Map.PlayersThatCanSee(this.Creature.Location),
                     new CreatureTurnedNotificationArguments(this.Creature, playerStackPos))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
         }
     }

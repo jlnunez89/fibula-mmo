@@ -51,6 +51,8 @@ namespace Fibula.Creatures
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
 
             this.Client = client;
+            this.Client.PlayerId = this.Id;
+
             this.CharacterId = characterId;
 
             this.Outfit = new Outfit

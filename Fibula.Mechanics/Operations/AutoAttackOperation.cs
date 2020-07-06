@@ -52,8 +52,6 @@ namespace Fibula.Mechanics.Operations
             this.Target = target;
             this.Attacker = attacker;
 
-            this.RepeatAfter = TimeSpan.Zero;
-
             this.ExhaustionCost = exhaustionCost;
             this.TargetIdAtScheduleTime = attacker?.AutoAttackTarget?.Id ?? 0;
         }
@@ -236,17 +234,17 @@ namespace Fibula.Mechanics.Operations
             // Normalize the attacker's defense speed based on the global round time and round that up.
             context.Scheduler.ScheduleEvent(
                 context.OperationFactory.Create(new RestoreCombatCreditOperationCreationArguments(this.Target, CombatCreditType.Defense)),
-                TimeSpan.FromMilliseconds((int)Math.Floor(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
+                TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
 
             if (this.Attacker != null)
             {
                 // this.Target.RecordDamageTaken(this.Attacker.Id, damageToApply);
                 this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
-                // Normalize the attacker's defense speed based on the global round time and round that up.
+                // Normalize the attacker's attack speed based on the global round time and round that up.
                 context.Scheduler.ScheduleEvent(
                     context.OperationFactory.Create(new RestoreCombatCreditOperationCreationArguments(this.Attacker, CombatCreditType.Attack)),
-                    TimeSpan.FromMilliseconds((int)Math.Floor(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
+                    TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
 
                 if (this.Attacker.Location != this.Target.Location && this.Attacker.Id != this.Target.Id)
                 {
@@ -259,7 +257,7 @@ namespace Fibula.Mechanics.Operations
             new GenericNotification(
                 () => context.Map.PlayersThatCanSee(this.Target.Location),
                 new GenericNotificationArguments(packetsToSend.ToArray()))
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
             if (this.Target is IPlayer targetPlayer)
             {
@@ -268,7 +266,7 @@ namespace Fibula.Mechanics.Operations
                 new GenericNotification(
                     () => targetPlayer.YieldSingleItem(),
                     new GenericNotificationArguments(squarePacket))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
             return true;

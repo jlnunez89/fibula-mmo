@@ -18,8 +18,10 @@ namespace Fibula.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a tile update.
@@ -52,7 +54,25 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            var descriptionBytes = this.Arguments.TileDescriptionFunction(player, this.Arguments.Location);
+            var (descriptionMetadata, descriptionBytes) = this.Arguments.TileDescriptionFunction(player, this.Arguments.Location);
+
+            if (descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object creatureIdsToLearnBoxed) &&
+                descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object creatureIdsToForgetBoxed) &&
+                creatureIdsToLearnBoxed is IEnumerable<uint> creatureIdsToLearn && creatureIdsToForgetBoxed is IEnumerable<uint> creatureIdsToForget)
+            {
+                this.Sent += (client) =>
+                {
+                    foreach (var creatureId in creatureIdsToLearn)
+                    {
+                        client.AddKnownCreature(creatureId);
+                    }
+
+                    foreach (var creatureId in creatureIdsToForget)
+                    {
+                        client.RemoveKnownCreature(creatureId);
+                    }
+                };
+            }
 
             return new TileUpdatePacket(this.Arguments.Location, descriptionBytes).YieldSingleItem();
         }

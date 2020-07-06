@@ -109,7 +109,7 @@ namespace Fibula.Mechanics.Operations
                         return context.Map.PlayersThatCanSee(creature.Location);
                     },
                     new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, creature.Location, placedAtStackPos, wasTeleport: true))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
             return addSuccessful;
@@ -164,14 +164,14 @@ namespace Fibula.Mechanics.Operations
                     new CreatureRemovedNotification(
                             () => context.Map.PlayersThatCanSee(creature.Location).Union(player.YieldSingleItem()),
                             new CreatureRemovedNotificationArguments(creature, oldStackpos))
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                 }
                 else
                 {
                     new CreatureRemovedNotification(
                             () => context.Map.PlayersThatCanSee(creature.Location),
                             new CreatureRemovedNotificationArguments(creature, oldStackpos))
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                 }
             }
 

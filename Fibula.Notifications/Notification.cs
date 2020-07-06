@@ -20,6 +20,7 @@ namespace Fibula.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Notifications.Contracts.Delegates;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
 
@@ -37,6 +38,11 @@ namespace Fibula.Notifications
         {
             this.FindTargetPlayers = findTargetPlayers;
         }
+
+        /// <summary>
+        /// Event to call when the notification is sent.
+        /// </summary>
+        public event OnSent Sent;
 
         /// <summary>
         /// Gets or sets a value indicating whether the event can be cancelled.
@@ -61,12 +67,22 @@ namespace Fibula.Notifications
                 throw new ArgumentException($"{nameof(context)} must be an {nameof(INotificationContext)}.");
             }
 
+            this.Send(notificationContext);
+        }
+
+        /// <summary>
+        /// Sends the notification to the players intented.
+        /// </summary>
+        /// <param name="context">The context for this notification.</param>
+        public void Send(INotificationContext context)
+        {
             try
             {
-                IEnumerable<IPlayer> targetPlayers = this.FindTargetPlayers.Invoke();
+                IEnumerable<IPlayer> targetPlayers = this.FindTargetPlayers?.Invoke();
 
                 if (targetPlayers == null || !targetPlayers.Any())
                 {
+                    context.Logger?.Warning($"Found no targets for {this.GetType().Name}, skipping.");
                     return;
                 }
 
@@ -78,7 +94,7 @@ namespace Fibula.Notifications
                     }
 
                     INetworkMessage outboundMessage = new NetworkMessage();
-                    IEnumerable<IOutboundPacket> outgoingPackets = this.Prepare(notificationContext, player);
+                    IEnumerable<IOutboundPacket> outgoingPackets = this.Prepare(context, player);
 
                     if (outgoingPackets == null || !outgoingPackets.Any())
                     {
@@ -86,21 +102,16 @@ namespace Fibula.Notifications
                     }
 
                     player.Client?.Send(outgoingPackets);
+
+                    this.Sent?.Invoke(player.Client);
                 }
             }
             catch (Exception ex)
             {
                 context.Logger?.Error($"Error while sending {this.GetType().Name}: {ex.Message}");
             }
-        }
 
-        /// <summary>
-        /// Sends the notification to the players intented.
-        /// </summary>
-        /// <param name="context">The context for this notification.</param>
-        public void Send(INotificationContext context)
-        {
-            this.Execute(context);
+            this.Sent = null;
         }
 
         /// <summary>

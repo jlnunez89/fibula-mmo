@@ -33,7 +33,7 @@ namespace Fibula.Notifications.Arguments
             creature.ThrowIfNull(nameof(creature));
 
             this.Creature = creature;
-            this.OldStackPosition = oldStackPos;
+            this.StackPosition = oldStackPos;
             this.RemoveEffect = removeEffect;
         }
 
@@ -43,9 +43,9 @@ namespace Fibula.Notifications.Arguments
         public AnimatedEffect RemoveEffect { get; }
 
         /// <summary>
-        /// Gets the old stack position of the creature.
+        /// Gets the stack position of the creature being removed.
         /// </summary>
-        public byte OldStackPosition { get; }
+        public byte StackPosition { get; }
 
         /// <summary>
         /// Gets the creature being removed.

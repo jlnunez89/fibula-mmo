@@ -112,7 +112,7 @@ namespace Fibula.Mechanics.Operations
             new CreatureSpeechNotification(
                     () => context.Map.PlayersThatCanSee(requestor.Location),
                     new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content))
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }
 }

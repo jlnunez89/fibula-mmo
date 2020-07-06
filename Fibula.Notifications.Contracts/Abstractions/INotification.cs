@@ -12,6 +12,7 @@
 
 namespace Fibula.Notifications.Contracts.Abstractions
 {
+    using Fibula.Notifications.Contracts.Delegates;
     using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
@@ -19,6 +20,11 @@ namespace Fibula.Notifications.Contracts.Abstractions
     /// </summary>
     public interface INotification : IEvent
     {
+        /// <summary>
+        /// Event to call when the notification is sent.
+        /// </summary>
+        event OnSent Sent;
+
         /// <summary>
         /// Sends the notification to the players intented.
         /// </summary>

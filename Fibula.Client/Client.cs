@@ -20,6 +20,7 @@ namespace Fibula.Client
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
+    using Serilog;
 
     /// <summary>
     /// Class that implements an <see cref="IClient"/> for any sort of connection.
@@ -27,19 +28,39 @@ namespace Fibula.Client
     public class Client : IClient
     {
         /// <summary>
-        /// Stores the set of creatures that are known to this player.
+        /// Stores the set of creatures that are known to this client.
         /// </summary>
         private readonly IDictionary<uint, long> knownCreatures;
 
         /// <summary>
+        /// A lock object to semaphore access to the <see cref="knownCreatures"/> collection.
+        /// </summary>
+        private readonly object knownCreaturesLock;
+
+        /// <summary>
+        /// Stores the logger in use.
+        /// </summary>
+        private readonly ILogger logger;
+
+        /// <summary>
+        /// Stores the id of the player tied to this client.
+        /// </summary>
+        private uint playerId;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Client"/> class.
         /// </summary>
+        /// <param name="logger">A reference to the logger to use.</param>
         /// <param name="connection">The connection that this client uses.</param>
-        public Client(IConnection connection)
+        public Client(ILogger logger, IConnection connection)
         {
+            logger.ThrowIfNull(nameof(logger));
             connection.ThrowIfNull(nameof(connection));
 
+            this.logger = logger.ForContext<Client>();
+
             this.knownCreatures = new Dictionary<uint, long>();
+            this.knownCreaturesLock = new object();
 
             this.Connection = connection;
             this.ClientInformation = new ClientInformation()
@@ -67,7 +88,20 @@ namespace Fibula.Client
         /// <summary>
         /// Gets or sets the id of the player that this client is tied to.
         /// </summary>
-        public uint PlayerId { get; set; }
+        public uint PlayerId
+        {
+            get => this.playerId;
+
+            set
+            {
+                if (this.playerId != default && this.playerId != value)
+                {
+                    throw new InvalidOperationException($"{nameof(this.PlayerId)} may only be set once.");
+                }
+
+                this.playerId = value;
+            }
+        }
 
         /// <summary>
         /// Sends the packets supplied over the <see cref="Connection"/>.
@@ -84,22 +118,16 @@ namespace Fibula.Client
         }
 
         /// <summary>
-        /// Associates this connection with a player.
-        /// </summary>
-        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
-        public void AssociateToPlayer(uint toPlayerId)
-        {
-            this.PlayerId = toPlayerId;
-        }
-
-        /// <summary>
         /// Checks if this player knows the given creature.
         /// </summary>
         /// <param name="creatureId">The id of the creature to check.</param>
         /// <returns>True if the player knows the creature, false otherwise.</returns>
         public bool KnowsCreatureWithId(uint creatureId)
         {
-            return this.knownCreatures.ContainsKey(creatureId);
+            lock (this.knownCreaturesLock)
+            {
+                return this.knownCreatures.ContainsKey(creatureId);
+            }
         }
 
         /// <summary>
@@ -108,29 +136,48 @@ namespace Fibula.Client
         /// <param name="creatureId">The id of the creature to add to the known creatures collection.</param>
         public void AddKnownCreature(uint creatureId)
         {
-            this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
+            lock (this.knownCreaturesLock)
+            {
+                this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
+
+                this.logger.Debug($"Added creatureId {creatureId} to player {this.playerId} known set.");
+            }
         }
 
         /// <summary>
         /// Chooses a creature to remove from this player's known creatures collection, if it has reached the collection size limit.
         /// </summary>
+        /// <param name="skip">Optional. A number of creatures to skip during selection. Used for multiple creature picking.</param>
         /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
-        public uint ChooseCreatureToRemoveFromKnownSet()
+        public uint ChooseCreatureToRemoveFromKnownSet(int skip = 0)
         {
-            // If the buffer is full we need to choose a victim.
-            while (this.knownCreatures.Count == IClient.KnownCreatureLimit)
+            lock (this.knownCreaturesLock)
             {
-                // ToList() prevents modifiying an enumerating collection in the rare case we hit an exception down there.
-                foreach (var candidate in this.knownCreatures.OrderBy(kvp => kvp.Value).ToList())
+                // If the buffer is full we need to choose a victim.
+                if (this.knownCreatures.Count == IClient.KnownCreatureLimit)
                 {
-                    if (this.knownCreatures.Remove(candidate.Key))
-                    {
-                        return candidate.Key;
-                    }
+                    return this.knownCreatures.OrderBy(kvp => kvp.Value).Skip(skip).FirstOrDefault().Key;
                 }
             }
 
             return uint.MinValue;
+        }
+
+        /// <summary>
+        /// Removes the given creature from this player's known collection.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature to remove from the known creatures collection.</param>
+        public void RemoveKnownCreature(uint creatureId)
+        {
+            lock (this.knownCreaturesLock)
+            {
+                if (this.knownCreatures.ContainsKey(creatureId))
+                {
+                    this.knownCreatures.Remove(creatureId);
+
+                    this.logger.Debug($"Removed creatureId {creatureId} to player {this.playerId} known set.");
+                }
+            }
         }
     }
 }

@@ -12,6 +12,7 @@
 
 namespace Fibula.Mechanics.Operations
 {
+    using System.Collections.Generic;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
@@ -109,23 +110,42 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            player.Client.AssociateToPlayer(player.Id);
-
             // TODO: In addition, we need to send the player's inventory, the first time login message + outfit window here if applicable.
             // And any VIP records here.
-            new GenericNotification(
+            var (descriptionMetadata, descriptionBytes) = context.MapDescriptor.DescribeAt(player, player.Location);
+
+            var notification = new GenericNotification(
                 () => player.YieldSingleItem(),
                 new GenericNotificationArguments(
                     new PlayerLoginPacket(player.Id, player),
-                    new MapDescriptionPacket(player.Location, context.MapDescriptor.DescribeAt(player, player.Location)),
+                    new MapDescriptionPacket(player.Location, descriptionBytes),
                     new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
                     new PlayerStatsPacket(player),
                     new PlayerSkillsPacket(player),
                     new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
                     new CreatureLightPacket(player),
                     new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
-                    new PlayerConditionsPacket(player)))
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                    new PlayerConditionsPacket(player)));
+
+            if (descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object creatureIdsToLearnBoxed) &&
+                descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object creatureIdsToForgetBoxed) &&
+                creatureIdsToLearnBoxed is IEnumerable<uint> creatureIdsToLearn && creatureIdsToForgetBoxed is IEnumerable<uint> creatureIdsToForget)
+            {
+                notification.Sent += (client) =>
+                {
+                    foreach (var creatureId in creatureIdsToLearn)
+                    {
+                        client.AddKnownCreature(creatureId);
+                    }
+
+                    foreach (var creatureId in creatureIdsToForget)
+                    {
+                        client.RemoveKnownCreature(creatureId);
+                    }
+                };
+            }
+
+            notification.Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }
 }

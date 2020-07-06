@@ -146,7 +146,7 @@ namespace Fibula.Standalone
                     return;
                 }
 
-                clientMap.Add(connection, new Client(connection));
+                clientMap.Add(connection, new Client(Log.Logger, connection));
 
                 connection.PacketReady += OnPacketReady;
 

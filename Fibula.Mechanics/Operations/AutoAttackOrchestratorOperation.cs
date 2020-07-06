@@ -58,23 +58,18 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             // We should stop this recurrent operation if there is no longer a target or it is dead.
-            if (this.Attacker.AutoAttackTarget == null)
-            {
-                this.RepeatAfter = TimeSpan.Zero;
-
-                return;
-            }
-
-            if (this.Attacker.AutoAttackTarget.IsDead)
+            if (this.Attacker.AutoAttackTarget == null || this.Attacker.AutoAttackTarget.IsDead)
             {
                 this.Attacker.SetAttackTarget(null);
+
+                this.RepeatAfter = TimeSpan.Zero;
 
                 return;
             }
 
             // Normalize the attacker's attack speed based on the global round time and round that up.
             // We do this every time because it could have changed.
-            var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed));
+            var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed));
             var autoAttackOp = context.OperationFactory.Create(new AutoAttackOperationCreationArguments(this.Attacker, this.Attacker.AutoAttackTarget, normalizedAttackSpeed));
             var operationDelay = TimeSpan.Zero;
 

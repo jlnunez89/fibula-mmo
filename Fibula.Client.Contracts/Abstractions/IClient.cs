@@ -32,9 +32,9 @@ namespace Fibula.Client.Contracts.Abstractions
         bool IsIdle { get; }
 
         /// <summary>
-        /// Gets the id of the player that this client is tied to.
+        /// Gets or sets the id of the player that this client is tied to.
         /// </summary>
-        public uint PlayerId { get; }
+        public uint PlayerId { get; set; }
 
         /// <summary>
         /// Gets the connection enstablished by this client.
@@ -53,12 +53,6 @@ namespace Fibula.Client.Contracts.Abstractions
         void Send(IEnumerable<IOutboundPacket> packetsToSend);
 
         /// <summary>
-        /// Associates this connection with a player.
-        /// </summary>
-        /// <param name="toPlayerId">The Id of the player that the connection will be associated to.</param>
-        void AssociateToPlayer(uint toPlayerId);
-
-        /// <summary>
         /// Checks if this client knows the given creature.
         /// </summary>
         /// <param name="creatureId">The id of the creature to check.</param>
@@ -72,9 +66,16 @@ namespace Fibula.Client.Contracts.Abstractions
         void AddKnownCreature(uint creatureId);
 
         /// <summary>
-        /// Chooses a creature to remove from this client's known creatures collection, if it has reached the collection size limit.
+        /// Chooses a creature to remove from this player's known creatures collection, if it has reached the collection size limit.
         /// </summary>
+        /// <param name="skip">Optional. A number of creatures to skip during selection. Used for multiple creature picking.</param>
         /// <returns>The id of the chosen creature, if any, or <see cref="uint.MinValue"/> if no creature was chosen.</returns>
-        uint ChooseCreatureToRemoveFromKnownSet();
+        uint ChooseCreatureToRemoveFromKnownSet(int skip = 0);
+
+        /// <summary>
+        /// Removes the given creature from this player's known collection.
+        /// </summary>
+        /// <param name="creatureId">The id of the creature to remove from the known creatures collection.</param>
+        void RemoveKnownCreature(uint creatureId);
     }
 }

@@ -30,10 +30,5 @@ namespace Fibula.Notifications.Contracts.Abstractions
         /// Gets the reference to the creature finder in use.
         /// </summary>
         ICreatureFinder CreatureFinder { get; }
-
-        /// <summary>
-        /// Gets a reference to the scheduler in use.
-        /// </summary>
-        IScheduler Scheduler { get; }
     }
 }

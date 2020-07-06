@@ -151,7 +151,7 @@ namespace Fibula.Mechanics.Operations
                         new TileUpdatedNotification(
                             () => context.Map.PlayersThatCanSee(targetTile.Location),
                             new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
-                       .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+                       .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
                         // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetContainer.Location, lastAddedThing, requestorCreature));
                     }
@@ -185,7 +185,7 @@ namespace Fibula.Mechanics.Operations
             new TextMessageNotification(
                 () => player.YieldSingleItem(),
                 new TextMessageNotificationArguments(MessageType.StatusSmall, message))
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder, context.Scheduler));
+            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }
 }

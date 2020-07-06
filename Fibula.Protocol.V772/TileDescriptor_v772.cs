@@ -69,14 +69,19 @@ namespace Fibula.Protocol.V772
         public ICreatureFinder CreatureFinder { get; }
 
         /// <summary>
-        /// Gets the description segment of a tile as seen by the given <paramref name="player"/>.
+        /// Gets the description segments of a tile as seen by the given <paramref name="player"/>.
         /// </summary>
         /// <param name="player">The player for which the tile is being described.</param>
         /// <param name="tile">The tile being described.</param>
+        /// <param name="creatureIdsToLearn">A set of ids of creatures to learn if this description is sent.</param>
+        /// <param name="creatureIdsToForget">A set of ids of creatures to forget if this description is sent.</param>
         /// <returns>A collection of description segments from the tile.</returns>
-        public IEnumerable<MapDescriptionSegment> DescribeTileForPlayer(IPlayer player, ITile tile)
+        public IEnumerable<MapDescriptionSegment> DescribeTileForPlayer(IPlayer player, ITile tile, out ISet<uint> creatureIdsToLearn, out ISet<uint> creatureIdsToForget)
         {
             player.ThrowIfNull(nameof(player));
+
+            creatureIdsToLearn = new HashSet<uint>();
+            creatureIdsToForget = new HashSet<uint>();
 
             if (tile == null)
             {
@@ -114,13 +119,19 @@ namespace Fibula.Protocol.V772
                         }
                         else
                         {
+                            var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet(creatureIdsToForget.Count);
+
                             creatureBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
                             creatureBytes.Add(0x00);
-                            creatureBytes.AddRange(BitConverter.GetBytes(player.Client.ChooseCreatureToRemoveFromKnownSet()));
+                            creatureBytes.AddRange(BitConverter.GetBytes(creatureIdToForget));
                             creatureBytes.AddRange(BitConverter.GetBytes(creature.Id));
 
-                            // TODO: is this the best spot for this ?
-                            player.Client.AddKnownCreature(creature.Id);
+                            if (creatureIdToForget > uint.MinValue)
+                            {
+                                creatureIdsToForget.Add(creatureIdToForget);
+                            }
+
+                            creatureIdsToLearn.Add(creature.Id);
 
                             var creatureNameBytes = Encoding.Default.GetBytes(creature.Name);
 
