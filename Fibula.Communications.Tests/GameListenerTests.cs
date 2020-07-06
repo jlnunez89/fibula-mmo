@@ -97,7 +97,7 @@ namespace Fibula.Communications.Listeners.Tests
             const int ExpectedConnectionCount = 1;
             const int NewConnectionsToEmulate = 1;
 
-            TimeSpan waitForConnectionDelay = TimeSpan.FromSeconds(1);
+            TimeSpan waitForConnectionDelay = TimeSpan.FromSeconds(2);
 
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<IDoSDefender> defenderMock = new Mock<IDoSDefender>();

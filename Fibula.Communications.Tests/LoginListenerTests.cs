@@ -36,7 +36,7 @@ namespace Fibula.Communications.Listeners.Tests
         /// Checks <see cref="GatewayListener{T}"/> initialization.
         /// </summary>
         [TestMethod]
-        public void LoginListener_Initialization()
+        public void GatewayListener_Initialization()
         {
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<ISocketConnectionFactory> connectionFactoryMock = new Mock<ISocketConnectionFactory>();
@@ -63,7 +63,7 @@ namespace Fibula.Communications.Listeners.Tests
         /// Checks the <see cref="GatewayListener{T}"/>'s options validation.
         /// </summary>
         [TestMethod]
-        public void GameListener_OptionsValidation()
+        public void GatewayListener_OptionsValidation()
         {
             const ushort AnyEphemerealPort = 4323;
 
@@ -93,13 +93,13 @@ namespace Fibula.Communications.Listeners.Tests
         /// </summary>
         /// <returns>A <see cref="Task"/> representing the asynchronous unit test.</returns>
         [TestMethod]
-        public async Task Listener_CallsNewConnectionEvent()
+        public async Task GatewayListener_CallsNewConnectionEvent()
         {
             const ushort AnyEphemerealPort = 1234;
             const int ExpectedConnectionCount = 1;
             const int NewConnectionsToEmulate = 1;
 
-            TimeSpan waitForConnectionDelay = TimeSpan.FromSeconds(1);
+            TimeSpan waitForConnectionDelay = TimeSpan.FromSeconds(2);
 
             Mock<ILogger> loggerMock = new Mock<ILogger>();
             Mock<IDoSDefender> defenderMock = new Mock<IDoSDefender>();
@@ -130,7 +130,7 @@ namespace Fibula.Communications.Listeners.Tests
             // Delay for a second and check that the counter has gone up on connections count.
             await Task.Delay(waitForConnectionDelay).ContinueWith(prev =>
             {
-                Assert.AreEqual(ExpectedConnectionCount, connectionCount, "New connections events counter does not match.");
+                Assert.AreEqual(ExpectedConnectionCount, connectionCount, $"New connections events counter does not match, expected {ExpectedConnectionCount} but found {connectionCount}.");
             });
         }
 
