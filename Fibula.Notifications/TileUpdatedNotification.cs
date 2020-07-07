@@ -21,7 +21,6 @@ namespace Fibula.Notifications
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a tile update.

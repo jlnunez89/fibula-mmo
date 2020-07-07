@@ -16,7 +16,6 @@ namespace Fibula.Notifications
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Scheduling.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>

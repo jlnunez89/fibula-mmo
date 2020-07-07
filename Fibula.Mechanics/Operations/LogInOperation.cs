@@ -110,10 +110,10 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            // TODO: In addition, we need to send the player's inventory, the first time login message + outfit window here if applicable.
-            // And any VIP records here.
             var (descriptionMetadata, descriptionBytes) = context.MapDescriptor.DescribeAt(player, player.Location);
 
+            // TODO: In addition, we need to send the player's inventory, the first time login message + outfit window here if applicable.
+            // And any VIP records here.
             var notification = new GenericNotification(
                 () => player.YieldSingleItem(),
                 new GenericNotificationArguments(

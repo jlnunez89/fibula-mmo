@@ -154,6 +154,9 @@ namespace Fibula.Communications.Listeners
         {
             this.tcpListener.Stop();
 
+            // Unhook all subscribers.
+            this.NewConnection = null;
+
             return Task.CompletedTask;
         }
 

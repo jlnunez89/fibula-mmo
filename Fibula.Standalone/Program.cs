@@ -44,10 +44,13 @@ namespace Fibula.Standalone
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;
     using Microsoft.ApplicationInsights;
+    using Microsoft.ApplicationInsights.Extensibility;
+    using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
     using Microsoft.Extensions.Hosting;
+    using Microsoft.Extensions.Options;
     using Serilog;
 
     /// <summary>
@@ -81,13 +84,6 @@ namespace Fibula.Standalone
                 .AddJsonFile("logsettings.json")
                 .Build();
 
-            Log.Logger = new LoggerConfiguration()
-                .ReadFrom.Configuration(configuration)
-                .Enrich.FromLogContext()
-                .CreateLogger();
-
-            Log.ForContext(typeof(Program)).Information("Building host...");
-
             var host = new HostBuilder()
                 .ConfigureHostConfiguration(configHost =>
                 {
@@ -105,7 +101,14 @@ namespace Fibula.Standalone
                     configApp.AddCommandLine(args);
                 })
                 .ConfigureServices(ConfigureServices)
-                .UseSerilog()
+                .UseSerilog((context, services, loggerConfig) =>
+                {
+                    var telemetryConfigOptions = services.GetRequiredService<IOptions<TelemetryConfiguration>>();
+
+                    loggerConfig.ReadFrom.Configuration(configuration)
+                                .WriteTo.ApplicationInsights(telemetryConfigOptions.Value, TelemetryConverter.Traces)
+                                .Enrich.FromLogContext();
+                })
                 .Build();
 
             // Bind the TCP listener events with handler picking.
@@ -159,12 +162,6 @@ namespace Fibula.Standalone
             }
 
             await host.RunAsync(Program.MasterCancellationTokenSource.Token).ConfigureAwait(false);
-
-            // Clean up.
-            foreach (var tcpListener in host.Services.GetServices<IListener>())
-            {
-                tcpListener.NewConnection -= OnNewConnection;
-            }
         }
 
         /// <summary>
@@ -212,7 +209,7 @@ namespace Fibula.Standalone
 
             // ConfigureEventRules(hostingContext, services);
             // ConfigurePathFindingAlgorithm(hostingContext, services);
-            // ConfigureExtraServices(hostingContext, services);
+            ConfigureExtraServices(hostingContext, services);
 
             // Choose a server version here.
             services.AddProtocol772GameServerComponents(hostingContext.Configuration);
@@ -324,11 +321,15 @@ namespace Fibula.Standalone
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
         }
 
-        // private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)
-        // {
-        //    // Azure providers for Azure VM hosting and storing secrets in KeyVault.
-        //    services.AddAzureProviders(hostingContext.Configuration);
-        // }
+        private static void ConfigureExtraServices(HostBuilderContext hostingContext, IServiceCollection services)
+        {
+            /*
+            // Azure providers for Azure VM hosting and storing secrets in KeyVault.
+            services.AddAzureProviders(hostingContext.Configuration);
+            */
+
+            services.Configure<TelemetryConfiguration>(hostingContext.Configuration.GetSection(nameof(TelemetryConfiguration)));
+        }
 
         // private static void ConfigureEventRules(HostBuilderContext hostingContext, IServiceCollection services)
         // {
