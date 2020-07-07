@@ -106,7 +106,7 @@ namespace Fibula.Standalone
                     var telemetryConfigOptions = services.GetRequiredService<IOptions<TelemetryConfiguration>>();
 
                     loggerConfig.ReadFrom.Configuration(configuration)
-                                .WriteTo.ApplicationInsights(telemetryConfigOptions.Value, TelemetryConverter.Traces)
+                                .WriteTo.ApplicationInsights(telemetryConfigOptions.Value, TelemetryConverter.Events, Serilog.Events.LogEventLevel.Information)
                                 .Enrich.FromLogContext();
                 })
                 .Build();
