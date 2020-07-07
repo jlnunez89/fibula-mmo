@@ -10,12 +10,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Server.Contracts.Enumerations;
-    using Fibula.Server.Contracts.Structs;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
+    using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for a path finder.

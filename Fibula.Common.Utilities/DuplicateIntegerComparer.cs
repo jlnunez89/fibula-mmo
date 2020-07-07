@@ -2,14 +2,15 @@
 // <copyright file="DuplicateIntegerComparer.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
+// jlnunez89@gmail.com
 // http://linkedin.com/in/jlnunez89
 //
 // Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// See LICENSE.txt file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities
+namespace Fibula.Common.Utilities
 {
     using System.Collections;
     using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace OpenTibia.Common.Utilities
         /// <returns>-1 if first is less than or equal to second, 1 otherwise.</returns>
         public int Compare(int x, int y)
         {
-            return (x <= y) ? -1 : 1;
+            return x <= y ? -1 : 1;
         }
     }
 }

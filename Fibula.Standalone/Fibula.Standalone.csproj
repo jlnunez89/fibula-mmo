@@ -66,6 +66,7 @@
     <ProjectReference Include="..\Fibula.Map.GrassOnly\Fibula.Map.GrassOnly.csproj" />
     <ProjectReference Include="..\Fibula.Map.SectorFiles\Fibula.Map.SectorFiles.csproj" />
     <ProjectReference Include="..\Fibula.Map\Fibula.Map.csproj" />
+    <ProjectReference Include="..\Fibula.Mechanics.PathFinding.AStar\Fibula.Mechanics.PathFinding.AStar.csproj" />
     <ProjectReference Include="..\Fibula.Mechanics\Fibula.Mechanics.csproj" />
     <ProjectReference Include="..\Fibula.Protocol.V772\Fibula.Protocol.V772.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />

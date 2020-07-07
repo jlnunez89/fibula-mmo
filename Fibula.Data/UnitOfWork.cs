@@ -23,7 +23,7 @@ namespace Fibula.Data
         Fibula.Data.Entities.CharacterEntity>;
 
     /// <summary>
-    /// Class that represents a unit of work for the OpenTibia project.
+    /// Class that represents a unit of work for the Fibula project.
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {

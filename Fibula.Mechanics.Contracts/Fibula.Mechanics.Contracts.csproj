@@ -20,7 +20,6 @@
     <Compile Remove="Abstractions\IEventRulesFactory.cs" />
     <Compile Remove="Abstractions\IEventRulesLoader.cs" />
     <Compile Remove="Abstractions\IMovementOperation.cs" />
-    <Compile Remove="Abstractions\IPathFinder.cs" />
     <Compile Remove="Abstractions\ISeparationEventRule.cs" />
     <Compile Remove="Abstractions\ISkill.cs" />
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />

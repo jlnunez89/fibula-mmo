@@ -16,7 +16,7 @@ namespace Fibula.Data.Contracts.Abstractions
     using Fibula.Data.Entities.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for units of work that target the OpenTibia project.
+    /// Interface for units of work that target the Fibula project.
     /// </summary>
     /// <typeparam name="TAccounts">The type of account entities.</typeparam>
     /// <typeparam name="TCharacters">The type of character entities.</typeparam>

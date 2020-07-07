@@ -39,13 +39,13 @@ namespace Fibula.Standalone
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Handlers;
     using Fibula.Mechanics.Operations;
+    using Fibula.PathFinding.AStar;
     using Fibula.Protocol.V772;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;
     using Microsoft.ApplicationInsights;
     using Microsoft.ApplicationInsights.Extensibility;
-    using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
     using Microsoft.Extensions.DependencyInjection.Extensions;
@@ -208,7 +208,7 @@ namespace Fibula.Standalone
             ConfigureHostedServices(services);
 
             // ConfigureEventRules(hostingContext, services);
-            // ConfigurePathFindingAlgorithm(hostingContext, services);
+            ConfigurePathFindingAlgorithm(hostingContext, services);
             ConfigureExtraServices(hostingContext, services);
 
             // Choose a server version here.
@@ -273,18 +273,16 @@ namespace Fibula.Standalone
             // services.AddCosmosDBDatabaseContext(hostingContext.Configuration);
             services.AddInMemoryDatabaseContext(hostingContext.Configuration);
 
-            // IOpenTibiaDbContext itself is added by the Add<DatabaseProvider>() call above.
-            // We add Func<IOpenTibiaDbContext> to let callers retrieve a transient instance of this from the Application context,
+            // IFibulaDbContext itself is added by the Add<DatabaseProvider>() call above.
+            // We add Func<IFibulaDbContext> to let callers retrieve a transient instance of this from the Application context,
             // rather than save an actual copy of the DB context in the app context.
             services.AddSingleton<Func<IFibulaDbContext>>(s => s.GetService<IFibulaDbContext>);
         }
 
-        /*
         private static void ConfigurePathFindingAlgorithm(HostBuilderContext hostingContext, IServiceCollection services)
         {
             services.AddAStarPathFinder(hostingContext.Configuration);
         }
-        */
 
         private static void ConfigureCreatures(IServiceCollection services)
         {

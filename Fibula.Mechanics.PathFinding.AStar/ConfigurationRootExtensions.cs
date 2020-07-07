@@ -10,10 +10,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Map.SectorFiles
+namespace Fibula.PathFinding.AStar
 {
     using Fibula.Common.Utilities;
-    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Common.Utilities.Pathfinding;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
@@ -23,20 +24,21 @@ namespace Fibula.Map.SectorFiles
     public static class ConfigurationRootExtensions
     {
         /// <summary>
-        /// Adds all implementations related to Sector map files contained in this library to the services collection.
+        /// Adds all implementations related to the A* path finder contained in this library to the services collection.
         /// Additionally, registers the options related to the concrete implementations added, such as:
-        ///     <see cref="SectorMapLoaderOptions"/>.
+        ///     <see cref="AStarPathFinderOptions"/>.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddSectorFilesMapLoader(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAStarPathFinder(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
             // configure options
-            services.Configure<SectorMapLoaderOptions>(configuration.GetSection(nameof(SectorMapLoaderOptions)));
+            services.Configure<AStarPathFinderOptions>(configuration.GetSection(nameof(AStarPathFinderOptions)));
 
-            services.AddSingleton<IMapLoader, SectorMapLoader>();
+            services.AddSingleton<INodeFactory, TileNodeCachingFactory>();
+            services.AddSingleton<IPathFinder, AStarPathFinder>();
         }
     }
 }

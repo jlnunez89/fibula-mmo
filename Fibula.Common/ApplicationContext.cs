@@ -41,19 +41,19 @@ namespace Fibula.Common
         /// <param name="telemetryOptions">A reference to the telemetry configuration that will be used to create the telemetry client.</param>
         /// <param name="rsaDecryptor">A reference to the RSA decryptor in use.</param>
         /// <param name="cancellationTokenSource">A reference to the master cancellation token source.</param>
-        /// <param name="openTibiaDbContextGenerationFunc">A reference to a function to generate the OpenTibia database context.</param>
+        /// <param name="dbContextGenerationFunc">A reference to a function to generate the database context.</param>
         public ApplicationContext(
             IOptions<ApplicationContextOptions> options,
             IOptions<TelemetryConfiguration> telemetryOptions,
             IRsaDecryptor rsaDecryptor,
             CancellationTokenSource cancellationTokenSource,
-            Func<IFibulaDbContext> openTibiaDbContextGenerationFunc)
+            Func<IFibulaDbContext> dbContextGenerationFunc)
         {
             options.ThrowIfNull(nameof(options));
             telemetryOptions.ThrowIfNull(nameof(telemetryOptions));
             rsaDecryptor.ThrowIfNull(nameof(rsaDecryptor));
             cancellationTokenSource.ThrowIfNull(nameof(cancellationTokenSource));
-            openTibiaDbContextGenerationFunc.ThrowIfNull(nameof(openTibiaDbContextGenerationFunc));
+            dbContextGenerationFunc.ThrowIfNull(nameof(dbContextGenerationFunc));
 
             DataAnnotationsValidator.ValidateObjectRecursive(options.Value);
 
@@ -63,7 +63,7 @@ namespace Fibula.Common
 
             this.TelemetryClient = this.InitializeTelemetry(telemetryOptions.Value);
 
-            this.contextGenerationFunction = openTibiaDbContextGenerationFunc;
+            this.contextGenerationFunction = dbContextGenerationFunc;
         }
 
         /// <summary>

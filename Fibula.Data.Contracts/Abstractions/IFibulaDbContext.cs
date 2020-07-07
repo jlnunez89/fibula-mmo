@@ -15,7 +15,7 @@ namespace Fibula.Data.Contracts.Abstractions
     using Microsoft.EntityFrameworkCore;
 
     /// <summary>
-    /// Interface for the OpenTibia database context.
+    /// Interface for the Fibula database context.
     /// </summary>
     public interface IFibulaDbContext
     {

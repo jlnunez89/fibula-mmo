@@ -2,20 +2,22 @@
 // <copyright file="AStar.cs" company="2Dudes">
 // Copyright (c) 2018 2Dudes. All rights reserved.
 // Author: Jose L. Nunez de Caceres
+// jlnunez89@gmail.com
 // http://linkedin.com/in/jlnunez89
 //
 // Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// See LICENSE.txt file in the project root for full license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Common.Utilities.Pathfinding
+namespace Fibula.Common.Utilities.Pathfinding
 {
-    using Fibula.Common.Utilities;
     using System.Collections.Generic;
+    using Fibula.Common.Utilities;
+    using Fibula.Common.Utilities.Extensions;
 
     /// <summary>
-    /// Interface to setup and run the AStar algorithm.
+    /// Interface to setup and run the A* algorithm.
     /// </summary>
     public class AStar
     {
@@ -146,6 +148,7 @@ namespace OpenTibia.Common.Utilities.Pathfinding
 
             // First of all, flag this node to not be visited again.
             this.visited.Add(this.CurrentNode);
+
             this.CurrentNode.ShouldBeVisited = false;
             this.CurrentNode.HasBeenVisited = true;
 
@@ -185,8 +188,9 @@ namespace OpenTibia.Common.Utilities.Pathfinding
                 adjacent.Parent = this.CurrentNode;
                 adjacent.SetMovementCost(this.CurrentNode);
                 adjacent.SetEstimatedCost(this.goal);
-                this.nextToVisit.Add(adjacent);
                 adjacent.ShouldBeVisited = true;
+
+                this.nextToVisit.Add(adjacent);
             }
 
             // This step did not find the goal so return status of still searching.
