@@ -1,6 +1,11 @@
 ﻿{
   "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
   "settings": {
+    "namingRules": { "tupleElementNameCasing": "PascalCase" },
+    "layoutRules": {
+      "allowConsecutiveUsings": false,
+      "newlineAtEndOfFile": "require"
+    },
     "documentationRules": {
       "companyName": "2Dudes",
       "headerDecoration": "-----------------------------------------------------------------",
