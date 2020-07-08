@@ -123,7 +123,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets or sets this creature's walk plan.
         /// </summary>
-        WalkPlan? WalkPlan { get; set; }
+        WalkPlan WalkPlan { get; set; }
 
         /// <summary>
         /// Checks if this creature can see a given creature.

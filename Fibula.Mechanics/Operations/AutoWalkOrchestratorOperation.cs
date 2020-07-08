@@ -13,7 +13,11 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
@@ -60,19 +64,42 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
-            if (this.Creature == null ||
-                this.Creature.IsDead ||
-                this.Creature.WalkPlan == null ||
-                this.Creature.WalkPlan.Value.State != WalkPlanState.InProgress ||
-                !this.Creature.WalkPlan.Value.GoingAsIntended(this.Creature.Location) ||
-                this.Creature.WalkPlan.Value.Waypoints.Count == 0)
+            if (this.Creature == null || this.Creature.IsDead)
             {
                 this.RepeatAfter = TimeSpan.Zero;
 
                 return;
             }
 
-            var nextLocation = this.Creature.WalkPlan.Value.Waypoints.First.Value;
+            var resultingState = this.Creature.WalkPlan.UpdateState(this.Creature.Location);
+
+            if (this.Creature.WalkPlan.IsInTerminalState)
+            {
+                this.RepeatAfter = TimeSpan.Zero;
+
+                return;
+            }
+
+            // Recalculate the route if necessary:
+            if (resultingState == WalkPlanState.NeedsToRecalculate)
+            {
+                var directions = context.PathFinder.FindBetween(this.Creature.Location, this.Creature.WalkPlan.DetermineGoal(), out Location endLocation, this.Creature);
+
+                this.Creature.WalkPlan.RecalculateWaypoints(this.Creature.Location, directions);
+            }
+
+            // Pop the current waypoint.
+            this.Creature.WalkPlan.Waypoints.RemoveFirst();
+
+            // If even after recalculating we're left without waypoints, we are done.
+            if (this.Creature.WalkPlan.Waypoints.Count == 0)
+            {
+                this.RepeatAfter = TimeSpan.Zero;
+
+                return;
+            }
+
+            var nextLocation = this.Creature.WalkPlan.Waypoints.First.Value;
             var scheduleDelay = TimeSpan.Zero;
 
             var autoWalkOp = context.OperationFactory.Create(

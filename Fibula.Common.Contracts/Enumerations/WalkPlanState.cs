@@ -18,13 +18,17 @@ namespace Fibula.Common.Contracts.Enumerations
     public enum WalkPlanState
     {
         /// <summary>
-        /// The plan is in progress and we should continue.
+        /// The plan is to continue, and there is no need to recalculate the path.
         /// </summary>
-        InProgress,
+        OnTrack,
 
         /// <summary>
-        /// The plan was successfully traversed and we're now
-        /// at the goal location.
+        /// The plan is to continue, but the path should be recalculated.
+        /// </summary>
+        NeedsToRecalculate,
+
+        /// <summary>
+        /// The plan was successfully traversed and we're now at the goal location.
         /// </summary>
         AtGoal,
 

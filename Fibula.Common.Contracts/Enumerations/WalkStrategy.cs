@@ -22,7 +22,7 @@ namespace Fibula.Common.Contracts.Enumerations
         /// When a creature is following a walk plan and it's suddenly interrupted,
         /// it will give up and abort the plan, sending a walk cancellation if applicable.
         /// </summary>
-        GiveUpOnInterruption,
+        DoNotRecalculate,
 
         /// <summary>
         /// Intended for static goals.
@@ -33,7 +33,7 @@ namespace Fibula.Common.Contracts.Enumerations
 
         /// <summary>
         /// Intended for slow moving goals, or low level artificial inteligence.
-        /// The creature follows the walk plan and there is a 20% chance of recalculating
+        /// The creature follows the walk plan and there is a 10% chance of recalculating
         /// at each waypoint. If the waypoint is not accessible or the creature is otherwise
         /// interrupted, it will recalculate the plan from it's current position.
         /// </summary>
@@ -41,7 +41,7 @@ namespace Fibula.Common.Contracts.Enumerations
 
         /// <summary>
         /// Intended for moderate moving goals, following players, or medium artificial inteligence.
-        /// The creature follows the walk plan and there is a 60% chance of recalculating
+        /// The creature follows the walk plan and there is a 25% chance of recalculating
         /// at each waypoint. If the waypoint is not accessible or the creature is otherwise
         /// interrupted, it will recalculate the plan from it's current position.
         /// </summary>
@@ -49,7 +49,7 @@ namespace Fibula.Common.Contracts.Enumerations
 
         /// <summary>
         /// Intended for fast moving goals, or highest artificial inteligence. Compute expensive.
-        /// The creature follows the walk plan and there is a 80% chance of recalculating
+        /// The creature follows the walk plan and there is a 50% chance of recalculating
         /// at each waypoint. If the waypoint is not accessible or the creature is otherwise
         /// interrupted, it will recalculate the plan from it's current position.
         /// </summary>

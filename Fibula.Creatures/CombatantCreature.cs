@@ -269,10 +269,32 @@ namespace Fibula.Creatures
 
                 this.AutoAttackTarget = otherCombatant;
 
-                if (this.ChaseMode == ChaseMode.Chase || otherCombatant == null)
+                if (this.ChaseMode == ChaseMode.Chase)
                 {
-                    this.ChasingTarget = otherCombatant;
+                    this.SetChaseTarget(otherCombatant);
                 }
+
+                // this.TargetChanged?.Invoke(this, oldTarget);
+                targetWasChanged = true;
+            }
+
+            return targetWasChanged;
+        }
+
+        /// <summary>
+        /// Sets the chasing target of this combatant.
+        /// </summary>
+        /// <param name="target">The target to chase, if any.</param>
+        /// <returns>True if the target was actually changed, false otherwise.</returns>
+        public bool SetChaseTarget(ICombatant target)
+        {
+            bool targetWasChanged = false;
+
+            if (target != this.ChasingTarget)
+            {
+                var oldTarget = this.ChasingTarget;
+
+                this.ChasingTarget = target;
 
                 // this.TargetChanged?.Invoke(this, oldTarget);
                 targetWasChanged = true;

@@ -39,6 +39,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="gameOperationsApi">A reference to the game operations api.</param>
         /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
+        /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public OperationContext(
             ILogger logger,
@@ -51,6 +52,7 @@ namespace Fibula.Mechanics.Operations
             IContainerManager containerManager,
             IGameOperationsApi gameOperationsApi,
             ICombatOperationsApi combatOperationsApi,
+            IPathFinder pathFinderAlgo,
             IScheduler scheduler)
             : base(logger)
         {
@@ -63,6 +65,7 @@ namespace Fibula.Mechanics.Operations
             containerManager.ThrowIfNull(nameof(containerManager));
             gameOperationsApi.ThrowIfNull(nameof(gameOperationsApi));
             combatOperationsApi.ThrowIfNull(nameof(combatOperationsApi));
+            pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.MapDescriptor = mapDescriptor;
@@ -74,6 +77,7 @@ namespace Fibula.Mechanics.Operations
             this.ContainerManager = containerManager;
             this.GameApi = gameOperationsApi;
             this.CombatApi = combatOperationsApi;
+            this.PathFinder = pathFinderAlgo;
             this.Scheduler = scheduler;
         }
 
@@ -121,6 +125,11 @@ namespace Fibula.Mechanics.Operations
         /// Gets a reference to the combat api.
         /// </summary>
         public ICombatOperationsApi CombatApi { get; }
+
+        /// <summary>
+        /// Gets a reference to the pathfinder algorithm in use.
+        /// </summary>
+        public IPathFinder PathFinder { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

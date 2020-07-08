@@ -97,6 +97,11 @@ namespace Fibula.Mechanics
         private readonly IContainerManager containerManager;
 
         /// <summary>
+        /// The pathfinder algorithm in use.
+        /// </summary>
+        private readonly IPathFinder pathFinder;
+
+        /// <summary>
         /// Stores the world information.
         /// </summary>
         private readonly WorldInformation worldInfo;
@@ -112,6 +117,7 @@ namespace Fibula.Mechanics
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
         /// <param name="operationFactory">A referecne to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
+        /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
@@ -122,6 +128,7 @@ namespace Fibula.Mechanics
             ICreatureFactory creatureFactory,
             IOperationFactory operationFactory,
             IContainerManager containerManager,
+            IPathFinder pathFinderAlgo,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -132,6 +139,7 @@ namespace Fibula.Mechanics
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
             operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
+            pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -142,6 +150,7 @@ namespace Fibula.Mechanics
             this.creatureFactory = creatureFactory;
             this.operationFactory = operationFactory;
             this.containerManager = containerManager;
+            this.pathFinder = pathFinderAlgo;
             this.scheduler = scheduler;
 
             // Initialize game vars.
@@ -276,7 +285,8 @@ namespace Fibula.Mechanics
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="directions">The directions for the new plan.</param>
-        public void ResetCreatureWalkPlan(ICreature creature, Direction[] directions)
+        /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
+        public void SetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate)
         {
             if (creature == null || !directions.Any())
             {
@@ -298,7 +308,46 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(WalkStrategy.GiveUpOnInterruption, () => lastLoc, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => lastLoc, waypoints.ToArray());
+
+            this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
+
+            this.DispatchOperation(new AutoWalkOrchestratorOperationCreationArguments(creature));
+        }
+
+        /// <summary>
+        /// Re-sets a given creature's walk plan and kicks it off.
+        /// </summary>
+        /// <param name="creature">The creature to reset the walk plan of.</param>
+        /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
+        /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
+        public void SetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation)
+        {
+            if (creature == null || targetCreature == null)
+            {
+                return;
+            }
+
+            var directions = this.pathFinder.FindBetween(creature.Location, targetCreature.Location, out Location endLocation, creature);
+
+            var waypoints = new List<Location>()
+            {
+                creature.Location,
+            };
+
+            var lastLoc = creature.Location;
+
+            // Calculate and add the waypoints.
+            foreach (var dir in directions)
+            {
+                var nextLoc = lastLoc.LocationAt(dir);
+
+                waypoints.Add(nextLoc);
+
+                lastLoc = nextLoc;
+            }
+
+            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.Location, waypoints.ToArray());
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
@@ -499,7 +548,7 @@ namespace Fibula.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
-                        // this.SendHeartbeat(player);
+                        this.SendHeartbeat(player);
                         continue;
                     }
 
@@ -613,6 +662,7 @@ namespace Fibula.Mechanics
                     this.containerManager,
                     this,
                     this,
+                    this.pathFinder,
                     this.scheduler);
             }
             else if (typeof(IOperation).IsAssignableFrom(type))
@@ -628,6 +678,7 @@ namespace Fibula.Mechanics
                     this.containerManager,
                     this,
                     this,
+                    this.pathFinder,
                     this.scheduler);
             }
             else if (typeof(INotification).IsAssignableFrom(type))

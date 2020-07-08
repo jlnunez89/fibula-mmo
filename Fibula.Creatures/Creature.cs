@@ -227,7 +227,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets or sets this creature's walk plan.
         /// </summary>
-        public WalkPlan? WalkPlan { get; set; }
+        public WalkPlan WalkPlan { get; set; }
 
         /// <summary>
         /// Gets a value indicating whether the creature is dead.

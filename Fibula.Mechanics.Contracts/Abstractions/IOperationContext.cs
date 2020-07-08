@@ -68,6 +68,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ICombatOperationsApi CombatApi { get; }
 
         /// <summary>
+        /// Gets a reference to the pathfinder algorithm in use.
+        /// </summary>
+        IPathFinder PathFinder { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }

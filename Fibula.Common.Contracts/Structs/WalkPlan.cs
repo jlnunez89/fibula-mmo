@@ -34,7 +34,9 @@ namespace Fibula.Common.Contracts
             this.DetermineGoal = goalDeterminationFunction;
             this.Waypoints = new LinkedList<Location>(startingWaypoints);
 
-            this.State = WalkPlanState.InProgress;
+            this.State = WalkPlanState.OnTrack;
+
+            this.Rng = new Random();
         }
 
         /// <summary>
@@ -43,9 +45,9 @@ namespace Fibula.Common.Contracts
         public WalkStrategy Strategy { get; }
 
         /// <summary>
-        /// Gets the state of this walk plan.
+        /// Gets or sets the state of this walk plan.
         /// </summary>
-        public WalkPlanState State { get; private set; }
+        public WalkPlanState State { get; set; }
 
         /// <summary>
         /// Gets the function that determines the goal location.
@@ -58,41 +60,13 @@ namespace Fibula.Common.Contracts
         public LinkedList<Location> Waypoints { get; }
 
         /// <summary>
-        /// Checks if the plan is going as intended, by comparing the current location to
-        /// the waypoints of the plan.
+        /// Gets a value indicating whether the walk plan is in a terminal state.
         /// </summary>
-        /// <param name="currentLocation">The current location.</param>
-        /// <returns>True if the current location is expected, false otherwise, or if the plan is out of waypoints.</returns>
-        public bool GoingAsIntended(Location currentLocation)
-        {
-            // The currentLocation must be either the goal, or the next location on our waypoints.
-            if (currentLocation == this.DetermineGoal())
-            {
-                this.State = WalkPlanState.AtGoal;
-                this.Waypoints.Clear();
+        public bool IsInTerminalState => this.State == WalkPlanState.Aborted || this.State == WalkPlanState.AtGoal;
 
-                return true;
-            }
-
-            if (this.Waypoints.Count > 0 && currentLocation == this.Waypoints.First.Value)
-            {
-                // Pop the next node and return, we're on the right path.
-                this.Waypoints.RemoveFirst();
-
-                return true;
-            }
-
-            if (this.Waypoints.Count == 0)
-            {
-                // We're out of waypoints and we're not at our goal...
-                // If we're giving up, mark as aborted before returning.
-                if (this.Strategy == WalkStrategy.GiveUpOnInterruption)
-                {
-                    this.State = WalkPlanState.Aborted;
-                }
-            }
-
-            return false;
-        }
+        /// <summary>
+        /// Gets or sets the pseudo-random number generator to work with.
+        /// </summary>
+        public Random Rng { get; set; }
     }
 }

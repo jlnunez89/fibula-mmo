@@ -37,6 +37,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="gameOperationsApi">A reference to the game operations api.</param>
         /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
+        /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public ElevatedOperationContext(
             ILogger logger,
@@ -49,8 +50,9 @@ namespace Fibula.Mechanics.Operations
             IContainerManager containerManager,
             IGameOperationsApi gameOperationsApi,
             ICombatOperationsApi combatOperationsApi,
+            IPathFinder pathFinderAlgo,
             IScheduler scheduler)
-            : base(logger, mapDescriptor, map, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, gameOperationsApi, combatOperationsApi, scheduler)
+            : base(logger, mapDescriptor, map, creatureManager, itemFactory, creatureFactory, operationFactory, containerManager, gameOperationsApi, combatOperationsApi, pathFinderAlgo, scheduler)
         {
         }
 

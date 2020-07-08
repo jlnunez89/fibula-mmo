@@ -142,27 +142,10 @@ namespace Fibula.Mechanics.Operations
                         // be expedited (or else it's just processed as usual).
                         this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed) * 2);
 
-                        /*
-                        context.EventRulesApi.ClearAllFor(this.GetPartitionKey());
-
-                        // Setup as a movement rule, so that it gets expedited when the combatant is in range from it's target.
-                        var conditionsForExpedition = new Func<IEventRuleContext, bool>[]
+                        if (this.Attacker.ChaseMode == ChaseMode.Chase && this.Attacker.ChasingTarget != null)
                         {
-                            (context) =>
-                            {
-                                if (!(context.Arguments is MovementEventRuleArguments movementEventRuleArguments) ||
-                                    !(movementEventRuleArguments.ThingMoving is ICombatant attacker) ||
-                                    !(attacker.AutoAttackTarget is ICombatant target))
-                                {
-                                    return false;
-                                }
-
-                                return (target.Location - attacker.Location).MaxValueIn2D <= attacker.AutoAttackRange;
-                            },
-                        };
-
-                        context.EventRulesApi.SetupRule(new ExpediteOperationMovementEventRule(context.Logger, this, conditionsForExpedition, 1), this.GetPartitionKey());
-                        */
+                            context.GameApi.SetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChasingTarget);
+                        }
                     }
 
                     return;

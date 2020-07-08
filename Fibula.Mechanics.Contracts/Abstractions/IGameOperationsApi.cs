@@ -150,11 +150,20 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
 
         /// <summary>
-        /// Re-sets a given creature's walk plan.
+        /// Re-sets a given creature's walk plan and kicks it off.
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="directions">The directions for the new plan.</param>
-        void ResetCreatureWalkPlan(ICreature creature, Direction[] directions);
+        /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
+        void SetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate);
+
+        /// <summary>
+        /// Re-sets a given creature's walk plan and kicks it off.
+        /// </summary>
+        /// <param name="creature">The creature to reset the walk plan of.</param>
+        /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
+        /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
+        void SetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation);
 
         /// <summary>
         /// Sends a heartbeat to the player's client.

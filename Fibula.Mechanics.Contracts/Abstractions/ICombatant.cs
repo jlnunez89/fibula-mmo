@@ -161,6 +161,13 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         bool SetAttackTarget(ICombatant otherCombatant);
 
         /// <summary>
+        /// Sets the chasing target of this combatant.
+        /// </summary>
+        /// <param name="target">The target to chase, if any.</param>
+        /// <returns>True if the target was actually changed, false otherwise.</returns>
+        bool SetChaseTarget(ICombatant target);
+
+        /// <summary>
         /// Consumes combat credits to the combatant.
         /// </summary>
         /// <param name="creditType">The type of combat credits to consume.</param>
