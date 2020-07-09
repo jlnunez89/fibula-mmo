@@ -1,5 +1,5 @@
 // -----------------------------------------------------------------
-// <copyright file="LoginListenerTests.cs" company="2Dudes">
+// <copyright file="GatewayListenerTests.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -29,7 +29,7 @@ namespace Fibula.Communications.Listeners.Tests
     /// Tests for the <see cref="GatewayListener{T}"/> class.
     /// </summary>
     [TestClass]
-    public class LoginListenerTests
+    public class GatewayListenerTests
     {
         /// <summary>
         /// Checks <see cref="GatewayListener{T}"/> initialization.

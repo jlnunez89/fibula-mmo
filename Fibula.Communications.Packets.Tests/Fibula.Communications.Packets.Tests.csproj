@@ -30,6 +30,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Fibula.Common.TestingUtilities\Fibula.Common.TestingUtilities.csproj" />
     <ProjectReference Include="..\Fibula.Communications.Packets\Fibula.Communications.Packets.csproj" />
   </ItemGroup>
 

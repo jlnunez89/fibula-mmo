@@ -12,6 +12,7 @@
 namespace Fibula.Communications.Packets.Outgoing
 {
     using System.Collections.Generic;
+    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Contracts.Abstractions;
@@ -28,6 +29,8 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <param name="premDays">The premium days left on the account.</param>
         public CharacterListPacket(IEnumerable<CharacterInfo> characters, ushort premDays)
         {
+            characters.ThrowIfNull(nameof(characters));
+
             this.Characters = characters;
             this.PremiumDaysLeft = premDays;
         }
