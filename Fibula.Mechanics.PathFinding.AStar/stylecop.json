@@ -9,13 +9,10 @@
     "documentationRules": {
       "companyName": "2Dudes",
       "headerDecoration": "-----------------------------------------------------------------",
-      "copyrightText": "Copyright (c) 2018 {companyName}. All rights reserved.\nAuthor: {author}\n{authorContact}\n{authorProfile}\n\nLicensed under the {licenseName} license.\nSee {licenseFile} file in the project root for full license information.",
+      "copyrightText": "Copyright (c) | {mainAuthor} et al.\r\n{mainAuthorProfile}\r\n\r\nAll Rights Reserved.\r\n\r\nLicensed under the MIT License. See LICENSE in the project root for license information.",
       "variables": {
-        "licenseName": "MIT",
-        "licenseFile": "LICENSE.txt",
-        "author": "Jose L. Nunez de Caceres",
-        "authorProfile": "http://linkedin.com/in/jlnunez89",
-        "authorContact": "jlnunez89@gmail.com"
+        "mainAuthor": "Jose L. Nunez de Caceres",
+        "mainAuthorProfile": "https://linkedin.com/in/nunezdecaceres"
       }
     }
   }
