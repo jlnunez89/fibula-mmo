@@ -18,6 +18,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
@@ -36,12 +37,20 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // bool CompareItemAttribute(IThing thing, ItemAttribute attribute, FunctionComparisonType comparisonType, ushort value);
 
         /// <summary>
+        /// Creates item at the specified location.
+        /// </summary>
+        /// <param name="location">The location at which to create the item.</param>
+        /// <param name="itemType">The type of item to create.</param>
+        /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
+        void CreateItemAtLocation(Location location, IItemType itemType, params (ItemAttribute, IConvertible)[] additionalAttributes);
+
+        /// <summary>
         /// Creates a new item at the specified location.
         /// </summary>
         /// <param name="location">The location at which to create the item.</param>
         /// <param name="itemTypeId">The type id of the item to create.</param>
-        /// <param name="itemAttributes">Optional. Item attributes to set on the new item.</param>
-        void CreateItemAtLocation(Location location, ushort itemTypeId, params KeyValuePair<ItemAttribute, IConvertible>[] itemAttributes);
+        /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
+        void CreateItemAtLocation(Location location, ushort itemTypeId, params (ItemAttribute, IConvertible)[] additionalAttributes);
 
         // void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
 

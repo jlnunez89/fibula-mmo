@@ -22,9 +22,9 @@ namespace Fibula.Creatures
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
-    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents all creatures in the game.

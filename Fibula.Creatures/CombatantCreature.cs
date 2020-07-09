@@ -16,6 +16,7 @@ namespace Fibula.Creatures
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
@@ -383,6 +384,14 @@ namespace Fibula.Creatures
             else if (damageInfo.Damage > 0)
             {
                 damageInfo.Damage = Math.Min(damageInfo.Damage, this.Hitpoints);
+                damageInfo.Blood = this.Blood;
+                damageInfo.Effect = this.Blood switch
+                {
+                    BloodType.Bones => AnimatedEffect.XGray,
+                    BloodType.Fire => AnimatedEffect.XBlood,
+                    BloodType.Slime => AnimatedEffect.Poison,
+                    _ => AnimatedEffect.XBlood,
+                };
 
                 this.Hitpoints = (ushort)(this.Hitpoints - damageInfo.Damage);
             }

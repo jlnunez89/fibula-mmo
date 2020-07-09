@@ -40,6 +40,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="gameOperationsApi">A reference to the game operations api.</param>
         /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
         /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
+        /// <param name="predefinedItemSet">A reference to the predefined item set declared.</param>
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public OperationContext(
             ILogger logger,
@@ -53,6 +54,7 @@ namespace Fibula.Mechanics.Operations
             IGameOperationsApi gameOperationsApi,
             ICombatOperationsApi combatOperationsApi,
             IPathFinder pathFinderAlgo,
+            IPredefinedItemSet predefinedItemSet,
             IScheduler scheduler)
             : base(logger)
         {
@@ -66,6 +68,7 @@ namespace Fibula.Mechanics.Operations
             gameOperationsApi.ThrowIfNull(nameof(gameOperationsApi));
             combatOperationsApi.ThrowIfNull(nameof(combatOperationsApi));
             pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
+            predefinedItemSet.ThrowIfNull(nameof(predefinedItemSet));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.MapDescriptor = mapDescriptor;
@@ -78,6 +81,7 @@ namespace Fibula.Mechanics.Operations
             this.GameApi = gameOperationsApi;
             this.CombatApi = combatOperationsApi;
             this.PathFinder = pathFinderAlgo;
+            this.PredefinedItemSet = predefinedItemSet;
             this.Scheduler = scheduler;
         }
 
@@ -130,6 +134,11 @@ namespace Fibula.Mechanics.Operations
         /// Gets a reference to the pathfinder algorithm in use.
         /// </summary>
         public IPathFinder PathFinder { get; }
+
+        /// <summary>
+        /// Gets the predefined item set.
+        /// </summary>
+        public IPredefinedItemSet PredefinedItemSet { get; }
 
         /// <summary>
         /// Gets a reference to the scheduler in use.

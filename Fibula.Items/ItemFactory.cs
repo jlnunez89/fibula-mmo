@@ -38,15 +38,8 @@ namespace Fibula.Items
         {
             itemLoader.ThrowIfNull(nameof(itemLoader));
 
-            this.ItemTypeLoader = itemLoader;
-
-            this.itemTypesCatalog = this.ItemTypeLoader.LoadTypes();
+            this.itemTypesCatalog = itemLoader.LoadTypes();
         }
-
-        /// <summary>
-        /// Gets the reference to the item type loader in use.
-        /// </summary>
-        public IItemTypeLoader ItemTypeLoader { get; }
 
         /// <summary>
         /// Creates a new <see cref="IThing"/>.
@@ -85,13 +78,28 @@ namespace Fibula.Items
 
             if (itemCreationArguments.Attributes != null)
             {
-                foreach (var attribute in itemCreationArguments.Attributes)
+                foreach (var (attributeName, attributeValue) in itemCreationArguments.Attributes)
                 {
-                    newItem.Attributes[attribute.Key] = attribute.Value;
+                    newItem.Attributes[attributeName] = attributeValue;
                 }
             }
 
             return newItem;
+        }
+
+        /// <summary>
+        /// Looks up an <see cref="IItemType"/> given a type id.
+        /// </summary>
+        /// <param name="typeId">The id of the type to look for.</param>
+        /// <returns>A reference to the <see cref="IItemType"/> found, and null if not found.</returns>
+        public IItemType FindTypeById(ushort typeId)
+        {
+            if (this.itemTypesCatalog.TryGetValue(typeId, out IItemType itemTypeFound))
+            {
+                return itemTypeFound;
+            }
+
+            return null;
         }
     }
 }

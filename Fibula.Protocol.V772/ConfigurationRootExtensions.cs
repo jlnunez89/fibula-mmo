@@ -18,6 +18,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Listeners;
+    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Protocol.V772.PacketReaders;
     using Fibula.Protocol.V772.PacketWriters;
@@ -141,6 +142,8 @@ namespace Fibula.Protocol.V772
             });
 
             services.TryAddSingleton<IProtocolTileDescriptor, TileDescriptor_v772>();
+
+            services.TryAddSingleton<IPredefinedItemSet, PredefinedItemSet_v772>();
 
             services.TryAddSingleton<ClientConnectionFactory<GameProtocol_v772>>();
             services.TryAddSingleton<ISocketConnectionFactory>(s => s.GetService<ClientConnectionFactory<GameProtocol_v772>>());

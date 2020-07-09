@@ -131,7 +131,11 @@ namespace Fibula.Map
             get
             {
                 // TODO: handle setting this as the items get added/removed to avoid constant calculation.
-                return (this.Ground != null && this.Ground.BlocksThrow) || this.stayOnTopItems.Any(i => i.BlocksThrow) || this.stayOnBottomItems.Any(i => i.BlocksThrow) || this.itemsOnTile.Any(i => i.BlocksThrow);
+                return (this.Ground != null && this.Ground.BlocksThrow) ||
+                        this.groundBorders.Any(i => i.BlocksThrow) ||
+                        this.stayOnTopItems.Any(i => i.BlocksThrow) ||
+                        this.stayOnBottomItems.Any(i => i.BlocksThrow) ||
+                        this.itemsOnTile.Any(i => i.BlocksThrow);
             }
         }
 
@@ -143,7 +147,12 @@ namespace Fibula.Map
             get
             {
                 // TODO: handle setting this as the items get added/removed to avoid constant calculation.
-                return (this.Ground != null && this.Ground.BlocksPass) || this.Creatures.Any() || this.stayOnTopItems.Any(i => i.BlocksPass) || this.stayOnBottomItems.Any(i => i.BlocksPass) || this.itemsOnTile.Any(i => i.BlocksPass);
+                return (this.Ground != null && this.Ground.BlocksPass) ||
+                        this.Creatures.Any() ||
+                        this.groundBorders.Any(i => i.BlocksPass) ||
+                        this.stayOnTopItems.Any(i => i.BlocksPass) ||
+                        this.stayOnBottomItems.Any(i => i.BlocksPass) ||
+                        this.itemsOnTile.Any(i => i.BlocksPass);
             }
         }
 
@@ -155,12 +164,16 @@ namespace Fibula.Map
             get
             {
                 // TODO: handle setting this as the items get added/removed to avoid constant calculation.
-                return (this.Ground != null && this.Ground.BlocksLay) || this.stayOnTopItems.Any(i => i.BlocksLay) || this.stayOnBottomItems.Any(i => i.BlocksLay) || this.itemsOnTile.Any(i => i.BlocksLay);
+                return (this.Ground != null && this.Ground.BlocksLay) ||
+                        this.groundBorders.Any(i => i.BlocksLay) ||
+                        this.stayOnTopItems.Any(i => i.BlocksLay) ||
+                        this.stayOnBottomItems.Any(i => i.BlocksLay) ||
+                        this.itemsOnTile.Any(i => i.BlocksLay);
             }
         }
 
         /// <summary>
-        /// Gets the thing that is on top based on the tile's stack order.
+        /// Gets the thing that is on top based on the tile's stack order. Prioritizes creatures, then items.
         /// </summary>
         public IThing TopThing
         {

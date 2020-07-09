@@ -85,8 +85,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     context.GameApi.CreateItemAtLocation(
                         creatureTile.Location,
-                        ItemConstants.BloodPoolTypeId,
-                        new KeyValuePair<ItemAttribute, IConvertible>(ItemAttribute.LiquidType, LiquidType.Blood));
+                        context.PredefinedItemSet.FindPoolForBloodType(this.Creature.Blood));
                 }
 
                 this.RemoveCreature(context, this.Creature);

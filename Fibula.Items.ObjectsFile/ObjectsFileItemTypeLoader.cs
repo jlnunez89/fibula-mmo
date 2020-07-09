@@ -128,13 +128,13 @@ namespace Fibula.Items.ObjectsFile
                 switch (propName)
                 {
                     case "typeid":
-                        currentType.SetId(Convert.ToUInt16(propData));
+                        currentType.TypeId = Convert.ToUInt16(propData);
                         break;
                     case "name":
-                        currentType.SetName(propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2)));
+                        currentType.Name = propData.Substring(Math.Min(1, propData.Length), Math.Max(0, propData.Length - 2));
                         break;
                     case "description":
-                        currentType.SetDescription(propData);
+                        currentType.Description = propData;
                         break;
                     case "flags":
                         foreach (var element in CipFileParser.Parse(propData))

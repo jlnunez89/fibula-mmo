@@ -13,7 +13,7 @@
 namespace Fibula.Mechanics.Contracts.Structs
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
@@ -31,7 +31,7 @@ namespace Fibula.Mechanics.Contracts.Structs
             this.Damage = damageValue;
             this.Dealer = damageDealer;
 
-            this.Effect = AnimatedEffect.XBlood;
+            this.Effect = AnimatedEffect.None;
             this.Blood = BloodType.Blood;
         }
 
@@ -58,6 +58,6 @@ namespace Fibula.Mechanics.Contracts.Structs
         /// <summary>
         /// Gets a value indicating whether to apply blood to the environment.
         /// </summary>
-        public bool ApplyBloodToEnvironment => this.Damage > 0 && this.Blood == BloodType.Blood;
+        public bool ApplyBloodToEnvironment => this.Damage > 0;
     }
 }

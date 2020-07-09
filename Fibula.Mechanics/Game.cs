@@ -102,6 +102,11 @@ namespace Fibula.Mechanics
         private readonly IPathFinder pathFinder;
 
         /// <summary>
+        /// The predefined item set declared.
+        /// </summary>
+        private readonly IPredefinedItemSet predefinedItemSet;
+
+        /// <summary>
         /// Stores the world information.
         /// </summary>
         private readonly WorldInformation worldInfo;
@@ -118,6 +123,7 @@ namespace Fibula.Mechanics
         /// <param name="operationFactory">A referecne to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
+        /// <param name="predefinedItemSet">A reference to the predefined item set declared.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
@@ -129,6 +135,7 @@ namespace Fibula.Mechanics
             IOperationFactory operationFactory,
             IContainerManager containerManager,
             IPathFinder pathFinderAlgo,
+            IPredefinedItemSet predefinedItemSet,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -140,6 +147,7 @@ namespace Fibula.Mechanics
             operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
             pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
+            predefinedItemSet.ThrowIfNull(nameof(predefinedItemSet));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -151,6 +159,7 @@ namespace Fibula.Mechanics
             this.operationFactory = operationFactory;
             this.containerManager = containerManager;
             this.pathFinder = pathFinderAlgo;
+            this.predefinedItemSet = predefinedItemSet;
             this.scheduler = scheduler;
 
             // Initialize game vars.
@@ -207,14 +216,37 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
+        /// Creates item at the specified location.
+        /// </summary>
+        /// <param name="location">The location at which to create the item.</param>
+        /// <param name="itemType">The type of item to create.</param>
+        /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
+        public void CreateItemAtLocation(Location location, IItemType itemType, params (ItemAttribute, IConvertible)[] additionalAttributes)
+        {
+            if (itemType == null)
+            {
+                return;
+            }
+
+            var attributesToSet = itemType.DefaultAttributes.Select(kvp => (kvp.Key, kvp.Value));
+
+            if (additionalAttributes != null)
+            {
+                attributesToSet.Union(additionalAttributes);
+            }
+
+            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemType.TypeId, location, attributesToSet.ToArray()));
+        }
+
+        /// <summary>
         /// Creates a new item at the specified location.
         /// </summary>
         /// <param name="location">The location at which to create the item.</param>
         /// <param name="itemTypeId">The type id of the item to create.</param>
-        /// <param name="itemAttributes">Optional. Item attributes to set on the new item.</param>
-        public void CreateItemAtLocation(Location location, ushort itemTypeId, params KeyValuePair<ItemAttribute, IConvertible>[] itemAttributes)
+        /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
+        public void CreateItemAtLocation(Location location, ushort itemTypeId, params (ItemAttribute, IConvertible)[] additionalAttributes)
         {
-            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location, new Dictionary<ItemAttribute, IConvertible>(itemAttributes)));
+            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location, additionalAttributes));
         }
 
         /// <summary>
@@ -663,6 +695,7 @@ namespace Fibula.Mechanics
                     this,
                     this,
                     this.pathFinder,
+                    this.predefinedItemSet,
                     this.scheduler);
             }
             else if (typeof(IOperation).IsAssignableFrom(type))
@@ -679,6 +712,7 @@ namespace Fibula.Mechanics
                     this,
                     this,
                     this.pathFinder,
+                    this.predefinedItemSet,
                     this.scheduler);
             }
             else if (typeof(INotification).IsAssignableFrom(type))

@@ -23,6 +23,13 @@ namespace Fibula.Items
     public class ItemType : IItemType
     {
         /// <summary>
+        /// The id of the type of this item.
+        /// </summary>
+        private ushort typeId;
+        private string name;
+        private string description;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ItemType"/> class.
         /// </summary>
         public ItemType()
@@ -36,19 +43,58 @@ namespace Fibula.Items
         }
 
         /// <summary>
-        /// Gets the id of the type of this item.
+        /// Gets or sets the id of the type of this item.
         /// </summary>
-        public ushort TypeId { get; private set; }
+        public ushort TypeId
+        {
+            get => this.typeId;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.TypeId)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                }
+
+                this.typeId = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the name of this type of item.
+        /// Gets or sets the name of this type of item.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name
+        {
+            get => this.name;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                }
+
+                this.name = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the decription of this type of item.
+        /// Gets or sets the decription of this type of item.
         /// </summary>
-        public string Description { get; private set; }
+        public string Description
+        {
+            get => this.description;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Description)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                }
+
+                this.description = value.Trim('"');
+            }
+        }
 
         /// <summary>
         /// Gets the flags for this type of item.
@@ -79,48 +125,6 @@ namespace Fibula.Items
         }
 
         /// <summary>
-        /// Sets the type's id.
-        /// </summary>
-        /// <param name="typeId">The id of the type.</param>
-        public void SetId(ushort typeId)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetId)}({nameof(typeId)}={typeId}");
-            }
-
-            this.TypeId = typeId;
-        }
-
-        /// <summary>
-        /// Sets the type's name.
-        /// </summary>
-        /// <param name="name">The name of the type.</param>
-        public void SetName(string name)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetName)}({nameof(name)}={name}");
-            }
-
-            this.Name = name;
-        }
-
-        /// <summary>
-        /// Sets the type's description.
-        /// </summary>
-        /// <param name="description">The description of the type.</param>
-        public void SetDescription(string description)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetDescription)}({nameof(description)}={description}");
-            }
-
-            this.Description = description.Trim('"');
-        }
-
-        /// <summary>
         /// Sets a flag in this type.
         /// </summary>
         /// <param name="flag">The flag to set in the type.</param>
@@ -147,6 +151,32 @@ namespace Fibula.Items
             }
 
             this.DefaultAttributes[attribute] = attributeValue;
+        }
+
+        /// <summary>
+        /// Clones the <see cref="ItemType"/> into a new instance without locking the clone.
+        /// </summary>
+        /// <returns>The cloned <see cref="ItemType"/>.</returns>
+        object ICloneable.Clone()
+        {
+            var newInstance = new ItemType()
+            {
+                TypeId = this.typeId,
+                Name = this.name,
+                Description = this.description,
+            };
+
+            foreach (var flag in this.Flags)
+            {
+                newInstance.Flags.Add(flag);
+            }
+
+            foreach (var attribute in this.DefaultAttributes)
+            {
+                newInstance.DefaultAttributes.Add(attribute);
+            }
+
+            return newInstance;
         }
     }
 }

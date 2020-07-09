@@ -34,7 +34,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="itemTypeId">The type id of the item being created.</param>
         /// <param name="atLocation">The location from which the item is being created.</param>
         /// <param name="attributes">The attributes to set in the item.</param>
-        public CreateItemOperation(uint requestorId, ushort itemTypeId, Location atLocation, IDictionary<ItemAttribute, IConvertible> attributes)
+        public CreateItemOperation(uint requestorId, ushort itemTypeId, Location atLocation, IReadOnlyCollection<(ItemAttribute, IConvertible)> attributes)
             : base(requestorId)
         {
             this.TypeId = itemTypeId;
@@ -60,7 +60,7 @@ namespace Fibula.Mechanics.Operations
         /// <summary>
         /// Gets or sets the attributes to set in the item to create.
         /// </summary>
-        public IDictionary<ItemAttribute, IConvertible> WithAttributes { get; set; }
+        public IReadOnlyCollection<(ItemAttribute, IConvertible)> WithAttributes { get; set; }
 
         /// <summary>
         /// Gets the location at which to create the item.

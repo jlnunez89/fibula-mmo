@@ -19,7 +19,7 @@ namespace Fibula.Items.Contracts.Abstractions
     /// <summary>
     /// Interface for types of items.
     /// </summary>
-    public interface IItemType
+    public interface IItemType : ICloneable
     {
         /// <summary>
         /// Gets the id of the type of this item.

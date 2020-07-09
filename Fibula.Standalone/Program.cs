@@ -299,6 +299,7 @@ namespace Fibula.Standalone
 
         private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)
         {
+            // Note: A IPredefinedItemSet component must be registered by the protocol version.
             services.AddSingleton<IItemFactory, ItemFactory>();
 
             services.AddSingleton<IContainerManager, ContainerManager>();

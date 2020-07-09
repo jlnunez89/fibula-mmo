@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.Contracts.Enumerations
+namespace Fibula.Items.Contracts.Enumerations
 {
     /// <summary>
     /// Enumerates the possible blood types.

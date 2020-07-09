@@ -30,6 +30,6 @@ namespace Fibula.Items
         /// <summary>
         /// Gets or sets the attributes to set in the item to create.
         /// </summary>
-        public IDictionary<ItemAttribute, IConvertible> Attributes { get; set; }
+        public IReadOnlyCollection<(ItemAttribute, IConvertible)> Attributes { get; set; }
     }
 }

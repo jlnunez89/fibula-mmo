@@ -25,5 +25,12 @@ namespace Fibula.Items.Contracts.Abstractions
         /// <param name="creationArguments">The arguments for the <see cref="IItem"/> creation.</param>
         /// <returns>A new instance of the <see cref="IItem"/>.</returns>
         IItem CreateItem(IThingCreationArguments creationArguments);
+
+        /// <summary>
+        /// Looks up an <see cref="IItemType"/> given a type id.
+        /// </summary>
+        /// <param name="typeId">The id of the type to look for.</param>
+        /// <returns>A reference to the <see cref="IItemType"/> found, and null if not found.</returns>
+        IItemType FindTypeById(ushort typeId);
     }
 }

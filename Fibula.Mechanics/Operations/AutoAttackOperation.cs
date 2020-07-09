@@ -19,7 +19,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
@@ -208,10 +207,7 @@ namespace Fibula.Mechanics.Operations
 
             if (damageDoneInfo.ApplyBloodToEnvironment)
             {
-                context.GameApi.CreateItemAtLocation(
-                    this.Target.Location,
-                    ItemConstants.BloodSplatterTypeId,
-                    new KeyValuePair<ItemAttribute, IConvertible>(ItemAttribute.LiquidType, LiquidType.Blood));
+                context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.Blood));
             }
 
             // Normalize the attacker's defense speed based on the global round time and round that up.

@@ -73,6 +73,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         IPathFinder PathFinder { get; }
 
         /// <summary>
+        /// Gets the predefined item set.
+        /// </summary>
+        IPredefinedItemSet PredefinedItemSet { get; }
+
+        /// <summary>
         /// Gets a reference to the scheduler in use.
         /// </summary>
         IScheduler Scheduler { get; }
