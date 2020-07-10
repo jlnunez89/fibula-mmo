@@ -85,9 +85,14 @@ namespace Fibula.Creatures.Contracts.Abstractions
         Outfit Outfit { get; }
 
         /// <summary>
-        /// Gets the creatures facing direction.
+        /// Gets the creature's facing direction.
         /// </summary>
         Direction Direction { get; }
+
+        /// <summary>
+        /// Gets or sets the creature's last move modifier.
+        /// </summary>
+        decimal LastMoveCostModifier { get; set; }
 
         /// <summary>
         /// Gets this creature's emitted light level.

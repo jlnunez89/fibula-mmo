@@ -62,7 +62,7 @@ namespace Fibula.Client
             this.knownCreaturesLock = new object();
 
             this.Connection = connection;
-            this.ClientInformation = new ClientInformation()
+            this.Information = new ClientInformation()
             {
                 Type = AgentType.Undefined,
                 Version = "Unknown",
@@ -82,7 +82,7 @@ namespace Fibula.Client
         /// <summary>
         /// Gets the information about the client on the other side of this connection.
         /// </summary>
-        public ClientInformation ClientInformation { get; }
+        public ClientInformation Information { get; }
 
         /// <summary>
         /// Gets or sets the id of the player that this client is tied to.

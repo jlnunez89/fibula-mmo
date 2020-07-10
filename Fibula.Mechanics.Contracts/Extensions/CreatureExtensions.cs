@@ -32,6 +32,8 @@ namespace Fibula.Mechanics.Contracts.Extensions
         /// <returns>The duration time of the step.</returns>
         public static TimeSpan CalculateStepDuration(this ICreature creature, Direction stepDirection, ITile fromTile = null)
         {
+            const uint Epsilon = 50;
+
             if (creature == null)
             {
                 return TimeSpan.Zero;
@@ -40,14 +42,12 @@ namespace Fibula.Mechanics.Contracts.Extensions
             // TODO: incorporate last step (i.e. if diagonal) into this calculation.
             var tilePenalty = fromTile?.Ground?.MovementPenalty ?? MechanicsConstants.DefaultGroundMovementPenaltyInMs;
 
-            const uint Epsilon = 25;
             decimal totalPenalty = 1000 * tilePenalty;
             decimal stepSpeed = Math.Max(1u, creature.Speed);
 
-            var durationInMs = (uint)Math.Ceiling(totalPenalty / stepSpeed / Epsilon) * Epsilon;
-            var adjustedDurationInMs = durationInMs * (stepDirection.IsDiagonal() ? 2 : 1);
+            var durationInMs = (uint)Math.Ceiling(Math.Floor(totalPenalty / stepSpeed) / Epsilon) * Epsilon;
 
-            return TimeSpan.FromMilliseconds(adjustedDurationInMs);
+            return TimeSpan.FromMilliseconds(durationInMs);
         }
     }
 }

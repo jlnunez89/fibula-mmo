@@ -84,6 +84,8 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
+            this.LastMoveCostModifier = 1;
+
             this.Outfit = new Outfit
             {
                 Id = 0,
@@ -177,6 +179,11 @@ namespace Fibula.Creatures
         /// Gets or sets the direction that this creature is facing.
         /// </summary>
         public Direction Direction { get; protected set; }
+
+        /// <summary>
+        /// Gets or sets the creature's last move modifier.
+        /// </summary>
+        public decimal LastMoveCostModifier { get; set; }
 
         /// <summary>
         /// Gets or sets this creature's light level.

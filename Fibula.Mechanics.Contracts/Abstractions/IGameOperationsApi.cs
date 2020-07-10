@@ -102,7 +102,8 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         /// <param name="player">The player to cancel actions for.</param>
         /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
-        void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null);
+        /// <param name="async">Optional. A value indicating whether to execute the cancellation asynchronously.</param>
+        void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null, bool async = false);
 
         /// <summary>
         /// Handles creature speech.

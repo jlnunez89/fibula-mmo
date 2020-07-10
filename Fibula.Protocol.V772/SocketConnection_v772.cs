@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="StandardTcpClientConnection.cs" company="2Dudes">
+// <copyright file="SocketConnection_v772.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -23,9 +23,9 @@ namespace Fibula.Protocol.V772
     using Serilog;
 
     /// <summary>
-    /// Class that represents a standard client connection over a TCP socket.
+    /// Class that represents a standard 7.72 client connection over a TCP socket.
     /// </summary>
-    public class StandardTcpClientConnection : ISocketConnection
+    public class SocketConnection_v772 : ISocketConnection
     {
         /// <summary>
         /// A lock used to sempahore writes to the connection's stream.
@@ -68,12 +68,12 @@ namespace Fibula.Protocol.V772
         private uint[] xteaKey;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StandardTcpClientConnection"/> class.
+        /// Initializes a new instance of the <see cref="SocketConnection_v772"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="socket">The socket that this connection is for.</param>
         /// <param name="protocol">The protocol in use by this connection.</param>
-        public StandardTcpClientConnection(ILogger logger, Socket socket, IProtocol protocol)
+        public SocketConnection_v772(ILogger logger, Socket socket, IProtocol protocol)
         {
             logger.ThrowIfNull(nameof(logger));
             socket.ThrowIfNull(nameof(socket));
@@ -87,7 +87,7 @@ namespace Fibula.Protocol.V772
             this.xteaKey = new uint[4];
             this.isAuthenticated = false;
 
-            this.logger = logger.ForContext<StandardTcpClientConnection>();
+            this.logger = logger.ForContext<SocketConnection_v772>();
             this.protocol = protocol;
         }
 

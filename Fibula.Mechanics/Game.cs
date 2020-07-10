@@ -390,14 +390,23 @@ namespace Fibula.Mechanics
         /// </summary>
         /// <param name="player">The player to cancel actions for.</param>
         /// <param name="typeOfActionToCancel">Optional. The specific type of action to cancel.</param>
-        public void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null)
+        /// <param name="async">Optional. A value indicating whether to execute the cancellation asynchronously.</param>
+        public void CancelPlayerActions(IPlayer player, Type typeOfActionToCancel = null, bool async = false)
         {
             if (player == null || (typeOfActionToCancel != null && !typeof(IOperation).IsAssignableFrom(typeOfActionToCancel)))
             {
                 return;
             }
 
-            this.DispatchOperation(new CancelOperationsOperationCreationArguments(player, typeOfActionToCancel));
+            var cancelOp = this.operationFactory.Create(new CancelOperationsOperationCreationArguments(player, typeOfActionToCancel));
+
+            if (async)
+            {
+                this.scheduler.ScheduleEvent(cancelOp);
+                return;
+            }
+
+            cancelOp.Execute(this.GetContextForEventType(cancelOp.GetType()));
         }
 
         /// <summary>
@@ -493,7 +502,11 @@ namespace Fibula.Mechanics
         /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
         public void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1)
         {
-            this.DispatchOperation(
+            var scheduleDelay = TimeSpan.Zero;
+
+            var creature = this.creatureManager.FindCreatureById(fromCreatureId);
+
+            var movementOp = this.operationFactory.Create(
                 new MovementOperationCreationArguments(
                     requestorId,
                     clientThingId,
@@ -503,6 +516,18 @@ namespace Fibula.Mechanics
                     toLocation,
                     toCreatureId,
                     amount));
+
+            // Add delay from current exhaustion of the requestor if it's a creature, and this is a movement in the map.
+            if (requestorId == fromCreatureId &&
+                fromLocation.Type == LocationType.Map &&
+                toLocation.Type == LocationType.Map &&
+                creature is ICreatureWithExhaustion creatureWithExhaustion)
+            {
+                // The scheduling delay becomes any cooldown debt for this operation.
+                scheduleDelay = creatureWithExhaustion.CalculateRemainingCooldownTime(movementOp.ExhaustionType, this.scheduler.CurrentTime);
+            }
+
+            this.scheduler.ScheduleEvent(movementOp, scheduleDelay);
         }
 
         /// <summary>
@@ -579,7 +604,13 @@ namespace Fibula.Mechanics
                 {
                     if (player.Client != null && !player.Client.IsIdle)
                     {
-                        this.SendHeartbeat(player);
+                        if (player.Client.Information.Type == AgentType.Linux ||
+                            player.Client.Information.Type == AgentType.OtClientLinux ||
+                            player.Client.Information.Type == AgentType.OtClientWindows)
+                        {
+                            this.SendHeartbeat(player);
+                        }
+
                         continue;
                     }
 

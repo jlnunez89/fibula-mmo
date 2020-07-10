@@ -55,7 +55,7 @@ namespace Fibula.Protocol.V772
         /// <returns>A new instance of a <see cref="ISocketConnection"/>.</returns>
         public ISocketConnection Create(Socket socket)
         {
-            return new StandardTcpClientConnection(this.logger, socket, this.protocol);
+            return new SocketConnection_v772(this.logger, socket, this.protocol);
         }
     }
 }

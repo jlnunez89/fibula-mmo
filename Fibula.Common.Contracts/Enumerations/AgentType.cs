@@ -35,5 +35,20 @@ namespace Fibula.Common.Contracts.Enumerations
         /// The flash client.
         /// </summary>
         Flash = 3,
+
+        /// <summary>
+        /// The Linux otclient.
+        /// </summary>
+        OtClientLinux = 10,
+
+        /// <summary>
+        /// The Windows otclient.
+        /// </summary>
+        OtClientWindows = 11,
+
+        /// <summary>
+        /// The Mac otclient.
+        /// </summary>
+        OtClientMac = 12,
     }
 }

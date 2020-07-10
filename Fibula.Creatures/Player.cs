@@ -167,7 +167,7 @@ namespace Fibula.Creatures
         /// <returns>The base movement speed of the player.</returns>
         protected override ushort CalculateMovementBaseSpeed()
         {
-            var expLevel = 20; // this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
+            var expLevel = 20 + new Random().Next(50); // this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 
             return (ushort)(this.BaseSpeed + (2 * (expLevel - 1)));
         }

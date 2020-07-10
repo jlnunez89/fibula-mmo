@@ -154,8 +154,8 @@ namespace Fibula.Mechanics.Handlers
             character.IsOnline = true;
 
             // TODO: possibly a friendly name conversion here.
-            client.ClientInformation.Type = Enum.IsDefined(typeof(AgentType), loginInfo.ClientOs) ? (AgentType)loginInfo.ClientOs : AgentType.Windows;
-            client.ClientInformation.Version = loginInfo.ClientVersion.ToString();
+            client.Information.Type = Enum.IsDefined(typeof(AgentType), loginInfo.ClientOs) ? (AgentType)loginInfo.ClientOs : AgentType.Windows;
+            client.Information.Version = loginInfo.ClientVersion.ToString();
 
             this.Game.LogPlayerIn(client, character);
 

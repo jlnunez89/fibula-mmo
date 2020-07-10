@@ -43,7 +43,7 @@ namespace Fibula.Client.Contracts.Abstractions
         /// <summary>
         /// Gets the information about the client on the other side of this connection.
         /// </summary>
-        ClientInformation ClientInformation { get; }
+        ClientInformation Information { get; }
 
         /// <summary>
         /// Sends the packets supplied over the <see cref="Connection"/>.

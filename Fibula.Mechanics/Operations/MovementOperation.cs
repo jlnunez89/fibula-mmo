@@ -475,14 +475,14 @@ namespace Fibula.Mechanics.Operations
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var canThrowBetweenLocations = isTeleport || requestor == null || this.CanThrowBetweenMapLocations(context.Map, this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
-            if (sourceTileIsNull || !thingCanBeMoved)
-            {
-                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
-            }
-            else if (!locationsMatch || !isIntendedThing)
+            if (sourceTileIsNull || !locationsMatch || !isIntendedThing)
             {
                 // Silent fail.
                 return;
+            }
+            else if (!thingCanBeMoved)
+            {
+                this.DispatchTextNotification(context, OperationMessage.MayNotMoveThis);
             }
             else if (!destinationHasGround || !canThrowBetweenLocations)
             {
@@ -714,7 +714,9 @@ namespace Fibula.Mechanics.Operations
             // Then deal with the consequences of the move.
             creature.TurnToDirection(moveDirection.GetClientSafeDirection());
 
-            this.ExhaustionCost = creature.CalculateStepDuration(moveDirection, fromTile);
+            this.ExhaustionCost = TimeSpan.FromTicks(creature.CalculateStepDuration(moveDirection, fromTile).Ticks * (long)creature.LastMoveCostModifier);
+
+            creature.LastMoveCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
             if (toStackPosition != byte.MaxValue)
             {

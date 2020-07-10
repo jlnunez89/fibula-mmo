@@ -72,7 +72,7 @@ namespace Fibula.Mechanics.Handlers
             switch (actionInfo.Action)
             {
                 case IncomingGamePacketType.AutoMoveCancel:
-                    this.Game.CancelPlayerActions(player, typeof(MovementOperation));
+                    this.Game.CancelPlayerActions(player, typeof(MovementOperation), async: true);
                     break;
                 case IncomingGamePacketType.HeartbeatResponse:
                     // NO-OP.
@@ -87,7 +87,7 @@ namespace Fibula.Mechanics.Handlers
                     // this.Game.RequestPlayerOutfitChange(player);
                     break;
                 case IncomingGamePacketType.StopAllActions:
-                    this.Game.CancelPlayerActions(player);
+                    this.Game.CancelPlayerActions(player, null, async: true);
                     break;
             }
 
