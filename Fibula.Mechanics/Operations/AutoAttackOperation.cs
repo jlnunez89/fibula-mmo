@@ -140,7 +140,7 @@ namespace Fibula.Mechanics.Operations
                         // be expedited (or else it's just processed as usual).
                         this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed) * 2);
 
-                        if (this.Attacker.ChaseMode == ChaseMode.Chase && this.Attacker.ChasingTarget != null)
+                        if (this.Attacker.ChaseMode == ChaseMode.Chase && this.Attacker.ChasingTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
                         {
                             context.GameApi.SetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChasingTarget);
                         }

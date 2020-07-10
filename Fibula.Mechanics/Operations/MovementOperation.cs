@@ -464,7 +464,7 @@ namespace Fibula.Mechanics.Operations
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
 
-            IThing thingMoving = this.ThingMovingId != CreatureConstants.CreatureThingId ? sourceTile.TopItem as IThing : sourceTile.TopCreature as IThing;
+            IThing thingMoving = this.ThingMovingId == CreatureConstants.CreatureThingId ? sourceTile.TopCreature as IThing : sourceTile.TopItem as IThing;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
@@ -713,10 +713,9 @@ namespace Fibula.Mechanics.Operations
 
             // Then deal with the consequences of the move.
             creature.TurnToDirection(moveDirection.GetClientSafeDirection());
+            creature.LastMovementCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
-            this.ExhaustionCost = TimeSpan.FromTicks(creature.CalculateStepDuration(moveDirection, fromTile).Ticks * (long)creature.LastMoveCostModifier);
-
-            creature.LastMoveCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
+            this.ExhaustionCost = creature.CalculateStepDuration(fromTile);
 
             if (toStackPosition != byte.MaxValue)
             {

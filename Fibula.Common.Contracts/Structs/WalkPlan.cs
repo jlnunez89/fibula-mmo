@@ -33,7 +33,7 @@ namespace Fibula.Common.Contracts
             this.DetermineGoal = goalDeterminationFunction;
             this.Waypoints = new LinkedList<Location>(startingWaypoints);
 
-            this.State = WalkPlanState.OnTrack;
+            this.State = WalkPlanState.NeedsToRecalculate;
 
             this.Rng = new Random();
         }

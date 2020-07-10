@@ -84,7 +84,7 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.Corpse = corpse;
 
-            this.LastMoveCostModifier = 1;
+            this.LastMovementCostModifier = 1;
 
             this.Outfit = new Outfit
             {
@@ -183,7 +183,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets or sets the creature's last move modifier.
         /// </summary>
-        public decimal LastMoveCostModifier { get; set; }
+        public decimal LastMovementCostModifier { get; set; }
 
         /// <summary>
         /// Gets or sets this creature's light level.

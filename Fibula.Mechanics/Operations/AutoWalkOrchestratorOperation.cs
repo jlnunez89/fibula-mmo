@@ -121,7 +121,7 @@ namespace Fibula.Mechanics.Operations
             // Schedule the actual walk operation.
             context.Scheduler.ScheduleEvent(autoWalkOp, scheduleDelay);
 
-            this.RepeatAfter = this.Creature.CalculateStepDuration(this.Creature.Location.DirectionTo(nextLocation), context.Map.GetTileAt(this.Creature.Location));
+            this.RepeatAfter = this.Creature.CalculateStepDuration(context.Map.GetTileAt(this.Creature.Location));
         }
     }
 }

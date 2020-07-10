@@ -92,7 +92,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets or sets the creature's last move modifier.
         /// </summary>
-        decimal LastMoveCostModifier { get; set; }
+        decimal LastMovementCostModifier { get; set; }
 
         /// <summary>
         /// Gets this creature's emitted light level.

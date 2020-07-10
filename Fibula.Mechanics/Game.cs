@@ -279,7 +279,7 @@ namespace Fibula.Mechanics
         {
             if (combatant is IPlayer playerCombatant)
             {
-                this.CancelPlayerActions(playerCombatant);
+                this.CancelPlayerActions(playerCombatant, typeof(IOperation), async: true);
             }
 
             var rng = new Random();
