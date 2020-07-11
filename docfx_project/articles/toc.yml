@@ -1,0 +1,14 @@
+- name: F.A.Q.
+  href: faq.md
+
+- name: Motivation
+  href: motivation.md
+
+- name: Setup
+  href: setup.md
+
+- name: Configuration
+  href: configuration.md
+
+- name: Roadmap
+  href: roadmap.md

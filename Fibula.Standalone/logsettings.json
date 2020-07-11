@@ -24,7 +24,8 @@
       {
         "Name": "File",
         "Args": {
-          "path": "%TEMP%\\Logs\\fibulammo-standalone.log",
+          "restrictedToMinimumLevel": "Debug",
+          "path": "%TEMP%\\Logs\\fibulammo-standalone-debug.log",
           "outputTemplate": "[{Timestamp:HH:mm:ss}] [{Level}] {SourceContext}: {Message}{NewLine}{Exception}"
         }
       }

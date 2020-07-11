@@ -1,0 +1,153 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Let's go through that README again... What the heck is this? | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Let's go through that README again... What the heck is this? | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="stylesheet" href="styles/docfx.vendor.css">
+    <link rel="stylesheet" href="styles/docfx.css">
+    <link rel="stylesheet" href="styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="index.html">
+                <img id="logo" class="svg" src="images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        <div class="article row grid">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="lets-go-through-that-readme-again-what-the-heck-is-this">Let's go through that README again... What the heck is this?</h1>
+
+<p>A C# NetCore open source server for that other leg-bone game which must not be named, apparently, because it may upset people.</p>
+<p>Here's a nice pic (from early dev), because pics are good:</p>
+<p><img src="images/fibulaDev.png" alt="Image of developing Fibula"></p>
+<h1 id="tldr-what-are-you-looking-for">TL;DR What are you looking for?</h1>
+<p>Run this thing? see <a href="articles/setup.html">how to setup and run it</a>.</p>
+<p>Knobs and switches? <a href="articles/configuration.html">configuration</a> section.</p>
+<p>Just... <a href="articles/motivation.html">WHY?</a>.</p>
+<p>Status and overview of things implemented? Err... <a href="articles/roadmap.html">overview / roadmap</a>... sure.</p>
+<h6 id="more-docs-to-probably-come-soon">More docs to (probably) come soon!</h6>
+<h1 id="how-is-this-better-than-the-existing-c-engines">How is this better than the existing C++ engines?</h1>
+<p>Well, it's too soon to say, but it sure looks sexy. The main development features right now are:</p>
+<h2 id="top-of-industry-standards--clean-code--happy-devs">Top-of-industry standards + clean code = happy devs.</h2>
+<p>It really grinds my gears how badly TFS is documented overall, and how steep the learning curve for newbies is.
+Ergo, I strived to make this is a well-documented and clean code project that can actually be maintained.</p>
+<p><img src="images/hashtagnowarnings.png" alt="Image of no warnings."></p>
+<p>Check the <a href="code/index.html">code reference here</a>, which pulls the XML documentation from the actual code to generate these pages. It doesn't get better than that.</p>
+<h2 id="we-got-them-tests">We got them tests.</h2>
+<p>Slowly growing in the repo, the Fibula project also features testing made super easy by the dotnet core framework.</p>
+<p><img src="images/testProjects.png" alt="Image of some test projects."></p>
+<p><img src="images/someTestRun.png" alt="Image of some test run."></p>
+<h2 id="dependency-injection">Dependency Injection:</h2>
+<p>Dependency injection gives the power to the dev, to quickly switch out the flavor of specific component that they want to run, e.g. the way the map loads:</p>
+<p><img src="images/dependencyInjection.png" alt="Image of more dependency injection."></p>
+<blockquote>
+<p>Notice the OTBM flavor in the image above.</p>
+</blockquote>
+<p>And the same can be done for other assets loading.</p>
+<h2 id="minimal-changes-between-backend-version">Minimal changes between backend version.</h2>
+<p>By leveraging DI we can support different back-end versions with minimal code changes to make when switching between them.</p>
+<p>Take 7.72 for example:</p>
+<p><img src="images/multiVersion.png" alt="Image of 7.72 project."></p>
+<p>This project (and thus, DLL) contains all the intrinsics of packet parsing and writing, connection and other components specific to that version:</p>
+<p><img src="images/perVersionPacketEx.png" alt="Image of a packet reader."></p>
+<p>And it is injected with 2 lines at the composition root of the project <code>(bottom 2 lines)</code>:</p>
+<p><img src="images/compositionRoot.png" alt="Image of the composition root."></p>
+<p>Once we want to support another version, say <code>7.4</code>, we shall add a single DLL targetting that version, implementing the components needed to be injected, possibly point to the <code>7.4</code> map/assets in the config, and re-compile.</p>
+<blockquote>
+<p>For the above example: <code>7.4</code> did not have XTEA or RSA encryption for connections, so that would be stripped.</p>
+<p>Moreover, for <code>7.1</code> for example, the structure would change to <em>not include <code>skulls</code> or <code>shields</code></em> in the player status packet.</p>
+</blockquote>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/docfx_project/index.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="styles/docfx.js"></script>
+    <script type="text/javascript" src="styles/main.js"></script>
+  </body>
+</html>

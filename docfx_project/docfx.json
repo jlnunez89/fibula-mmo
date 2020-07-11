@@ -1,0 +1,79 @@
+{
+  "metadata": [
+    {
+      "src": [
+        {
+          "files": [
+            "**/*.csproj"
+          ],
+          "src": "..",
+          "exclude": [
+            "**/obj/**",
+            "**/bin/**",
+            "**/*Test.csproj",
+            "docs/**"
+          ]
+        }
+      ],
+      "dest": "code",
+      "disableGitFeatures": false,
+      "disableDefaultFilter": false
+    }
+  ],
+  "build": {
+    "content": [
+      {
+        "files": [
+          "code/**.yml",
+          "code/index.md"
+        ]
+      },
+      {
+        "files": [
+          "articles/**.md",
+          "articles/**/toc.yml",
+          "toc.yml",
+          "*.md"
+        ]
+      }
+    ],
+    "resource": [
+      {
+        "files": [
+          "images/**"
+        ]
+      }
+    ],
+    "overwrite": [
+      {
+        "files": [
+          "codedoc/**.md"
+        ],
+        "exclude": [
+          "obj/**",
+          "docs/**"
+        ]
+      }
+    ],
+    "dest": "../docs",
+    "globalMetadata": {
+      "_appTitle": "Fibula MMO",
+      "_appFooter": "<span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>",
+      "_appLogoPath": "images/logo.png",
+      "_appFaviconPath": "favicon.ico",
+      "_enableSearch": true
+    },
+    "globalMetadataFiles": [],
+    "fileMetadataFiles": [],
+    "template": [
+      "default",
+      "templates/darkfx"
+    ],
+    "postProcessors": [],
+    "markdownEngineName": "markdig",
+    "noLangKeyword": false,
+    "keepFileLink": false,
+    "cleanupCacheHistory": false,
+    "disableGitFeatures": false
+  }
+}

@@ -1,0 +1,1141 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Tile
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Tile
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Map.Tile">
+  
+  
+  <h1 id="Fibula_Map_Tile" data-uid="Fibula.Map.Tile" class="text-break">Class Tile
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a tile in the map.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Tile</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Map.Contracts.Abstractions.ITile.html">ITile</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Map.html">Fibula.Map</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Map.dll</h6>
+  <h5 id="Fibula_Map_Tile_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class Tile : ITile, IThingContainer, ILocatable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile__ctor_Fibula_Common_Contracts_Structs_Location_Fibula_Items_Contracts_Abstractions_IItem_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.%23ctor(Fibula.Common.Contracts.Structs.Location%2CFibula.Items.Contracts.Abstractions.IItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L69">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile__ctor_" data-uid="Fibula.Map.Tile.#ctor*"></a>
+  <h4 id="Fibula_Map_Tile__ctor_Fibula_Common_Contracts_Structs_Location_Fibula_Items_Contracts_Abstractions_IItem_" data-uid="Fibula.Map.Tile.#ctor(Fibula.Common.Contracts.Structs.Location,Fibula.Items.Contracts.Abstractions.IItem)">Tile(Location, IItem)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Map.Tile.html">Tile</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Tile(Location location, IItem ground)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The location of this tile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td><span class="parametername">ground</span></td>
+        <td><p>The ground item to initialize the tile with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_BlocksLay.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.BlocksLay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L161">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_BlocksLay_" data-uid="Fibula.Map.Tile.BlocksLay*"></a>
+  <h4 id="Fibula_Map_Tile_BlocksLay" data-uid="Fibula.Map.Tile.BlocksLay">BlocksLay</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether items in this tile block laying.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BlocksLay { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_BlocksPass.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.BlocksPass%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L144">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_BlocksPass_" data-uid="Fibula.Map.Tile.BlocksPass*"></a>
+  <h4 id="Fibula_Map_Tile_BlocksPass" data-uid="Fibula.Map.Tile.BlocksPass">BlocksPass</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether items in this tile block passing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BlocksPass { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_BlocksThrow.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.BlocksThrow%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L128">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_BlocksThrow_" data-uid="Fibula.Map.Tile.BlocksThrow*"></a>
+  <h4 id="Fibula_Map_Tile_BlocksThrow" data-uid="Fibula.Map.Tile.BlocksThrow">BlocksThrow</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether items in this tile block throwing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool BlocksThrow { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_CarryLocation.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.CarryLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L98">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_CarryLocation_" data-uid="Fibula.Map.Tile.CarryLocation*"></a>
+  <h4 id="Fibula_Map_Tile_CarryLocation" data-uid="Fibula.Map.Tile.CarryLocation">CarryLocation</h4>
+  <div class="markdown level1 summary"><p>Gets the location where this entity is being carried at, which is null for tiles.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Location? CarryLocation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_Creatures.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.Creatures%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L113">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_Creatures_" data-uid="Fibula.Map.Tile.Creatures*"></a>
+  <h4 id="Fibula_Map_Tile_Creatures" data-uid="Fibula.Map.Tile.Creatures">Creatures</h4>
+  <div class="markdown level1 summary"><p>Gets the tile's creature ids.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;ICreature&gt; Creatures { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_Flags.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.Flags%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L118">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_Flags_" data-uid="Fibula.Map.Tile.Flags*"></a>
+  <h4 id="Fibula_Map_Tile_Flags" data-uid="Fibula.Map.Tile.Flags">Flags</h4>
+  <div class="markdown level1 summary"><p>Gets the flags from this tile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte Flags { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_Ground.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.Ground%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L103">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_Ground_" data-uid="Fibula.Map.Tile.Ground*"></a>
+  <h4 id="Fibula_Map_Tile_Ground" data-uid="Fibula.Map.Tile.Ground">Ground</h4>
+  <div class="markdown level1 summary"><p>Gets the single ground item that a tile may have.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IItem Ground { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_LastModified.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.LastModified%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L123">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_LastModified_" data-uid="Fibula.Map.Tile.LastModified*"></a>
+  <h4 id="Fibula_Map_Tile_LastModified" data-uid="Fibula.Map.Tile.LastModified">LastModified</h4>
+  <div class="markdown level1 summary"><p>Gets the last date and time that this tile was modified.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public DateTimeOffset LastModified { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.DateTimeOffset</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_LiquidPool.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.LiquidPool%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L108">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_LiquidPool_" data-uid="Fibula.Map.Tile.LiquidPool*"></a>
+  <h4 id="Fibula_Map_Tile_LiquidPool" data-uid="Fibula.Map.Tile.LiquidPool">LiquidPool</h4>
+  <div class="markdown level1 summary"><p>Gets the single liquid pool item that a tile may have.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IItem LiquidPool { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_Location.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.Location%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L93">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_Location_" data-uid="Fibula.Map.Tile.Location*"></a>
+  <h4 id="Fibula_Map_Tile_Location" data-uid="Fibula.Map.Tile.Location">Location</h4>
+  <div class="markdown level1 summary"><p>Gets this tile's location.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Location Location { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_TopCreature.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.TopCreature%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L188">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_TopCreature_" data-uid="Fibula.Map.Tile.TopCreature*"></a>
+  <h4 id="Fibula_Map_Tile_TopCreature" data-uid="Fibula.Map.Tile.TopCreature">TopCreature</h4>
+  <div class="markdown level1 summary"><p>Gets the creature that is on top based on the tile's stack order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreature TopCreature { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_TopItem.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.TopItem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L199">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_TopItem_" data-uid="Fibula.Map.Tile.TopItem*"></a>
+  <h4 id="Fibula_Map_Tile_TopItem" data-uid="Fibula.Map.Tile.TopItem">TopItem</h4>
+  <div class="markdown level1 summary"><p>Gets the item that is on top based on the tile's stack order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IItem TopItem { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_TopThing.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.TopThing%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L177">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_TopThing_" data-uid="Fibula.Map.Tile.TopThing*"></a>
+  <h4 id="Fibula_Map_Tile_TopThing" data-uid="Fibula.Map.Tile.TopThing">TopThing</h4>
+  <div class="markdown level1 summary"><p>Gets the thing that is on top based on the tile's stack order. Prioritizes creatures, then items.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IThing TopThing { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L413">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_AddContent_" data-uid="Fibula.Map.Tile.AddContent*"></a>
+  <h4 id="Fibula_Map_Tile_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_" data-uid="Fibula.Map.Tile.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing,System.Byte)">AddContent(IThingFactory, IThing, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = 255)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to add to the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index at which to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> at any free index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_FindItemWithId_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.FindItemWithId(System.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L299">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_FindItemWithId_" data-uid="Fibula.Map.Tile.FindItemWithId*"></a>
+  <h4 id="Fibula_Map_Tile_FindItemWithId_System_UInt16_" data-uid="Fibula.Map.Tile.FindItemWithId(System.UInt16)">FindItemWithId(UInt16)</h4>
+  <div class="markdown level1 summary"><p>Attempts to find an item in the tile with the given type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IItem FindItemWithId(ushort typeId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">typeId</span></td>
+        <td><p>The type to look for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td><p>The item with such id, null otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_FindThingAtIndex_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.FindThingAtIndex(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L401">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_FindThingAtIndex_" data-uid="Fibula.Map.Tile.FindThingAtIndex*"></a>
+  <h4 id="Fibula_Map_Tile_FindThingAtIndex_System_Byte_" data-uid="Fibula.Map.Tile.FindThingAtIndex(System.Byte)">FindThingAtIndex(Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to find an <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> whitin this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IThing FindThingAtIndex(byte index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The index at which to look for the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> found at the index, if any was found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_GetItemsToDescribeByPriority_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.GetItemsToDescribeByPriority(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L225">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_GetItemsToDescribeByPriority_" data-uid="Fibula.Map.Tile.GetItemsToDescribeByPriority*"></a>
+  <h4 id="Fibula_Map_Tile_GetItemsToDescribeByPriority_System_Int32_" data-uid="Fibula.Map.Tile.GetItemsToDescribeByPriority(System.Int32)">GetItemsToDescribeByPriority(Int32)</h4>
+  <div class="markdown level1 summary"><p>Attempts to get the tile's items to describe prioritized and ordered by their stack order.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (IEnumerable&lt;IItem&gt; fixedItems, IEnumerable&lt;IItem&gt; normalItems) GetItemsToDescribeByPriority(int maxItemsToGet = 10)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">maxItemsToGet</span></td>
+        <td><p>The maximum number of items to include in the result.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a>&gt;, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a>&gt;&gt;</td>
+        <td><p>The items in the tile, split by those which are fixed and those considered normal.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Fibula_Map_Tile_GetItemsToDescribeByPriority_System_Int32__remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The algorithm prioritizes the returned items in the following order:</p>
+<ol>
+<li>Ground item.</li>
+<li>Clipped items.</li>
+<li>Stay-on-bottom items.</li>
+<li>Stay-on-top items.</li>
+<li>Normal items.</li>
+</ol>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_GetStackOrderOfThing_Fibula_Common_Contracts_Abstractions_IThing_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.GetStackOrderOfThing(Fibula.Common.Contracts.Abstractions.IThing)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L322">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_GetStackOrderOfThing_" data-uid="Fibula.Map.Tile.GetStackOrderOfThing*"></a>
+  <h4 id="Fibula_Map_Tile_GetStackOrderOfThing_Fibula_Common_Contracts_Abstractions_IThing_" data-uid="Fibula.Map.Tile.GetStackOrderOfThing(Fibula.Common.Contracts.Abstractions.IThing)">GetStackOrderOfThing(IThing)</h4>
+  <div class="markdown level1 summary"><p>Attempts to get the position in the stack for the given <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte GetStackOrderOfThing(IThing thing)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The thing to find.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><p>The position in the stack for the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>, or <span class="xref">System.Byte.MaxValue</span> if its not found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_IsPathBlocking_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.IsPathBlocking(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L640">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_IsPathBlocking_" data-uid="Fibula.Map.Tile.IsPathBlocking*"></a>
+  <h4 id="Fibula_Map_Tile_IsPathBlocking_System_Byte_" data-uid="Fibula.Map.Tile.IsPathBlocking(System.Byte)">IsPathBlocking(Byte)</h4>
+  <div class="markdown level1 summary"><p>Determines if this tile is considered to be blocking the path.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsPathBlocking(byte avoidTypes = 14)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">avoidTypes</span></td>
+        <td><p>The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the tile is considered path blocking, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.RemoveContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%40%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L515">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_RemoveContent_" data-uid="Fibula.Map.Tile.RemoveContent*"></a>
+  <h4 id="Fibula_Map_Tile_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_" data-uid="Fibula.Map.Tile.RemoveContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing@,System.Byte,System.Byte)">RemoveContent(IThingFactory, ref IThing, Byte, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to remove a thing from this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainder) RemoveContent(IThingFactory thingFactory, ref IThing thing, byte index = 255, byte amount = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to remove from the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index from which to remove the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to remove the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> if found at any index.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Optional. The amount of the <code data-dev-comment-type="paramref" class="paramref">thing</code> to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.ReplaceContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%2CFibula.Common.Contracts.Abstractions.IThing%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L613">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_ReplaceContent_" data-uid="Fibula.Map.Tile.ReplaceContent*"></a>
+  <h4 id="Fibula_Map_Tile_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_" data-uid="Fibula.Map.Tile.ReplaceContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing,Fibula.Common.Contracts.Abstractions.IThing,System.Byte,System.Byte)">ReplaceContent(IThingFactory, IThing, IThing, Byte, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to replace a <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> from this container with another.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainderToChange) ReplaceContent(IThingFactory thingFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">fromThing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to remove from the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">toThing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to add to the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index from which to replace the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to replace the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> if found at any index.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Optional. The amount of the <code data-dev-comment-type="paramref" class="paramref">fromThing</code> to replace.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile_SetFlag_Fibula_Map_Contracts_Enumerations_TileFlag_.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile.SetFlag(Fibula.Map.Contracts.Enumerations.TileFlag)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L289">View Source</a>
+  </span>
+  <a id="Fibula_Map_Tile_SetFlag_" data-uid="Fibula.Map.Tile.SetFlag*"></a>
+  <h4 id="Fibula_Map_Tile_SetFlag_Fibula_Map_Contracts_Enumerations_TileFlag_" data-uid="Fibula.Map.Tile.SetFlag(Fibula.Map.Contracts.Enumerations.TileFlag)">SetFlag(TileFlag)</h4>
+  <div class="markdown level1 summary"><p>Sets a flag on this tile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetFlag(TileFlag flag)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Map.Contracts.Enumerations.TileFlag.html">TileFlag</a></td>
+        <td><span class="parametername">flag</span></td>
+        <td><p>The flag to set.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Map.Contracts.Abstractions.ITile.html">ITile</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IThingContainer_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IThingContainer, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_Tile.md&amp;value=---%0Auid%3A%20Fibula.Map.Tile%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map/Tile.cs/#L32" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -1,0 +1,524 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class LogInOperation
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class LogInOperation
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Mechanics.Operations.LogInOperation">
+  
+  
+  <h1 id="Fibula_Mechanics_Operations_LogInOperation" data-uid="Fibula.Mechanics.Operations.LogInOperation" class="text-break">Class LogInOperation
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a login operation.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Priority_Queue.FastPriorityQueueNode</span></div>
+    <div class="level2"><span class="xref">Priority_Queue.StablePriorityQueueNode</span></div>
+    <div class="level3"><a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a></div>
+    <div class="level4"><a class="xref" href="Fibula.Mechanics.Operations.Operation.html">Operation</a></div>
+    <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.ElevatedOperation.html">ElevatedOperation</a></div>
+    <div class="level6"><a class="xref" href="Fibula.Mechanics.Operations.BaseEnvironmentOperation.html">BaseEnvironmentOperation</a></div>
+    <div class="level7"><span class="xref">LogInOperation</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IElevatedOperation.html">IElevatedOperation</a></div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperation.html">IOperation</a></div>
+    <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.BaseEnvironmentOperation.html#Fibula_Mechanics_Operations_BaseEnvironmentOperation_ExhaustionCost">BaseEnvironmentOperation.ExhaustionCost</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.BaseEnvironmentOperation.html#Fibula_Mechanics_Operations_BaseEnvironmentOperation_PlaceCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Map_Contracts_Abstractions_ITile_Fibula_Creatures_Contracts_Abstractions_ICreature_">BaseEnvironmentOperation.PlaceCreature(IElevatedOperationContext, ITile, ICreature)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.BaseEnvironmentOperation.html#Fibula_Mechanics_Operations_BaseEnvironmentOperation_RemoveCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Creatures_Contracts_Abstractions_ICreature_">BaseEnvironmentOperation.RemoveCreature(IElevatedOperationContext, ICreature)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.ElevatedOperation.html#Fibula_Mechanics_Operations_ElevatedOperation_Execute_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_">ElevatedOperation.Execute(IOperationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_CanBeCancelled">Operation.CanBeCancelled</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_GetRequestor_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_">Operation.GetRequestor(ICreatureFinder)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_">Operation.Execute(IEventContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_AddContentToContainerOrFallback_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_Fibula_Common_Contracts_Abstractions_IThingContainer_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Boolean_Fibula_Creatures_Contracts_Abstractions_ICreature_">Operation.AddContentToContainerOrFallback(IOperationContext, IThingContainer, IThing, Byte, Boolean, ICreature)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_DispatchTextNotification_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_System_String_">Operation.DispatchTextNotification(IOperationContext, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">BaseEvent.Cancelled</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedited">BaseEvent.Expedited</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_EventId">BaseEvent.EventId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RequestorId">BaseEvent.RequestorId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RepeatAfter">BaseEvent.RepeatAfter</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasCancellationHandler">BaseEvent.HasCancellationHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasExpeditionHandler">BaseEvent.HasExpeditionHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancel">BaseEvent.Cancel()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedite">BaseEvent.Expedite()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_">BaseEvent.Equals(BaseEvent)</a>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.StablePriorityQueueNode.InsertionIndex</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.Priority</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.QueueIndex</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.Operations.html">Fibula.Mechanics.Operations</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
+  <h5 id="Fibula_Mechanics_Operations_LogInOperation_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class LogInOperation : BaseEnvironmentOperation, IEquatable&lt;BaseEvent&gt;, IElevatedOperation, IOperation, IEvent</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation__ctor_System_UInt32_Fibula_Client_Contracts_Abstractions_IClient_Fibula_Creatures_Contracts_Abstractions_ICreatureCreationMetadata_System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.%23ctor(System.UInt32%2CFibula.Client.Contracts.Abstractions.IClient%2CFibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L42">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation__ctor_" data-uid="Fibula.Mechanics.Operations.LogInOperation.#ctor*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation__ctor_System_UInt32_Fibula_Client_Contracts_Abstractions_IClient_Fibula_Creatures_Contracts_Abstractions_ICreatureCreationMetadata_System_Byte_System_Byte_" data-uid="Fibula.Mechanics.Operations.LogInOperation.#ctor(System.UInt32,Fibula.Client.Contracts.Abstractions.IClient,Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata,System.Byte,System.Byte)">LogInOperation(UInt32, IClient, ICreatureCreationMetadata, Byte, Byte)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.Operations.LogInOperation.html">LogInOperation</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public LogInOperation(uint requestorId, IClient client, ICreatureCreationMetadata playerMetadata, byte worldLightLevel, byte worldLightColor)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">requestorId</span></td>
+        <td><p>The id of the creature requesting the action.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Client.Contracts.Abstractions.IClient.html">IClient</a></td>
+        <td><span class="parametername">client</span></td>
+        <td><p>The client requesting the log in.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata.html">ICreatureCreationMetadata</a></td>
+        <td><span class="parametername">playerMetadata</span></td>
+        <td><p>The creation metadata of the player that is logging in.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">worldLightLevel</span></td>
+        <td><p>The level of the world light to send to the player.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">worldLightColor</span></td>
+        <td><p>The color of the world light to send to the player.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_Client.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.Client%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L60">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_Client_" data-uid="Fibula.Mechanics.Operations.LogInOperation.Client*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_Client" data-uid="Fibula.Mechanics.Operations.LogInOperation.Client">Client</h4>
+  <div class="markdown level1 summary"><p>Gets the client requesting the log in.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IClient Client { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Client.Contracts.Abstractions.IClient.html">IClient</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightColor.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L70">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightColor_" data-uid="Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightColor*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightColor" data-uid="Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightColor">CurrentWorldLightColor</h4>
+  <div class="markdown level1 summary"><p>Gets the current light color of the world, to send with the login information.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte CurrentWorldLightColor { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightLevel.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L65">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightLevel_" data-uid="Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightLevel*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_CurrentWorldLightLevel" data-uid="Fibula.Mechanics.Operations.LogInOperation.CurrentWorldLightLevel">CurrentWorldLightLevel</h4>
+  <div class="markdown level1 summary"><p>Gets the current light level of the world, to send with the login information.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte CurrentWorldLightLevel { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_ExhaustionType.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.ExhaustionType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L55">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_ExhaustionType_" data-uid="Fibula.Mechanics.Operations.LogInOperation.ExhaustionType*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_ExhaustionType" data-uid="Fibula.Mechanics.Operations.LogInOperation.ExhaustionType">ExhaustionType</h4>
+  <div class="markdown level1 summary"><p>Gets the type of exhaustion that this operation produces.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override ExhaustionType ExhaustionType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Enumerations.ExhaustionType.html">ExhaustionType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_ExhaustionType">Operation.ExhaustionType</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_PlayerMetadata.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.PlayerMetadata%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L75">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_PlayerMetadata_" data-uid="Fibula.Mechanics.Operations.LogInOperation.PlayerMetadata*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_PlayerMetadata" data-uid="Fibula.Mechanics.Operations.LogInOperation.PlayerMetadata">PlayerMetadata</h4>
+  <div class="markdown level1 summary"><p>Gets the player metadata.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreatureCreationMetadata PlayerMetadata { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata.html">ICreatureCreationMetadata</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation_Execute_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation.Execute(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L81">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_LogInOperation_Execute_" data-uid="Fibula.Mechanics.Operations.LogInOperation.Execute*"></a>
+  <h4 id="Fibula_Mechanics_Operations_LogInOperation_Execute_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_" data-uid="Fibula.Mechanics.Operations.LogInOperation.Execute(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext)">Execute(IElevatedOperationContext)</h4>
+  <div class="markdown level1 summary"><p>Executes the operation's logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override void Execute(IElevatedOperationContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext.html">IElevatedOperationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>A reference to the operation context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Mechanics.Operations.ElevatedOperation.html#Fibula_Mechanics_Operations_ElevatedOperation_Execute_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_">ElevatedOperation.Execute(IElevatedOperationContext)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IElevatedOperation.html">IElevatedOperation</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperation.html">IOperation</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_LogInOperation.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.LogInOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/LogInOperation.cs/#L32" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

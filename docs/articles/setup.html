@@ -1,0 +1,212 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How to setup and run the service: | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="How to setup and run the service: | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="how-to-setup-and-run-the-service">How to setup and run the service:</h1>
+
+<h2 id="1-clone-using-git">1) Clone using Git</h2>
+<ol>
+<li><p>Open your command prompt window with <strong>Git</strong> support installed.</p>
+</li>
+<li><p>Use <strong>Git</strong> to clone this repo:</p>
+<p><code>git clone https://github.com/jlnunez89/fibula-mmo.git</code></p>
+</li>
+<li><p>The resulting folder will contain this structure (or similar):</p>
+<p><img src="../images/folderstructure.PNG" alt="Image of folder structure at repo root."></p>
+</li>
+</ol>
+<h2 id="2-build-the-solution">2) Build the solution</h2>
+<ol>
+<li><p>You have some options to do this, but you'll need to:</p>
+<ul>
+<li><p>Install .NetCore SDK 3.X from <a href="https://dotnet.microsoft.com/download">https://dotnet.microsoft.com/download</a>.</p>
+</li>
+<li><p>Use Visual Studio (the included solution is for 2019 Community edition)
+OR</p>
+</li>
+<li><p>Using a command line interface to build:</p>
+<p><code>dotnet build --configuration Release</code></p>
+</li>
+</ul>
+<p><img src="../images/hashtagnowarnings.png" alt="Image of awesomeness, no errors, no warnings!"></p>
+</li>
+</ol>
+<blockquote>
+<p>NOTE: You can run tests for the solution by running the command:</p>
+<p><code>dotnet test</code></p>
+<p>That being said, there are not very many tests at the time of writing... help write some!</p>
+<p><img src="../images/someTestRun.png" alt="Image of some test results."></p>
+</blockquote>
+<ol>
+<li><p>After you build it, the project you want to focus on is <code>Fibula.Standalone</code>. Go into the bin folder created, and it should look something like this:</p>
+<p><img src="../images/standaloneBinReleaseFolder.png" alt="Image of Fibula.Standalone/bin/Release/netcoreapp3.1 folder contents"></p>
+</li>
+</ol>
+<h2 id="3-extract-the-map-sector-files">3) Extract the Map sector files.</h2>
+<blockquote>
+<p>These take a lot of space uncompressed, so I only included them as a zipped archive.</p>
+</blockquote>
+<ol>
+<li><p>Look for the file named <code>map.zip</code> in the main repository folder.</p>
+</li>
+<li><p>Decompress the archive into the <code>Fibula.Standalone/bin/Release/netcoreapp3.1</code> folder you just inspected:</p>
+<p><img src="../images/standaloneBinFolderWithMap.PNG" alt="Image of Fibula.Standalone/bin/Release/netcoreapp3.1 folder with the Map folder"></p>
+</li>
+</ol>
+<h2 id="4-run-the-binary">4) Run the binary:</h2>
+<p>Running the server is simple:</p>
+<ol>
+<li><p>From within the <code>Fibula.Standalone/bin/Release/netcoreapp3.1</code> folder, execute dotnet on the standalone's DLL:</p>
+<p><code>dotnet .\Fibula.Standalone.dll</code></p>
+<p><img src="../images/standaloneExecution.PNG" alt="Image of running service"></p>
+</li>
+</ol>
+<blockquote>
+<p>This server engine is designed to only load the sector files surronding players as they approach them, making it start <em><strong>really fast</strong></em> and requiring just a few memory- currently hovering around <strong>~60 MB</strong> so far. This will change of course, as we switch to a non in-memory database, add more assets loading and pre-checks.</p>
+</blockquote>
+<p>What's that? You don't see [Verbose] stuff when you run yours? That's by design! Go to <a href="configuration.html">configuration</a> after this if you want to fiddle with that kind of thing.</p>
+<h2 id="5-log-in">5) Log in:</h2>
+<ol>
+<li><p>Use you favorite <code>7.72**</code> client to connnect to <code>localhost</code> / <code>127.0.0.1</code> (per vanilla configuration). In my case, I'm just using OTLand's IP Changer with a vanilla client:</p>
+<p><img src="../images/ipChanger.png" alt="Image of Tibia Loader"></p>
+</li>
+</ol>
+<blockquote>
+<p>** Or whatever version you're running! At the time of writing, 7.72 is the default version that's selected as the project builds.</p>
+</blockquote>
+<ol>
+<li>Use the credentials for the In-Memory database:</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Account Number:</td>
+<td>1</td>
+</tr>
+<tr>
+<td>Password:</td>
+<td>1</td>
+</tr>
+</tbody>
+</table>
+<p>These are currently seeded during the in-memory database model creation <code>OnModelCreating</code> method: <a href="../code/Fibula.Data.InMemoryDatabase.FibulaInMemoryDatabaseContext.html#Fibula_Data_InMemoryDatabase_FibulaInMemoryDatabaseContext_OnModelCreating_Microsoft_EntityFrameworkCore_ModelBuilder_">Fibula.Data.InMemoryDatabase\FibulaInMemoryDatabaseContext.cs</a></p>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/docfx_project/articles/setup.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

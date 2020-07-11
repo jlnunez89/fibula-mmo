@@ -1,0 +1,1144 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface IItem
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface IItem
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Items.Contracts.Abstractions.IItem">
+  
+  
+  <h1 id="Fibula_Items_Contracts_Abstractions_IItem" data-uid="Fibula.Items.Contracts.Abstractions.IItem" class="text-break">Interface IItem
+  </h1>
+  <div class="markdown level0 summary"><p>Interface for all items in the game.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingChanged">IThing.ThingChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingId">IThing.ThingId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved">IThing.CanBeMoved</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger">IThing.DescribeForLogger()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html#Fibula_Common_Contracts_Abstractions_ILocatable_Location">ILocatable.Location</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html#Fibula_Common_Contracts_Abstractions_ILocatable_CarryLocation">ILocatable.CarryLocation</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html#Fibula_Common_Contracts_Abstractions_IContainedThing_ParentContainer">IContainedThing.ParentContainer</a>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Items.Contracts.Abstractions.html">Fibula.Items.Contracts.Abstractions</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Items.Contracts.dll</h6>
+  <h5 id="Fibula_Items_Contracts_Abstractions_IItem_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface IItem : IThing, ILocatable, IContainedThing</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_Amount.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.Amount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L43">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_Amount_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Amount*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_Amount" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Amount">Amount</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the amount of this item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">byte Amount { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_Attributes.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.Attributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L38">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_Attributes_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Attributes*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_Attributes" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Attributes">Attributes</h4>
+  <div class="markdown level1 summary"><p>Gets the attributes of this item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IDictionary&lt;ItemAttribute, IConvertible&gt; Attributes { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Fibula.Items.Contracts.Enumerations.ItemAttribute.html">ItemAttribute</a>, <span class="xref">System.IConvertible</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_BlocksLay.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.BlocksLay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L120">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_BlocksLay_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksLay*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_BlocksLay" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksLay">BlocksLay</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the item blocks laying anything on it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool BlocksLay { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_BlocksPass.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.BlocksPass%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L115">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_BlocksPass_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksPass*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_BlocksPass" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksPass">BlocksPass</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the item blocks walking on it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool BlocksPass { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_BlocksThrow.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.BlocksThrow%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L110">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_BlocksThrow_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksThrow*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_BlocksThrow" data-uid="Fibula.Items.Contracts.Abstractions.IItem.BlocksThrow">BlocksThrow</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the item blocks throwing through it.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool BlocksThrow { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_CanBeDressed.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.CanBeDressed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L135">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_CanBeDressed_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.CanBeDressed*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_CanBeDressed" data-uid="Fibula.Items.Contracts.Abstractions.IItem.CanBeDressed">CanBeDressed</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item can be dressed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool CanBeDressed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_CanBeRotated.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.CanBeRotated%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L79">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_CanBeRotated_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.CanBeRotated*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_CanBeRotated" data-uid="Fibula.Items.Contracts.Abstractions.IItem.CanBeRotated">CanBeRotated</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item can be rotated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool CanBeRotated { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_ChangeOnUseTo.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.ChangeOnUseTo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L74">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_ChangeOnUseTo_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.ChangeOnUseTo*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_ChangeOnUseTo" data-uid="Fibula.Items.Contracts.Abstractions.IItem.ChangeOnUseTo">ChangeOnUseTo</h4>
+  <div class="markdown level1 summary"><p>Gets the Id of the item into which this will change upon use.
+Callers must check <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_ChangesOnUse">ChangesOnUse</a> to verify this item does indeed have a target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ushort ChangeOnUseTo { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_ChangesOnUse.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.ChangesOnUse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L68">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_ChangesOnUse_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.ChangesOnUse*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_ChangesOnUse" data-uid="Fibula.Items.Contracts.Abstractions.IItem.ChangesOnUse">ChangesOnUse</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item changes on use.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ChangesOnUse { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_DressPosition.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.DressPosition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L140">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_DressPosition_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.DressPosition*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_DressPosition" data-uid="Fibula.Items.Contracts.Abstractions.IItem.DressPosition">DressPosition</h4>
+  <div class="markdown level1 summary"><p>Gets the position at which the item can be dressed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Slot DressPosition { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.Slot.html">Slot</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_HasCollision.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.HasCollision%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L145">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_HasCollision_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.HasCollision*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_HasCollision" data-uid="Fibula.Items.Contracts.Abstractions.IItem.HasCollision">HasCollision</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item triggers a collision event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool HasCollision { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_HasSeparation.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.HasSeparation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L150">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_HasSeparation_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.HasSeparation*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_HasSeparation" data-uid="Fibula.Items.Contracts.Abstractions.IItem.HasSeparation">HasSeparation</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item triggers a separation event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool HasSeparation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsContainer.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsContainer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L130">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsContainer_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsContainer*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsContainer" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsContainer">IsContainer</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is a container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsContainer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsCumulative.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsCumulative%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L125">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsCumulative_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsCumulative*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsCumulative" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsCumulative">IsCumulative</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item can be accumulated.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsCumulative { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsGround.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsGround%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L48">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsGround_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsGround*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsGround" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsGround">IsGround</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is ground floor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsGround { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsGroundFix.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsGroundFix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L155">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsGroundFix_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsGroundFix*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsGroundFix" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsGroundFix">IsGroundFix</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is clipped to the ground.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsGroundFix { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsLiquidContainer.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsLiquidContainer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L100">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidContainer_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidContainer*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidContainer" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidContainer">IsLiquidContainer</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is a liquid container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsLiquidContainer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsLiquidPool.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsLiquidPool%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L90">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidPool_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidPool*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidPool" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidPool">IsLiquidPool</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is a liquid pool.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsLiquidPool { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsLiquidSource.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsLiquidSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L95">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidSource_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidSource*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsLiquidSource" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsLiquidSource">IsLiquidSource</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item is a liquid source.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsLiquidSource { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_LiquidType.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.LiquidType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L105">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_LiquidType_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.LiquidType*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_LiquidType" data-uid="Fibula.Items.Contracts.Abstractions.IItem.LiquidType">LiquidType</h4>
+  <div class="markdown level1 summary"><p>Gets the type of liquid in this item, assuming it: <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_IsLiquidPool">IsLiquidPool</a>, <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_IsLiquidSource">IsLiquidSource</a>, or <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_IsLiquidContainer">IsLiquidContainer</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">LiquidType LiquidType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.LiquidType.html">LiquidType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_MovementPenalty.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.MovementPenalty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L53">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_MovementPenalty_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.MovementPenalty*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_MovementPenalty" data-uid="Fibula.Items.Contracts.Abstractions.IItem.MovementPenalty">MovementPenalty</h4>
+  <div class="markdown level1 summary"><p>Gets the movement cost for walking over this item, assuming it <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_IsGround">IsGround</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">byte MovementPenalty { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_RotateTo.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.RotateTo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L85">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_RotateTo_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.RotateTo*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_RotateTo" data-uid="Fibula.Items.Contracts.Abstractions.IItem.RotateTo">RotateTo</h4>
+  <div class="markdown level1 summary"><p>Gets the Id of the item into which this will rotate to.
+Callers must check <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_CanBeRotated">CanBeRotated</a> to verify this item does indeed have a target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ushort RotateTo { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_StaysOnBottom.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.StaysOnBottom%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L63">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_StaysOnBottom_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.StaysOnBottom*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_StaysOnBottom" data-uid="Fibula.Items.Contracts.Abstractions.IItem.StaysOnBottom">StaysOnBottom</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item stays on the bottom of the stack.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool StaysOnBottom { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_StaysOnTop.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.StaysOnTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L58">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_StaysOnTop_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.StaysOnTop*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_StaysOnTop" data-uid="Fibula.Items.Contracts.Abstractions.IItem.StaysOnTop">StaysOnTop</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item stays on top of the stack.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool StaysOnTop { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_Type.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L33">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_Type_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Type*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_Type" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Type">Type</h4>
+  <div class="markdown level1 summary"><p>Gets a reference to this item's <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemType.html">IItemType</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IItemType Type { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemType.html">IItemType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_UniqueId.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.UniqueId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L28">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_UniqueId_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.UniqueId*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_UniqueId" data-uid="Fibula.Items.Contracts.Abstractions.IItem.UniqueId">UniqueId</h4>
+  <div class="markdown level1 summary"><p>Gets the unique id of this item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Guid UniqueId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Guid</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_IsPathBlocking_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.IsPathBlocking(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L177">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_IsPathBlocking_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsPathBlocking*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_IsPathBlocking_System_Byte_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.IsPathBlocking(System.Byte)">IsPathBlocking(Byte)</h4>
+  <div class="markdown level1 summary"><p>Determines if this item is blocks pathfinding.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsPathBlocking(byte avoidTypes = 14)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">avoidTypes</span></td>
+        <td><p>The damage types to avoid when checking for path blocking. By default, all types are considered path blocking.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the tile is considered path blocking, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_Merge_Fibula_Items_Contracts_Abstractions_IItem_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.Merge(Fibula.Items.Contracts.Abstractions.IItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L162">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_Merge_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Merge*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_Merge_Fibula_Items_Contracts_Abstractions_IItem_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Merge(Fibula.Items.Contracts.Abstractions.IItem)">Merge(IItem)</h4>
+  <div class="markdown level1 summary"><p>Attempts to join an item to this item's content at the default index.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">(bool success, IItem surplusItem) Merge(IItem otherItem)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></td>
+        <td><span class="parametername">otherItem</span></td>
+        <td><p>The item to join with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a>&gt;</td>
+        <td><p>True if the operation was successful, false otherwise. Along with any surplus of the item after merge.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem_Split_Fibula_Items_Contracts_Abstractions_IItemFactory_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem.Split(Fibula.Items.Contracts.Abstractions.IItemFactory%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L170">View Source</a>
+  </span>
+  <a id="Fibula_Items_Contracts_Abstractions_IItem_Split_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Split*"></a>
+  <h4 id="Fibula_Items_Contracts_Abstractions_IItem_Split_Fibula_Items_Contracts_Abstractions_IItemFactory_System_Byte_" data-uid="Fibula.Items.Contracts.Abstractions.IItem.Split(Fibula.Items.Contracts.Abstractions.IItemFactory,System.Byte)">Split(IItemFactory, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to split this item into two based on the amount provided.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">(bool success, IItem itemProduced) Split(IItemFactory itemFactory, byte amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemFactory.html">IItemFactory</a></td>
+        <td><span class="parametername">itemFactory</span></td>
+        <td><p>A reference to the item factory in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>The amount of the item to split.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a>&gt;</td>
+        <td><p>True if the operation was successful, false otherwise, along with the item produced, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IContainedThing_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IContainedThing, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ItemExtensions.html#Fibula_Mechanics_Contracts_Extensions_ItemExtensions_GetCarrier_Fibula_Items_Contracts_Abstractions_IItem_">ItemExtensions.GetCarrier(IItem)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IItem.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IItem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IItem.cs/#L23" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

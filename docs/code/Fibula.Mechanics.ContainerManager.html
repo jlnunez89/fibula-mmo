@@ -1,0 +1,487 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ContainerManager
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ContainerManager
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Mechanics.ContainerManager">
+  
+  
+  <h1 id="Fibula_Mechanics_ContainerManager" data-uid="Fibula.Mechanics.ContainerManager" class="text-break">Class ContainerManager
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a manager for all item container operations by creatures.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">ContainerManager</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerManager.html">IContainerManager</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.html">Fibula.Mechanics</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
+  <h5 id="Fibula_Mechanics_ContainerManager_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ContainerManager : IContainerManager</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager__ctor_Serilog_ILogger_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_Fibula_Scheduling_Contracts_Abstractions_IScheduler_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.%23ctor(Serilog.ILogger%2CFibula.Creatures.Contracts.Abstractions.ICreatureFinder%2CFibula.Scheduling.Contracts.Abstractions.IScheduler)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L50">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager__ctor_" data-uid="Fibula.Mechanics.ContainerManager.#ctor*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager__ctor_Serilog_ILogger_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_Fibula_Scheduling_Contracts_Abstractions_IScheduler_" data-uid="Fibula.Mechanics.ContainerManager.#ctor(Serilog.ILogger,Fibula.Creatures.Contracts.Abstractions.ICreatureFinder,Fibula.Scheduling.Contracts.Abstractions.IScheduler)">ContainerManager(ILogger, ICreatureFinder, IScheduler)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.ContainerManager.html">ContainerManager</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ContainerManager(ILogger logger, ICreatureFinder creatureFinder, IScheduler scheduler)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Serilog.ILogger</span></td>
+        <td><span class="parametername">logger</span></td>
+        <td><p>A reference to the logger in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td><span class="parametername">creatureFinder</span></td>
+        <td><p>A reference to the creature finder in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IScheduler.html">IScheduler</a></td>
+        <td><span class="parametername">scheduler</span></td>
+        <td><p>A reference to the scheduler in use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager_CloseContainer_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.CloseContainer(System.UInt32%2CFibula.Items.Contracts.Abstractions.IContainerItem%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L112">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager_CloseContainer_" data-uid="Fibula.Mechanics.ContainerManager.CloseContainer*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager_CloseContainer_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_System_Byte_" data-uid="Fibula.Mechanics.ContainerManager.CloseContainer(System.UInt32,Fibula.Items.Contracts.Abstractions.IContainerItem,System.Byte)">CloseContainer(UInt32, IContainerItem, Byte)</h4>
+  <div class="markdown level1 summary"><p>Performs a container close action for a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void CloseContainer(uint forCreatureId, IContainerItem container, byte atPosition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">forCreatureId</span></td>
+        <td><p>The id of the creature for which the container is being closed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></td>
+        <td><span class="parametername">container</span></td>
+        <td><p>The container being closed.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">atPosition</span></td>
+        <td><p>The position of the container being closed, as seen by the player.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager_FindAllForCreature_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.FindAllForCreature(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L187">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager_FindAllForCreature_" data-uid="Fibula.Mechanics.ContainerManager.FindAllForCreature*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager_FindAllForCreature_System_UInt32_" data-uid="Fibula.Mechanics.ContainerManager.FindAllForCreature(System.UInt32)">FindAllForCreature(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Finds all the containers known by the specified creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;IContainerItem&gt; FindAllForCreature(uint creatureId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">creatureId</span></td>
+        <td><p>The id of the creature.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a>&gt;</td>
+        <td><p>A collection of containers that the creature knows.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager_FindForCreature_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.FindForCreature(System.UInt32%2CFibula.Items.Contracts.Abstractions.IContainerItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L158">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager_FindForCreature_" data-uid="Fibula.Mechanics.ContainerManager.FindForCreature*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager_FindForCreature_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_" data-uid="Fibula.Mechanics.ContainerManager.FindForCreature(System.UInt32,Fibula.Items.Contracts.Abstractions.IContainerItem)">FindForCreature(UInt32, IContainerItem)</h4>
+  <div class="markdown level1 summary"><p>Finds the position of a specified container as seen by a specific creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte FindForCreature(uint creatureId, IContainerItem container)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">creatureId</span></td>
+        <td><p>The id of the creature for which to find the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></td>
+        <td><span class="parametername">container</span></td>
+        <td><p>The container to look for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><p>The position of container found, or <a class="xref" href="Fibula.Items.Contracts.Constants.ItemConstants.html#Fibula_Items_Contracts_Constants_ItemConstants_UnsetContainerPosition">UnsetContainerPosition</a>&gt; if not found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager_FindForCreature_System_UInt32_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.FindForCreature(System.UInt32%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L139">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager_FindForCreature_" data-uid="Fibula.Mechanics.ContainerManager.FindForCreature*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager_FindForCreature_System_UInt32_System_Byte_" data-uid="Fibula.Mechanics.ContainerManager.FindForCreature(System.UInt32,System.Byte)">FindForCreature(UInt32, Byte)</h4>
+  <div class="markdown level1 summary"><p>Finds a container for a specific creature at the specified position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IContainerItem FindForCreature(uint creatureId, byte atPosition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">creatureId</span></td>
+        <td><p>The id of the creature for which to find the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">atPosition</span></td>
+        <td><p>The position at which to look for the container.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></td>
+        <td><p>The container found, or null if not found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager_OpenContainer_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager.OpenContainer(System.UInt32%2CFibula.Items.Contracts.Abstractions.IContainerItem%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L67">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_ContainerManager_OpenContainer_" data-uid="Fibula.Mechanics.ContainerManager.OpenContainer*"></a>
+  <h4 id="Fibula_Mechanics_ContainerManager_OpenContainer_System_UInt32_Fibula_Items_Contracts_Abstractions_IContainerItem_System_Byte_" data-uid="Fibula.Mechanics.ContainerManager.OpenContainer(System.UInt32,Fibula.Items.Contracts.Abstractions.IContainerItem,System.Byte)">OpenContainer(UInt32, IContainerItem, Byte)</h4>
+  <div class="markdown level1 summary"><p>Performs a container open action for a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void OpenContainer(uint forCreatureId, IContainerItem container, byte atPosition)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">forCreatureId</span></td>
+        <td><p>The id of the creature for which the container is being opened.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></td>
+        <td><span class="parametername">container</span></td>
+        <td><p>The container to open.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">atPosition</span></td>
+        <td><p>The position in which to open the container, for the player.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerManager.html">IContainerManager</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_ContainerManager.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.ContainerManager%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/ContainerManager.cs/#L34" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

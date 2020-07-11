@@ -1,0 +1,850 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface INetworkMessage
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface INetworkMessage
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage">
+  
+  
+  <h1 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage" class="text-break">Interface INetworkMessage
+  </h1>
+  <div class="markdown level0 summary"><p>Interface that represents a network message.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Communications.Contracts.Abstractions.html">Fibula.Communications.Contracts.Abstractions</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Communications.Contracts.dll</h6>
+  <h5 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface INetworkMessage</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Buffer.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Buffer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L25">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Buffer_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Buffer*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Buffer" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Buffer">Buffer</h4>
+  <div class="markdown level1 summary"><p>Gets the byte buffer for this message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">Span&lt;byte&gt; Buffer { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Span</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Cursor.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Cursor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L35">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Cursor_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Cursor*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Cursor" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Cursor">Cursor</h4>
+  <div class="markdown level1 summary"><p>Gets the message position.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int Cursor { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Length.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Length%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L30">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Length_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Length*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Length" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Length">Length</h4>
+  <div class="markdown level1 summary"><p>Gets the message length.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int Length { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddByte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddByte(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L41">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddByte_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddByte*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddByte_System_Byte_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddByte(System.Byte)">AddByte(Byte)</h4>
+  <div class="markdown level1 summary"><p>Adds a byte to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddByte(byte value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The byte value to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_System_Buffers_ReadOnlySequence_System_Byte__.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes(System.Buffers.ReadOnlySequence%7BSystem.Byte%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L53">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_System_Buffers_ReadOnlySequence_System_Byte__" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes(System.Buffers.ReadOnlySequence{System.Byte})">AddBytes(ReadOnlySequence&lt;Byte&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds a byte sequence to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddBytes(ReadOnlySequence&lt;byte&gt; value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Buffers.ReadOnlySequence</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The bytes span to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_System_ReadOnlySpan_System_Byte__.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes(System.ReadOnlySpan%7BSystem.Byte%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L47">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddBytes_System_ReadOnlySpan_System_Byte__" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddBytes(System.ReadOnlySpan{System.Byte})">AddBytes(ReadOnlySpan&lt;Byte&gt;)</h4>
+  <div class="markdown level1 summary"><p>Adds a byte range to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddBytes(ReadOnlySpan&lt;byte&gt; value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ReadOnlySpan</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The bytes to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddString_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddString(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L59">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddString_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddString*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddString_System_String_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddString(System.String)">AddString(String)</h4>
+  <div class="markdown level1 summary"><p>Add a string to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddString(string value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The string value to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt16_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt16(System.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L65">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt16_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt16*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt16_System_UInt16_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt16(System.UInt16)">AddUInt16(UInt16)</h4>
+  <div class="markdown level1 summary"><p>Add an unsigned short integer to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddUInt16(ushort value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The value to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt32_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt32(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L71">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt32_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt32*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_AddUInt32_System_UInt32_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.AddUInt32(System.UInt32)">AddUInt32(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Add an unsigned integer to the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void AddUInt32(uint value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The value to add.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Copy_System_Nullable_System_Int32__.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Copy(System.Nullable%7BSystem.Int32%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L139">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Copy_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Copy*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Copy_System_Nullable_System_Int32__" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Copy(System.Nullable{System.Int32})">Copy(Nullable&lt;Int32&gt;)</h4>
+  <div class="markdown level1 summary"><p>Creates a copy of this message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">INetworkMessage Copy(int? overrideCursor = default(int? ))</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.Int32</span>&gt;</td>
+        <td><span class="parametername">overrideCursor</span></td>
+        <td><p>Optional. A value to override the cursor with.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Abstractions.INetworkMessage.html">INetworkMessage</a></td>
+        <td><p>The copy of the message.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetByte.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetByte%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L83">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetByte_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetByte*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetByte" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetByte">GetByte()</h4>
+  <div class="markdown level1 summary"><p>Reads a byte value from the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">byte GetByte()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><p>The value read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetBytes_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetBytes(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L108">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetBytes_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetBytes*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetBytes_System_Int32_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetBytes(System.Int32)">GetBytes(Int32)</h4>
+  <div class="markdown level1 summary"><p>Reads some bytes from the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ReadOnlySpan&lt;byte&gt; GetBytes(int count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>The number of bytes to read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ReadOnlySpan</span>&lt;<span class="xref">System.Byte</span>&gt;</td>
+        <td><p>The bytes read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetString.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetString%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L89">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetString_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetString*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetString" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetString">GetString()</h4>
+  <div class="markdown level1 summary"><p>Reads a string value from the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">string GetString()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The value read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt16.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt16%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L95">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt16_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt16*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt16" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt16">GetUInt16()</h4>
+  <div class="markdown level1 summary"><p>Reads an unsigned short value from the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ushort GetUInt16()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><p>The value read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt32.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt32%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L101">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt32_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt32*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_GetUInt32" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.GetUInt32">GetUInt32()</h4>
+  <div class="markdown level1 summary"><p>Reads an unsigned integer value from the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">uint GetUInt32()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><p>The value read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_PeekByte.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.PeekByte%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L77">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_PeekByte_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.PeekByte*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_PeekByte" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.PeekByte">PeekByte()</h4>
+  <div class="markdown level1 summary"><p>Reads a byte value from the message without advancing the read cursor.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">byte PeekByte()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><p>The value read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_ReadAsBytesInfo.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadAsBytesInfo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L126">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_ReadAsBytesInfo_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadAsBytesInfo*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_ReadAsBytesInfo" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadAsBytesInfo">ReadAsBytesInfo()</h4>
+  <div class="markdown level1 summary"><p>Reads information sent in the message as bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IBytesInfo ReadAsBytesInfo()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Abstractions.IBytesInfo.html">IBytesInfo</a></td>
+        <td><p>The information read.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Reset.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Reset%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L113">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Reset_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Reset*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Reset" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Reset">Reset()</h4>
+  <div class="markdown level1 summary"><p>Resets the message.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Reset()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_Resize_System_Int32_System_Boolean_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.Resize(System.Int32%2CSystem.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L120">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Resize_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Resize*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_Resize_System_Int32_System_Boolean_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.Resize(System.Int32,System.Boolean)">Resize(Int32, Boolean)</h4>
+  <div class="markdown level1 summary"><p>Changes the <a class="xref" href="Fibula.Communications.Contracts.Abstractions.INetworkMessage.html#Fibula_Communications_Contracts_Abstractions_INetworkMessage_Length">Length</a> of this message and resets its <a class="xref" href="Fibula.Communications.Contracts.Abstractions.INetworkMessage.html#Fibula_Communications_Contracts_Abstractions_INetworkMessage_Cursor">Cursor</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void Resize(int size, bool resetCursor = true)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">size</span></td>
+        <td><p>The new size of the message.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">resetCursor</span></td>
+        <td><p>Optional. A value indicating whether to reset the cursor in the message to zero.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage_SkipBytes_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage.SkipBytes(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L132">View Source</a>
+  </span>
+  <a id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_SkipBytes_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.SkipBytes*"></a>
+  <h4 id="Fibula_Communications_Contracts_Abstractions_INetworkMessage_SkipBytes_System_Int32_" data-uid="Fibula.Communications.Contracts.Abstractions.INetworkMessage.SkipBytes(System.Int32)">SkipBytes(Int32)</h4>
+  <div class="markdown level1 summary"><p>Moves the read pointer in the message, essentially skipping a number of bytes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SkipBytes(int count)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">count</span></td>
+        <td><p>The number of bytes to skip.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_XteaDecrypt_Fibula_Communications_Contracts_Abstractions_INetworkMessage_System_UInt32___">NetworkMessageExtensions.XteaDecrypt(INetworkMessage, UInt32[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_XteaEncrypt_Fibula_Communications_Contracts_Abstractions_INetworkMessage_System_UInt32___">NetworkMessageExtensions.XteaEncrypt(INetworkMessage, UInt32[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_PrepareToSend_Fibula_Communications_Contracts_Abstractions_INetworkMessage_System_UInt32___">NetworkMessageExtensions.PrepareToSend(INetworkMessage, UInt32[])</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_AddLocation_Fibula_Communications_Contracts_Abstractions_INetworkMessage_Fibula_Common_Contracts_Structs_Location_">NetworkMessageExtensions.AddLocation(INetworkMessage, Location)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_AddCreature_Fibula_Communications_Contracts_Abstractions_INetworkMessage_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Boolean_System_UInt32_">NetworkMessageExtensions.AddCreature(INetworkMessage, ICreature, Boolean, UInt32)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_AddOutfit_Fibula_Communications_Contracts_Abstractions_INetworkMessage_Fibula_Creatures_Contracts_Structs_Outfit_">NetworkMessageExtensions.AddOutfit(INetworkMessage, Outfit)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Protocol.V772.NetworkMessageExtensions.html#Fibula_Protocol_V772_NetworkMessageExtensions_AddItem_Fibula_Communications_Contracts_Abstractions_INetworkMessage_Fibula_Items_Contracts_Abstractions_IItem_">NetworkMessageExtensions.AddItem(INetworkMessage, IItem)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Contracts_Abstractions_INetworkMessage.md&amp;value=---%0Auid%3A%20Fibula.Communications.Contracts.Abstractions.INetworkMessage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Contracts/Abstractions/INetworkMessage.cs/#L20" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

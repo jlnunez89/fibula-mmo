@@ -1,0 +1,1613 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Creature
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Creature
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Creatures.Creature">
+  
+  
+  <h1 id="Fibula_Creatures_Creature" data-uid="Fibula.Creatures.Creature" class="text-break">Class Creature
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents all creatures in the game.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Fibula.Common.Thing.html">Thing</a></div>
+    <div class="level2"><span class="xref">Creature</span></div>
+      <div class="level3"><a class="xref" href="Fibula.Creatures.CombatantCreature.html">CombatantCreature</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingChanged">Thing.ThingChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_CanBeMoved">Thing.CanBeMoved</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ParentContainer">Thing.ParentContainer</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_Location">Thing.Location</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_InvokePropertyChanged_System_String_">Thing.InvokePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ToString">Thing.ToString()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Creatures.html">Fibula.Creatures</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Creatures.dll</h6>
+  <h5 id="Fibula_Creatures_Creature_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class Creature : Thing, ICreature, IThing, IContainedThing, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature__ctor_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.%23ctor(System.String%2CSystem.String%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L58">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature__ctor_" data-uid="Fibula.Creatures.Creature.#ctor*"></a>
+  <h4 id="Fibula_Creatures_Creature__ctor_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_" data-uid="Fibula.Creatures.Creature.#ctor(System.String,System.String,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt16)">Creature(String, String, UInt16, UInt16, UInt16, UInt16, UInt16)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Creatures.Creature.html">Creature</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Creature(string name, string article, ushort maxHitpoints, ushort maxManapoints, ushort corpse = 0, ushort hitpoints = 0, ushort manapoints = 0)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">name</span></td>
+        <td><p>The name of this creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">article</span></td>
+        <td><p>An article for the name of this creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">maxHitpoints</span></td>
+        <td><p>The maximum hitpoints of the creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">maxManapoints</span></td>
+        <td><p>The maximum manapoints of the creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">corpse</span></td>
+        <td><p>The corpse of the creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">hitpoints</span></td>
+        <td><p>The current hitpoints of the creature.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">manapoints</span></td>
+        <td><p>The current manapoints of the creature.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Article.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Article%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L119">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Article_" data-uid="Fibula.Creatures.Creature.Article*"></a>
+  <h4 id="Fibula_Creatures_Creature_Article" data-uid="Fibula.Creatures.Creature.Article">Article</h4>
+  <div class="markdown level1 summary"><p>Gets the article in the name of the creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Article { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_BaseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.BaseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L211">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_BaseSpeed_" data-uid="Fibula.Creatures.Creature.BaseSpeed*"></a>
+  <h4 id="Fibula_Creatures_Creature_BaseSpeed" data-uid="Fibula.Creatures.Creature.BaseSpeed">BaseSpeed</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's base speed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int BaseSpeed { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Blood.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Blood%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L221">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Blood_" data-uid="Fibula.Creatures.Creature.Blood*"></a>
+  <h4 id="Fibula_Creatures_Creature_Blood" data-uid="Fibula.Creatures.Creature.Blood">Blood</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's blood type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BloodType Blood { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Enumerations.BloodType.html">BloodType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_CarryLocation.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.CarryLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L159">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_CarryLocation_" data-uid="Fibula.Creatures.Creature.CarryLocation*"></a>
+  <h4 id="Fibula_Creatures_Creature_CarryLocation" data-uid="Fibula.Creatures.Creature.CarryLocation">CarryLocation</h4>
+  <div class="markdown level1 summary"><p>Gets the location where this thing is being carried at, which is null for creatures.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Location? CarryLocation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_CarryLocation">Thing.CarryLocation</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_CarryStrength.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.CarryStrength%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L171">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_CarryStrength_" data-uid="Fibula.Creatures.Creature.CarryStrength*"></a>
+  <h4 id="Fibula_Creatures_Creature_CarryStrength" data-uid="Fibula.Creatures.Creature.CarryStrength">CarryStrength</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the creature's strength to carry stuff.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public decimal CarryStrength { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Corpse.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Corpse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L129">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Corpse_" data-uid="Fibula.Creatures.Creature.Corpse*"></a>
+  <h4 id="Fibula_Creatures_Creature_Corpse" data-uid="Fibula.Creatures.Creature.Corpse">Corpse</h4>
+  <div class="markdown level1 summary"><p>Gets the corpse of the creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Corpse { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Direction.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Direction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L181">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Direction_" data-uid="Fibula.Creatures.Creature.Direction*"></a>
+  <h4 id="Fibula_Creatures_Creature_Direction" data-uid="Fibula.Creatures.Creature.Direction">Direction</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the direction that this creature is facing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Direction Direction { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.Direction.html">Direction</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_EmittedLightColor.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.EmittedLightColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L196">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_EmittedLightColor_" data-uid="Fibula.Creatures.Creature.EmittedLightColor*"></a>
+  <h4 id="Fibula_Creatures_Creature_EmittedLightColor" data-uid="Fibula.Creatures.Creature.EmittedLightColor">EmittedLightColor</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's light color.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte EmittedLightColor { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_EmittedLightLevel.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.EmittedLightLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L191">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_EmittedLightLevel_" data-uid="Fibula.Creatures.Creature.EmittedLightLevel*"></a>
+  <h4 id="Fibula_Creatures_Creature_EmittedLightLevel" data-uid="Fibula.Creatures.Creature.EmittedLightLevel">EmittedLightLevel</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's light level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte EmittedLightLevel { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Flags.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Flags%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L216">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Flags_" data-uid="Fibula.Creatures.Creature.Flags*"></a>
+  <h4 id="Fibula_Creatures_Creature_Flags" data-uid="Fibula.Creatures.Creature.Flags">Flags</h4>
+  <div class="markdown level1 summary"><p>Gets this creature's flags.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint Flags { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_HitpointPercentage.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.HitpointPercentage%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L134">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_HitpointPercentage_" data-uid="Fibula.Creatures.Creature.HitpointPercentage*"></a>
+  <h4 id="Fibula_Creatures_Creature_HitpointPercentage" data-uid="Fibula.Creatures.Creature.HitpointPercentage">HitpointPercentage</h4>
+  <div class="markdown level1 summary"><p>Gets the percentage of <a class="xref" href="Fibula.Creatures.Creature.html#Fibula_Creatures_Creature_Hitpoints">Hitpoints</a> left out of <a class="xref" href="Fibula.Creatures.Creature.html#Fibula_Creatures_Creature_MaxHitpoints">MaxHitpoints</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte HitpointPercentage { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Hitpoints.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Hitpoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L139">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Hitpoints_" data-uid="Fibula.Creatures.Creature.Hitpoints*"></a>
+  <h4 id="Fibula_Creatures_Creature_Hitpoints" data-uid="Fibula.Creatures.Creature.Hitpoints">Hitpoints</h4>
+  <div class="markdown level1 summary"><p>Gets or sets thre current hitpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Hitpoints { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Id.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Id%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L114">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Id_" data-uid="Fibula.Creatures.Creature.Id*"></a>
+  <h4 id="Fibula_Creatures_Creature_Id" data-uid="Fibula.Creatures.Creature.Id">Id</h4>
+  <div class="markdown level1 summary"><p>Gets the creature's in-game id.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint Id { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Inventory.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Inventory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L231">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Inventory_" data-uid="Fibula.Creatures.Creature.Inventory*"></a>
+  <h4 id="Fibula_Creatures_Creature_Inventory" data-uid="Fibula.Creatures.Creature.Inventory">Inventory</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the inventory for the creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract IInventory Inventory { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IInventory.html">IInventory</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_IsDead.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.IsDead%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L241">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_IsDead_" data-uid="Fibula.Creatures.Creature.IsDead*"></a>
+  <h4 id="Fibula_Creatures_Creature_IsDead" data-uid="Fibula.Creatures.Creature.IsDead">IsDead</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether the creature is dead.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool IsDead { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_LastMovementCostModifier.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.LastMovementCostModifier%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L186">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_LastMovementCostModifier_" data-uid="Fibula.Creatures.Creature.LastMovementCostModifier*"></a>
+  <h4 id="Fibula_Creatures_Creature_LastMovementCostModifier" data-uid="Fibula.Creatures.Creature.LastMovementCostModifier">LastMovementCostModifier</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the creature's last move modifier.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public decimal LastMovementCostModifier { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Manapoints.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Manapoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L149">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Manapoints_" data-uid="Fibula.Creatures.Creature.Manapoints*"></a>
+  <h4 id="Fibula_Creatures_Creature_Manapoints" data-uid="Fibula.Creatures.Creature.Manapoints">Manapoints</h4>
+  <div class="markdown level1 summary"><p>Gets the current manapoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Manapoints { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_MaxHitpoints.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.MaxHitpoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L144">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_MaxHitpoints_" data-uid="Fibula.Creatures.Creature.MaxHitpoints*"></a>
+  <h4 id="Fibula_Creatures_Creature_MaxHitpoints" data-uid="Fibula.Creatures.Creature.MaxHitpoints">MaxHitpoints</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum hitpoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort MaxHitpoints { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_MaxManapoints.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.MaxManapoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L154">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_MaxManapoints_" data-uid="Fibula.Creatures.Creature.MaxManapoints*"></a>
+  <h4 id="Fibula_Creatures_Creature_MaxManapoints" data-uid="Fibula.Creatures.Creature.MaxManapoints">MaxManapoints</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum manapoints.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort MaxManapoints { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Name.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L124">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Name_" data-uid="Fibula.Creatures.Creature.Name*"></a>
+  <h4 id="Fibula_Creatures_Creature_Name" data-uid="Fibula.Creatures.Creature.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets the name of the creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Outfit.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Outfit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L176">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Outfit_" data-uid="Fibula.Creatures.Creature.Outfit*"></a>
+  <h4 id="Fibula_Creatures_Creature_Outfit" data-uid="Fibula.Creatures.Creature.Outfit">Outfit</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the outfit of this creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Outfit Outfit { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Structs.Outfit.html">Outfit</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Speed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Speed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L201">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Speed_" data-uid="Fibula.Creatures.Creature.Speed*"></a>
+  <h4 id="Fibula_Creatures_Creature_Speed" data-uid="Fibula.Creatures.Creature.Speed">Speed</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's speed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract ushort Speed { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_ThingId.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.ThingId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L109">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_ThingId_" data-uid="Fibula.Creatures.Creature.ThingId*"></a>
+  <h4 id="Fibula_Creatures_Creature_ThingId" data-uid="Fibula.Creatures.Creature.ThingId">ThingId</h4>
+  <div class="markdown level1 summary"><p>Gets the id of this creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override ushort ThingId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingId">Thing.ThingId</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_VariableSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.VariableSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L206">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_VariableSpeed_" data-uid="Fibula.Creatures.Creature.VariableSpeed*"></a>
+  <h4 id="Fibula_Creatures_Creature_VariableSpeed" data-uid="Fibula.Creatures.Creature.VariableSpeed">VariableSpeed</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's variable speed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public int VariableSpeed { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_WalkPlan.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.WalkPlan%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L236">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_WalkPlan_" data-uid="Fibula.Creatures.Creature.WalkPlan*"></a>
+  <h4 id="Fibula_Creatures_Creature_WalkPlan" data-uid="Fibula.Creatures.Creature.WalkPlan">WalkPlan</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this creature's walk plan.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public WalkPlan WalkPlan { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.WalkPlan.html">WalkPlan</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L318">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_AddContent_" data-uid="Fibula.Creatures.Creature.AddContent*"></a>
+  <h4 id="Fibula_Creatures_Creature_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_" data-uid="Fibula.Creatures.Creature.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing,System.Byte)">AddContent(IThingFactory, IThing, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = 255)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to add to the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index at which to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> at any free index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_CalculateMovementBaseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.CalculateMovementBaseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L395">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_CalculateMovementBaseSpeed_" data-uid="Fibula.Creatures.Creature.CalculateMovementBaseSpeed*"></a>
+  <h4 id="Fibula_Creatures_Creature_CalculateMovementBaseSpeed" data-uid="Fibula.Creatures.Creature.CalculateMovementBaseSpeed">CalculateMovementBaseSpeed()</h4>
+  <div class="markdown level1 summary"><p>Calculates the base movement speed of the creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected virtual ushort CalculateMovementBaseSpeed()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><p>The base movement speed of the creature.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_CanSee_Fibula_Common_Contracts_Structs_Location_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.CanSee(Fibula.Common.Contracts.Structs.Location)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L279">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_CanSee_" data-uid="Fibula.Creatures.Creature.CanSee*"></a>
+  <h4 id="Fibula_Creatures_Creature_CanSee_Fibula_Common_Contracts_Structs_Location_" data-uid="Fibula.Creatures.Creature.CanSee(Fibula.Common.Contracts.Structs.Location)">CanSee(Location)</h4>
+  <div class="markdown level1 summary"><p>Checks if this creature can see a given location.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanSee(Location location)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The location to check against.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if this creature can see the given location, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_CanSee_Fibula_Creatures_Contracts_Abstractions_ICreature_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.CanSee(Fibula.Creatures.Contracts.Abstractions.ICreature)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L266">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_CanSee_" data-uid="Fibula.Creatures.Creature.CanSee*"></a>
+  <h4 id="Fibula_Creatures_Creature_CanSee_Fibula_Creatures_Contracts_Abstractions_ICreature_" data-uid="Fibula.Creatures.Creature.CanSee(Fibula.Creatures.Contracts.Abstractions.ICreature)">CanSee(ICreature)</h4>
+  <div class="markdown level1 summary"><p>Checks if this creature can see a given creature.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool CanSee(ICreature otherCreature)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td><span class="parametername">otherCreature</span></td>
+        <td><p>The creature to check against.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if this creature can see the given creature, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_DescribeForLogger.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.DescribeForLogger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L376">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_DescribeForLogger_" data-uid="Fibula.Creatures.Creature.DescribeForLogger*"></a>
+  <h4 id="Fibula_Creatures_Creature_DescribeForLogger" data-uid="Fibula.Creatures.Creature.DescribeForLogger">DescribeForLogger()</h4>
+  <div class="markdown level1 summary"><p>Provides a string describing the current creature for logging purposes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override string DescribeForLogger()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><p>The string to log.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_DescribeForLogger">Thing.DescribeForLogger()</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_Equals_Fibula_Creatures_Contracts_Abstractions_ICreature_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.Equals(Fibula.Creatures.Contracts.Abstractions.ICreature)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L386">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_Equals_" data-uid="Fibula.Creatures.Creature.Equals*"></a>
+  <h4 id="Fibula_Creatures_Creature_Equals_Fibula_Creatures_Contracts_Abstractions_ICreature_" data-uid="Fibula.Creatures.Creature.Equals(Fibula.Creatures.Contracts.Abstractions.ICreature)">Equals(ICreature)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(ICreature other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The other object to compare against.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the current object is equal to the other parameter, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_FindThingAtIndex_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.FindThingAtIndex(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L362">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_FindThingAtIndex_" data-uid="Fibula.Creatures.Creature.FindThingAtIndex*"></a>
+  <h4 id="Fibula_Creatures_Creature_FindThingAtIndex_System_Byte_" data-uid="Fibula.Creatures.Creature.FindThingAtIndex(System.Byte)">FindThingAtIndex(Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to find an <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> whitin this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IThing FindThingAtIndex(byte index)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>The index at which to look for the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> found at the index, if any was found.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.RemoveContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%40%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L332">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_RemoveContent_" data-uid="Fibula.Creatures.Creature.RemoveContent*"></a>
+  <h4 id="Fibula_Creatures_Creature_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_" data-uid="Fibula.Creatures.Creature.RemoveContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing@,System.Byte,System.Byte)">RemoveContent(IThingFactory, ref IThing, Byte, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to remove a thing from this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainder) RemoveContent(IThingFactory thingFactory, ref IThing thing, byte index = 255, byte amount = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to remove from the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index from which to remove the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to remove the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> if found at any index.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Optional. The amount of the <code data-dev-comment-type="paramref" class="paramref">thing</code> to remove.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.ReplaceContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%2CFibula.Common.Contracts.Abstractions.IThing%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L347">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_ReplaceContent_" data-uid="Fibula.Creatures.Creature.ReplaceContent*"></a>
+  <h4 id="Fibula_Creatures_Creature_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_" data-uid="Fibula.Creatures.Creature.ReplaceContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing,Fibula.Common.Contracts.Abstractions.IThing,System.Byte,System.Byte)">ReplaceContent(IThingFactory, IThing, IThing, Byte, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to replace a <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> from this container with another.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (bool result, IThing remainderToChange) ReplaceContent(IThingFactory thingFactory, IThing fromThing, IThing toThing, byte index = 255, byte amount = 1)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">fromThing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to remove from the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">toThing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to add to the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index from which to replace the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to replace the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> if found at any index.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>Optional. The amount of the <code data-dev-comment-type="paramref" class="paramref">fromThing</code> to replace.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_SetOutfit_Fibula_Creatures_Contracts_Structs_Outfit_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.SetOutfit(Fibula.Creatures.Contracts.Structs.Outfit)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L256">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_SetOutfit_" data-uid="Fibula.Creatures.Creature.SetOutfit*"></a>
+  <h4 id="Fibula_Creatures_Creature_SetOutfit_Fibula_Creatures_Contracts_Structs_Outfit_" data-uid="Fibula.Creatures.Creature.SetOutfit(Fibula.Creatures.Contracts.Structs.Outfit)">SetOutfit(Outfit)</h4>
+  <div class="markdown level1 summary"><p>Attempts to set this creature's <a class="xref" href="Fibula.Creatures.Creature.html#Fibula_Creatures_Creature_Outfit">Outfit</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetOutfit(Outfit outfit)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Structs.Outfit.html">Outfit</a></td>
+        <td><span class="parametername">outfit</span></td>
+        <td><p>The new outfit to change to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature_TurnToDirection_Fibula_Common_Contracts_Enumerations_Direction_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature.TurnToDirection(Fibula.Common.Contracts.Enumerations.Direction)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L247">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_Creature_TurnToDirection_" data-uid="Fibula.Creatures.Creature.TurnToDirection*"></a>
+  <h4 id="Fibula_Creatures_Creature_TurnToDirection_Fibula_Common_Contracts_Enumerations_Direction_" data-uid="Fibula.Creatures.Creature.TurnToDirection(Fibula.Common.Contracts.Enumerations.Direction)">TurnToDirection(Direction)</h4>
+  <div class="markdown level1 summary"><p>Turns this creature to a given direction.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void TurnToDirection(Direction direction)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.Direction.html">Direction</a></td>
+        <td><span class="parametername">direction</span></td>
+        <td><p>The direction to turn the creature to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Creature.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Creature%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Creature.cs/#L31" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

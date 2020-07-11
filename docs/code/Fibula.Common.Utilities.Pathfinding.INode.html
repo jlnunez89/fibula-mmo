@@ -1,0 +1,512 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface INode
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface INode
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Common.Utilities.Pathfinding.INode">
+  
+  
+  <h1 id="Fibula_Common_Utilities_Pathfinding_INode" data-uid="Fibula.Common.Utilities.Pathfinding.INode" class="text-break">Interface INode
+  </h1>
+  <div class="markdown level0 summary"><p>The A* algorithm takes a starting node and a goal node and searches from the start to the goal.</p>
+<p>The nodes can be setup in a graph ahead of running the algorithm or the children
+nodes can be generated on the fly when the A* algorithm requests the Children property.</p>
+<p>See the square puzzle implementation to see the children being generated on the fly instead
+of the classical image/graph search with walls.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Common.Utilities.Pathfinding.html">Fibula.Common.Utilities.Pathfinding</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Common.Utilities.dll</h6>
+  <h5 id="Fibula_Common_Utilities_Pathfinding_INode_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface INode</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_EstimatedCost.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.EstimatedCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L54">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_EstimatedCost_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.EstimatedCost*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_EstimatedCost" data-uid="Fibula.Common.Utilities.Pathfinding.INode.EstimatedCost">EstimatedCost</h4>
+  <div class="markdown level1 summary"><p>Gets the estimated cost for this node.
+This is the heuristic from this node to the goal node, or h.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int EstimatedCost { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_HasBeenVisited.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.HasBeenVisited%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L35">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_HasBeenVisited_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.HasBeenVisited*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_HasBeenVisited" data-uid="Fibula.Common.Utilities.Pathfinding.INode.HasBeenVisited">HasBeenVisited</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this node is part of the closed list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool HasBeenVisited { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_MovementCost.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.MovementCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L48">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_MovementCost_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.MovementCost*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_MovementCost" data-uid="Fibula.Common.Utilities.Pathfinding.INode.MovementCost">MovementCost</h4>
+  <div class="markdown level1 summary"><p>Gets the movement cost for this node.
+This is the movement cost from this node to the starting node, or g.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int MovementCost { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_Parent.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.Parent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L59">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_Parent_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.Parent*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_Parent" data-uid="Fibula.Common.Utilities.Pathfinding.INode.Parent">Parent</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the parent node to this node.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">INode Parent { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Utilities.Pathfinding.INode.html">INode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_ShouldBeVisited.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.ShouldBeVisited%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L30">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_ShouldBeVisited_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.ShouldBeVisited*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_ShouldBeVisited" data-uid="Fibula.Common.Utilities.Pathfinding.INode.ShouldBeVisited">ShouldBeVisited</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether this node is part of the open list.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool ShouldBeVisited { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_TotalCost.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.TotalCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L42">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_TotalCost_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.TotalCost*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_TotalCost" data-uid="Fibula.Common.Utilities.Pathfinding.INode.TotalCost">TotalCost</h4>
+  <div class="markdown level1 summary"><p>Gets the total cost for this node.
+This is the sum of the cost from this node to the starting node, or g, plus
+the heuristic cost from this node to the goal node, or h. [t = g + h].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int TotalCost { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_FindAdjacent_Fibula_Common_Utilities_Pathfinding_INodeFactory_.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.FindAdjacent(Fibula.Common.Utilities.Pathfinding.INodeFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L66">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_FindAdjacent_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.FindAdjacent*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_FindAdjacent_Fibula_Common_Utilities_Pathfinding_INodeFactory_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.FindAdjacent(Fibula.Common.Utilities.Pathfinding.INodeFactory)">FindAdjacent(INodeFactory)</h4>
+  <div class="markdown level1 summary"><p>Gets this node's adjacent nodes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;INode&gt; FindAdjacent(INodeFactory nodeFactory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Utilities.Pathfinding.INodeFactory.html">INodeFactory</a></td>
+        <td><span class="parametername">nodeFactory</span></td>
+        <td><p>A reference to the factory to create new nodes.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Common.Utilities.Pathfinding.INode.html">INode</a>&gt;</td>
+        <td><p>The collection of adjacent nodes.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_IsGoal_Fibula_Common_Utilities_Pathfinding_INode_.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.IsGoal(Fibula.Common.Utilities.Pathfinding.INode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L73">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_IsGoal_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.IsGoal*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_IsGoal_Fibula_Common_Utilities_Pathfinding_INode_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.IsGoal(Fibula.Common.Utilities.Pathfinding.INode)">IsGoal(INode)</h4>
+  <div class="markdown level1 summary"><p>Returns true if this node is the goal, false if it is not the goal.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool IsGoal(INode goal)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Utilities.Pathfinding.INode.html">INode</a></td>
+        <td><span class="parametername">goal</span></td>
+        <td><p>The goal node to compare this node against.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if this node is the goal, false if it s not the goal.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_SetEstimatedCost_Fibula_Common_Utilities_Pathfinding_INode_.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.SetEstimatedCost(Fibula.Common.Utilities.Pathfinding.INode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L85">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_SetEstimatedCost_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.SetEstimatedCost*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_SetEstimatedCost_Fibula_Common_Utilities_Pathfinding_INode_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.SetEstimatedCost(Fibula.Common.Utilities.Pathfinding.INode)">SetEstimatedCost(INode)</h4>
+  <div class="markdown level1 summary"><p>Sets the estimated cost for the current node, or h.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetEstimatedCost(INode goal)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Utilities.Pathfinding.INode.html">INode</a></td>
+        <td><span class="parametername">goal</span></td>
+        <td><p>Goal node, for acces to the goals position.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode_SetMovementCost_Fibula_Common_Utilities_Pathfinding_INode_.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode.SetMovementCost(Fibula.Common.Utilities.Pathfinding.INode)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L79">View Source</a>
+  </span>
+  <a id="Fibula_Common_Utilities_Pathfinding_INode_SetMovementCost_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.SetMovementCost*"></a>
+  <h4 id="Fibula_Common_Utilities_Pathfinding_INode_SetMovementCost_Fibula_Common_Utilities_Pathfinding_INode_" data-uid="Fibula.Common.Utilities.Pathfinding.INode.SetMovementCost(Fibula.Common.Utilities.Pathfinding.INode)">SetMovementCost(INode)</h4>
+  <div class="markdown level1 summary"><p>Sets the movement cost for the current node, or g.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void SetMovementCost(INode parent)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Utilities.Pathfinding.INode.html">INode</a></td>
+        <td><span class="parametername">parent</span></td>
+        <td><p>Parent node, for access to the parents movement cost.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Utilities_Pathfinding_INode.md&amp;value=---%0Auid%3A%20Fibula.Common.Utilities.Pathfinding.INode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Utilities/Pathfinding/INode.cs/#L25" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

@@ -316,6 +316,7 @@ namespace Fibula.Standalone
 
             // Chose a type of map loader:
             // services.AddGrassOnlyDummyMapLoader(hostingContext.Configuration);
+            // services.AddOtbmMapLoader(hostingContext.Configuration);
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
         }
 

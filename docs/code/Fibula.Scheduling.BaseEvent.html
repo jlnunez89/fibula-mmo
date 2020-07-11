@@ -1,0 +1,637 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class BaseEvent
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class BaseEvent
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Scheduling.BaseEvent">
+  
+  
+  <h1 id="Fibula_Scheduling_BaseEvent" data-uid="Fibula.Scheduling.BaseEvent" class="text-break">Class BaseEvent
+  </h1>
+  <div class="markdown level0 summary"><p>Abstract class that represents the base event for scheduling.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Priority_Queue.FastPriorityQueueNode</span></div>
+    <div class="level2"><span class="xref">Priority_Queue.StablePriorityQueueNode</span></div>
+    <div class="level3"><span class="xref">BaseEvent</span></div>
+      <div class="level4"><a class="xref" href="Fibula.Mechanics.Operations.Operation.html">Operation</a></div>
+      <div class="level4"><a class="xref" href="Fibula.Notifications.Notification.html">Notification</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">Priority_Queue.StablePriorityQueueNode.InsertionIndex</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.Priority</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.QueueIndex</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Scheduling.html">Fibula.Scheduling</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Scheduling.dll</h6>
+  <h5 id="Fibula_Scheduling_BaseEvent_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class BaseEvent : StablePriorityQueueNode, IEvent, IEquatable&lt;BaseEvent&gt;</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent__ctor_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.%23ctor(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L29">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent__ctor_" data-uid="Fibula.Scheduling.BaseEvent.#ctor*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent__ctor_System_UInt32_" data-uid="Fibula.Scheduling.BaseEvent.#ctor(System.UInt32)">BaseEvent(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BaseEvent(uint requestorId = 0U)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">requestorId</span></td>
+        <td><p>Optional. The id of the creature or entity requesting the event. Default is 0.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_CanBeCancelled.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.CanBeCancelled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L76">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_CanBeCancelled_" data-uid="Fibula.Scheduling.BaseEvent.CanBeCancelled*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_CanBeCancelled" data-uid="Fibula.Scheduling.BaseEvent.CanBeCancelled">CanBeCancelled</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the event can be cancelled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract bool CanBeCancelled { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_EventId.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.EventId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L50">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_EventId_" data-uid="Fibula.Scheduling.BaseEvent.EventId*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_EventId" data-uid="Fibula.Scheduling.BaseEvent.EventId">EventId</h4>
+  <div class="markdown level1 summary"><p>Gets a unique identifier for this event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string EventId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_HasCancellationHandler.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.HasCancellationHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L66">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_HasCancellationHandler_" data-uid="Fibula.Scheduling.BaseEvent.HasCancellationHandler*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_HasCancellationHandler" data-uid="Fibula.Scheduling.BaseEvent.HasCancellationHandler">HasCancellationHandler</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this event has a handler hooked up for it's <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">Cancelled</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasCancellationHandler { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_HasExpeditionHandler.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.HasExpeditionHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L71">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_HasExpeditionHandler_" data-uid="Fibula.Scheduling.BaseEvent.HasExpeditionHandler*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_HasExpeditionHandler" data-uid="Fibula.Scheduling.BaseEvent.HasExpeditionHandler">HasExpeditionHandler</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this event has a handler hooked up for it's <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedited">Expedited</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasExpeditionHandler { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_RepeatAfter.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.RepeatAfter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L61">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_RepeatAfter_" data-uid="Fibula.Scheduling.BaseEvent.RepeatAfter*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_RepeatAfter" data-uid="Fibula.Scheduling.BaseEvent.RepeatAfter">RepeatAfter</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the time after which this event should be repeated.
+The event is not repeated if the value is not positive.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public TimeSpan RepeatAfter { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_RequestorId.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.RequestorId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L55">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_RequestorId_" data-uid="Fibula.Scheduling.BaseEvent.RequestorId*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_RequestorId" data-uid="Fibula.Scheduling.BaseEvent.RequestorId">RequestorId</h4>
+  <div class="markdown level1 summary"><p>Gets the id of the requestor of this event, if available.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint RequestorId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Cancel.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Cancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L88">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_Cancel_" data-uid="Fibula.Scheduling.BaseEvent.Cancel*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_Cancel" data-uid="Fibula.Scheduling.BaseEvent.Cancel">Cancel()</h4>
+  <div class="markdown level1 summary"><p>Attempts to cancel this event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Cancel()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the event is successfully cancelled, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Equals(Fibula.Scheduling.BaseEvent)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L117">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_Equals_" data-uid="Fibula.Scheduling.BaseEvent.Equals*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_" data-uid="Fibula.Scheduling.BaseEvent.Equals(Fibula.Scheduling.BaseEvent)">Equals(BaseEvent)</h4>
+  <div class="markdown level1 summary"><p>Indicates whether the current object is equal to another object of the same type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Equals(BaseEvent other)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a></td>
+        <td><span class="parametername">other</span></td>
+        <td><p>The other object to compare against.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the current object is equal to the other parameter, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L82">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_Execute_" data-uid="Fibula.Scheduling.BaseEvent.Execute*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_" data-uid="Fibula.Scheduling.BaseEvent.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)">Execute(IEventContext)</h4>
+  <div class="markdown level1 summary"><p>Executes the event logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract void Execute(IEventContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEventContext.html">IEventContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The execution context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Expedite.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Expedite%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L102">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_Expedite_" data-uid="Fibula.Scheduling.BaseEvent.Expedite*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_Expedite" data-uid="Fibula.Scheduling.BaseEvent.Expedite">Expedite()</h4>
+  <div class="markdown level1 summary"><p>Attempts to expedite this event, in other words, requesting it to be fired immediately.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Expedite()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the event is successfully expedited, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Cancelled.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Cancelled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L40">View Source</a>
+  </span>
+  <h4 id="Fibula_Scheduling_BaseEvent_Cancelled" data-uid="Fibula.Scheduling.BaseEvent.Cancelled">Cancelled</h4>
+  <div class="markdown level1 summary"><p>Fired when this event is cancelled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventCancelledDelegate Cancelled</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Delegates.EventCancelledDelegate.html">EventCancelledDelegate</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Expedited.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Expedited%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L45">View Source</a>
+  </span>
+  <h4 id="Fibula_Scheduling_BaseEvent_Expedited" data-uid="Fibula.Scheduling.BaseEvent.Expedited">Expedited</h4>
+  <div class="markdown level1 summary"><p>Fired when this event is expedited.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventExpeditedDelegate Expedited</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Delegates.EventExpeditedDelegate.html">EventExpeditedDelegate</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L23" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

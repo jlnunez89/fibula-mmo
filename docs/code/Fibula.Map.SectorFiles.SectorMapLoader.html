@@ -1,0 +1,811 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class SectorMapLoader
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class SectorMapLoader
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Map.SectorFiles.SectorMapLoader">
+  
+  
+  <h1 id="Fibula_Map_SectorFiles_SectorMapLoader" data-uid="Fibula.Map.SectorFiles.SectorMapLoader" class="text-break">Class SectorMapLoader
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a map loader that loads from the sector files from CipSoft.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">SectorMapLoader</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Map.Contracts.Abstractions.IMapLoader.html">IMapLoader</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Map.SectorFiles.html">Fibula.Map.SectorFiles</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Map.SectorFiles.dll</h6>
+  <h5 id="Fibula_Map_SectorFiles_SectorMapLoader_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class SectorMapLoader : IMapLoader</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader__ctor_Serilog_ILogger_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_Fibula_Items_Contracts_Abstractions_IItemFactory_Microsoft_Extensions_Options_IOptions_Fibula_Map_SectorFiles_SectorMapLoaderOptions__.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.%23ctor(Serilog.ILogger%2CFibula.Creatures.Contracts.Abstractions.ICreatureFinder%2CFibula.Items.Contracts.Abstractions.IItemFactory%2CMicrosoft.Extensions.Options.IOptions%7BFibula.Map.SectorFiles.SectorMapLoaderOptions%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L139">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader__ctor_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.#ctor*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader__ctor_Serilog_ILogger_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_Fibula_Items_Contracts_Abstractions_IItemFactory_Microsoft_Extensions_Options_IOptions_Fibula_Map_SectorFiles_SectorMapLoaderOptions__" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.#ctor(Serilog.ILogger,Fibula.Creatures.Contracts.Abstractions.ICreatureFinder,Fibula.Items.Contracts.Abstractions.IItemFactory,Microsoft.Extensions.Options.IOptions{Fibula.Map.SectorFiles.SectorMapLoaderOptions})">SectorMapLoader(ILogger, ICreatureFinder, IItemFactory, IOptions&lt;SectorMapLoaderOptions&gt;)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Map.SectorFiles.SectorMapLoader.html">SectorMapLoader</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public SectorMapLoader(ILogger logger, ICreatureFinder creatureFinder, IItemFactory itemFactory, IOptions&lt;SectorMapLoaderOptions&gt; sectorMapLoaderOptions)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Serilog.ILogger</span></td>
+        <td><span class="parametername">logger</span></td>
+        <td><p>A reference to the logger instance in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td><span class="parametername">creatureFinder</span></td>
+        <td><p>A reference to the creature finder.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemFactory.html">IItemFactory</a></td>
+        <td><span class="parametername">itemFactory</span></td>
+        <td><p>A reference to the item factory.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.Extensions.Options.IOptions</span>&lt;<a class="xref" href="Fibula.Map.SectorFiles.SectorMapLoaderOptions.html">SectorMapLoaderOptions</a>&gt;</td>
+        <td><span class="parametername">sectorMapLoaderOptions</span></td>
+        <td><p>The options for this map loader.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="fields">Fields
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_CommentSymbol.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.CommentSymbol%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L45">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_CommentSymbol" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.CommentSymbol">CommentSymbol</h4>
+  <div class="markdown level1 summary"><p>The symbol used for comments.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char CommentSymbol = '#'</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Char</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_PositionSeparator.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.PositionSeparator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L55">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_PositionSeparator" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.PositionSeparator">PositionSeparator</h4>
+  <div class="markdown level1 summary"><p>The separator used for positions of sectors.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char PositionSeparator = '-'</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Char</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorSeparator.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorSeparator%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L50">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorSeparator" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorSeparator">SectorSeparator</h4>
+  <div class="markdown level1 summary"><p>The separator used for sector files.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const char SectorSeparator = ':'</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Char</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorXMax.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorXMax%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L65">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorXMax" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorXMax">SectorXMax</h4>
+  <div class="markdown level1 summary"><p>The maximum X value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorXMax = 1043</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorXMin.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorXMin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L60">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorXMin" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorXMin">SectorXMin</h4>
+  <div class="markdown level1 summary"><p>The minimum X value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorXMin = 996</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorYMax.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorYMax%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L75">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorYMax" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorYMax">SectorYMax</h4>
+  <div class="markdown level1 summary"><p>The maximum Y value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorYMax = 1031</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorYMin.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorYMin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L70">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorYMin" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorYMin">SectorYMin</h4>
+  <div class="markdown level1 summary"><p>The minimum Y value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorYMin = 984</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorZMax.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorZMax%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L85">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorZMax" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorZMax">SectorZMax</h4>
+  <div class="markdown level1 summary"><p>The maximum Z value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorZMax = 15</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_SectorZMin.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.SectorZMin%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L80">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_SectorZMin" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.SectorZMin">SectorZMin</h4>
+  <div class="markdown level1 summary"><p>The minimum Z value for sectors known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public const int SectorZMin = 0</code></pre>
+  </div>
+  <h5 class="fieldValue">Field Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_CreatureFinder.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.CreatureFinder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L188">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_CreatureFinder_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.CreatureFinder*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_CreatureFinder" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.CreatureFinder">CreatureFinder</h4>
+  <div class="markdown level1 summary"><p>Gets the creature finder instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreatureFinder CreatureFinder { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_ItemFactory.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.ItemFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L193">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_ItemFactory_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.ItemFactory*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_ItemFactory" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.ItemFactory">ItemFactory</h4>
+  <div class="markdown level1 summary"><p>Gets the item factory instance.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IItemFactory ItemFactory { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemFactory.html">IItemFactory</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_Logger.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.Logger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L183">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_Logger_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.Logger*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_Logger" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.Logger">Logger</h4>
+  <div class="markdown level1 summary"><p>Gets the logger to use.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ILogger Logger { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">Serilog.ILogger</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_PercentageComplete.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.PercentageComplete%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L198">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_PercentageComplete_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.PercentageComplete*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_PercentageComplete" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.PercentageComplete">PercentageComplete</h4>
+  <div class="markdown level1 summary"><p>Gets the percentage completed loading the map [0, 100].</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte PercentageComplete { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_HasLoaded_System_Int32_System_Int32_System_SByte_.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.HasLoaded(System.Int32%2CSystem.Int32%2CSystem.SByte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L207">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_HasLoaded_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.HasLoaded*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_HasLoaded_System_Int32_System_Int32_System_SByte_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.HasLoaded(System.Int32,System.Int32,System.SByte)">HasLoaded(Int32, Int32, SByte)</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this loader has previously loaded the given coordinates.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool HasLoaded(int x, int y, sbyte z)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">x</span></td>
+        <td><p>The X coordinate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">y</span></td>
+        <td><p>The Y coordinate.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.SByte</span></td>
+        <td><span class="parametername">z</span></td>
+        <td><p>The Z coordinate.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the loader has previously loaded the given coordinates, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_Load_System_Int32_System_Int32_System_Int32_System_Int32_System_SByte_System_SByte_.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.Load(System.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.SByte%2CSystem.SByte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L236">View Source</a>
+  </span>
+  <a id="Fibula_Map_SectorFiles_SectorMapLoader_Load_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.Load*"></a>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_Load_System_Int32_System_Int32_System_Int32_System_Int32_System_SByte_System_SByte_" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.Load(System.Int32,System.Int32,System.Int32,System.Int32,System.SByte,System.SByte)">Load(Int32, Int32, Int32, Int32, SByte, SByte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to load all tiles within a 3 dimensional coordinates window.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IEnumerable&lt;(Location Location, ITile Tile)&gt; Load(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">fromX</span></td>
+        <td><p>The start X coordinate for the load window.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">toX</span></td>
+        <td><p>The end X coordinate for the load window.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">fromY</span></td>
+        <td><p>The start Y coordinate for the load window.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">toY</span></td>
+        <td><p>The end Y coordinate for the load window.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.SByte</span></td>
+        <td><span class="parametername">fromZ</span></td>
+        <td><p>The start Z coordinate for the load window.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.SByte</span></td>
+        <td><span class="parametername">toZ</span></td>
+        <td><p>The end Z coordinate for the load window.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>, <a class="xref" href="Fibula.Map.Contracts.Abstractions.ITile.html">ITile</a>&gt;&gt;</td>
+        <td><p>A collection of ordered pairs containing the <a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a> and its corresponding <a class="xref" href="Fibula.Map.Contracts.Abstractions.ITile.html">ITile</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader_WindowLoaded.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader.WindowLoaded%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L178">View Source</a>
+  </span>
+  <h4 id="Fibula_Map_SectorFiles_SectorMapLoader_WindowLoaded" data-uid="Fibula.Map.SectorFiles.SectorMapLoader.WindowLoaded">WindowLoaded</h4>
+  <div class="markdown level1 summary"><p>Event invoked when a window of coordinates in the map is loaded.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event WindowLoaded WindowLoaded</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Map.Contracts.Delegates.WindowLoaded.html">WindowLoaded</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Map.Contracts.Abstractions.IMapLoader.html">IMapLoader</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Map_SectorFiles_SectorMapLoader.md&amp;value=---%0Auid%3A%20Fibula.Map.SectorFiles.SectorMapLoader%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Map.SectorFiles/SectorMapLoader.cs/#L40" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

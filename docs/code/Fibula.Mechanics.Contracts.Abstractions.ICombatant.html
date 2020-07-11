@@ -1,0 +1,1153 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Interface ICombatant
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Interface ICombatant
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant">
+  
+  
+  <h1 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant" class="text-break">Interface ICombatant
+  </h1>
+  <div class="markdown level0 summary"><p>Interface for all creatures that can participate in combat.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html#Fibula_Mechanics_Contracts_Abstractions_ICreatureWithExhaustion_ExhaustionInformation">ICreatureWithExhaustion.ExhaustionInformation</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html#Fibula_Mechanics_Contracts_Abstractions_ICreatureWithExhaustion_CalculateRemainingCooldownTime_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_">ICreatureWithExhaustion.CalculateRemainingCooldownTime(ExhaustionType, DateTimeOffset)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html#Fibula_Mechanics_Contracts_Abstractions_ICreatureWithExhaustion_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_UInt32_">ICreatureWithExhaustion.AddExhaustion(ExhaustionType, DateTimeOffset, UInt32)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html#Fibula_Mechanics_Contracts_Abstractions_ICreatureWithExhaustion_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_TimeSpan_">ICreatureWithExhaustion.AddExhaustion(ExhaustionType, DateTimeOffset, TimeSpan)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Id">ICreature.Id</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Blood">ICreature.Blood</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Article">ICreature.Article</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Name">ICreature.Name</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Corpse">ICreature.Corpse</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_HitpointPercentage">ICreature.HitpointPercentage</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Hitpoints">ICreature.Hitpoints</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_MaxHitpoints">ICreature.MaxHitpoints</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Manapoints">ICreature.Manapoints</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_MaxManapoints">ICreature.MaxManapoints</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_CarryStrength">ICreature.CarryStrength</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Outfit">ICreature.Outfit</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Direction">ICreature.Direction</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_LastMovementCostModifier">ICreature.LastMovementCostModifier</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_EmittedLightLevel">ICreature.EmittedLightLevel</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_EmittedLightColor">ICreature.EmittedLightColor</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Speed">ICreature.Speed</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Flags">ICreature.Flags</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_Inventory">ICreature.Inventory</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_IsDead">ICreature.IsDead</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_WalkPlan">ICreature.WalkPlan</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_CanSee_Fibula_Creatures_Contracts_Abstractions_ICreature_">ICreature.CanSee(ICreature)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_CanSee_Fibula_Common_Contracts_Structs_Location_">ICreature.CanSee(Location)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_TurnToDirection_Fibula_Common_Contracts_Enumerations_Direction_">ICreature.TurnToDirection(Direction)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html#Fibula_Creatures_Contracts_Abstractions_ICreature_SetOutfit_Fibula_Creatures_Contracts_Structs_Outfit_">ICreature.SetOutfit(Outfit)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingChanged">IThing.ThingChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingId">IThing.ThingId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved">IThing.CanBeMoved</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger">IThing.DescribeForLogger()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html#Fibula_Common_Contracts_Abstractions_IContainedThing_ParentContainer">IContainedThing.ParentContainer</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html#Fibula_Common_Contracts_Abstractions_IThingContainer_FindThingAtIndex_System_Byte_">IThingContainer.FindThingAtIndex(Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html#Fibula_Common_Contracts_Abstractions_IThingContainer_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_">IThingContainer.AddContent(IThingFactory, IThing, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html#Fibula_Common_Contracts_Abstractions_IThingContainer_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_">IThingContainer.RemoveContent(IThingFactory, IThing, Byte, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html#Fibula_Common_Contracts_Abstractions_IThingContainer_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_">IThingContainer.ReplaceContent(IThingFactory, IThing, IThing, Byte, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html#Fibula_Common_Contracts_Abstractions_ILocatable_Location">ILocatable.Location</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html#Fibula_Common_Contracts_Abstractions_ILocatable_CarryLocation">ILocatable.CarryLocation</a>
+    </div>
+    <div>
+      <span class="xref">System.IEquatable&lt;Fibula.Creatures.Contracts.Abstractions.ICreature&gt;.Equals(Fibula.Creatures.Contracts.Abstractions.ICreature)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.html">Fibula.Mechanics.Contracts.Abstractions</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.Contracts.dll</h6>
+  <h5 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public interface ICombatant : ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackedBy.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackedBy%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L143">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackedBy_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackedBy*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackedBy" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackedBy">AttackedBy</h4>
+  <div class="markdown level1 summary"><p>Gets the collection of ids of attackers of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;uint&gt; AttackedBy { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.UInt32</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackSpeed.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L98">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AttackSpeed" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AttackSpeed">AttackSpeed</h4>
+  <div class="markdown level1 summary"><p>Gets a metric of how fast a combatant can earn an attack credit per combat round.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">decimal AttackSpeed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackCredits.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L88">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackCredits" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackCredits">AutoAttackCredits</h4>
+  <div class="markdown level1 summary"><p>Gets the number of attack credits available.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int AutoAttackCredits { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackMaximumCredits.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackMaximumCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L93">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackMaximumCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackMaximumCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackMaximumCredits" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackMaximumCredits">AutoAttackMaximumCredits</h4>
+  <div class="markdown level1 summary"><p>Gets the number of maximum attack credits.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ushort AutoAttackMaximumCredits { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackRange.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackRange%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L83">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackRange_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackRange*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackRange" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackRange">AutoAttackRange</h4>
+  <div class="markdown level1 summary"><p>Gets the range that the auto attack has.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">byte AutoAttackRange { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackTarget.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L73">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackTarget_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackTarget*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoAttackTarget" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoAttackTarget">AutoAttackTarget</h4>
+  <div class="markdown level1 summary"><p>Gets the current target combatant, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICombatant AutoAttackTarget { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseCredits.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L103">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseCredits" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseCredits">AutoDefenseCredits</h4>
+  <div class="markdown level1 summary"><p>Gets the number of auto defense credits available.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">int AutoDefenseCredits { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseMaximumCredits.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseMaximumCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L108">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseMaximumCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseMaximumCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_AutoDefenseMaximumCredits" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.AutoDefenseMaximumCredits">AutoDefenseMaximumCredits</h4>
+  <div class="markdown level1 summary"><p>Gets the number of maximum defense credits.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ushort AutoDefenseMaximumCredits { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChaseMode.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChaseMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L153">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChaseMode_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChaseMode*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChaseMode" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChaseMode">ChaseMode</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the chase mode selected by this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ChaseMode ChaseMode { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.ChaseMode.html">ChaseMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChasingTarget.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChasingTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L78">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChasingTarget_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChasingTarget*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ChasingTarget" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ChasingTarget">ChasingTarget</h4>
+  <div class="markdown level1 summary"><p>Gets the current target being chased, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">ICombatant ChasingTarget { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_DamageTakenDistribution.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.DamageTakenDistribution%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L138">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DamageTakenDistribution_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DamageTakenDistribution*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DamageTakenDistribution" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DamageTakenDistribution">DamageTakenDistribution</h4>
+  <div class="markdown level1 summary"><p>Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IEnumerable&lt;(uint, uint)&gt; DamageTakenDistribution { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.UInt32</span>, <span class="xref">System.UInt32</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_DefenseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.DefenseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L113">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DefenseSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DefenseSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DefenseSpeed" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DefenseSpeed">DefenseSpeed</h4>
+  <div class="markdown level1 summary"><p>Gets a metric of how fast a combatant can earn a defense credit per combat round.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">decimal DefenseSpeed { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_FightMode.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.FightMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L148">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_FightMode_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.FightMode*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_FightMode" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.FightMode">FightMode</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the fight mode selected by this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">FightMode FightMode { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.FightMode.html">FightMode</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_PendingAutoAttackOperation.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.PendingAutoAttackOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L133">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_PendingAutoAttackOperation_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.PendingAutoAttackOperation*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_PendingAutoAttackOperation" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.PendingAutoAttackOperation">PendingAutoAttackOperation</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the current auto attack operation that this combatant has pending, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IOperation PendingAutoAttackOperation { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperation.html">IOperation</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_ApplyDamage_Fibula_Mechanics_Contracts_Structs_DamageInfo_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.ApplyDamage(Fibula.Mechanics.Contracts.Structs.DamageInfo%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L213">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ApplyDamage_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ApplyDamage*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ApplyDamage_Fibula_Mechanics_Contracts_Structs_DamageInfo_System_UInt32_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ApplyDamage(Fibula.Mechanics.Contracts.Structs.DamageInfo,System.UInt32)">ApplyDamage(DamageInfo, UInt32)</h4>
+  <div class="markdown level1 summary"><p>Applies damage to the combatant, which is expected to apply reductions and protections.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0U)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Structs.DamageInfo.html">DamageInfo</a></td>
+        <td><span class="parametername">damageInfo</span></td>
+        <td><p>The information of the damage to make, without reductions.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">fromCombatantId</span></td>
+        <td><p>The combatant from which to track the damage, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Structs.DamageInfo.html">DamageInfo</a></td>
+        <td><p>The information about the damage actually done.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_ConsumeCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.ConsumeCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L174">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ConsumeCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ConsumeCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_ConsumeCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.ConsumeCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType,System.Byte)">ConsumeCredits(CombatCreditType, Byte)</h4>
+  <div class="markdown level1 summary"><p>Consumes combat credits to the combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void ConsumeCredits(CombatCreditType creditType, byte amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType.html">CombatCreditType</a></td>
+        <td><span class="parametername">creditType</span></td>
+        <td><p>The type of combat credits to consume.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>The amount of credits to consume.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseAttackSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseAttackSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L199">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseAttackSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseAttackSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseAttackSpeed_System_Decimal_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseAttackSpeed(System.Decimal)">DecreaseAttackSpeed(Decimal)</h4>
+  <div class="markdown level1 summary"><p>Decreases the attack speed of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void DecreaseAttackSpeed(decimal decreaseAmount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">decreaseAmount</span></td>
+        <td><p>The amount by which to decrease.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseDefenseSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseDefenseSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L205">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseDefenseSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseDefenseSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_DecreaseDefenseSpeed_System_Decimal_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.DecreaseDefenseSpeed(System.Decimal)">DecreaseDefenseSpeed(Decimal)</h4>
+  <div class="markdown level1 summary"><p>Decreases the defense speed of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void DecreaseDefenseSpeed(decimal decreaseAmount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">decreaseAmount</span></td>
+        <td><p>The amount by which to decrease.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseAttackSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseAttackSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L187">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseAttackSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseAttackSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseAttackSpeed_System_Decimal_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseAttackSpeed(System.Decimal)">IncreaseAttackSpeed(Decimal)</h4>
+  <div class="markdown level1 summary"><p>Increases the attack speed of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void IncreaseAttackSpeed(decimal increaseAmount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">increaseAmount</span></td>
+        <td><p>The amount by which to increase.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseDefenseSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseDefenseSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L193">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseDefenseSpeed_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseDefenseSpeed*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_IncreaseDefenseSpeed_System_Decimal_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.IncreaseDefenseSpeed(System.Decimal)">IncreaseDefenseSpeed(Decimal)</h4>
+  <div class="markdown level1 summary"><p>Increases the defense speed of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void IncreaseDefenseSpeed(decimal increaseAmount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Decimal</span></td>
+        <td><span class="parametername">increaseAmount</span></td>
+        <td><p>The amount by which to increase.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_RestoreCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.RestoreCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L181">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_RestoreCredits_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.RestoreCredits*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_RestoreCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.RestoreCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType,System.Byte)">RestoreCredits(CombatCreditType, Byte)</h4>
+  <div class="markdown level1 summary"><p>Restores combat credits to the combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void RestoreCredits(CombatCreditType creditType, byte amount)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType.html">CombatCreditType</a></td>
+        <td><span class="parametername">creditType</span></td>
+        <td><p>The type of combat credits to restore.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">amount</span></td>
+        <td><p>The amount of credits to restore.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetAttackTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetAttackTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L160">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetAttackTarget_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetAttackTarget*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetAttackTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetAttackTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)">SetAttackTarget(ICombatant)</h4>
+  <div class="markdown level1 summary"><p>Sets the attack target of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool SetAttackTarget(ICombatant otherCombatant)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></td>
+        <td><span class="parametername">otherCombatant</span></td>
+        <td><p>The other target combatant, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the target was actually changed, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetChaseTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetChaseTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L167">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetChaseTarget_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetChaseTarget*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_SetChaseTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.SetChaseTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)">SetChaseTarget(ICombatant)</h4>
+  <div class="markdown level1 summary"><p>Sets the chasing target of this combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">bool SetChaseTarget(ICombatant target)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></td>
+        <td><span class="parametername">target</span></td>
+        <td><p>The target to chase, if any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the target was actually changed, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="events">Events
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_Death.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.Death%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L33">View Source</a>
+  </span>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_Death" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.Death">Death</h4>
+  <div class="markdown level1 summary"><p>Event to call when the combatant dies.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event OnDeath Death</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Delegates.OnDeath.html">OnDeath</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant_HealthChanged.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant.HealthChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L28">View Source</a>
+  </span>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_HealthChanged" data-uid="Fibula.Mechanics.Contracts.Abstractions.ICombatant.HealthChanged">HealthChanged</h4>
+  <div class="markdown level1 summary"><p>Event to call when the combatant's health changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">event OnHealthChange HealthChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Delegates.OnHealthChange.html">OnHealthChange</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IContainedThing_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IContainedThing, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IThingContainer_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IThingContainer, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.CreatureExtensions.html#Fibula_Mechanics_Contracts_Extensions_CreatureExtensions_CalculateStepDuration_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Map_Contracts_Abstractions_ITile_">CreatureExtensions.CalculateStepDuration(ICreature, ITile)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_ICombatant.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.ICombatant%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/ICombatant.cs/#L23" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

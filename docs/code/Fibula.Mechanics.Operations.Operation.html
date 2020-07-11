@@ -1,0 +1,618 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class Operation
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class Operation
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Mechanics.Operations.Operation">
+  
+  
+  <h1 id="Fibula_Mechanics_Operations_Operation" data-uid="Fibula.Mechanics.Operations.Operation" class="text-break">Class Operation
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a common base between game operations.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Priority_Queue.FastPriorityQueueNode</span></div>
+    <div class="level2"><span class="xref">Priority_Queue.StablePriorityQueueNode</span></div>
+    <div class="level3"><a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a></div>
+    <div class="level4"><span class="xref">Operation</span></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.AutoAttackOperation.html">AutoAttackOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.AutoAttackOrchestratorOperation.html">AutoAttackOrchestratorOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.AutoWalkOrchestratorOperation.html">AutoWalkOrchestratorOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.ChangeModesOperation.html">ChangeModesOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.ElevatedOperation.html">ElevatedOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.LookAtOperation.html">LookAtOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.MovementOperation.html">MovementOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.RestoreCombatCreditOperation.html">RestoreCombatCreditOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.SpeechOperation.html">SpeechOperation</a></div>
+      <div class="level5"><a class="xref" href="Fibula.Mechanics.Operations.TurnToDirectionOperation.html">TurnToDirectionOperation</a></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperation.html">IOperation</a></div>
+    <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">BaseEvent.Cancelled</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedited">BaseEvent.Expedited</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_EventId">BaseEvent.EventId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RequestorId">BaseEvent.RequestorId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RepeatAfter">BaseEvent.RepeatAfter</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasCancellationHandler">BaseEvent.HasCancellationHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasExpeditionHandler">BaseEvent.HasExpeditionHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancel">BaseEvent.Cancel()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedite">BaseEvent.Expedite()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_">BaseEvent.Equals(BaseEvent)</a>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.StablePriorityQueueNode.InsertionIndex</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.Priority</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.QueueIndex</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.Operations.html">Fibula.Mechanics.Operations</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
+  <h5 id="Fibula_Mechanics_Operations_Operation_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract class Operation : BaseEvent, IEquatable&lt;BaseEvent&gt;, IOperation, IEvent</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation__ctor_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.%23ctor(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L43">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation__ctor_" data-uid="Fibula.Mechanics.Operations.Operation.#ctor*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation__ctor_System_UInt32_" data-uid="Fibula.Mechanics.Operations.Operation.#ctor(System.UInt32)">Operation(UInt32)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.Operations.Operation.html">Operation</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected Operation(uint requestorId)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">requestorId</span></td>
+        <td><p>The id of the creature requesting the movement.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_CanBeCancelled.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.CanBeCancelled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L52">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_CanBeCancelled_" data-uid="Fibula.Mechanics.Operations.Operation.CanBeCancelled*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_CanBeCancelled" data-uid="Fibula.Mechanics.Operations.Operation.CanBeCancelled">CanBeCancelled</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether the event can be cancelled.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override bool CanBeCancelled { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_CanBeCancelled">BaseEvent.CanBeCancelled</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_ExhaustionCost.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.ExhaustionCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L62">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_ExhaustionCost_" data-uid="Fibula.Mechanics.Operations.Operation.ExhaustionCost*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_ExhaustionCost" data-uid="Fibula.Mechanics.Operations.Operation.ExhaustionCost">ExhaustionCost</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the exhaustion cost time of this operation.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract TimeSpan ExhaustionCost { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.TimeSpan</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_ExhaustionType.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.ExhaustionType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L57">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_ExhaustionType_" data-uid="Fibula.Mechanics.Operations.Operation.ExhaustionType*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_ExhaustionType" data-uid="Fibula.Mechanics.Operations.Operation.ExhaustionType">ExhaustionType</h4>
+  <div class="markdown level1 summary"><p>Gets the type of exhaustion that this operation produces.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public abstract ExhaustionType ExhaustionType { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Enumerations.ExhaustionType.html">ExhaustionType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_AddContentToContainerOrFallback_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_Fibula_Common_Contracts_Abstractions_IThingContainer_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Boolean_Fibula_Creatures_Contracts_Abstractions_ICreature_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.AddContentToContainerOrFallback(Fibula.Mechanics.Contracts.Abstractions.IOperationContext%2CFibula.Common.Contracts.Abstractions.IThingContainer%2CFibula.Common.Contracts.Abstractions.IThing%40%2CSystem.Byte%2CSystem.Boolean%2CFibula.Creatures.Contracts.Abstractions.ICreature)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L121">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_AddContentToContainerOrFallback_" data-uid="Fibula.Mechanics.Operations.Operation.AddContentToContainerOrFallback*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_AddContentToContainerOrFallback_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_Fibula_Common_Contracts_Abstractions_IThingContainer_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Boolean_Fibula_Creatures_Contracts_Abstractions_ICreature_" data-uid="Fibula.Mechanics.Operations.Operation.AddContentToContainerOrFallback(Fibula.Mechanics.Contracts.Abstractions.IOperationContext,Fibula.Common.Contracts.Abstractions.IThingContainer,Fibula.Common.Contracts.Abstractions.IThing@,System.Byte,System.Boolean,Fibula.Creatures.Contracts.Abstractions.ICreature)">AddContentToContainerOrFallback(IOperationContext, IThingContainer, ref IThing, Byte, Boolean, ICreature)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add content to the first possible parent container that accepts it, on a chain of parent containers.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected bool AddContentToContainerOrFallback(IOperationContext context, IThingContainer thingContainer, ref IThing remainder, byte addIndex = 255, bool includeTileAsFallback = true, ICreature requestorCreature = null)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperationContext.html">IOperationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>A reference to the operation context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></td>
+        <td><span class="parametername">thingContainer</span></td>
+        <td><p>The first thing container to add to.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">remainder</span></td>
+        <td><p>The remainder content to add, which overflows to the next container in the chain.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">addIndex</span></td>
+        <td><p>The index at which to attempt to add, only for the first attempted container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">includeTileAsFallback</span></td>
+        <td><p>Optional. A value for whether to include tiles in the fallback chain.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td><span class="parametername">requestorCreature</span></td>
+        <td><p>Optional. The creature requesting the addition of content.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><p>True if the content was successfully added, false otherwise.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_DispatchTextNotification_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.DispatchTextNotification(Fibula.Mechanics.Contracts.Abstractions.IOperationContext%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L175">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_DispatchTextNotification_" data-uid="Fibula.Mechanics.Operations.Operation.DispatchTextNotification*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_DispatchTextNotification_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_System_String_" data-uid="Fibula.Mechanics.Operations.Operation.DispatchTextNotification(Fibula.Mechanics.Contracts.Abstractions.IOperationContext,System.String)">DispatchTextNotification(IOperationContext, String)</h4>
+  <div class="markdown level1 summary"><p>Sends a <a class="xref" href="Fibula.Notifications.TextMessageNotification.html">TextMessageNotification</a> to the requestor of the operation, if there is one and it is a player.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void DispatchTextNotification(IOperationContext context, string message = &quot;Sorry, not possible.&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperationContext.html">IOperationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>A reference to the operation context.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">message</span></td>
+        <td><p>Optional. The message to send. Defaults to <a class="xref" href="Fibula.Mechanics.Operations.OperationMessage.html#Fibula_Mechanics_Operations_OperationMessage_NotPossible">NotPossible</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_Execute_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.Execute(Fibula.Mechanics.Contracts.Abstractions.IOperationContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L109">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_Execute_" data-uid="Fibula.Mechanics.Operations.Operation.Execute*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_Execute_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_" data-uid="Fibula.Mechanics.Operations.Operation.Execute(Fibula.Mechanics.Contracts.Abstractions.IOperationContext)">Execute(IOperationContext)</h4>
+  <div class="markdown level1 summary"><p>Executes the operation's logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected abstract void Execute(IOperationContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperationContext.html">IOperationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The execution context for this operation.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L85">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_Execute_" data-uid="Fibula.Mechanics.Operations.Operation.Execute*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_" data-uid="Fibula.Mechanics.Operations.Operation.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)">Execute(IEventContext)</h4>
+  <div class="markdown level1 summary"><p>Executes the event logic.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override void Execute(IEventContext context)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEventContext.html">IEventContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The execution context.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_">BaseEvent.Execute(IEventContext)</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation_GetRequestor_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation.GetRequestor(Fibula.Creatures.Contracts.Abstractions.ICreatureFinder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L69">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Operations_Operation_GetRequestor_" data-uid="Fibula.Mechanics.Operations.Operation.GetRequestor*"></a>
+  <h4 id="Fibula_Mechanics_Operations_Operation_GetRequestor_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_" data-uid="Fibula.Mechanics.Operations.Operation.GetRequestor(Fibula.Creatures.Contracts.Abstractions.ICreatureFinder)">GetRequestor(ICreatureFinder)</h4>
+  <div class="markdown level1 summary"><p>Gets the creature that is requesting the event, if known.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreature GetRequestor(ICreatureFinder creatureFinder)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td><span class="parametername">creatureFinder</span></td>
+        <td><p>A reference to the creature finder in use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td><p>The creature that requested the operation, or null if there wasn't any.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IOperation.html">IOperation</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_Operation.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.Operation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/Operation.cs/#L32" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

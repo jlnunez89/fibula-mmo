@@ -1,0 +1,584 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class BodyContainerItem
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class BodyContainerItem
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Items.BodyContainerItem">
+  
+  
+  <h1 id="Fibula_Items_BodyContainerItem" data-uid="Fibula.Items.BodyContainerItem" class="text-break">Class BodyContainerItem
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a container item for body slots.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Fibula.Common.Thing.html">Thing</a></div>
+    <div class="level2"><a class="xref" href="Fibula.Items.Item.html">Item</a></div>
+    <div class="level3"><a class="xref" href="Fibula.Items.ContainerItem.html">ContainerItem</a></div>
+    <div class="level4"><span class="xref">BodyContainerItem</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></div>
+    <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></div>
+    <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_ContentAdded">ContainerItem.ContentAdded</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_ContentUpdated">ContainerItem.ContentUpdated</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_ContentRemoved">ContainerItem.ContentRemoved</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_Content">ContainerItem.Content</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_Item_System_Int32_">ContainerItem.Item[Int32]</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_RemoveContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing__System_Byte_System_Byte_">ContainerItem.RemoveContent(IThingFactory, IThing, Byte, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_ReplaceContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_System_Byte_">ContainerItem.ReplaceContent(IThingFactory, IThing, IThing, Byte, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_CountAmountAt_System_Byte_System_UInt16_">ContainerItem.CountAmountAt(Byte, UInt16)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_IsChildOf_Fibula_Items_Contracts_Abstractions_IItem_">ContainerItem.IsChildOf(IItem)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_FindThingAtIndex_System_Byte_">ContainerItem.FindThingAtIndex(Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_InvokeContentAdded_Fibula_Items_Contracts_Abstractions_IItem_">ContainerItem.InvokeContentAdded(IItem)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_InvokeContentRemoved_System_Byte_">ContainerItem.InvokeContentRemoved(Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_InvokeContentUpdated_System_Byte_Fibula_Items_Contracts_Abstractions_IItem_">ContainerItem.InvokeContentUpdated(Byte, IItem)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_UniqueId">Item.UniqueId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Type">Item.Type</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Attributes">Item.Attributes</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_ThingId">Item.ThingId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_ChangesOnUse">Item.ChangesOnUse</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_ChangeOnUseTo">Item.ChangeOnUseTo</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_CanBeRotated">Item.CanBeRotated</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_RotateTo">Item.RotateTo</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_CanBeMoved">Item.CanBeMoved</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_HasCollision">Item.HasCollision</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_HasSeparation">Item.HasSeparation</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsCumulative">Item.IsCumulative</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Amount">Item.Amount</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsContainer">Item.IsContainer</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_CanBeDressed">Item.CanBeDressed</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_DressPosition">Item.DressPosition</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsGround">Item.IsGround</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_MovementPenalty">Item.MovementPenalty</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsGroundFix">Item.IsGroundFix</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_StaysOnTop">Item.StaysOnTop</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_StaysOnBottom">Item.StaysOnBottom</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsLiquidPool">Item.IsLiquidPool</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsLiquidSource">Item.IsLiquidSource</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsLiquidContainer">Item.IsLiquidContainer</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_LiquidType">Item.LiquidType</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_BlocksThrow">Item.BlocksThrow</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_BlocksPass">Item.BlocksPass</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_BlocksLay">Item.BlocksLay</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_IsPathBlocking_System_Byte_">Item.IsPathBlocking(Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Merge_Fibula_Items_Contracts_Abstractions_IItem_">Item.Merge(IItem)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Split_Fibula_Items_Contracts_Abstractions_IItemFactory_System_Byte_">Item.Split(IItemFactory, Byte)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_DescribeForLogger">Item.DescribeForLogger()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingChanged">Thing.ThingChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ParentContainer">Thing.ParentContainer</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_InvokePropertyChanged_System_String_">Thing.InvokePropertyChanged(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ToString">Thing.ToString()</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Items.html">Fibula.Items</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Items.dll</h6>
+  <h5 id="Fibula_Items_BodyContainerItem_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class BodyContainerItem : ContainerItem, IContainerItem, IItem, IThing, IContainedThing, IThingContainer, ILocatable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem__ctor_Fibula_Common_Contracts_Enumerations_Slot_.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.%23ctor(Fibula.Common.Contracts.Enumerations.Slot)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L38">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem__ctor_" data-uid="Fibula.Items.BodyContainerItem.#ctor*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem__ctor_Fibula_Common_Contracts_Enumerations_Slot_" data-uid="Fibula.Items.BodyContainerItem.#ctor(Fibula.Common.Contracts.Enumerations.Slot)">BodyContainerItem(Slot)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Items.BodyContainerItem.html">BodyContainerItem</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BodyContainerItem(Slot slot)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.Slot.html">Slot</a></td>
+        <td><span class="parametername">slot</span></td>
+        <td><p>The slot at which this body container is.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem_Capacity.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.Capacity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L53">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem_Capacity_" data-uid="Fibula.Items.BodyContainerItem.Capacity*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem_Capacity" data-uid="Fibula.Items.BodyContainerItem.Capacity">Capacity</h4>
+  <div class="markdown level1 summary"><p>Gets the capacity of this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override byte Capacity { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_Capacity">ContainerItem.Capacity</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem_CarryLocation.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.CarryLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L74">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem_CarryLocation_" data-uid="Fibula.Items.BodyContainerItem.CarryLocation*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem_CarryLocation" data-uid="Fibula.Items.BodyContainerItem.CarryLocation">CarryLocation</h4>
+  <div class="markdown level1 summary"><p>Gets the location where this thing is being carried at, which is none for creatures.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Location? CarryLocation { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Nullable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_CarryLocation">Item.CarryLocation</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem_Location.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.Location%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L63">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem_Location_" data-uid="Fibula.Items.BodyContainerItem.Location*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem_Location" data-uid="Fibula.Items.BodyContainerItem.Location">Location</h4>
+  <div class="markdown level1 summary"><p>Gets this body container's location.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override Location Location { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_Location">Thing.Location</a></div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem_Slot.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.Slot%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L58">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem_Slot_" data-uid="Fibula.Items.BodyContainerItem.Slot*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem_Slot" data-uid="Fibula.Items.BodyContainerItem.Slot">Slot</h4>
+  <div class="markdown level1 summary"><p>Gets this body container's slot.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Slot Slot { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.Slot.html">Slot</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory%2CFibula.Common.Contracts.Abstractions.IThing%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L89">View Source</a>
+  </span>
+  <a id="Fibula_Items_BodyContainerItem_AddContent_" data-uid="Fibula.Items.BodyContainerItem.AddContent*"></a>
+  <h4 id="Fibula_Items_BodyContainerItem_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_" data-uid="Fibula.Items.BodyContainerItem.AddContent(Fibula.Common.Contracts.Abstractions.IThingFactory,Fibula.Common.Contracts.Abstractions.IThing,System.Byte)">AddContent(IThingFactory, IThing, Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to add a <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to this container.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public override (bool result, IThing remainder) AddContent(IThingFactory thingFactory, IThing thing, byte index = 255)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></td>
+        <td><span class="parametername">thingFactory</span></td>
+        <td><p>A reference to the factory of things to use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></td>
+        <td><span class="parametername">thing</span></td>
+        <td><p>The <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> to add to the container.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">index</span></td>
+        <td><p>Optional. The index at which to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>. Defaults to byte.MaxValue, which instructs to add the <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a> at any free index.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Boolean</span>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</td>
+        <td><p>A tuple with a value indicating whether the attempt was at least partially successful, and false otherwise. If the result was only partially successful, a remainder of the thing may be returned.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Items.ContainerItem.html#Fibula_Items_ContainerItem_AddContent_Fibula_Common_Contracts_Abstractions_IThingFactory_Fibula_Common_Contracts_Abstractions_IThing_System_Byte_">ContainerItem.AddContent(IThingFactory, IThing, Byte)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_BodyContainerItem.md&amp;value=---%0Auid%3A%20Fibula.Items.BodyContainerItem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/BodyContainerItem.cs/#L27" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

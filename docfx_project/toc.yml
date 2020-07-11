@@ -1,0 +1,5 @@
+- name: The Project
+  href: articles/
+- name: The Code
+  href: code/
+  homepage: code/index.md
