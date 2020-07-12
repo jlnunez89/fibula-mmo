@@ -17,7 +17,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents a speech operation.
@@ -110,7 +109,10 @@ namespace Fibula.Mechanics.Operations
 
             new CreatureSpeechNotification(
                     () => context.Map.PlayersThatCanSee(requestor.Location),
-                    new CreatureSpeechNotificationArguments(requestor, this.Type, this.ChannelId, this.Content))
+                    requestor,
+                    this.Type,
+                    this.ChannelId,
+                    this.Content)
             .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }

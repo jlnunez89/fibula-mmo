@@ -29,4 +29,9 @@
     <ProjectReference Include="..\Fibula.Map.Contracts\Fibula.Map.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling.Contracts\Fibula.Scheduling.Contracts.csproj" />
   </ItemGroup>
+  
+  <ItemGroup>
+    <Folder Include="Abstractions\" />
+    <Folder Include="Delegates\" />
+  </ItemGroup>
 </Project>

@@ -23,7 +23,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an event for an item change.
@@ -119,7 +118,8 @@ namespace Fibula.Mechanics.Operations
                 {
                     new TileUpdatedNotification(
                         () => context.Map.PlayersThatCanSee(atTile.Location),
-                        new TileUpdatedNotificationArguments(atTile.Location, context.MapDescriptor.DescribeTile))
+                        atTile.Location,
+                        context.MapDescriptor.DescribeTile)
                     .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
                     // Evaluate if the new item triggers a collision.

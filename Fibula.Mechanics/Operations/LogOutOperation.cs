@@ -20,7 +20,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents a logout operation.
@@ -58,7 +57,8 @@ namespace Fibula.Mechanics.Operations
             {
                 new TextMessageNotification(
                     () => this.Player.YieldSingleItem(),
-                    new TextMessageNotificationArguments(MessageType.StatusSmall, "You may not logout at this time."))
+                    MessageType.StatusSmall,
+                    "You may not logout at this time.")
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
                 return;
@@ -86,7 +86,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     new GenericNotification(
                         () => context.Map.PlayersThatCanSee(playerLocation),
-                        new GenericNotificationArguments(new MagicEffectPacket(playerLocation, AnimatedEffect.Puff)))
+                        new MagicEffectPacket(playerLocation, AnimatedEffect.Puff))
                     .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                 }
 

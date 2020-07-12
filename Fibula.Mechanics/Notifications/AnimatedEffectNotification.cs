@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="GenericNotification.cs" company="2Dudes">
+// <copyright file="AnimatedEffectNotification.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -13,34 +13,49 @@ namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
+    using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a generic notification.
+    /// Class that represents a notification for animated effects.
     /// </summary>
-    public class GenericNotification : Notification
+    public class AnimatedEffectNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="GenericNotification"/> class.
+        /// Initializes a new instance of the <see cref="AnimatedEffectNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public GenericNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, GenericNotificationArguments arguments)
+        /// <param name="location">The location of the animated text.</param>
+        /// <param name="effect">The effect.</param>
+        public AnimatedEffectNotification(
+            Func<IEnumerable<IPlayer>> findTargetPlayers,
+            Location location,
+            AnimatedEffect effect = AnimatedEffect.None)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
+            if (effect == AnimatedEffect.None)
+            {
+                throw new ArgumentException($"Invalid value for effect parameter: {effect}.", nameof(effect));
+            }
 
-            this.Arguments = arguments;
+            this.Location = location;
+            this.Effect = effect;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the location of the animated text.
         /// </summary>
-        public GenericNotificationArguments Arguments { get; }
+        public Location Location { get; }
+
+        /// <summary>
+        /// Gets the actual effect.
+        /// </summary>
+        public AnimatedEffect Effect { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -50,7 +65,7 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            return this.Arguments.OutgoingPackets;
+            return new MagicEffectPacket(this.Location, this.Effect).YieldSingleItem();
         }
     }
 }

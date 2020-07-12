@@ -19,7 +19,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an operation that cancels other operations.
@@ -71,9 +70,8 @@ namespace Fibula.Mechanics.Operations
 
                 new GenericNotification(
                     () => player.YieldSingleItem(),
-                    new GenericNotificationArguments(
-                        new PlayerCancelAttackPacket(),
-                        new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection())))
+                    new PlayerCancelAttackPacket(),
+                    new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection()))
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
         }

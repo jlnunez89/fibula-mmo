@@ -9,9 +9,9 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Notifications.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Abstractions
 {
-    using Fibula.Notifications.Contracts.Delegates;
+    using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>

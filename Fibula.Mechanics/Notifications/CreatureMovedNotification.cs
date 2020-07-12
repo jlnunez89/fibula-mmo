@@ -16,15 +16,13 @@ namespace Fibula.Notifications
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
-    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for when a creature has moved.
@@ -35,19 +33,61 @@ namespace Fibula.Notifications
         /// Initializes a new instance of the <see cref="CreatureMovedNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureMovedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureMovedNotificationArguments arguments)
+        /// <param name="creatureId">The id of the creature moving.</param>
+        /// <param name="fromLocation">The location from which the creature is moving.</param>
+        /// <param name="fromStackPos">The stack position from where the creature moving.</param>
+        /// <param name="toLocation">The location to which the creature is moving.</param>
+        /// <param name="toStackPos">The stack position to which the creature is moving.</param>
+        /// <param name="wasTeleport">A value indicating whether this movement was a teleportation.</param>
+        public CreatureMovedNotification(
+            Func<IEnumerable<IPlayer>> findTargetPlayers,
+            uint creatureId,
+            Location fromLocation,
+            byte fromStackPos,
+            Location toLocation,
+            byte toStackPos,
+            bool wasTeleport)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
+            var locationDiff = fromLocation - toLocation;
 
-            this.Arguments = arguments;
+            this.CreatureId = creatureId;
+            this.OldLocation = fromLocation;
+            this.OldStackPosition = fromStackPos;
+            this.NewLocation = toLocation;
+            this.NewStackPosition = toStackPos;
+            this.WasTeleport = wasTeleport || locationDiff.MaxValueIn3D > 1;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets a value indicating whether this movement was a teleportation.
         /// </summary>
-        public CreatureMovedNotificationArguments Arguments { get; }
+        public bool WasTeleport { get; }
+
+        /// <summary>
+        /// Gets the location from which the creature is moving.
+        /// </summary>
+        public Location OldLocation { get; }
+
+        /// <summary>
+        /// Gets the stack position from where the creature moving.
+        /// </summary>
+        public byte OldStackPosition { get; }
+
+        /// <summary>
+        /// Gets the stack position to which the creature is moving.
+        /// </summary>
+        public byte NewStackPosition { get; }
+
+        /// <summary>
+        /// Gets the location to which the creature is moving.
+        /// </summary>
+        public Location NewLocation { get; }
+
+        /// <summary>
+        /// Gets the id of the creature moving.
+        /// </summary>
+        public uint CreatureId { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -58,78 +98,78 @@ namespace Fibula.Notifications
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
             var packets = new List<IOutboundPacket>();
-            var creature = context.CreatureFinder.FindCreatureById(this.Arguments.CreatureId);
+            var creature = context.CreatureFinder.FindCreatureById(this.CreatureId);
 
             var allCreatureIdsToLearn = new List<uint>();
             var allCreatureIdsToForget = new List<uint>();
 
-            if (this.Arguments.CreatureId == player.Id)
+            if (this.CreatureId == player.Id)
             {
-                if (this.Arguments.WasTeleport)
+                if (this.WasTeleport)
                 {
-                    if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
+                    if (this.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                     {
                         // Since this was described to the client before, we send a packet that lets them know the thing must be removed from that Tile's stack.
-                        packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                        packets.Add(new RemoveAtLocationPacket(this.OldLocation, this.OldStackPosition));
                     }
 
                     // Then send the entire description at the new location.
-                    var (descriptionMetadata, descriptionBytes) = context.MapDescriptor.DescribeAt(player, this.Arguments.NewLocation);
+                    var (descriptionMetadata, descriptionBytes) = context.MapDescriptor.DescribeAt(player, this.NewLocation);
 
-                    packets.Add(new MapDescriptionPacket(this.Arguments.NewLocation, descriptionBytes));
+                    packets.Add(new MapDescriptionPacket(this.NewLocation, descriptionBytes));
 
                     return packets;
                 }
 
-                if (this.Arguments.OldLocation.Z == 7 && this.Arguments.NewLocation.Z > 7)
+                if (this.OldLocation.Z == 7 && this.NewLocation.Z > 7)
                 {
-                    if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
+                    if (this.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                     {
-                        packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                        packets.Add(new RemoveAtLocationPacket(this.OldLocation, this.OldStackPosition));
                     }
                 }
                 else
                 {
-                    packets.Add(new CreatureMovedPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition, this.Arguments.NewLocation));
+                    packets.Add(new CreatureMovedPacket(this.OldLocation, this.OldStackPosition, this.NewLocation));
                 }
 
                 // floor change down
-                if (this.Arguments.NewLocation.Z > this.Arguments.OldLocation.Z)
+                if (this.NewLocation.Z > this.OldLocation.Z)
                 {
                     var windowStartLocation = new Location()
                     {
-                        X = this.Arguments.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1), // -8
-                        Y = this.Arguments.OldLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1), // -6
-                        Z = this.Arguments.NewLocation.Z,
+                        X = this.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1), // -8
+                        Y = this.OldLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1), // -6
+                        Z = this.NewLocation.Z,
                     };
 
                     (IDictionary<string, object> Metadata, ReadOnlySequence<byte> Data) description;
 
                     // going from surface to underground
-                    if (this.Arguments.NewLocation.Z == 8)
+                    if (this.NewLocation.Z == 8)
                     {
                         // Client already has the two floors above (6 and 7), so it needs 8 (new current), and 2 below.
                         description = context.MapDescriptor.DescribeWindow(
                             player,
                             (ushort)windowStartLocation.X,
                             (ushort)windowStartLocation.Y,
-                            this.Arguments.NewLocation.Z,
-                            (sbyte)(this.Arguments.NewLocation.Z + 2),
+                            this.NewLocation.Z,
+                            (sbyte)(this.NewLocation.Z + 2),
                             MapConstants.DefaultWindowSizeX,
                             MapConstants.DefaultWindowSizeY,
                             -1);
                     }
 
                     // going further down underground; watch for world's deepest floor (hardcoded for now).
-                    else if (this.Arguments.NewLocation.Z > 8 && this.Arguments.NewLocation.Z < 14)
+                    else if (this.NewLocation.Z > 8 && this.NewLocation.Z < 14)
                     {
                         // Client already has all floors needed except the new deepest floor, so it needs the 2th floor below the current.
                         description = context.MapDescriptor.DescribeWindow(
                             player,
                             (ushort)windowStartLocation.X,
                             (ushort)windowStartLocation.Y,
-                            (sbyte)(this.Arguments.NewLocation.Z + 2),
-                            (sbyte)(this.Arguments.NewLocation.Z + 2),
+                            (sbyte)(this.NewLocation.Z + 2),
+                            (sbyte)(this.NewLocation.Z + 2),
                             MapConstants.DefaultWindowSizeX,
                             MapConstants.DefaultWindowSizeY,
                             -3);
@@ -147,8 +187,8 @@ namespace Fibula.Notifications
                     var (eastDescriptionMetadata, eastDescriptionBytes) = this.EastSliceDescription(
                             context,
                             player,
-                            this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
-                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z);
+                            this.OldLocation.X - this.NewLocation.X,
+                            this.OldLocation.Y - this.NewLocation.Y + this.OldLocation.Z - this.NewLocation.Z);
 
                     if (eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object eastCreatureIdsToLearnBoxed) &&
                         eastDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object eastCreatureIdsToForgetBoxed) &&
@@ -160,7 +200,7 @@ namespace Fibula.Notifications
 
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
 
-                    var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y);
+                    var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player, this.OldLocation.Y - this.NewLocation.Y);
 
                     if (southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object southCreatureIdsToLearnBoxed) &&
                         southDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object southCreatureIdsToForgetBoxed) &&
@@ -174,19 +214,19 @@ namespace Fibula.Notifications
                 }
 
                 // floor change up
-                else if (this.Arguments.NewLocation.Z < this.Arguments.OldLocation.Z)
+                else if (this.NewLocation.Z < this.OldLocation.Z)
                 {
                     var windowStartLocation = new Location()
                     {
-                        X = this.Arguments.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1), // -8
-                        Y = this.Arguments.OldLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1), // -6
-                        Z = this.Arguments.NewLocation.Z,
+                        X = this.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1), // -8
+                        Y = this.OldLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1), // -6
+                        Z = this.NewLocation.Z,
                     };
 
                     (IDictionary<string, object> Metadata, ReadOnlySequence<byte> Data) description;
 
                     // going to surface
-                    if (this.Arguments.NewLocation.Z == 7)
+                    if (this.NewLocation.Z == 7)
                     {
                         // Client already has the first two above-the-ground floors (6 and 7), so it needs 0-5 above.
                         description = context.MapDescriptor.DescribeWindow(
@@ -201,15 +241,15 @@ namespace Fibula.Notifications
                     }
 
                     // going up but still underground
-                    else if (this.Arguments.NewLocation.Z > 7)
+                    else if (this.NewLocation.Z > 7)
                     {
                         // Client already has all floors needed except the new highest floor, so it needs the 2th floor above the current.
                         description = context.MapDescriptor.DescribeWindow(
                             player,
                             (ushort)windowStartLocation.X,
                             (ushort)windowStartLocation.Y,
-                            (sbyte)(this.Arguments.NewLocation.Z - 2),
-                            (sbyte)(this.Arguments.NewLocation.Z - 2),
+                            (sbyte)(this.NewLocation.Z - 2),
+                            (sbyte)(this.NewLocation.Z - 2),
                             MapConstants.DefaultWindowSizeX,
                             MapConstants.DefaultWindowSizeY,
                             3);
@@ -227,8 +267,8 @@ namespace Fibula.Notifications
                     var (westDescriptionMetadata, westDescriptionBytes) = this.WestSliceDescription(
                             context,
                             player,
-                            this.Arguments.OldLocation.X - this.Arguments.NewLocation.X,
-                            this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y + this.Arguments.OldLocation.Z - this.Arguments.NewLocation.Z);
+                            this.OldLocation.X - this.NewLocation.X,
+                            this.OldLocation.Y - this.NewLocation.Y + this.OldLocation.Z - this.NewLocation.Z);
 
                     if (westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object westCreatureIdsToLearnBoxed) &&
                         westDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object westCreatureIdsToForgetBoxed) &&
@@ -240,7 +280,7 @@ namespace Fibula.Notifications
 
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
 
-                    var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player, this.Arguments.OldLocation.Y - this.Arguments.NewLocation.Y);
+                    var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player, this.OldLocation.Y - this.NewLocation.Y);
 
                     if (northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object northCreatureIdsToLearnBoxed) &&
                         northDescriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object northCreatureIdsToForgetBoxed) &&
@@ -253,7 +293,7 @@ namespace Fibula.Notifications
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
                 }
 
-                if (this.Arguments.OldLocation.Y > this.Arguments.NewLocation.Y)
+                if (this.OldLocation.Y > this.NewLocation.Y)
                 {
                     // Creature is moving north, so we need to send the additional north bytes.
                     var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player);
@@ -268,7 +308,7 @@ namespace Fibula.Notifications
 
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
                 }
-                else if (this.Arguments.OldLocation.Y < this.Arguments.NewLocation.Y)
+                else if (this.OldLocation.Y < this.NewLocation.Y)
                 {
                     // Creature is moving south, so we need to send the additional south bytes.
                     var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player);
@@ -284,7 +324,7 @@ namespace Fibula.Notifications
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceSouth, southDescriptionBytes));
                 }
 
-                if (this.Arguments.OldLocation.X < this.Arguments.NewLocation.X)
+                if (this.OldLocation.X < this.NewLocation.X)
                 {
                     // Creature is moving east, so we need to send the additional east bytes.
                     var (eastDescriptionMetadata, eastDescriptionBytes) = this.EastSliceDescription(context, player);
@@ -299,7 +339,7 @@ namespace Fibula.Notifications
 
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
                 }
-                else if (this.Arguments.OldLocation.X > this.Arguments.NewLocation.X)
+                else if (this.OldLocation.X > this.NewLocation.X)
                 {
                     // Creature is moving west, so we need to send the additional west bytes.
                     var (westDescriptionMetadata, westDescriptionBytes) = this.WestSliceDescription(context, player);
@@ -315,23 +355,23 @@ namespace Fibula.Notifications
                     packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
                 }
             }
-            else if (player.CanSee(this.Arguments.OldLocation) && player.CanSee(this.Arguments.NewLocation))
+            else if (player.CanSee(this.OldLocation) && player.CanSee(this.NewLocation))
             {
                 if (player.CanSee(creature))
                 {
-                    if (this.Arguments.WasTeleport || (this.Arguments.OldLocation.Z == 7 && this.Arguments.NewLocation.Z > 7) || this.Arguments.OldStackPosition > 9)
+                    if (this.WasTeleport || (this.OldLocation.Z == 7 && this.NewLocation.Z > 7) || this.OldStackPosition > 9)
                     {
-                        if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
+                        if (this.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                         {
-                            packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                            packets.Add(new RemoveAtLocationPacket(this.OldLocation, this.OldStackPosition));
                         }
 
-                        var creatureIsKnown = player.Client.KnowsCreatureWithId(this.Arguments.CreatureId);
+                        var creatureIsKnown = player.Client.KnowsCreatureWithId(this.CreatureId);
                         var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet();
 
                         if (!creatureIsKnown)
                         {
-                            allCreatureIdsToLearn.Add(this.Arguments.CreatureId);
+                            allCreatureIdsToLearn.Add(this.CreatureId);
                         }
 
                         if (creatureIdToForget > uint.MinValue)
@@ -343,27 +383,27 @@ namespace Fibula.Notifications
                     }
                     else
                     {
-                        packets.Add(new CreatureMovedPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition, this.Arguments.NewLocation));
+                        packets.Add(new CreatureMovedPacket(this.OldLocation, this.OldStackPosition, this.NewLocation));
                     }
                 }
             }
-            else if (player.CanSee(this.Arguments.OldLocation) && !player.CanSee(creature))
+            else if (player.CanSee(this.OldLocation) && !player.CanSee(creature))
             {
-                if (this.Arguments.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
+                if (this.OldStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                 {
-                    packets.Add(new RemoveAtLocationPacket(this.Arguments.OldLocation, this.Arguments.OldStackPosition));
+                    packets.Add(new RemoveAtLocationPacket(this.OldLocation, this.OldStackPosition));
                 }
             }
-            else if (player.CanSee(this.Arguments.NewLocation) && player.CanSee(creature))
+            else if (player.CanSee(this.NewLocation) && player.CanSee(creature))
             {
-                if (this.Arguments.NewStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
+                if (this.NewStackPosition <= MapConstants.MaximumNumberOfThingsToDescribePerTile)
                 {
-                    var creatureIsKnown = player.Client.KnowsCreatureWithId(this.Arguments.CreatureId);
+                    var creatureIsKnown = player.Client.KnowsCreatureWithId(this.CreatureId);
                     var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet();
 
                     if (!creatureIsKnown)
                     {
-                        allCreatureIdsToLearn.Add(this.Arguments.CreatureId);
+                        allCreatureIdsToLearn.Add(this.CreatureId);
                     }
 
                     if (creatureIdToForget > uint.MinValue)
@@ -375,9 +415,9 @@ namespace Fibula.Notifications
                 }
             }
 
-            if (this.Arguments.WasTeleport)
+            if (this.WasTeleport)
             {
-                packets.Add(new MagicEffectPacket(this.Arguments.NewLocation, AnimatedEffect.BubbleBlue));
+                packets.Add(new MagicEffectPacket(this.NewLocation, AnimatedEffect.BubbleBlue));
             }
 
             this.Sent += (client) =>
@@ -422,20 +462,20 @@ namespace Fibula.Notifications
             var windowStartLocation = new Location()
             {
                 // -8
-                X = this.Arguments.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1),
+                X = this.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1),
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1 - floorChangeOffset),
+                Y = this.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1 - floorChangeOffset),
 
-                Z = this.Arguments.NewLocation.Z,
+                Z = this.NewLocation.Z,
             };
 
             return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Max(0, this.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Min(15, this.NewLocation.Z + 2) : 0),
                     MapConstants.DefaultWindowSizeX,
                     1);
         }
@@ -466,20 +506,20 @@ namespace Fibula.Notifications
             var windowStartLocation = new Location()
             {
                 // -8
-                X = this.Arguments.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1),
+                X = this.OldLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1),
 
                 // +7
-                Y = this.Arguments.NewLocation.Y + (MapConstants.DefaultWindowSizeY / 2) + floorChangeOffset,
+                Y = this.NewLocation.Y + (MapConstants.DefaultWindowSizeY / 2) + floorChangeOffset,
 
-                Z = this.Arguments.NewLocation.Z,
+                Z = this.NewLocation.Z,
             };
 
             return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Max(0, this.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Min(15, this.NewLocation.Z + 2) : 0),
                     MapConstants.DefaultWindowSizeX,
                     1);
         }
@@ -509,20 +549,20 @@ namespace Fibula.Notifications
             var windowStartLocation = new Location()
             {
                 // +9
-                X = this.Arguments.NewLocation.X + (MapConstants.DefaultWindowSizeX / 2) + floorChangeOffsetX,
+                X = this.NewLocation.X + (MapConstants.DefaultWindowSizeX / 2) + floorChangeOffsetX,
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
+                Y = this.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
 
-                Z = this.Arguments.NewLocation.Z,
+                Z = this.NewLocation.Z,
             };
 
             return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Max(0, this.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Min(15, this.NewLocation.Z + 2) : 0),
                     1,
                     MapConstants.DefaultWindowSizeY);
         }
@@ -552,20 +592,20 @@ namespace Fibula.Notifications
             var windowStartLocation = new Location()
             {
                 // -8
-                X = this.Arguments.NewLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1) + floorChangeOffsetX,
+                X = this.NewLocation.X - ((MapConstants.DefaultWindowSizeX / 2) - 1) + floorChangeOffsetX,
 
                 // -6
-                Y = this.Arguments.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
+                Y = this.NewLocation.Y - ((MapConstants.DefaultWindowSizeY / 2) - 1) + floorChangeOffsetY,
 
-                Z = this.Arguments.NewLocation.Z,
+                Z = this.NewLocation.Z,
             };
 
             return notificationContext.MapDescriptor.DescribeWindow(
                     player,
                     (ushort)windowStartLocation.X,
                     (ushort)windowStartLocation.Y,
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Max(0, this.Arguments.NewLocation.Z - 2) : 7),
-                    (sbyte)(this.Arguments.NewLocation.IsUnderground ? Math.Min(15, this.Arguments.NewLocation.Z + 2) : 0),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Max(0, this.NewLocation.Z - 2) : 7),
+                    (sbyte)(this.NewLocation.IsUnderground ? Math.Min(15, this.NewLocation.Z + 2) : 0),
                     1,
                     MapConstants.DefaultWindowSizeY);
         }

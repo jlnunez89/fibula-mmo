@@ -30,7 +30,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents a common base between movements.
@@ -506,7 +505,7 @@ namespace Fibula.Mechanics.Operations
                     {
                         var cancelMovementNotification = new GenericNotification(
                             () => context.CreatureFinder.FindPlayerById(player.Id).YieldSingleItem(),
-                            new GenericNotificationArguments(new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection())));
+                            new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection()));
 
                         context.Scheduler.ScheduleEvent(cancelMovementNotification);
                     }
@@ -628,7 +627,8 @@ namespace Fibula.Mechanics.Operations
                 // TODO: formally introduce async/synchronous notifications.
                 new TileUpdatedNotification(
                     () => context.Map.PlayersThatCanSee(fromTile.Location),
-                    new TileUpdatedNotificationArguments(fromTile.Location, context.MapDescriptor.DescribeTile))
+                    fromTile.Location,
+                    context.MapDescriptor.DescribeTile)
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
@@ -722,7 +722,12 @@ namespace Fibula.Mechanics.Operations
                 // context.Dispatcher.SendNotificationAsync(new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport));
                 new CreatureMovedNotification(
                     () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
-                    new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport))
+                    creature.Id,
+                    fromTile.Location,
+                    fromTileStackPos,
+                    toTile.Location,
+                    toStackPosition,
+                    isTeleport)
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 

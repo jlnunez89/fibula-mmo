@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="TextMessageNotification.cs" company="2Dudes">
+// <copyright file="GenericNotification.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -13,35 +13,36 @@ namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Common.Utilities;
+    using System.Linq;
     using Fibula.Communications.Contracts.Abstractions;
-    using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a notification for text messages.
+    /// Class that represents a generic notification.
     /// </summary>
-    public class TextMessageNotification : Notification
+    public class GenericNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="TextMessageNotification"/> class.
+        /// Initializes a new instance of the <see cref="GenericNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public TextMessageNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, TextMessageNotificationArguments arguments)
+        /// <param name="outgoingPackets">The packets to send as part of this notification.</param>
+        public GenericNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, params IOutboundPacket[] outgoingPackets)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
+            if (outgoingPackets == null || !outgoingPackets.Any())
+            {
+                throw new ArgumentNullException(nameof(outgoingPackets));
+            }
 
-            this.Arguments = arguments;
+            this.OutgoingPackets = outgoingPackets;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the packets to be included in this notification.
         /// </summary>
-        public TextMessageNotificationArguments Arguments { get; }
+        public IEnumerable<IOutboundPacket> OutgoingPackets { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -51,7 +52,7 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            return new TextMessagePacket(this.Arguments.Type, this.Arguments.Text).YieldSingleItem();
+            return this.OutgoingPackets;
         }
     }
 }

@@ -19,7 +19,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an event for a creature turning.
@@ -74,7 +73,8 @@ namespace Fibula.Mechanics.Operations
 
                 new CreatureTurnedNotification(
                     () => context.Map.PlayersThatCanSee(this.Creature.Location),
-                    new CreatureTurnedNotificationArguments(this.Creature, playerStackPos))
+                    this.Creature,
+                    playerStackPos)
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
         }

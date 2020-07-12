@@ -26,7 +26,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Structs;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an auto attack operation.
@@ -233,7 +232,7 @@ namespace Fibula.Mechanics.Operations
 
             new GenericNotification(
                 () => context.Map.PlayersThatCanSee(this.Target.Location),
-                new GenericNotificationArguments(packetsToSend.ToArray()))
+                packetsToSend.ToArray())
             .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
             if (this.Target is IPlayer targetPlayer)
@@ -242,7 +241,7 @@ namespace Fibula.Mechanics.Operations
 
                 new GenericNotification(
                     () => targetPlayer.YieldSingleItem(),
-                    new GenericNotificationArguments(squarePacket))
+                    squarePacket)
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 

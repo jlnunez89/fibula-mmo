@@ -26,7 +26,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an event for a thing description.
@@ -141,7 +140,8 @@ namespace Fibula.Mechanics.Operations
 
             new TextMessageNotification(
                 () => this.PlayerToDescribeFor.YieldSingleItem(),
-                new TextMessageNotificationArguments(MessageType.DescriptionGreen, description))
+                MessageType.DescriptionGreen,
+                description)
             .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
 

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="INotificationArguments.cs" company="2Dudes">
+// <copyright file="OnSent.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,12 +9,13 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Notifications.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Delegates
 {
+    using Fibula.Client.Contracts.Abstractions;
+
     /// <summary>
-    /// Interface for all notification arguments.
+    /// Delegate meant for when a notification is sent to a client.
     /// </summary>
-    public interface INotificationArguments
-    {
-    }
+    /// <param name="toClient">The client to which the notification was sent.</param>
+    public delegate void OnSent(IClient toClient);
 }

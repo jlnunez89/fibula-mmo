@@ -8,13 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="AnimatedEffectNotification.cs" />
-    <Compile Remove="AnimatedTextNotification.cs" />
-    <Compile Remove="Arguments\AnimatedEffectNotificationArguments.cs" />
-    <Compile Remove="Arguments\AnimatedTextNotificationArguments.cs" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Remove="stylecop.json" />
   </ItemGroup>
 
@@ -36,7 +29,6 @@
     <ProjectReference Include="..\Fibula.Communications.Packets\Fibula.Communications.Packets.csproj" />
     <ProjectReference Include="..\Fibula.Communications\Fibula.Communications.csproj" />
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Notifications.Contracts\Fibula.Notifications.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />
   </ItemGroup>
 

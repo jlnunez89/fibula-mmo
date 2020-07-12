@@ -18,8 +18,7 @@ namespace Fibula.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for when a creature has turned.
@@ -30,19 +29,33 @@ namespace Fibula.Notifications
         /// Initializes a new instance of the <see cref="CreatureTurnedNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureTurnedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureTurnedNotificationArguments arguments)
+        /// <param name="creature">The creature that turned.</param>
+        /// <param name="creatureStackPosition">The position in the stack of the creature that turned.</param>
+        /// <param name="turnEffect">Optional. An effect of the turn.</param>
+        public CreatureTurnedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, ICreature creature, byte creatureStackPosition, AnimatedEffect turnEffect = AnimatedEffect.None)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
+            creature.ThrowIfNull(nameof(creature));
 
-            this.Arguments = arguments;
+            this.Creature = creature;
+            this.StackPosition = creatureStackPosition;
+            this.TurnedEffect = turnEffect;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the creature that turned.
         /// </summary>
-        public CreatureTurnedNotificationArguments Arguments { get; }
+        public ICreature Creature { get; }
+
+        /// <summary>
+        /// Gets the position in the stack of the creatue.
+        /// </summary>
+        public byte StackPosition { get; }
+
+        /// <summary>
+        /// Gets the effect of the turn, if any.
+        /// </summary>
+        public AnimatedEffect TurnedEffect { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -54,12 +67,12 @@ namespace Fibula.Notifications
         {
             var packets = new List<IOutboundPacket>();
 
-            if (this.Arguments.TurnedEffect != AnimatedEffect.None)
+            if (this.TurnedEffect != AnimatedEffect.None)
             {
-                packets.Add(new MagicEffectPacket(this.Arguments.Creature.Location, this.Arguments.TurnedEffect));
+                packets.Add(new MagicEffectPacket(this.Creature.Location, this.TurnedEffect));
             }
 
-            packets.Add(new CreatureTurnedPacket(this.Arguments.Creature, this.Arguments.StackPosition));
+            packets.Add(new CreatureTurnedPacket(this.Creature, this.StackPosition));
 
             return packets;
         }

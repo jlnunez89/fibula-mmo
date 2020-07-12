@@ -18,8 +18,8 @@ namespace Fibula.Notifications
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Contracts.Abstractions;
-    using Fibula.Notifications.Contracts.Delegates;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
 

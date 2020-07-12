@@ -24,7 +24,6 @@ namespace Fibula.Mechanics
     using Fibula.Items.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Serilog;
 
@@ -92,14 +91,13 @@ namespace Fibula.Mechanics
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),
-                        new GenericNotificationArguments(
-                            new ContainerOpenPacket(
-                                containerId,
-                                container.ThingId,
-                                container.Type.Name,
-                                container.Capacity,
-                                container.ParentContainer is IContainerItem parentContainer && parentContainer.Type.TypeId != 0,
-                                container.Content))));
+                        new ContainerOpenPacket(
+                            containerId,
+                            container.ThingId,
+                            container.Type.Name,
+                            container.Capacity,
+                            container.ParentContainer is IContainerItem parentContainer && parentContainer.Type.TypeId != 0,
+                            container.Content)));
             }
         }
 
@@ -126,7 +124,7 @@ namespace Fibula.Mechanics
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),
-                        new GenericNotificationArguments(new ContainerClosePacket(atPosition))));
+                        new ContainerClosePacket(atPosition)));
             }
         }
 
@@ -378,7 +376,7 @@ namespace Fibula.Mechanics
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             () => player.YieldSingleItem(),
-                            new GenericNotificationArguments(new ContainerAddItemPacket(containerPosition, addedItem))));
+                            new ContainerAddItemPacket(containerPosition, addedItem)));
                 }
             }
         }
@@ -408,7 +406,7 @@ namespace Fibula.Mechanics
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             () => player.YieldSingleItem(),
-                            new GenericNotificationArguments(new ContainerRemoveItemPacket(indexRemoved, containerId))));
+                            new ContainerRemoveItemPacket(indexRemoved, containerId)));
                 }
             }
         }
@@ -444,7 +442,7 @@ namespace Fibula.Mechanics
                     this.scheduler.ScheduleEvent(
                         new GenericNotification(
                             () => player.YieldSingleItem(),
-                            new GenericNotificationArguments(new ContainerUpdateItemPacket(indexOfUpdated, containerId, updatedItem))));
+                            new ContainerUpdateItemPacket(indexOfUpdated, containerId, updatedItem)));
                 }
             }
         }

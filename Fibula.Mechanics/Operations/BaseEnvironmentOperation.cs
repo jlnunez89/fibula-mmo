@@ -20,7 +20,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents a base environment operation.
@@ -107,7 +106,12 @@ namespace Fibula.Mechanics.Operations
 
                         return context.Map.PlayersThatCanSee(creature.Location);
                     },
-                    new CreatureMovedNotificationArguments(creature.Id, default, byte.MaxValue, creature.Location, placedAtStackPos, wasTeleport: true))
+                    creature.Id,
+                    default,
+                    byte.MaxValue,
+                    creature.Location,
+                    placedAtStackPos,
+                    wasTeleport: true)
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 
@@ -162,14 +166,16 @@ namespace Fibula.Mechanics.Operations
                 {
                     new CreatureRemovedNotification(
                             () => context.Map.PlayersThatCanSee(creature.Location).Union(player.YieldSingleItem()),
-                            new CreatureRemovedNotificationArguments(creature, oldStackpos))
+                            creature,
+                            oldStackpos)
                     .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                 }
                 else
                 {
                     new CreatureRemovedNotification(
                             () => context.Map.PlayersThatCanSee(creature.Location),
-                            new CreatureRemovedNotificationArguments(creature, oldStackpos))
+                            creature,
+                            oldStackpos)
                     .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                 }
             }

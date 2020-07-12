@@ -32,8 +32,6 @@ namespace Fibula.Mechanics
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Operations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
@@ -255,13 +253,13 @@ namespace Fibula.Mechanics
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => this.map.PlayersThatCanSee(playerCombatant.Location),
-                        new GenericNotificationArguments(new CreatureHealthPacket(playerCombatant))));
+                        new CreatureHealthPacket(playerCombatant)));
 
                 // And this updates the health of the player.
                 this.scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => playerCombatant.YieldSingleItem(),
-                        new GenericNotificationArguments(new PlayerStatsPacket(playerCombatant))));
+                        new PlayerStatsPacket(playerCombatant)));
             }
         }
 
@@ -539,7 +537,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatPacket())));
+            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new HeartbeatPacket()));
         }
 
         /// <summary>
@@ -553,7 +551,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new GenericNotificationArguments(new HeartbeatResponsePacket())));
+            this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new HeartbeatResponsePacket()));
         }
 
         /// <summary>
@@ -671,7 +669,8 @@ namespace Fibula.Mechanics
                     this.scheduler.ScheduleEvent(
                         new WorldLightChangedNotification(
                             () => this.creatureManager.FindAllPlayers(),
-                            new WorldLightChangedNotificationArguments(this.worldInfo.LightLevel, this.worldInfo.LightColor)));
+                            this.worldInfo.LightLevel,
+                            this.worldInfo.LightColor));
                 }
             }
         }

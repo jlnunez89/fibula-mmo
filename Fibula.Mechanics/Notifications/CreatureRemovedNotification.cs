@@ -18,8 +18,7 @@ namespace Fibula.Notifications
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a creature being removed.
@@ -30,19 +29,33 @@ namespace Fibula.Notifications
         /// Initializes a new instance of the <see cref="CreatureRemovedNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureRemovedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureRemovedNotificationArguments arguments)
+        /// <param name="creature">The creature being removed.</param>
+        /// <param name="oldStackPos">The position in the stack of the creature being removed.</param>
+        /// <param name="removeEffect">Optional. An effect to add when removing the creature.</param>
+        public CreatureRemovedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, ICreature creature, byte oldStackPos, AnimatedEffect removeEffect = AnimatedEffect.None)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
+            creature.ThrowIfNull(nameof(creature));
 
-            this.Arguments = arguments;
+            this.Creature = creature;
+            this.StackPosition = oldStackPos;
+            this.RemoveEffect = removeEffect;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the effect to send when removing the creature.
         /// </summary>
-        public CreatureRemovedNotificationArguments Arguments { get; }
+        public AnimatedEffect RemoveEffect { get; }
+
+        /// <summary>
+        /// Gets the stack position of the creature being removed.
+        /// </summary>
+        public byte StackPosition { get; }
+
+        /// <summary>
+        /// Gets the creature being removed.
+        /// </summary>
+        public ICreature Creature { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -52,19 +65,19 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            if (player == null || !player.CanSee(this.Arguments.Creature) || !player.CanSee(this.Arguments.Creature.Location))
+            if (player == null || !player.CanSee(this.Creature) || !player.CanSee(this.Creature.Location))
             {
                 return null;
             }
 
             var packets = new List<IOutboundPacket>
             {
-                new RemoveAtLocationPacket(this.Arguments.Creature.Location, this.Arguments.StackPosition),
+                new RemoveAtLocationPacket(this.Creature.Location, this.StackPosition),
             };
 
-            if (this.Arguments.RemoveEffect != AnimatedEffect.None)
+            if (this.RemoveEffect != AnimatedEffect.None)
             {
-                packets.Add(new MagicEffectPacket(this.Arguments.Creature.Location, this.Arguments.RemoveEffect));
+                packets.Add(new MagicEffectPacket(this.Creature.Location, this.RemoveEffect));
             }
 
             return packets;

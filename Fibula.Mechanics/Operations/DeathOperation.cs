@@ -21,7 +21,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents an operation for a creature's death.
@@ -64,7 +63,8 @@ namespace Fibula.Mechanics.Operations
             {
                 new TextMessageNotification(
                     () => player.YieldSingleItem(),
-                    new TextMessageNotificationArguments(MessageType.EventAdvance, "You are dead."))
+                    MessageType.EventAdvance,
+                    "You are dead.")
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 

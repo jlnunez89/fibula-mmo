@@ -13,12 +13,12 @@ namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a world light change.
@@ -29,19 +29,24 @@ namespace Fibula.Notifications
         /// Initializes a new instance of the <see cref="WorldLightChangedNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public WorldLightChangedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, WorldLightChangedNotificationArguments arguments)
+        /// <param name="lightLevel">The new world light level.</param>
+        /// <param name="lightColor">The new world light color.</param>
+        public WorldLightChangedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, byte lightLevel, byte lightColor = (byte)LightColors.White)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
-
-            this.Arguments = arguments;
+            this.LightLevel = lightLevel;
+            this.LightColor = lightColor;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the new world light level.
         /// </summary>
-        public WorldLightChangedNotificationArguments Arguments { get; }
+        public byte LightLevel { get; }
+
+        /// <summary>
+        /// Gets the new world light color.
+        /// </summary>
+        public byte LightColor { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -51,7 +56,7 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            return new WorldLightPacket(this.Arguments.LightLevel, this.Arguments.LightColor).YieldSingleItem();
+            return new WorldLightPacket(this.LightLevel, this.LightColor).YieldSingleItem();
         }
     }
 }

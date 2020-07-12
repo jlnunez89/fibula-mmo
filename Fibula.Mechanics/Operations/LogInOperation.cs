@@ -24,7 +24,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
 
     /// <summary>
     /// Class that represents a login operation.
@@ -103,8 +102,7 @@ namespace Fibula.Mechanics.Operations
                 context.Scheduler.ScheduleEvent(
                     new GenericNotification(
                         () => player.YieldSingleItem(),
-                        new GenericNotificationArguments(
-                            new GameServerDisconnectPacket("Your character could not be placed on the map.\nPlease try again, or contact an administrator if the issue persists."))));
+                        new GameServerDisconnectPacket("Your character could not be placed on the map.\nPlease try again, or contact an administrator if the issue persists.")));
 
                 return;
             }
@@ -115,16 +113,15 @@ namespace Fibula.Mechanics.Operations
             // And any VIP records here.
             var notification = new GenericNotification(
                 () => player.YieldSingleItem(),
-                new GenericNotificationArguments(
-                    new PlayerLoginPacket(player.Id, player),
-                    new MapDescriptionPacket(player.Location, descriptionBytes),
-                    new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
-                    new PlayerStatsPacket(player),
-                    new PlayerSkillsPacket(player),
-                    new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
-                    new CreatureLightPacket(player),
-                    new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
-                    new PlayerConditionsPacket(player)));
+                new PlayerLoginPacket(player.Id, player),
+                new MapDescriptionPacket(player.Location, descriptionBytes),
+                new MagicEffectPacket(player.Location, AnimatedEffect.BubbleBlue),
+                new PlayerStatsPacket(player),
+                new PlayerSkillsPacket(player),
+                new WorldLightPacket(this.CurrentWorldLightLevel, this.CurrentWorldLightColor),
+                new CreatureLightPacket(player),
+                new TextMessagePacket(MessageType.StatusDefault, "This is a test message"),
+                new PlayerConditionsPacket(player));
 
             if (descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object creatureIdsToLearnBoxed) &&
                 descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object creatureIdsToForgetBoxed) &&

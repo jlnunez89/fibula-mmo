@@ -12,14 +12,15 @@
 namespace Fibula.Notifications
 {
     using System;
+    using System.Buffers;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a notification for a tile update.
@@ -30,19 +31,24 @@ namespace Fibula.Notifications
         /// Initializes a new instance of the <see cref="TileUpdatedNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public TileUpdatedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, TileUpdatedNotificationArguments arguments)
+        /// <param name="location">The location of the updated tile.</param>
+        /// <param name="descriptionFunction">The function used to get the description of the updated tile.</param>
+        public TileUpdatedNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, Location location, Func<IPlayer, Location, (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData)> descriptionFunction)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
-
-            this.Arguments = arguments;
+            this.Location = location;
+            this.TileDescriptionFunction = descriptionFunction;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the location of the updated tile.
         /// </summary>
-        public TileUpdatedNotificationArguments Arguments { get; }
+        public Location Location { get; }
+
+        /// <summary>
+        /// Gets the function that decribes the tile.
+        /// </summary>
+        public Func<IPlayer, Location, (IDictionary<string, object> descriptionMetadata, ReadOnlySequence<byte> descriptionData)> TileDescriptionFunction { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -52,7 +58,7 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            var (descriptionMetadata, descriptionBytes) = this.Arguments.TileDescriptionFunction(player, this.Arguments.Location);
+            var (descriptionMetadata, descriptionBytes) = this.TileDescriptionFunction(player, this.Location);
 
             if (descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToLearnMetadataKeyName, out object creatureIdsToLearnBoxed) &&
                 descriptionMetadata.TryGetValue(IMapDescriptor.CreatureIdsToForgetMetadataKeyName, out object creatureIdsToForgetBoxed) &&
@@ -72,7 +78,7 @@ namespace Fibula.Notifications
                 };
             }
 
-            return new TileUpdatePacket(this.Arguments.Location, descriptionBytes).YieldSingleItem();
+            return new TileUpdatePacket(this.Location, descriptionBytes).YieldSingleItem();
         }
     }
 }

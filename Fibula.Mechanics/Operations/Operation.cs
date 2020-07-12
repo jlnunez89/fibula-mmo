@@ -22,7 +22,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Notifications;
-    using Fibula.Notifications.Arguments;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
 
@@ -149,7 +148,8 @@ namespace Fibula.Mechanics.Operations
                     {
                         new TileUpdatedNotification(
                             () => context.Map.PlayersThatCanSee(targetTile.Location),
-                            new TileUpdatedNotificationArguments(targetTile.Location, context.MapDescriptor.DescribeTile))
+                            targetTile.Location,
+                            context.MapDescriptor.DescribeTile)
                        .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
 
                         // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetContainer.Location, lastAddedThing, requestorCreature));
@@ -183,7 +183,8 @@ namespace Fibula.Mechanics.Operations
 
             new TextMessageNotification(
                 () => player.YieldSingleItem(),
-                new TextMessageNotificationArguments(MessageType.StatusSmall, message))
+                MessageType.StatusSmall,
+                message)
             .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }

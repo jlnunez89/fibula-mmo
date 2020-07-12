@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="CreatureSpeechNotification.cs" company="2Dudes">
+// <copyright file="TextMessageNotification.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -13,35 +13,46 @@ namespace Fibula.Notifications
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Notifications.Arguments;
-    using Fibula.Notifications.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a notification for a creature speech.
+    /// Class that represents a notification for text messages.
     /// </summary>
-    public class CreatureSpeechNotification : Notification
+    public class TextMessageNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="CreatureSpeechNotification"/> class.
+        /// Initializes a new instance of the <see cref="TextMessageNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
-        /// <param name="arguments">The arguments for this notification.</param>
-        public CreatureSpeechNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, CreatureSpeechNotificationArguments arguments)
+        /// <param name="type">The type of text to send.</param>
+        /// <param name="message">The text to send.</param>
+        public TextMessageNotification(Func<IEnumerable<IPlayer>> findTargetPlayers, MessageType type, string message)
             : base(findTargetPlayers)
         {
-            arguments.ThrowIfNull(nameof(arguments));
-
-            this.Arguments = arguments;
+            this.Type = type;
+            this.Text = message;
         }
 
         /// <summary>
-        /// Gets this notification's arguments.
+        /// Gets the location of the animated text.
         /// </summary>
-        public CreatureSpeechNotificationArguments Arguments { get; }
+        public Location Location { get; }
+
+        /// <summary>
+        /// Gets the text message type.
+        /// </summary>
+        public MessageType Type { get; }
+
+        /// <summary>
+        /// Gets the text value.
+        /// </summary>
+        public string Text { get; }
 
         /// <summary>
         /// Finalizes the notification in preparation to it being sent.
@@ -51,14 +62,7 @@ namespace Fibula.Notifications
         /// <returns>A collection of <see cref="IOutboundPacket"/>s, the ones to be sent.</returns>
         protected override IEnumerable<IOutboundPacket> Prepare(INotificationContext context, IPlayer player)
         {
-            return new CreatureSpeechPacket(
-                this.Arguments.Creature.Id,
-                this.Arguments.Creature.Name,
-                this.Arguments.SpeechType,
-                this.Arguments.Text,
-                this.Arguments.Creature.Location,
-                this.Arguments.ChannelType,
-                (uint)DateTimeOffset.Now.ToUnixTimeMilliseconds()).YieldSingleItem();
+            return new TextMessagePacket(this.Type, this.Text).YieldSingleItem();
         }
     }
 }

@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Notifications.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
