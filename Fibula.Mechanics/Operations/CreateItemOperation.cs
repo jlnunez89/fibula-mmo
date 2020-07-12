@@ -16,6 +16,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Items;
+    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -86,8 +87,25 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
+            var itemCreated = thingCreated as IItem;
+
             // At this point, we were able to generate the new one, let's proceed to add it.
             this.AddContentToContainerOrFallback(context, inThingContainer, ref thingCreated, index, includeTileAsFallback: true, requestor);
+
+            if (itemCreated != null)
+            {
+                // Start decay for items that need it.
+                if (itemCreated.HasExpiration)
+                {
+                    // TODO: the item location will change and this will break.
+                    var expirationOp = itemCreated.ExpirationTarget == 0 ?
+                        new DeleteItemOperation(requestorId: 0, this.TypeId, itemCreated.Location) as IOperation
+                        :
+                        new ChangeItemOperation(requestorId: 0, this.TypeId, itemCreated.Location, itemCreated.ExpirationTarget) as IOperation;
+
+                    context.Scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft);
+                }
+            }
         }
     }
 }

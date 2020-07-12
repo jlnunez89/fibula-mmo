@@ -47,9 +47,19 @@ namespace Fibula.Items.Contracts.Enumerations
         ChangesOnUse,
 
         /// <summary>
-        /// An item that is an aesthetic fix to the ground tile.
+        /// An item that expires starting from creation.
         /// </summary>
-        IsGroundFix,
+        HasExpiration,
+
+        /// <summary>
+        /// An item that expires but expiration toggles.
+        /// </summary>
+        HasToggledExpiration,
+
+        /// <summary>
+        /// An item that is a ground border.
+        /// </summary>
+        IsGroundBorder,
 
         /// <summary>
         /// An item that is a container.

@@ -77,9 +77,19 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         AutoWalkOrchestrator,
 
         /// <summary>
+        /// An operation that changes an item.
+        /// </summary>
+        ChangeItem,
+
+        /// <summary>
         /// An operation that creates an item.
         /// </summary>
         CreateItem,
+
+        /// <summary>
+        /// An operation that deletes an item.
+        /// </summary>
+        DeleteItem,
 
         /// <summary>
         /// An operation to deal with a creature's death.
@@ -93,8 +103,6 @@ namespace Fibula.Mechanics.Contracts.Enumerations
         UseItem,
         UseItemOn,
 
-        ChangeItem,
-        DeleteItem,
         PlaceCreature,
         RemoveCreature,
         SpawnMonsters,

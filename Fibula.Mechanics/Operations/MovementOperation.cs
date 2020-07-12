@@ -29,7 +29,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
-    using Fibula.Mechanics.Operations.Arguments;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
 
@@ -288,7 +287,7 @@ namespace Fibula.Mechanics.Operations
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(player, directionToDestination));
             }
         }
 
@@ -379,7 +378,7 @@ namespace Fibula.Mechanics.Operations
             {
                 var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
+                context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(player, directionToDestination));
             }
         }
 
@@ -531,7 +530,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(player, directionToDestination));
                 }
             }
             else if (thingMoving is IItem item)
@@ -571,7 +570,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     var directionToDestination = player.Location.DirectionTo(this.ToLocation);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(player.Id, player, directionToDestination)));
+                    context.Scheduler.ScheduleEvent(new TurnToDirectionOperation(player, directionToDestination));
                 }
 
                 // TODO: Check if the item is an IContainerItem and, if it got moved, check if there are players that have it open that now are too far away from it.

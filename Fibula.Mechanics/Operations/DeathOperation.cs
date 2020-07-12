@@ -12,14 +12,11 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
-    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
-    using Fibula.Items.Contracts.Constants;
-    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -82,9 +79,7 @@ namespace Fibula.Mechanics.Operations
 
                 if (context.ItemFactory.Create(corpseCreationArguments) is IThing corpseCreated && this.AddContentToContainerOrFallback(context, creatureTile, ref corpseCreated))
                 {
-                    context.GameApi.CreateItemAtLocation(
-                        creatureTile.Location,
-                        context.PredefinedItemSet.FindPoolForBloodType(this.Creature.Blood));
+                    context.GameApi.CreateItemAtLocation(creatureTile.Location, context.PredefinedItemSet.FindPoolForBloodType(this.Creature.Blood));
                 }
 
                 this.RemoveCreature(context, this.Creature);

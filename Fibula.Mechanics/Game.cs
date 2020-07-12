@@ -31,7 +31,6 @@ namespace Fibula.Mechanics
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Operations;
-    using Fibula.Mechanics.Operations.Arguments;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
     using Fibula.Notifications.Contracts.Abstractions;
@@ -86,11 +85,6 @@ namespace Fibula.Mechanics
         private readonly ICreatureFactory creatureFactory;
 
         /// <summary>
-        /// The operation factory instance.
-        /// </summary>
-        private readonly IOperationFactory operationFactory;
-
-        /// <summary>
         /// The container manager instance.
         /// </summary>
         private readonly IContainerManager containerManager;
@@ -119,7 +113,6 @@ namespace Fibula.Mechanics
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
-        /// <param name="operationFactory">A referecne to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
         /// <param name="predefinedItemSet">A reference to the predefined item set declared.</param>
@@ -131,7 +124,6 @@ namespace Fibula.Mechanics
             ICreatureManager creatureManager,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
-            IOperationFactory operationFactory,
             IContainerManager containerManager,
             IPathFinder pathFinderAlgo,
             IPredefinedItemSet predefinedItemSet,
@@ -143,7 +135,6 @@ namespace Fibula.Mechanics
             creatureManager.ThrowIfNull(nameof(creatureManager));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
-            operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
             pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
             predefinedItemSet.ThrowIfNull(nameof(predefinedItemSet));
@@ -155,7 +146,6 @@ namespace Fibula.Mechanics
             this.creatureManager = creatureManager;
             this.itemFactory = itemFactory;
             this.creatureFactory = creatureFactory;
-            this.operationFactory = operationFactory;
             this.containerManager = containerManager;
             this.pathFinder = pathFinderAlgo;
             this.predefinedItemSet = predefinedItemSet;
@@ -234,7 +224,9 @@ namespace Fibula.Mechanics
                 attributesToSet.Union(additionalAttributes);
             }
 
-            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemType.TypeId, location, attributesToSet.ToArray()));
+            var createItemOp = new CreateItemOperation(requestorId: 0, itemType.TypeId, location, attributesToSet.ToArray());
+
+            this.DispatchOperation(createItemOp);
         }
 
         /// <summary>
@@ -245,7 +237,9 @@ namespace Fibula.Mechanics
         /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
         public void CreateItemAtLocation(Location location, ushort itemTypeId, params (ItemAttribute, IConvertible)[] additionalAttributes)
         {
-            this.DispatchOperation(new CreateItemOperationCreationArguments(requestorId: 0, itemTypeId, location, additionalAttributes));
+            var createItemOp = new CreateItemOperation(requestorId: 0, itemTypeId, location, additionalAttributes);
+
+            this.DispatchOperation(createItemOp);
         }
 
         /// <summary>
@@ -284,8 +278,9 @@ namespace Fibula.Mechanics
 
             var rng = new Random();
             var deathDelay = TimeSpan.FromMilliseconds(rng.Next(2000));
+            var deathOp = new DeathOperation(requestorId: 0, combatant);
 
-            this.DispatchOperation(new DeathOperationCreationArguments(requestorId: 0, combatant), deathDelay);
+            this.DispatchOperation(deathOp, deathDelay);
         }
 
         /// <summary>
@@ -306,7 +301,9 @@ namespace Fibula.Mechanics
 
                 if (attacker.AutoAttackTarget != null)
                 {
-                    this.DispatchOperation(new AutoAttackOrchestratorOperationCreationArguments(attacker));
+                    var autoAttackOrchestrationOp = new AutoAttackOrchestratorOperation(attacker);
+
+                    this.DispatchOperation(autoAttackOrchestrationOp);
                 }
             }
         }
@@ -343,7 +340,9 @@ namespace Fibula.Mechanics
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
-            this.DispatchOperation(new AutoWalkOrchestratorOperationCreationArguments(creature));
+            var autoWalkOrchOp = new AutoWalkOrchestratorOperation(creature);
+
+            this.DispatchOperation(autoWalkOrchOp);
         }
 
         /// <summary>
@@ -382,7 +381,9 @@ namespace Fibula.Mechanics
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
-            this.DispatchOperation(new AutoWalkOrchestratorOperationCreationArguments(creature));
+            var autoWalkOrchOp = new AutoWalkOrchestratorOperation(creature);
+
+            this.DispatchOperation(autoWalkOrchOp);
         }
 
         /// <summary>
@@ -398,7 +399,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            var cancelOp = this.operationFactory.Create(new CancelOperationsOperationCreationArguments(player, typeOfActionToCancel));
+            var cancelOp = new CancelOperationsOperation(player.Id, player, typeOfActionToCancel);
 
             if (async)
             {
@@ -418,7 +419,9 @@ namespace Fibula.Mechanics
         /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
         public void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
         {
-            this.DispatchOperation(new ChangeModesOperationCreationArguments(creatureId, fightMode, chaseMode, safeModeOn));
+            var changeModesOp = new ChangeModesOperation(creatureId, fightMode, chaseMode, safeModeOn);
+
+            this.DispatchOperation(changeModesOp);
         }
 
         /// <summary>
@@ -431,7 +434,9 @@ namespace Fibula.Mechanics
         /// <param name="receiver">Optional. The receiver of the speech, if any.</param>
         public void CreatureSpeech(uint creatureId, SpeechType speechType, ChatChannelType channelType, string content, string receiver = "")
         {
-            this.DispatchOperation(new SpeechOperationCreationArguments(creatureId, speechType, channelType, content, receiver));
+            var speechOp = new SpeechOperation(creatureId, speechType, channelType, content, receiver);
+
+            this.DispatchOperation(speechOp);
         }
 
         /// <summary>
@@ -442,7 +447,9 @@ namespace Fibula.Mechanics
         /// <param name="direction">The direction to turn to.</param>
         public void CreatureTurn(uint requestorId, ICreature creature, Direction direction)
         {
-            this.DispatchOperation(new TurnToDirectionOperationCreationArguments(requestorId, creature, direction));
+            var turnToDirOp = new TurnToDirectionOperation(creature, direction);
+
+            this.DispatchOperation(turnToDirOp);
         }
 
         /// <summary>
@@ -454,7 +461,9 @@ namespace Fibula.Mechanics
         /// <param name="player">The player for which to describe the thing for.</param>
         public void LookAt(ushort thingId, Location location, byte stackPosition, IPlayer player)
         {
-            this.DispatchOperation(new LookAtOperationCreationArguments(thingId, location, stackPosition, player));
+            var lootAtOp = new LookAtOperation(thingId, location, stackPosition, player);
+
+            this.DispatchOperation(lootAtOp);
         }
 
         /// <summary>
@@ -467,12 +476,9 @@ namespace Fibula.Mechanics
             client.ThrowIfNull(nameof(client));
             creatureCreationMetadata.ThrowIfNull(nameof(creatureCreationMetadata));
 
-            this.DispatchOperation(
-                new LogInOperationCreationArguments(
-                    client,
-                    creatureCreationMetadata,
-                    this.WorldInfo.LightLevel,
-                    this.WorldInfo.LightColor));
+            var loginOp = new LogInOperation(requestorId: 0, client, creatureCreationMetadata, this.WorldInfo.LightLevel, this.WorldInfo.LightColor);
+
+            this.DispatchOperation(loginOp);
         }
 
         /// <summary>
@@ -486,7 +492,9 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            this.DispatchOperation(new LogOutOperationCreationArguments(player));
+            var logOutOp = new LogOutOperation(player.Id, player);
+
+            this.DispatchOperation(logOutOp);
         }
 
         /// <summary>
@@ -505,17 +513,7 @@ namespace Fibula.Mechanics
             var scheduleDelay = TimeSpan.Zero;
 
             var creature = this.creatureManager.FindCreatureById(fromCreatureId);
-
-            var movementOp = this.operationFactory.Create(
-                new MovementOperationCreationArguments(
-                    requestorId,
-                    clientThingId,
-                    fromLocation,
-                    fromIndex,
-                    fromCreatureId,
-                    toLocation,
-                    toCreatureId,
-                    amount));
+            var movementOp = new MovementOperation(requestorId, clientThingId, fromLocation, fromIndex, fromCreatureId, toLocation, toCreatureId, amount);
 
             // Add delay from current exhaustion of the requestor if it's a creature, and this is a movement in the map.
             if (requestorId == fromCreatureId &&
@@ -559,15 +557,13 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Dispatches a new operation created using the supplied parameters.
+        /// Dispatches an operation.
         /// </summary>
-        /// <param name="operationArguments">The parameters used to create the operation.</param>
+        /// <param name="operation">The operation to dispatch.</param>
         /// <param name="withDelay">Optional. A delay to dispatch the operation with.</param>
-        private void DispatchOperation(IOperationCreationArguments operationArguments, TimeSpan withDelay = default)
+        private void DispatchOperation(IOperation operation, TimeSpan withDelay = default)
         {
-            IOperation newOperation = this.operationFactory.Create(operationArguments);
-
-            if (newOperation == null)
+            if (operation == null)
             {
                 return;
             }
@@ -576,14 +572,14 @@ namespace Fibula.Mechanics
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
 
             // Add delay from current exhaustion of the requestor, if any.
-            if (operationArguments.RequestorId > 0 && this.creatureManager.FindCreatureById(operationArguments.RequestorId) is ICreatureWithExhaustion creatureWithExhaustion)
+            if (operation.RequestorId > 0 && this.creatureManager.FindCreatureById(operation.RequestorId) is ICreatureWithExhaustion creatureWithExhaustion)
             {
-                TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(newOperation.ExhaustionType, this.scheduler.CurrentTime);
+                TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(operation.ExhaustionType, this.scheduler.CurrentTime);
 
                 operationDelay += cooldownRemaining;
             }
 
-            this.scheduler.ScheduleEvent(newOperation, operationDelay);
+            this.scheduler.ScheduleEvent(operation, operationDelay);
         }
 
         /// <summary>
@@ -614,7 +610,9 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    this.DispatchOperation(new LogOutOperationCreationArguments(player));
+                    var logOutOp = new LogOutOperation(player.Id, player);
+
+                    this.DispatchOperation(logOutOp);
 
                     if (player is ICombatant playerAsCombatant)
                     {
@@ -720,7 +718,6 @@ namespace Fibula.Mechanics
                     this.creatureManager,
                     this.itemFactory,
                     this.creatureFactory,
-                    this.operationFactory,
                     this.containerManager,
                     this,
                     this,
@@ -737,7 +734,6 @@ namespace Fibula.Mechanics
                     this.creatureManager,
                     this.itemFactory,
                     this.creatureFactory,
-                    this.operationFactory,
                     this.containerManager,
                     this,
                     this,

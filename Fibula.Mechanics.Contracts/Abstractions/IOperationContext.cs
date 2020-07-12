@@ -47,11 +47,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ICreatureFactory CreatureFactory { get; }
 
         /// <summary>
-        /// Gets the reference to the operation factory.
-        /// </summary>
-        IOperationFactory OperationFactory { get; }
-
-        /// <summary>
         /// Gets a reference to the container manager in use.
         /// </summary>
         IContainerManager ContainerManager { get; }

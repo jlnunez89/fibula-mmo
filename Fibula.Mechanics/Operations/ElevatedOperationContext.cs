@@ -32,7 +32,6 @@ namespace Fibula.Mechanics.Operations
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="gameOperationsApi">A reference to the game operations api.</param>
         /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
@@ -46,7 +45,6 @@ namespace Fibula.Mechanics.Operations
             ICreatureManager creatureManager,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
-            IOperationFactory operationFactory,
             IContainerManager containerManager,
             IGameOperationsApi gameOperationsApi,
             ICombatOperationsApi combatOperationsApi,
@@ -60,7 +58,6 @@ namespace Fibula.Mechanics.Operations
                 creatureManager,
                 itemFactory,
                 creatureFactory,
-                operationFactory,
                 containerManager,
                 gameOperationsApi,
                 combatOperationsApi,

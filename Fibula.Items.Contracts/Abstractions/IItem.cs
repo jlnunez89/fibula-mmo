@@ -85,6 +85,23 @@ namespace Fibula.Items.Contracts.Abstractions
         ushort RotateTo { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this item expires.
+        /// </summary>
+        bool HasExpiration { get; }
+
+        /// <summary>
+        /// Gets the time left before this item expires, if it <see cref="HasExpiration"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When the item does not expire.</exception>
+        TimeSpan ExpirationTimeLeft { get; }
+
+        /// <summary>
+        /// Gets the Id of the item into which this will expire to, if it <see cref="HasExpiration"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When the item does not expire.</exception>
+        ushort ExpirationTarget { get; }
+
+        /// <summary>
         /// Gets a value indicating whether this item is a liquid pool.
         /// </summary>
         bool IsLiquidPool { get; }

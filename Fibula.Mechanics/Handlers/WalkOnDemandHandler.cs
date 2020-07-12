@@ -17,9 +17,7 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Operations;
     using Serilog;
 
     /// <summary>

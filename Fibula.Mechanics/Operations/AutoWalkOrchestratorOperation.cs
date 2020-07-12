@@ -12,9 +12,6 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -23,7 +20,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
-    using Fibula.Mechanics.Operations.Arguments;
 
     /// <summary>
     /// Class that represents an operation that orchestrates auto walk operations.
@@ -101,15 +97,15 @@ namespace Fibula.Mechanics.Operations
             var nextLocation = this.Creature.WalkPlan.Waypoints.First.Value;
             var scheduleDelay = TimeSpan.Zero;
 
-            var autoWalkOp = context.OperationFactory.Create(
-                new MovementOperationCreationArguments(
+            var autoWalkOp = new MovementOperation(
                     this.Creature.Id,
                     CreatureConstants.CreatureThingId,
                     this.Creature.Location,
                     byte.MaxValue,
                     this.Creature.Id,
                     nextLocation,
-                    this.Creature.Id));
+                    this.Creature.Id,
+                    amount: 1);
 
             // Add delay from current exhaustion of the requestor, if any.
             if (this.Creature is ICreatureWithExhaustion creatureWithExhaustion)

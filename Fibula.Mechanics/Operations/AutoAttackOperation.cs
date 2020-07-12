@@ -18,7 +18,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -26,7 +25,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Structs;
-    using Fibula.Mechanics.Operations.Arguments;
     using Fibula.Notifications;
     using Fibula.Notifications.Arguments;
 
@@ -211,7 +209,7 @@ namespace Fibula.Mechanics.Operations
 
             // Normalize the attacker's defense speed based on the global round time and round that up.
             context.Scheduler.ScheduleEvent(
-                context.OperationFactory.Create(new RestoreCombatCreditOperationCreationArguments(this.Target, CombatCreditType.Defense)),
+                new RestoreCombatCreditOperation(this.Target, CombatCreditType.Defense),
                 TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
 
             if (this.Attacker != null)
@@ -221,14 +219,15 @@ namespace Fibula.Mechanics.Operations
 
                 // Normalize the attacker's attack speed based on the global round time and round that up.
                 context.Scheduler.ScheduleEvent(
-                    context.OperationFactory.Create(new RestoreCombatCreditOperationCreationArguments(this.Attacker, CombatCreditType.Attack)),
+                    new RestoreCombatCreditOperation(this.Attacker, CombatCreditType.Attack),
                     TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
 
                 if (this.Attacker.Location != this.Target.Location && this.Attacker.Id != this.Target.Id)
                 {
                     var directionToTarget = this.Attacker.Location.DirectionTo(this.Target.Location);
+                    var turnToDirOp = new TurnToDirectionOperation(this.Attacker, directionToTarget);
 
-                    context.Scheduler.ScheduleEvent(context.OperationFactory.Create(new TurnToDirectionOperationCreationArguments(this.Attacker.Id, this.Attacker, directionToTarget)));
+                    context.Scheduler.ScheduleEvent(turnToDirOp);
                 }
             }
 

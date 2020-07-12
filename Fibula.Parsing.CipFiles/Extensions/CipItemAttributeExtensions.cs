@@ -33,9 +33,13 @@ namespace Fibula.Parsing.CipFiles.Extensions
                 CipItemAttribute.Amount => ItemAttribute.Amount,
                 CipItemAttribute.DisguiseTarget => ItemAttribute.DisguiseAs,
                 CipItemAttribute.Waypoints => ItemAttribute.MovementPenalty,
+                CipItemAttribute.TotalExpireTime => ItemAttribute.ExpirationStartTime,
+                CipItemAttribute.SavedExpireTime => ItemAttribute.ExpirationTimeLeft,
+                CipItemAttribute.ExpireTarget => ItemAttribute.ExpirationTarget,
                 CipItemAttribute.ContainerLiquidType => ItemAttribute.LiquidType,
                 CipItemAttribute.PoolLiquidType => ItemAttribute.LiquidType,
                 CipItemAttribute.SourceLiquidType => ItemAttribute.LiquidType,
+                CipItemAttribute.RotateTarget => ItemAttribute.RotateTo,
                 _ => null,
             };
         }

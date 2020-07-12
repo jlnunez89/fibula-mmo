@@ -12,8 +12,6 @@
 namespace Fibula.Mechanics.Contracts.Extensions
 {
     using System;
-    using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Common.Contracts.Extensions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;

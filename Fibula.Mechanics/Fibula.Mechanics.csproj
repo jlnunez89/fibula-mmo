@@ -36,21 +36,6 @@
     <Compile Remove="Handlers\WalkSouthHandler.cs" />
     <Compile Remove="Handlers\WalkSouthwestHandler.cs" />
     <Compile Remove="Handlers\WalkWestHandler.cs" />
-    <Compile Remove="Operations\Unused\Arguments\AutoAttackCombatOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\AutoWalkOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\ChangeItemOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\CloseContainerOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\CreateItemOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\DeleteItemOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\MoveUpContainerOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\OpenContainerOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\PlaceCreatureOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\RemoveCreatureOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\RestoreCombatCreditOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\SpawnMonstersOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\ThinkingOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\UseItemOnOperationCreationArguments.cs" />
-    <Compile Remove="Operations\Unused\Arguments\UseItemOperationCreationArguments.cs" />
     <Compile Remove="Operations\Unused\AutoAttackCombatOperation.cs" />
     <Compile Remove="Operations\Unused\AutoWalkOperation.cs" />
     <Compile Remove="Operations\Unused\BaseActionOperation.cs" />
@@ -98,7 +83,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Operations\Unused\Arguments\" />
+    <Folder Include="Operations\Unused\" />
   </ItemGroup>
 
 </Project>

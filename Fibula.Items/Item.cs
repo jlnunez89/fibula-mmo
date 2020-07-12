@@ -76,7 +76,7 @@ namespace Fibula.Items
             {
                 if (!this.Type.Flags.Contains(ItemFlag.ChangesOnUse))
                 {
-                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ChangeOnUseTo)} on an item which doesn't have a target: {this.ThingId}");
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ChangeOnUseTo)} on an item which doesn't have a target: {this}");
                 }
 
                 return Convert.ToUInt16(this.Attributes[ItemAttribute.ChangeOnUseTo]);
@@ -99,10 +99,49 @@ namespace Fibula.Items
             {
                 if (!this.Type.Flags.Contains(ItemFlag.CanBeRotated))
                 {
-                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.RotateTo)} on an item which doesn't have a target: {this.ThingId}");
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.RotateTo)} on an item which doesn't have a target: {this}");
                 }
 
                 return Convert.ToUInt16(this.Attributes[ItemAttribute.RotateTo]);
+            }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether this item expires.
+        /// </summary>
+        public bool HasExpiration => this.Type.Flags.Contains(ItemFlag.HasExpiration);
+
+        /// <summary>
+        /// Gets the time left before this item expires, if it <see cref="HasExpiration"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When the item does not expire.</exception>
+        public TimeSpan ExpirationTimeLeft
+        {
+            get
+            {
+                if (!this.Type.Flags.Contains(ItemFlag.HasExpiration))
+                {
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ExpirationTimeLeft)} on an item which doesn't have expiration: {this}");
+                }
+
+                return TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationTimeLeft]));
+            }
+        }
+
+        /// <summary>
+        /// Gets the Id of the item into which this will expire to, if it <see cref="HasExpiration"/>.
+        /// </summary>
+        /// <exception cref="InvalidOperationException">When the item does not expire.</exception>
+        public ushort ExpirationTarget
+        {
+            get
+            {
+                if (!this.Type.Flags.Contains(ItemFlag.HasExpiration))
+                {
+                    throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ExpirationTarget)} on an item which doesn't have expiration: {this}");
+                }
+
+                return Convert.ToUInt16(this.Attributes[ItemAttribute.ExpirationTarget]);
             }
         }
 
@@ -197,7 +236,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item is a ground aesthetic fix.
         /// </summary>
-        public bool IsGroundFix => this.Type.Flags.Contains(ItemFlag.IsGroundFix);
+        public bool IsGroundFix => this.Type.Flags.Contains(ItemFlag.IsGroundBorder);
 
         /// <summary>
         /// Gets a value indicating whether this item stays on top of the stack.

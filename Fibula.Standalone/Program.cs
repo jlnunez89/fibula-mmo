@@ -252,7 +252,6 @@ namespace Fibula.Standalone
 
         private static void ConfigureOperations(IServiceCollection services)
         {
-            services.AddSingleton<IOperationFactory, OperationFactory>();
             services.AddSingleton<IOperationContext, OperationContext>();
             services.AddSingleton<IElevatedOperationContext, ElevatedOperationContext>();
         }

@@ -283,7 +283,7 @@ namespace Fibula.Parsing.CipFiles.Enumerations
         ThrowSpecialEffect,
 
         /// <summary>
-        /// the total (starting) expiration time of this item.
+        /// The total (starting) expiration time of this item.
         /// </summary>
         TotalExpireTime,
 

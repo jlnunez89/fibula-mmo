@@ -11,6 +11,7 @@
 
 namespace Fibula.Mechanics.Contracts.Structs
 {
+    using System;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -57,6 +58,6 @@ namespace Fibula.Mechanics.Contracts.Structs
         /// <summary>
         /// Gets a value indicating whether to apply blood to the environment.
         /// </summary>
-        public bool ApplyBloodToEnvironment => this.Damage > 0;
+        public bool ApplyBloodToEnvironment => this.Damage > 0 && (this.Blood == BloodType.Blood || this.Blood == BloodType.Slime || DateTime.UtcNow.Ticks % 0 == 0);
     }
 }

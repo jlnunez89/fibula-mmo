@@ -70,5 +70,20 @@ namespace Fibula.Items.Contracts.Enumerations
         /// The range that a readable item can be read within.
         /// </summary>
         ReadRange,
+
+        /// <summary>
+        /// The starting time of an item that expires.
+        /// </summary>
+        ExpirationStartTime,
+
+        /// <summary>
+        /// The time left until the item expires.
+        /// </summary>
+        ExpirationTimeLeft,
+
+        /// <summary>
+        /// The id of the item to expire to, if any.
+        /// </summary>
+        ExpirationTarget,
     }
 }

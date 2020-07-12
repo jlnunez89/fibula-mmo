@@ -34,7 +34,6 @@ namespace Fibula.Mechanics.Operations
         /// <param name="creatureFinder">A reference to the creature finder in use.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         /// <param name="creatureFactory">A reference to the creature factory in use.</param>
-        /// <param name="operationFactory">A reference to the operation factory in use.</param>
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="gameOperationsApi">A reference to the game operations api.</param>
         /// <param name="combatOperationsApi">A reference to the combat operations api.</param>
@@ -48,7 +47,6 @@ namespace Fibula.Mechanics.Operations
             ICreatureFinder creatureFinder,
             IItemFactory itemFactory,
             ICreatureFactory creatureFactory,
-            IOperationFactory operationFactory,
             IContainerManager containerManager,
             IGameOperationsApi gameOperationsApi,
             ICombatOperationsApi combatOperationsApi,
@@ -62,7 +60,6 @@ namespace Fibula.Mechanics.Operations
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
             itemFactory.ThrowIfNull(nameof(itemFactory));
             creatureFactory.ThrowIfNull(nameof(creatureFactory));
-            operationFactory.ThrowIfNull(nameof(operationFactory));
             containerManager.ThrowIfNull(nameof(containerManager));
             gameOperationsApi.ThrowIfNull(nameof(gameOperationsApi));
             combatOperationsApi.ThrowIfNull(nameof(combatOperationsApi));
@@ -75,7 +72,6 @@ namespace Fibula.Mechanics.Operations
             this.CreatureFinder = creatureFinder;
             this.ItemFactory = itemFactory;
             this.CreatureFactory = creatureFactory;
-            this.OperationFactory = operationFactory;
             this.ContainerManager = containerManager;
             this.GameApi = gameOperationsApi;
             this.CombatApi = combatOperationsApi;
@@ -108,11 +104,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets a reference to the creature factory in use.
         /// </summary>
         public ICreatureFactory CreatureFactory { get; }
-
-        /// <summary>
-        /// Gets the reference to the operation factory.
-        /// </summary>
-        public IOperationFactory OperationFactory { get; }
 
         /// <summary>
         /// Gets a reference to the container manager in use.

@@ -16,7 +16,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Mechanics.Operations.Arguments;
 
     /// <summary>
     /// Class that represents a combat operation that orchestrates auto attack operations.
@@ -69,7 +68,7 @@ namespace Fibula.Mechanics.Operations
             // Normalize the attacker's attack speed based on the global round time and round that up.
             // We do this every time because it could have changed.
             var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed));
-            var autoAttackOp = context.OperationFactory.Create(new AutoAttackOperationCreationArguments(this.Attacker, this.Attacker.AutoAttackTarget, normalizedAttackSpeed));
+            var autoAttackOp = new AutoAttackOperation(this.Attacker, this.Attacker.AutoAttackTarget, normalizedAttackSpeed);
             var operationDelay = TimeSpan.Zero;
 
             // Add delay from current exhaustion of the requestor, if any.
