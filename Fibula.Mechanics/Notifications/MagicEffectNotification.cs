@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AnimatedEffectNotification.cs" company="2Dudes">
+// <copyright file="MagicEffectNotification.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -22,17 +22,17 @@ namespace Fibula.Notifications
     using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents a notification for animated effects.
+    /// Class that represents a notification for magic effects.
     /// </summary>
-    public class AnimatedEffectNotification : Notification
+    public class MagicEffectNotification : Notification
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AnimatedEffectNotification"/> class.
+        /// Initializes a new instance of the <see cref="MagicEffectNotification"/> class.
         /// </summary>
         /// <param name="findTargetPlayers">A function to determine the target players of this notification.</param>
         /// <param name="location">The location of the animated text.</param>
         /// <param name="effect">The effect.</param>
-        public AnimatedEffectNotification(
+        public MagicEffectNotification(
             Func<IEnumerable<IPlayer>> findTargetPlayers,
             Location location,
             AnimatedEffect effect = AnimatedEffect.None)

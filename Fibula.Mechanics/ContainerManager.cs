@@ -121,10 +121,7 @@ namespace Fibula.Mechanics
 
             if (this.creatureFinder.FindPlayerById(forCreatureId) is IPlayer player)
             {
-                this.scheduler.ScheduleEvent(
-                    new GenericNotification(
-                        () => player.YieldSingleItem(),
-                        new ContainerClosePacket(atPosition)));
+                this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new ContainerClosePacket(atPosition)));
             }
         }
 
@@ -373,10 +370,9 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    this.scheduler.ScheduleEvent(
-                        new GenericNotification(
-                            () => player.YieldSingleItem(),
-                            new ContainerAddItemPacket(containerPosition, addedItem)));
+                    var notification = new GenericNotification(() => player.YieldSingleItem(), new ContainerAddItemPacket(containerPosition, addedItem));
+
+                    this.scheduler.ScheduleEvent(notification);
                 }
             }
         }
@@ -403,10 +399,9 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    this.scheduler.ScheduleEvent(
-                        new GenericNotification(
-                            () => player.YieldSingleItem(),
-                            new ContainerRemoveItemPacket(indexRemoved, containerId)));
+                    var notification = new GenericNotification(() => player.YieldSingleItem(), new ContainerRemoveItemPacket(indexRemoved, containerId));
+
+                    this.scheduler.ScheduleEvent(notification);
                 }
             }
         }
@@ -439,10 +434,9 @@ namespace Fibula.Mechanics
                         continue;
                     }
 
-                    this.scheduler.ScheduleEvent(
-                        new GenericNotification(
-                            () => player.YieldSingleItem(),
-                            new ContainerUpdateItemPacket(indexOfUpdated, containerId, updatedItem)));
+                    var notification = new GenericNotification(() => player.YieldSingleItem(), new ContainerUpdateItemPacket(indexOfUpdated, containerId, updatedItem));
+
+                    this.scheduler.ScheduleEvent(notification);
                 }
             }
         }

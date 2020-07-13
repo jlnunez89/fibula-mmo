@@ -250,16 +250,10 @@ namespace Fibula.Mechanics
             if (combatant is IPlayer playerCombatant)
             {
                 // This updates the health as seen by others.
-                this.scheduler.ScheduleEvent(
-                    new GenericNotification(
-                        () => this.map.PlayersThatCanSee(playerCombatant.Location),
-                        new CreatureHealthPacket(playerCombatant)));
+                this.scheduler.ScheduleEvent(new GenericNotification(() => this.map.PlayersThatCanSee(playerCombatant.Location), new CreatureHealthPacket(playerCombatant)));
 
                 // And this updates the health of the player.
-                this.scheduler.ScheduleEvent(
-                    new GenericNotification(
-                        () => playerCombatant.YieldSingleItem(),
-                        new PlayerStatsPacket(playerCombatant)));
+                this.scheduler.ScheduleEvent(new GenericNotification(() => playerCombatant.YieldSingleItem(), new PlayerStatsPacket(playerCombatant)));
             }
         }
 
@@ -405,7 +399,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            cancelOp.Execute(this.GetContextForEventType(cancelOp.GetType()));
+            cancelOp.Execute(this.PrepareContextForEvent(cancelOp));
         }
 
         /// <summary>
@@ -561,10 +555,7 @@ namespace Fibula.Mechanics
         /// <param name="withDelay">Optional. A delay to dispatch the operation with.</param>
         private void DispatchOperation(IOperation operation, TimeSpan withDelay = default)
         {
-            if (operation == null)
-            {
-                return;
-            }
+            operation.ThrowIfNull(nameof(operation));
 
             // Normalize delay to protect against negative time spans.
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
@@ -693,7 +684,7 @@ namespace Fibula.Mechanics
             {
                 Stopwatch sw = Stopwatch.StartNew();
 
-                evt.Execute(this.GetContextForEventType(evt.GetType()));
+                evt.Execute(this.PrepareContextForEvent(evt));
 
                 sw.Stop();
 
@@ -706,9 +697,18 @@ namespace Fibula.Mechanics
             }
         }
 
-        private IEventContext GetContextForEventType(Type type)
+        /// <summary>
+        /// Prepares a new context for the given <see cref="IEvent"/>.
+        /// </summary>
+        /// <param name="evt">The event.</param>
+        /// <returns>A new instance of the context prepared for the event.</returns>
+        private IEventContext PrepareContextForEvent(IEvent evt)
         {
-            if (typeof(IElevatedOperation).IsAssignableFrom(type))
+            evt.ThrowIfNull(nameof(evt));
+
+            var eventType = evt.GetType();
+
+            if (typeof(IElevatedOperation).IsAssignableFrom(eventType))
             {
                 return new ElevatedOperationContext(
                     this.logger,
@@ -724,7 +724,7 @@ namespace Fibula.Mechanics
                     this.predefinedItemSet,
                     this.scheduler);
             }
-            else if (typeof(IOperation).IsAssignableFrom(type))
+            else if (typeof(IOperation).IsAssignableFrom(eventType))
             {
                 return new OperationContext(
                     this.logger,
@@ -740,7 +740,7 @@ namespace Fibula.Mechanics
                     this.predefinedItemSet,
                     this.scheduler);
             }
-            else if (typeof(INotification).IsAssignableFrom(type))
+            else if (typeof(INotification).IsAssignableFrom(eventType))
             {
                 return new NotificationContext(
                     this.logger,
