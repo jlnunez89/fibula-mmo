@@ -1,0 +1,455 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class CreatureTurnedNotification
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class CreatureTurnedNotification
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification">
+  
+  
+  <h1 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification" class="text-break">Class CreatureTurnedNotification
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a notification for when a creature has turned.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><span class="xref">Priority_Queue.FastPriorityQueueNode</span></div>
+    <div class="level2"><span class="xref">Priority_Queue.StablePriorityQueueNode</span></div>
+    <div class="level3"><a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a></div>
+    <div class="level4"><a class="xref" href="Fibula.Mechanics.Notifications.Notification.html">Notification</a></div>
+    <div class="level5"><span class="xref">CreatureTurnedNotification</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a></div>
+    <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Notifications.Notification.html#Fibula_Mechanics_Notifications_Notification_Sent">Notification.Sent</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Notifications.Notification.html#Fibula_Mechanics_Notifications_Notification_CanBeCancelled">Notification.CanBeCancelled</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Notifications.Notification.html#Fibula_Mechanics_Notifications_Notification_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_">Notification.Execute(IEventContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Notifications.Notification.html#Fibula_Mechanics_Notifications_Notification_Send_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_">Notification.Send(INotificationContext)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">BaseEvent.Cancelled</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedited">BaseEvent.Expedited</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_EventId">BaseEvent.EventId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RequestorId">BaseEvent.RequestorId</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_RepeatAfter">BaseEvent.RepeatAfter</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasCancellationHandler">BaseEvent.HasCancellationHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasExpeditionHandler">BaseEvent.HasExpeditionHandler</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancel">BaseEvent.Cancel()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedite">BaseEvent.Expedite()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_">BaseEvent.Equals(BaseEvent)</a>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.StablePriorityQueueNode.InsertionIndex</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.Priority</span>
+    </div>
+    <div>
+      <span class="xref">Priority_Queue.FastPriorityQueueNode.QueueIndex</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.Notifications.html">Fibula.Mechanics.Notifications</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
+  <h5 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class CreatureTurnedNotification : Notification, IEquatable&lt;BaseEvent&gt;, INotification, IEvent</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Creatures_Contracts_Abstractions_ICreature_System_Byte_Fibula_Common_Contracts_Enumerations_AnimatedEffect_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification.%23ctor(System.Func%7BSystem.Collections.Generic.IEnumerable%7BFibula.Creatures.Contracts.Abstractions.IPlayer%7D%7D%2CFibula.Creatures.Contracts.Abstractions.ICreature%2CSystem.Byte%2CFibula.Common.Contracts.Enumerations.AnimatedEffect)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L35">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Notifications_CreatureTurnedNotification__ctor_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.#ctor*"></a>
+  <h4 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Creatures_Contracts_Abstractions_ICreature_System_Byte_Fibula_Common_Contracts_Enumerations_AnimatedEffect_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.#ctor(System.Func{System.Collections.Generic.IEnumerable{Fibula.Creatures.Contracts.Abstractions.IPlayer}},Fibula.Creatures.Contracts.Abstractions.ICreature,System.Byte,Fibula.Common.Contracts.Enumerations.AnimatedEffect)">CreatureTurnedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt;, ICreature, Byte, AnimatedEffect)</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.Notifications.CreatureTurnedNotification.html">CreatureTurnedNotification</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public CreatureTurnedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt; findTargetPlayers, ICreature creature, byte creatureStackPosition, AnimatedEffect turnEffect = AnimatedEffect.None)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a>&gt;&gt;</td>
+        <td><span class="parametername">findTargetPlayers</span></td>
+        <td><p>A function to determine the target players of this notification.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td><span class="parametername">creature</span></td>
+        <td><p>The creature that turned.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">creatureStackPosition</span></td>
+        <td><p>The position in the stack of the creature that turned.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.AnimatedEffect.html">AnimatedEffect</a></td>
+        <td><span class="parametername">turnEffect</span></td>
+        <td><p>Optional. An effect of the turn.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification_Creature.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification.Creature%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L48">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_Creature_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.Creature*"></a>
+  <h4 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_Creature" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.Creature">Creature</h4>
+  <div class="markdown level1 summary"><p>Gets the creature that turned.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreature Creature { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification_StackPosition.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification.StackPosition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L53">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_StackPosition_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.StackPosition*"></a>
+  <h4 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_StackPosition" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.StackPosition">StackPosition</h4>
+  <div class="markdown level1 summary"><p>Gets the position in the stack of the creatue.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte StackPosition { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification_TurnedEffect.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification.TurnedEffect%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L58">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_TurnedEffect_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.TurnedEffect*"></a>
+  <h4 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_TurnedEffect" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.TurnedEffect">TurnedEffect</h4>
+  <div class="markdown level1 summary"><p>Gets the effect of the turn, if any.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public AnimatedEffect TurnedEffect { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.AnimatedEffect.html">AnimatedEffect</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext%2CFibula.Creatures.Contracts.Abstractions.IPlayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L66">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_Prepare_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.Prepare*"></a>
+  <h4 id="Fibula_Mechanics_Notifications_CreatureTurnedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_" data-uid="Fibula.Mechanics.Notifications.CreatureTurnedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext,Fibula.Creatures.Contracts.Abstractions.IPlayer)">Prepare(INotificationContext, IPlayer)</h4>
+  <div class="markdown level1 summary"><p>Finalizes the notification in preparation to it being sent.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected override IEnumerable&lt;IOutboundPacket&gt; Prepare(INotificationContext context, IPlayer player)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotificationContext.html">INotificationContext</a></td>
+        <td><span class="parametername">context</span></td>
+        <td><p>The context of this notification.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a></td>
+        <td><span class="parametername">player</span></td>
+        <td><p>The player which this notification is being prepared for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<a class="xref" href="Fibula.Communications.Contracts.Abstractions.IOutboundPacket.html">IOutboundPacket</a>&gt;</td>
+        <td><p>A collection of <a class="xref" href="Fibula.Communications.Contracts.Abstractions.IOutboundPacket.html">IOutboundPacket</a>s, the ones to be sent.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="overrides">Overrides</h5>
+  <div><a class="xref" href="Fibula.Mechanics.Notifications.Notification.html#Fibula_Mechanics_Notifications_Notification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_">Notification.Prepare(INotificationContext, IPlayer)</a></div>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Notifications_CreatureTurnedNotification.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Notifications.CreatureTurnedNotification%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/CreatureTurnedNotification.cs/#L26" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

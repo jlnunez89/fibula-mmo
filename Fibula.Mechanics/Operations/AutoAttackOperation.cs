@@ -25,7 +25,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Structs;
-    using Fibula.Notifications;
+    using Fibula.Mechanics.Notifications;
 
     /// <summary>
     /// Class that represents an auto attack operation.

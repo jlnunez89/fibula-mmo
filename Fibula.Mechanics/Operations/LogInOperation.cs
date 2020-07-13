@@ -23,7 +23,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Notifications;
+    using Fibula.Mechanics.Notifications;
 
     /// <summary>
     /// Class that represents a login operation.

@@ -98,7 +98,7 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
-    <div><a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotification.html">INotification</a></div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a></div>
     <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
   </div>
   <div class="inheritedMembers">
@@ -113,7 +113,7 @@
       <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_">Notification.Execute(IEventContext)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Send_Fibula_Notifications_Contracts_Abstractions_INotificationContext_">Notification.Send(INotificationContext)</a>
+      <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Send_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_">Notification.Send(INotificationContext)</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">BaseEvent.Cancelled</a>
@@ -177,7 +177,7 @@
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Notifications.html">Fibula.Notifications</a></h6>
-  <h6><strong>Assembly</strong>: Fibula.Notifications.dll</h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
   <h5 id="Fibula_Notifications_TileUpdatedNotification_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class TileUpdatedNotification : Notification, IEquatable&lt;BaseEvent&gt;, INotification, IEvent</code></pre>
@@ -186,19 +186,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Notifications_Arguments_TileUpdatedNotificationArguments_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.%23ctor(System.Func%7BSystem.Collections.Generic.IEnumerable%7BFibula.Creatures.Contracts.Abstractions.IPlayer%7D%7D%2CFibula.Notifications.Arguments.TileUpdatedNotificationArguments)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Common_Contracts_Structs_Location_System_Func_Fibula_Creatures_Contracts_Abstractions_IPlayer_Fibula_Common_Contracts_Structs_Location_System_ValueTuple_System_Collections_Generic_IDictionary_System_String_System_Object__System_Buffers_ReadOnlySequence_System_Byte____.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.%23ctor(System.Func%7BSystem.Collections.Generic.IEnumerable%7BFibula.Creatures.Contracts.Abstractions.IPlayer%7D%7D%2CFibula.Common.Contracts.Structs.Location%2CSystem.Func%7BFibula.Creatures.Contracts.Abstractions.IPlayer%2CFibula.Common.Contracts.Structs.Location%2CSystem.ValueTuple%7BSystem.Collections.Generic.IDictionary%7BSystem.String%2CSystem.Object%7D%2CSystem.Buffers.ReadOnlySequence%7BSystem.Byte%7D%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/TileUpdatedNotification.cs/#L34">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/TileUpdatedNotification.cs/#L36">View Source</a>
   </span>
   <a id="Fibula_Notifications_TileUpdatedNotification__ctor_" data-uid="Fibula.Notifications.TileUpdatedNotification.#ctor*"></a>
-  <h4 id="Fibula_Notifications_TileUpdatedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Notifications_Arguments_TileUpdatedNotificationArguments_" data-uid="Fibula.Notifications.TileUpdatedNotification.#ctor(System.Func{System.Collections.Generic.IEnumerable{Fibula.Creatures.Contracts.Abstractions.IPlayer}},Fibula.Notifications.Arguments.TileUpdatedNotificationArguments)">TileUpdatedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt;, TileUpdatedNotificationArguments)</h4>
+  <h4 id="Fibula_Notifications_TileUpdatedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Common_Contracts_Structs_Location_System_Func_Fibula_Creatures_Contracts_Abstractions_IPlayer_Fibula_Common_Contracts_Structs_Location_System_ValueTuple_System_Collections_Generic_IDictionary_System_String_System_Object__System_Buffers_ReadOnlySequence_System_Byte____" data-uid="Fibula.Notifications.TileUpdatedNotification.#ctor(System.Func{System.Collections.Generic.IEnumerable{Fibula.Creatures.Contracts.Abstractions.IPlayer}},Fibula.Common.Contracts.Structs.Location,System.Func{Fibula.Creatures.Contracts.Abstractions.IPlayer,Fibula.Common.Contracts.Structs.Location,System.ValueTuple{System.Collections.Generic.IDictionary{System.String,System.Object},System.Buffers.ReadOnlySequence{System.Byte}}})">TileUpdatedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt;, Location, Func&lt;IPlayer, Location, (IDictionary&lt;String, Object&gt; descriptionMetadata, ReadOnlySequence&lt;Byte&gt; descriptionData)&gt;)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Notifications.TileUpdatedNotification.html">TileUpdatedNotification</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TileUpdatedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt; findTargetPlayers, TileUpdatedNotificationArguments arguments)</code></pre>
+    <pre><code class="lang-csharp hljs">public TileUpdatedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt; findTargetPlayers, Location location, Func&lt;IPlayer, Location, (IDictionary&lt;string, object&gt; descriptionMetadata, ReadOnlySequence&lt;byte&gt; descriptionData)&gt; descriptionFunction)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -217,9 +217,15 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Arguments.TileUpdatedNotificationArguments.html">TileUpdatedNotificationArguments</a></td>
-        <td><span class="parametername">arguments</span></td>
-        <td><p>The arguments for this notification.</p>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td><span class="parametername">location</span></td>
+        <td><p>The location of the updated tile.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a>, <a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>, <span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;, <span class="xref">System.Buffers.ReadOnlySequence</span>&lt;<span class="xref">System.Byte</span>&gt;&gt;&gt;</td>
+        <td><span class="parametername">descriptionFunction</span></td>
+        <td><p>The function used to get the description of the updated tile.</p>
 </td>
       </tr>
     </tbody>
@@ -228,19 +234,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification_Arguments.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.Arguments%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification_Location.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.Location%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/TileUpdatedNotification.cs/#L45">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/TileUpdatedNotification.cs/#L46">View Source</a>
   </span>
-  <a id="Fibula_Notifications_TileUpdatedNotification_Arguments_" data-uid="Fibula.Notifications.TileUpdatedNotification.Arguments*"></a>
-  <h4 id="Fibula_Notifications_TileUpdatedNotification_Arguments" data-uid="Fibula.Notifications.TileUpdatedNotification.Arguments">Arguments</h4>
-  <div class="markdown level1 summary"><p>Gets this notification's arguments.</p>
+  <a id="Fibula_Notifications_TileUpdatedNotification_Location_" data-uid="Fibula.Notifications.TileUpdatedNotification.Location*"></a>
+  <h4 id="Fibula_Notifications_TileUpdatedNotification_Location" data-uid="Fibula.Notifications.TileUpdatedNotification.Location">Location</h4>
+  <div class="markdown level1 summary"><p>Gets the location of the updated tile.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TileUpdatedNotificationArguments Arguments { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public Location Location { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -252,7 +258,38 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Arguments.TileUpdatedNotificationArguments.html">TileUpdatedNotificationArguments</a></td>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification_TileDescriptionFunction.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.TileDescriptionFunction%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/TileUpdatedNotification.cs/#L51">View Source</a>
+  </span>
+  <a id="Fibula_Notifications_TileUpdatedNotification_TileDescriptionFunction_" data-uid="Fibula.Notifications.TileUpdatedNotification.TileDescriptionFunction*"></a>
+  <h4 id="Fibula_Notifications_TileUpdatedNotification_TileDescriptionFunction" data-uid="Fibula.Notifications.TileUpdatedNotification.TileDescriptionFunction">TileDescriptionFunction</h4>
+  <div class="markdown level1 summary"><p>Gets the function that decribes the tile.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Func&lt;IPlayer, Location, (IDictionary&lt;string, object&gt; descriptionMetadata, ReadOnlySequence&lt;byte&gt; descriptionData)&gt; TileDescriptionFunction { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Func</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a>, <a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>, <span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <span class="xref">System.Object</span>&gt;, <span class="xref">System.Buffers.ReadOnlySequence</span>&lt;<span class="xref">System.Byte</span>&gt;&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -261,13 +298,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.Prepare(Fibula.Notifications.Contracts.Abstractions.INotificationContext%2CFibula.Creatures.Contracts.Abstractions.IPlayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext%2CFibula.Creatures.Contracts.Abstractions.IPlayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/TileUpdatedNotification.cs/#L53">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/TileUpdatedNotification.cs/#L59">View Source</a>
   </span>
   <a id="Fibula_Notifications_TileUpdatedNotification_Prepare_" data-uid="Fibula.Notifications.TileUpdatedNotification.Prepare*"></a>
-  <h4 id="Fibula_Notifications_TileUpdatedNotification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_" data-uid="Fibula.Notifications.TileUpdatedNotification.Prepare(Fibula.Notifications.Contracts.Abstractions.INotificationContext,Fibula.Creatures.Contracts.Abstractions.IPlayer)">Prepare(INotificationContext, IPlayer)</h4>
+  <h4 id="Fibula_Notifications_TileUpdatedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_" data-uid="Fibula.Notifications.TileUpdatedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext,Fibula.Creatures.Contracts.Abstractions.IPlayer)">Prepare(INotificationContext, IPlayer)</h4>
   <div class="markdown level1 summary"><p>Finalizes the notification in preparation to it being sent.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -286,7 +323,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotificationContext.html">INotificationContext</a></td>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotificationContext.html">INotificationContext</a></td>
         <td><span class="parametername">context</span></td>
         <td><p>The context of this notification.</p>
 </td>
@@ -316,13 +353,13 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_">Notification.Prepare(INotificationContext, IPlayer)</a></div>
+  <div><a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_">Notification.Prepare(INotificationContext, IPlayer)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <div>
-      <a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotification.html">INotification</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a>
   </div>
   <div>
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
@@ -348,7 +385,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_TileUpdatedNotification.md&amp;value=---%0Auid%3A%20Fibula.Notifications.TileUpdatedNotification%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/TileUpdatedNotification.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/TileUpdatedNotification.cs/#L28" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

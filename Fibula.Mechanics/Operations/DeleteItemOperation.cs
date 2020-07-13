@@ -20,7 +20,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
-    using Fibula.Notifications;
+    using Fibula.Mechanics.Notifications;
 
     /// <summary>
     /// Class that represents an event for an item deletion.

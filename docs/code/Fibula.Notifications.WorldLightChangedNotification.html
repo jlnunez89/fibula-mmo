@@ -98,7 +98,7 @@
   <div classs="implements">
     <h5>Implements</h5>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Scheduling.BaseEvent.html">BaseEvent</a>&gt;</div>
-    <div><a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotification.html">INotification</a></div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a></div>
     <div><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></div>
   </div>
   <div class="inheritedMembers">
@@ -113,7 +113,7 @@
       <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_">Notification.Execute(IEventContext)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Send_Fibula_Notifications_Contracts_Abstractions_INotificationContext_">Notification.Send(INotificationContext)</a>
+      <a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Send_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_">Notification.Send(INotificationContext)</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancelled">BaseEvent.Cancelled</a>
@@ -177,7 +177,7 @@
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Notifications.html">Fibula.Notifications</a></h6>
-  <h6><strong>Assembly</strong>: Fibula.Notifications.dll</h6>
+  <h6><strong>Assembly</strong>: Fibula.Mechanics.dll</h6>
   <h5 id="Fibula_Notifications_WorldLightChangedNotification_syntax">Syntax</h5>
   <div class="codewrapper">
     <pre><code class="lang-csharp hljs">public class WorldLightChangedNotification : Notification, IEquatable&lt;BaseEvent&gt;, INotification, IEvent</code></pre>
@@ -186,19 +186,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Notifications_Arguments_WorldLightChangedNotificationArguments_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.%23ctor(System.Func%7BSystem.Collections.Generic.IEnumerable%7BFibula.Creatures.Contracts.Abstractions.IPlayer%7D%7D%2CFibula.Notifications.Arguments.WorldLightChangedNotificationArguments)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___System_Byte_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.%23ctor(System.Func%7BSystem.Collections.Generic.IEnumerable%7BFibula.Creatures.Contracts.Abstractions.IPlayer%7D%7D%2CSystem.Byte%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/WorldLightChangedNotification.cs/#L33">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/WorldLightChangedNotification.cs/#L34">View Source</a>
   </span>
   <a id="Fibula_Notifications_WorldLightChangedNotification__ctor_" data-uid="Fibula.Notifications.WorldLightChangedNotification.#ctor*"></a>
-  <h4 id="Fibula_Notifications_WorldLightChangedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___Fibula_Notifications_Arguments_WorldLightChangedNotificationArguments_" data-uid="Fibula.Notifications.WorldLightChangedNotification.#ctor(System.Func{System.Collections.Generic.IEnumerable{Fibula.Creatures.Contracts.Abstractions.IPlayer}},Fibula.Notifications.Arguments.WorldLightChangedNotificationArguments)">WorldLightChangedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt;, WorldLightChangedNotificationArguments)</h4>
+  <h4 id="Fibula_Notifications_WorldLightChangedNotification__ctor_System_Func_System_Collections_Generic_IEnumerable_Fibula_Creatures_Contracts_Abstractions_IPlayer___System_Byte_System_Byte_" data-uid="Fibula.Notifications.WorldLightChangedNotification.#ctor(System.Func{System.Collections.Generic.IEnumerable{Fibula.Creatures.Contracts.Abstractions.IPlayer}},System.Byte,System.Byte)">WorldLightChangedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt;, Byte, Byte)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Notifications.WorldLightChangedNotification.html">WorldLightChangedNotification</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WorldLightChangedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt; findTargetPlayers, WorldLightChangedNotificationArguments arguments)</code></pre>
+    <pre><code class="lang-csharp hljs">public WorldLightChangedNotification(Func&lt;IEnumerable&lt;IPlayer&gt;&gt; findTargetPlayers, byte lightLevel, byte lightColor = 215)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -217,9 +217,15 @@
 </td>
       </tr>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Arguments.WorldLightChangedNotificationArguments.html">WorldLightChangedNotificationArguments</a></td>
-        <td><span class="parametername">arguments</span></td>
-        <td><p>The arguments for this notification.</p>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">lightLevel</span></td>
+        <td><p>The new world light level.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">lightColor</span></td>
+        <td><p>The new world light color.</p>
 </td>
       </tr>
     </tbody>
@@ -228,19 +234,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification_Arguments.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.Arguments%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification_LightColor.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.LightColor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/WorldLightChangedNotification.cs/#L44">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/WorldLightChangedNotification.cs/#L49">View Source</a>
   </span>
-  <a id="Fibula_Notifications_WorldLightChangedNotification_Arguments_" data-uid="Fibula.Notifications.WorldLightChangedNotification.Arguments*"></a>
-  <h4 id="Fibula_Notifications_WorldLightChangedNotification_Arguments" data-uid="Fibula.Notifications.WorldLightChangedNotification.Arguments">Arguments</h4>
-  <div class="markdown level1 summary"><p>Gets this notification's arguments.</p>
+  <a id="Fibula_Notifications_WorldLightChangedNotification_LightColor_" data-uid="Fibula.Notifications.WorldLightChangedNotification.LightColor*"></a>
+  <h4 id="Fibula_Notifications_WorldLightChangedNotification_LightColor" data-uid="Fibula.Notifications.WorldLightChangedNotification.LightColor">LightColor</h4>
+  <div class="markdown level1 summary"><p>Gets the new world light color.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public WorldLightChangedNotificationArguments Arguments { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public byte LightColor { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -252,7 +258,38 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Arguments.WorldLightChangedNotificationArguments.html">WorldLightChangedNotificationArguments</a></td>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification_LightLevel.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.LightLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/WorldLightChangedNotification.cs/#L44">View Source</a>
+  </span>
+  <a id="Fibula_Notifications_WorldLightChangedNotification_LightLevel_" data-uid="Fibula.Notifications.WorldLightChangedNotification.LightLevel*"></a>
+  <h4 id="Fibula_Notifications_WorldLightChangedNotification_LightLevel" data-uid="Fibula.Notifications.WorldLightChangedNotification.LightLevel">LightLevel</h4>
+  <div class="markdown level1 summary"><p>Gets the new world light level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte LightLevel { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -261,13 +298,13 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.Prepare(Fibula.Notifications.Contracts.Abstractions.INotificationContext%2CFibula.Creatures.Contracts.Abstractions.IPlayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext%2CFibula.Creatures.Contracts.Abstractions.IPlayer)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/WorldLightChangedNotification.cs/#L52">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/WorldLightChangedNotification.cs/#L57">View Source</a>
   </span>
   <a id="Fibula_Notifications_WorldLightChangedNotification_Prepare_" data-uid="Fibula.Notifications.WorldLightChangedNotification.Prepare*"></a>
-  <h4 id="Fibula_Notifications_WorldLightChangedNotification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_" data-uid="Fibula.Notifications.WorldLightChangedNotification.Prepare(Fibula.Notifications.Contracts.Abstractions.INotificationContext,Fibula.Creatures.Contracts.Abstractions.IPlayer)">Prepare(INotificationContext, IPlayer)</h4>
+  <h4 id="Fibula_Notifications_WorldLightChangedNotification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_" data-uid="Fibula.Notifications.WorldLightChangedNotification.Prepare(Fibula.Mechanics.Contracts.Abstractions.INotificationContext,Fibula.Creatures.Contracts.Abstractions.IPlayer)">Prepare(INotificationContext, IPlayer)</h4>
   <div class="markdown level1 summary"><p>Finalizes the notification in preparation to it being sent.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
@@ -286,7 +323,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotificationContext.html">INotificationContext</a></td>
+        <td><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotificationContext.html">INotificationContext</a></td>
         <td><span class="parametername">context</span></td>
         <td><p>The context of this notification.</p>
 </td>
@@ -316,13 +353,13 @@
     </tbody>
   </table>
   <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Prepare_Fibula_Notifications_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_">Notification.Prepare(INotificationContext, IPlayer)</a></div>
+  <div><a class="xref" href="Fibula.Notifications.Notification.html#Fibula_Notifications_Notification_Prepare_Fibula_Mechanics_Contracts_Abstractions_INotificationContext_Fibula_Creatures_Contracts_Abstractions_IPlayer_">Notification.Prepare(INotificationContext, IPlayer)</a></div>
   <h3 id="implements">Implements</h3>
   <div>
       <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <div>
-      <a class="xref" href="Fibula.Notifications.Contracts.Abstractions.INotification.html">INotification</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.INotification.html">INotification</a>
   </div>
   <div>
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>
@@ -348,7 +385,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Notifications_WorldLightChangedNotification.md&amp;value=---%0Auid%3A%20Fibula.Notifications.WorldLightChangedNotification%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Notifications/WorldLightChangedNotification.cs/#L26" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Notifications/WorldLightChangedNotification.cs/#L26" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

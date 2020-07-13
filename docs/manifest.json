@@ -3045,7 +3045,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.BodyContainerItem.html",
-          "hash": "Jvoa+CxPAnVEiXpRGBgbiw=="
+          "hash": "iWUYOa9isYli39+ezDlwMw=="
         }
       },
       "is_incremental": false,
@@ -3057,7 +3057,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ContainerItem.html",
-          "hash": "qTjZksMQp21/RANcMHy5yg=="
+          "hash": "GLqJOWvhatN3emlYHB8jsg=="
         }
       },
       "is_incremental": false,
@@ -3069,7 +3069,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IContainerItem.html",
-          "hash": "vos8+2yBfqq2STZdRDdVRQ=="
+          "hash": "LARltY/WhN1rFeO5a6Djqw=="
         }
       },
       "is_incremental": false,
@@ -3093,7 +3093,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IItem.html",
-          "hash": "PFegJ+pepScPG+f6EeAYvg=="
+          "hash": "1eJm082S0fRIEQe7lwM7DA=="
         }
       },
       "is_incremental": false,
@@ -3249,7 +3249,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.ItemAttribute.html",
-          "hash": "1+VOKpyMmrlYfxoVntU3jA=="
+          "hash": "+MX+cFk65A/79IAnzCcznQ=="
         }
       },
       "is_incremental": false,
@@ -3261,7 +3261,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.ItemFlag.html",
-          "hash": "4t2Rcowdj82bXWmuTioawQ=="
+          "hash": "jl86iyxK94MSnz/IZrfg1Q=="
         }
       },
       "is_incremental": false,
@@ -3285,7 +3285,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Item.html",
-          "hash": "+vmNOBPu4AsYFqO7H5uJUw=="
+          "hash": "/YL6CE5qQd+9bcro+Vt36Q=="
         }
       },
       "is_incremental": false,
@@ -3717,7 +3717,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.ContainerManager.html",
-          "hash": "MsnA+Bzf6jxXTvvjUT1TmQ=="
+          "hash": "0F/zcV12mrUacss71mlPLw=="
         }
       },
       "is_incremental": false,
@@ -3777,7 +3777,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext.html",
-          "hash": "EmTzRIfrFow91c+OX4YH+g=="
+          "hash": "6HspEnABsXVd2WFR59TDhQ=="
         }
       },
       "is_incremental": false,
@@ -3801,7 +3801,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html",
-          "hash": "bSo3x+d6qQy2vwUQ3dDCXQ=="
+          "hash": "D6qCdAt3DSakZEYPuHDorQ=="
         }
       },
       "is_incremental": false,
@@ -3833,6 +3833,30 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotification.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotification.html",
+          "hash": "SJLsBb3XZQXBYxmixXWXDw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotificationContext.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotificationContext.html",
+          "hash": "4fk4GFiwYNXN7fdl/qdo2g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperation.yml",
       "output": {
         ".html": {
@@ -3849,31 +3873,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationContext.html",
-          "hash": "XrFEv/Hvd4ZQqb/PvdLn2A=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationCreationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationCreationArguments.html",
-          "hash": "uuNhB7bDpko73Gy1lpiUgw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationFactory.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationFactory.html",
-          "hash": "O3Ba6CauVB2DJlnumI1R0A=="
+          "hash": "A4Yarmjzef3jIiKnXxPcYQ=="
         }
       },
       "is_incremental": false,
@@ -3909,7 +3909,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.html",
-          "hash": "fH5/4asi3/ZChC4Yqezbvw=="
+          "hash": "c5cjUMARBeDRVOfdAXNnzg=="
         }
       },
       "is_incremental": false,
@@ -4001,11 +4001,23 @@
     },
     {
       "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnSent.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnSent.html",
+          "hash": "nU4fyiaPzeDXe8FFJ81a9w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
       "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.yml",
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.html",
-          "hash": "ByWL5FaeSL19s/PL/7m3Fg=="
+          "hash": "qey3wg/0djbj833viah34g=="
         }
       },
       "is_incremental": false,
@@ -4018,18 +4030,6 @@
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.ExhaustionType.html",
           "hash": "AG6cPFVx401jvO+t+g9NCg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.OperationType.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.OperationType.html",
-          "hash": "o3J9tdiw8CZ/uVx/e2uo/w=="
         }
       },
       "is_incremental": false,
@@ -4053,7 +4053,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.html",
-          "hash": "ChYYKA4QQEg3sCUE9/w55g=="
+          "hash": "1m5TFdDGhpmMYdaJ1MTdiw=="
         }
       },
       "is_incremental": false,
@@ -4077,7 +4077,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.CreatureExtensions.html",
-          "hash": "cmkuxBBnD3ITO4wiDRQEfA=="
+          "hash": "Knj60nYtCDnjckTYFASypw=="
         }
       },
       "is_incremental": false,
@@ -4137,7 +4137,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Structs.DamageInfo.html",
-          "hash": "AlhDBFlsHeRZtJfGxJp1rA=="
+          "hash": "0E+hGqY6VBAnh8H0O7VyRw=="
         }
       },
       "is_incremental": false,
@@ -4161,7 +4161,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Game.html",
-          "hash": "WkGOdCHHNOxEPOT3seAWAg=="
+          "hash": "LIhVZUeLBAELn5xFWfrwBw=="
         }
       },
       "is_incremental": false,
@@ -4329,7 +4329,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.WalkOnDemandHandler.html",
-          "hash": "PaTLN14NmcVvxY4nHDzmsQ=="
+          "hash": "HwTPYmzP8SCeW/CFYcmzLQ=="
         }
       },
       "is_incremental": false,
@@ -4349,11 +4349,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoAttackOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.AnimatedTextNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoAttackOperationCreationArguments.html",
-          "hash": "WlmefbPnlDPVt+mjwziMiQ=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.AnimatedTextNotification.html",
+          "hash": "jBUrtjQuElqZYMYHgS6amw=="
         }
       },
       "is_incremental": false,
@@ -4361,11 +4361,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoAttackOrchestratorOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.CreatureMovedNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoAttackOrchestratorOperationCreationArguments.html",
-          "hash": "sp0de/vDK1jgDqFta6nnEQ=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.CreatureMovedNotification.html",
+          "hash": "l40hq5s0024qCJOayGCsKQ=="
         }
       },
       "is_incremental": false,
@@ -4373,11 +4373,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoWalkOrchestratorOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.CreatureRemovedNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.AutoWalkOrchestratorOperationCreationArguments.html",
-          "hash": "cVNuQLHm/GF8cBveHI1K1A=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.CreatureRemovedNotification.html",
+          "hash": "0Qgwr6u9AajAz2HZlI6EkQ=="
         }
       },
       "is_incremental": false,
@@ -4385,11 +4385,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.CancelOperationsOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.CreatureSpeechNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.CancelOperationsOperationCreationArguments.html",
-          "hash": "ev02ROwzQ4vV0V0+gnnEIw=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.CreatureSpeechNotification.html",
+          "hash": "OXjhz+X1L/CCQ3fRvLQanw=="
         }
       },
       "is_incremental": false,
@@ -4397,11 +4397,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.ChangeModesOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.CreatureTurnedNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.ChangeModesOperationCreationArguments.html",
-          "hash": "B7JifokeAIvOto1W5H6zew=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.CreatureTurnedNotification.html",
+          "hash": "IGguUWGyMdj1ynGAbnS5Vw=="
         }
       },
       "is_incremental": false,
@@ -4409,11 +4409,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.CreateItemOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.GenericNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.CreateItemOperationCreationArguments.html",
-          "hash": "dU7qJPUQVVRW43+rTu4j7g=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.GenericNotification.html",
+          "hash": "iNPaIh9KlIEyMWEjJG08lw=="
         }
       },
       "is_incremental": false,
@@ -4421,11 +4421,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.DeathOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.MagicEffectNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.DeathOperationCreationArguments.html",
-          "hash": "pu8JPnqtECMxdb1/vDNyOQ=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.MagicEffectNotification.html",
+          "hash": "On9ot1Qy+u2cIYgwpdyqHg=="
         }
       },
       "is_incremental": false,
@@ -4433,11 +4433,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.LogInOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.Notification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.LogInOperationCreationArguments.html",
-          "hash": "jKByfa4QCdjs9t/rkW/4vw=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.Notification.html",
+          "hash": "/dL0lAtZDrvRgy0lFudnDA=="
         }
       },
       "is_incremental": false,
@@ -4445,11 +4445,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.LogOutOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.NotificationContext.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.LogOutOperationCreationArguments.html",
-          "hash": "f1ViVoCDV+7dGpyp4d6LCw=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.NotificationContext.html",
+          "hash": "UkyPK4YQqDYnaEPspX/3Zw=="
         }
       },
       "is_incremental": false,
@@ -4457,11 +4457,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.LookAtOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.TextMessageNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.LookAtOperationCreationArguments.html",
-          "hash": "l0pPzdLkVMdJ4imQ2Led2Q=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.TextMessageNotification.html",
+          "hash": "h8Z+qrbbvwZR5opJDkjIrw=="
         }
       },
       "is_incremental": false,
@@ -4469,11 +4469,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.MovementOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.TileUpdatedNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.MovementOperationCreationArguments.html",
-          "hash": "6e5kQfU8StxOqGAAeIwjKw=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.TileUpdatedNotification.html",
+          "hash": "EQ5ikoibquH4XrHPT4eg6A=="
         }
       },
       "is_incremental": false,
@@ -4481,11 +4481,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.RestoreCombatCreditOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.WorldLightChangedNotification.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.RestoreCombatCreditOperationCreationArguments.html",
-          "hash": "pXqblCo2qLs3//j4LOr9Sg=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.WorldLightChangedNotification.html",
+          "hash": "NejbDMpidxq1Yr+z6BDl+Q=="
         }
       },
       "is_incremental": false,
@@ -4493,35 +4493,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.SpeechOperationCreationArguments.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Notifications.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.SpeechOperationCreationArguments.html",
-          "hash": "WG00YUwqrdMmFDqYd73ELw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.TurnToDirectionOperationCreationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.TurnToDirectionOperationCreationArguments.html",
-          "hash": "4StsqtEzr74WD0Lsb2B9dA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.Arguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.Arguments.html",
-          "hash": "kH08pLmxXR7pwyVU+knzcw=="
+          "relative_path": "code/Fibula.Mechanics.Notifications.html",
+          "hash": "r4r8HGYCCMG0P/8PmhlLFw=="
         }
       },
       "is_incremental": false,
@@ -4533,7 +4509,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoAttackOperation.html",
-          "hash": "Sep/emZ/xA2zfkUQ5AngSQ=="
+          "hash": "1GSSQA3uhCaZLrW/+R013w=="
         }
       },
       "is_incremental": false,
@@ -4545,7 +4521,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoAttackOrchestratorOperation.html",
-          "hash": "iGE/AL7lZpIvWPw5PxsZ5Q=="
+          "hash": "UvWJkJUqql3u3M2WebISGQ=="
         }
       },
       "is_incremental": false,
@@ -4557,7 +4533,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoWalkOrchestratorOperation.html",
-          "hash": "4rftWEnnKslfha0LSLk8oA=="
+          "hash": "O12AAqosUUZADhluIfL/Sw=="
         }
       },
       "is_incremental": false,
@@ -4569,7 +4545,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.BaseEnvironmentOperation.html",
-          "hash": "+8Me8w3bpAWBuPAOaeXfww=="
+          "hash": "V0Aep9nNg2Zq5vD3ulaCqw=="
         }
       },
       "is_incremental": false,
@@ -4581,7 +4557,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.CancelOperationsOperation.html",
-          "hash": "gijtCQrsS7c0USBoQtSwbA=="
+          "hash": "JeRKUGH+xILvLZ+Q3WSSqA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Operations.ChangeItemOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Operations.ChangeItemOperation.html",
+          "hash": "8ceTp5AjApPLsjczlhLATQ=="
         }
       },
       "is_incremental": false,
@@ -4605,7 +4593,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.CreateItemOperation.html",
-          "hash": "QdoFww+oR5USG9CzsCkUig=="
+          "hash": "9GzYlbxpWwtlttpNHO3h9g=="
         }
       },
       "is_incremental": false,
@@ -4617,7 +4605,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.DeathOperation.html",
-          "hash": "vkTb3dgDbo6QxfC8KUJzfQ=="
+          "hash": "yz9F+/sqnPdBiX2xNqqw4A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Operations.DeleteItemOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Operations.DeleteItemOperation.html",
+          "hash": "WQ36qyU8NsnBV2rQdI/xtw=="
         }
       },
       "is_incremental": false,
@@ -4641,7 +4641,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.ElevatedOperationContext.html",
-          "hash": "0be6/kxEDDAcQFlWoYvGqw=="
+          "hash": "zSZKd/yyQW0wRhBEe+gixg=="
         }
       },
       "is_incremental": false,
@@ -4653,7 +4653,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LogInOperation.html",
-          "hash": "zEpzfGiPkiX2ZHZfShGHsw=="
+          "hash": "4vaxVMIaI2Kbc3tiDNRb1g=="
         }
       },
       "is_incremental": false,
@@ -4665,7 +4665,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LogOutOperation.html",
-          "hash": "+geFV0PG28jG9mpSPiTLnA=="
+          "hash": "gZjudSdEsEgItFpbbKeMpA=="
         }
       },
       "is_incremental": false,
@@ -4677,7 +4677,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LookAtOperation.html",
-          "hash": "JaODrH5iuvxVfogpKXaotw=="
+          "hash": "Lth0gjpTvtP0j0C4fW6cVQ=="
         }
       },
       "is_incremental": false,
@@ -4689,7 +4689,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.MovementOperation.html",
-          "hash": "HfDYpb+Wk8c7sPDKm+Sz3g=="
+          "hash": "EZHyb4eEtR0EC+TEjQl+6A=="
         }
       },
       "is_incremental": false,
@@ -4701,7 +4701,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.Operation.html",
-          "hash": "S62KW6TqEOAG2NDSm/qpHA=="
+          "hash": "TwBK7wJPiW3eyBMOukwzEw=="
         }
       },
       "is_incremental": false,
@@ -4713,19 +4713,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.OperationContext.html",
-          "hash": "BHHmBcccy20NsCXt8UPuaA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Operations.OperationFactory.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Mechanics.Operations.OperationFactory.html",
-          "hash": "f/mlYdthYAVV+m7tJHnU4Q=="
+          "hash": "8ZyUwP4nQq7PLDQlh+vkxg=="
         }
       },
       "is_incremental": false,
@@ -4761,7 +4749,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.SpeechOperation.html",
-          "hash": "4tJLRnRERikbEqXCXG3UUg=="
+          "hash": "HPFa9847sx9vs8HZL45qKw=="
         }
       },
       "is_incremental": false,
@@ -4773,7 +4761,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.TurnToDirectionOperation.html",
-          "hash": "JZTNXWPAW4jIqbVUk/oSgA=="
+          "hash": "JTlPyiHjyTqacYK/97Hg8A=="
         }
       },
       "is_incremental": false,
@@ -4785,7 +4773,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.html",
-          "hash": "L6elr6m45y8V92ee5uPUnA=="
+          "hash": "gXhofLEU6i6rfRxWIpOlLQ=="
         }
       },
       "is_incremental": false,
@@ -4810,318 +4798,6 @@
         ".html": {
           "relative_path": "code/Fibula.Mechanics.html",
           "hash": "+xF32ayPvOfQnppVSIfj7g=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.CreatureMovedNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.CreatureMovedNotificationArguments.html",
-          "hash": "del+KXZAhNir+6JvNRS+2Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.CreatureRemovedNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.CreatureRemovedNotificationArguments.html",
-          "hash": "fv8+A1Z1i6iv5DR/m/DoYg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.CreatureSpeechNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.CreatureSpeechNotificationArguments.html",
-          "hash": "sfdNzvImyONbpDFYn8tzvw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.CreatureTurnedNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.CreatureTurnedNotificationArguments.html",
-          "hash": "949U/e5HRlzKvMIhc91rnw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.GenericNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.GenericNotificationArguments.html",
-          "hash": "53WMqhByZT0kIJ7lDo3dJw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.TextMessageNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.TextMessageNotificationArguments.html",
-          "hash": "i3U/aE+kYAhnr9LXQpPnJw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.TileUpdatedNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.TileUpdatedNotificationArguments.html",
-          "hash": "Ep4+8OQAR1AEuHguu6ggHg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.WorldLightChangedNotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.WorldLightChangedNotificationArguments.html",
-          "hash": "yISBfEudcKob397uNVKBNQ=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Arguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Arguments.html",
-          "hash": "Lu+iBPl4CPGYQt2T6UimMg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotification.html",
-          "hash": "CTsZKcuc/vw1inaCoQF8Xw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotificationArguments.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotificationArguments.html",
-          "hash": "uxESwCTiYv4ZdDJ1ajDxIA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotificationContext.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Abstractions.INotificationContext.html",
-          "hash": "G5yrj71LQLg2ZSR2pG0wXw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Abstractions.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Abstractions.html",
-          "hash": "+ZOR8hntbQl8GUeBEwHoWg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Delegates.OnSent.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Delegates.OnSent.html",
-          "hash": "5bYWRVjSS2dlnHDihoEO1w=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Contracts.Delegates.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Contracts.Delegates.html",
-          "hash": "Vqij+AYYxJOntrGaAdi4kw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.CreatureMovedNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.CreatureMovedNotification.html",
-          "hash": "onZQawnu70LFMvrV6/EiEg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.CreatureRemovedNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.CreatureRemovedNotification.html",
-          "hash": "5bZvNgwJfV0vyERkmUb2Pw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.CreatureSpeechNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.CreatureSpeechNotification.html",
-          "hash": "FjDHoeiu7xoQcY2mZWw2HA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.CreatureTurnedNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.CreatureTurnedNotification.html",
-          "hash": "2CdDD8qi8TjpmIHfHvZ1wA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.GenericNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.GenericNotification.html",
-          "hash": "LjgVtmYprim3nilzVAXUJw=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.Notification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.Notification.html",
-          "hash": "N8dD5T3/r/GHhYnulr49wg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.NotificationContext.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.NotificationContext.html",
-          "hash": "3GR0cAd3T3RbY5U6q176zA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.TextMessageNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.TextMessageNotification.html",
-          "hash": "uy8rECFUAkTm5jQYC1Ei2Q=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.TileUpdatedNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.TileUpdatedNotification.html",
-          "hash": "A4DRjlJO3zD70OiAml/EoA=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.WorldLightChangedNotification.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.WorldLightChangedNotification.html",
-          "hash": "nXnjuv+Br/1k/AvjzgNcxg=="
-        }
-      },
-      "is_incremental": false,
-      "version": ""
-    },
-    {
-      "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Notifications.yml",
-      "output": {
-        ".html": {
-          "relative_path": "code/Fibula.Notifications.html",
-          "hash": "ilnIxtIcQ+bGZlwHgBl0iA=="
         }
       },
       "is_incremental": false,
@@ -5157,7 +4833,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Enumerations.CipItemAttribute.html",
-          "hash": "QV9yY4VJqhXpyfeLdmTwQA=="
+          "hash": "hOzAbQ371t/2BZ+EqHUBTw=="
         }
       },
       "is_incremental": false,
@@ -6393,7 +6069,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.BaseEvent.html",
-          "hash": "ODzOjegfr7wgvocA4wpokw=="
+          "hash": "q5qA/i23IlyA9jcLoBhG4g=="
         }
       },
       "is_incremental": false,
@@ -6789,7 +6465,7 @@
       "output": {
         ".html": {
           "relative_path": "code/toc.html",
-          "hash": "6TVS8CCnjBqaejPEl26VkQ=="
+          "hash": "ChFFUwbJP5g9N0/XAd8sfA=="
         }
       },
       "is_incremental": false,
@@ -7009,13 +6685,13 @@
           "can_incremental": true,
           "incrementalPhase": "build",
           "total_file_count": 7,
-          "skipped_file_count": 6
+          "skipped_file_count": 7
         },
         "ManagedReferenceDocumentProcessor": {
           "can_incremental": true,
           "incrementalPhase": "build",
-          "total_file_count": 557,
-          "skipped_file_count": 557
+          "total_file_count": 530,
+          "skipped_file_count": 530
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,

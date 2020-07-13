@@ -23,7 +23,7 @@ namespace Fibula.Mechanics
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Extensions;
-    using Fibula.Notifications;
+    using Fibula.Mechanics.Notifications;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Serilog;
 

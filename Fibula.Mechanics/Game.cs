@@ -30,8 +30,8 @@ namespace Fibula.Mechanics
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Notifications;
     using Fibula.Mechanics.Operations;
-    using Fibula.Notifications;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
