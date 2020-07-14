@@ -1,43 +1,30 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="MonsterInventory.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Monsters
+namespace Fibula.Creatures
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
+    using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Constants;
+    using Fibula.Items;
+    using Fibula.Items.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents an inventory for monsters.
     /// </summary>
     public class MonsterInventory : IInventory
     {
-        /// <summary>
-        /// The factor to use to calculate drop chance.
-        /// </summary>
-        private const int DropChanceFactor = 1000;
-
-        /// <summary>
-        /// The default maximum capacity for this inventory.
-        /// </summary>
-        private const int DefaultMaximumCapacity = 20;
-
-        /// <summary>
-        /// The default drop probability for an item in the inventory.
-        /// </summary>
-        private const int DefaultLossProbability = 1000;
-
         /// <summary>
         /// Internal store for the inventory.
         /// </summary>
@@ -55,7 +42,7 @@ namespace OpenTibia.Server.Monsters
         /// <param name="owner">The owner of this inventory.</param>
         /// <param name="inventoryComposition">A collection of monster inventory posibilities, composed of typeId, maximumAmount, and chance.</param>
         /// <param name="maxCapacity">The maximum capacity of the monster's inventory.</param>
-        public MonsterInventory(IItemFactory itemFactory, ICreature owner, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryComposition, ushort maxCapacity = DefaultMaximumCapacity)
+        public MonsterInventory(IItemFactory itemFactory, ICreature owner, IEnumerable<(ushort typeId, byte maxAmount, ushort chance)> inventoryComposition, ushort maxCapacity = MonsterConstants.DefaultMaximumCapacity)
         {
             itemFactory.ThrowIfNull(nameof(itemFactory));
             owner.ThrowIfNull(nameof(owner));
@@ -68,10 +55,10 @@ namespace OpenTibia.Server.Monsters
             this.DetermineLoot(itemFactory, inventoryComposition, maxCapacity);
         }
 
-        /// <summary>
-        /// A delegate to invoke when a slot in the inventory changes.
-        /// </summary>
-        public event OnInventorySlotChanged SlotChanged;
+        ///// <summary>
+        ///// A delegate to invoke when a slot in the inventory changes.
+        ///// </summary>
+        // public event OnInventorySlotChanged SlotChanged;
 
         /// <summary>
         /// Gets a reference to the owner of this inventory.
@@ -123,13 +110,13 @@ namespace OpenTibia.Server.Monsters
                     break;
                 }
 
-                if (rng.Next(DropChanceFactor) > chance)
+                if (rng.Next(MonsterConstants.DropChanceFactor) > chance)
                 {
                     continue;
                 }
 
                 // Got lucky! This creature has this item.
-                if (!(itemFactory.Create(typeId) is IItem newItem))
+                if (!(itemFactory.Create(new ItemCreationArguments() { TypeId = typeId }) is IItem newItem))
                 {
                     // TODO: propper logging.
                     // Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
@@ -140,13 +127,10 @@ namespace OpenTibia.Server.Monsters
                 {
                     var amount = (byte)(rng.Next(maxAmount) + 1);
 
-                    newItem.SetAmount(amount);
+                    newItem.Amount = amount;
                 }
 
-                // TODO: propper logging.
-                // Console.WriteLine($"Added {newItem} as loot in {(this.Owner as Monster)?.Name}.");
-
-                this.inventory[this.lastPosByte++] = (newItem, DefaultLossProbability);
+                this.inventory[this.lastPosByte++] = (newItem, MonsterConstants.DefaultLossProbability);
             }
         }
     }

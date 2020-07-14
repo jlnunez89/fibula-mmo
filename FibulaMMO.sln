@@ -115,6 +115,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Communications.Packe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Mechanics.PathFinding.AStar", "Fibula.Mechanics.PathFinding.AStar\Fibula.Mechanics.PathFinding.AStar.csproj", "{30B4A8C4-BD13-4D74-BB1F-B308AFBD5926}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Creatures.MonFiles", "Fibula.Creatures.MonFiles\Fibula.Creatures.MonFiles.csproj", "{29C2053C-959A-48BA-9E38-D7AA0BD82F54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fibula.Creatures.MonstersDbFile", "Fibula.Creatures.MonstersDbFile\Fibula.Creatures.MonstersDbFile.csproj", "{9EC2B736-9590-4461-981F-6AFD5D10757D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -467,6 +471,22 @@ Global
 		{30B4A8C4-BD13-4D74-BB1F-B308AFBD5926}.Release|Any CPU.Build.0 = Release|Any CPU
 		{30B4A8C4-BD13-4D74-BB1F-B308AFBD5926}.Release|x64.ActiveCfg = Release|Any CPU
 		{30B4A8C4-BD13-4D74-BB1F-B308AFBD5926}.Release|x64.Build.0 = Release|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Debug|x64.Build.0 = Debug|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Release|x64.ActiveCfg = Release|Any CPU
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54}.Release|x64.Build.0 = Release|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Debug|x64.Build.0 = Debug|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Release|x64.ActiveCfg = Release|Any CPU
+		{9EC2B736-9590-4461-981F-6AFD5D10757D}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -514,6 +534,8 @@ Global
 		{8D3A9833-E6E0-418A-B4B0-22E9F1D7E1DB} = {06C3FD59-5CF2-477E-AF01-672BE171A718}
 		{B3D594FB-5EA2-4247-9CD6-2EAF4D90DD30} = {E14AD76A-05D8-4760-958F-E05C40F5F20E}
 		{30B4A8C4-BD13-4D74-BB1F-B308AFBD5926} = {B86072F1-AD65-43C2-A63C-3D7A642A8F24}
+		{29C2053C-959A-48BA-9E38-D7AA0BD82F54} = {9A57D82F-2B2E-4AB4-94A9-A2A4897AFF1D}
+		{9EC2B736-9590-4461-981F-6AFD5D10757D} = {9A57D82F-2B2E-4AB4-94A9-A2A4897AFF1D}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4198A479-8EF8-4C3D-BCC7-702B747E6EE4}

@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Delegates\**" />
-    <EmbeddedResource Remove="Delegates\**" />
-    <None Remove="Delegates\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Abstractions\IActionOperation.cs" />
     <Compile Remove="Abstractions\ICollisionEventRule.cs" />
     <Compile Remove="Abstractions\ICombatApi.cs" />
@@ -30,10 +24,6 @@
     <Compile Remove="Abstractions\IEventRulesFactory.cs" />
     <Compile Remove="Abstractions\IEventRulesLoader.cs" />
     <Compile Remove="Abstractions\IItemTypeLoader.cs" />
-    <Compile Remove="Abstractions\IMonster.cs" />
-    <Compile Remove="Abstractions\IMonsterSpawnLoader.cs" />
-    <Compile Remove="Abstractions\IMonsterType.cs" />
-    <Compile Remove="Abstractions\IMonsterTypeLoader.cs" />
     <Compile Remove="Abstractions\IMovementOperation.cs" />
     <Compile Remove="Abstractions\IOperation.cs" />
     <Compile Remove="Abstractions\IOperationContext.cs" />
@@ -44,10 +34,6 @@
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemOnEventRule.cs" />
-    <Compile Remove="Extensions\ConnectionFinderExtensions.cs" />
-    <Compile Remove="Extensions\EventExtensions.cs" />
-    <Compile Remove="Extensions\LocationExtensions.cs" />
-    <Compile Remove="Extensions\ScriptExtensions.cs" />
     <Compile Remove="ThingStateChangedEventArgs.cs" />
   </ItemGroup>
 

@@ -1,21 +1,23 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="Monster.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server.Monsters
+namespace Fibula.Creatures
 {
     using System;
-    using System.Linq;
-    using OpenTibia.Common.Utilities;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Constants;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
     /// Class that represents all monsters in the game.
@@ -26,20 +28,22 @@ namespace OpenTibia.Server.Monsters
         /// Initializes a new instance of the <see cref="Monster"/> class.
         /// </summary>
         /// <param name="monsterType">The type of this monster.</param>
-        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use, for inventory generation.</param>
         public Monster(IMonsterType monsterType, IItemFactory itemFactory)
             : base(monsterType.Name, monsterType.Article, monsterType.MaxHitPoints, monsterType.MaxManaPoints, monsterType.Corpse)
         {
             this.Type = monsterType;
-            this.Speed += monsterType.Speed;
             this.Outfit = monsterType.Outfit;
 
-            this.Blood = monsterType.Blood;
-            this.ChaseMode = this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+            this.BaseSpeed += monsterType.BaseSpeed;
+
+            this.Blood = monsterType.BloodType;
+            this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
             this.FightMode = FightMode.FullAttack;
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
+            /*
             // make a copy of the type we are based on...
             foreach (var kvp in this.Type.Skills)
             {
@@ -50,6 +54,7 @@ namespace OpenTibia.Server.Monsters
 
             // Add experience as a skill
             this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Max(int.MaxValue, (int)monsterType.Experience), 0, int.MaxValue, 100, 1100, 5);
+            */
         }
 
         /// <summary>
@@ -60,7 +65,7 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// Gets the experience yielded when this monster dies.
         /// </summary>
-        public uint Experience => this.Skills[SkillType.Experience].Level;
+        public uint Experience => 0; // this.Skills[SkillType.Experience].Level;
 
         /// <summary>
         /// Gets or sets the inventory for the monster.
@@ -70,88 +75,43 @@ namespace OpenTibia.Server.Monsters
         /// <summary>
         /// Gets a value indicating whether this monster can be moved by others.
         /// </summary>
-        public override bool CanBeMoved => !this.Type.Flags.HasFlag((uint)CreatureFlag.Unpushable);
+        public override bool CanBeMoved => !this.Type.HasFlag(CreatureFlag.Unpushable);
 
         /// <summary>
         /// Gets the range that the auto attack has.
         /// </summary>
-        public override byte AutoAttackRange => (byte)(this.Type.Flags.HasFlag((uint)CreatureFlag.DistanceFighting) ? IMonster.DefaultDistanceFightingAttackRange : IMonster.DefaultMeleeFightingAttackRange);
+        public override byte AutoAttackRange => (byte)(this.Type.HasFlag(CreatureFlag.DistanceFighting) ? MonsterConstants.DefaultDistanceFightingAttackRange : MonsterConstants.DefaultMeleeFightingAttackRange);
 
         /// <summary>
-        /// Gets the attack power of this combatant.
+        /// Gets or sets the monster speed.
         /// </summary>
-        public override ushort AttackPower => (ushort)(this.Type.Attack + this.Inventory.EquipmentAttackPower);
-
-        /// <summary>
-        /// Gets the defense power of this combatant.
-        /// </summary>
-        public override ushort DefensePower => (ushort)(this.Type.Defense + this.Inventory.EquipmentDefensePower);
-
-        /// <summary>
-        /// Gets the armor rating of this combatant.
-        /// </summary>
-        public override ushort ArmorRating => (ushort)(this.Type.Armor + this.Inventory.EquipmentArmorRating);
-
-        /// <summary>
-        /// Gets or sets the chase mode selected by this combatant.
-        /// </summary>
-        public override ChaseMode ChaseMode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fight mode selected by this combatant.
-        /// </summary>
-        public override FightMode FightMode { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this monster is currently thinking.
-        /// </summary>
-        public override bool IsThinking => this.HostilesInView.Any() || this.NeutralsInView.Any();
-
-        /// <summary>
-        /// Sets a <see cref="ICombatant"/> now in view for this combatant.
-        /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void CombatantNowInView(ICombatant otherCombatant)
+        public override ushort Speed
         {
-            otherCombatant.ThrowIfNull(nameof(otherCombatant));
+            get => (ushort)((2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
 
-            if (otherCombatant is Monster otherMonster)
-            {
-                // TODO: consider monsters that are not friendly.
-                this.FriendlyInView.Add(otherMonster.Id);
-            }
-            else if (otherCombatant is IPlayer player)
-            {
-                this.HostilesInView.Add(player.Id);
-            }
-            else
-            {
-                this.NeutralsInView.Add(otherCombatant.Id);
-            }
+            protected set => this.BaseSpeed = value;
         }
 
         /// <summary>
-        /// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
+        /// Applies damage modifiers to the damage information provided.
         /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void CombatantNoLongerInView(ICombatant otherCombatant)
+        /// <param name="damageInfo">The damage information.</param>
+        protected override void ApplyDamageModifiers(ref DamageInfo damageInfo)
         {
-            otherCombatant.ThrowIfNull(nameof(otherCombatant));
+            var rng = new Random();
 
-            if (this.AutoAttackTarget == otherCombatant)
+            // 75% chance to block it?
+            if (this.AutoDefenseCredits > 0 && rng.Next(4) > 0)
             {
-                this.SetAttackTarget(null);
+                damageInfo.Effect = AnimatedEffect.Puff;
+                damageInfo.Damage = 0;
             }
 
-            this.FriendlyInView.Remove(otherCombatant.Id);
-            this.HostilesInView.Remove(otherCombatant.Id);
-            this.NeutralsInView.Remove(otherCombatant.Id);
-
-            var totalInViewAfter = this.HostilesInView.Count + this.NeutralsInView.Count + this.FriendlyInView.Count;
-
-            if (totalInViewAfter == 0)
+            // 25% chance to hit the armor...
+            if (rng.Next(4) == 0)
             {
-                this.InvokeCombatEnded();
+                damageInfo.Effect = AnimatedEffect.SparkYellow;
+                damageInfo.Damage = 0;
             }
         }
     }

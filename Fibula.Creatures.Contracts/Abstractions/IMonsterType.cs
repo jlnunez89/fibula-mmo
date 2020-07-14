@@ -1,12 +1,11 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="IMonsterType.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
@@ -16,6 +15,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
     /// Inferface for a monster type.
@@ -45,7 +45,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the amount of experience that this type of monster deals.
         /// </summary>
-        uint Experience { get; }
+        uint BaseExperienceYield { get; }
 
         /// <summary>
         /// Gets the base cost to summon this type of monster.
@@ -55,12 +55,12 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the threshold value under which this type of monster begins to flee battle.
         /// </summary>
-        ushort FleeThreshold { get; }
+        ushort HitpointFleeThreshold { get; }
 
         /// <summary>
         /// Gets the distance in tiles after which this type of monster looses track of their target.
         /// </summary>
-        byte LoseTarget { get; }
+        byte LoseTargetDistance { get; }
 
         /// <summary>
         /// Gets an encoded value containing <see cref="ConditionFlag"/>s, detailing if this type of monster infects upon
@@ -116,12 +116,12 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the type of blood of this monster type.
         /// </summary>
-        BloodType Blood { get; }
+        BloodType BloodType { get; }
 
         /// <summary>
         /// Gets the base movement speed for this type of monster.
         /// </summary>
-        ushort Speed { get; }
+        ushort BaseSpeed { get; }
 
         /// <summary>
         /// Gets the maximum capacity for this type of monster.
@@ -131,12 +131,28 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the fighting strategy of this type of monster.
         /// </summary>
-        (byte switchToFirstChance, byte switchToLowestHpChance, byte switchToHigestDmgDealtChance, byte switchToClosestChance) Strategy { get; }
+        (byte switchToClosest, byte switchToLowestHp, byte switchToHigestDmgDealt, byte randomSwitch) Strategy { get; }
 
-        ushort Attack { get; }
+        /// <summary>
+        /// Gets the base attack for this type of monster.
+        /// </summary>
+        ushort BaseAttack { get; }
 
-        ushort Defense { get; }
+        /// <summary>
+        /// Gets the base defense for this type of monster.
+        /// </summary>
+        ushort BaseDefense { get; }
 
-        ushort Armor { get; }
+        /// <summary>
+        /// Gets the base armor rating for this type of monster.
+        /// </summary>
+        ushort BaseArmorRating { get; }
+
+        /// <summary>
+        /// Checks if the monster type has the given flag set.
+        /// </summary>
+        /// <param name="flag">The flag to check for.</param>
+        /// <returns>True if the type has the flag set, false otherwise.</returns>
+        bool HasFlag(CreatureFlag flag);
     }
 }

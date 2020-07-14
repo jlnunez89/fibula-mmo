@@ -1,12 +1,11 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="IMonster.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
@@ -17,16 +16,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
     /// </summary>
     public interface IMonster : ICreature
     {
-        /// <summary>
-        /// The default attack range for melee figthing in monsters.
-        /// </summary>
-        const int DefaultMeleeFightingAttackRange = 1;
-
-        /// <summary>
-        /// The default attack range for distance figthing in monsters.
-        /// </summary>
-        const int DefaultDistanceFightingAttackRange = 5;
-
         /// <summary>
         /// Gets the type of this monster.
         /// </summary>

@@ -1,12 +1,11 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="MonsterType.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
@@ -15,16 +14,37 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a monster type.
     /// </summary>
     public class MonsterType : IMonsterType
     {
+        private ushort raceId;
+        private string name;
+        private string article;
+        private uint experience;
+        private ushort summonCost;
+        private ushort fleeThreshold;
+        private byte loseTarget;
+        private Outfit outfit;
+        private ushort corpse;
+        private BloodType bloodType;
+        private (byte switchToFirst, byte switchToLowestHp, byte switchToHigestDmgDealt, byte switchToClosest) strategy;
+        private ushort baseAttack;
+        private ushort baseDefense;
+        private ushort baseArmorRating;
+        private ushort maxHitPoints;
+        private ushort baseSpeed;
+        private ushort capacity;
+        private uint flags;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="MonsterType"/> class.
         /// </summary>
@@ -34,14 +54,14 @@ namespace Fibula.Creatures
             this.Name = string.Empty;
             this.MaxManaPoints = 0;
 
-            this.Attack = 1;
-            this.Defense = 1;
-            this.Armor = 1;
+            this.BaseAttack = 1;
+            this.BaseDefense = 1;
+            this.BaseArmorRating = 1;
 
-            this.Experience = 0;
+            this.BaseExperienceYield = 0;
             this.SummonCost = 0;
-            this.FleeThreshold = 0;
-            this.LoseTarget = 0;
+            this.HitpointFleeThreshold = 0;
+            this.LoseTargetDistance = 0;
             this.ConditionInfect = 0;
 
             // this.KnownSpells = new HashSet<KnownSpell>();
@@ -59,39 +79,130 @@ namespace Fibula.Creatures
         public bool Locked { get; private set; }
 
         /// <summary>
-        /// Gets the id of the monster race.
+        /// Gets or sets the id of the monster race.
         /// </summary>
-        public ushort RaceId { get; private set; }
+        public ushort RaceId
+        {
+            get => this.raceId;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.RaceId)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.raceId = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the name of the monster type.
+        /// Gets or sets the name of the monster type.
         /// </summary>
-        public string Name { get; private set; }
+        public string Name
+        {
+            get => this.name;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.name = value.Trim('\"');
+            }
+        }
 
         /// <summary>
-        /// Gets the article to use with the name.
+        /// Gets or sets the article to use with the name.
         /// </summary>
-        public string Article { get; private set; }
+        public string Article
+        {
+            get => this.article;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Article)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.article = value.Trim('\"');
+            }
+        }
 
         /// <summary>
-        /// Gets the amount of experience that this type of monster deals.
+        /// Gets or sets the amount of experience that this type of monster deals.
         /// </summary>
-        public uint Experience { get; private set; }
+        public uint BaseExperienceYield
+        {
+            get => this.experience;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseExperienceYield)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.experience = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the base cost to summon this type of monster.
+        /// Gets or sets the base cost to summon this type of monster.
         /// </summary>
-        public ushort SummonCost { get; private set; }
+        public ushort SummonCost
+        {
+            get => this.summonCost;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.SummonCost)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.summonCost = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the threshold value under which this type of monster begins to flee battle.
+        /// Gets or sets the threshold value under which this type of monster begins to flee battle.
         /// </summary>
-        public ushort FleeThreshold { get; private set; }
+        public ushort HitpointFleeThreshold
+        {
+            get => this.fleeThreshold;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.HitpointFleeThreshold)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.fleeThreshold = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the distance in tiles after which this type of monster looses track of their target.
+        /// Gets or sets the distance in tiles after which this type of monster looses track of their target.
         /// </summary>
-        public byte LoseTarget { get; private set; }
+        public byte LoseTargetDistance
+        {
+            get => this.loseTarget;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.LoseTargetDistance)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.loseTarget = value;
+            }
+        }
 
         /// <summary>
         /// Gets an encoded value containing <see cref="ConditionFlag"/>s, detailing if this type of monster infects upon
@@ -105,9 +216,22 @@ namespace Fibula.Creatures
         // public ISet<ISpell> KnownSpells { get; private set; }
 
         /// <summary>
-        /// Gets the flags set for this type of monster.
+        /// Gets or sets the flags set for this type of monster.
         /// </summary>
-        public uint Flags { get; private set; }
+        public uint Flags
+        {
+            get => this.flags;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Flags)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.flags = value;
+            }
+        }
 
         /// <summary>
         /// Gets the skills that this type of monster starts with.
@@ -125,19 +249,58 @@ namespace Fibula.Creatures
         public IList<(ushort typeId, byte maxAmount, ushort chance)> InventoryComposition { get; private set; }
 
         /// <summary>
-        /// Gets this type of monster outfit.
+        /// Gets or sets this type of monster outfit.
         /// </summary>
-        public Outfit Outfit { get; private set; }
+        public Outfit Outfit
+        {
+            get => this.outfit;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Outfit)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.outfit = value;
+            }
+        }
 
         /// <summary>
-        /// Gets this type of monster's corpse item type id.
+        /// Gets or sets this type of monster's corpse item type id.
         /// </summary>
-        public ushort Corpse { get; private set; }
+        public ushort Corpse
+        {
+            get => this.corpse;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Corpse)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.corpse = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the maximum hitpoints that this monster type starts with.
+        /// Gets or sets the maximum hitpoints that this monster type starts with.
         /// </summary>
-        public ushort MaxHitPoints { get; private set; }
+        public ushort MaxHitPoints
+        {
+            get => this.maxHitPoints;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.MaxHitPoints)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.maxHitPoints = value;
+            }
+        }
 
         /// <summary>
         /// Gets the maximum manapoints that this monster type starts with.
@@ -145,30 +308,130 @@ namespace Fibula.Creatures
         public ushort MaxManaPoints { get; private set; }
 
         /// <summary>
-        /// Gets the type of blood of this monster type.
+        /// Gets or sets the type of blood of this monster type.
         /// </summary>
-        public BloodType Blood { get; private set; }
+        public BloodType BloodType
+        {
+            get => this.bloodType;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BloodType)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.bloodType = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the base movement speed for this type of monster.
+        /// Gets or sets the base movement speed for this type of monster.
         /// </summary>
-        public ushort Speed { get; private set; }
+        public ushort BaseSpeed
+        {
+            get => this.baseSpeed;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseSpeed)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.baseSpeed = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the maximum capacity for this type of monster.
+        /// Gets or sets the maximum capacity for this type of monster.
         /// </summary>
-        public ushort Capacity { get; private set; }
+        public ushort Capacity
+        {
+            get => this.capacity;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Capacity)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.capacity = value;
+            }
+        }
 
         /// <summary>
-        /// Gets the fighting strategy of this type of monster.
+        /// Gets or sets the fighting strategy of this type of monster.
         /// </summary>
-        public (byte switchToFirstChance, byte switchToLowestHpChance, byte switchToHigestDmgDealtChance, byte switchToClosestChance) Strategy { get; private set; }
+        public (byte switchToClosest, byte switchToLowestHp, byte switchToHigestDmgDealt, byte randomSwitch) Strategy
+        {
+            get => this.strategy;
 
-        public ushort Attack { get; private set; }
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Strategy)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
 
-        public ushort Defense { get; private set; }
+                this.strategy = value;
+            }
+        }
 
-        public ushort Armor { get; private set; }
+        /// <summary>
+        /// Gets or sets the base attack for this type of monster.
+        /// </summary>
+        public ushort BaseAttack
+        {
+            get => this.baseAttack;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseAttack)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.baseAttack = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the base defense for this type of monster.
+        /// </summary>
+        public ushort BaseDefense
+        {
+            get => this.baseDefense;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseDefense)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.baseDefense = value;
+            }
+        }
+
+        /// <summary>
+        /// Gets or sets the base armor rating for this type of monster.
+        /// </summary>
+        public ushort BaseArmorRating
+        {
+            get => this.baseArmorRating;
+
+            set
+            {
+                if (this.Locked)
+                {
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseArmorRating)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                }
+
+                this.baseArmorRating = value;
+            }
+        }
 
         /// <summary>
         /// Locks this type to protect from further changes.
@@ -179,199 +442,28 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Sets the type's id.
+        /// Checks if the monster type has the given flag set.
         /// </summary>
-        /// <param name="typeId">The id of the monster type.</param>
-        public void SetId(ushort typeId)
+        /// <param name="flag">The flag to check for.</param>
+        /// <returns>True if the type has the flag set, false otherwise.</returns>
+        public bool HasFlag(CreatureFlag flag)
         {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.RaceId = typeId;
+            return (this.Flags & (uint)flag) == (uint)flag;
         }
 
         /// <summary>
-        /// Sets the type's name.
+        /// Sets a given skill for this monster type.
         /// </summary>
-        /// <param name="name">The name of the monster type.</param>
-        public void SetName(string name)
+        /// <param name="skillType">The type of skill to set.</param>
+        /// <param name="currentLevel">The current skill level.</param>
+        /// <param name="defaultLevel">The default level of the skill.</param>
+        /// <param name="maximumLevel">The maximum skill level.</param>
+        /// <param name="targetCount">The next target count for skill advancement.</param>
+        /// <param name="countIncreaseFactor">The factor by which the next target count increases upon advancement.</param>
+        /// <param name="increaserPerLevel">The base increase per level upon advancement.</param>
+        public void SetSkill(SkillType skillType, int currentLevel, int defaultLevel, int maximumLevel, uint targetCount, uint countIncreaseFactor, byte increaserPerLevel)
         {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Name = name;
-        }
-
-        /// <summary>
-        /// Sets the type's article in the name.
-        /// </summary>
-        /// <param name="article">The article in the name of the monster type.</param>
-        public void SetArticle(string article)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Article = article;
-        }
-
-        /// <summary>
-        /// Sets the type's outfit.
-        /// </summary>
-        /// <param name="outfitStr">The string representation of the outfit of the monster type.</param>
-        public void SetOutfit(string outfitStr)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            // comes in the form
-            // 68, 0-0-0-0
-            var splitStr = outfitStr.Split(new[] { ',' }, 2);
-            var outfitId = Convert.ToUInt16(splitStr[0]);
-
-            var outfitSections = splitStr[1].Split('-').Select(s => Convert.ToByte(s)).ToArray();
-
-            if (outfitId == 0)
-            {
-                this.Outfit = new Outfit
-                {
-                    Id = outfitId,
-                    ItemIdLookAlike = outfitSections[0],
-                };
-            }
-            else
-            {
-                this.Outfit = new Outfit
-                {
-                    Id = outfitId,
-                    Head = outfitSections[0],
-                    Body = outfitSections[1],
-                    Legs = outfitSections[2],
-                    Feet = outfitSections[3],
-                };
-            }
-        }
-
-        /// <summary>
-        /// Sets the type's corpse.
-        /// </summary>
-        /// <param name="corpse">The corpse of the monster type.</param>
-        public void SetCorpse(ushort corpse)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Corpse = corpse;
-        }
-
-        /// <summary>
-        /// Sets the type's type of blood.
-        /// </summary>
-        /// <param name="typeOfBlood">The type of blood of the monster type.</param>
-        public void SetBlood(string typeOfBlood)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            if (Enum.TryParse(typeOfBlood, out BloodType bloodType))
-            {
-                this.Blood = bloodType;
-            }
-        }
-
-        /// <summary>
-        /// Sets the type's experience.
-        /// </summary>
-        /// <param name="experience">The experience given by this monster type.</param>
-        public void SetExperience(uint experience)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Experience = experience;
-        }
-
-        /// <summary>
-        /// Sets the type's summon cost.
-        /// </summary>
-        /// <param name="summonCost">The cost to summon the monster type.</param>
-        public void SetSummonCost(ushort summonCost)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.SummonCost = summonCost;
-        }
-
-        /// <summary>
-        /// Sets the type's flee threshold.
-        /// </summary>
-        /// <param name="fleeThreshold">The flee threshold of the monster type.</param>
-        public void SetFleeTreshold(ushort fleeThreshold)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.FleeThreshold = fleeThreshold;
-        }
-
-        /// <summary>
-        /// Sets the type's base defense power.
-        /// </summary>
-        /// <param name="defense">The base defense value of the monster type.</param>
-        public void SetDefense(ushort defense)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Defense = defense;
-        }
-
-        /// <summary>
-        /// Sets the type's base armor.
-        /// </summary>
-        /// <param name="armor">The base armor of the monster type.</param>
-        public void SetArmor(ushort armor)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Armor = armor;
-        }
-
-        /// <summary>
-        /// Sets the type's base attack power.
-        /// </summary>
-        /// <param name="attack">The base attack power of the monster type.</param>
-        public void SetAttack(ushort attack)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Attack = attack;
+            this.Skills[skillType] = (defaultLevel, currentLevel, maximumLevel, targetCount, countIncreaseFactor, increaserPerLevel);
         }
 
         /// <summary>
@@ -390,59 +482,6 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Sets the type's lost target threshold.
-        /// </summary>
-        /// <param name="loseTarget">The threshold at which the monster type loses their target.</param>
-        public void SetLoseTarget(byte loseTarget)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.LoseTarget = loseTarget;
-        }
-
-        /// <summary>
-        /// Sets the type's strategy.
-        /// </summary>
-        /// <param name="strategy">The strategy of the monster type.</param>
-        public void SetStrategy((byte fChance, byte lChance, byte hChance, byte cChance) strategy)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            this.Strategy = strategy;
-        }
-
-        /// <summary>
-        /// Sets the type's flags.
-        /// </summary>
-        /// <param name="flagParsed">The parsed flags of the monster type.</param>
-        public void SetFlags(IEnumerable<IParsedElement> flagParsed)
-        {
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            foreach (var element in flagParsed)
-            {
-                if (!element.IsFlag || element.Attributes == null || !element.Attributes.Any())
-                {
-                    continue;
-                }
-
-                if (Enum.TryParse(element.Attributes.First().Name, out CreatureFlag creatureFlag))
-                {
-                    this.Flags |= (uint)creatureFlag;
-                }
-            }
-        }
-
-        /// <summary>
         /// Sets the type's spells.
         /// </summary>
         /// <param name="spells">The spells of the monster type.</param>
@@ -454,53 +493,6 @@ namespace Fibula.Creatures
             }
 
             // TODO: implement.
-        }
-
-        /// <summary>
-        /// Sets the type's skills.
-        /// </summary>
-        /// <param name="skillParsed">The skills of the monster type.</param>
-        public void SetSkills(IEnumerable<(string Name, int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)> skillParsed)
-        {
-            skillParsed.ThrowIfNull(nameof(skillParsed));
-
-            if (!skillParsed.Any())
-            {
-                throw new ArgumentException("Empty skills parsed!", nameof(skillParsed));
-            }
-
-            if (this.Locked)
-            {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
-            }
-
-            foreach (var skill in skillParsed)
-            {
-                if (!Enum.TryParse(skill.Name, ignoreCase: true, out MonsterSkillType mSkill))
-                {
-                    continue;
-                }
-
-                switch (mSkill)
-                {
-                    case MonsterSkillType.Hitpoints:
-                        this.MaxHitPoints = skill.CurrentLevel < 0 ? ushort.MaxValue : (ushort)skill.DefaultLevel;
-                        break;
-                    case MonsterSkillType.GoStrength:
-                        this.Speed = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.DefaultLevel;
-                        break;
-                    case MonsterSkillType.CarryStrength:
-                        this.Capacity = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.DefaultLevel;
-                        break;
-                    case MonsterSkillType.FistFighting:
-                        if (skill.CurrentLevel > 0)
-                        {
-                            this.Skills[SkillType.NoWeapon] = (skill.CurrentLevel, skill.DefaultLevel, skill.MaximumLevel, skill.TargetCount, skill.CountIncreaseFactor, skill.IncreaserPerLevel);
-                        }
-
-                        break;
-                }
-            }
         }
 
         /// <summary>

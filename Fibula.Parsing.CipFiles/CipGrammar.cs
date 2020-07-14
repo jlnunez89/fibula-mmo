@@ -81,6 +81,16 @@ namespace Fibula.Parsing.CipFiles
         public static readonly Parser<char> Colon = Parse.Char(':');
 
         /// <summary>
+        /// The dash character.
+        /// </summary>
+        public static readonly Parser<char> Dash = Parse.Char('-');
+
+        /// <summary>
+        /// The zero character.
+        /// </summary>
+        public static readonly Parser<char> Zero = Parse.Char('0');
+
+        /// <summary>
         /// A message enclosed in double quotes.
         /// </summary>
         public static readonly Parser<string> QuotedMessage =
@@ -254,6 +264,41 @@ namespace Fibula.Parsing.CipFiles
             select (spellCondition, spellEffect, chance);
 
         /// <summary>
+        /// The outfit lookType for the normal outfit.
+        /// </summary>
+        public static readonly Parser<(ushort lookTypeId, byte headColor, byte bodyColor, byte legsColor, byte feetColor)> Outfit =
+            from looktypeStr in Parse.Number
+            from comma in Comma
+            from mws in Parse.WhiteSpace.Optional().Many()
+            from headColorStr in Parse.Number
+            from d0 in Dash
+            from bodyColorStr in Parse.Number
+            from d1 in Dash
+            from legsColorStr in Parse.Number
+            from d2 in Dash
+            from feetColorStr in Parse.Number
+            select (Convert.ToUInt16(looktypeStr), Convert.ToByte(headColorStr), Convert.ToByte(bodyColorStr), Convert.ToByte(legsColorStr), Convert.ToByte(feetColorStr));
+
+        /// <summary>
+        /// The outfit lookType for the invisible outfit.
+        /// </summary>
+        public static readonly Parser<(ushort lookTypeId, byte headColor, byte bodyColor, byte legsColor, byte feetColor)> OutfitInvisible =
+            from firstZero in Zero
+            from comma in Comma
+            from mws in Parse.WhiteSpace.Optional().Many()
+            from secondZero in Zero
+            select (ushort.MinValue, byte.MinValue, byte.MinValue, byte.MinValue, byte.MinValue);
+
+        /// <summary>
+        /// Parses a monster outfit.
+        /// </summary>
+        public static readonly Parser<(ushort lookTypeId, byte headColor, byte bodyColor, byte legsColor, byte feetColor)> MonsterOutfit =
+            from open in OpenParenthesis
+            from outfit in OutfitInvisible.Or(Outfit)
+            from close in CloseParenthesis
+            select outfit;
+
+        /// <summary>
         /// Parses monster spells.
         /// </summary>
         public static readonly Parser<IEnumerable<(IEnumerable<string> conditions, IEnumerable<string> effects, string chance)>> MonsterSpellRules =
@@ -329,7 +374,7 @@ namespace Fibula.Parsing.CipFiles
         /// <summary>
         /// Parses a monster strategy.
         /// </summary>
-        public static readonly Parser<(byte, byte, byte, byte)> MonsterStrategy =
+        public static readonly Parser<(byte closest, byte lowestHp, byte mostDamage, byte random)> MonsterStrategy =
             from open in OpenParenthesis
             from content in OneOrMoreArguments
             from close in CloseParenthesis

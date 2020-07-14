@@ -12,7 +12,9 @@
 namespace Fibula.Creatures
 {
     using System;
+    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
@@ -22,6 +24,26 @@ namespace Fibula.Creatures
     /// </summary>
     public class CreatureFactory : ICreatureFactory
     {
+        /// <summary>
+        /// Stores the map between the monster race ids and the actual monster types.
+        /// </summary>
+        private readonly IDictionary<ushort, IMonsterType> monsterTypeCatalog;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="CreatureFactory"/> class.
+        /// </summary>
+        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        /// <param name="itemFactory">A reference to the item factory in use.</param>
+        public CreatureFactory(IMonsterTypeLoader monsterTypeLoader, IItemFactory itemFactory)
+        {
+            monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
+            itemFactory.ThrowIfNull(nameof(itemFactory));
+
+            this.monsterTypeCatalog = monsterTypeLoader.LoadTypes();
+
+            this.ItemFactory = itemFactory;
+        }
+
         /// <summary>
         /// Gets the item factory in use.
         /// </summary>
@@ -53,7 +75,18 @@ namespace Fibula.Creatures
             {
                 // TODO: suppport other types
                 // case CreatureType.NonPlayerCharacter:
-                // case CreatureType.Monster:
+                case CreatureType.Monster:
+                    if (creatureCreationArguments.Metadata == null)
+                    {
+                        throw new ArgumentException("Invalid metadata in creation arguments for a monster.", nameof(creatureCreationArguments));
+                    }
+
+                    if (!this.monsterTypeCatalog.TryGetValue(Convert.ToUInt16(creatureCreationArguments.Metadata.Id), out IMonsterType monsterType))
+                    {
+                        throw new ArgumentException($"Unknown monster with Id {creatureCreationArguments.Metadata.Id} in creation arguments for a monster.", nameof(creatureCreationArguments));
+                    }
+
+                    return new Monster(monsterType, this.ItemFactory);
                 case CreatureType.Player:
 
                     if (creatureCreationArguments == null ||

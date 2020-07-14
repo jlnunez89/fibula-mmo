@@ -111,6 +111,16 @@ namespace Fibula.Parsing.CipFiles
         }
 
         /// <summary>
+        /// Parses a monster outfit out of a string.
+        /// </summary>
+        /// <param name="outfitStr">The string to parse.</param>
+        /// <returns>A tuple containing the monster outfit values.</returns>
+        public static (ushort lookTypeId, byte headColor, byte bodyColor, byte legsColor, byte feetColor) ParseMonsterOutfit(string outfitStr)
+        {
+            return CipGrammar.MonsterOutfit.Parse(outfitStr);
+        }
+
+        /// <summary>
         /// Parses monster spells out of a string.
         /// </summary>
         /// <param name="spellsStr">The string to parse.</param>
@@ -135,7 +145,7 @@ namespace Fibula.Parsing.CipFiles
         /// </summary>
         /// <param name="skillsStr">The string to parse.</param>
         /// <returns>A collection of tuples containing the skills information.</returns>
-        public static IEnumerable<(string, int, int, int, uint, uint, byte)> ParseMonsterSkills(string skillsStr)
+        public static IEnumerable<(string Name, int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)> ParseMonsterSkills(string skillsStr)
         {
             return CipGrammar.MonsterSkills.Parse(skillsStr);
         }
@@ -145,7 +155,7 @@ namespace Fibula.Parsing.CipFiles
         /// </summary>
         /// <param name="strategyStr">The string to parse.</param>
         /// <returns>A tuple containing the monster strategy chances.</returns>
-        public static (byte, byte, byte, byte) ParseMonsterStrategy(string strategyStr)
+        public static (byte closest, byte lowestHp, byte mostDmgDealt, byte random) ParseMonsterStrategy(string strategyStr)
         {
             return CipGrammar.MonsterStrategy.Parse(strategyStr);
         }

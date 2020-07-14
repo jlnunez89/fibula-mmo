@@ -59,6 +59,8 @@
     <ProjectReference Include="..\Fibula.Client\Fibula.Client.csproj" />
     <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Common\Fibula.Common.csproj" />
+    <ProjectReference Include="..\Fibula.Creatures.MonFiles\Fibula.Creatures.MonFiles.csproj" />
+    <ProjectReference Include="..\Fibula.Creatures.MonstersDbFile\Fibula.Creatures.MonstersDbFile.csproj" />
     <ProjectReference Include="..\Fibula.Creatures\Fibula.Creatures.csproj" />
     <ProjectReference Include="..\Fibula.Data.InMemoryDatabase\Fibula.Data.InMemoryDatabase.csproj" />
     <ProjectReference Include="..\Fibula.Items.ObjectsFile\Fibula.Items.ObjectsFile.csproj" />

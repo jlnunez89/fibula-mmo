@@ -26,6 +26,8 @@ namespace Fibula.Standalone
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.MonFiles;
+    using Fibula.Creatures.MonstersDbFile;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Data.InMemoryDatabase;
     using Fibula.Items;
@@ -198,7 +200,7 @@ namespace Fibula.Standalone
 
             ConfigureItems(hostingContext, services);
 
-            ConfigureCreatures(services);
+            ConfigureCreatures(hostingContext, services);
 
             ConfigureDatabaseContext(hostingContext, services);
 
@@ -282,17 +284,17 @@ namespace Fibula.Standalone
             services.AddAStarPathFinder(hostingContext.Configuration);
         }
 
-        private static void ConfigureCreatures(IServiceCollection services)
+        private static void ConfigureCreatures(HostBuilderContext hostingContext, IServiceCollection services)
         {
             services.AddSingleton<ICreatureFactory, CreatureFactory>();
             services.AddSingleton<ICreatureManager, CreatureManager>();
             services.AddSingleton<ICreatureFinder>(s => s.GetService<ICreatureManager>());
 
-            //// Chose a type of monster types (catalog) loader:
-            // services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
+            // Chose a type of monster types (catalog) loader:
+            services.AddMonFilesMonsterTypeLoader(hostingContext.Configuration);
 
-            //// Chose a type of monster spawns loader:
-            // services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
+            // Chose a type of monster spawns loader:
+            services.AddMonsterDbFileMonsterSpawnLoader(hostingContext.Configuration);
         }
 
         private static void ConfigureItems(HostBuilderContext hostingContext, IServiceCollection services)

@@ -22,7 +22,7 @@ namespace Fibula.Creatures.Contracts.Structs
         /// <summary>
         /// Gets or sets the id of entities in this spawn.
         /// </summary>
-        public ushort Id { get; set; }
+        public ushort MonsterTypeId { get; set; }
 
         /// <summary>
         /// Gets or sets the location of the spawn.
