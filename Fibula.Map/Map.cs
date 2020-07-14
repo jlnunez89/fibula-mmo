@@ -17,6 +17,7 @@ namespace Fibula.Map
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Delegates;
     using Serilog;
 
     /// <summary>
@@ -49,6 +50,11 @@ namespace Fibula.Map
         }
 
         /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        public event WindowLoaded WindowLoaded;
+
+        /// <summary>
         /// Gets the reference to the current logger.
         /// </summary>
         public ILogger Logger { get; }
@@ -61,7 +67,7 @@ namespace Fibula.Map
         /// <summary>
         /// Gets the reference to the selected map loader.
         /// </summary>
-        private IMapLoader Loader { get; }
+        public IMapLoader Loader { get; }
 
         /// <summary>
         /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
@@ -93,6 +99,11 @@ namespace Fibula.Map
 
                     minZLoaded = Math.Min(loc.Z, minZLoaded);
                     maxZLoaded = Math.Max(loc.Z, maxZLoaded);
+                }
+
+                if (minXLoaded < int.MaxValue)
+                {
+                    this.WindowLoaded?.Invoke(minXLoaded, maxXLoaded, minYLoaded, maxYLoaded, minZLoaded, maxZLoaded);
                 }
             }
 

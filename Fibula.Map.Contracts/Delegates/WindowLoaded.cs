@@ -12,7 +12,7 @@
 namespace Fibula.Map.Contracts.Delegates
 {
     /// <summary>
-    /// Delegate for when a window in the map is loaded by the map loader.
+    /// Delegate for when a window in the map is loaded.
     /// </summary>
     /// <param name="fromX">The start X coordinate for the load window.</param>
     /// <param name="toX">The end X coordinate for the load window.</param>

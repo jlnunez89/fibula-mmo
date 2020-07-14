@@ -12,12 +12,23 @@
 namespace Fibula.Map.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Map.Contracts.Delegates;
 
     /// <summary>
     /// Interface for a map.
     /// </summary>
     public interface IMap
     {
+        /// <summary>
+        /// Event invoked when a window of coordinates in the map is loaded.
+        /// </summary>
+        event WindowLoaded WindowLoaded;
+
+        /// <summary>
+        /// Gets the reference to the selected map loader.
+        /// </summary>
+        IMapLoader Loader { get; }
+
         /// <summary>
         /// Attempts to get a <see cref="ITile"/> at a given <see cref="Location"/>, if any.
         /// </summary>

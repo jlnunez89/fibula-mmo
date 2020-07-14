@@ -21,11 +21,6 @@ namespace Fibula.Map.Contracts.Abstractions
     public interface IMapLoader
     {
         /// <summary>
-        /// Event invoked when a window of coordinates in the map is loaded.
-        /// </summary>
-        event WindowLoaded WindowLoaded;
-
-        /// <summary>
         /// Gets the percentage completed loading the map [0, 100].
         /// </summary>
         byte PercentageComplete { get; }

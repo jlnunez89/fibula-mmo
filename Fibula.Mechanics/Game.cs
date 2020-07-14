@@ -23,7 +23,10 @@ namespace Fibula.Mechanics
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
@@ -93,6 +96,11 @@ namespace Fibula.Mechanics
         private readonly IPathFinder pathFinder;
 
         /// <summary>
+        /// Gets the monster spawns in the game.
+        /// </summary>
+        private readonly IEnumerable<Spawn> monsterSpawns;
+
+        /// <summary>
         /// The predefined item set declared.
         /// </summary>
         private readonly IPredefinedItemSet predefinedItemSet;
@@ -114,6 +122,7 @@ namespace Fibula.Mechanics
         /// <param name="containerManager">A reference to the container manager in use.</param>
         /// <param name="pathFinderAlgo">A reference to the path finding algorithm in use.</param>
         /// <param name="predefinedItemSet">A reference to the predefined item set declared.</param>
+        /// <param name="monsterSpawnsLoader">A reference to the monster spawns loader.</param>
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
@@ -125,6 +134,7 @@ namespace Fibula.Mechanics
             IContainerManager containerManager,
             IPathFinder pathFinderAlgo,
             IPredefinedItemSet predefinedItemSet,
+            IMonsterSpawnLoader monsterSpawnsLoader,
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
@@ -136,6 +146,7 @@ namespace Fibula.Mechanics
             containerManager.ThrowIfNull(nameof(containerManager));
             pathFinderAlgo.ThrowIfNull(nameof(pathFinderAlgo));
             predefinedItemSet.ThrowIfNull(nameof(predefinedItemSet));
+            monsterSpawnsLoader.ThrowIfNull(nameof(monsterSpawnsLoader));
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
@@ -157,10 +168,12 @@ namespace Fibula.Mechanics
                 LightLevel = (byte)LightLevels.World,
             };
 
+            // Load the spawns
+            this.monsterSpawns = monsterSpawnsLoader.LoadSpawns();
+
             // Hook some event handlers.
             this.scheduler.EventFired += this.ProcessFiredEvent;
-
-            // this.map.Loader.WindowLoaded += this.OnMapWindowLoaded;
+            this.map.WindowLoaded += this.OnMapWindowLoaded;
         }
 
         /// <summary>
@@ -749,6 +762,56 @@ namespace Fibula.Mechanics
             }
 
             return new EventContext(this.logger);
+        }
+
+        /// <summary>
+        /// Handles a window loaded event from the map loader.
+        /// </summary>
+        /// <param name="fromX">The start X coordinate for the loaded window.</param>
+        /// <param name="toX">The end X coordinate for the loaded window.</param>
+        /// <param name="fromY">The start Y coordinate for the loaded window.</param>
+        /// <param name="toY">The end Y coordinate for the loaded window.</param>
+        /// <param name="fromZ">The start Z coordinate for the loaded window.</param>
+        /// <param name="toZ">The end Z coordinate for the loaded window.</param>
+        private void OnMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
+        {
+            var rng = new Random();
+
+            // For spawns, check which fall within this window:
+            var spawnsInWindow = this.monsterSpawns
+                .Where(s => s.Location.X >= fromX && s.Location.X <= toX &&
+                            s.Location.Y >= fromY && s.Location.Y <= toY &&
+                            s.Location.Z >= fromZ && s.Location.Z <= toZ);
+
+            if (spawnsInWindow == null)
+            {
+                return;
+            }
+
+            foreach (var spawn in spawnsInWindow)
+            {
+                for (int i = 0; i < spawn.Count; i++)
+                {
+                    var r = spawn.Radius / 4;
+                    var newMonster = this.creatureFactory.Create(
+                        new CreatureCreationArguments()
+                        {
+                            Type = CreatureType.Monster,
+                            Metadata = new MonsterCreationMetadata(spawn.MonsterTypeId),
+                        }) as IMonster;
+
+                    var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
+
+                    // Need to actually pathfind to avoid placing a monster in unreachable places.
+                    this.pathFinder.FindBetween(spawn.Location, randomLoc, out Location foundLocation, newMonster, (i + 1) * 10);
+
+                    // TODO: some property of newMonster here to figure out what actually blocks path finding.
+                    if (this.map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
+                    {
+                        this.DispatchOperation(new PlaceCreatureOperation(requestorId: 0, targetTile, newMonster));
+                    }
+                }
+            }
         }
     }
 }

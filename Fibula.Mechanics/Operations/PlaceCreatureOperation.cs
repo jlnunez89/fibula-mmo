@@ -1,17 +1,21 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="PlaceCreatureOperation.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Operations.Environment
+namespace Fibula.Mechanics.Operations
 {
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
+
     /// <summary>
     /// Class that represents an operation for placing a creature on the map.
     /// </summary>
@@ -41,6 +45,11 @@ namespace Fibula.Server.Operations.Environment
         public ITile AtTile { get; }
 
         /// <summary>
+        /// Gets the type of exhaustion that this operation produces.
+        /// </summary>
+        public override ExhaustionType ExhaustionType => ExhaustionType.None;
+
+        /// <summary>
         /// Executes the operation's logic.
         /// </summary>
         /// <param name="context">A reference to the operation context.</param>
@@ -50,8 +59,8 @@ namespace Fibula.Server.Operations.Environment
 
             if (!successfulPlacement)
             {
-                // handles check for isPlayer.
-                // this.NotifyOfFailure();
+                context.Logger.Warning($"Failed to place creature {this.Creature.Name} at {this.AtTile.Location}");
+
                 return;
             }
         }

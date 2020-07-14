@@ -81,7 +81,9 @@ namespace Fibula.Mechanics.Notifications
 
                 if (targetPlayers == null || !targetPlayers.Any())
                 {
-                    context.Logger?.Warning($"Found no targets for {this.GetType().Name}, skipping.");
+                    // This one is verbose because it is really common, for example, expiring items or spawning creatures,
+                    // which mostly tend to happen while there are no players around.
+                    context.Logger?.Verbose($"Found no targets for {this.GetType().Name}, skipping.");
                     return;
                 }
 

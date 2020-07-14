@@ -173,11 +173,6 @@ namespace Fibula.Map.SectorFiles
         }
 
         /// <summary>
-        /// Event invoked when a window of coordinates in the map is loaded.
-        /// </summary>
-        public event WindowLoaded WindowLoaded;
-
-        /// <summary>
         /// Gets the logger to use.
         /// </summary>
         public ILogger Logger { get; }
@@ -284,8 +279,6 @@ namespace Fibula.Map.SectorFiles
             }
 
             this.totalLoadedCount = this.totalTileCount;
-
-            this.WindowLoaded?.Invoke(fromSectorX * SquareSectorSize, (toSectorX * SquareSectorSize) + SquareSectorSize, fromSectorY * SquareSectorSize, (toSectorY * SquareSectorSize) + SquareSectorSize, fromZ, toZ);
 
             return tuplesAdded;
         }
