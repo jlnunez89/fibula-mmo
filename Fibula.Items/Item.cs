@@ -27,6 +27,11 @@ namespace Fibula.Items
     public class Item : Thing, IItem
     {
         /// <summary>
+        /// Stores the expiration time left on this item.
+        /// </summary>
+        private TimeSpan expirationTimeLeft;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="Item"/> class.
         /// </summary>
         /// <param name="type">The type of this item.</param>
@@ -38,6 +43,15 @@ namespace Fibula.Items
 
             // make a copy of the type we are based on...
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
+
+            this.expirationTimeLeft = !this.HasExpiration ? TimeSpan.Zero :
+                this.Attributes.ContainsKey(ItemAttribute.ExpirationTimeLeft) ?
+                    TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationTimeLeft]))
+                    :
+                    this.Attributes.ContainsKey(ItemAttribute.ExpirationStartTime) ?
+                        TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationStartTime]))
+                        :
+                        TimeSpan.Zero;
         }
 
         /// <summary>
@@ -124,7 +138,7 @@ namespace Fibula.Items
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ExpirationTimeLeft)} on an item which doesn't have expiration: {this}");
                 }
 
-                return TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationTimeLeft]));
+                return this.expirationTimeLeft;
             }
         }
 

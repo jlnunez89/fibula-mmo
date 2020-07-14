@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ChangeItemOperation.cs" company="2Dudes">
+// <copyright file="ExpireItemOperation.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -11,44 +11,31 @@
 
 namespace Fibula.Mechanics.Operations
 {
+    using System;
     using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Common.Contracts.Structs;
-    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
-    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
-    /// Class that represents an event for an item change.
+    /// Class that represents an event for an item expiring.
     /// </summary>
-    public class ChangeItemOperation : BaseEnvironmentOperation
+    public class ExpireItemOperation : BaseEnvironmentOperation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ChangeItemOperation"/> class.
+        /// Initializes a new instance of the <see cref="ExpireItemOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the change.</param>
-        /// <param name="typeId">The type id of the item being changed.</param>
-        /// <param name="fromLocation">The location from which the item is being changed.</param>
-        /// <param name="toTypeId">The type id of the item to change to.</param>
-        /// <param name="carrierCreature">The creature who is carrying the thing, if any.</param>
-        public ChangeItemOperation(
-            uint requestorId,
-            ushort typeId,
-            Location fromLocation,
-            ushort toTypeId,
-            ICreature carrierCreature = null)
+        /// <param name="item">The item that's expiring.</param>
+        public ExpireItemOperation(uint requestorId, IItem item)
             : base(requestorId)
         {
-            this.FromLocation = fromLocation;
-            this.FromTypeId = typeId;
-            this.FromCreature = carrierCreature;
-            this.ToTypeId = toTypeId;
+            this.Item = item;
         }
 
         /// <summary>
@@ -57,24 +44,9 @@ namespace Fibula.Mechanics.Operations
         public override ExhaustionType ExhaustionType => ExhaustionType.MentalCombat;
 
         /// <summary>
-        /// Gets the location from which the item is being changed.
+        /// Gets the item that is expiring.
         /// </summary>
-        public Location FromLocation { get; }
-
-        /// <summary>
-        /// Gets the type id from which the item is being changed.
-        /// </summary>
-        public ushort FromTypeId { get; }
-
-        /// <summary>
-        /// Gets the creature from which the item is being changed, if any.
-        /// </summary>
-        public ICreature FromCreature { get; }
-
-        /// <summary>
-        /// Gets the type id of the item to change to.
-        /// </summary>
-        public ushort ToTypeId { get; }
+        public IItem Item { get; }
 
         /// <summary>
         /// Executes the operation's logic.
@@ -84,18 +56,23 @@ namespace Fibula.Mechanics.Operations
         {
             const byte FallbackIndex = 0xFF;
 
-            var inThingContainer = this.FromLocation.DecodeContainer(context.Map, context.ContainerManager, out byte index, this.FromCreature);
+            var inThingContainer = this.Item.ParentContainer;
 
-            // Adjust index if this a map location.
-            var existingThing = (this.FromLocation.Type == LocationType.Map && (inThingContainer is ITile fromTile)) ? fromTile.FindItemWithId(this.FromTypeId) : inThingContainer?.FindThingAtIndex(index);
-
-            if (existingThing == null || !(existingThing is IItem existingItem))
+            if (!(this.Item is IThing existingThing) || !(existingThing is IItem existingItem) || !existingItem.HasExpiration)
             {
                 // Silent fail.
                 return;
             }
 
-            var creationArguments = new ItemCreationArguments() { TypeId = this.ToTypeId };
+            var creationArguments = new ItemCreationArguments() { TypeId = existingItem.ExpirationTarget };
+
+            if (existingItem.IsLiquidPool)
+            {
+                creationArguments.Attributes = new[]
+                {
+                    (ItemAttribute.LiquidType, existingItem.LiquidType as IConvertible),
+                };
+            }
 
             IThing thingCreated = context.ItemFactory.Create(creationArguments);
 
@@ -105,7 +82,7 @@ namespace Fibula.Mechanics.Operations
             }
 
             // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
-            (bool replaceSuccessful, IThing replaceRemainder) = inThingContainer.ReplaceContent(context.ItemFactory, existingThing, thingCreated, index, existingItem.Amount);
+            (bool replaceSuccessful, IThing replaceRemainder) = inThingContainer.ReplaceContent(context.ItemFactory, existingThing, thingCreated, byte.MaxValue, existingItem.Amount);
 
             if (!replaceSuccessful || replaceRemainder != null)
             {

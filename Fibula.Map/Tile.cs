@@ -538,6 +538,19 @@ namespace Fibula.Map
                 {
                     this.Ground = null;
                 }
+                else if (item.IsGroundFix)
+                {
+                    if (amount > 1)
+                    {
+                        throw new ArgumentException($"Invalid {nameof(amount)} while removing a ground border item: {amount}.");
+                    }
+
+                    return (this.InternalRemoveGroundBorderItem(thing), null);
+                }
+                else if (item.IsLiquidPool)
+                {
+                    this.LiquidPool = null;
+                }
                 else if (item.StaysOnTop)
                 {
                     if (amount > 1)
@@ -689,6 +702,54 @@ namespace Fibula.Map
             }
 
             return removedCreature != null;
+        }
+
+        /// <summary>
+        /// Attempts to remove a specific item of the ground borders category in this tile.
+        /// </summary>
+        /// <param name="groundBorderItem">The item to remove.</param>
+        /// <returns>True if the item was found and removed, false otherwise.</returns>
+        private bool InternalRemoveGroundBorderItem(IThing groundBorderItem)
+        {
+            if (groundBorderItem == null)
+            {
+                return false;
+            }
+
+            var tempStack = new Stack<IItem>();
+
+            bool wasRemoved = false;
+
+            lock (this.tileLock)
+            {
+                while (!wasRemoved && this.groundBorders.Count > 0)
+                {
+                    var temp = this.groundBorders.Pop();
+
+                    if (groundBorderItem == temp)
+                    {
+                        wasRemoved = true;
+                        break;
+                    }
+                    else
+                    {
+                        tempStack.Push(temp);
+                    }
+                }
+
+                while (tempStack.Count > 0)
+                {
+                    this.groundBorders.Push(tempStack.Pop());
+                }
+            }
+
+            if (wasRemoved)
+            {
+                // Update the tile's version so that it invalidates the cache.
+                this.LastModified = DateTimeOffset.UtcNow;
+            }
+
+            return wasRemoved;
         }
 
         /// <summary>
