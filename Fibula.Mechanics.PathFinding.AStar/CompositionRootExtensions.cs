@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ConfigurationRootExtensions.cs" company="2Dudes">
+// <copyright file="CompositionRootExtensions.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,33 +9,35 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.MonFiles
+namespace Fibula.PathFinding.AStar
 {
     using Fibula.Common.Utilities;
-    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Common.Utilities.Pathfinding;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.
     /// </summary>
-    public static class ConfigurationRootExtensions
+    public static class CompositionRootExtensions
     {
         /// <summary>
-        /// Adds all implementations related to *.mon monster type files contained in this library to the services collection.
+        /// Adds all implementations related to the A* path finder contained in this library to the services collection.
         /// Additionally, registers the options related to the concrete implementations added, such as:
-        ///     <see cref="MonFilesMonsterTypeLoaderOptions"/>.
+        ///     <see cref="AStarPathFinderOptions"/>.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddMonFilesMonsterTypeLoader(this IServiceCollection services, IConfiguration configuration)
+        public static void AddAStarPathFinder(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
             // configure options
-            services.Configure<MonFilesMonsterTypeLoaderOptions>(configuration.GetSection(nameof(MonFilesMonsterTypeLoaderOptions)));
+            services.Configure<AStarPathFinderOptions>(configuration.GetSection(nameof(AStarPathFinderOptions)));
 
-            services.AddSingleton<IMonsterTypeLoader, MonFilesMonsterTypeLoader>();
+            services.AddSingleton<INodeFactory, TileNodeCachingFactory>();
+            services.AddSingleton<IPathFinder, AStarPathFinder>();
         }
     }
 }

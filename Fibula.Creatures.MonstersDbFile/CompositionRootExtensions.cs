@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ConfigurationRootExtensions.cs" company="2Dudes">
+// <copyright file="CompositionRootExtensions.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,28 +9,33 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Map.GrassOnly
+namespace Fibula.Creatures.MonstersDbFile
 {
     using Fibula.Common.Utilities;
-    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.
     /// </summary>
-    public static class ConfigurationRootExtensions
+    public static class CompositionRootExtensions
     {
         /// <summary>
-        /// Adds all implementations related to a dummy map loader that gives only grass tiles contained in this library to the services collection.
+        /// Adds all implementations related to the monster Db file contained in this library to the services collection.
+        /// Additionally, registers the options related to the concrete implementations added, such as:
+        ///     <see cref="MonsterDbFileMonsterSpawnLoaderOptions"/>.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddGrassOnlyDummyMapLoader(this IServiceCollection services, IConfiguration configuration)
+        public static void AddMonsterDbFileMonsterSpawnLoader(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
-            services.AddSingleton<IMapLoader, GrassOnlyDummyMapLoader>();
+            // configure options
+            services.Configure<MonsterDbFileMonsterSpawnLoaderOptions>(configuration.GetSection(nameof(MonsterDbFileMonsterSpawnLoaderOptions)));
+
+            services.AddSingleton<IMonsterSpawnLoader, MonsterDbFileMonsterSpawnLoader>();
         }
     }
 }

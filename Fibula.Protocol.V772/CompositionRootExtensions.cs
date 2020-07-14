@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ConfigurationRootExtensions.cs" company="2Dudes">
+// <copyright file="CompositionRootExtensions.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -30,7 +30,7 @@ namespace Fibula.Protocol.V772
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.
     /// </summary>
-    public static class ConfigurationRootExtensions
+    public static class CompositionRootExtensions
     {
         /// <summary>
         /// Adds all the game server components related to protocol 7.72 contained in this library to the services collection.

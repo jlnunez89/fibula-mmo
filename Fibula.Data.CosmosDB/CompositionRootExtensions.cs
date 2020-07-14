@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ConfigurationRootExtensions.cs" company="2Dudes">
+// <copyright file="CompositionRootExtensions.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,37 +9,33 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Data.InMemoryDatabase
+namespace Fibula.Data.CosmosDB
 {
     using Fibula.Common.Utilities;
     using Fibula.Data.Contracts.Abstractions;
-    using Microsoft.EntityFrameworkCore;
-    using Microsoft.EntityFrameworkCore.Diagnostics;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.
     /// </summary>
-    public static class ConfigurationRootExtensions
+    public static class CompositionRootExtensions
     {
         /// <summary>
-        /// A name to register the in-memory DB with.
-        /// </summary>
-        private const string DatabaseName = "FibulaDb";
-
-        /// <summary>
-        /// Adds all implementations related to In-memory database contained in this library to the services collection.
+        /// Adds all implementations related to CosmosDb contained in this library to the services collection.
+        /// Additionally, registers the options related to the concrete implementations added, such as:
+        ///     <see cref="FibulaCosmosDbContextOptions"/>.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddInMemoryDatabaseContext(this IServiceCollection services, IConfiguration configuration)
+        public static void AddCosmosDBDatabaseContext(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
-            services.AddDbContext<FibulaInMemoryDatabaseContext>(options => options.UseInMemoryDatabase(DatabaseName).ConfigureWarnings(w => w.Ignore(InMemoryEventId.TransactionIgnoredWarning)));
+            // configure options
+            services.Configure<FibulaCosmosDbContextOptions>(configuration.GetSection(nameof(FibulaCosmosDbContextOptions)));
 
-            services.AddTransient<IFibulaDbContext, FibulaInMemoryDatabaseContext>();
+            services.AddTransient<IFibulaDbContext, FibulaCosmosDbContext>();
         }
     }
 }

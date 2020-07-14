@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ConfigurationRootExtensions.cs" company="2Dudes">
+// <copyright file="CompositionRootExtensions.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,35 +9,33 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Providers.Azure
+namespace Fibula.Map.SectorFiles
 {
     using Fibula.Common.Utilities;
-    using Fibula.Providers.Contracts;
+    using Fibula.Map.Contracts.Abstractions;
     using Microsoft.Extensions.Configuration;
     using Microsoft.Extensions.DependencyInjection;
-    using Microsoft.Extensions.DependencyInjection.Extensions;
 
     /// <summary>
     /// Static class that adds convenient methods to add the concrete implementations contained in this library.
     /// </summary>
-    public static class ConfigurationRootExtensions
+    public static class CompositionRootExtensions
     {
         /// <summary>
-        /// Adds all implementations related to Azure providers contained in this library to the services collection.
+        /// Adds all implementations related to Sector map files contained in this library to the services collection.
         /// Additionally, registers the options related to the concrete implementations added, such as:
-        ///     <see cref="KeyVaultSecretsProviderOptions"/>.
+        ///     <see cref="SectorMapLoaderOptions"/>.
         /// </summary>
         /// <param name="services">The services collection.</param>
         /// <param name="configuration">The configuration reference.</param>
-        public static void AddAzureProviders(this IServiceCollection services, IConfiguration configuration)
+        public static void AddSectorFilesMapLoader(this IServiceCollection services, IConfiguration configuration)
         {
             configuration.ThrowIfNull(nameof(configuration));
 
             // configure options
-            services.Configure<KeyVaultSecretsProviderOptions>(configuration.GetSection(nameof(KeyVaultSecretsProviderOptions)));
+            services.Configure<SectorMapLoaderOptions>(configuration.GetSection(nameof(SectorMapLoaderOptions)));
 
-            services.TryAddSingleton<ITokenProvider, AadTokenMsiBasedProvider>();
-            services.TryAddSingleton<ISecretsProvider, KeyVaultSecretsProvider>();
+            services.AddSingleton<IMapLoader, SectorMapLoader>();
         }
     }
 }

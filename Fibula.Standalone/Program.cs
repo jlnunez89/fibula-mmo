@@ -315,7 +315,7 @@ namespace Fibula.Standalone
             services.AddSingleton<IMap, Map>();
             services.AddSingleton<IMapDescriptor, MapDescriptor>();
 
-            // Chose a type of map loader:
+            // Choose a type of map loader:
             // services.AddGrassOnlyDummyMapLoader(hostingContext.Configuration);
             // services.AddOtbmMapLoader(hostingContext.Configuration);
             services.AddSectorFilesMapLoader(hostingContext.Configuration);
