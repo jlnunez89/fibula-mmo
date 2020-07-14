@@ -25,7 +25,6 @@ namespace Fibula.Map.SectorFiles
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
-    using Fibula.Map.Contracts.Delegates;
     using Fibula.Map.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles;
     using Fibula.Parsing.CipFiles.Enumerations;
