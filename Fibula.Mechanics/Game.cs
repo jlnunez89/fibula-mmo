@@ -790,27 +790,7 @@ namespace Fibula.Mechanics
 
             foreach (var spawn in spawnsInWindow)
             {
-                for (int i = 0; i < spawn.Count; i++)
-                {
-                    var r = spawn.Radius / 4;
-                    var newMonster = this.creatureFactory.Create(
-                        new CreatureCreationArguments()
-                        {
-                            Type = CreatureType.Monster,
-                            Metadata = new MonsterCreationMetadata(spawn.MonsterTypeId),
-                        }) as IMonster;
-
-                    var randomLoc = spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
-
-                    // Need to actually pathfind to avoid placing a monster in unreachable places.
-                    this.pathFinder.FindBetween(spawn.Location, randomLoc, out Location foundLocation, newMonster, (i + 1) * 10);
-
-                    // TODO: some property of newMonster here to figure out what actually blocks path finding.
-                    if (this.map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
-                    {
-                        this.DispatchOperation(new PlaceCreatureOperation(requestorId: 0, targetTile, newMonster));
-                    }
-                }
+                this.DispatchOperation(new SpawnMonstersOperation(requestorId: 0, spawn));
             }
         }
     }

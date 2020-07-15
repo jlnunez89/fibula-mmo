@@ -12,7 +12,9 @@
 namespace Fibula.Mechanics.Handlers
 {
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
@@ -65,6 +67,11 @@ namespace Fibula.Mechanics.Handlers
                 this.Logger.Warning($"Client's associated player could not be found. [Id={client.PlayerId}]");
 
                 return null;
+            }
+
+            if (player is ICombatant combatant && combatant.ChaseMode != ChaseMode.Stand)
+            {
+                this.Game.CreatureChangeModes(player.Id, combatant.FightMode, ChaseMode.Stand, false /*combatantCreature.SafeMode*/);
             }
 
             this.Game.SetCreatureStaticWalkPlan(player, new[] { walkOnDemandInfo.Direction });

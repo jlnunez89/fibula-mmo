@@ -1,18 +1,25 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="SpawnMonstersOperation.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Operations.Environment
+namespace Fibula.Mechanics.Operations
 {
     using System;
+    using Fibula.Common.Contracts.Structs;
+    using Fibula.Creatures;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a monsters spawn operation.
@@ -22,14 +29,12 @@ namespace Fibula.Server.Operations.Environment
         /// <summary>
         /// Initializes a new instance of the <see cref="SpawnMonstersOperation"/> class.
         /// </summary>
-        /// <param name="requestorId"></param>
-        /// <param name="spawn"></param>
-        /// <param name="monsterCreationMetadata"></param>
-        public SpawnMonstersOperation(uint requestorId, Spawn spawn, ICreatureCreationMetadata monsterCreationMetadata)
+        /// <param name="requestorId">The id of the requestor of the operation.</param>
+        /// <param name="spawn">The spawn that this operation targets.</param>
+        public SpawnMonstersOperation(uint requestorId, Spawn spawn)
             : base(requestorId)
         {
             this.Spawn = spawn;
-            this.MonsterCreationMetadata = monsterCreationMetadata;
         }
 
         /// <summary>
@@ -37,9 +42,10 @@ namespace Fibula.Server.Operations.Environment
         /// </summary>
         public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
+        /// <summary>
+        /// Gets the spawn that this operation targets.
+        /// </summary>
         public Spawn Spawn { get; }
-
-        public ICreatureCreationMetadata MonsterCreationMetadata { get; }
 
         /// <summary>
         /// Gets or sets the exhaustion cost time of this operation.
@@ -57,19 +63,22 @@ namespace Fibula.Server.Operations.Environment
             for (int i = 0; i < this.Spawn.Count; i++)
             {
                 var r = this.Spawn.Radius / 4;
-                var newMonster = context.CreatureFactory.Create(CreatureType.Monster, this.MonsterCreationMetadata) as IMonster;
+                var newMonster = context.CreatureFactory.Create(
+                    new CreatureCreationArguments()
+                    {
+                        Type = CreatureType.Monster,
+                        Metadata = new MonsterCreationMetadata(this.Spawn.MonsterTypeId),
+                    }) as IMonster;
 
                 var randomLoc = this.Spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
 
                 // Need to actually pathfind to avoid placing a monster in unreachable places.
-                context.PathFinder.FindBetween(this.Spawn.Location, randomLoc, out Location foundLocation, (i + 1) * 10);
+                context.PathFinder.FindBetween(this.Spawn.Location, randomLoc, out Location foundLocation, newMonster, (i + 1) * 10);
 
                 // TODO: some property of newMonster here to figure out what actually blocks path finding.
-                if (context.TileAccessor.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
+                if (context.Map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())
                 {
-                    var placeCreatureOperation = context.OperationFactory.Create(OperationType.PlaceCreature, new PlaceCreatureOperationCreationArguments(requestorId: 0, targetTile, newMonster));
-
-                    context.Scheduler.ScheduleEvent(placeCreatureOperation);
+                    context.Scheduler.ScheduleEvent(new PlaceCreatureOperation(requestorId: 0, targetTile, newMonster));
                 }
             }
         }
