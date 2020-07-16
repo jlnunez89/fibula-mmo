@@ -18,7 +18,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/configuration.html",
-          "hash": "gYKhLrpRPhtw+5WysFSTaw=="
+          "hash": "IeLyiwx/Zs4uc9C7wp7R0w=="
         }
       },
       "is_incremental": false,
@@ -30,7 +30,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/faq.html",
-          "hash": "1s70jw6AAdrzRZPB9lrjvw=="
+          "hash": "rOVKj0eVrH5giFfa3J3s2Q=="
         }
       },
       "is_incremental": false,
@@ -42,7 +42,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/motivation.html",
-          "hash": "dk8ADpCe+nHTXU+1lLnC2w=="
+          "hash": "c5SlcpIeOcFX9yhof+gJqw=="
         }
       },
       "is_incremental": false,
@@ -54,7 +54,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/roadmap.html",
-          "hash": "0PLv2MqPEgdAt2bNvx2IpQ=="
+          "hash": "pUfJ+LD6M0Z9yhGzZzmHzA=="
         }
       },
       "is_incremental": false,
@@ -69,7 +69,7 @@
       "output": {
         ".html": {
           "relative_path": "articles/setup.html",
-          "hash": "PDxkkrMqPkUATJSFZ0pPcQ=="
+          "hash": "rIVbnXWTF03eGnE3ZvyDbQ=="
         }
       },
       "is_incremental": false,
@@ -93,7 +93,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.Client.html",
-          "hash": "8wedV4XS/ijYuqNE1XnD4g=="
+          "hash": "yD8lABO29Sq8OiLKkZ6N0w=="
         }
       },
       "is_incremental": false,
@@ -105,7 +105,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.Contracts.Abstractions.IClient.html",
-          "hash": "kw7ifi34wI1jTz/yfudtGg=="
+          "hash": "BfyR2C2IBa7yr8lzqb7wcg=="
         }
       },
       "is_incremental": false,
@@ -117,7 +117,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.Contracts.Abstractions.html",
-          "hash": "wEcX7aCnXC19EEcwBc2Qpw=="
+          "hash": "0nE59xRDzpXAIHlUq7lxgw=="
         }
       },
       "is_incremental": false,
@@ -129,7 +129,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.Contracts.Models.ClientInformation.html",
-          "hash": "yv/Xn8WxeP7e2CzSj6Sjyg=="
+          "hash": "m9ySlbGc0fhcufDwtJOcgQ=="
         }
       },
       "is_incremental": false,
@@ -141,7 +141,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.Contracts.Models.html",
-          "hash": "OqXbvwG568UUNYDJCdY57Q=="
+          "hash": "aK8FZE2B4gCYYbt3u5l4DQ=="
         }
       },
       "is_incremental": false,
@@ -153,7 +153,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Client.html",
-          "hash": "V5cTsGLeZuudEe4IC7cjWw=="
+          "hash": "5yN/sz5U26a0M9n+ZEiZ5g=="
         }
       },
       "is_incremental": false,
@@ -165,7 +165,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.ApplicationContext.html",
-          "hash": "iObmHEF7OSy6uyBw95+T6A=="
+          "hash": "7DgsRrt6my2lUMxkAJvm+A=="
         }
       },
       "is_incremental": false,
@@ -177,7 +177,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IApplicationContext.html",
-          "hash": "wL1qeXw1EZVYBk22nrKXyQ=="
+          "hash": "8zAbgPHbseYdxgl7UQ+DTA=="
         }
       },
       "is_incremental": false,
@@ -189,7 +189,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IContainedThing.html",
-          "hash": "5jGZak2ALcleCBsJs2SIwQ=="
+          "hash": "pcu602tipM3ca5I/K9a0dQ=="
         }
       },
       "is_incremental": false,
@@ -201,7 +201,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IConverter.html",
-          "hash": "3cPaMQvNDoqgVhNLMlEmUw=="
+          "hash": "gIYbB2sdE9FaPmx6yYGtOQ=="
         }
       },
       "is_incremental": false,
@@ -213,7 +213,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.ILocatable.html",
-          "hash": "p0Z2fLhXJlAZtS3j2Lrxiw=="
+          "hash": "tJgpgDXN5FpxDABDIp5Xdw=="
         }
       },
       "is_incremental": false,
@@ -225,7 +225,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IThing.html",
-          "hash": "mG5O+VpHtWjuEC5hBouzNw=="
+          "hash": "5MmwaMwIZVCBqbyO417lPg=="
         }
       },
       "is_incremental": false,
@@ -237,7 +237,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IThingContainer.html",
-          "hash": "f8pDmMJVIwRcZgCOp72T7A=="
+          "hash": "aXCZuUEbDAXCuDnnq4qtjw=="
         }
       },
       "is_incremental": false,
@@ -249,7 +249,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IThingCreationArguments.html",
-          "hash": "4dPUrjxVneKKK/hmAQqERw=="
+          "hash": "LHx5xekE3/bOy0D55WaW9g=="
         }
       },
       "is_incremental": false,
@@ -261,7 +261,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.IThingFactory.html",
-          "hash": "QADn+jQKb694iNV4a2d1UQ=="
+          "hash": "gOlUZ5t2FnTPnyFGB2an1g=="
         }
       },
       "is_incremental": false,
@@ -273,7 +273,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Abstractions.html",
-          "hash": "qxoL6SHALmqkLTXjq8YQkw=="
+          "hash": "4XftwtvP5pX5FwgoO52bNA=="
         }
       },
       "is_incremental": false,
@@ -285,7 +285,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Constants.LocationConstants.html",
-          "hash": "sBJ6CFhoqgeNrHm5V1GOTA=="
+          "hash": "mz1tZFv7pHDR8u4l+SMtxA=="
         }
       },
       "is_incremental": false,
@@ -297,7 +297,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Constants.html",
-          "hash": "eYSJg7rpNunmsHzFWMZRwg=="
+          "hash": "gZ9lC9fW9dPTqDvKq3sHVw=="
         }
       },
       "is_incremental": false,
@@ -309,7 +309,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.CustomConvertersFactory.html",
-          "hash": "x93+mxkrFv7+0Fg1z9DDWg=="
+          "hash": "8/EsfmAaIhdotllV6c6JTg=="
         }
       },
       "is_incremental": false,
@@ -321,7 +321,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Delegates.OnThingStateChanged.html",
-          "hash": "xCBaCcGLSmC1S7sqc3hOzQ=="
+          "hash": "K9/SLu+Wt+NC8biI3Aa/bA=="
         }
       },
       "is_incremental": false,
@@ -333,7 +333,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Delegates.html",
-          "hash": "MbhXHT2m3E9QR5DXxDepXg=="
+          "hash": "5RjX77UHJQtgwYKoPUJXNQ=="
         }
       },
       "is_incremental": false,
@@ -345,7 +345,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.AgentType.html",
-          "hash": "fwXGMVoUTARWlP4rcr7exw=="
+          "hash": "KHXZdazBRhMMMwU9gcvIBQ=="
         }
       },
       "is_incremental": false,
@@ -357,7 +357,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.AnimatedEffect.html",
-          "hash": "c/DiQbWCaSRlR2O5yTo01g=="
+          "hash": "SGkSNsRxkMVI5VZGN0Rmmw=="
         }
       },
       "is_incremental": false,
@@ -369,7 +369,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.AvoidDamageType.html",
-          "hash": "1zr1pNymn4nPbmEpslzrJQ=="
+          "hash": "aBwBY4oO93Y85jVbJhYGtg=="
         }
       },
       "is_incremental": false,
@@ -381,7 +381,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.ChaseMode.html",
-          "hash": "dH+3IokgMv0IWRYE5/lhTw=="
+          "hash": "zTbcOBM/PUAjm8yTeIYj6w=="
         }
       },
       "is_incremental": false,
@@ -393,7 +393,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.ChatChannelType.html",
-          "hash": "OZD2V1f3eleq0BsdO81T0g=="
+          "hash": "ByovwnbdzYgvSVlWETbvJw=="
         }
       },
       "is_incremental": false,
@@ -405,7 +405,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.ConditionFlag.html",
-          "hash": "vxVD0w5FPovLtz4a2rh8Gg=="
+          "hash": "i8DL03HqYR4IVkKk/DZA2Q=="
         }
       },
       "is_incremental": false,
@@ -417,7 +417,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.Direction.html",
-          "hash": "w/D009HjxkEQGXHRvw6FPA=="
+          "hash": "jmWFB/6U6iUTjumj+tH2Ug=="
         }
       },
       "is_incremental": false,
@@ -429,7 +429,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.FightMode.html",
-          "hash": "CThR4IKtEhHfyhmKiGPiSg=="
+          "hash": "Sv5SdMSDGA470CAtBi8NZg=="
         }
       },
       "is_incremental": false,
@@ -441,7 +441,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.LightColors.html",
-          "hash": "XsIEceLge9/vw8wz068tAg=="
+          "hash": "a4rWCwS1YsARUHaJw+JpgA=="
         }
       },
       "is_incremental": false,
@@ -453,7 +453,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.LightLevels.html",
-          "hash": "+n948g+udxJfYqTHT966uA=="
+          "hash": "QaUXtiRzqjpAuWAJQXbaiw=="
         }
       },
       "is_incremental": false,
@@ -465,7 +465,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.LiquidColor.html",
-          "hash": "m2h8+pmdkpJm0Af7Ib93kw=="
+          "hash": "5Vj7qdq2WFRyr+zstOOhVg=="
         }
       },
       "is_incremental": false,
@@ -477,7 +477,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.LiquidType.html",
-          "hash": "dHEBhTDBB6fn7DTH6uGA4w=="
+          "hash": "Co8IPRUr/eMSsDTxx05deA=="
         }
       },
       "is_incremental": false,
@@ -489,7 +489,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.LocationType.html",
-          "hash": "9kJPCYl/2X7pNKVbibclXA=="
+          "hash": "LKgzB/oW2t6GpM/SuQVyhA=="
         }
       },
       "is_incremental": false,
@@ -501,7 +501,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.MessageType.html",
-          "hash": "BrclP7kRxjzEc38RrnLNfQ=="
+          "hash": "lt1+xY9a6cqB39YP9oJwEA=="
         }
       },
       "is_incremental": false,
@@ -513,7 +513,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.SkillType.html",
-          "hash": "p/c7pFKbusSI0gqxPcEpPw=="
+          "hash": "sqbltzhlceSUzMwRuUBYcA=="
         }
       },
       "is_incremental": false,
@@ -525,7 +525,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.Slot.html",
-          "hash": "pJpgDI+qEXow2+ekD5p7pQ=="
+          "hash": "vfreT+nDMPJlbMjYsQq9zw=="
         }
       },
       "is_incremental": false,
@@ -537,7 +537,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.SpeechType.html",
-          "hash": "ncisXTT2SRhIWSCCJm9FAA=="
+          "hash": "MnKUKmtbVRW8c3wKtCf2dg=="
         }
       },
       "is_incremental": false,
@@ -549,7 +549,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.SquareColor.html",
-          "hash": "aMBUJFPaV2BGwgN5r1RaPQ=="
+          "hash": "KJVLHSCDiCIEMXu2xjy5SQ=="
         }
       },
       "is_incremental": false,
@@ -561,7 +561,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.TextColor.html",
-          "hash": "OrYCerMKM8fLzCNjpVadnA=="
+          "hash": "+haGk5ruhI+QsnYGxqm5dw=="
         }
       },
       "is_incremental": false,
@@ -573,7 +573,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.WalkPlanState.html",
-          "hash": "UoWSlQ9Maz/23U204L2nrg=="
+          "hash": "Sgrpz6noGxfJkNPEyfhp9A=="
         }
       },
       "is_incremental": false,
@@ -585,7 +585,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.WalkStrategy.html",
-          "hash": "PKw72FPejRsbzbuBS7sEbA=="
+          "hash": "dfoxKC4hGWN5QRu0OnL5LQ=="
         }
       },
       "is_incremental": false,
@@ -597,7 +597,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.WorldType.html",
-          "hash": "M7geW8QNax358s+ImZkwXg=="
+          "hash": "fe4XqAM2KKVN+5abMdih4A=="
         }
       },
       "is_incremental": false,
@@ -609,7 +609,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Enumerations.html",
-          "hash": "bSRpWM5UfBLzIbxXG2PxKQ=="
+          "hash": "fePbXdrF9BPgxmcLZNMQgg=="
         }
       },
       "is_incremental": false,
@@ -621,7 +621,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Extensions.DirectionExtensions.html",
-          "hash": "7HrktzaGU6PEFwhhjIM0kg=="
+          "hash": "yzJ/wnLIsGcrBxA21M1FwQ=="
         }
       },
       "is_incremental": false,
@@ -633,7 +633,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Extensions.html",
-          "hash": "qnYRaWqdHNQtIiDe1AtaMA=="
+          "hash": "OGDwSiZdPn52PfZU4scx9A=="
         }
       },
       "is_incremental": false,
@@ -645,7 +645,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Models.ApplicationContextOptions.html",
-          "hash": "PIfY1gLOlzWAKynauE0nmQ=="
+          "hash": "SrEy54IshzGV2X2NEMhR9g=="
         }
       },
       "is_incremental": false,
@@ -657,7 +657,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Models.VersionInformation.html",
-          "hash": "X+xvndCxC33mbn7eYoQUpQ=="
+          "hash": "gAPEGLOrigPtRzyqmnwyBA=="
         }
       },
       "is_incremental": false,
@@ -669,7 +669,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Models.WorldConfiguration.html",
-          "hash": "genvNBa6ung7iG+HU8YBbQ=="
+          "hash": "wApQQGjkfZNkgDbUwhOuBQ=="
         }
       },
       "is_incremental": false,
@@ -681,7 +681,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Models.html",
-          "hash": "2slyFZQNlVnbjBWWwBP5IA=="
+          "hash": "fw9EI+L8rf821fsB8kjscg=="
         }
       },
       "is_incremental": false,
@@ -693,7 +693,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Structs.Location.html",
-          "hash": "OF6Bany169cMxw9v4e/OBQ=="
+          "hash": "JDVEJvTV4R8uePSt6OVkvA=="
         }
       },
       "is_incremental": false,
@@ -705,7 +705,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.Structs.html",
-          "hash": "pylQlD4kBYnu2bOSmY+rzA=="
+          "hash": "nNZdxetp5Fehm/SOoXeUBg=="
         }
       },
       "is_incremental": false,
@@ -717,7 +717,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.ThingStateChangedEventArgs.html",
-          "hash": "LOG4k7fQkeg5Xt7o9JCE4g=="
+          "hash": "v5On+L6wcDAaWBmgmn8yfg=="
         }
       },
       "is_incremental": false,
@@ -729,7 +729,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.WalkPlan.html",
-          "hash": "Wwk3nEsU+VxFf8bjLm97Cg=="
+          "hash": "o1RZktZkYVLFgi1nU4I7CA=="
         }
       },
       "is_incremental": false,
@@ -741,7 +741,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Contracts.html",
-          "hash": "6mWdJ+MVYksaS1iQe8f3XA=="
+          "hash": "gqOEYOKc+RMDHcsh6gXQWA=="
         }
       },
       "is_incremental": false,
@@ -753,7 +753,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.TestingUtilities.ExceptionAssert.html",
-          "hash": "IOWL2GzcYmTWytU3hFXSoQ=="
+          "hash": "V37zHCgGH8ThZEoZ8RpwLQ=="
         }
       },
       "is_incremental": false,
@@ -765,7 +765,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.TestingUtilities.html",
-          "hash": "s8K9M4hrUbRrdawaE8Vq1g=="
+          "hash": "KAs0mgx92VaKH0cYMNjHWg=="
         }
       },
       "is_incremental": false,
@@ -777,7 +777,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Thing.html",
-          "hash": "OzNUUqnhEoeprZkA4JeO+Q=="
+          "hash": "R9/1ZZQC6pY+z1FtJWPYEg=="
         }
       },
       "is_incremental": false,
@@ -789,7 +789,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.CompositeValidationResult.html",
-          "hash": "Etg0fT81V9nnZAd3G6Xd6w=="
+          "hash": "bY+Igaz/D8bybTOyP74ijA=="
         }
       },
       "is_incremental": false,
@@ -801,7 +801,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.DataAnnotationsValidator.html",
-          "hash": "JqLCfbuVJZP35g9wct6alg=="
+          "hash": "KGRbv1fH2/rzPcCxrlKUEw=="
         }
       },
       "is_incremental": false,
@@ -813,7 +813,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Extensions.SortedListExtensions.html",
-          "hash": "1KCSj1SeY/OnkzN9lndhiw=="
+          "hash": "2zpLyG9jtzBDJGp02Vl11g=="
         }
       },
       "is_incremental": false,
@@ -825,7 +825,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Extensions.StringExtensions.html",
-          "hash": "rZuyn8LdcV66ckuAfs3uaw=="
+          "hash": "IOJFFbkIf2m3XeUKASxkuA=="
         }
       },
       "is_incremental": false,
@@ -837,7 +837,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Extensions.html",
-          "hash": "6VpQpbkQakRFunRGP/eQaw=="
+          "hash": "I0kScapxi7N74q2tTwRMWg=="
         }
       },
       "is_incremental": false,
@@ -849,7 +849,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.ObjectExtensions.html",
-          "hash": "t8wUs6YkcC2GnszdhyM+Tg=="
+          "hash": "5QucyUTOJ8RILpLvv7ADfQ=="
         }
       },
       "is_incremental": false,
@@ -861,7 +861,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.AStar.html",
-          "hash": "ZmKl38Z+N8M9wM2AX/VS6g=="
+          "hash": "IDW8rJl8LeRBYNzyYCcL1A=="
         }
       },
       "is_incremental": false,
@@ -873,7 +873,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.INode.html",
-          "hash": "9hSgRIWxq1kmG81Zor/5Eg=="
+          "hash": "MyYcIRj5FRHzLgaTyUG/oA=="
         }
       },
       "is_incremental": false,
@@ -885,7 +885,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.INodeCreationArguments.html",
-          "hash": "xjAxxcXeSz+WklXW/+8Byg=="
+          "hash": "gdRWsSQepmj1A9c3SDrmWQ=="
         }
       },
       "is_incremental": false,
@@ -897,7 +897,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.INodeFactory.html",
-          "hash": "0Mi1kC1rGsyaRKwumoo4Cw=="
+          "hash": "9221dbOIHriwqmaYxM1fCA=="
         }
       },
       "is_incremental": false,
@@ -909,7 +909,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.ISearchContext.html",
-          "hash": "UzhOoN+24anbd++JvSMzPg=="
+          "hash": "E7u35fIz1xszsHNo02hV3A=="
         }
       },
       "is_incremental": false,
@@ -921,7 +921,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.SearchState.html",
-          "hash": "mDAmSYSK+eGhzCJ26R6yMA=="
+          "hash": "RTDOy7kKj+b6pUyd7fpTrg=="
         }
       },
       "is_incremental": false,
@@ -933,7 +933,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Pathfinding.html",
-          "hash": "GwBXmqogcJsRhG7jHIwkAw=="
+          "hash": "ckeEEY7X44mD1mppy4PgvQ=="
         }
       },
       "is_incremental": false,
@@ -945,7 +945,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.SkipRecursiveValidation.html",
-          "hash": "9PKaykKc7wANNUp+b4VN7w=="
+          "hash": "LqbWWb9Xx3MEXgn9T0TuTg=="
         }
       },
       "is_incremental": false,
@@ -957,7 +957,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.Validate.html",
-          "hash": "SHYTttcyZX7Q6p0xZChksQ=="
+          "hash": "wQJi+zBHMP5/CGIH3Iv7fw=="
         }
       },
       "is_incremental": false,
@@ -969,7 +969,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.ValidateCollectionAttribute.html",
-          "hash": "85UZLVshsT1SWxrqyEuxjA=="
+          "hash": "0E0avZF3DYAVHWpLNHYf5g=="
         }
       },
       "is_incremental": false,
@@ -981,7 +981,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.ValidateObjectAttribute.html",
-          "hash": "j/NgYVsX3n7g2GIUCXCjpQ=="
+          "hash": "HyERIeoHwyHJIGY03Xh9KA=="
         }
       },
       "is_incremental": false,
@@ -993,7 +993,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.Utilities.html",
-          "hash": "dK6aNSaCFpbJFU+RV9Ar9g=="
+          "hash": "mgp4mI+nEbNsXgXjMBcYHw=="
         }
       },
       "is_incremental": false,
@@ -1005,7 +1005,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Common.html",
-          "hash": "AQH4lgirTkIBb6H2PAL2uw=="
+          "hash": "bpf0toM3flSsvtBmQTiCWg=="
         }
       },
       "is_incremental": false,
@@ -1017,7 +1017,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.BasePacketReader.html",
-          "hash": "KVCJiQhW176AwppVFpa9cQ=="
+          "hash": "qo4xMxh9B2UvWz++jxFA3Q=="
         }
       },
       "is_incremental": false,
@@ -1029,7 +1029,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.BasePacketWriter.html",
-          "hash": "QJtvmiolBK5iQQPgglq+0Q=="
+          "hash": "lg3Cls7QPow3il8Nxr4xlg=="
         }
       },
       "is_incremental": false,
@@ -1041,7 +1041,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IBytesInfo.html",
-          "hash": "uJtZFK95mgZ9iPB3wOTe9w=="
+          "hash": "V2tH8RREn1/+rCt1XBHarg=="
         }
       },
       "is_incremental": false,
@@ -1053,7 +1053,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IConnection.html",
-          "hash": "GG88Hk1rjCYIKfNkWoFrBA=="
+          "hash": "jy16YCvQrcDarxSCGtedEg=="
         }
       },
       "is_incremental": false,
@@ -1065,7 +1065,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html",
-          "hash": "WGsZ9U+Pgeqs6lilEgoiWA=="
+          "hash": "t6Y3VX7Uh5Jr838lappnPw=="
         }
       },
       "is_incremental": false,
@@ -1077,7 +1077,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IListener.html",
-          "hash": "SQcQOldJ8Zfi4co0i5ni9A=="
+          "hash": "kW6INhcRclFH7WCqTKThLg=="
         }
       },
       "is_incremental": false,
@@ -1089,7 +1089,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.INetworkMessage.html",
-          "hash": "4wjt2xGa/flCuD26sCSTBA=="
+          "hash": "fUnAhUI0gDFk6N9+P0XiAA=="
         }
       },
       "is_incremental": false,
@@ -1101,7 +1101,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IOutboundPacket.html",
-          "hash": "FDdmYi92gQkp4eXSK0WBhA=="
+          "hash": "DoWVo+70yFsR7SBljtuI2g=="
         }
       },
       "is_incremental": false,
@@ -1113,7 +1113,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IPacketReader.html",
-          "hash": "RYoZJgOmvpccN+iEjjzoxg=="
+          "hash": "+Nlxu437LgOyZ4QAXW4iog=="
         }
       },
       "is_incremental": false,
@@ -1125,7 +1125,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IPacketWriter.html",
-          "hash": "EGCBA1e5/2jsqgtBEV5a2g=="
+          "hash": "vD8Byr9KL1NwRg0Ckv6ypw=="
         }
       },
       "is_incremental": false,
@@ -1137,7 +1137,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.IProtocol.html",
-          "hash": "pwckdU+uVXvCI/E2bT3pcA=="
+          "hash": "339XjsqkSznAKfzM03lWqg=="
         }
       },
       "is_incremental": false,
@@ -1149,7 +1149,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.ISocketConnection.html",
-          "hash": "5uEt/6mhfPlOlLUeUBtL8g=="
+          "hash": "W1a1s1j0vSMOW2H0rXPNzA=="
         }
       },
       "is_incremental": false,
@@ -1161,7 +1161,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.ISocketConnectionFactory.html",
-          "hash": "ocTfT/jREQ/3l+XFj0U9yg=="
+          "hash": "sls/NUhlDS+dOQ8f6kUREA=="
         }
       },
       "is_incremental": false,
@@ -1173,7 +1173,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.ITcpListener.html",
-          "hash": "4KgYFw78jsVPhuwDUfKx8A=="
+          "hash": "ZuySAScJfXQYP/yFBnt7nQ=="
         }
       },
       "is_incremental": false,
@@ -1185,7 +1185,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Abstractions.html",
-          "hash": "Sz6UGwQmBK3Vv5+wfSmJww=="
+          "hash": "P+pcywHus+g9IBVTKr6Edw=="
         }
       },
       "is_incremental": false,
@@ -1197,7 +1197,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Delegates.ConnectionClosedDelegate.html",
-          "hash": "fgJgQ5N0xrW1LhFy7cq/XQ=="
+          "hash": "QcSJ1C3PabPlGjS5vvZ6Zw=="
         }
       },
       "is_incremental": false,
@@ -1209,7 +1209,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Delegates.ConnectionPacketProccessedDelegate.html",
-          "hash": "HmcW0SPaBz29SlLBQgvn0g=="
+          "hash": "W6w1737fLAXk4hsDUkizNw=="
         }
       },
       "is_incremental": false,
@@ -1221,7 +1221,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Delegates.ConnectionPacketReadyDelegate.html",
-          "hash": "MjRJ1ZIYPSMBXXOM0egY4w=="
+          "hash": "CrVfqLMEs/ZDQ4edtnyVpg=="
         }
       },
       "is_incremental": false,
@@ -1233,7 +1233,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Delegates.NewConnectionDelegate.html",
-          "hash": "/oHgwbb4Be8BMyz1Wov5rA=="
+          "hash": "HaF5V9gzHparJdYtsjE/1w=="
         }
       },
       "is_incremental": false,
@@ -1245,7 +1245,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Delegates.html",
-          "hash": "FH4wnKlTS7AwRvhJtBLfJw=="
+          "hash": "0t9ymVbquGT+qnayKpcwRA=="
         }
       },
       "is_incremental": false,
@@ -1257,7 +1257,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Enumerations.IncomingGamePacketType.html",
-          "hash": "JVv12miJ0dyCMrSdG0oVpQ=="
+          "hash": "kBUcjV6Xi9Yfi2Eek9CXbA=="
         }
       },
       "is_incremental": false,
@@ -1269,7 +1269,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Enumerations.IncomingGatewayPacketType.html",
-          "hash": "buZTEa7byVtxhHTtPs8E/g=="
+          "hash": "0y0fxNQ4JIG5mSWypgP2Vw=="
         }
       },
       "is_incremental": false,
@@ -1281,7 +1281,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.html",
-          "hash": "SGDoPAIq0PjVvOSIjwbCag=="
+          "hash": "9OskzCYmHFxpwrVhdFgA/Q=="
         }
       },
       "is_incremental": false,
@@ -1293,7 +1293,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Enumerations.OutgoingGatewayPacketType.html",
-          "hash": "rKF6jp2YG1Zgvh7/ZK/0wg=="
+          "hash": "yz1CzjwURAEB5cKXd0i2SQ=="
         }
       },
       "is_incremental": false,
@@ -1305,7 +1305,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Contracts.Enumerations.html",
-          "hash": "NV6qCXwPlpdMCJo8klHCxw=="
+          "hash": "ENbcXY9D2cVS6WWCPIGq7w=="
         }
       },
       "is_incremental": false,
@@ -1317,7 +1317,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.DefaultPacketReader.html",
-          "hash": "CVX/QBCxv9y2m7C/7Xr9JQ=="
+          "hash": "p0KPR2MimbzkJJCzklszsA=="
         }
       },
       "is_incremental": false,
@@ -1329,7 +1329,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.DefaultRequestData.html",
-          "hash": "qW6NjWfji5aTD9RWn90P6g=="
+          "hash": "WPu3BPWKAZVhJwMIkTBOxA=="
         }
       },
       "is_incremental": false,
@@ -1341,7 +1341,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.BaseListener.html",
-          "hash": "Ulw7w+6eIkbj+lcoBgWm/Q=="
+          "hash": "IWZCosfCJpvBV99Qk3lOZw=="
         }
       },
       "is_incremental": false,
@@ -1353,7 +1353,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.BaseListenerOptions.html",
-          "hash": "hyoImRZlU4tPds2A0fCeAQ=="
+          "hash": "PIh4TMjVIie2k36cDH9XUg=="
         }
       },
       "is_incremental": false,
@@ -1365,7 +1365,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.FibulaTcpListener.html",
-          "hash": "buYtXW8Q3vnLtHYyj95isA=="
+          "hash": "QfW3MpsXTfPQmi8flwAWNg=="
         }
       },
       "is_incremental": false,
@@ -1377,7 +1377,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.GameListener-1.html",
-          "hash": "0+LXibpm30dSFPlgnzwsAg=="
+          "hash": "jhS0QM90DQHO7h2oAOPO4g=="
         }
       },
       "is_incremental": false,
@@ -1389,7 +1389,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.GameListenerOptions.html",
-          "hash": "E8jl3e3MKPEDpURWJHGr3g=="
+          "hash": "sLRABN/xynkWzbnRou/QxA=="
         }
       },
       "is_incremental": false,
@@ -1401,7 +1401,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.GatewayListener-1.html",
-          "hash": "xHnAFAZ4/xcVL1Nz1J4OwQ=="
+          "hash": "mCE6jahcovcpKXR0mJQMkw=="
         }
       },
       "is_incremental": false,
@@ -1413,7 +1413,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.GatewayListenerOptions.html",
-          "hash": "eIdAhSGL3c8QXZZ84ImNZA=="
+          "hash": "O0p20i3QpBFcs9UNmZ5OEw=="
         }
       },
       "is_incremental": false,
@@ -1425,7 +1425,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.Tests.GameListenerTests.html",
-          "hash": "KXo8mmN+jSeOemRYPh2oOA=="
+          "hash": "SCcdpL7cNA4EYyOCdGNTNw=="
         }
       },
       "is_incremental": false,
@@ -1437,7 +1437,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.Tests.GatewayListenerTests.html",
-          "hash": "CFuml/EvHE5jXNUJxr9uJg=="
+          "hash": "chKskZTJ14ExyFLbAbjDog=="
         }
       },
       "is_incremental": false,
@@ -1449,7 +1449,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.Tests.html",
-          "hash": "33iA44fd24p3WOiweaeZ6g=="
+          "hash": "2U2SL6H8rXDFXUkQX0/jyw=="
         }
       },
       "is_incremental": false,
@@ -1461,7 +1461,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Listeners.html",
-          "hash": "d26WCInbqr0XTNLEM8R0AA=="
+          "hash": "ghSHhwu1XMKIC8Q1qW4Fag=="
         }
       },
       "is_incremental": false,
@@ -1473,7 +1473,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.NetworkMessage.html",
-          "hash": "0jgROTzOSckfcfWqxClC1Q=="
+          "hash": "YHrCdvCRBIgSQ2rjaykHeQ=="
         }
       },
       "is_incremental": false,
@@ -1485,7 +1485,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.CharacterInfo.html",
-          "hash": "EPK5BeBMELjTuUHQkAxZQw=="
+          "hash": "ONkDwhAR/J3fo9qq3ydECQ=="
         }
       },
       "is_incremental": false,
@@ -1497,7 +1497,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IActionWithoutContentInfo.html",
-          "hash": "LK06x7QLopuqbP+YxjbM/w=="
+          "hash": "xHQ2JZ6QOD9n4qB+B+y+wA=="
         }
       },
       "is_incremental": false,
@@ -1509,7 +1509,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IAttackInfo.html",
-          "hash": "9gFw42zb6AwCoycJu/USsA=="
+          "hash": "IEwoFSR4TmhcyUEiTsq2pQ=="
         }
       },
       "is_incremental": false,
@@ -1521,7 +1521,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IAutoMovementInfo.html",
-          "hash": "5hgfzUTXX3cCCHa2M9ZZBA=="
+          "hash": "690zYsIpX4qJ7vWVpBF94A=="
         }
       },
       "is_incremental": false,
@@ -1533,7 +1533,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IGameLogInInfo.html",
-          "hash": "rmKsfswbAoBdC+5C9tqPwQ=="
+          "hash": "isKVO7nXPt774eQrUIqsZg=="
         }
       },
       "is_incremental": false,
@@ -1545,7 +1545,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IGatewayLoginInfo.html",
-          "hash": "a5EMBQSl3H5e43L3/4t8FQ=="
+          "hash": "H+uKcKIz7ruvfpASr7oNGQ=="
         }
       },
       "is_incremental": false,
@@ -1557,7 +1557,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.ILookAtInfo.html",
-          "hash": "gHGkEQLz6flFI/QZwY90wg=="
+          "hash": "i9OQ8MHex/+1Xwp1nP/6nw=="
         }
       },
       "is_incremental": false,
@@ -1569,7 +1569,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IModesInfo.html",
-          "hash": "g80YtcwyMdXE19MSvYEk/w=="
+          "hash": "wEM+tKifBureR7EcF3YEvQ=="
         }
       },
       "is_incremental": false,
@@ -1581,7 +1581,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.ISpeechInfo.html",
-          "hash": "kq1ceLQAqYEgke4BYxMBWQ=="
+          "hash": "hZth5aE7U6Lb6R2aQ4Ajvw=="
         }
       },
       "is_incremental": false,
@@ -1593,7 +1593,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IThingMoveInfo.html",
-          "hash": "HL2srfkL1Kudh6ywnLBFUA=="
+          "hash": "f6EG4BlyUwVULkLYRy+teg=="
         }
       },
       "is_incremental": false,
@@ -1605,7 +1605,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.ITurnOnDemandInfo.html",
-          "hash": "SAs143Z0kpFMKPyD7u010g=="
+          "hash": "7LVlfEKlvW2bGJ3G+DCHdQ=="
         }
       },
       "is_incremental": false,
@@ -1617,7 +1617,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.IWalkOnDemandInfo.html",
-          "hash": "xqZGLxn486pBsZzqMiuIHA=="
+          "hash": "BFHk9QNmFicLYNSvXXeE/Q=="
         }
       },
       "is_incremental": false,
@@ -1629,7 +1629,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Contracts.Abstractions.html",
-          "hash": "Fb+kcsBT4j1iprY240UP0g=="
+          "hash": "4wNxnJiaEO38Vk8njIAiBA=="
         }
       },
       "is_incremental": false,
@@ -1641,7 +1641,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.AttackPacket.html",
-          "hash": "kK627GdeVcjYySspsFyzoA=="
+          "hash": "/djGXpFTan66TcvVSy77Pw=="
         }
       },
       "is_incremental": false,
@@ -1653,7 +1653,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.AutoMoveCancelPacket.html",
-          "hash": "KFBUseisJJMVT8ogvouXZQ=="
+          "hash": "boY4ugMZSEPh2g8fAiW1Vg=="
         }
       },
       "is_incremental": false,
@@ -1665,7 +1665,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.AutoMovePacket.html",
-          "hash": "dx3haFEXU4zWaRHnRYugTQ=="
+          "hash": "BgEkV8jYu32DKGVbcRGvWg=="
         }
       },
       "is_incremental": false,
@@ -1677,7 +1677,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.DefaultReadPacket.html",
-          "hash": "VPmn4aB82/OuCEMi49sleQ=="
+          "hash": "rJouOAJtk4q43auttilb0Q=="
         }
       },
       "is_incremental": false,
@@ -1689,7 +1689,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.GameLogInPacket.html",
-          "hash": "HbCGrwQft5N3hVzebFevJQ=="
+          "hash": "mcULowI2+friOTRkkUIwsg=="
         }
       },
       "is_incremental": false,
@@ -1701,7 +1701,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.GameLogOutPacket.html",
-          "hash": "SD2SDZT8lfaUdG3OC8glMQ=="
+          "hash": "RPP9dvpVW/4lmSVoVzaVYQ=="
         }
       },
       "is_incremental": false,
@@ -1713,7 +1713,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.GatewayLogInPacket.html",
-          "hash": "jXAnPAM70/oSgudjeeg4/w=="
+          "hash": "8Zo1OYS+Y5ci2YsDiFLofA=="
         }
       },
       "is_incremental": false,
@@ -1725,7 +1725,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.HeartbeatPacket.html",
-          "hash": "lHXH4NNfFdye+TJTPNqtKg=="
+          "hash": "eU/6bSH/j6aAaX9NcHFC7w=="
         }
       },
       "is_incremental": false,
@@ -1737,7 +1737,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.HeartbeatResponsePacket.html",
-          "hash": "OrfcbxTFGppNyVjXcbWK4w=="
+          "hash": "M/mqSxz6/trbwDnH/NYXTQ=="
         }
       },
       "is_incremental": false,
@@ -1749,7 +1749,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.LookAtPacket.html",
-          "hash": "20U2rHMdHbGXFv8zk+qh+Q=="
+          "hash": "A0vfps3P8+gyPLlE8YrxEg=="
         }
       },
       "is_incremental": false,
@@ -1761,7 +1761,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.ModesPacket.html",
-          "hash": "cF+0zCZ6TLZmAO1Mutb+Vw=="
+          "hash": "Qyp72nleYs/MffSm1dobFQ=="
         }
       },
       "is_incremental": false,
@@ -1773,7 +1773,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.SpeechPacket.html",
-          "hash": "Ts1egEG3hFLMyC6T8yRMLw=="
+          "hash": "zCMUZFeSL5cP+LI5Zhu1dA=="
         }
       },
       "is_incremental": false,
@@ -1785,7 +1785,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.StopAllActionsPacket.html",
-          "hash": "ltSeCD4V1snvxqSqRPyFXg=="
+          "hash": "ii0B9MdmlhKkcXlduMji4w=="
         }
       },
       "is_incremental": false,
@@ -1797,7 +1797,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.Tests.IncomingPacketTests.html",
-          "hash": "na34GI1r3NhYtd4tHSuEeA=="
+          "hash": "P40L658HUu/Kd/f2QoO/Cw=="
         }
       },
       "is_incremental": false,
@@ -1809,7 +1809,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.Tests.OutgoingPacketTests.html",
-          "hash": "dlKJ0jPAQeyIMJE/dqKjtQ=="
+          "hash": "aGEhGmrn5UCxi8i2+P8PWQ=="
         }
       },
       "is_incremental": false,
@@ -1821,7 +1821,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.Tests.html",
-          "hash": "p5ZX4zV+ebD4ojbBwx4auw=="
+          "hash": "smQ4IckQt5jXlwdlyDtgZQ=="
         }
       },
       "is_incremental": false,
@@ -1833,7 +1833,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.ThingMovePacket.html",
-          "hash": "AVcntzqK/3QbQk6a83F/cg=="
+          "hash": "PiASCfARb4Wf9ugUODzC/A=="
         }
       },
       "is_incremental": false,
@@ -1845,7 +1845,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.TurnOnDemandPacket.html",
-          "hash": "8lkN+tN8zgLynmlS5SXYNA=="
+          "hash": "ySMLEktNKAUKqcGwiVc1oQ=="
         }
       },
       "is_incremental": false,
@@ -1857,7 +1857,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.WalkOnDemandPacket.html",
-          "hash": "ETP2Qpvq1wg2FLLjj++eYw=="
+          "hash": "AmSbBDs8TjOD5N2JfBG32A=="
         }
       },
       "is_incremental": false,
@@ -1869,7 +1869,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Incoming.html",
-          "hash": "+xKskwgE3lGne3SX+vJNrA=="
+          "hash": "QsIzK+HUrGT7HJVG5xpX9g=="
         }
       },
       "is_incremental": false,
@@ -1881,7 +1881,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.AddCreaturePacket.html",
-          "hash": "S/Oe/Iob+xnYeXH3DQvwlw=="
+          "hash": "ZOkHrPg37J6gOO+hVFnY5g=="
         }
       },
       "is_incremental": false,
@@ -1893,7 +1893,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.AnimatedTextPacket.html",
-          "hash": "EItfQOv/5ily9gOuV98qug=="
+          "hash": "r/o55G2XIEj83J4XLprFKA=="
         }
       },
       "is_incremental": false,
@@ -1905,7 +1905,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CharacterListPacket.html",
-          "hash": "y+G/JE/wv3X9sqSXbZLNug=="
+          "hash": "vGyR6eDeqYfE0eoPgc4oXg=="
         }
       },
       "is_incremental": false,
@@ -1917,7 +1917,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.ContainerAddItemPacket.html",
-          "hash": "qdvJl0IJl147JgPko1XI6A=="
+          "hash": "ZvLtRHknSv6yA8J3PavkUQ=="
         }
       },
       "is_incremental": false,
@@ -1929,7 +1929,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.ContainerClosePacket.html",
-          "hash": "If4er2QKLOr95LvmTu77AA=="
+          "hash": "m5CdEhLVJx/7SeKk2kwcfg=="
         }
       },
       "is_incremental": false,
@@ -1941,7 +1941,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.ContainerOpenPacket.html",
-          "hash": "g4wFqpw5C5ZlblRuHTuJsQ=="
+          "hash": "lJulS/73+getU7fPN88uwA=="
         }
       },
       "is_incremental": false,
@@ -1953,7 +1953,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.ContainerRemoveItemPacket.html",
-          "hash": "FjbRftfJKtl+Sh6o2gcvow=="
+          "hash": "wcPKNNQDsas0VjrbOVRsng=="
         }
       },
       "is_incremental": false,
@@ -1965,7 +1965,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.ContainerUpdateItemPacket.html",
-          "hash": "UVKy4AFPW6ZGw1fEOlkIaw=="
+          "hash": "vtcmq6EAn4bpW8ueNbs+RQ=="
         }
       },
       "is_incremental": false,
@@ -1977,7 +1977,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureHealthPacket.html",
-          "hash": "zwXwyPUruQjKhwOV0VX2AQ=="
+          "hash": "vLa3qcqtiIJqcbDh0fntEw=="
         }
       },
       "is_incremental": false,
@@ -1989,7 +1989,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureLightPacket.html",
-          "hash": "ZtpWHugE9+h8Nz81/ZmB7Q=="
+          "hash": "3sHdYdIjbNzRDQOFctbTog=="
         }
       },
       "is_incremental": false,
@@ -2001,7 +2001,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureMovedPacket.html",
-          "hash": "+/2FaZsLPyfMAceGdCGY8g=="
+          "hash": "Wa+N8Q7UZ+YJZgjQXjRzAg=="
         }
       },
       "is_incremental": false,
@@ -2013,7 +2013,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureSkullPacket.html",
-          "hash": "Ptmq6CVmtAW4O42DwX3PKg=="
+          "hash": "F9XfkVkvGmjFV/0HAPZqEg=="
         }
       },
       "is_incremental": false,
@@ -2025,7 +2025,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureSpeechPacket.html",
-          "hash": "HzCWueTbvbiK7qYM/naXfg=="
+          "hash": "MAzfIccqj9ZfVgDPa4PT/Q=="
         }
       },
       "is_incremental": false,
@@ -2037,7 +2037,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureSpeedChangePacket.html",
-          "hash": "LWk6K3+C2wVrgrQbGtwHhQ=="
+          "hash": "c47i2K5iaKOFCEyiPSyd7w=="
         }
       },
       "is_incremental": false,
@@ -2049,7 +2049,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.CreatureTurnedPacket.html",
-          "hash": "OYFemZaLdTS9t5FIIuIgog=="
+          "hash": "f8C52phAJLHxJf0Ibbhnrg=="
         }
       },
       "is_incremental": false,
@@ -2061,7 +2061,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.GameServerDisconnectPacket.html",
-          "hash": "JxTH2dK6moAW+NkPepEWhg=="
+          "hash": "r5NCWodUy3Jq3GR6YB2yfg=="
         }
       },
       "is_incremental": false,
@@ -2073,7 +2073,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.GatewayServerDisconnectPacket.html",
-          "hash": "fQR57jaOTUX53ptNK4toaw=="
+          "hash": "oD5C+W9NCEKdkOVeR/GK5A=="
         }
       },
       "is_incremental": false,
@@ -2085,7 +2085,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.HeartbeatPacket.html",
-          "hash": "ZxN9yBM+JHBQhR/Tz8Biug=="
+          "hash": "WUt3GpNXClZCtbY6r39UyA=="
         }
       },
       "is_incremental": false,
@@ -2097,7 +2097,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.HeartbeatResponsePacket.html",
-          "hash": "/Fb1XJhf78/pWSb4XqsGVA=="
+          "hash": "h4wVB9LhCMi2HVOonabQKw=="
         }
       },
       "is_incremental": false,
@@ -2109,7 +2109,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.MagicEffectPacket.html",
-          "hash": "fBxKmaWFG7bWSWx0fbBp8A=="
+          "hash": "6rHEe6ikCvbHFn5gZ+3d5Q=="
         }
       },
       "is_incremental": false,
@@ -2121,7 +2121,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.MapDescriptionPacket.html",
-          "hash": "x9YmssLRYc3LusVXWm7Mbw=="
+          "hash": "dQEUIe9eRho7RaoJCneeDQ=="
         }
       },
       "is_incremental": false,
@@ -2133,7 +2133,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.MapPartialDescriptionPacket.html",
-          "hash": "/BQfjCGiLMFntIAEdTcaqQ=="
+          "hash": "ZDLO1ZovPvaIW37wroODuw=="
         }
       },
       "is_incremental": false,
@@ -2145,7 +2145,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.MessageOfTheDayPacket.html",
-          "hash": "bKM6G74gUvp59wvnZfRfPQ=="
+          "hash": "S/k9TXcV4tls91LHz/P0Jw=="
         }
       },
       "is_incremental": false,
@@ -2157,7 +2157,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerCancelAttackPacket.html",
-          "hash": "FzlYZ0OgzXX6EnlRmwI5VQ=="
+          "hash": "Y7l08i3/1SsDQajWVjFysQ=="
         }
       },
       "is_incremental": false,
@@ -2169,7 +2169,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerCancelWalkPacket.html",
-          "hash": "jfetdNjOhF3OY8t7nMt1GA=="
+          "hash": "W/QiSVTaTbgSEQyKW4X2Kw=="
         }
       },
       "is_incremental": false,
@@ -2181,7 +2181,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerConditionsPacket.html",
-          "hash": "VeHd5z1Wx8EGhV2MI4G0kg=="
+          "hash": "RuuyOBoHQ8brVXayy1YjFw=="
         }
       },
       "is_incremental": false,
@@ -2193,7 +2193,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerInventoryClearSlotPacket.html",
-          "hash": "zuCPu0A7ymQH4aM3jd89bw=="
+          "hash": "lTCMw9mAx2aLKJqww03Neg=="
         }
       },
       "is_incremental": false,
@@ -2205,7 +2205,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerInventorySetSlotPacket.html",
-          "hash": "E252q2wTwiBx04PbNnDDbw=="
+          "hash": "W0WleFNQ9qNMUitsiOQeUA=="
         }
       },
       "is_incremental": false,
@@ -2217,7 +2217,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerLoginPacket.html",
-          "hash": "lsdea3r68Z6Em6KsXrZ+eA=="
+          "hash": "HLp1IKXoxRomqpVvh2VpWA=="
         }
       },
       "is_incremental": false,
@@ -2229,7 +2229,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerSkillsPacket.html",
-          "hash": "4xJV3M4yvYQKVho+FzTXPQ=="
+          "hash": "1E1AQ8JCF1bpytFPsBIDDA=="
         }
       },
       "is_incremental": false,
@@ -2241,7 +2241,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.PlayerStatsPacket.html",
-          "hash": "rhJh6l71X7jhj8TEPVgfZQ=="
+          "hash": "adW9aoxVzZj85DIukRDAXw=="
         }
       },
       "is_incremental": false,
@@ -2253,7 +2253,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.RemoveAtLocationPacket.html",
-          "hash": "U2KQYYvz1VLVjc8aNsW8pw=="
+          "hash": "wDBkNt2xhagR+0T0C0gfUg=="
         }
       },
       "is_incremental": false,
@@ -2265,7 +2265,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.SquarePacket.html",
-          "hash": "qf65g2NlxORAIkjG7PLpVA=="
+          "hash": "UhX/Dr3xDFuoUEkwojJa0w=="
         }
       },
       "is_incremental": false,
@@ -2277,7 +2277,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.TextMessagePacket.html",
-          "hash": "PBvTA0AGFlYfbHsZc1fEYQ=="
+          "hash": "Tr2taMmw8V+lv7Hm/zUlcA=="
         }
       },
       "is_incremental": false,
@@ -2289,7 +2289,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.TileUpdatePacket.html",
-          "hash": "I2tjcaj9YkZjHzcm9HwAzQ=="
+          "hash": "2bljQqMy1aTsx+hr2537+A=="
         }
       },
       "is_incremental": false,
@@ -2301,7 +2301,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.WaitingListPacket.html",
-          "hash": "ylskkoU7oWkNYYY4q9GDGg=="
+          "hash": "eA57rkWk9ebQkul+2DAO/g=="
         }
       },
       "is_incremental": false,
@@ -2313,7 +2313,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.WorldLightPacket.html",
-          "hash": "hIEVdRgvmqzF5ykjVDOu5g=="
+          "hash": "QG9ETfld2U/jxVIZ93SvRQ=="
         }
       },
       "is_incremental": false,
@@ -2325,7 +2325,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Packets.Outgoing.html",
-          "hash": "29JkO/ZfKRkbo5cbcNIrBA=="
+          "hash": "JgV0/2W/yKbEC3B0JEv2tQ=="
         }
       },
       "is_incremental": false,
@@ -2337,7 +2337,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Tests.DefaultPacketReaderTests.html",
-          "hash": "mLtmGKxBlxgaTcyNsB78pg=="
+          "hash": "qVl9S+7dt+NtsKMmnbiwlQ=="
         }
       },
       "is_incremental": false,
@@ -2349,7 +2349,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Tests.NetworkMessageTests.html",
-          "hash": "GrB9ptVjAyn5dd8AECAwwg=="
+          "hash": "e0vXvvhslIH6jIw1G8w/oA=="
         }
       },
       "is_incremental": false,
@@ -2361,7 +2361,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.Tests.html",
-          "hash": "OCZ+QrV4ZhhGA1cIeXJwaA=="
+          "hash": "bjOfwWeSZzMVbBtOwewY6A=="
         }
       },
       "is_incremental": false,
@@ -2373,7 +2373,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Communications.html",
-          "hash": "RQZF9E2gWsg4p/9kYo/9lQ=="
+          "hash": "knVIYzQLyK9BJy4fWuiB7A=="
         }
       },
       "is_incremental": false,
@@ -2385,7 +2385,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.CombatantCreature.html",
-          "hash": "Lfz3sRht9iJUxx2v5buLiA=="
+          "hash": "b605JlHK/tcFv6jvBMmA/Q=="
         }
       },
       "is_incremental": false,
@@ -2397,7 +2397,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.ICreature.html",
-          "hash": "JLGda3jpnk2iifk9g/krwg=="
+          "hash": "vKLq8Z7Hs2wNb5HcM3MRNA=="
         }
       },
       "is_incremental": false,
@@ -2409,7 +2409,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata.html",
-          "hash": "OLAenVk3zkcfKa6Z03iqdg=="
+          "hash": "J+bEDFNixFdQc6C6rAOTyg=="
         }
       },
       "is_incremental": false,
@@ -2421,7 +2421,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.ICreatureFactory.html",
-          "hash": "dbCwh2KChfMGLupc+MJ6dQ=="
+          "hash": "N4dZfuATY6EcvzpHhVMenQ=="
         }
       },
       "is_incremental": false,
@@ -2433,7 +2433,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html",
-          "hash": "47ofU6msHbyPYonp0IP+Jg=="
+          "hash": "qsGzs5/69ipuLXt7/eAmTw=="
         }
       },
       "is_incremental": false,
@@ -2445,7 +2445,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.ICreatureManager.html",
-          "hash": "kLvVSeCqkEZ4NnhnXhNK0w=="
+          "hash": "IT1icTA6AlbFg5nWRqKE9g=="
         }
       },
       "is_incremental": false,
@@ -2457,7 +2457,55 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IInventory.html",
-          "hash": "sg+AoZlTjQB8RVPZ1luzAw=="
+          "hash": "qN0cSxu8nsTgkuQhXedYUQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonster.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonster.html",
+          "hash": "nQvaSiZp3QBZL0XW8Ce+1A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterSpawnLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterSpawnLoader.html",
+          "hash": "1gbXcjyvZxk26h49yinoGg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterType.html",
+          "hash": "vbg4BrVaOjxkp7AMOX87Uw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader.html",
+          "hash": "NTwQLRNyQku/BIzies3c/w=="
         }
       },
       "is_incremental": false,
@@ -2469,7 +2517,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.IPlayer.html",
-          "hash": "k/i9YnPsoXSZrX1IBJx3gw=="
+          "hash": "I8LfqIdEJbTnKMWpCmWeTg=="
         }
       },
       "is_incremental": false,
@@ -2481,7 +2529,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Abstractions.html",
-          "hash": "kItn/WPi3wWX3OaHOTjwoQ=="
+          "hash": "Mxtl15Qingci2SVFsk0zvA=="
         }
       },
       "is_incremental": false,
@@ -2493,7 +2541,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Constants.CreatureConstants.html",
-          "hash": "PCmSHjcwk5TBsqiSljHucA=="
+          "hash": "Bf5y+lHm4H4xwT1X8/KV4Q=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Contracts.Constants.MonsterConstants.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Contracts.Constants.MonsterConstants.html",
+          "hash": "Ts/TpwH4maQC+2HWJ047pw=="
         }
       },
       "is_incremental": false,
@@ -2505,7 +2565,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Constants.html",
-          "hash": "XIrjuMLwDROfueqsYMJigg=="
+          "hash": "wDm9fkii9Ytlvf65PR0qtg=="
         }
       },
       "is_incremental": false,
@@ -2517,7 +2577,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Enumerations.CreatureFlag.html",
-          "hash": "HiShl5viUy8D5xbHjih4zA=="
+          "hash": "9mr8itBkJQWubePLYpVxqA=="
         }
       },
       "is_incremental": false,
@@ -2529,7 +2589,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Enumerations.CreatureType.html",
-          "hash": "Cu0DvfwzurVb6u05WmGZig=="
+          "hash": "6YlHPFwMoOEpBdumABk2vg=="
         }
       },
       "is_incremental": false,
@@ -2541,7 +2601,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Enumerations.html",
-          "hash": "7FzK8yUVDctyaj/ebJ7LJw=="
+          "hash": "MNldE2M/vegUDWDjQYQ1lA=="
         }
       },
       "is_incremental": false,
@@ -2553,7 +2613,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Structs.Outfit.html",
-          "hash": "A2ONz8pvStE/xlp6/xddBg=="
+          "hash": "C0u/2y764RlWRaLtQadXVw=="
         }
       },
       "is_incremental": false,
@@ -2565,7 +2625,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Structs.Spawn.html",
-          "hash": "ORbbln9tczn2GeqqVIoKMA=="
+          "hash": "e4bxYy6tO4i/EVVbUwwqdg=="
         }
       },
       "is_incremental": false,
@@ -2577,7 +2637,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Contracts.Structs.html",
-          "hash": "R24Y6OMABwceWgS0M38Sfg=="
+          "hash": "9IxTy3+GeBO0/rYejW360Q=="
         }
       },
       "is_incremental": false,
@@ -2589,7 +2649,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Creature.html",
-          "hash": "MS7ldGbELZIJ9OGgqozs4Q=="
+          "hash": "l0wRDLFHa1WCkP9RuxjG0A=="
         }
       },
       "is_incremental": false,
@@ -2601,7 +2661,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.CreatureCreationArguments.html",
-          "hash": "4pX1bJzEo9+zeekPcqzMSg=="
+          "hash": "V228sxzzNXPy7TqJXO5ELA=="
         }
       },
       "is_incremental": false,
@@ -2613,7 +2673,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.CreatureFactory.html",
-          "hash": "wdrougBnfpYAdEFVbOHjHA=="
+          "hash": "gMcYXol12LK19+Iy5ikzXg=="
         }
       },
       "is_incremental": false,
@@ -2625,7 +2685,151 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.CreatureManager.html",
-          "hash": "7F8hPXEvSd+h0gDGJ7gntA=="
+          "hash": "CjLXlvZUiywruSA0YdHoRw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonFiles.CompositionRootExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonFiles.CompositionRootExtensions.html",
+          "hash": "gtJvX+l6skH4Wmask5xA4w=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonFiles.MonFilesMonsterTypeLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonFiles.MonFilesMonsterTypeLoader.html",
+          "hash": "D0/FjZHt4/6usLpHmiXBoA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonFiles.MonFilesMonsterTypeLoaderOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonFiles.MonFilesMonsterTypeLoaderOptions.html",
+          "hash": "Bd9zKqJQHfvr2jdGedpXJQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonFiles.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonFiles.html",
+          "hash": "0S1xKgKo870UM3VnEQ4r2A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.Monster.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.Monster.html",
+          "hash": "ILZc+7YdHEEHClQOA6nhNA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonsterCreationMetadata.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonsterCreationMetadata.html",
+          "hash": "a/gPBYHw/cNBAzSZtFBfUw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonsterInventory.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonsterInventory.html",
+          "hash": "P8pNeb4Tw8VkMYbPKbgOcQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonsterType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonsterType.html",
+          "hash": "AlB2ScblG+u8Wb2uJuTajA=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonstersDbFile.CompositionRootExtensions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonstersDbFile.CompositionRootExtensions.html",
+          "hash": "cPT6Bl6xpbUEbABZESijTw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonstersDbFile.MonsterDbFileMonsterSpawnLoader.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonstersDbFile.MonsterDbFileMonsterSpawnLoader.html",
+          "hash": "7fBOq6MwD9uFMnqRPAhmbw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonstersDbFile.MonsterDbFileMonsterSpawnLoaderOptions.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonstersDbFile.MonsterDbFileMonsterSpawnLoaderOptions.html",
+          "hash": "9hWQKlvLgF7v/nOMWlAhNw=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Creatures.MonstersDbFile.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Creatures.MonstersDbFile.html",
+          "hash": "aiSTeHzip4tSRoHIFm4qBA=="
         }
       },
       "is_incremental": false,
@@ -2637,7 +2841,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.Player.html",
-          "hash": "Kr77r2qTgcbQao2mkLnymA=="
+          "hash": "LxwKoQu9Az1gxXwWu0ruOQ=="
         }
       },
       "is_incremental": false,
@@ -2649,7 +2853,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.PlayerCreationArguments.html",
-          "hash": "UycC1P4c7YG1n48tBaF0Aw=="
+          "hash": "u6oePKLySGb65nQlPLQHHA=="
         }
       },
       "is_incremental": false,
@@ -2661,7 +2865,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Creatures.html",
-          "hash": "Zs2A7xACkt6lchmhDW343w=="
+          "hash": "6iAm+PluHOLNaUJ5pFFGIw=="
         }
       },
       "is_incremental": false,
@@ -2673,7 +2877,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.IAccountRepository-1.html",
-          "hash": "n57jVw2+WLsvNzFp+gIvjA=="
+          "hash": "Ouout1wqtgKNkAPrrFknHg=="
         }
       },
       "is_incremental": false,
@@ -2685,7 +2889,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.ICharacterRepository-1.html",
-          "hash": "xzbOvI7fO0yB4rHVJUt/hg=="
+          "hash": "09wttnuXV0U75LBo9pm7lw=="
         }
       },
       "is_incremental": false,
@@ -2697,7 +2901,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.IFibulaDbContext.html",
-          "hash": "mZHsM7X7Bsl80F59E3VkWQ=="
+          "hash": "Zh+/CptHVJtYBffZhHLZtQ=="
         }
       },
       "is_incremental": false,
@@ -2709,7 +2913,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.IRepository-1.html",
-          "hash": "1N+YWXXaMrt16rQLglSASg=="
+          "hash": "fouIZgy+NENtGH2SESQV8A=="
         }
       },
       "is_incremental": false,
@@ -2721,7 +2925,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.IUnitOfWork-2.html",
-          "hash": "xMGYdUHyMeNaikMqUODHbg=="
+          "hash": "QOhcUhYgPkHW9pFg7tLIdQ=="
         }
       },
       "is_incremental": false,
@@ -2733,7 +2937,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Contracts.Abstractions.html",
-          "hash": "qzg7JHbtQJOv8mV7INo7mw=="
+          "hash": "ePFJ6TGDgb/F9q8XUajayQ=="
         }
       },
       "is_incremental": false,
@@ -2741,11 +2945,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Data.CosmosDB.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Data.CosmosDB.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Data.CosmosDB.ConfigurationRootExtensions.html",
-          "hash": "TwpkMNzrXi3mjNbEl+jyQQ=="
+          "relative_path": "code/Fibula.Data.CosmosDB.CompositionRootExtensions.html",
+          "hash": "P95jDRYdx1FrQ+JUYMLb1g=="
         }
       },
       "is_incremental": false,
@@ -2757,7 +2961,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.CosmosDB.FibulaCosmosDbContext.html",
-          "hash": "iNpFHtYq0q+MUQ50c9Q6/g=="
+          "hash": "cCKcIN8we2w0CiGWPpYnTA=="
         }
       },
       "is_incremental": false,
@@ -2769,7 +2973,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.CosmosDB.FibulaCosmosDbContextOptions.html",
-          "hash": "i2afdX88rJzBI8CvYyslhw=="
+          "hash": "bQnQOsyxwMtCVL1g1+yEvw=="
         }
       },
       "is_incremental": false,
@@ -2781,7 +2985,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.CosmosDB.html",
-          "hash": "HRpKe4FQYZ/ygqEssPHx+Q=="
+          "hash": "B2h2BZ1CScRfexvER2iopw=="
         }
       },
       "is_incremental": false,
@@ -2793,7 +2997,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.AccountEntity.html",
-          "hash": "NXvtxVQAxhnhLTog9dIDjQ=="
+          "hash": "A+9sLHMcnMSJHNgH981vng=="
         }
       },
       "is_incremental": false,
@@ -2805,7 +3009,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.BaseEntity.html",
-          "hash": "QoxR5X4lnPPHuOJZJw8FPw=="
+          "hash": "gh/aInnNL/6TNtEwi7Yi8g=="
         }
       },
       "is_incremental": false,
@@ -2817,7 +3021,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.CharacterEntity.html",
-          "hash": "VHzGTSj+CvXpz6abWZ7g7g=="
+          "hash": "2GmMZkJzPX6TAFYR3iSgQA=="
         }
       },
       "is_incremental": false,
@@ -2829,7 +3033,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity.html",
-          "hash": "I/ciF/hvR3eWJNLS13h3hw=="
+          "hash": "9NbZhN0F4xlgPlbc7O4qLg=="
         }
       },
       "is_incremental": false,
@@ -2841,7 +3045,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IBanishmentEntity.html",
-          "hash": "NpYeQpC70pWPXnqU1qzsag=="
+          "hash": "MI6bAWmIFhBSjyPZcRmUkw=="
         }
       },
       "is_incremental": false,
@@ -2853,7 +3057,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity.html",
-          "hash": "Zvk0AowUbFiTxUSUyZOUCw=="
+          "hash": "EJ3KIhfYCHiDMcl01WQjsA=="
         }
       },
       "is_incremental": false,
@@ -2865,7 +3069,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IEntity.html",
-          "hash": "mxU6jeTnM7oAOnzBUhG5/Q=="
+          "hash": "NIh0ojvc+2JvedlmOU2Wwg=="
         }
       },
       "is_incremental": false,
@@ -2877,7 +3081,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IIdentifiableEntity.html",
-          "hash": "d/N2AublkCbNC6UY3L4GGQ=="
+          "hash": "YsAiMn8CpboWDW3uaaW36A=="
         }
       },
       "is_incremental": false,
@@ -2889,7 +3093,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IOnlineCharacterEntity.html",
-          "hash": "yH3V2BJcOxoAFEEx54rD/g=="
+          "hash": "NCkqNJvnc+nsl/u1FpZJ8A=="
         }
       },
       "is_incremental": false,
@@ -2901,7 +3105,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.IWorldStatusEntity.html",
-          "hash": "ftXH+SveXAwWX/d3thecGg=="
+          "hash": "bmUQyOrwjR2paaICF8Z6bA=="
         }
       },
       "is_incremental": false,
@@ -2913,7 +3117,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.Contracts.Abstractions.html",
-          "hash": "4QtxI0r8qcph6t7gprOTmg=="
+          "hash": "yPFLgxpegyM5NobUycwThA=="
         }
       },
       "is_incremental": false,
@@ -2925,7 +3129,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Entities.html",
-          "hash": "qJSwyp8eLJLo7mia4bfGvw=="
+          "hash": "tJmNmiISmS1Zr4qCeul78Q=="
         }
       },
       "is_incremental": false,
@@ -2933,11 +3137,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Data.InMemoryDatabase.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Data.InMemoryDatabase.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Data.InMemoryDatabase.ConfigurationRootExtensions.html",
-          "hash": "HBU0GooqMCm2Z4GSKE9vkQ=="
+          "relative_path": "code/Fibula.Data.InMemoryDatabase.CompositionRootExtensions.html",
+          "hash": "+NbNqZhB58zhHEQ0BH9tyw=="
         }
       },
       "is_incremental": false,
@@ -2949,7 +3153,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.InMemoryDatabase.FibulaInMemoryDatabaseContext.html",
-          "hash": "jDhqvwTuK3FvzPvhm0vMlg=="
+          "hash": "gQPHFIwpkChxa72XIft3hg=="
         }
       },
       "is_incremental": false,
@@ -2961,7 +3165,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.InMemoryDatabase.html",
-          "hash": "PYq4FgwsFV6CstdCRUs+dA=="
+          "hash": "IXXXVHQ9b4Nfh9oqF/Lxow=="
         }
       },
       "is_incremental": false,
@@ -2973,7 +3177,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Repositories.AccountRepository.html",
-          "hash": "yGQjXGd5bf70Ni0WbjlEcg=="
+          "hash": "FsQW9MGljJmHLLPlngWpzw=="
         }
       },
       "is_incremental": false,
@@ -2985,7 +3189,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Repositories.CharacterRepository.html",
-          "hash": "BZQmAwHpqYzlsFyT/HNJlw=="
+          "hash": "A8WOu4lVtBuWbEdVc4Z40A=="
         }
       },
       "is_incremental": false,
@@ -2997,7 +3201,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Repositories.GenericRepository-1.html",
-          "hash": "6PVTKJT0BzRkrRZcp/3Ycg=="
+          "hash": "2WjXxdQAtq78axj6mzWcyw=="
         }
       },
       "is_incremental": false,
@@ -3009,7 +3213,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.Repositories.html",
-          "hash": "XGURn4SMvJmQYOh/ngIKPw=="
+          "hash": "TFQPNbCq36kBcYD0N1A6nQ=="
         }
       },
       "is_incremental": false,
@@ -3021,7 +3225,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.UnitOfWork.html",
-          "hash": "gnsgIi4p7ev6sm2KFUdwig=="
+          "hash": "RPGqBXQVZ4jkO0nvwF4KUw=="
         }
       },
       "is_incremental": false,
@@ -3033,7 +3237,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Data.html",
-          "hash": "G5n5MOHrsbpLZicfN6Rvlw=="
+          "hash": "TZtt4gsVm1qC/U3sVH6A3Q=="
         }
       },
       "is_incremental": false,
@@ -3045,7 +3249,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.BodyContainerItem.html",
-          "hash": "iWUYOa9isYli39+ezDlwMw=="
+          "hash": "zruAu629F9hxsuiBTJ4c6Q=="
         }
       },
       "is_incremental": false,
@@ -3057,7 +3261,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ContainerItem.html",
-          "hash": "GLqJOWvhatN3emlYHB8jsg=="
+          "hash": "ZKvA7XviUTMOBc4mnkt7+Q=="
         }
       },
       "is_incremental": false,
@@ -3069,7 +3273,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IContainerItem.html",
-          "hash": "LARltY/WhN1rFeO5a6Djqw=="
+          "hash": "70WtWihUzxl3OVn6Odt9mw=="
         }
       },
       "is_incremental": false,
@@ -3081,7 +3285,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IContainerManager.html",
-          "hash": "BwHQej6fRRfWcBcf2AmfvQ=="
+          "hash": "Ls8rjPp+KrHERc14W7DASw=="
         }
       },
       "is_incremental": false,
@@ -3093,7 +3297,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IItem.html",
-          "hash": "1eJm082S0fRIEQe7lwM7DA=="
+          "hash": "5t3x41XEz9/eAoaTbZqy7Q=="
         }
       },
       "is_incremental": false,
@@ -3105,7 +3309,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IItemFactory.html",
-          "hash": "KGV7SJwZptwgALZPU2RTwg=="
+          "hash": "0KXuQyVVwj71lzgIF69Psg=="
         }
       },
       "is_incremental": false,
@@ -3117,7 +3321,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IItemType.html",
-          "hash": "fCHcS0L6CSrQvqEijciyhg=="
+          "hash": "S64Va1mPG+KLnzgCh3bSUQ=="
         }
       },
       "is_incremental": false,
@@ -3129,7 +3333,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IItemTypeLoader.html",
-          "hash": "Bv7d6e93j2uJmHGU5Nho1g=="
+          "hash": "K2RMIRkaFI/2I+Je4gLUpQ=="
         }
       },
       "is_incremental": false,
@@ -3141,7 +3345,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.IPredefinedItemSet.html",
-          "hash": "xazR5E235sLtg7LgYp3N1A=="
+          "hash": "L+eN7/P5f3O69JdXT9G3TA=="
         }
       },
       "is_incremental": false,
@@ -3153,7 +3357,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Abstractions.html",
-          "hash": "kwYLxYuCWGaapU+xqud3Tg=="
+          "hash": "Lll2Pw7Br+pAjzE5ONP5WA=="
         }
       },
       "is_incremental": false,
@@ -3165,7 +3369,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Constants.ItemConstants.html",
-          "hash": "DJDHIpyA5mdNb75IFqA3Cg=="
+          "hash": "/eTOQlBhbnNascHSUnbphA=="
         }
       },
       "is_incremental": false,
@@ -3177,7 +3381,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Constants.html",
-          "hash": "Ti2Q+Inr3aaMOMgXs7hjjA=="
+          "hash": "h+Y9NxHRyu8l8kN3v0Cc1Q=="
         }
       },
       "is_incremental": false,
@@ -3189,7 +3393,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Delegates.OnContentAdded.html",
-          "hash": "mgNVgrsOSA2FbUTbq0lG5Q=="
+          "hash": "yL77hiTZNphzSBLl0D+huA=="
         }
       },
       "is_incremental": false,
@@ -3201,7 +3405,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Delegates.OnContentRemoved.html",
-          "hash": "sknAnRL1SRKwL650i+8bXA=="
+          "hash": "ABW8agJzuFWnYi4RNEn8Dg=="
         }
       },
       "is_incremental": false,
@@ -3213,7 +3417,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Delegates.OnContentUpdated.html",
-          "hash": "zgA6iDxT4uV+Jqo8g4hFAA=="
+          "hash": "BGcDiE6PqHATiYp5ZK7N/g=="
         }
       },
       "is_incremental": false,
@@ -3225,7 +3429,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Delegates.html",
-          "hash": "j37DO3oO8MeFvdrHzvYFFA=="
+          "hash": "j73/SGPpOCcjIKhjM9OSgg=="
         }
       },
       "is_incremental": false,
@@ -3237,7 +3441,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.BloodType.html",
-          "hash": "vp8gnpPUFK3Vbyak4+Go+g=="
+          "hash": "TSusjGoRub3lpMXzwLQXiA=="
         }
       },
       "is_incremental": false,
@@ -3249,7 +3453,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.ItemAttribute.html",
-          "hash": "+MX+cFk65A/79IAnzCcznQ=="
+          "hash": "OcUslcRJHQe7+AtXHHIl1w=="
         }
       },
       "is_incremental": false,
@@ -3261,7 +3465,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.ItemFlag.html",
-          "hash": "jl86iyxK94MSnz/IZrfg1Q=="
+          "hash": "gumHF4QoHXeNm9Qk9wK2og=="
         }
       },
       "is_incremental": false,
@@ -3273,7 +3477,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Contracts.Enumerations.html",
-          "hash": "qFE4EmK5zDAIDbio3FlZzg=="
+          "hash": "eQx/q7RMP/DJzfbCToJT0w=="
         }
       },
       "is_incremental": false,
@@ -3285,7 +3489,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.Item.html",
-          "hash": "/YL6CE5qQd+9bcro+Vt36Q=="
+          "hash": "tOmsj/qFDEDM/tP0r0dfoA=="
         }
       },
       "is_incremental": false,
@@ -3297,7 +3501,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ItemCreationArguments.html",
-          "hash": "idAyZ9+WzmWnrPqkR0YulA=="
+          "hash": "0tx0V4liqH8tbo17njG5UA=="
         }
       },
       "is_incremental": false,
@@ -3309,7 +3513,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ItemFactory.html",
-          "hash": "G8ipH476u8KqqBU7DNJGtw=="
+          "hash": "EJ5ywv2Jk3R7/MiopXoAyQ=="
         }
       },
       "is_incremental": false,
@@ -3321,7 +3525,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ItemType.html",
-          "hash": "WjkNktTmSvC8Q3opkyLjGw=="
+          "hash": "8vmmhu6nHPaBCICxQOQxSw=="
         }
       },
       "is_incremental": false,
@@ -3329,11 +3533,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Items.ObjectsFile.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Items.ObjectsFile.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Items.ObjectsFile.ConfigurationRootExtensions.html",
-          "hash": "qL8VgZS6hav0Tb72WkShOQ=="
+          "relative_path": "code/Fibula.Items.ObjectsFile.CompositionRootExtensions.html",
+          "hash": "0Ej/HBAJeRueuIjSzk4dgw=="
         }
       },
       "is_incremental": false,
@@ -3345,7 +3549,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ObjectsFile.ObjectsFileItemTypeLoader.html",
-          "hash": "IgNXBC6Fp8RnmyOXv7KIuQ=="
+          "hash": "txUZzJwzagM1wltGJ3VTKg=="
         }
       },
       "is_incremental": false,
@@ -3357,7 +3561,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ObjectsFile.ObjectsFileItemTypeLoaderOptions.html",
-          "hash": "iZgmECKjVHILeyg/66fCYg=="
+          "hash": "xM31Sln+UjHHanqo+lgViA=="
         }
       },
       "is_incremental": false,
@@ -3369,7 +3573,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.ObjectsFile.html",
-          "hash": "631GDdaq+A0Dbp324bq71g=="
+          "hash": "oR98pPkQY4mggtmlGuQQJA=="
         }
       },
       "is_incremental": false,
@@ -3381,7 +3585,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Items.html",
-          "hash": "IpLTlerzy8cXsJuSupvKpg=="
+          "hash": "AfjQ4VLFPHfz56TUcmtN1Q=="
         }
       },
       "is_incremental": false,
@@ -3393,7 +3597,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.IMap.html",
-          "hash": "Uw3KIb0bm/NZVU+bR3pyig=="
+          "hash": "OND0vrPV78nPUeYUFkI0NA=="
         }
       },
       "is_incremental": false,
@@ -3405,7 +3609,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.IMapDescriptor.html",
-          "hash": "TZeKrp1kbe6VJ2hkimvCmg=="
+          "hash": "UTTMDvQ1FdRnnPqYGxJuAA=="
         }
       },
       "is_incremental": false,
@@ -3417,7 +3621,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.IMapLoader.html",
-          "hash": "uNwKizreTD1nqrX6CdwW8g=="
+          "hash": "6igq7XeUTFKP3z1g/MXuig=="
         }
       },
       "is_incremental": false,
@@ -3429,7 +3633,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.IProtocolTileDescriptor.html",
-          "hash": "sxaaYq7dC15VVoC4JHuVLg=="
+          "hash": "z+kqFeLazv7da8TzX1CJMw=="
         }
       },
       "is_incremental": false,
@@ -3441,7 +3645,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.ITile.html",
-          "hash": "1Xb2ewX3dPnvHRtY5DOl2A=="
+          "hash": "wwPYP3C0GD2bTdtlZzJUsQ=="
         }
       },
       "is_incremental": false,
@@ -3453,7 +3657,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Abstractions.html",
-          "hash": "V8WRzeAmeogEb7YbsinRYw=="
+          "hash": "ra/umbBAdconDFrzI7oU7A=="
         }
       },
       "is_incremental": false,
@@ -3465,7 +3669,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Constants.MapConstants.html",
-          "hash": "avrpsF0UL7pWHf+Q6jJ1nw=="
+          "hash": "v67+hr7uvqcDGMOme5iWRw=="
         }
       },
       "is_incremental": false,
@@ -3477,7 +3681,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Constants.html",
-          "hash": "kCbv1kY9jyRpyI+NxOD78A=="
+          "hash": "C9g8HuS947OvR/rIVf4T0Q=="
         }
       },
       "is_incremental": false,
@@ -3489,7 +3693,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Delegates.WindowLoaded.html",
-          "hash": "TUKIswdtNiXmOzvyLbGJtw=="
+          "hash": "iIXZhio1gfZFJRtckHx8CQ=="
         }
       },
       "is_incremental": false,
@@ -3501,7 +3705,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Delegates.html",
-          "hash": "ikvNpwMIuzyY/q1soDjGpw=="
+          "hash": "qMvmoaA/sAJSHrOj63y86Q=="
         }
       },
       "is_incremental": false,
@@ -3513,7 +3717,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Enumerations.TileFlag.html",
-          "hash": "2o1B3muifaXO1KqVM6bQAw=="
+          "hash": "o2+fViSfLPzx5L7riA216A=="
         }
       },
       "is_incremental": false,
@@ -3525,7 +3729,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Enumerations.html",
-          "hash": "vFkivcjuzmnq8fhjI5Xw+g=="
+          "hash": "jRa8h8G2YhQVe41ZnFoXKQ=="
         }
       },
       "is_incremental": false,
@@ -3537,7 +3741,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Extensions.MapExtensions.html",
-          "hash": "8MnrqGqPcMbAlUH89YjqOA=="
+          "hash": "DwW4J8bhyyTbcXSYIZrZog=="
         }
       },
       "is_incremental": false,
@@ -3549,7 +3753,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.Extensions.html",
-          "hash": "rphJNfIsJAQgZupnkneN0Q=="
+          "hash": "e4TgXpYuPwX5MrODBbz+XQ=="
         }
       },
       "is_incremental": false,
@@ -3561,7 +3765,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.MapDescriptionSegment.html",
-          "hash": "OUyySPvDxnMOKbvWxwwYGg=="
+          "hash": "Zms4DRQBq8zReVB9zMrSIA=="
         }
       },
       "is_incremental": false,
@@ -3573,7 +3777,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Contracts.html",
-          "hash": "qd3cmCA8A+bbLE7Qe9t52g=="
+          "hash": "AycpiiV5wwFAzer7Ou9ppg=="
         }
       },
       "is_incremental": false,
@@ -3581,11 +3785,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Map.GrassOnly.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Map.GrassOnly.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Map.GrassOnly.ConfigurationRootExtensions.html",
-          "hash": "QZCQDq7PD8j+alL8k4KbDw=="
+          "relative_path": "code/Fibula.Map.GrassOnly.CompositionRootExtensions.html",
+          "hash": "cVFyhjd7H+zxx1yUU7JQgg=="
         }
       },
       "is_incremental": false,
@@ -3597,7 +3801,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.GrassOnly.GrassOnlyDummyMapLoader.html",
-          "hash": "9ft4Hb5ndgpR8LVA3f/Lig=="
+          "hash": "DhGFNdqloqOPtEUZbJuDYw=="
         }
       },
       "is_incremental": false,
@@ -3609,7 +3813,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.GrassOnly.html",
-          "hash": "Q/AHcyPHZEaBxQpr5kXksg=="
+          "hash": "TrwH09C+1w76Rx08J1Jf0Q=="
         }
       },
       "is_incremental": false,
@@ -3621,7 +3825,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Map.html",
-          "hash": "P0e+1jx4bNRIl5+h1aG8Rw=="
+          "hash": "fejy4lqlLiy31jjcoD9tdA=="
         }
       },
       "is_incremental": false,
@@ -3633,7 +3837,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.MapDescriptor.html",
-          "hash": "Tv+8OemGICut99qlNa3ClQ=="
+          "hash": "xhdMsAqwnwojORGbXu4q8g=="
         }
       },
       "is_incremental": false,
@@ -3641,11 +3845,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Map.SectorFiles.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Map.SectorFiles.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Map.SectorFiles.ConfigurationRootExtensions.html",
-          "hash": "2SJewo4Ks9HaokgD2NMr7A=="
+          "relative_path": "code/Fibula.Map.SectorFiles.CompositionRootExtensions.html",
+          "hash": "6g0kmZt+noIMDHIKW6Q/yA=="
         }
       },
       "is_incremental": false,
@@ -3657,7 +3861,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.SectorFiles.SectorMapLoader.html",
-          "hash": "TY8BsP1CDuvwmldVTcbJlg=="
+          "hash": "bkaZfxfSOaZyJtkUNnFe6g=="
         }
       },
       "is_incremental": false,
@@ -3669,7 +3873,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.SectorFiles.SectorMapLoaderOptions.html",
-          "hash": "xcoTkvb1YTGzszMvyIbytg=="
+          "hash": "dSEaNScZEZWsB52USndcLA=="
         }
       },
       "is_incremental": false,
@@ -3681,7 +3885,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.SectorFiles.html",
-          "hash": "BGe24d3umDFt2U5eUiTJ2w=="
+          "hash": "W8HyF1V4WYk/uQilEIJL8w=="
         }
       },
       "is_incremental": false,
@@ -3693,7 +3897,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.Tile.html",
-          "hash": "pub29Bs0S9cyNZk+YPG/Yg=="
+          "hash": "DaFBurANb5YM9dzb2vc9KA=="
         }
       },
       "is_incremental": false,
@@ -3705,7 +3909,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Map.html",
-          "hash": "hNCl9G/GI47WibtaVYQT+Q=="
+          "hash": "dJhbDTusirCs02ympAhxCg=="
         }
       },
       "is_incremental": false,
@@ -3717,7 +3921,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.ContainerManager.html",
-          "hash": "0F/zcV12mrUacss71mlPLw=="
+          "hash": "amaIW2kBu4IhiX3StA7P0A=="
         }
       },
       "is_incremental": false,
@@ -3729,7 +3933,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html",
-          "hash": "upLaH4U6okBSRLJGKsxQCw=="
+          "hash": "KCK4FpYH7Z5Rcq3d2IbjMA=="
         }
       },
       "is_incremental": false,
@@ -3741,7 +3945,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.ICombatant.html",
-          "hash": "u/cI43vazu/JN0RJArLZ3g=="
+          "hash": "jKtcu4/FstSlqXxP/eqR3Q=="
         }
       },
       "is_incremental": false,
@@ -3753,7 +3957,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html",
-          "hash": "iZKPqGYtRjF8WO94Lb6H5Q=="
+          "hash": "DUScxhK03FSQeQ+i753FgQ=="
         }
       },
       "is_incremental": false,
@@ -3765,7 +3969,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IElevatedOperation.html",
-          "hash": "k+cpm9jpRyX9JwvVJKd2OA=="
+          "hash": "AiTDSKoE7tdGC9HwwWCrOg=="
         }
       },
       "is_incremental": false,
@@ -3777,7 +3981,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext.html",
-          "hash": "6HspEnABsXVd2WFR59TDhQ=="
+          "hash": "EbjEbXa+bTZnobiMpBOM3A=="
         }
       },
       "is_incremental": false,
@@ -3789,7 +3993,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IGame.html",
-          "hash": "5OmW0DsGEjG4Mt17AuAcQA=="
+          "hash": "/oJLM8NEHbqv39C+CeOs/A=="
         }
       },
       "is_incremental": false,
@@ -3801,7 +4005,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html",
-          "hash": "D6qCdAt3DSakZEYPuHDorQ=="
+          "hash": "0LrQrSDCFdrspE9nhfdymg=="
         }
       },
       "is_incremental": false,
@@ -3813,7 +4017,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IHandler.html",
-          "hash": "MC6pJLaoDMncz6DUGzffjg=="
+          "hash": "c2DqowD6nvDodFHXdxL+Ew=="
         }
       },
       "is_incremental": false,
@@ -3825,7 +4029,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IHandlerSelector.html",
-          "hash": "Z26bIAWCMuoNL9nFu/dWlg=="
+          "hash": "UJ/xNaDBI0vYDiChPe5FIw=="
         }
       },
       "is_incremental": false,
@@ -3837,7 +4041,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotification.html",
-          "hash": "SJLsBb3XZQXBYxmixXWXDw=="
+          "hash": "Kr7UK6Qbx4ufskoanVCN0g=="
         }
       },
       "is_incremental": false,
@@ -3849,7 +4053,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.INotificationContext.html",
-          "hash": "4fk4GFiwYNXN7fdl/qdo2g=="
+          "hash": "nx+jVBPt9buka7VhgIbIvw=="
         }
       },
       "is_incremental": false,
@@ -3861,7 +4065,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperation.html",
-          "hash": "oR0mr8tXB4Fo97bWN51/Xg=="
+          "hash": "bw1rp4rtZNIhU3zq52J++A=="
         }
       },
       "is_incremental": false,
@@ -3873,7 +4077,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IOperationContext.html",
-          "hash": "A4Yarmjzef3jIiKnXxPcYQ=="
+          "hash": "EtiNbX2YT0khWEUn3mEENw=="
         }
       },
       "is_incremental": false,
@@ -3885,7 +4089,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IPathFinder.html",
-          "hash": "cO15y7w56iT3Hw9Qar3pFw=="
+          "hash": "+VvDOQZ0WYgI4wMKB5dEpA=="
         }
       },
       "is_incremental": false,
@@ -3897,7 +4101,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.IWorldInformation.html",
-          "hash": "2hwG96aYovwk2ecxNofJkQ=="
+          "hash": "FyPRRst0JyFtjuWJFjqmfQ=="
         }
       },
       "is_incremental": false,
@@ -3909,7 +4113,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Abstractions.html",
-          "hash": "c5cjUMARBeDRVOfdAXNnzg=="
+          "hash": "7Ukp1w94/zsVhRRpbRBkww=="
         }
       },
       "is_incremental": false,
@@ -3921,7 +4125,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType.html",
-          "hash": "tnNMWrKH+Jw/Th/Q/yxiog=="
+          "hash": "Vyi6P9hnJ7pMujULdY+JNg=="
         }
       },
       "is_incremental": false,
@@ -3933,7 +4137,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Combat.Enumerations.html",
-          "hash": "kBsSMrS3UMDHgSObDvGw7w=="
+          "hash": "vKgTAewZB9Xh8LfTdng+ig=="
         }
       },
       "is_incremental": false,
@@ -3945,7 +4149,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Constants.CombatConstants.html",
-          "hash": "6+cMVvNcYNONIPHJ2a9i7A=="
+          "hash": "0ZCj8WapD1TTE86vcswirA=="
         }
       },
       "is_incremental": false,
@@ -3957,7 +4161,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Constants.MechanicsConstants.html",
-          "hash": "VX5AsJ0duKydCxHOcSwSyg=="
+          "hash": "fB1VqasqULaMT/QXkfMheg=="
         }
       },
       "is_incremental": false,
@@ -3969,7 +4173,31 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Constants.html",
-          "hash": "JoTyoOvEtLRbqpWTmP71Bg=="
+          "hash": "NERdvJdjxSzQ+13U3n5Iig=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnAttackTargetChanged.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnAttackTargetChanged.html",
+          "hash": "9jFKCQYAuybKM4TGvtpo0g=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnChaseTargetChanged.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnChaseTargetChanged.html",
+          "hash": "ps+8Q9769t+EOCMYivoa1g=="
         }
       },
       "is_incremental": false,
@@ -3981,7 +4209,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnDeath.html",
-          "hash": "bizoGYVkJl1E1m4g7OhrDQ=="
+          "hash": "u23TtrQM5jyR4GGFHB9cCA=="
         }
       },
       "is_incremental": false,
@@ -3989,11 +4217,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnHealthChange.yml",
+      "source_relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnHealthChanged.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnHealthChange.html",
-          "hash": "zvaCTQfA06er5nISHmp6yA=="
+          "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnHealthChanged.html",
+          "hash": "at1R2iG8iiHiEEIo8ezA2Q=="
         }
       },
       "is_incremental": false,
@@ -4005,7 +4233,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.OnSent.html",
-          "hash": "nU4fyiaPzeDXe8FFJ81a9w=="
+          "hash": "amz84XqHF/x3oPqWgRppDw=="
         }
       },
       "is_incremental": false,
@@ -4017,7 +4245,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Delegates.html",
-          "hash": "qey3wg/0djbj833viah34g=="
+          "hash": "knfmmhTyck7S3wKDUU10HQ=="
         }
       },
       "is_incremental": false,
@@ -4029,7 +4257,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.ExhaustionType.html",
-          "hash": "AG6cPFVx401jvO+t+g9NCg=="
+          "hash": "IuEIQifs++f/8DBDYWG1VQ=="
         }
       },
       "is_incremental": false,
@@ -4041,7 +4269,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.WorldState.html",
-          "hash": "fHrv1wDKZRQ02Q4FVbe47Q=="
+          "hash": "DZLU/iasLtEzb+b+/IJUYA=="
         }
       },
       "is_incremental": false,
@@ -4053,7 +4281,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Enumerations.html",
-          "hash": "1m5TFdDGhpmMYdaJ1MTdiw=="
+          "hash": "TU7SoTYgCKtCmqg0cAKzUw=="
         }
       },
       "is_incremental": false,
@@ -4065,7 +4293,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html",
-          "hash": "iKytmPlRO56tL53TCN1hQA=="
+          "hash": "lkkNHI8bpOUoeWzwXPXvxw=="
         }
       },
       "is_incremental": false,
@@ -4077,7 +4305,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.CreatureExtensions.html",
-          "hash": "Knj60nYtCDnjckTYFASypw=="
+          "hash": "GxFiJvOgqAg1Lsv7Sqi5Ww=="
         }
       },
       "is_incremental": false,
@@ -4089,7 +4317,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.ItemExtensions.html",
-          "hash": "7fQ07n6XaBNRnzzKtko24g=="
+          "hash": "MBQNdZ/sNgy3+MeEmRoGOw=="
         }
       },
       "is_incremental": false,
@@ -4101,7 +4329,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.LocationExtensions.html",
-          "hash": "3wGeiRsXYD91f9ipAlsmbA=="
+          "hash": "ABZuIL68Kdz4WvI0utQAkg=="
         }
       },
       "is_incremental": false,
@@ -4113,7 +4341,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.WalkPlanExtensions.html",
-          "hash": "uFlR7+tXtcZ6qGxxdBLh4A=="
+          "hash": "p7kMALpq/LE30BLUc/uZQA=="
         }
       },
       "is_incremental": false,
@@ -4125,7 +4353,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Extensions.html",
-          "hash": "+br1B8HzlfYfw74vzEIVCQ=="
+          "hash": "cXhPxAzNWnCJjoKzfr07Rg=="
         }
       },
       "is_incremental": false,
@@ -4137,7 +4365,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Structs.DamageInfo.html",
-          "hash": "0E+hGqY6VBAnh8H0O7VyRw=="
+          "hash": "2QdqpdeBB0bLBaPCg00Zzg=="
         }
       },
       "is_incremental": false,
@@ -4149,7 +4377,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Contracts.Structs.html",
-          "hash": "l13uiKfbLPM+DMziWIlSvg=="
+          "hash": "nSzMLRiJe/lUhlcDqm9Nmw=="
         }
       },
       "is_incremental": false,
@@ -4161,7 +4389,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Game.html",
-          "hash": "LIhVZUeLBAELn5xFWfrwBw=="
+          "hash": "GqL2fMO2IJKYB+ncc4T9cg=="
         }
       },
       "is_incremental": false,
@@ -4173,7 +4401,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.HandlerSelector.html",
-          "hash": "jHpUylPb/+58+Av191+I0Q=="
+          "hash": "GyKgFyq6fWRVibUpWO7YYw=="
         }
       },
       "is_incremental": false,
@@ -4185,7 +4413,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.ActionWithoutContentHandler.html",
-          "hash": "Z4XTGvlcT1ZHwJ7dL5FXuA=="
+          "hash": "CjHkxGWarZjPYZ9TIzxpUg=="
         }
       },
       "is_incremental": false,
@@ -4197,7 +4425,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.AttackHandler.html",
-          "hash": "UpxD0Y8tP4qn/yFX5PRf2A=="
+          "hash": "2gvaSXOFJfRLvsNx8xLXDQ=="
         }
       },
       "is_incremental": false,
@@ -4209,7 +4437,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.AutoMoveHandler.html",
-          "hash": "ktRl4yiqoFCXScVTt/E0KQ=="
+          "hash": "xETxxdobBELy4lrAtXw0YA=="
         }
       },
       "is_incremental": false,
@@ -4221,7 +4449,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.BaseRequestHandler.html",
-          "hash": "39BpZSsdXIgAnCW14NX4Vw=="
+          "hash": "CZfyEpXu8xu0MoodZAqTMw=="
         }
       },
       "is_incremental": false,
@@ -4233,7 +4461,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.DefaultRequestHandler.html",
-          "hash": "75ImH6PeHPuGhyYTl2cgbw=="
+          "hash": "yqIIu7kwzD9iv4jzIQYA6Q=="
         }
       },
       "is_incremental": false,
@@ -4245,7 +4473,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.GameHandler.html",
-          "hash": "SRdlx+i64hliIoXByJ7bbQ=="
+          "hash": "wGunEKekrfrwT9NoGNsuGg=="
         }
       },
       "is_incremental": false,
@@ -4257,7 +4485,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.GameLogInHandler.html",
-          "hash": "AOu7xi+GeF4WuFqAfu/9Zw=="
+          "hash": "T+y6cqpJHTBgcwHdcikCsA=="
         }
       },
       "is_incremental": false,
@@ -4269,7 +4497,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.GatewayLogInHandler.html",
-          "hash": "JsvLYtAgZ5QXJcF0FPWtjw=="
+          "hash": "SMHKHdRuK6aEu4hxLqU4Kg=="
         }
       },
       "is_incremental": false,
@@ -4281,7 +4509,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.LookAtHandler.html",
-          "hash": "zp/adU9GIW7RFsJJ/5anGw=="
+          "hash": "rO2n4a7jccwzwCl58lpvPg=="
         }
       },
       "is_incremental": false,
@@ -4293,7 +4521,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.ModesHandler.html",
-          "hash": "/bt+vvTshLL9/bQTHhptcg=="
+          "hash": "XyETrE0LxGjcvkBaRtTNJQ=="
         }
       },
       "is_incremental": false,
@@ -4305,7 +4533,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.SpeechHandler.html",
-          "hash": "777NoGDo2Wq7VWBQS/3nDA=="
+          "hash": "QKw25Eg5uhgb+41AY6L5Pw=="
         }
       },
       "is_incremental": false,
@@ -4317,7 +4545,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.TurnOnDemandHandler.html",
-          "hash": "pcuVBumId98JOhtoAg97+g=="
+          "hash": "T7P3ujb41iq4GNSMMewZRQ=="
         }
       },
       "is_incremental": false,
@@ -4329,7 +4557,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.WalkOnDemandHandler.html",
-          "hash": "HwTPYmzP8SCeW/CFYcmzLQ=="
+          "hash": "00fjfwnV7sSz+GjU897yBA=="
         }
       },
       "is_incremental": false,
@@ -4341,7 +4569,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Handlers.html",
-          "hash": "TCOM6h29/zP2aqd0hDs8zA=="
+          "hash": "UKPVEPT3XjDGsPuiCR6Jvw=="
         }
       },
       "is_incremental": false,
@@ -4353,7 +4581,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.AnimatedTextNotification.html",
-          "hash": "jBUrtjQuElqZYMYHgS6amw=="
+          "hash": "RovKDWiX4fQhfHyFrb/L5Q=="
         }
       },
       "is_incremental": false,
@@ -4365,7 +4593,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.CreatureMovedNotification.html",
-          "hash": "l40hq5s0024qCJOayGCsKQ=="
+          "hash": "OQAfw1m4fTNHKDDa/Z68og=="
         }
       },
       "is_incremental": false,
@@ -4377,7 +4605,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.CreatureRemovedNotification.html",
-          "hash": "0Qgwr6u9AajAz2HZlI6EkQ=="
+          "hash": "YAmysyA0lMbxXnbEqUfw3g=="
         }
       },
       "is_incremental": false,
@@ -4389,7 +4617,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.CreatureSpeechNotification.html",
-          "hash": "OXjhz+X1L/CCQ3fRvLQanw=="
+          "hash": "zDMNlBhZHmS3vIEfmZd0Tg=="
         }
       },
       "is_incremental": false,
@@ -4401,7 +4629,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.CreatureTurnedNotification.html",
-          "hash": "IGguUWGyMdj1ynGAbnS5Vw=="
+          "hash": "7nd+KUju2pt74gx7kzYz/w=="
         }
       },
       "is_incremental": false,
@@ -4413,7 +4641,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.GenericNotification.html",
-          "hash": "iNPaIh9KlIEyMWEjJG08lw=="
+          "hash": "Dym0zyR21NFKB13cip05Rw=="
         }
       },
       "is_incremental": false,
@@ -4425,7 +4653,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.MagicEffectNotification.html",
-          "hash": "On9ot1Qy+u2cIYgwpdyqHg=="
+          "hash": "6mXEbTbInVz6yYQXR78qeA=="
         }
       },
       "is_incremental": false,
@@ -4437,7 +4665,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.Notification.html",
-          "hash": "/dL0lAtZDrvRgy0lFudnDA=="
+          "hash": "tK4u9E7x0Jmid6mEiW4a8w=="
         }
       },
       "is_incremental": false,
@@ -4449,7 +4677,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.NotificationContext.html",
-          "hash": "UkyPK4YQqDYnaEPspX/3Zw=="
+          "hash": "+eRdUEgzRoRlKGAeEYGEkQ=="
         }
       },
       "is_incremental": false,
@@ -4461,7 +4689,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.TextMessageNotification.html",
-          "hash": "h8Z+qrbbvwZR5opJDkjIrw=="
+          "hash": "I/hSgJrS1J2IlO78uqTbBQ=="
         }
       },
       "is_incremental": false,
@@ -4473,7 +4701,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.TileUpdatedNotification.html",
-          "hash": "EQ5ikoibquH4XrHPT4eg6A=="
+          "hash": "HVY9zu8b4MDNdaJ65tbc0g=="
         }
       },
       "is_incremental": false,
@@ -4485,7 +4713,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.WorldLightChangedNotification.html",
-          "hash": "NejbDMpidxq1Yr+z6BDl+Q=="
+          "hash": "0haaX9DhOLn9bTCekWUtcQ=="
         }
       },
       "is_incremental": false,
@@ -4497,7 +4725,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Notifications.html",
-          "hash": "r4r8HGYCCMG0P/8PmhlLFw=="
+          "hash": "uNDz/YghOeu5BY+rUVo8XQ=="
         }
       },
       "is_incremental": false,
@@ -4509,7 +4737,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoAttackOperation.html",
-          "hash": "1GSSQA3uhCaZLrW/+R013w=="
+          "hash": "g++3niVUQT1zB+L+LpqMZA=="
         }
       },
       "is_incremental": false,
@@ -4521,7 +4749,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoAttackOrchestratorOperation.html",
-          "hash": "UvWJkJUqql3u3M2WebISGQ=="
+          "hash": "pvI0sJk6Zn+2Q1nHzIDBaw=="
         }
       },
       "is_incremental": false,
@@ -4533,7 +4761,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.AutoWalkOrchestratorOperation.html",
-          "hash": "O12AAqosUUZADhluIfL/Sw=="
+          "hash": "QAZOsyX1bjlyG9KBnIGNhQ=="
         }
       },
       "is_incremental": false,
@@ -4545,7 +4773,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.BaseEnvironmentOperation.html",
-          "hash": "V0Aep9nNg2Zq5vD3ulaCqw=="
+          "hash": "/GtjQjlzMSd6GqVbBSI02w=="
         }
       },
       "is_incremental": false,
@@ -4557,7 +4785,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.CancelOperationsOperation.html",
-          "hash": "JeRKUGH+xILvLZ+Q3WSSqA=="
+          "hash": "N0+DE4wxLxUWl0u02SHHNg=="
         }
       },
       "is_incremental": false,
@@ -4569,7 +4797,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.ChangeItemOperation.html",
-          "hash": "8ceTp5AjApPLsjczlhLATQ=="
+          "hash": "8PoLZnLrKkDQimbBG9nBrQ=="
         }
       },
       "is_incremental": false,
@@ -4581,7 +4809,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.ChangeModesOperation.html",
-          "hash": "F0FlVL3d2vV2HYGTX5TkwQ=="
+          "hash": "W9scfkZAJeAAiXUc07EzWw=="
         }
       },
       "is_incremental": false,
@@ -4593,7 +4821,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.CreateItemOperation.html",
-          "hash": "9GzYlbxpWwtlttpNHO3h9g=="
+          "hash": "A7A37blKUatq8vPzt7OZ7g=="
         }
       },
       "is_incremental": false,
@@ -4605,7 +4833,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.DeathOperation.html",
-          "hash": "yz9F+/sqnPdBiX2xNqqw4A=="
+          "hash": "pjbvyKX6iJLJQMFtGVBMbg=="
         }
       },
       "is_incremental": false,
@@ -4617,7 +4845,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.DeleteItemOperation.html",
-          "hash": "WQ36qyU8NsnBV2rQdI/xtw=="
+          "hash": "DbQxM1WFBYeepRFON9hZUQ=="
         }
       },
       "is_incremental": false,
@@ -4629,7 +4857,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.ElevatedOperation.html",
-          "hash": "31b8yZV+BEtz9aSRVcgfZw=="
+          "hash": "sfw5bOiM+RKzbzBBqVKyjw=="
         }
       },
       "is_incremental": false,
@@ -4641,7 +4869,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.ElevatedOperationContext.html",
-          "hash": "zSZKd/yyQW0wRhBEe+gixg=="
+          "hash": "qDb4JrPcu+EnxZGCwdrX+A=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Operations.ExpireItemOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Operations.ExpireItemOperation.html",
+          "hash": "szQzhTGZ7i1cANhO/3SWZA=="
         }
       },
       "is_incremental": false,
@@ -4653,7 +4893,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LogInOperation.html",
-          "hash": "4vaxVMIaI2Kbc3tiDNRb1g=="
+          "hash": "JaOM6evUwIU/ZyMWCURgWQ=="
         }
       },
       "is_incremental": false,
@@ -4665,7 +4905,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LogOutOperation.html",
-          "hash": "gZjudSdEsEgItFpbbKeMpA=="
+          "hash": "l142pyWuWxHC44pR6+jTug=="
         }
       },
       "is_incremental": false,
@@ -4677,7 +4917,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.LookAtOperation.html",
-          "hash": "Lth0gjpTvtP0j0C4fW6cVQ=="
+          "hash": "PWp8irP73Br2EgDDu0+Bpw=="
         }
       },
       "is_incremental": false,
@@ -4689,7 +4929,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.MovementOperation.html",
-          "hash": "EZHyb4eEtR0EC+TEjQl+6A=="
+          "hash": "p9lvBIZ98DsDVJmF612YoA=="
         }
       },
       "is_incremental": false,
@@ -4701,7 +4941,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.Operation.html",
-          "hash": "TwBK7wJPiW3eyBMOukwzEw=="
+          "hash": "YGYIAyxTgFQx6o6OOYtI5A=="
         }
       },
       "is_incremental": false,
@@ -4713,7 +4953,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.OperationContext.html",
-          "hash": "8ZyUwP4nQq7PLDQlh+vkxg=="
+          "hash": "RhNIvbs/6USFBQIVxDlT0g=="
         }
       },
       "is_incremental": false,
@@ -4725,7 +4965,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.OperationMessage.html",
-          "hash": "1NO1wIOVvdAYfgsmAU9Z9Q=="
+          "hash": "3b1SC20CquyDh7IJgFwlsQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Operations.PlaceCreatureOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Operations.PlaceCreatureOperation.html",
+          "hash": "AKhmESzxKvuHrv5wc+hPYg=="
         }
       },
       "is_incremental": false,
@@ -4737,7 +4989,19 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.RestoreCombatCreditOperation.html",
-          "hash": "g3CtP6xuG8OslycwZsGINg=="
+          "hash": "p6T44Ivd9eL4mMC+uU5IFg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Mechanics.Operations.SpawnMonstersOperation.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Mechanics.Operations.SpawnMonstersOperation.html",
+          "hash": "eML9jt/7/cgvXn8Fx5XySg=="
         }
       },
       "is_incremental": false,
@@ -4749,7 +5013,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.SpeechOperation.html",
-          "hash": "HPFa9847sx9vs8HZL45qKw=="
+          "hash": "phb9M+2bNew2WTNAIxm/pw=="
         }
       },
       "is_incremental": false,
@@ -4761,7 +5025,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.TurnToDirectionOperation.html",
-          "hash": "JTlPyiHjyTqacYK/97Hg8A=="
+          "hash": "mTCDirTie1o3eGd6h+lPzQ=="
         }
       },
       "is_incremental": false,
@@ -4773,7 +5037,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.Operations.html",
-          "hash": "gXhofLEU6i6rfRxWIpOlLQ=="
+          "hash": "zvK/iyUhqUOKJky+A0Eu/Q=="
         }
       },
       "is_incremental": false,
@@ -4785,7 +5049,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.WorldInformation.html",
-          "hash": "y0NFkgDRGTg+7URKQ3Pszw=="
+          "hash": "rr2Rt+ZF7TM46hz8ZBgO9A=="
         }
       },
       "is_incremental": false,
@@ -4797,7 +5061,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Mechanics.html",
-          "hash": "+xF32ayPvOfQnppVSIfj7g=="
+          "hash": "H62dqan3S0PIcRwBHuWDyQ=="
         }
       },
       "is_incremental": false,
@@ -4809,7 +5073,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.CipFileParser.html",
-          "hash": "usN+D0I+h0dfTfNDNJ05lQ=="
+          "hash": "Uo0jntmS7wDt/wStIiISHg=="
         }
       },
       "is_incremental": false,
@@ -4821,7 +5085,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.CipGrammar.html",
-          "hash": "KF/Hq9dU2C9/ubunajv6iw=="
+          "hash": "RNJpZMeJTrArKPIwKQDv2A=="
         }
       },
       "is_incremental": false,
@@ -4833,7 +5097,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Enumerations.CipItemAttribute.html",
-          "hash": "hOzAbQ371t/2BZ+EqHUBTw=="
+          "hash": "y5IRQtKqJu9nk0AlxijS4w=="
         }
       },
       "is_incremental": false,
@@ -4845,7 +5109,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Enumerations.CipItemFlag.html",
-          "hash": "sFfAoauNWdaQgzd5+20ukw=="
+          "hash": "1rPkpViVEY2ouaVcEYN/lw=="
         }
       },
       "is_incremental": false,
@@ -4857,7 +5121,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Enumerations.html",
-          "hash": "Qw91ZLHpA0LUptASFDzt4w=="
+          "hash": "RQeyvjpKC1BMit+c70brIQ=="
         }
       },
       "is_incremental": false,
@@ -4869,7 +5133,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Extensions.CipItemAttributeExtensions.html",
-          "hash": "h5WTLVxP0ACtB+59GtNeqA=="
+          "hash": "vE65bIcn4ii+46LE+/79qw=="
         }
       },
       "is_incremental": false,
@@ -4881,7 +5145,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Extensions.CipItemFlagExtensions.html",
-          "hash": "+ncLb5q1HfCG513g0vPtmA=="
+          "hash": "ay0/1wuHUw0YALfB3L+G/A=="
         }
       },
       "is_incremental": false,
@@ -4893,7 +5157,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Extensions.html",
-          "hash": "vRD6rWI9dPuGe6OiKWROCw=="
+          "hash": "EMmu6sb2Mc9Oj9FlyYeL9g=="
         }
       },
       "is_incremental": false,
@@ -4905,7 +5169,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Models.CipAttribute.html",
-          "hash": "N46mzZB8InbtQO0Buf5DSQ=="
+          "hash": "acn3OjDiH8lNBi266ZkZVA=="
         }
       },
       "is_incremental": false,
@@ -4917,7 +5181,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Models.CipElement.html",
-          "hash": "jLGjHoYg43syYudNuWez/w=="
+          "hash": "co9lTKaYVmlV/xBj9z80QA=="
         }
       },
       "is_incremental": false,
@@ -4929,7 +5193,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.Models.html",
-          "hash": "1ms1X5c/yPoLmh/RvLKoMw=="
+          "hash": "DAkaipBQYMbH+xfXm3S9Ow=="
         }
       },
       "is_incremental": false,
@@ -4941,7 +5205,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.CipFiles.html",
-          "hash": "YC1WvA2hnFyh/MbtjvYtWg=="
+          "hash": "l7qvidHqDKPrRD3AldPLLA=="
         }
       },
       "is_incremental": false,
@@ -4953,7 +5217,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Abstractions.IParsedAttribute.html",
-          "hash": "c4pZGAe58ObDA4920tts6g=="
+          "hash": "mk6MmnrduAL9FtCfzOuvGg=="
         }
       },
       "is_incremental": false,
@@ -4965,7 +5229,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Abstractions.IParsedElement.html",
-          "hash": "aUeIH80OQo4UL3eWaFyaOw=="
+          "hash": "nlVz7a0sBW/NV3+JNG7FMw=="
         }
       },
       "is_incremental": false,
@@ -4977,7 +5241,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Abstractions.html",
-          "hash": "Dp+vgLtLACHuhMkXAFogqA=="
+          "hash": "3SDlbjI0LCg38UTCxjqv0g=="
         }
       },
       "is_incremental": false,
@@ -4989,7 +5253,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.ActionFunction.html",
-          "hash": "BPJRIEnte2PCJv0SMSrlew=="
+          "hash": "TA0BrWpKFVswjq6EQYE9VA=="
         }
       },
       "is_incremental": false,
@@ -5001,7 +5265,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.ComparisonFunction.html",
-          "hash": "xAAeAZiWt2ik52EsB3Ey2g=="
+          "hash": "6TRJ9reuXX8sGfJsM99PUQ=="
         }
       },
       "is_incremental": false,
@@ -5013,7 +5277,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Enumerations.FunctionComparisonType.html",
-          "hash": "US/7PyiLFoJ/M0bf3IE1MQ=="
+          "hash": "H5kCEkWO41ag9h3n2hkKpA=="
         }
       },
       "is_incremental": false,
@@ -5025,7 +5289,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Enumerations.html",
-          "hash": "HS1t1M5G4vC9dtSN2UleMQ=="
+          "hash": "WMvyjoApjSTGFuL54m5qfw=="
         }
       },
       "is_incremental": false,
@@ -5037,7 +5301,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Models.RawMonsterSpell.html",
-          "hash": "qbaXUqYQHp5BaRUFHPa0JQ=="
+          "hash": "EeT0xAMZ+iezXrSP9i4k+A=="
         }
       },
       "is_incremental": false,
@@ -5049,7 +5313,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.Models.html",
-          "hash": "eXRG522bArXeZahSvT7CnQ=="
+          "hash": "nPX02pkttRWtGkypR0tDEw=="
         }
       },
       "is_incremental": false,
@@ -5061,7 +5325,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Parsing.Contracts.html",
-          "hash": "o0h6VWkHFvkCzWtXodhZmQ=="
+          "hash": "y4MkHTuVQLeMOsDCl5s4aA=="
         }
       },
       "is_incremental": false,
@@ -5073,7 +5337,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.PathFinding.AStar.AStarPathFinder.html",
-          "hash": "pQO8rk795KV8oT5z3gTG2A=="
+          "hash": "r1vscs2RgmSyXM96i1nxmw=="
         }
       },
       "is_incremental": false,
@@ -5085,7 +5349,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.PathFinding.AStar.AStarPathFinderOptions.html",
-          "hash": "CKsBUOeXd+crZPLou1hVJQ=="
+          "hash": "02xTJknbUQMTYT/oHWviZw=="
         }
       },
       "is_incremental": false,
@@ -5093,11 +5357,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.PathFinding.AStar.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.PathFinding.AStar.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.PathFinding.AStar.ConfigurationRootExtensions.html",
-          "hash": "cdZmjCduFkvM5143U+G2PA=="
+          "relative_path": "code/Fibula.PathFinding.AStar.CompositionRootExtensions.html",
+          "hash": "KiwR4sWkvkZqdCebVgZdwQ=="
         }
       },
       "is_incremental": false,
@@ -5109,7 +5373,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.PathFinding.AStar.html",
-          "hash": "AWe7SgHGpG8Y2y+/Sh/E1Q=="
+          "hash": "Whlq7GdZbT7uyDBWWSJfcQ=="
         }
       },
       "is_incremental": false,
@@ -5121,7 +5385,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.ClientConnectionFactory-1.html",
-          "hash": "zn6cubdaA7WWV0eXH9MmlA=="
+          "hash": "pjnfBDW1Wun7tSRtGB5BsQ=="
         }
       },
       "is_incremental": false,
@@ -5129,11 +5393,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Protocol.V772.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Protocol.V772.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Protocol.V772.ConfigurationRootExtensions.html",
-          "hash": "lin3ntCTzV0kXj2H/YenNw=="
+          "relative_path": "code/Fibula.Protocol.V772.CompositionRootExtensions.html",
+          "hash": "s07TNmUSkz71LpV+aEK2hg=="
         }
       },
       "is_incremental": false,
@@ -5145,7 +5409,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.GameProtocol_v772.html",
-          "hash": "dSWdVHSaL/ydSYHzgoTDXQ=="
+          "hash": "pFNeAmzZh58G0IExOmJ48w=="
         }
       },
       "is_incremental": false,
@@ -5157,7 +5421,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.GatewayProtocol_v772.html",
-          "hash": "ylD5j25iVYJnWvoicScWRw=="
+          "hash": "icJ5ESri171UHE/ycJT57A=="
         }
       },
       "is_incremental": false,
@@ -5169,7 +5433,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.NetworkMessageExtensions.html",
-          "hash": "+MryZZKjPROkgWM+5FnFSg=="
+          "hash": "C4mLXj2kHC/DE1KBqgirhw=="
         }
       },
       "is_incremental": false,
@@ -5181,7 +5445,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.AttackPacketReader.html",
-          "hash": "cYlpHw3JrEwPNzbO5bYTNw=="
+          "hash": "ZsFvab1wvzjVUUK2WO2ezA=="
         }
       },
       "is_incremental": false,
@@ -5193,7 +5457,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.AutoMoveCancelPacketReader.html",
-          "hash": "6rwtt+R5dAedwb7ZNp0k5g=="
+          "hash": "PlWFjhjKcMAic/w9KHcK/Q=="
         }
       },
       "is_incremental": false,
@@ -5205,7 +5469,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.AutoMovePacketReader.html",
-          "hash": "6wJNNgV1Y1lf0BAdlEKCMQ=="
+          "hash": "exCZVpGxu66lBOgA+K0JoQ=="
         }
       },
       "is_incremental": false,
@@ -5217,7 +5481,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.ChangeModesPacketReader.html",
-          "hash": "uQc5mEGCB3b6nyJIxUMDEg=="
+          "hash": "MVbR4YpzZrtVJ9bubGOCSQ=="
         }
       },
       "is_incremental": false,
@@ -5229,7 +5493,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.GameLogInPacketReader.html",
-          "hash": "ZnQYpEYUSbz4w7EbSqS/Kw=="
+          "hash": "rWaX3xV1Pduf8f0SFDDozQ=="
         }
       },
       "is_incremental": false,
@@ -5241,7 +5505,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.GameLogOutPacketReader.html",
-          "hash": "d7WMNgDDIp2+yVPcXC758w=="
+          "hash": "+KLvDwqc3sUI/v3VK+Uxcw=="
         }
       },
       "is_incremental": false,
@@ -5253,7 +5517,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.GatewayLogInPacketReader.html",
-          "hash": "xWUioGW+QuAWq+OB1kvVwQ=="
+          "hash": "sdHnl7bR6b9zxDMPCNs6Xg=="
         }
       },
       "is_incremental": false,
@@ -5265,7 +5529,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.HeartbeatPacketReader.html",
-          "hash": "DgDIO1ar4mOmizBDTy0gHA=="
+          "hash": "CyfmaOJlaIjmp6hVr/eIIQ=="
         }
       },
       "is_incremental": false,
@@ -5277,7 +5541,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.HeartbeatResponsePacketReader.html",
-          "hash": "bN294OCKYkz6IX2d+ylljg=="
+          "hash": "c6+OUEQQPP1oZfmBmLm64Q=="
         }
       },
       "is_incremental": false,
@@ -5289,7 +5553,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.LookAtPacketReader.html",
-          "hash": "7yhZXFYcbDObmK2/93CqAw=="
+          "hash": "cQY8PmdskiVzRNYohyVtVQ=="
         }
       },
       "is_incremental": false,
@@ -5301,7 +5565,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.SpeechPacketReader.html",
-          "hash": "yGy9if8+TbI6c7eM7ejiuQ=="
+          "hash": "f6n9hJWiahqRT+IVjHrzaQ=="
         }
       },
       "is_incremental": false,
@@ -5313,7 +5577,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.StopAllActionsPacketReader.html",
-          "hash": "JtxsPh/GCyNuqX2gTedxUw=="
+          "hash": "Ox7D7zQwndOwbA7/GzyvEg=="
         }
       },
       "is_incremental": false,
@@ -5325,7 +5589,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.TurnEastPacketReader.html",
-          "hash": "H7Uy/UjjLgDIODO9n9Stzw=="
+          "hash": "p6L8fOSJr3ImhYHpWzBskQ=="
         }
       },
       "is_incremental": false,
@@ -5337,7 +5601,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.TurnNorthPacketReader.html",
-          "hash": "skl3WB6FbpFOvsvHPKI7DA=="
+          "hash": "27qFFNdKtpJ288kUthywSg=="
         }
       },
       "is_incremental": false,
@@ -5349,7 +5613,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.TurnSouthPacketReader.html",
-          "hash": "LKPl0ZKci/J2IRBPNrgLfA=="
+          "hash": "vUJJ93kzCGvNINoxguqNnA=="
         }
       },
       "is_incremental": false,
@@ -5361,7 +5625,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.TurnWestPacketReader.html",
-          "hash": "QjCy6LpNhaSZYnspn88Duw=="
+          "hash": "XFRb+phYBmjCXOVCm5W6NQ=="
         }
       },
       "is_incremental": false,
@@ -5373,7 +5637,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkEastPacketReader.html",
-          "hash": "7ssoeTPsh1Muef8bkWwvpQ=="
+          "hash": "aWSHr184s+Ku7Q+1bi9GXA=="
         }
       },
       "is_incremental": false,
@@ -5385,7 +5649,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkNorthPacketReader.html",
-          "hash": "LoNgSZq60Q8owqh6VNfxbw=="
+          "hash": "awC49ngH5J5CUnowyMFblg=="
         }
       },
       "is_incremental": false,
@@ -5397,7 +5661,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkNortheastPacketReader.html",
-          "hash": "QXC/7hnW/pRjBo7/C0ETvQ=="
+          "hash": "rPWQUQCLjcNeRLf6Y11JZw=="
         }
       },
       "is_incremental": false,
@@ -5409,7 +5673,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkNorthwestPacketReader.html",
-          "hash": "Is4jaWUCIJvptuh+d3BLEQ=="
+          "hash": "ajXDfYE+xOYzeFZXa4Ywfw=="
         }
       },
       "is_incremental": false,
@@ -5421,7 +5685,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkSouthPacketReader.html",
-          "hash": "DABwYEWL3CoMlIFADri37w=="
+          "hash": "mqQb1Evy5Y9yV+8fxhsrqQ=="
         }
       },
       "is_incremental": false,
@@ -5433,7 +5697,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkSoutheastPacketReader.html",
-          "hash": "8RitBn9ri5M+R/8HvcNeog=="
+          "hash": "osYiFuOljIZM51xpo1e8Bw=="
         }
       },
       "is_incremental": false,
@@ -5445,7 +5709,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkSouthwestPacketReader.html",
-          "hash": "d8OdTJnRieAxKWgbKRq/yA=="
+          "hash": "n5MHC3k75ssrr+GYXWN0SA=="
         }
       },
       "is_incremental": false,
@@ -5457,7 +5721,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.WalkWestPacketReader.html",
-          "hash": "a4cgO+VHZ9Yl0jFrAk2txQ=="
+          "hash": "lb8bGvRbnNhLHhY/KLVi/Q=="
         }
       },
       "is_incremental": false,
@@ -5469,7 +5733,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketReaders.html",
-          "hash": "nfWKNaePw/fCJiWSyMQVig=="
+          "hash": "y+WCbitjtTgkgNHYm8qQrA=="
         }
       },
       "is_incremental": false,
@@ -5481,7 +5745,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.AddCreaturePacketWriter.html",
-          "hash": "wZAaxRg7SMBhe4K2bXOK1A=="
+          "hash": "NRwROoUmbWJT8pMA5yZ2wg=="
         }
       },
       "is_incremental": false,
@@ -5493,7 +5757,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.AnimatedTextPacketWriter.html",
-          "hash": "bfNRprNQT9Y5BVrHGPpWqg=="
+          "hash": "J6nx+D7CW5g72+mOdQK7JA=="
         }
       },
       "is_incremental": false,
@@ -5505,7 +5769,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CharacterListPacketWriter.html",
-          "hash": "7x0jxo+2ToPTVDr9gT2KRw=="
+          "hash": "9Zl34aNy5LtmTlSc+5nOZg=="
         }
       },
       "is_incremental": false,
@@ -5517,7 +5781,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.ContainerAddItemPacketWriter.html",
-          "hash": "PMmyWsoEuRy6WQYO/snBsQ=="
+          "hash": "slXWCI6sAHuuCNBIbHHY1A=="
         }
       },
       "is_incremental": false,
@@ -5529,7 +5793,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.ContainerClosePacketWriter.html",
-          "hash": "uM9gXtgVZjlRpwn1OSYTkg=="
+          "hash": "M9XUmgGJpAkMp9E8O8eOlw=="
         }
       },
       "is_incremental": false,
@@ -5541,7 +5805,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.ContainerOpenPacketWriter.html",
-          "hash": "hJBkBZvkAdAAcmjnHSvxNg=="
+          "hash": "iCINnBn5WOfzb+cNWFB69g=="
         }
       },
       "is_incremental": false,
@@ -5553,7 +5817,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.ContainerRemoveItemPacketWriter.html",
-          "hash": "PqBtTAprDa3uwrtnEdli+Q=="
+          "hash": "A/mNs25eVH5nwTTntvOchQ=="
         }
       },
       "is_incremental": false,
@@ -5565,7 +5829,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.ContainerUpdateItemPacketWriter.html",
-          "hash": "SqEONcQjD1qA/Xfs0xLvFA=="
+          "hash": "zCmVH9Ir9tSL4A9rjE0Plg=="
         }
       },
       "is_incremental": false,
@@ -5577,7 +5841,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureHealthPacketWriter.html",
-          "hash": "mFCeUtLzcHK/rWlrCioIvA=="
+          "hash": "c3pIAV7WVMRuNaqknGwNSA=="
         }
       },
       "is_incremental": false,
@@ -5589,7 +5853,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureLightPacketWriter.html",
-          "hash": "2TAqfn7DoppVNKCFG3p2Ig=="
+          "hash": "fGBiv8mgs6O+8XFJANgXRQ=="
         }
       },
       "is_incremental": false,
@@ -5601,7 +5865,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureMovedPacketWriter.html",
-          "hash": "Cuu7MSJ//FshyccPM6VDBA=="
+          "hash": "ckFRLFRzqrzAdbIt6NXHIA=="
         }
       },
       "is_incremental": false,
@@ -5613,7 +5877,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureSkullPacketWriter.html",
-          "hash": "TT+U+UdCD4pOdwj/Ge9NXQ=="
+          "hash": "vCFyLURWfJc6ds4AdpQdXw=="
         }
       },
       "is_incremental": false,
@@ -5625,7 +5889,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureSpeechPacketWriter.html",
-          "hash": "od2uyuvui7qIc41Mgv/A1w=="
+          "hash": "OxL9XvZVc/Vqq/lvuJ0Q/w=="
         }
       },
       "is_incremental": false,
@@ -5637,7 +5901,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureSpeedChangePacketWriter.html",
-          "hash": "z606xroY7CJHcqPn1qqTDA=="
+          "hash": "UZgGbTglL7yYhC0DGqcuUw=="
         }
       },
       "is_incremental": false,
@@ -5649,7 +5913,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.CreatureTurnedPacketWriter.html",
-          "hash": "Gg0jG0yaMWuEUF7H2y/maQ=="
+          "hash": "KNa18xNP42U3k/vmkkxczQ=="
         }
       },
       "is_incremental": false,
@@ -5661,7 +5925,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.GameServerDisconnectPacketWriter.html",
-          "hash": "/YTBhqXT12J9j5GiXBp6wQ=="
+          "hash": "lxo/MgOZVxdQYVYpFri7vw=="
         }
       },
       "is_incremental": false,
@@ -5673,7 +5937,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.GatewayServerDisconnectPacketWriter.html",
-          "hash": "vur/EeU84RGLRIf2nWLycQ=="
+          "hash": "4PGQcCcW0NdXe8u46Op4fA=="
         }
       },
       "is_incremental": false,
@@ -5685,7 +5949,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.HeartbeatPacketWriter.html",
-          "hash": "JtdK9yxvbawdyjz9lkFoKQ=="
+          "hash": "c3PvOXWQqpIAamG0LkGK0A=="
         }
       },
       "is_incremental": false,
@@ -5697,7 +5961,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.HeartbeatResponsePacketWriter.html",
-          "hash": "7QbY4HUnxXPHeuLGiJg6DA=="
+          "hash": "1lxMc+HTa9YkQWq9OtiCJg=="
         }
       },
       "is_incremental": false,
@@ -5709,7 +5973,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.MagicEffectPacketWriter.html",
-          "hash": "4C+/hpNc9al6jAa6Smw0GQ=="
+          "hash": "8rqSs2goDS/YhZCMt8hrcw=="
         }
       },
       "is_incremental": false,
@@ -5721,7 +5985,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.MapDescriptionPacketWriter.html",
-          "hash": "m6erGth/aCGq0zPQaMju6Q=="
+          "hash": "Pc0yfStpjXscT5gbsQTJgQ=="
         }
       },
       "is_incremental": false,
@@ -5733,7 +5997,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.MapPartialDescriptionPacketWriter.html",
-          "hash": "lX6MppgSSeYX0fujC/GVMA=="
+          "hash": "QnieA50YAx2XYuXrr5ux0g=="
         }
       },
       "is_incremental": false,
@@ -5745,7 +6009,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.MessageOfTheDayPacketWriter.html",
-          "hash": "IIJveAs02Lso8+EsUV1+cg=="
+          "hash": "KrGqmUw9vzXJlj5G3cPr/g=="
         }
       },
       "is_incremental": false,
@@ -5757,7 +6021,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerCancelAttackPacketWriter.html",
-          "hash": "OSW4334iZoL6iMwbWMy7Ww=="
+          "hash": "2fb7FgS8UUrElu3EJ1nutQ=="
         }
       },
       "is_incremental": false,
@@ -5769,7 +6033,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerCancelWalkPacketWriter.html",
-          "hash": "fQhzU0O0S18LS25YY0Nr7A=="
+          "hash": "b74GOpBJbcON6DGPwo1FEw=="
         }
       },
       "is_incremental": false,
@@ -5781,7 +6045,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerConditionsPacketWriter.html",
-          "hash": "yHGW8+9ECeFvyNYHrgOFBw=="
+          "hash": "YbUgn88zdszUUE0Y/ahz6g=="
         }
       },
       "is_incremental": false,
@@ -5793,7 +6057,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerInventoryClearSlotPacketWriter.html",
-          "hash": "zFOfLuutgIbJckCTQsDA1Q=="
+          "hash": "vwWJjKzPEg2qpTxmOeb6kw=="
         }
       },
       "is_incremental": false,
@@ -5805,7 +6069,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerInventorySetSlotPacketWriter.html",
-          "hash": "FaP7T7ovGhatqaFgmw7Fvw=="
+          "hash": "jmEEntr2gVc037k4s7vjZg=="
         }
       },
       "is_incremental": false,
@@ -5817,7 +6081,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerLoginPacketWriter.html",
-          "hash": "KLYxMzsT5JpYYYOowVG6mw=="
+          "hash": "rHuGZPT1DzCN4TKlEMEXZA=="
         }
       },
       "is_incremental": false,
@@ -5829,7 +6093,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerSkillsPacketWriter.html",
-          "hash": "B98y7amF0wm5RXnxdZCEYQ=="
+          "hash": "j+c/+XclVwaBQ2fFVCTKGw=="
         }
       },
       "is_incremental": false,
@@ -5841,7 +6105,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.PlayerStatsPacketWriter.html",
-          "hash": "QZh95G7atTCWAdz5meL7AA=="
+          "hash": "Mszt/uPIzrSBGKRJvfuyxA=="
         }
       },
       "is_incremental": false,
@@ -5853,7 +6117,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.RemoveAtPositionPacketWriter.html",
-          "hash": "FMQrBbKXgmx858YgLseGzg=="
+          "hash": "p57Rwf4cAo+5Hap8gebSug=="
         }
       },
       "is_incremental": false,
@@ -5865,7 +6129,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.SquarePacketWriter.html",
-          "hash": "JyqICWoup/eCWseLjr/GCQ=="
+          "hash": "IJiCwHByWL/uyQOfbrS3pQ=="
         }
       },
       "is_incremental": false,
@@ -5877,7 +6141,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.TextMessagePacketWriter.html",
-          "hash": "ZL6cT77lKG32ChnrfKVjVw=="
+          "hash": "K/fhj3K9KrxoWk/eoyyvmA=="
         }
       },
       "is_incremental": false,
@@ -5889,7 +6153,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.TileUpdatePacketWriter.html",
-          "hash": "ulqV+9qPSs1+R9JHzI00qA=="
+          "hash": "PL9XUdLxz7teVfHFZffUqA=="
         }
       },
       "is_incremental": false,
@@ -5901,7 +6165,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.WorldLightPacketWriter.html",
-          "hash": "f7qapz66KwXjSNlLmBCkxQ=="
+          "hash": "VUQBBhGD6lnFVI+DZK+W1Q=="
         }
       },
       "is_incremental": false,
@@ -5913,7 +6177,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PacketWriters.html",
-          "hash": "/9AotILc14s5loAlvuzHfg=="
+          "hash": "WCa7e1j51QkC1K9R6ZPlqQ=="
         }
       },
       "is_incremental": false,
@@ -5925,7 +6189,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.PredefinedItemSet_v772.html",
-          "hash": "q+HP2hv4Ybodv3PLOOEFQA=="
+          "hash": "UMcrjIjmTiqUe1dvqKgWmA=="
         }
       },
       "is_incremental": false,
@@ -5937,7 +6201,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.SocketConnection_v772.html",
-          "hash": "VOS42It35h7G43MEUhj13w=="
+          "hash": "SEXu/57rscRCVuzjxyGGtA=="
         }
       },
       "is_incremental": false,
@@ -5949,7 +6213,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.TileDescriptor_v772.html",
-          "hash": "Vc+i87SIZxj56j0SZDb/JA=="
+          "hash": "2dJOir5Htzswda/f0WvUuw=="
         }
       },
       "is_incremental": false,
@@ -5961,7 +6225,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Protocol.V772.html",
-          "hash": "HOYwVbSPZgtUwLoD+EA/lQ=="
+          "hash": "aCeHI8N9Akxj4Rr3gNL9/A=="
         }
       },
       "is_incremental": false,
@@ -5973,7 +6237,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Azure.AadTokenMsiBasedProvider.html",
-          "hash": "dIaMbhaHuL3cZ2Oc8zMgSw=="
+          "hash": "Yme1uBbiaIeQTjYTts3mhg=="
         }
       },
       "is_incremental": false,
@@ -5981,11 +6245,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Providers.Azure.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Providers.Azure.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Providers.Azure.ConfigurationRootExtensions.html",
-          "hash": "qFupFB/DCbuNydB26XVFgA=="
+          "relative_path": "code/Fibula.Providers.Azure.CompositionRootExtensions.html",
+          "hash": "iPlnlHbpz45uqaicwQ90dg=="
         }
       },
       "is_incremental": false,
@@ -5997,7 +6261,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Azure.KeyVaultSecretsProvider.html",
-          "hash": "qTe3K6w2Gj1nyQkDvbf3MA=="
+          "hash": "dQG8ws/+vkwdmLVMYXD3lA=="
         }
       },
       "is_incremental": false,
@@ -6009,7 +6273,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Azure.KeyVaultSecretsProviderOptions.html",
-          "hash": "nf01U81simFJtl6eAvllfA=="
+          "hash": "kXtgGqjrCq6Ns+AOjX4OpA=="
         }
       },
       "is_incremental": false,
@@ -6021,7 +6285,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Azure.html",
-          "hash": "kUpZVgUFyjBYsg5xDmVryA=="
+          "hash": "vC5WI7yHss3kCVHAoIMtZw=="
         }
       },
       "is_incremental": false,
@@ -6033,7 +6297,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Contracts.ISecretsProvider.html",
-          "hash": "dBeox2Jh/3dZo8xbRNzclQ=="
+          "hash": "bayNO85V5RKGbZ0l2D8lyQ=="
         }
       },
       "is_incremental": false,
@@ -6045,7 +6309,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Contracts.ITokenProvider.html",
-          "hash": "W6W1IojuU2Z/G71Fk9fqcQ=="
+          "hash": "oFd9u2pzBtwv5UPz63eL5Q=="
         }
       },
       "is_incremental": false,
@@ -6057,7 +6321,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Providers.Contracts.html",
-          "hash": "dOrKBKzR9rxF+2qIqVthQA=="
+          "hash": "9l0CAwf5IJbBiV27A3R//Q=="
         }
       },
       "is_incremental": false,
@@ -6069,7 +6333,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.BaseEvent.html",
-          "hash": "q5qA/i23IlyA9jcLoBhG4g=="
+          "hash": "tKsO3HocBZCpqTzEM0n/vA=="
         }
       },
       "is_incremental": false,
@@ -6081,7 +6345,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Abstractions.IEvent.html",
-          "hash": "nqS9cCLD5f9S+9RHHWNT5Q=="
+          "hash": "FlP34RkdfLa/ZpB+0kNf+w=="
         }
       },
       "is_incremental": false,
@@ -6093,7 +6357,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Abstractions.IEventContext.html",
-          "hash": "skDc3gBekQY6gYyvp5t4tw=="
+          "hash": "7pnK2q6Es+66f/mmxNflyQ=="
         }
       },
       "is_incremental": false,
@@ -6105,7 +6369,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Abstractions.IScheduler.html",
-          "hash": "NvCLa6GSj43k5gUcDVSg+A=="
+          "hash": "wsvKE7pT1wVos3HLv6xGpw=="
         }
       },
       "is_incremental": false,
@@ -6117,7 +6381,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Abstractions.html",
-          "hash": "xHTo1eNi7qHJFGYNz6QeMA=="
+          "hash": "U3trjsyhH6+IvBncCqsWZA=="
         }
       },
       "is_incremental": false,
@@ -6129,7 +6393,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Delegates.EventCancelledDelegate.html",
-          "hash": "eRkGB4pBlMakneIpjXx1Yg=="
+          "hash": "w27oGNnUdQPRLmmLmSy0aw=="
         }
       },
       "is_incremental": false,
@@ -6141,7 +6405,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Delegates.EventExpeditedDelegate.html",
-          "hash": "DovlPefOZCbbuzUsJY92Eg=="
+          "hash": "OCvztaXkEJGtudSvNtbUlw=="
         }
       },
       "is_incremental": false,
@@ -6153,7 +6417,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Delegates.EventFiredDelegate.html",
-          "hash": "TuuJKU11fFw24+M9tTuRWQ=="
+          "hash": "wEU+VZwVK62IafpajxJqDQ=="
         }
       },
       "is_incremental": false,
@@ -6165,7 +6429,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Delegates.EventFiredEventArgs.html",
-          "hash": "C4Qi52JLy9of2W71DA/LZg=="
+          "hash": "g+EN9V3y2wX9c+K3N/Dpgg=="
         }
       },
       "is_incremental": false,
@@ -6177,7 +6441,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Delegates.html",
-          "hash": "iU/QMv+3ZeJgX4TcMRhFmw=="
+          "hash": "QZxBMcnCQHsQSaXtq1RX8w=="
         }
       },
       "is_incremental": false,
@@ -6189,7 +6453,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Extensions.TimeSpanExtensions.html",
-          "hash": "X3wniw+zZwp7+ZY4n3COFQ=="
+          "hash": "kW4u0+9geNOxZ33pAOdd6w=="
         }
       },
       "is_incremental": false,
@@ -6201,7 +6465,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Contracts.Extensions.html",
-          "hash": "ksRM9eUHNp4qumWQBcRaew=="
+          "hash": "ZijPid+1eAzEFHcK4mV9xg=="
         }
       },
       "is_incremental": false,
@@ -6213,7 +6477,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.EventContext.html",
-          "hash": "eKQKB3QPWKt7sNEjLycP1Q=="
+          "hash": "PUCRnIdQiIeVVKWYXt+IhA=="
         }
       },
       "is_incremental": false,
@@ -6225,7 +6489,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Scheduler.html",
-          "hash": "V5n5ksB806SquIO1lh7L+g=="
+          "hash": "5apQPcT2k/odjEajHC3twg=="
         }
       },
       "is_incremental": false,
@@ -6237,7 +6501,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Tests.SchedulerTests.html",
-          "hash": "tIe5FEWhe0EGPFmhuJj6/g=="
+          "hash": "5wbr+3Sq926Mvtj2LHWNlQ=="
         }
       },
       "is_incremental": false,
@@ -6249,7 +6513,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.Tests.html",
-          "hash": "cTS0tmRvwYlvplDsJv3FIA=="
+          "hash": "f0L5sWOqbRmYY2HCm3ZOrA=="
         }
       },
       "is_incremental": false,
@@ -6261,7 +6525,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Scheduling.html",
-          "hash": "fGS4TcaQvGgObHiKXkogLg=="
+          "hash": "HCCQu1VU5CORck6ODih4ag=="
         }
       },
       "is_incremental": false,
@@ -6269,11 +6533,11 @@
     },
     {
       "type": "ManagedReference",
-      "source_relative_path": "code/Fibula.Security.ConfigurationRootExtensions.yml",
+      "source_relative_path": "code/Fibula.Security.CompositionRootExtensions.yml",
       "output": {
         ".html": {
-          "relative_path": "code/Fibula.Security.ConfigurationRootExtensions.html",
-          "hash": "IwAVcZhrQgMt91fD8cn4dQ=="
+          "relative_path": "code/Fibula.Security.CompositionRootExtensions.html",
+          "hash": "Dr9XPYKhzOF7hkTfOQSFPQ=="
         }
       },
       "is_incremental": false,
@@ -6285,7 +6549,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Contracts.IDoSDefender.html",
-          "hash": "Ii8RoSPjcBRUkrFWg8P+XA=="
+          "hash": "lSAQqWua4+lqbmzuJjsGfA=="
         }
       },
       "is_incremental": false,
@@ -6297,7 +6561,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Contracts.IRsaDecryptor.html",
-          "hash": "t8gJLabtDH9E5MJVBq5sRg=="
+          "hash": "hEfTFKdsZmwez4o+JuGwTw=="
         }
       },
       "is_incremental": false,
@@ -6309,7 +6573,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Contracts.html",
-          "hash": "PQyF+rDjEjAjaIa5mQLDOQ=="
+          "hash": "fHM7HlxJBCR8eNrcTlbHDA=="
         }
       },
       "is_incremental": false,
@@ -6321,7 +6585,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Encryption.LocalPemFileRsaDecryptor.html",
-          "hash": "4TTDGwxi/ktzaq8GFGe5qQ=="
+          "hash": "917+7GqU/TUxuzo9+fFpSg=="
         }
       },
       "is_incremental": false,
@@ -6333,7 +6597,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Encryption.LocalPemFileRsaDecryptorOptions.html",
-          "hash": "OLDq0jgztCWaZuIvzd4f6A=="
+          "hash": "52eqBBklCIAb60wQwMODlQ=="
         }
       },
       "is_incremental": false,
@@ -6345,7 +6609,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Encryption.Xtea.html",
-          "hash": "UZTDDFeSzvZcKuSIf/7gZQ=="
+          "hash": "Rl9hDPhJ3YmQrNLnT3l89A=="
         }
       },
       "is_incremental": false,
@@ -6357,7 +6621,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Encryption.html",
-          "hash": "9e17fAYm7SR/nhuDOHAkhQ=="
+          "hash": "8XA3AfGhQSkh9Vmc+5fV0A=="
         }
       },
       "is_incremental": false,
@@ -6369,7 +6633,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.SimpleDosDefender.html",
-          "hash": "xvWJ5VbevWJG9YtlKvW5nw=="
+          "hash": "NLT9r3YBKDsSYyPjjlRywg=="
         }
       },
       "is_incremental": false,
@@ -6381,7 +6645,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.SimpleDosDefenderOptions.html",
-          "hash": "nn8/7PjtJCeLIiM8X7aPmw=="
+          "hash": "xgQlGTvw+GyCukDXO/+6lA=="
         }
       },
       "is_incremental": false,
@@ -6393,7 +6657,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Tests.SimpleDoSDefenderTests.html",
-          "hash": "WD2WIh3H9yTjTFpqqPGxaQ=="
+          "hash": "B9eAlNpbMLh/RcKNdOhyaA=="
         }
       },
       "is_incremental": false,
@@ -6405,7 +6669,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.Tests.html",
-          "hash": "WZqWGCnvMyQwiCYpyWYPPw=="
+          "hash": "zmHKk+yvZMNcPHTEXWOK1A=="
         }
       },
       "is_incremental": false,
@@ -6417,7 +6681,31 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Security.html",
-          "hash": "TIFl/vGT9iWx6SfYY9MexQ=="
+          "hash": "cqjEc/D7MeZPo6T+E0sORQ=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Server.Contracts.Enumerations.CipMonsterSkillType.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Server.Contracts.Enumerations.CipMonsterSkillType.html",
+          "hash": "+9L6KC7oL9jDjjMwxE2/hg=="
+        }
+      },
+      "is_incremental": false,
+      "version": ""
+    },
+    {
+      "type": "ManagedReference",
+      "source_relative_path": "code/Fibula.Server.Contracts.Enumerations.yml",
+      "output": {
+        ".html": {
+          "relative_path": "code/Fibula.Server.Contracts.Enumerations.html",
+          "hash": "5GlVxsMqSHMd0ifo68UnyQ=="
         }
       },
       "is_incremental": false,
@@ -6429,7 +6717,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Standalone.Program.html",
-          "hash": "l0vBwGGLc+h7H/Qd2vordw=="
+          "hash": "qxsU9Q7HiblD7ntMnA2+1w=="
         }
       },
       "is_incremental": false,
@@ -6441,7 +6729,7 @@
       "output": {
         ".html": {
           "relative_path": "code/Fibula.Standalone.html",
-          "hash": "gIq7Xgk1XJAPC7mr4L7qHA=="
+          "hash": "R5QxtsLILbQj+LsnUuSMog=="
         }
       },
       "is_incremental": false,
@@ -6453,7 +6741,7 @@
       "output": {
         ".html": {
           "relative_path": "code/index.html",
-          "hash": "rtr4Tjg6XJ4pg4riXAWE6w=="
+          "hash": "krk5gvqiI9qOus0B9gBd2Q=="
         }
       },
       "is_incremental": false,
@@ -6465,7 +6753,7 @@
       "output": {
         ".html": {
           "relative_path": "code/toc.html",
-          "hash": "ChFFUwbJP5g9N0/XAd8sfA=="
+          "hash": "4y4Jc/xcgOpbEGBqqod34Q=="
         }
       },
       "is_incremental": false,
@@ -6653,7 +6941,7 @@
       "output": {
         ".html": {
           "relative_path": "index.html",
-          "hash": "1kbDv5bj/oEpWwBSjjqLbw=="
+          "hash": "iJ2I6Xs69SYjKfY0RNtaaQ=="
         }
       },
       "is_incremental": false,
@@ -6675,23 +6963,25 @@
   "incremental_info": [
     {
       "status": {
-        "can_incremental": true,
+        "can_incremental": false,
+        "details": "Cannot build incrementally because config changed.",
         "incrementalPhase": "build",
         "total_file_count": 0,
-        "skipped_file_count": 0
+        "skipped_file_count": 0,
+        "full_build_reason_code": "ConfigChanged"
       },
       "processors": {
         "ConceptualDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
           "total_file_count": 7,
-          "skipped_file_count": 7
+          "skipped_file_count": 0
         },
         "ManagedReferenceDocumentProcessor": {
-          "can_incremental": true,
+          "can_incremental": false,
           "incrementalPhase": "build",
-          "total_file_count": 530,
-          "skipped_file_count": 530
+          "total_file_count": 554,
+          "skipped_file_count": 0
         },
         "ResourceDocumentProcessor": {
           "can_incremental": false,

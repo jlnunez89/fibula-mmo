@@ -122,10 +122,10 @@
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_Movement_System_UInt32_System_UInt16_Fibula_Common_Contracts_Structs_Location_System_Byte_System_UInt32_Fibula_Common_Contracts_Structs_Location_System_UInt32_System_Byte_">IGameOperationsApi.Movement(UInt32, UInt16, Location, Byte, UInt32, Location, UInt32, Byte)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SetCreatureStaticWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_Direction___Fibula_Common_Contracts_Enumerations_WalkStrategy_">IGameOperationsApi.SetCreatureStaticWalkPlan(ICreature, Direction[], WalkStrategy)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_ResetCreatureStaticWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_Direction___Fibula_Common_Contracts_Enumerations_WalkStrategy_">IGameOperationsApi.ResetCreatureStaticWalkPlan(ICreature, Direction[], WalkStrategy)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_">IGameOperationsApi.SetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_ResetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_">IGameOperationsApi.ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SendHeartbeat_Fibula_Creatures_Contracts_Abstractions_IPlayer_">IGameOperationsApi.SendHeartbeat(IPlayer)</a>
@@ -140,10 +140,16 @@
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_CombatantDeath_Fibula_Mechanics_Contracts_Abstractions_ICombatant_">ICombatOperationsApi.CombatantDeath(ICombatant)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_CreatureChangeModes_System_UInt32_Fibula_Common_Contracts_Enumerations_FightMode_Fibula_Common_Contracts_Enumerations_ChaseMode_System_Boolean_">ICombatOperationsApi.CreatureChangeModes(UInt32, FightMode, ChaseMode, Boolean)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_CombatantAttackTargetChanged_Fibula_Mechanics_Contracts_Abstractions_ICombatant_Fibula_Mechanics_Contracts_Abstractions_ICombatant_">ICombatOperationsApi.CombatantAttackTargetChanged(ICombatant, ICombatant)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_ResetCombatTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_Fibula_Mechanics_Contracts_Abstractions_ICombatant_">ICombatOperationsApi.ResetCombatTarget(ICombatant, ICombatant)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_CombatantChaseTargetChanged_Fibula_Mechanics_Contracts_Abstractions_ICombatant_Fibula_Mechanics_Contracts_Abstractions_ICombatant_">ICombatOperationsApi.CombatantChaseTargetChanged(ICombatant, ICombatant)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_SetCombatantModes_Fibula_Mechanics_Contracts_Abstractions_ICombatant_Fibula_Common_Contracts_Enumerations_FightMode_Fibula_Common_Contracts_Enumerations_ChaseMode_System_Boolean_">ICombatOperationsApi.SetCombatantModes(ICombatant, FightMode, ChaseMode, Boolean)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_ICombatOperationsApi_SetCombatantAttackTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_Fibula_Mechanics_Contracts_Abstractions_ICombatant_">ICombatOperationsApi.SetCombatantAttackTarget(ICombatant, ICombatant)</a>
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.html">Fibula.Mechanics.Contracts.Abstractions</a></h6>
@@ -225,7 +231,7 @@
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href="https://linkedin.com/in/nunezdecaceres">Jose L. Nuñez de Caceres</a> et al.</span>
             
           </div>
         </div>

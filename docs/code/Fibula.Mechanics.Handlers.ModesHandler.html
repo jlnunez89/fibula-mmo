@@ -137,19 +137,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Handlers_ModesHandler__ctor_Serilog_ILogger_Fibula_Mechanics_Contracts_Abstractions_IGame_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Handlers.ModesHandler.%23ctor(Serilog.ILogger%2CFibula.Mechanics.Contracts.Abstractions.IGame)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Handlers_ModesHandler__ctor_Serilog_ILogger_Fibula_Mechanics_Contracts_Abstractions_IGame_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Handlers.ModesHandler.%23ctor(Serilog.ILogger%2CFibula.Mechanics.Contracts.Abstractions.IGame%2CFibula.Creatures.Contracts.Abstractions.ICreatureFinder)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L32">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L34">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Handlers_ModesHandler__ctor_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.#ctor*"></a>
-  <h4 id="Fibula_Mechanics_Handlers_ModesHandler__ctor_Serilog_ILogger_Fibula_Mechanics_Contracts_Abstractions_IGame_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.#ctor(Serilog.ILogger,Fibula.Mechanics.Contracts.Abstractions.IGame)">ModesHandler(ILogger, IGame)</h4>
+  <h4 id="Fibula_Mechanics_Handlers_ModesHandler__ctor_Serilog_ILogger_Fibula_Mechanics_Contracts_Abstractions_IGame_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.#ctor(Serilog.ILogger,Fibula.Mechanics.Contracts.Abstractions.IGame,Fibula.Creatures.Contracts.Abstractions.ICreatureFinder)">ModesHandler(ILogger, IGame, ICreatureFinder)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.Handlers.ModesHandler.html">ModesHandler</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ModesHandler(ILogger logger, IGame gameInstance)</code></pre>
+    <pre><code class="lang-csharp hljs">public ModesHandler(ILogger logger, IGame gameInstance, ICreatureFinder creatureFinder)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,6 +173,45 @@
         <td><p>A reference to the game instance.</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td><span class="parametername">creatureFinder</span></td>
+        <td><p>A reference to the creature finder in use.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Handlers_ModesHandler_CreatureFinder.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Handlers.ModesHandler.CreatureFinder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L43">View Source</a>
+  </span>
+  <a id="Fibula_Mechanics_Handlers_ModesHandler_CreatureFinder_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.CreatureFinder*"></a>
+  <h4 id="Fibula_Mechanics_Handlers_ModesHandler_CreatureFinder" data-uid="Fibula.Mechanics.Handlers.ModesHandler.CreatureFinder">CreatureFinder</h4>
+  <div class="markdown level1 summary"><p>Gets the creature finder to use.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ICreatureFinder CreatureFinder { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureFinder.html">ICreatureFinder</a></td>
+        <td></td>
+      </tr>
     </tbody>
   </table>
   <h3 id="methods">Methods
@@ -182,7 +221,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Handlers_ModesHandler_HandleRequest_Fibula_Communications_Contracts_Abstractions_IIncomingPacket_Fibula_Client_Contracts_Abstractions_IClient_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Handlers.ModesHandler.HandleRequest(Fibula.Communications.Contracts.Abstractions.IIncomingPacket%2CFibula.Client.Contracts.Abstractions.IClient)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L43">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L51">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Handlers_ModesHandler_HandleRequest_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.HandleRequest*"></a>
   <h4 id="Fibula_Mechanics_Handlers_ModesHandler_HandleRequest_Fibula_Communications_Contracts_Abstractions_IIncomingPacket_Fibula_Client_Contracts_Abstractions_IClient_" data-uid="Fibula.Mechanics.Handlers.ModesHandler.HandleRequest(Fibula.Communications.Contracts.Abstractions.IIncomingPacket,Fibula.Client.Contracts.Abstractions.IClient)">HandleRequest(IIncomingPacket, IClient)</h4>
@@ -260,7 +299,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Handlers_ModesHandler.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Handlers.ModesHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L25" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Handlers/ModesHandler.cs/#L26" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
@@ -279,7 +318,7 @@
             <span class="pull-right">
               <a href="#top">Back to top</a>
             </span>
-            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href="https://linkedin.com/in/nunezdecaceres">Jose L. Nuñez de Caceres</a> et al.</span>
             
           </div>
         </div>

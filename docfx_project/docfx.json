@@ -58,7 +58,7 @@
     "dest": "../docs",
     "globalMetadata": {
       "_appTitle": "Fibula MMO",
-      "_appFooter": "<span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | Jose L. Nuñez de Caceres et al.</span>",
+      "_appFooter": "<span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href=\"https://linkedin.com/in/nunezdecaceres\">Jose L. Nuñez de Caceres</a> et al.</span>",
       "_appLogoPath": "images/logo.png",
       "_appFaviconPath": "favicon.ico",
       "_enableSearch": true
