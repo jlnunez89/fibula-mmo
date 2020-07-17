@@ -47,6 +47,11 @@ namespace Fibula.Communications.Contracts.Enumerations
         Heartbeat = 0x1E,
 
         /// <summary>
+        /// Player death notification.
+        /// </summary>
+        Death = 0x28,
+
+        /// <summary>
         /// Adding an unknown creature description.
         /// </summary>
         AddUnknownCreature = 0x61,

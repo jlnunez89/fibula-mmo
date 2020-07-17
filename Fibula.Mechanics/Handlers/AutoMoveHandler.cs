@@ -67,7 +67,7 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            this.Game.SetCreatureStaticWalkPlan(player, autoMoveInfo.Directions);
+            this.Game.ResetCreatureStaticWalkPlan(player, autoMoveInfo.Directions);
 
             return null;
         }

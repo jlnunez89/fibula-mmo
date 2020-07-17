@@ -92,6 +92,9 @@ namespace Fibula.Mechanics.Operations
 
             var operationContext = context as IOperationContext;
 
+            // Reset the operation's Repeat property, to avoid implementations running perpetually.
+            this.RepeatAfter = TimeSpan.MinValue;
+
             this.Execute(operationContext);
 
             // Add any exhaustion for the requestor of the operation, if any.
@@ -181,10 +184,7 @@ namespace Fibula.Mechanics.Operations
 
             message.ThrowIfNullOrWhiteSpace();
 
-            new TextMessageNotification(
-                () => player.YieldSingleItem(),
-                MessageType.StatusSmall,
-                message)
+            new TextMessageNotification(() => player.YieldSingleItem(), MessageType.StatusSmall, message)
             .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }

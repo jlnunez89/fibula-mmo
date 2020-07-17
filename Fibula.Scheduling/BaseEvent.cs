@@ -32,6 +32,8 @@ namespace Fibula.Scheduling
             this.RequestorId = 0;
 
             this.RequestorId = requestorId;
+
+            this.RepeatAfter = TimeSpan.MinValue;
         }
 
         /// <summary>

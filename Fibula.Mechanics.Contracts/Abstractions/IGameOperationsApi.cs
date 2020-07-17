@@ -158,20 +158,21 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
 
         /// <summary>
-        /// Re-sets a given creature's walk plan and kicks it off.
+        /// Resets a given creature's walk plan and kicks it off.
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="directions">The directions for the new plan.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
-        void SetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate);
+        void ResetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate);
 
         /// <summary>
-        /// Re-sets a given creature's walk plan and kicks it off.
+        /// Resets a given creature's walk plan and kicks it off.
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
-        void SetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation);
+        /// <param name="targetDistance">Optional. The target distance to calculate from the target creature.</param>
+        void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1);
 
         /// <summary>
         /// Sends a heartbeat to the player's client.

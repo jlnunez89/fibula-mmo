@@ -112,12 +112,22 @@ namespace Fibula.Creatures
         /// <summary>
         /// Event to call when the combatant's health changes.
         /// </summary>
-        public event OnHealthChange HealthChanged;
+        public event OnHealthChanged HealthChanged;
 
         /// <summary>
         /// Event to call when the combatant dies.
         /// </summary>
         public event OnDeath Death;
+
+        /// <summary>
+        /// Event to call when the attack target changes.
+        /// </summary>
+        public event OnAttackTargetChanged AttackTargetChanged;
+
+        /// <summary>
+        /// Event to call when the chase target changes.
+        /// </summary>
+        public event OnChaseTargetChanged ChaseTargetChanged;
 
         /// <summary>
         /// Gets the current target combatant.
@@ -157,7 +167,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the target being chased, if any.
         /// </summary>
-        public ICombatant ChasingTarget { get; private set; }
+        public ICombatant ChaseTarget { get; private set; }
 
         /// <summary>
         /// Gets or sets the chase mode selected by this combatant.
@@ -274,7 +284,8 @@ namespace Fibula.Creatures
                     this.SetChaseTarget(otherCombatant);
                 }
 
-                // this.TargetChanged?.Invoke(this, oldTarget);
+                this.AttackTargetChanged?.Invoke(this, oldTarget);
+
                 targetWasChanged = true;
             }
 
@@ -290,13 +301,14 @@ namespace Fibula.Creatures
         {
             bool targetWasChanged = false;
 
-            if (target != this.ChasingTarget)
+            if (target != this.ChaseTarget)
             {
-                var oldTarget = this.ChasingTarget;
+                var oldTarget = this.ChaseTarget;
 
-                this.ChasingTarget = target;
+                this.ChaseTarget = target;
 
-                // this.TargetChanged?.Invoke(this, oldTarget);
+                this.ChaseTargetChanged?.Invoke(this, oldTarget);
+
                 targetWasChanged = true;
             }
 

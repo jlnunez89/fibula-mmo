@@ -132,6 +132,10 @@ namespace Fibula.Communications.Listeners
                             // This is normal when the listerner is stopped because of token cancellation.
                             break;
                         }
+                        catch (Exception socEx)
+                        {
+                            this.Logger.Error(socEx.ToString());
+                        }
                     }
                 }
                 catch (SocketException socEx)

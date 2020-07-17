@@ -18,16 +18,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// </summary>
     public interface ICombatOperationsApi
     {
-        // void OnCombatantCombatStarted(ICombatant combatant);
-
-        // void OnCombatantCombatEnded(ICombatant combatant);
-
-        // void OnCombatCreditsConsumed(ICombatant combatant, CombatCreditType creditType, byte amount);
-
-        // void OnCombatantTargetChanged(ICombatant combatant, ICombatant oldTarget);
-
-        // void OnCombatantChaseModeChanged(ICombatant combatant, ChaseMode oldMode);
-
         /// <summary>
         /// Handles a health change event from a combatant.
         /// </summary>
@@ -42,19 +32,33 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void CombatantDeath(ICombatant combatant);
 
         /// <summary>
-        /// Changes the fight, chase and safety modes of a creature.
+        /// Handles an attack target change from a combatant.
         /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="combatant">The combatant that died.</param>
+        /// <param name="oldTarget">The previous attack target, which can be null.</param>
+        void CombatantAttackTargetChanged(ICombatant combatant, ICombatant oldTarget);
+
+        /// <summary>
+        /// Handles a chase target change from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that died.</param>
+        /// <param name="oldTarget">The previous chased target, which can be null.</param>
+        void CombatantChaseTargetChanged(ICombatant combatant, ICombatant oldTarget);
+
+        /// <summary>
+        /// Sets the fight, chase and safety modes of a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that update modes.</param>
         /// <param name="fightMode">The fight mode to change to.</param>
         /// <param name="chaseMode">The chase mode to change to.</param>
         /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
-        void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn);
+        void SetCombatantModes(ICombatant combatant, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn);
 
         /// <summary>
-        /// Re-sets the combat target of the attacker and it's (possibly new) target.
+        /// Sets the combat target of the attacker and it's (possibly new) target.
         /// </summary>
         /// <param name="attacker">The attacker.</param>
         /// <param name="target">The target.</param>
-        void ResetCombatTarget(ICombatant attacker, ICombatant target);
+        void SetCombatantAttackTarget(ICombatant attacker, ICombatant target);
     }
 }

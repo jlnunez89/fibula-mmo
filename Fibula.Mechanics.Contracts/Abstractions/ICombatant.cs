@@ -25,17 +25,22 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Event to call when the combatant's health changes.
         /// </summary>
-        event OnHealthChange HealthChanged;
+        event OnHealthChanged HealthChanged;
 
         /// <summary>
         /// Event to call when the combatant dies.
         /// </summary>
         event OnDeath Death;
 
-        ///// <summary>
-        ///// Event to call when the attack target changes.
-        ///// </summary>
-        // event OnAttackTargetChange TargetChanged;
+        /// <summary>
+        /// Event to call when the attack target changes.
+        /// </summary>
+        event OnAttackTargetChanged AttackTargetChanged;
+
+        /// <summary>
+        /// Event to call when the chase target changes.
+        /// </summary>
+        event OnChaseTargetChanged ChaseTargetChanged;
 
         ///// <summary>
         ///// Event to call when the fight mode changes.
@@ -75,7 +80,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Gets the current target being chased, if any.
         /// </summary>
-        ICombatant ChasingTarget { get; }
+        ICombatant ChaseTarget { get; }
 
         /// <summary>
         /// Gets the range that the auto attack has.

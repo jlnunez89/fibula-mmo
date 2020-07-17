@@ -503,11 +503,10 @@ namespace Fibula.Mechanics.Operations
                 {
                     if (requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
                     {
-                        var cancelMovementNotification = new GenericNotification(
-                            () => context.CreatureFinder.FindPlayerById(player.Id).YieldSingleItem(),
-                            new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection()));
-
-                        context.Scheduler.ScheduleEvent(cancelMovementNotification);
+                        new GenericNotification(
+                            () => player.YieldSingleItem(),
+                            new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection()))
+                        .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
                     }
 
                     this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);

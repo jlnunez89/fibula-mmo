@@ -196,8 +196,9 @@ namespace Fibula.Scheduling
                                 evt.Expedited -= this.HandleEventExpedition;
 
                                 // Repeat the event if it applicable.
-                                if (!wasCancelled && evt.RepeatAfter > TimeSpan.Zero)
+                                if (!wasCancelled && evt.RepeatAfter != TimeSpan.MinValue)
                                 {
+                                    // Schedule event protects against negative delays.
                                     this.ScheduleEvent(evt, evt.RepeatAfter);
                                 }
                             }

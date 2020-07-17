@@ -11,6 +11,7 @@
 
 namespace Fibula.Mechanics.Contracts.Extensions
 {
+    using System;
     using System.Collections.Generic;
     using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Enumerations;
@@ -27,16 +28,22 @@ namespace Fibula.Mechanics.Contracts.Extensions
         /// </summary>
         /// <param name="walkPlan">The walkplan to check.</param>
         /// <param name="currentWaypoint">The current waypoint.</param>
+        /// <param name="rng">Optional. A pseudo-random number generator to work with.</param>
         /// <returns>The resulting state of the walk plan..</returns>
-        public static WalkPlanState UpdateState(this WalkPlan walkPlan, Location currentWaypoint)
+        public static WalkPlanState UpdateState(this WalkPlan walkPlan, Location currentWaypoint, Random rng = null)
         {
+            if (rng == null)
+            {
+                rng = new Random();
+            }
+
             if (walkPlan.IsInTerminalState)
             {
                 return walkPlan.State;
             }
 
             // The currentLocation must be either the goal, or the first location on our waypoints list.
-            if (currentWaypoint == walkPlan.DetermineGoal())
+            if ((currentWaypoint - walkPlan.DetermineTargetLocation()).MaxValueIn2D <= walkPlan.AtGoalDistanceFromLocation)
             {
                 walkPlan.State = WalkPlanState.AtGoal;
 
@@ -58,17 +65,17 @@ namespace Fibula.Mechanics.Contracts.Extensions
             {
                 case WalkStrategy.ConservativeRecalculation:
                     // 10% chance of recalculation.
-                    needsRecalculation |= walkPlan.Rng.Next(10) == 0;
+                    needsRecalculation |= rng.Next(10) == 0;
 
                     break;
                 case WalkStrategy.AggresiveRecalculation:
                     // 25% chance of recalculation.
-                    needsRecalculation |= walkPlan.Rng.Next(4) == 0;
+                    needsRecalculation |= rng.Next(4) == 0;
 
                     break;
                 case WalkStrategy.ExtremeRecalculation:
                     // 50% chance of recalculation.
-                    needsRecalculation |= walkPlan.Rng.Next(2) == 0;
+                    needsRecalculation |= rng.Next(2) == 0;
 
                     break;
             }

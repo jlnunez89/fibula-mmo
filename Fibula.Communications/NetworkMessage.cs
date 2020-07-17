@@ -13,7 +13,9 @@ namespace Fibula.Communications
 {
     using System;
     using System.Buffers;
+    using System.Net.Sockets;
     using System.Text;
+    using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
@@ -322,6 +324,18 @@ namespace Fibula.Communications
         public IBytesInfo ReadAsBytesInfo()
         {
             return new DefaultRequestData(this.GetBytes(this.Length - this.Cursor));
+        }
+
+        /// <summary>
+        /// Reads <paramref name="numberOfBytesToRead"/> bytes from the supplied network stream into the message buffer.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
+        public void ReadBytesFromStream(NetworkStream stream, ushort numberOfBytesToRead)
+        {
+            stream.ThrowIfNull(nameof(stream));
+
+            stream.Read(this.buffer, this.Cursor, numberOfBytesToRead);
         }
 
         /// <summary>

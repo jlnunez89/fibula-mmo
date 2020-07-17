@@ -133,8 +133,12 @@ namespace Fibula.Protocol.V772
         /// </summary>
         public void Read()
         {
-            var lenArray = new byte[2];
-            this.stream.BeginRead(lenArray, 0, 2, this.OnDataReady, null);
+            if (this.stream.CanRead)
+            {
+                var header = new byte[2];
+
+                this.stream.BeginRead(header, 0, 2, this.OnDataReady, header);
+            }
         }
 
         /// <summary>
@@ -213,16 +217,19 @@ namespace Fibula.Protocol.V772
                 {
                     if (this.stream.DataAvailable)
                     {
-                        var msgSize = this.stream.Read(this.inboundMessage.Buffer);
+                        // Read the message size from ar.AsyncState, which is the 2 byte header
+                        // initially read from the pipe after the await period.
+                        var messageSize = BitConverter.ToUInt16(ar.AsyncState as byte[]);
 
-                        this.inboundMessage.Resize(msgSize);
+                        this.inboundMessage.Resize(messageSize);
+                        this.inboundMessage.ReadBytesFromStream(this.stream, messageSize);
 
                         if (this.isAuthenticated)
                         {
                             // Decrypt message using XTea
                             this.inboundMessage.XteaDecrypt(this.xteaKey);
 
-                            // Read the total length.
+                            // Read the packet length to advance the cursor.
                             this.inboundMessage.GetUInt16();
                         }
 
@@ -266,14 +273,16 @@ namespace Fibula.Protocol.V772
 
                         this.inboundMessage.Reset();
                     }
-
-                    this.PacketProcessed?.Invoke(this);
                 }
             }
             catch (Exception e)
             {
                 // Invalid data from the client
                 this.logger.Warning(e.ToString());
+            }
+            finally
+            {
+                this.PacketProcessed?.Invoke(this);
             }
         }
 

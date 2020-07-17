@@ -15,6 +15,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items;
     using Fibula.Map.Contracts.Abstractions;
@@ -61,10 +62,10 @@ namespace Fibula.Mechanics.Operations
         {
             if (this.Creature is IPlayer player)
             {
-                new TextMessageNotification(
-                    () => player.YieldSingleItem(),
-                    MessageType.EventAdvance,
-                    "You are dead.")
+                new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, "You are dead.")
+                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+
+                new GenericNotification(() => player.YieldSingleItem(), new PlayerDeathPacket())
                 .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
             }
 

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OnHealthChange.cs" company="2Dudes">
+// <copyright file="OnHealthChanged.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -18,5 +18,5 @@ namespace Fibula.Mechanics.Contracts.Delegates
     /// </summary>
     /// <param name="combatant">The combatant that had a health change.</param>
     /// <param name="oldHealthValue">The old health value before this change.</param>
-    public delegate void OnHealthChange(ICombatant combatant, ushort oldHealthValue);
+    public delegate void OnHealthChanged(ICombatant combatant, ushort oldHealthValue);
 }

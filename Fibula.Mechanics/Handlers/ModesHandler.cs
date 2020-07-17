@@ -16,6 +16,7 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Serilog;
 
@@ -29,10 +30,17 @@ namespace Fibula.Mechanics.Handlers
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
         /// <param name="gameInstance">A reference to the game instance.</param>
-        public ModesHandler(ILogger logger, IGame gameInstance)
+        /// <param name="creatureFinder">A reference to the creature finder in use.</param>
+        public ModesHandler(ILogger logger, IGame gameInstance, ICreatureFinder creatureFinder)
             : base(logger, gameInstance)
         {
+            this.CreatureFinder = creatureFinder;
         }
+
+        /// <summary>
+        /// Gets the creature finder to use.
+        /// </summary>
+        public ICreatureFinder CreatureFinder { get; }
 
         /// <summary>
         /// Handles the contents of a network message.
@@ -52,7 +60,17 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            this.Game.CreatureChangeModes(client.PlayerId, modesInfo.FightMode, modesInfo.ChaseMode, modesInfo.SafeModeOn);
+            if (!(this.CreatureFinder.FindCreatureById(client.PlayerId) is IPlayer player))
+            {
+                this.Logger.Warning($"Client's associated player could not be found. [Id={client.PlayerId}]");
+
+                return null;
+            }
+
+            if (player is ICombatant combatant)
+            {
+                this.Game.SetCombatantModes(combatant, modesInfo.FightMode, modesInfo.ChaseMode, modesInfo.SafeModeOn);
+            }
 
             return null;
         }

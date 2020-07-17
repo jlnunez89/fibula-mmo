@@ -88,7 +88,7 @@ namespace Fibula.Mechanics.Operations
                 combatantCreature.SetChaseTarget(null);
             }
 
-            // combatantCreature.SafeMode = this.IsSafeModeOn;
+            /* combatantCreature.SafeMode = this.IsSafeModeOn; */
         }
     }
 }

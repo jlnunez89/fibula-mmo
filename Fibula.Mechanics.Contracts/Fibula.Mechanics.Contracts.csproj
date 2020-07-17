@@ -31,7 +31,6 @@
     <Compile Remove="Delegates\CombatStarted.cs" />
     <Compile Remove="Delegates\EventRulesEvaluationTriggered.cs" />
     <Compile Remove="Delegates\FightModeChanged.cs" />
-    <Compile Remove="Delegates\OnAttackTargetChange.cs" />
     <Compile Remove="Delegates\OnInventorySlotChanged.cs" />
     <Compile Remove="Delegates\SkillLevelAdvance.cs" />
     <Compile Remove="Enumerations\AttackType.cs" />

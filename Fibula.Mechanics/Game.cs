@@ -23,9 +23,7 @@ namespace Fibula.Mechanics
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
@@ -289,37 +287,67 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
+        /// Handles an attack target change from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that died.</param>
+        /// <param name="oldTarget">The previous attack target, which can be null.</param>
+        public void CombatantAttackTargetChanged(ICombatant combatant, ICombatant oldTarget)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            this.scheduler.CancelAllFor(combatant.Id, typeof(AutoAttackOrchestratorOperation));
+
+            if (combatant.AutoAttackTarget != null)
+            {
+                var autoAttackOrchestrationOp = new AutoAttackOrchestratorOperation(combatant);
+
+                this.DispatchOperation(autoAttackOrchestrationOp);
+            }
+        }
+
+        /// <summary>
+        /// Handles a chase target change from a combatant.
+        /// </summary>
+        /// <param name="combatant">The combatant that died.</param>
+        /// <param name="oldTarget">The previous chased target, which can be null.</param>
+        public void CombatantChaseTargetChanged(ICombatant combatant, ICombatant oldTarget)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            if (combatant.ChaseTarget != null)
+            {
+                this.ResetCreatureDynamicWalkPlan(combatant, combatant.ChaseTarget);
+            }
+        }
+
+        /// <summary>
         /// Re-sets the combat target of the attacker and it's (possibly new) target.
         /// </summary>
         /// <param name="attacker">The attacker.</param>
         /// <param name="target">The new target.</param>
-        public void ResetCombatTarget(ICombatant attacker, ICombatant target)
+        public void SetCombatantAttackTarget(ICombatant attacker, ICombatant target)
         {
             if (attacker == null)
             {
                 return;
             }
 
-            if (attacker.SetAttackTarget(target))
-            {
-                this.scheduler.CancelAllFor(attacker.Id, typeof(AutoAttackOrchestratorOperation));
-
-                if (attacker.AutoAttackTarget != null)
-                {
-                    var autoAttackOrchestrationOp = new AutoAttackOrchestratorOperation(attacker);
-
-                    this.DispatchOperation(autoAttackOrchestrationOp);
-                }
-            }
+            attacker.SetAttackTarget(target);
         }
 
         /// <summary>
-        /// Re-sets a given creature's walk plan and kicks it off.
+        /// Resets a given creature's walk plan and kicks it off.
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="directions">The directions for the new plan.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
-        public void SetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate)
+        public void ResetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate)
         {
             if (creature == null || !directions.Any())
             {
@@ -341,7 +369,7 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(strategy, () => lastLoc, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => lastLoc, atGoalDistance: 0, waypoints.ToArray());
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
@@ -351,12 +379,13 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Re-sets a given creature's walk plan and kicks it off.
+        /// Resets a given creature's walk plan and kicks it off.
         /// </summary>
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
-        public void SetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation)
+        /// <param name="targetDistance">Optional. The target distance to calculate from the target creature.</param>
+        public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1)
         {
             if (creature == null || targetCreature == null)
             {
@@ -382,7 +411,7 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.Location, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.Location, targetDistance, waypoints.ToArray());
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
@@ -416,15 +445,20 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Changes the fight, chase and safety modes of a creature.
+        /// Sets the fight, chase and safety modes of a combatant.
         /// </summary>
-        /// <param name="creatureId">The id of the creature.</param>
+        /// <param name="combatant">The combatant that update modes.</param>
         /// <param name="fightMode">The fight mode to change to.</param>
         /// <param name="chaseMode">The chase mode to change to.</param>
         /// <param name="safeModeOn">A value indicating whether the attack safety lock is on.</param>
-        public void CreatureChangeModes(uint creatureId, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
+        public void SetCombatantModes(ICombatant combatant, FightMode fightMode, ChaseMode chaseMode, bool safeModeOn)
         {
-            var changeModesOp = new ChangeModesOperation(creatureId, fightMode, chaseMode, safeModeOn);
+            if (combatant == null)
+            {
+                return;
+            }
+
+            var changeModesOp = new ChangeModesOperation(combatant.Id, fightMode, chaseMode, safeModeOn);
 
             this.DispatchOperation(changeModesOp);
         }

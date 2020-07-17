@@ -19,23 +19,23 @@ namespace Fibula.Common.Contracts
     /// <summary>
     /// Class that represents a walk plan.
     /// </summary>
-    public struct WalkPlan
+    public class WalkPlan
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="WalkPlan"/> struct.
+        /// Initializes a new instance of the <see cref="WalkPlan"/> class.
         /// </summary>
         /// <param name="strategy">The strategy of the plan.</param>
         /// <param name="goalDeterminationFunction">A function used to determine the goal of this plan.</param>
+        /// <param name="atGoalDistance">The distance to consider the walk plan at goal.</param>
         /// <param name="startingWaypoints">The waypoints already known to the goal.</param>
-        public WalkPlan(WalkStrategy strategy, Func<Location> goalDeterminationFunction, params Location[] startingWaypoints)
+        public WalkPlan(WalkStrategy strategy, Func<Location> goalDeterminationFunction, int atGoalDistance = 1, params Location[] startingWaypoints)
         {
             this.Strategy = strategy;
-            this.DetermineGoal = goalDeterminationFunction;
+            this.DetermineTargetLocation = goalDeterminationFunction;
             this.Waypoints = new LinkedList<Location>(startingWaypoints);
 
-            this.State = WalkPlanState.NeedsToRecalculate;
-
-            this.Rng = new Random();
+            this.AtGoalDistanceFromLocation = atGoalDistance;
+            this.State = this.Waypoints.Count > 0 ? WalkPlanState.OnTrack : WalkPlanState.NeedsToRecalculate;
         }
 
         /// <summary>
@@ -51,7 +51,12 @@ namespace Fibula.Common.Contracts
         /// <summary>
         /// Gets the function that determines the goal location.
         /// </summary>
-        public Func<Location> DetermineGoal { get; }
+        public Func<Location> DetermineTargetLocation { get; }
+
+        /// <summary>
+        /// Gets the distance from the target location within which the walk plan is considered <see cref="WalkPlanState.AtGoal"/>.
+        /// </summary>
+        public int AtGoalDistanceFromLocation { get; }
 
         /// <summary>
         /// Gets the waypoints of this walk plan.
@@ -62,10 +67,5 @@ namespace Fibula.Common.Contracts
         /// Gets a value indicating whether the walk plan is in a terminal state.
         /// </summary>
         public bool IsInTerminalState => this.State == WalkPlanState.Aborted || this.State == WalkPlanState.AtGoal;
-
-        /// <summary>
-        /// Gets or sets the pseudo-random number generator to work with.
-        /// </summary>
-        public Random Rng { get; set; }
     }
 }

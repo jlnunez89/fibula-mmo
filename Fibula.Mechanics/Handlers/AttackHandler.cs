@@ -71,7 +71,7 @@ namespace Fibula.Mechanics.Handlers
             {
                 var combatantTarget = this.CreatureFinder.FindCreatureById(attackInfo.TargetCreatureId) as ICombatant;
 
-                this.Game.ResetCombatTarget(playerAsCombatant, combatantTarget);
+                this.Game.SetCombatantAttackTarget(playerAsCombatant, combatantTarget);
             }
 
             return null;

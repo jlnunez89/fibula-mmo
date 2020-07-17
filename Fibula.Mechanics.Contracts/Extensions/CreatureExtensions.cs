@@ -29,7 +29,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
         /// <returns>The duration time of the step.</returns>
         public static TimeSpan CalculateStepDuration(this ICreature creature, ITile fromTile = null)
         {
-            const uint Epsilon = 50;
+            const uint Epsilon = 30;
 
             if (creature == null)
             {

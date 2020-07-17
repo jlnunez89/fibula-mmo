@@ -13,6 +13,7 @@ namespace Fibula.Communications.Contracts.Abstractions
 {
     using System;
     using System.Buffers;
+    using System.Net.Sockets;
 
     /// <summary>
     /// Interface that represents a network message.
@@ -137,5 +138,12 @@ namespace Fibula.Communications.Contracts.Abstractions
         /// <param name="overrideCursor">Optional. A value to override the cursor with.</param>
         /// <returns>The copy of the message.</returns>
         INetworkMessage Copy(int? overrideCursor = null);
+
+        /// <summary>
+        /// Reads <paramref name="numberOfBytesToRead"/> bytes from the supplied network stream into the message buffer.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="numberOfBytesToRead">The number of bytes to read.</param>
+        void ReadBytesFromStream(NetworkStream stream, ushort numberOfBytesToRead);
     }
 }

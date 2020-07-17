@@ -60,8 +60,6 @@ namespace Fibula.Mechanics.Operations
             {
                 this.Attacker.SetAttackTarget(null);
 
-                this.RepeatAfter = TimeSpan.Zero;
-
                 return;
             }
 

@@ -74,6 +74,8 @@ namespace Fibula.Mechanics.Operations
                 {
                     combatant.HealthChanged += context.CombatApi.CombatantHealthChanged;
                     combatant.Death += context.CombatApi.CombatantDeath;
+                    combatant.AttackTargetChanged += context.CombatApi.CombatantAttackTargetChanged;
+                    combatant.ChaseTargetChanged += context.CombatApi.CombatantChaseTargetChanged;
                 }
 
                 /*
@@ -143,6 +145,8 @@ namespace Fibula.Mechanics.Operations
                 {
                     combatant.HealthChanged -= context.CombatApi.CombatantHealthChanged;
                     combatant.Death -= context.CombatApi.CombatantDeath;
+                    combatant.AttackTargetChanged -= context.CombatApi.CombatantAttackTargetChanged;
+                    combatant.ChaseTargetChanged -= context.CombatApi.CombatantChaseTargetChanged;
                 }
 
                 /*

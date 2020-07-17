@@ -69,12 +69,7 @@ namespace Fibula.Mechanics.Handlers
                 return null;
             }
 
-            if (player is ICombatant combatant && combatant.ChaseMode != ChaseMode.Stand)
-            {
-                this.Game.CreatureChangeModes(player.Id, combatant.FightMode, ChaseMode.Stand, false /*combatantCreature.SafeMode*/);
-            }
-
-            this.Game.SetCreatureStaticWalkPlan(player, new[] { walkOnDemandInfo.Direction });
+            this.Game.ResetCreatureStaticWalkPlan(player, new[] { walkOnDemandInfo.Direction });
 
             return null;
         }
