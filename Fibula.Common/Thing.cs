@@ -11,6 +11,8 @@
 
 namespace Fibula.Common
 {
+    using System;
+    using System.Diagnostics.CodeAnalysis;
     using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Delegates;
@@ -28,9 +30,22 @@ namespace Fibula.Common
         private IThingContainer parentContainer;
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="Thing"/> class.
+        /// </summary>
+        public Thing()
+        {
+            this.UniqueId = Guid.NewGuid();
+        }
+
+        /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
         /// </summary>
         public event OnThingStateChanged ThingChanged;
+
+        /// <summary>
+        /// Gets the unique id of this item.
+        /// </summary>
+        public Guid UniqueId { get; }
 
         /// <summary>
         /// Gets the id of this thing.
@@ -105,5 +120,15 @@ namespace Fibula.Common
         /// </summary>
         /// <returns>The string to log.</returns>
         public abstract string DescribeForLogger();
+
+        /// <summary>
+        /// Indicates whether the current object is equal to another object of the same type.
+        /// </summary>
+        /// <param name="other">The other object to compare against.</param>
+        /// <returns>True if the current object is equal to the other parameter, false otherwise.</returns>
+        public bool Equals([AllowNull] IThing other)
+        {
+            return this.UniqueId == other?.UniqueId;
+        }
     }
 }

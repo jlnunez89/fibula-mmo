@@ -23,11 +23,6 @@ namespace Fibula.Items.Contracts.Abstractions
     public interface IItem : IThing, IContainedThing
     {
         /// <summary>
-        /// Gets the unique id of this item.
-        /// </summary>
-        Guid UniqueId { get; }
-
-        /// <summary>
         /// Gets a reference to this item's <see cref="IItemType"/>.
         /// </summary>
         IItemType Type { get; }

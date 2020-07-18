@@ -139,7 +139,7 @@ namespace Fibula.Mechanics.Operations
 
                         if (this.Attacker.ChaseMode == ChaseMode.Chase && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
                         {
-                            context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget);
+                            context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
                         }
                     }
 

@@ -39,8 +39,6 @@ namespace Fibula.Items
         {
             this.Type = type;
 
-            this.UniqueId = Guid.NewGuid();
-
             // make a copy of the type we are based on...
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
 
@@ -53,11 +51,6 @@ namespace Fibula.Items
                         :
                         TimeSpan.Zero;
         }
-
-        /// <summary>
-        /// Gets the unique id of this item.
-        /// </summary>
-        public Guid UniqueId { get; }
 
         /// <summary>
         /// Gets a reference to this item's <see cref="IItemType"/>.

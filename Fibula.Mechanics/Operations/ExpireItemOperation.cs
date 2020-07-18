@@ -54,23 +54,21 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IElevatedOperationContext context)
         {
-            const byte FallbackIndex = 0xFF;
-
             var inThingContainer = this.Item.ParentContainer;
 
-            if (!(this.Item is IThing existingThing) || !(existingThing is IItem existingItem) || !existingItem.HasExpiration)
+            if (!(this.Item is IThing existingThing) || !this.Item.HasExpiration)
             {
                 // Silent fail.
                 return;
             }
 
-            var creationArguments = new ItemCreationArguments() { TypeId = existingItem.ExpirationTarget };
+            var creationArguments = new ItemCreationArguments() { TypeId = this.Item.ExpirationTarget };
 
-            if (existingItem.IsLiquidPool)
+            if (this.Item.IsLiquidPool)
             {
                 creationArguments.Attributes = new[]
                 {
-                    (ItemAttribute.LiquidType, existingItem.LiquidType as IConvertible),
+                    (ItemAttribute.LiquidType, this.Item.LiquidType as IConvertible),
                 };
             }
 
@@ -82,12 +80,7 @@ namespace Fibula.Mechanics.Operations
             }
 
             // At this point, we have an item to change, and we were able to generate the new one, let's proceed.
-            (bool replaceSuccessful, IThing replaceRemainder) = inThingContainer.ReplaceContent(context.ItemFactory, existingThing, thingCreated, byte.MaxValue, existingItem.Amount);
-
-            if (!replaceSuccessful || replaceRemainder != null)
-            {
-                this.AddContentToContainerOrFallback(context, inThingContainer, ref replaceRemainder, FallbackIndex, includeTileAsFallback: true, this.GetRequestor(context.CreatureFinder));
-            }
+            (bool replaceSuccessful, IThing replaceRemainder) = inThingContainer.ReplaceContent(context.ItemFactory, existingThing, thingCreated, byte.MaxValue, this.Item.Amount);
 
             if (replaceSuccessful)
             {

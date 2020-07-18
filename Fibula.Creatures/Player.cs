@@ -121,7 +121,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the range that the auto attack has.
         /// </summary>
-        public override byte AutoAttackRange => 1;
+        public override byte AutoAttackRange => 2;
 
         /// <summary>
         /// Gets the client associated to this player.

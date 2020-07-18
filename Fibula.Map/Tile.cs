@@ -505,7 +505,7 @@ namespace Fibula.Map
         }
 
         /// <summary>
-        /// Attempts to remove a thing from this container.
+        /// Attempts to remove a specific thing from this container.
         /// </summary>
         /// <param name="thingFactory">A reference to the factory of things to use.</param>
         /// <param name="thing">The <see cref="IThing"/> to remove from the container.</param>
@@ -536,6 +536,11 @@ namespace Fibula.Map
             {
                 if (item.IsGround)
                 {
+                    if (this.Ground != item)
+                    {
+                        return (false, item);
+                    }
+
                     this.Ground = null;
                 }
                 else if (item.IsGroundFix)
@@ -549,6 +554,11 @@ namespace Fibula.Map
                 }
                 else if (item.IsLiquidPool)
                 {
+                    if (this.LiquidPool != item)
+                    {
+                        return (false, item);
+                    }
+
                     this.LiquidPool = null;
                 }
                 else if (item.StaysOnTop)

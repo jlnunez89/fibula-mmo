@@ -11,12 +11,13 @@
 
 namespace Fibula.Common.Contracts.Abstractions
 {
+    using System;
     using Fibula.Common.Contracts.Delegates;
 
     /// <summary>
     /// Interface for all things in the game.
     /// </summary>
-    public interface IThing : ILocatable, IContainedThing
+    public interface IThing : ILocatable, IContainedThing, IEquatable<IThing>
     {
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
@@ -27,6 +28,11 @@ namespace Fibula.Common.Contracts.Abstractions
         /// Gets the id of this thing.
         /// </summary>
         ushort ThingId { get; }
+
+        /// <summary>
+        /// Gets the unique id of this item.
+        /// </summary>
+        Guid UniqueId { get; }
 
         /// <summary>
         /// Gets a value indicating whether this thing can be moved.

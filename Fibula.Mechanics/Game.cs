@@ -322,7 +322,7 @@ namespace Fibula.Mechanics
 
             if (combatant.ChaseTarget != null)
             {
-                this.ResetCreatureDynamicWalkPlan(combatant, combatant.ChaseTarget);
+                this.ResetCreatureDynamicWalkPlan(combatant, combatant.ChaseTarget, targetDistance: combatant.AutoAttackRange);
             }
         }
 
