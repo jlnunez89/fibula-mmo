@@ -182,6 +182,9 @@
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingId">IThing.ThingId</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_UniqueId">IThing.UniqueId</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved">IThing.CanBeMoved</a>
     </div>
     <div>
@@ -189,6 +192,9 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html#Fibula_Common_Contracts_Abstractions_IContainedThing_ParentContainer">IContainedThing.ParentContainer</a>
+    </div>
+    <div>
+      <span class="xref">System.IEquatable&lt;Fibula.Common.Contracts.Abstractions.IThing&gt;.Equals(Fibula.Common.Contracts.Abstractions.IThing)</span>
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html#Fibula_Common_Contracts_Abstractions_IThingContainer_FindThingAtIndex_System_Byte_">IThingContainer.FindThingAtIndex(Byte)</a>
@@ -216,7 +222,7 @@
   <h6><strong>Assembly</strong>: Fibula.Mechanics.Contracts.dll</h6>
   <h5 id="Fibula_Mechanics_Contracts_Abstractions_ICombatant_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface ICombatant : ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public interface ICombatant : ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
   </div>
   <h3 id="properties">Properties
   </h3>

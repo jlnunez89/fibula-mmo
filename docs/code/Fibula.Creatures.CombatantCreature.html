@@ -102,6 +102,7 @@
     <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
     <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a>&gt;</div>
@@ -220,6 +221,9 @@
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingChanged">Thing.ThingChanged</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_UniqueId">Thing.UniqueId</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_CanBeMoved">Thing.CanBeMoved</a>
     </div>
     <div>
@@ -233,6 +237,9 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ToString">Thing.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_Equals_Fibula_Common_Contracts_Abstractions_IThing_">Thing.Equals(IThing)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -257,7 +264,7 @@
   <h6><strong>Assembly</strong>: Fibula.Creatures.dll</h6>
   <h5 id="Fibula_Creatures_CombatantCreature_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class CombatantCreature : Creature, ICombatant, ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class CombatantCreature : Creature, ICombatant, ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -1511,6 +1518,9 @@ at which exhaustion is completely recovered.</p>
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a>

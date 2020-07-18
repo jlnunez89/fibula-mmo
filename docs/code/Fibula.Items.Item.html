@@ -98,12 +98,16 @@
     <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingChanged">Thing.ThingChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_UniqueId">Thing.UniqueId</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ParentContainer">Thing.ParentContainer</a>
@@ -116,6 +120,9 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ToString">Thing.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_Equals_Fibula_Common_Contracts_Abstractions_IThing_">Thing.Equals(IThing)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -140,7 +147,7 @@
   <h6><strong>Assembly</strong>: Fibula.Items.dll</h6>
   <h5 id="Fibula_Items_Item_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Item : Thing, IItem, IThing, ILocatable, IContainedThing</code></pre>
+    <pre><code class="lang-csharp hljs">public class Item : Thing, IItem, IThing, ILocatable, IEquatable&lt;IThing&gt;, IContainedThing</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -185,7 +192,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_Amount.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.Amount%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L185">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L178">View Source</a>
   </span>
   <a id="Fibula_Items_Item_Amount_" data-uid="Fibula.Items.Item.Amount*"></a>
   <h4 id="Fibula_Items_Item_Amount" data-uid="Fibula.Items.Item.Amount">Amount</h4>
@@ -216,7 +223,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_Attributes.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.Attributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L70">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L63">View Source</a>
   </span>
   <a id="Fibula_Items_Item_Attributes_" data-uid="Fibula.Items.Item.Attributes*"></a>
   <h4 id="Fibula_Items_Item_Attributes" data-uid="Fibula.Items.Item.Attributes">Attributes</h4>
@@ -247,7 +254,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_BlocksLay.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.BlocksLay%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L311">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L304">View Source</a>
   </span>
   <a id="Fibula_Items_Item_BlocksLay_" data-uid="Fibula.Items.Item.BlocksLay*"></a>
   <h4 id="Fibula_Items_Item_BlocksLay" data-uid="Fibula.Items.Item.BlocksLay">BlocksLay</h4>
@@ -278,7 +285,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_BlocksPass.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.BlocksPass%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L306">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L299">View Source</a>
   </span>
   <a id="Fibula_Items_Item_BlocksPass_" data-uid="Fibula.Items.Item.BlocksPass*"></a>
   <h4 id="Fibula_Items_Item_BlocksPass" data-uid="Fibula.Items.Item.BlocksPass">BlocksPass</h4>
@@ -309,7 +316,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_BlocksThrow.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.BlocksThrow%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L301">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L294">View Source</a>
   </span>
   <a id="Fibula_Items_Item_BlocksThrow_" data-uid="Fibula.Items.Item.BlocksThrow*"></a>
   <h4 id="Fibula_Items_Item_BlocksThrow" data-uid="Fibula.Items.Item.BlocksThrow">BlocksThrow</h4>
@@ -340,7 +347,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_CanBeDressed.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.CanBeDressed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L211">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L204">View Source</a>
   </span>
   <a id="Fibula_Items_Item_CanBeDressed_" data-uid="Fibula.Items.Item.CanBeDressed*"></a>
   <h4 id="Fibula_Items_Item_CanBeDressed" data-uid="Fibula.Items.Item.CanBeDressed">CanBeDressed</h4>
@@ -371,7 +378,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_CanBeMoved.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.CanBeMoved%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L165">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L158">View Source</a>
   </span>
   <a id="Fibula_Items_Item_CanBeMoved_" data-uid="Fibula.Items.Item.CanBeMoved*"></a>
   <h4 id="Fibula_Items_Item_CanBeMoved" data-uid="Fibula.Items.Item.CanBeMoved">CanBeMoved</h4>
@@ -404,7 +411,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_CanBeRotated.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.CanBeRotated%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L103">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L96">View Source</a>
   </span>
   <a id="Fibula_Items_Item_CanBeRotated_" data-uid="Fibula.Items.Item.CanBeRotated*"></a>
   <h4 id="Fibula_Items_Item_CanBeRotated" data-uid="Fibula.Items.Item.CanBeRotated">CanBeRotated</h4>
@@ -435,7 +442,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_CarryLocation.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.CarryLocation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L242">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L235">View Source</a>
   </span>
   <a id="Fibula_Items_Item_CarryLocation_" data-uid="Fibula.Items.Item.CarryLocation*"></a>
   <h4 id="Fibula_Items_Item_CarryLocation" data-uid="Fibula.Items.Item.CarryLocation">CarryLocation</h4>
@@ -468,7 +475,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_ChangeOnUseTo.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.ChangeOnUseTo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L87">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L80">View Source</a>
   </span>
   <a id="Fibula_Items_Item_ChangeOnUseTo_" data-uid="Fibula.Items.Item.ChangeOnUseTo*"></a>
   <h4 id="Fibula_Items_Item_ChangeOnUseTo" data-uid="Fibula.Items.Item.ChangeOnUseTo">ChangeOnUseTo</h4>
@@ -516,7 +523,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_ChangesOnUse.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.ChangesOnUse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L80">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L73">View Source</a>
   </span>
   <a id="Fibula_Items_Item_ChangesOnUse_" data-uid="Fibula.Items.Item.ChangesOnUse*"></a>
   <h4 id="Fibula_Items_Item_ChangesOnUse" data-uid="Fibula.Items.Item.ChangesOnUse">ChangesOnUse</h4>
@@ -547,7 +554,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_DressPosition.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.DressPosition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L216">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L209">View Source</a>
   </span>
   <a id="Fibula_Items_Item_DressPosition_" data-uid="Fibula.Items.Item.DressPosition*"></a>
   <h4 id="Fibula_Items_Item_DressPosition" data-uid="Fibula.Items.Item.DressPosition">DressPosition</h4>
@@ -578,7 +585,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_ExpirationTarget.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.ExpirationTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L149">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L142">View Source</a>
   </span>
   <a id="Fibula_Items_Item_ExpirationTarget_" data-uid="Fibula.Items.Item.ExpirationTarget*"></a>
   <h4 id="Fibula_Items_Item_ExpirationTarget" data-uid="Fibula.Items.Item.ExpirationTarget">ExpirationTarget</h4>
@@ -625,7 +632,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_ExpirationTimeLeft.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.ExpirationTimeLeft%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L132">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L125">View Source</a>
   </span>
   <a id="Fibula_Items_Item_ExpirationTimeLeft_" data-uid="Fibula.Items.Item.ExpirationTimeLeft*"></a>
   <h4 id="Fibula_Items_Item_ExpirationTimeLeft" data-uid="Fibula.Items.Item.ExpirationTimeLeft">ExpirationTimeLeft</h4>
@@ -672,7 +679,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_HasCollision.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.HasCollision%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L170">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L163">View Source</a>
   </span>
   <a id="Fibula_Items_Item_HasCollision_" data-uid="Fibula.Items.Item.HasCollision*"></a>
   <h4 id="Fibula_Items_Item_HasCollision" data-uid="Fibula.Items.Item.HasCollision">HasCollision</h4>
@@ -703,7 +710,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_HasExpiration.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.HasExpiration%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L126">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L119">View Source</a>
   </span>
   <a id="Fibula_Items_Item_HasExpiration_" data-uid="Fibula.Items.Item.HasExpiration*"></a>
   <h4 id="Fibula_Items_Item_HasExpiration" data-uid="Fibula.Items.Item.HasExpiration">HasExpiration</h4>
@@ -734,7 +741,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_HasSeparation.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.HasSeparation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L175">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L168">View Source</a>
   </span>
   <a id="Fibula_Items_Item_HasSeparation_" data-uid="Fibula.Items.Item.HasSeparation*"></a>
   <h4 id="Fibula_Items_Item_HasSeparation" data-uid="Fibula.Items.Item.HasSeparation">HasSeparation</h4>
@@ -765,7 +772,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsContainer.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsContainer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L206">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L199">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsContainer_" data-uid="Fibula.Items.Item.IsContainer*"></a>
   <h4 id="Fibula_Items_Item_IsContainer" data-uid="Fibula.Items.Item.IsContainer">IsContainer</h4>
@@ -796,7 +803,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsCumulative.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsCumulative%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L180">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L173">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsCumulative_" data-uid="Fibula.Items.Item.IsCumulative*"></a>
   <h4 id="Fibula_Items_Item_IsCumulative" data-uid="Fibula.Items.Item.IsCumulative">IsCumulative</h4>
@@ -827,7 +834,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsGround.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsGround%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L221">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L214">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsGround_" data-uid="Fibula.Items.Item.IsGround*"></a>
   <h4 id="Fibula_Items_Item_IsGround" data-uid="Fibula.Items.Item.IsGround">IsGround</h4>
@@ -858,7 +865,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsGroundFix.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsGroundFix%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L253">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L246">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsGroundFix_" data-uid="Fibula.Items.Item.IsGroundFix*"></a>
   <h4 id="Fibula_Items_Item_IsGroundFix" data-uid="Fibula.Items.Item.IsGroundFix">IsGroundFix</h4>
@@ -889,7 +896,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsLiquidContainer.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsLiquidContainer%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L278">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L271">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsLiquidContainer_" data-uid="Fibula.Items.Item.IsLiquidContainer*"></a>
   <h4 id="Fibula_Items_Item_IsLiquidContainer" data-uid="Fibula.Items.Item.IsLiquidContainer">IsLiquidContainer</h4>
@@ -920,7 +927,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsLiquidPool.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsLiquidPool%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L268">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L261">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsLiquidPool_" data-uid="Fibula.Items.Item.IsLiquidPool*"></a>
   <h4 id="Fibula_Items_Item_IsLiquidPool" data-uid="Fibula.Items.Item.IsLiquidPool">IsLiquidPool</h4>
@@ -951,7 +958,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsLiquidSource.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsLiquidSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L273">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L266">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsLiquidSource_" data-uid="Fibula.Items.Item.IsLiquidSource*"></a>
   <h4 id="Fibula_Items_Item_IsLiquidSource" data-uid="Fibula.Items.Item.IsLiquidSource">IsLiquidSource</h4>
@@ -982,7 +989,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_LiquidType.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.LiquidType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L283">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L276">View Source</a>
   </span>
   <a id="Fibula_Items_Item_LiquidType_" data-uid="Fibula.Items.Item.LiquidType*"></a>
   <h4 id="Fibula_Items_Item_LiquidType" data-uid="Fibula.Items.Item.LiquidType">LiquidType</h4>
@@ -1013,7 +1020,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_MovementPenalty.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.MovementPenalty%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L226">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L219">View Source</a>
   </span>
   <a id="Fibula_Items_Item_MovementPenalty_" data-uid="Fibula.Items.Item.MovementPenalty*"></a>
   <h4 id="Fibula_Items_Item_MovementPenalty" data-uid="Fibula.Items.Item.MovementPenalty">MovementPenalty</h4>
@@ -1044,7 +1051,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_RotateTo.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.RotateTo%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L110">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L103">View Source</a>
   </span>
   <a id="Fibula_Items_Item_RotateTo_" data-uid="Fibula.Items.Item.RotateTo*"></a>
   <h4 id="Fibula_Items_Item_RotateTo" data-uid="Fibula.Items.Item.RotateTo">RotateTo</h4>
@@ -1092,7 +1099,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_StaysOnBottom.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.StaysOnBottom%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L263">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L256">View Source</a>
   </span>
   <a id="Fibula_Items_Item_StaysOnBottom_" data-uid="Fibula.Items.Item.StaysOnBottom*"></a>
   <h4 id="Fibula_Items_Item_StaysOnBottom" data-uid="Fibula.Items.Item.StaysOnBottom">StaysOnBottom</h4>
@@ -1123,7 +1130,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_StaysOnTop.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.StaysOnTop%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L258">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L251">View Source</a>
   </span>
   <a id="Fibula_Items_Item_StaysOnTop_" data-uid="Fibula.Items.Item.StaysOnTop*"></a>
   <h4 id="Fibula_Items_Item_StaysOnTop" data-uid="Fibula.Items.Item.StaysOnTop">StaysOnTop</h4>
@@ -1154,7 +1161,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_ThingId.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.ThingId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L75">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L68">View Source</a>
   </span>
   <a id="Fibula_Items_Item_ThingId_" data-uid="Fibula.Items.Item.ThingId*"></a>
   <h4 id="Fibula_Items_Item_ThingId" data-uid="Fibula.Items.Item.ThingId">ThingId</h4>
@@ -1187,7 +1194,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_Type.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.Type%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L65">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L58">View Source</a>
   </span>
   <a id="Fibula_Items_Item_Type_" data-uid="Fibula.Items.Item.Type*"></a>
   <h4 id="Fibula_Items_Item_Type" data-uid="Fibula.Items.Item.Type">Type</h4>
@@ -1213,37 +1220,6 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
       </tr>
     </tbody>
   </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_UniqueId.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.UniqueId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L60">View Source</a>
-  </span>
-  <a id="Fibula_Items_Item_UniqueId_" data-uid="Fibula.Items.Item.UniqueId*"></a>
-  <h4 id="Fibula_Items_Item_UniqueId" data-uid="Fibula.Items.Item.UniqueId">UniqueId</h4>
-  <div class="markdown level1 summary"><p>Gets the unique id of this item.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public Guid UniqueId { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Guid</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -1251,7 +1227,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_DescribeForLogger.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.DescribeForLogger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L390">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L383">View Source</a>
   </span>
   <a id="Fibula_Items_Item_DescribeForLogger_" data-uid="Fibula.Items.Item.DescribeForLogger*"></a>
   <h4 id="Fibula_Items_Item_DescribeForLogger" data-uid="Fibula.Items.Item.DescribeForLogger">DescribeForLogger()</h4>
@@ -1285,7 +1261,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_IsPathBlocking_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.IsPathBlocking(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L318">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L311">View Source</a>
   </span>
   <a id="Fibula_Items_Item_IsPathBlocking_" data-uid="Fibula.Items.Item.IsPathBlocking*"></a>
   <h4 id="Fibula_Items_Item_IsPathBlocking_System_Byte_" data-uid="Fibula.Items.Item.IsPathBlocking(System.Byte)">IsPathBlocking(Byte)</h4>
@@ -1335,7 +1311,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_Merge_Fibula_Items_Contracts_Abstractions_IItem_.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.Merge(Fibula.Items.Contracts.Abstractions.IItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L337">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L330">View Source</a>
   </span>
   <a id="Fibula_Items_Item_Merge_" data-uid="Fibula.Items.Item.Merge*"></a>
   <h4 id="Fibula_Items_Item_Merge_Fibula_Items_Contracts_Abstractions_IItem_" data-uid="Fibula.Items.Item.Merge(Fibula.Items.Contracts.Abstractions.IItem)">Merge(IItem)</h4>
@@ -1385,7 +1361,7 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Item_Split_Fibula_Items_Contracts_Abstractions_IItemFactory_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Items.Item.Split(Fibula.Items.Contracts.Abstractions.IItemFactory%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L368">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items/Item.cs/#L361">View Source</a>
   </span>
   <a id="Fibula_Items_Item_Split_" data-uid="Fibula.Items.Item.Split*"></a>
   <h4 id="Fibula_Items_Item_Split_Fibula_Items_Contracts_Abstractions_IItemFactory_System_Byte_" data-uid="Fibula.Items.Item.Split(Fibula.Items.Contracts.Abstractions.IItemFactory,System.Byte)">Split(IItemFactory, Byte)</h4>
@@ -1445,6 +1421,9 @@ Callers must check <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Ite
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a>

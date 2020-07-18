@@ -89,9 +89,6 @@
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
     <div>
-      <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_UniqueId">IItem.UniqueId</a>
-    </div>
-    <div>
       <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_Type">IItem.Type</a>
     </div>
     <div>
@@ -191,10 +188,16 @@
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingId">IThing.ThingId</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_UniqueId">IThing.UniqueId</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved">IThing.CanBeMoved</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger">IThing.DescribeForLogger()</a>
+    </div>
+    <div>
+      <span class="xref">System.IEquatable&lt;Fibula.Common.Contracts.Abstractions.IThing&gt;.Equals(Fibula.Common.Contracts.Abstractions.IThing)</span>
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html#Fibula_Common_Contracts_Abstractions_IContainedThing_ParentContainer">IContainedThing.ParentContainer</a>
@@ -222,7 +225,7 @@
   <h6><strong>Assembly</strong>: Fibula.Items.Contracts.dll</h6>
   <h5 id="Fibula_Items_Contracts_Abstractions_IContainerItem_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public interface IContainerItem : IItem, IThing, IContainedThing, IThingContainer, ILocatable</code></pre>
+    <pre><code class="lang-csharp hljs">public interface IContainerItem : IItem, IThing, IEquatable&lt;IThing&gt;, IContainedThing, IThingContainer, ILocatable</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>

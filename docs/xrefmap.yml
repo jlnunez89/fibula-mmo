@@ -619,6 +619,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Contracts.Abstractions.IThing.ThingId
   nameWithType: IThing.ThingId
+- uid: Fibula.Common.Contracts.Abstractions.IThing.UniqueId
+  name: UniqueId
+  href: code/Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_UniqueId
+  commentId: P:Fibula.Common.Contracts.Abstractions.IThing.UniqueId
+  fullName: Fibula.Common.Contracts.Abstractions.IThing.UniqueId
+  nameWithType: IThing.UniqueId
+- uid: Fibula.Common.Contracts.Abstractions.IThing.UniqueId*
+  name: UniqueId
+  href: code/Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_UniqueId_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.IThing.UniqueId
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.IThing.UniqueId
+  nameWithType: IThing.UniqueId
 - uid: Fibula.Common.Contracts.Abstractions.IThingContainer
   name: IThingContainer
   href: code/Fibula.Common.Contracts.Abstractions.IThingContainer.html
@@ -2589,15 +2602,15 @@ references:
   commentId: T:Fibula.Common.Contracts.WalkPlan
   fullName: Fibula.Common.Contracts.WalkPlan
   nameWithType: WalkPlan
-- uid: Fibula.Common.Contracts.WalkPlan.#ctor(Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Func{Fibula.Common.Contracts.Structs.Location},Fibula.Common.Contracts.Structs.Location[])
-  name: WalkPlan(WalkStrategy, Func<Location>, Location[])
-  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan__ctor_Fibula_Common_Contracts_Enumerations_WalkStrategy_System_Func_Fibula_Common_Contracts_Structs_Location__Fibula_Common_Contracts_Structs_Location___
-  commentId: M:Fibula.Common.Contracts.WalkPlan.#ctor(Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Func{Fibula.Common.Contracts.Structs.Location},Fibula.Common.Contracts.Structs.Location[])
-  name.vb: WalkPlan(WalkStrategy, Func(Of Location), Location())
-  fullName: Fibula.Common.Contracts.WalkPlan.WalkPlan(Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Func<Fibula.Common.Contracts.Structs.Location>, Fibula.Common.Contracts.Structs.Location[])
-  fullName.vb: Fibula.Common.Contracts.WalkPlan.WalkPlan(Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Func(Of Fibula.Common.Contracts.Structs.Location), Fibula.Common.Contracts.Structs.Location())
-  nameWithType: WalkPlan.WalkPlan(WalkStrategy, Func<Location>, Location[])
-  nameWithType.vb: WalkPlan.WalkPlan(WalkStrategy, Func(Of Location), Location())
+- uid: Fibula.Common.Contracts.WalkPlan.#ctor(Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Func{Fibula.Common.Contracts.Structs.Location},System.Int32,Fibula.Common.Contracts.Structs.Location[])
+  name: WalkPlan(WalkStrategy, Func<Location>, Int32, Location[])
+  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan__ctor_Fibula_Common_Contracts_Enumerations_WalkStrategy_System_Func_Fibula_Common_Contracts_Structs_Location__System_Int32_Fibula_Common_Contracts_Structs_Location___
+  commentId: M:Fibula.Common.Contracts.WalkPlan.#ctor(Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Func{Fibula.Common.Contracts.Structs.Location},System.Int32,Fibula.Common.Contracts.Structs.Location[])
+  name.vb: WalkPlan(WalkStrategy, Func(Of Location), Int32, Location())
+  fullName: Fibula.Common.Contracts.WalkPlan.WalkPlan(Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Func<Fibula.Common.Contracts.Structs.Location>, System.Int32, Fibula.Common.Contracts.Structs.Location[])
+  fullName.vb: Fibula.Common.Contracts.WalkPlan.WalkPlan(Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Func(Of Fibula.Common.Contracts.Structs.Location), System.Int32, Fibula.Common.Contracts.Structs.Location())
+  nameWithType: WalkPlan.WalkPlan(WalkStrategy, Func<Location>, Int32, Location[])
+  nameWithType.vb: WalkPlan.WalkPlan(WalkStrategy, Func(Of Location), Int32, Location())
 - uid: Fibula.Common.Contracts.WalkPlan.#ctor*
   name: WalkPlan
   href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan__ctor_
@@ -2605,19 +2618,32 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Contracts.WalkPlan.WalkPlan
   nameWithType: WalkPlan.WalkPlan
-- uid: Fibula.Common.Contracts.WalkPlan.DetermineGoal
-  name: DetermineGoal
-  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_DetermineGoal
-  commentId: P:Fibula.Common.Contracts.WalkPlan.DetermineGoal
-  fullName: Fibula.Common.Contracts.WalkPlan.DetermineGoal
-  nameWithType: WalkPlan.DetermineGoal
-- uid: Fibula.Common.Contracts.WalkPlan.DetermineGoal*
-  name: DetermineGoal
-  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_DetermineGoal_
-  commentId: Overload:Fibula.Common.Contracts.WalkPlan.DetermineGoal
+- uid: Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation
+  name: AtGoalDistanceFromLocation
+  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_AtGoalDistanceFromLocation
+  commentId: P:Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation
+  fullName: Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation
+  nameWithType: WalkPlan.AtGoalDistanceFromLocation
+- uid: Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation*
+  name: AtGoalDistanceFromLocation
+  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_AtGoalDistanceFromLocation_
+  commentId: Overload:Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation
   isSpec: "True"
-  fullName: Fibula.Common.Contracts.WalkPlan.DetermineGoal
-  nameWithType: WalkPlan.DetermineGoal
+  fullName: Fibula.Common.Contracts.WalkPlan.AtGoalDistanceFromLocation
+  nameWithType: WalkPlan.AtGoalDistanceFromLocation
+- uid: Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation
+  name: DetermineTargetLocation
+  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_DetermineTargetLocation
+  commentId: P:Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation
+  fullName: Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation
+  nameWithType: WalkPlan.DetermineTargetLocation
+- uid: Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation*
+  name: DetermineTargetLocation
+  href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_DetermineTargetLocation_
+  commentId: Overload:Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.WalkPlan.DetermineTargetLocation
+  nameWithType: WalkPlan.DetermineTargetLocation
 - uid: Fibula.Common.Contracts.WalkPlan.IsInTerminalState
   name: IsInTerminalState
   href: code/Fibula.Common.Contracts.WalkPlan.html#Fibula_Common_Contracts_WalkPlan_IsInTerminalState
@@ -2704,6 +2730,19 @@ references:
   commentId: T:Fibula.Common.Thing
   fullName: Fibula.Common.Thing
   nameWithType: Thing
+- uid: Fibula.Common.Thing.#ctor
+  name: Thing()
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing__ctor
+  commentId: M:Fibula.Common.Thing.#ctor
+  fullName: Fibula.Common.Thing.Thing()
+  nameWithType: Thing.Thing()
+- uid: Fibula.Common.Thing.#ctor*
+  name: Thing
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing__ctor_
+  commentId: Overload:Fibula.Common.Thing.#ctor
+  isSpec: "True"
+  fullName: Fibula.Common.Thing.Thing
+  nameWithType: Thing.Thing
 - uid: Fibula.Common.Thing.CanBeMoved
   name: CanBeMoved
   href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_CanBeMoved
@@ -2743,6 +2782,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Thing.DescribeForLogger
   nameWithType: Thing.DescribeForLogger
+- uid: Fibula.Common.Thing.Equals(Fibula.Common.Contracts.Abstractions.IThing)
+  name: Equals(IThing)
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_Equals_Fibula_Common_Contracts_Abstractions_IThing_
+  commentId: M:Fibula.Common.Thing.Equals(Fibula.Common.Contracts.Abstractions.IThing)
+  fullName: Fibula.Common.Thing.Equals(Fibula.Common.Contracts.Abstractions.IThing)
+  nameWithType: Thing.Equals(IThing)
+- uid: Fibula.Common.Thing.Equals*
+  name: Equals
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_Equals_
+  commentId: Overload:Fibula.Common.Thing.Equals
+  isSpec: "True"
+  fullName: Fibula.Common.Thing.Equals
+  nameWithType: Thing.Equals
 - uid: Fibula.Common.Thing.InvokePropertyChanged(System.String)
   name: InvokePropertyChanged(String)
   href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_InvokePropertyChanged_System_String_
@@ -2814,6 +2866,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Thing.ToString
   nameWithType: Thing.ToString
+- uid: Fibula.Common.Thing.UniqueId
+  name: UniqueId
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_UniqueId
+  commentId: P:Fibula.Common.Thing.UniqueId
+  fullName: Fibula.Common.Thing.UniqueId
+  nameWithType: Thing.UniqueId
+- uid: Fibula.Common.Thing.UniqueId*
+  name: UniqueId
+  href: code/Fibula.Common.Thing.html#Fibula_Common_Thing_UniqueId_
+  commentId: Overload:Fibula.Common.Thing.UniqueId
+  isSpec: "True"
+  fullName: Fibula.Common.Thing.UniqueId
+  nameWithType: Thing.UniqueId
 - uid: Fibula.Common.Utilities
   name: Fibula.Common.Utilities
   href: code/Fibula.Common.Utilities.html
@@ -3103,19 +3168,6 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Utilities.Pathfinding.AStar.AStar
   nameWithType: AStar.AStar
-- uid: Fibula.Common.Utilities.Pathfinding.AStar.ClosedList
-  name: ClosedList
-  href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_ClosedList
-  commentId: P:Fibula.Common.Utilities.Pathfinding.AStar.ClosedList
-  fullName: Fibula.Common.Utilities.Pathfinding.AStar.ClosedList
-  nameWithType: AStar.ClosedList
-- uid: Fibula.Common.Utilities.Pathfinding.AStar.ClosedList*
-  name: ClosedList
-  href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_ClosedList_
-  commentId: Overload:Fibula.Common.Utilities.Pathfinding.AStar.ClosedList
-  isSpec: "True"
-  fullName: Fibula.Common.Utilities.Pathfinding.AStar.ClosedList
-  nameWithType: AStar.ClosedList
 - uid: Fibula.Common.Utilities.Pathfinding.AStar.CurrentNode
   name: CurrentNode
   href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_CurrentNode
@@ -3142,19 +3194,6 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Utilities.Pathfinding.AStar.GetLastPath
   nameWithType: AStar.GetLastPath
-- uid: Fibula.Common.Utilities.Pathfinding.AStar.OpenList
-  name: OpenList
-  href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_OpenList
-  commentId: P:Fibula.Common.Utilities.Pathfinding.AStar.OpenList
-  fullName: Fibula.Common.Utilities.Pathfinding.AStar.OpenList
-  nameWithType: AStar.OpenList
-- uid: Fibula.Common.Utilities.Pathfinding.AStar.OpenList*
-  name: OpenList
-  href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_OpenList_
-  commentId: Overload:Fibula.Common.Utilities.Pathfinding.AStar.OpenList
-  isSpec: "True"
-  fullName: Fibula.Common.Utilities.Pathfinding.AStar.OpenList
-  nameWithType: AStar.OpenList
 - uid: Fibula.Common.Utilities.Pathfinding.AStar.Run
   name: Run()
   href: code/Fibula.Common.Utilities.Pathfinding.AStar.html#Fibula_Common_Utilities_Pathfinding_AStar_Run
@@ -3953,6 +3992,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadAsBytesInfo
   nameWithType: INetworkMessage.ReadAsBytesInfo
+- uid: Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream,System.UInt16)
+  name: ReadBytesFromStream(NetworkStream, UInt16)
+  href: code/Fibula.Communications.Contracts.Abstractions.INetworkMessage.html#Fibula_Communications_Contracts_Abstractions_INetworkMessage_ReadBytesFromStream_System_Net_Sockets_NetworkStream_System_UInt16_
+  commentId: M:Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream,System.UInt16)
+  fullName: Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream, System.UInt16)
+  nameWithType: INetworkMessage.ReadBytesFromStream(NetworkStream, UInt16)
+- uid: Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream*
+  name: ReadBytesFromStream
+  href: code/Fibula.Communications.Contracts.Abstractions.INetworkMessage.html#Fibula_Communications_Contracts_Abstractions_INetworkMessage_ReadBytesFromStream_
+  commentId: Overload:Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream
+  isSpec: "True"
+  fullName: Fibula.Communications.Contracts.Abstractions.INetworkMessage.ReadBytesFromStream
+  nameWithType: INetworkMessage.ReadBytesFromStream
 - uid: Fibula.Communications.Contracts.Abstractions.INetworkMessage.Reset
   name: Reset()
   href: code/Fibula.Communications.Contracts.Abstractions.INetworkMessage.html#Fibula_Communications_Contracts_Abstractions_INetworkMessage_Reset
@@ -4773,6 +4825,12 @@ references:
   commentId: F:Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.CreatureSpeedChange
   fullName: Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.CreatureSpeedChange
   nameWithType: OutgoingGamePacketType.CreatureSpeedChange
+- uid: Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.Death
+  name: Death
+  href: code/Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.html#Fibula_Communications_Contracts_Enumerations_OutgoingGamePacketType_Death
+  commentId: F:Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.Death
+  fullName: Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.Death
+  nameWithType: OutgoingGamePacketType.Death
 - uid: Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.Disconnect
   name: Disconnect
   href: code/Fibula.Communications.Contracts.Enumerations.OutgoingGamePacketType.html#Fibula_Communications_Contracts_Enumerations_OutgoingGamePacketType_Disconnect
@@ -5684,6 +5742,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Communications.NetworkMessage.ReadAsBytesInfo
   nameWithType: NetworkMessage.ReadAsBytesInfo
+- uid: Fibula.Communications.NetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream,System.UInt16)
+  name: ReadBytesFromStream(NetworkStream, UInt16)
+  href: code/Fibula.Communications.NetworkMessage.html#Fibula_Communications_NetworkMessage_ReadBytesFromStream_System_Net_Sockets_NetworkStream_System_UInt16_
+  commentId: M:Fibula.Communications.NetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream,System.UInt16)
+  fullName: Fibula.Communications.NetworkMessage.ReadBytesFromStream(System.Net.Sockets.NetworkStream, System.UInt16)
+  nameWithType: NetworkMessage.ReadBytesFromStream(NetworkStream, UInt16)
+- uid: Fibula.Communications.NetworkMessage.ReadBytesFromStream*
+  name: ReadBytesFromStream
+  href: code/Fibula.Communications.NetworkMessage.html#Fibula_Communications_NetworkMessage_ReadBytesFromStream_
+  commentId: Overload:Fibula.Communications.NetworkMessage.ReadBytesFromStream
+  isSpec: "True"
+  fullName: Fibula.Communications.NetworkMessage.ReadBytesFromStream
+  nameWithType: NetworkMessage.ReadBytesFromStream
 - uid: Fibula.Communications.NetworkMessage.Reset
   name: Reset()
   href: code/Fibula.Communications.NetworkMessage.html#Fibula_Communications_NetworkMessage_Reset
@@ -8733,6 +8804,25 @@ references:
   isSpec: "True"
   fullName: Fibula.Communications.Packets.Outgoing.PlayerConditionsPacket.Player
   nameWithType: PlayerConditionsPacket.Player
+- uid: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket
+  name: PlayerDeathPacket
+  href: code/Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.html
+  commentId: T:Fibula.Communications.Packets.Outgoing.PlayerDeathPacket
+  fullName: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket
+  nameWithType: PlayerDeathPacket
+- uid: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType
+  name: PacketType
+  href: code/Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.html#Fibula_Communications_Packets_Outgoing_PlayerDeathPacket_PacketType
+  commentId: P:Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType
+  fullName: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType
+  nameWithType: PlayerDeathPacket.PacketType
+- uid: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType*
+  name: PacketType
+  href: code/Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.html#Fibula_Communications_Packets_Outgoing_PlayerDeathPacket_PacketType_
+  commentId: Overload:Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType
+  isSpec: "True"
+  fullName: Fibula.Communications.Packets.Outgoing.PlayerDeathPacket.PacketType
+  nameWithType: PlayerDeathPacket.PacketType
 - uid: Fibula.Communications.Packets.Outgoing.PlayerInventoryClearSlotPacket
   name: PlayerInventoryClearSlotPacket
   href: code/Fibula.Communications.Packets.Outgoing.PlayerInventoryClearSlotPacket.html
@@ -15948,19 +16038,6 @@ references:
   isSpec: "True"
   fullName: Fibula.Items.Contracts.Abstractions.IItem.Type
   nameWithType: IItem.Type
-- uid: Fibula.Items.Contracts.Abstractions.IItem.UniqueId
-  name: UniqueId
-  href: code/Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_UniqueId
-  commentId: P:Fibula.Items.Contracts.Abstractions.IItem.UniqueId
-  fullName: Fibula.Items.Contracts.Abstractions.IItem.UniqueId
-  nameWithType: IItem.UniqueId
-- uid: Fibula.Items.Contracts.Abstractions.IItem.UniqueId*
-  name: UniqueId
-  href: code/Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_UniqueId_
-  commentId: Overload:Fibula.Items.Contracts.Abstractions.IItem.UniqueId
-  isSpec: "True"
-  fullName: Fibula.Items.Contracts.Abstractions.IItem.UniqueId
-  nameWithType: IItem.UniqueId
 - uid: Fibula.Items.Contracts.Abstractions.IItemFactory
   name: IItemFactory
   href: code/Fibula.Items.Contracts.Abstractions.IItemFactory.html
@@ -16944,19 +17021,6 @@ references:
   isSpec: "True"
   fullName: Fibula.Items.Item.Type
   nameWithType: Item.Type
-- uid: Fibula.Items.Item.UniqueId
-  name: UniqueId
-  href: code/Fibula.Items.Item.html#Fibula_Items_Item_UniqueId
-  commentId: P:Fibula.Items.Item.UniqueId
-  fullName: Fibula.Items.Item.UniqueId
-  nameWithType: Item.UniqueId
-- uid: Fibula.Items.Item.UniqueId*
-  name: UniqueId
-  href: code/Fibula.Items.Item.html#Fibula_Items_Item_UniqueId_
-  commentId: Overload:Fibula.Items.Item.UniqueId
-  isSpec: "True"
-  fullName: Fibula.Items.Item.UniqueId
-  nameWithType: Item.UniqueId
 - uid: Fibula.Items.ItemCreationArguments
   name: ItemCreationArguments
   href: code/Fibula.Items.ItemCreationArguments.html
@@ -19408,12 +19472,12 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.Movement
   nameWithType: IGameOperationsApi.Movement
-- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  name: ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)
-  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_ResetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_
-  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  nameWithType: IGameOperationsApi.ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)
+- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Int32)
+  name: ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy, Int32)
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_ResetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_System_Int32_
+  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Int32)
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Int32)
+  nameWithType: IGameOperationsApi.ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy, Int32)
 - uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.ResetCreatureDynamicWalkPlan*
   name: ResetCreatureDynamicWalkPlan
   href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_ResetCreatureDynamicWalkPlan_
@@ -19758,15 +19822,12 @@ references:
   commentId: T:Fibula.Mechanics.Contracts.Abstractions.IPathFinder
   fullName: Fibula.Mechanics.Contracts.Abstractions.IPathFinder
   nameWithType: IPathFinder
-- uid: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location@,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
-  name: FindBetween(Location, Location, out Location, ICreature, Int32, Boolean, Int32)
-  href: code/Fibula.Mechanics.Contracts.Abstractions.IPathFinder.html#Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location__Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_
-  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location@,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
-  name.vb: FindBetween(Location, Location, ByRef Location, ICreature, Int32, Boolean, Int32)
-  fullName: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, out Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
-  fullName.vb: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, ByRef Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
-  nameWithType: IPathFinder.FindBetween(Location, Location, out Location, ICreature, Int32, Boolean, Int32)
-  nameWithType.vb: IPathFinder.FindBetween(Location, Location, ByRef Location, ICreature, Int32, Boolean, Int32)
+- uid: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
+  name: FindBetween(Location, Location, ICreature, Int32, Boolean, Int32)
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IPathFinder.html#Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_
+  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
+  nameWithType: IPathFinder.FindBetween(Location, Location, ICreature, Int32, Boolean, Int32)
 - uid: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween*
   name: FindBetween
   href: code/Fibula.Mechanics.Contracts.Abstractions.IPathFinder.html#Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_
@@ -20121,6 +20182,38 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Contracts.Extensions.LocationExtensions.FindItemById
   nameWithType: LocationExtensions.FindItemById
+- uid: Fibula.Mechanics.Contracts.Extensions.MapExtensions
+  name: MapExtensions
+  href: code/Fibula.Mechanics.Contracts.Extensions.MapExtensions.html
+  commentId: T:Fibula.Mechanics.Contracts.Extensions.MapExtensions
+  fullName: Fibula.Mechanics.Contracts.Extensions.MapExtensions
+  nameWithType: MapExtensions
+- uid: Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight(Fibula.Map.Contracts.Abstractions.IMap,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location)
+  name: AreInLineOfSight(IMap, Location, Location)
+  href: code/Fibula.Mechanics.Contracts.Extensions.MapExtensions.html#Fibula_Mechanics_Contracts_Extensions_MapExtensions_AreInLineOfSight_Fibula_Map_Contracts_Abstractions_IMap_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_
+  commentId: M:Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight(Fibula.Map.Contracts.Abstractions.IMap,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location)
+  fullName: Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight(Fibula.Map.Contracts.Abstractions.IMap, Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location)
+  nameWithType: MapExtensions.AreInLineOfSight(IMap, Location, Location)
+- uid: Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight*
+  name: AreInLineOfSight
+  href: code/Fibula.Mechanics.Contracts.Extensions.MapExtensions.html#Fibula_Mechanics_Contracts_Extensions_MapExtensions_AreInLineOfSight_
+  commentId: Overload:Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Contracts.Extensions.MapExtensions.AreInLineOfSight
+  nameWithType: MapExtensions.AreInLineOfSight
+- uid: Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations(Fibula.Map.Contracts.Abstractions.IMap,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,System.Boolean)
+  name: CanThrowBetweenLocations(IMap, Location, Location, Boolean)
+  href: code/Fibula.Mechanics.Contracts.Extensions.MapExtensions.html#Fibula_Mechanics_Contracts_Extensions_MapExtensions_CanThrowBetweenLocations_Fibula_Map_Contracts_Abstractions_IMap_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_System_Boolean_
+  commentId: M:Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations(Fibula.Map.Contracts.Abstractions.IMap,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,System.Boolean)
+  fullName: Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations(Fibula.Map.Contracts.Abstractions.IMap, Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, System.Boolean)
+  nameWithType: MapExtensions.CanThrowBetweenLocations(IMap, Location, Location, Boolean)
+- uid: Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations*
+  name: CanThrowBetweenLocations
+  href: code/Fibula.Mechanics.Contracts.Extensions.MapExtensions.html#Fibula_Mechanics_Contracts_Extensions_MapExtensions_CanThrowBetweenLocations_
+  commentId: Overload:Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Contracts.Extensions.MapExtensions.CanThrowBetweenLocations
+  nameWithType: MapExtensions.CanThrowBetweenLocations
 - uid: Fibula.Mechanics.Contracts.Extensions.WalkPlanExtensions
   name: WalkPlanExtensions
   href: code/Fibula.Mechanics.Contracts.Extensions.WalkPlanExtensions.html
@@ -20433,12 +20526,12 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Game.Movement
   nameWithType: Game.Movement
-- uid: Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  name: ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)
-  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_ResetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_
-  commentId: M:Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  fullName: Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Common.Contracts.Enumerations.WalkStrategy)
-  nameWithType: Game.ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy)
+- uid: Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Int32)
+  name: ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy, Int32)
+  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_ResetCreatureDynamicWalkPlan_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Creatures_Contracts_Abstractions_ICreature_Fibula_Common_Contracts_Enumerations_WalkStrategy_System_Int32_
+  commentId: M:Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Creatures.Contracts.Abstractions.ICreature,Fibula.Common.Contracts.Enumerations.WalkStrategy,System.Int32)
+  fullName: Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan(Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Creatures.Contracts.Abstractions.ICreature, Fibula.Common.Contracts.Enumerations.WalkStrategy, System.Int32)
+  nameWithType: Game.ResetCreatureDynamicWalkPlan(ICreature, ICreature, WalkStrategy, Int32)
 - uid: Fibula.Mechanics.Game.ResetCreatureDynamicWalkPlan*
   name: ResetCreatureDynamicWalkPlan
   href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_ResetCreatureDynamicWalkPlan_
@@ -25970,15 +26063,12 @@ references:
   isSpec: "True"
   fullName: Fibula.PathFinding.AStar.AStarPathFinder.AStarPathFinder
   nameWithType: AStarPathFinder.AStarPathFinder
-- uid: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location@,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
-  name: FindBetween(Location, Location, out Location, ICreature, Int32, Boolean, Int32)
-  href: code/Fibula.PathFinding.AStar.AStarPathFinder.html#Fibula_PathFinding_AStar_AStarPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location__Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_
-  commentId: M:Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location@,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
-  name.vb: FindBetween(Location, Location, ByRef Location, ICreature, Int32, Boolean, Int32)
-  fullName: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, out Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
-  fullName.vb: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, ByRef Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
-  nameWithType: AStarPathFinder.FindBetween(Location, Location, out Location, ICreature, Int32, Boolean, Int32)
-  nameWithType.vb: AStarPathFinder.FindBetween(Location, Location, ByRef Location, ICreature, Int32, Boolean, Int32)
+- uid: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
+  name: FindBetween(Location, Location, ICreature, Int32, Boolean, Int32)
+  href: code/Fibula.PathFinding.AStar.AStarPathFinder.html#Fibula_PathFinding_AStar_AStarPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_
+  commentId: M:Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)
+  fullName: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location, Fibula.Common.Contracts.Structs.Location, Fibula.Creatures.Contracts.Abstractions.ICreature, System.Int32, System.Boolean, System.Int32)
+  nameWithType: AStarPathFinder.FindBetween(Location, Location, ICreature, Int32, Boolean, Int32)
 - uid: Fibula.PathFinding.AStar.AStarPathFinder.FindBetween*
   name: FindBetween
   href: code/Fibula.PathFinding.AStar.AStarPathFinder.html#Fibula_PathFinding_AStar_AStarPathFinder_FindBetween_

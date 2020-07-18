@@ -99,15 +99,13 @@
     <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IContainerItem.html">IContainerItem</a></div>
     <div><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html">IItem</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
+    <div><span class="xref">System.IEquatable</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>&gt;</div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
-    <div>
-      <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_UniqueId">Item.UniqueId</a>
-    </div>
     <div>
       <a class="xref" href="Fibula.Items.Item.html#Fibula_Items_Item_Type">Item.Type</a>
     </div>
@@ -217,6 +215,9 @@
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ThingChanged">Thing.ThingChanged</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_UniqueId">Thing.UniqueId</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ParentContainer">Thing.ParentContainer</a>
     </div>
     <div>
@@ -227,6 +228,9 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_ToString">Thing.ToString()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Thing.html#Fibula_Common_Thing_Equals_Fibula_Common_Contracts_Abstractions_IThing_">Thing.Equals(IThing)</a>
     </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
@@ -251,7 +255,7 @@
   <h6><strong>Assembly</strong>: Fibula.Items.dll</h6>
   <h5 id="Fibula_Items_ContainerItem_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class ContainerItem : Item, IContainerItem, IItem, IThing, IContainedThing, IThingContainer, ILocatable</code></pre>
+    <pre><code class="lang-csharp hljs">public class ContainerItem : Item, IContainerItem, IItem, IThing, IEquatable&lt;IThing&gt;, IContainedThing, IThingContainer, ILocatable</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -974,6 +978,9 @@
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>
+  </div>
+  <div>
+      <span class="xref">System.IEquatable&lt;T&gt;</span>
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a>
