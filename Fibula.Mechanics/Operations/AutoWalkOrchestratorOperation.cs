@@ -12,10 +12,12 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
+    using Fibula.Common.Utilities.Pathfinding;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
@@ -77,12 +79,25 @@ namespace Fibula.Mechanics.Operations
             // Recalculate the route if necessary:
             if (resultingState == WalkPlanState.NeedsToRecalculate)
             {
-                var directions = context.PathFinder.FindBetween(this.Creature.Location, this.Creature.WalkPlan.DetermineTargetLocation(), out _, this.Creature);
+                var (result, _, directions) = context.PathFinder.FindBetween(this.Creature.Location, this.Creature.WalkPlan.DetermineTargetLocation(), this.Creature, targetDistance: this.Creature.WalkPlan.AtGoalDistanceFromLocation);
 
-                this.Creature.WalkPlan.RecalculateWaypoints(this.Creature.Location, directions);
+                if (result == SearchState.Failed && !directions.Any())
+                {
+                    // No way found.
+                    this.DispatchTextNotification(context, OperationMessage.ThereIsNoWay);
 
-                // Repeat immediately.
-                this.RepeatAfter = TimeSpan.Zero;
+                    if (this.Creature is ICombatant combatant)
+                    {
+                        context.CombatApi.SetCombatantModes(combatant, combatant.FightMode, ChaseMode.Stand, false /*combatant.HasSafetyOn*/);
+                    }
+                }
+                else
+                {
+                    this.Creature.WalkPlan.RecalculateWaypoints(this.Creature.Location, directions);
+
+                    // Repeat immediately.
+                    this.RepeatAfter = TimeSpan.Zero;
+                }
 
                 return;
             }

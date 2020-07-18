@@ -24,6 +24,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Structs;
     using Fibula.Mechanics.Notifications;
 
@@ -115,6 +116,7 @@ namespace Fibula.Mechanics.Operations
             var isCorrectTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
             var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= 1;
             var inRange = nullAttacker || (distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0);
+            var canAttackFromThere = nullAttacker || (inRange && context.Map.CanThrowBetweenLocations(this.Attacker.Location, this.Target.Location));
 
             var attackPerformed = false;
 
@@ -126,7 +128,7 @@ namespace Fibula.Mechanics.Operations
                     return;
                 }
 
-                if (!inRange)
+                if (!canAttackFromThere)
                 {
                     if (!nullAttacker)
                     {

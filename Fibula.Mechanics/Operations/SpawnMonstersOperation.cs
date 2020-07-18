@@ -73,7 +73,7 @@ namespace Fibula.Mechanics.Operations
                 var randomLoc = this.Spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };
 
                 // Need to actually pathfind to avoid placing a monster in unreachable places.
-                context.PathFinder.FindBetween(this.Spawn.Location, randomLoc, out Location foundLocation, newMonster, (i + 1) * 10);
+                var (_, foundLocation, _) = context.PathFinder.FindBetween(this.Spawn.Location, randomLoc, newMonster, (i + 1) * 10);
 
                 // TODO: some property of newMonster here to figure out what actually blocks path finding.
                 if (context.Map.GetTileAt(foundLocation, out ITile targetTile) && !targetTile.IsPathBlocking())

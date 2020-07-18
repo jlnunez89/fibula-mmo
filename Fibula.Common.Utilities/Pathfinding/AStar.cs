@@ -23,12 +23,8 @@ namespace Fibula.Common.Utilities.Pathfinding
         /// <summary>
         /// The open list.
         /// </summary>
+        // TODO: This can be replaced by a min heap and it would have better performance.
         private readonly SortedList<int, INode> nextToVisit;
-
-        /// <summary>
-        /// The closed list.
-        /// </summary>
-        private readonly SortedList<int, INode> visited;
 
         /// <summary>
         /// The reference to the node factory in use.
@@ -64,7 +60,6 @@ namespace Fibula.Common.Utilities.Pathfinding
             goal.ThrowIfNull(nameof(goal));
 
             this.nextToVisit = new SortedList<int, INode>(new DuplicateIntegerComparer());
-            this.visited = new SortedList<int, INode>(new DuplicateIntegerComparer());
 
             this.nodeFactory = nodeFactory;
 
@@ -78,16 +73,6 @@ namespace Fibula.Common.Utilities.Pathfinding
 
             this.nextToVisit.Add(this.CurrentNode);
         }
-
-        /// <summary>
-        /// Gets the current state of the open list.
-        /// </summary>
-        public IEnumerable<INode> OpenList => this.nextToVisit.Values;
-
-        /// <summary>
-        /// Gets the current state of the closed list.
-        /// </summary>
-        public IEnumerable<INode> ClosedList => this.visited.Values;
 
         /// <summary>
         /// Gets the current node that the AStar algorithm is at.
@@ -146,10 +131,8 @@ namespace Fibula.Common.Utilities.Pathfinding
             }
 
             // First of all, flag this node to not be visited again.
-            this.visited.Add(this.CurrentNode);
-
-            this.CurrentNode.ShouldBeVisited = false;
             this.CurrentNode.HasBeenVisited = true;
+            this.CurrentNode.ShouldBeVisited = false;
 
             // Check if this node is the goal.
             if (this.CurrentNode.IsGoal(this.goal))

@@ -43,7 +43,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
             }
 
             // The currentLocation must be either the goal, or the first location on our waypoints list.
-            if ((currentWaypoint - walkPlan.DetermineTargetLocation()).MaxValueIn2D <= walkPlan.AtGoalDistanceFromLocation)
+            if ((currentWaypoint - walkPlan.DetermineTargetLocation()).MaxValueIn2D == 0)
             {
                 walkPlan.State = WalkPlanState.AtGoal;
 

@@ -392,7 +392,7 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            var directions = this.pathFinder.FindBetween(creature.Location, targetCreature.Location, out Location endLocation, creature);
+            var (result, endLocation, directions) = this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance);
 
             var waypoints = new List<Location>()
             {

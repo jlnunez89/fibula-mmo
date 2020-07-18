@@ -13,10 +13,12 @@ namespace Fibula.PathFinding.AStar
 {
     using System;
     using System.Collections.Generic;
+    using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Common.Utilities.Pathfinding;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Extensions;
 
     /// <summary>
     /// Class that represents a tile node.
@@ -97,7 +99,6 @@ namespace Fibula.PathFinding.AStar
 
             var currentLoc = this.Tile.Location;
 
-            var rng = new Random();
             var offsets = new List<Location>();
 
             // look at adjacent tiles.
@@ -111,7 +112,7 @@ namespace Fibula.PathFinding.AStar
                         continue;
                     }
 
-                    offsets.Insert(rng.Next(offsets.Count), new Location { X = dx, Y = dy, Z = 0 });
+                    offsets.Insert((int)(DateTime.Now.Ticks % (offsets.Count + 1)), new Location { X = dx, Y = dy, Z = 0 });
                 }
             }
 
@@ -139,11 +140,10 @@ namespace Fibula.PathFinding.AStar
                 return;
             }
 
-            var locationDiff = this.Tile.Location - parentNode.Tile.Location;
-            var isDiagonal = Math.Min(Math.Abs(locationDiff.X), 1) + Math.Min(Math.Abs(locationDiff.Y), 1) == 2;
+            var directionToParent = this.Tile.Location.DirectionTo(parentNode.Tile.Location, returnDiagonals: true);
 
             // TODO: check OnBehalfOfCreature avoids anything over this tile by adding weight here.
-            var newCost = parent.MovementCost + (isDiagonal ? 3 : 1);
+            var newCost = parent.MovementCost + (directionToParent.IsDiagonal() ? 3 : 1);
 
             this.MovementCost = this.MovementCost > 0 ? Math.Min(this.MovementCost, newCost) : newCost;
         }
@@ -183,7 +183,9 @@ namespace Fibula.PathFinding.AStar
 
             var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
-            return locationDiff.Z == 0 && locationDiff.MaxValueIn2D <= this.SearchContext.TargetDistance;
+            return locationDiff.Z == 0 &&
+                locationDiff.MaxValueIn2D <= this.SearchContext.TargetDistance &&
+                this.SearchContext.Map.CanThrowBetweenLocations(this.Tile.Location, goalNode.Tile.Location);
         }
     }
 }
