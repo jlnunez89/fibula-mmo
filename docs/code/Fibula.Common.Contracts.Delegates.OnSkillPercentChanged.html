@@ -5,10 +5,10 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-    <title>Namespace Fibula.Common.Contracts.Abstractions
+    <title>Delegate OnSkillPercentChanged
    | Fibula MMO </title>
     <meta name="viewport" content="width=device-width">
-    <meta name="title" content="Namespace Fibula.Common.Contracts.Abstractions
+    <meta name="title" content="Delegate OnSkillPercentChanged
    | Fibula MMO ">
     <meta name="generator" content="docfx 2.56.1.0">
     
@@ -78,42 +78,48 @@
         </div>
         <div class="article row grid-right">
           <div class="col-md-10">
-            <article class="content wrap" id="_content" data-uid="Fibula.Common.Contracts.Abstractions">
+            <article class="content wrap" id="_content" data-uid="Fibula.Common.Contracts.Delegates.OnSkillPercentChanged">
   
-  <h1 id="Fibula_Common_Contracts_Abstractions" data-uid="Fibula.Common.Contracts.Abstractions" class="text-break">Namespace Fibula.Common.Contracts.Abstractions
+  
+  <h1 id="Fibula_Common_Contracts_Delegates_OnSkillPercentChanged" data-uid="Fibula.Common.Contracts.Delegates.OnSkillPercentChanged" class="text-break">Delegate OnSkillPercentChanged
   </h1>
-  <div class="markdown level0 summary"></div>
+  <div class="markdown level0 summary"><p>Delegate meant for a skill percent changed.</p>
+</div>
   <div class="markdown level0 conceptual"></div>
-  <div class="markdown level0 remarks"></div>
-    <h3 id="interfaces">Interfaces
-  </h3>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IApplicationContext.html">IApplicationContext</a></h4>
-      <section><p>Interface that represents the common context of the entire application.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></h4>
-      <section><p>Interface for all entities that keep track of a parent container.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IConverter.html">IConverter</a></h4>
-      <section><p>Inteface for a converter.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.ILocatable.html">ILocatable</a></h4>
-      <section><p>Interface for all entities with a location.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.ISkill.html">ISkill</a></h4>
-      <section><p>Interface for skills in the game.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></h4>
-      <section><p>Interface for all things in the game.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingContainer.html">IThingContainer</a></h4>
-      <section><p>Interface for all containers of <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a>s.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingCreationArguments.html">IThingCreationArguments</a></h4>
-      <section><p>Interface for arguments used during creation of things.</p>
-</section>
-      <h4><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThingFactory.html">IThingFactory</a></h4>
-      <section><p>Interface for factories of things.</p>
-</section>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Common.Contracts.Delegates.html">Fibula.Common.Contracts.Delegates</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Common.Contracts.dll</h6>
+  <h5 id="Fibula_Common_Contracts_Delegates_OnSkillPercentChanged_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public delegate void OnSkillPercentChanged(SkillType skillType);</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a></td>
+        <td><span class="parametername">skillType</span></td>
+        <td><p>The type of skill that changed.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
 </article>
           </div>
           
@@ -121,6 +127,12 @@
             <div class="sideaffix">
               <div class="contribution">
                 <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Delegates_OnSkillPercentChanged.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Delegates.OnSkillPercentChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Delegates/OnSkillPercentChanged.cs/#L20" class="contribution-link">View Source</a>
+                  </li>
                 </ul>
               </div>
               <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">

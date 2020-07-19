@@ -568,6 +568,167 @@ references:
   isSpec: "True"
   fullName: Fibula.Common.Contracts.Abstractions.ILocatable.Location
   nameWithType: ILocatable.Location
+- uid: Fibula.Common.Contracts.Abstractions.ISkill
+  name: ISkill
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html
+  commentId: T:Fibula.Common.Contracts.Abstractions.ISkill
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill
+  nameWithType: ISkill
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Advanced
+  name: Advanced
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Advanced
+  commentId: E:Fibula.Common.Contracts.Abstractions.ISkill.Advanced
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Advanced
+  nameWithType: ISkill.Advanced
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease
+  name: BaseTargetIncrease
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_BaseTargetIncrease
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease
+  nameWithType: ISkill.BaseTargetIncrease
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease*
+  name: BaseTargetIncrease
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_BaseTargetIncrease_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.BaseTargetIncrease
+  nameWithType: ISkill.BaseTargetIncrease
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Count
+  name: Count
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Count
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.Count
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Count
+  nameWithType: ISkill.Count
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Count*
+  name: Count
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Count_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.Count
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Count
+  nameWithType: ISkill.Count
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel
+  name: DefaultLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_DefaultLevel
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel
+  nameWithType: ISkill.DefaultLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel*
+  name: DefaultLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_DefaultLevel_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.DefaultLevel
+  nameWithType: ISkill.DefaultLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter(System.Double)
+  name: IncreaseCounter(Double)
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_IncreaseCounter_System_Double_
+  commentId: M:Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter(System.Double)
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter(System.Double)
+  nameWithType: ISkill.IncreaseCounter(Double)
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter*
+  name: IncreaseCounter
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_IncreaseCounter_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.IncreaseCounter
+  nameWithType: ISkill.IncreaseCounter
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Level
+  name: Level
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Level
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.Level
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Level
+  nameWithType: ISkill.Level
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Level*
+  name: Level
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Level_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.Level
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Level
+  nameWithType: ISkill.Level
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel
+  name: MaxLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_MaxLevel
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel
+  nameWithType: ISkill.MaxLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel*
+  name: MaxLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_MaxLevel_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.MaxLevel
+  nameWithType: ISkill.MaxLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Percent
+  name: Percent
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Percent
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.Percent
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Percent
+  nameWithType: ISkill.Percent
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Percent*
+  name: Percent
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Percent_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.Percent
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Percent
+  nameWithType: ISkill.Percent
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.PercentChanged
+  name: PercentChanged
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_PercentChanged
+  commentId: E:Fibula.Common.Contracts.Abstractions.ISkill.PercentChanged
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.PercentChanged
+  nameWithType: ISkill.PercentChanged
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Rate
+  name: Rate
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Rate
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.Rate
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Rate
+  nameWithType: ISkill.Rate
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Rate*
+  name: Rate
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Rate_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.Rate
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Rate
+  nameWithType: ISkill.Rate
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel
+  name: StartingCountAtLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_StartingCountAtLevel
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel
+  nameWithType: ISkill.StartingCountAtLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel*
+  name: StartingCountAtLevel
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_StartingCountAtLevel_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.StartingCountAtLevel
+  nameWithType: ISkill.StartingCountAtLevel
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.TargetCount
+  name: TargetCount
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_TargetCount
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.TargetCount
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.TargetCount
+  nameWithType: ISkill.TargetCount
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.TargetCount*
+  name: TargetCount
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_TargetCount_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.TargetCount
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.TargetCount
+  nameWithType: ISkill.TargetCount
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Type
+  name: Type
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Type
+  commentId: P:Fibula.Common.Contracts.Abstractions.ISkill.Type
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Type
+  nameWithType: ISkill.Type
+- uid: Fibula.Common.Contracts.Abstractions.ISkill.Type*
+  name: Type
+  href: code/Fibula.Common.Contracts.Abstractions.ISkill.html#Fibula_Common_Contracts_Abstractions_ISkill_Type_
+  commentId: Overload:Fibula.Common.Contracts.Abstractions.ISkill.Type
+  isSpec: "True"
+  fullName: Fibula.Common.Contracts.Abstractions.ISkill.Type
+  nameWithType: ISkill.Type
 - uid: Fibula.Common.Contracts.Abstractions.IThing
   name: IThing
   href: code/Fibula.Common.Contracts.Abstractions.IThing.html
@@ -754,6 +915,39 @@ references:
   commentId: N:Fibula.Common.Contracts.Delegates
   fullName: Fibula.Common.Contracts.Delegates
   nameWithType: Fibula.Common.Contracts.Delegates
+- uid: Fibula.Common.Contracts.Delegates.AsyncEventHandler`1
+  name: AsyncEventHandler<TEventArgs>
+  href: code/Fibula.Common.Contracts.Delegates.AsyncEventHandler-1.html
+  commentId: T:Fibula.Common.Contracts.Delegates.AsyncEventHandler`1
+  name.vb: AsyncEventHandler(Of TEventArgs)
+  fullName: Fibula.Common.Contracts.Delegates.AsyncEventHandler<TEventArgs>
+  fullName.vb: Fibula.Common.Contracts.Delegates.AsyncEventHandler(Of TEventArgs)
+  nameWithType: AsyncEventHandler<TEventArgs>
+  nameWithType.vb: AsyncEventHandler(Of TEventArgs)
+- uid: Fibula.Common.Contracts.Delegates.OnSkillAdvanced
+  name: OnSkillAdvanced
+  href: code/Fibula.Common.Contracts.Delegates.OnSkillAdvanced.html
+  commentId: T:Fibula.Common.Contracts.Delegates.OnSkillAdvanced
+  fullName: Fibula.Common.Contracts.Delegates.OnSkillAdvanced
+  nameWithType: OnSkillAdvanced
+- uid: Fibula.Common.Contracts.Delegates.OnSkillLevelChanged
+  name: OnSkillLevelChanged
+  href: code/Fibula.Common.Contracts.Delegates.OnSkillLevelChanged.html
+  commentId: T:Fibula.Common.Contracts.Delegates.OnSkillLevelChanged
+  fullName: Fibula.Common.Contracts.Delegates.OnSkillLevelChanged
+  nameWithType: OnSkillLevelChanged
+- uid: Fibula.Common.Contracts.Delegates.OnSkillPercentChanged
+  name: OnSkillPercentChanged
+  href: code/Fibula.Common.Contracts.Delegates.OnSkillPercentChanged.html
+  commentId: T:Fibula.Common.Contracts.Delegates.OnSkillPercentChanged
+  fullName: Fibula.Common.Contracts.Delegates.OnSkillPercentChanged
+  nameWithType: OnSkillPercentChanged
+- uid: Fibula.Common.Contracts.Delegates.OnSkillPerecentualChanged
+  name: OnSkillPerecentualChanged
+  href: code/Fibula.Common.Contracts.Delegates.OnSkillPerecentualChanged.html
+  commentId: T:Fibula.Common.Contracts.Delegates.OnSkillPerecentualChanged
+  fullName: Fibula.Common.Contracts.Delegates.OnSkillPerecentualChanged
+  nameWithType: OnSkillPerecentualChanged
 - uid: Fibula.Common.Contracts.Delegates.OnThingStateChanged
   name: OnThingStateChanged
   href: code/Fibula.Common.Contracts.Delegates.OnThingStateChanged.html
@@ -9899,6 +10093,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Creatures.CombatantCreature.CalculateRemainingCooldownTime
   nameWithType: CombatantCreature.CalculateRemainingCooldownTime
+- uid: Fibula.Creatures.CombatantCreature.CalculateSkillPercent(Fibula.Common.Contracts.Enumerations.SkillType)
+  name: CalculateSkillPercent(SkillType)
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_CalculateSkillPercent_Fibula_Common_Contracts_Enumerations_SkillType_
+  commentId: M:Fibula.Creatures.CombatantCreature.CalculateSkillPercent(Fibula.Common.Contracts.Enumerations.SkillType)
+  fullName: Fibula.Creatures.CombatantCreature.CalculateSkillPercent(Fibula.Common.Contracts.Enumerations.SkillType)
+  nameWithType: CombatantCreature.CalculateSkillPercent(SkillType)
+- uid: Fibula.Creatures.CombatantCreature.CalculateSkillPercent*
+  name: CalculateSkillPercent
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_CalculateSkillPercent_
+  commentId: Overload:Fibula.Creatures.CombatantCreature.CalculateSkillPercent
+  isSpec: "True"
+  fullName: Fibula.Creatures.CombatantCreature.CalculateSkillPercent
+  nameWithType: CombatantCreature.CalculateSkillPercent
 - uid: Fibula.Creatures.CombatantCreature.ChaseMode
   name: ChaseMode
   href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_ChaseMode
@@ -10073,6 +10280,32 @@ references:
   isSpec: "True"
   fullName: Fibula.Creatures.CombatantCreature.PendingAutoAttackOperation
   nameWithType: CombatantCreature.PendingAutoAttackOperation
+- uid: Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance(Fibula.Common.Contracts.Enumerations.SkillType)
+  name: RaiseSkillLevelAdvance(SkillType)
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_Fibula_Common_Contracts_Enumerations_SkillType_
+  commentId: M:Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance(Fibula.Common.Contracts.Enumerations.SkillType)
+  fullName: Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance(Fibula.Common.Contracts.Enumerations.SkillType)
+  nameWithType: CombatantCreature.RaiseSkillLevelAdvance(SkillType)
+- uid: Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance*
+  name: RaiseSkillLevelAdvance
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_
+  commentId: Overload:Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance
+  isSpec: "True"
+  fullName: Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance
+  nameWithType: CombatantCreature.RaiseSkillLevelAdvance
+- uid: Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange(Fibula.Common.Contracts.Enumerations.SkillType)
+  name: RaiseSkillPercentChange(SkillType)
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_Fibula_Common_Contracts_Enumerations_SkillType_
+  commentId: M:Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange(Fibula.Common.Contracts.Enumerations.SkillType)
+  fullName: Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange(Fibula.Common.Contracts.Enumerations.SkillType)
+  nameWithType: CombatantCreature.RaiseSkillPercentChange(SkillType)
+- uid: Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange*
+  name: RaiseSkillPercentChange
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_
+  commentId: Overload:Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange
+  isSpec: "True"
+  fullName: Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange
+  nameWithType: CombatantCreature.RaiseSkillPercentChange
 - uid: Fibula.Creatures.CombatantCreature.RestoreCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType,System.Byte)
   name: RestoreCredits(CombatCreditType, Byte)
   href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RestoreCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_
@@ -10112,6 +10345,31 @@ references:
   isSpec: "True"
   fullName: Fibula.Creatures.CombatantCreature.SetChaseTarget
   nameWithType: CombatantCreature.SetChaseTarget
+- uid: Fibula.Creatures.CombatantCreature.SkillLevelChanged
+  name: SkillLevelChanged
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillLevelChanged
+  commentId: E:Fibula.Creatures.CombatantCreature.SkillLevelChanged
+  fullName: Fibula.Creatures.CombatantCreature.SkillLevelChanged
+  nameWithType: CombatantCreature.SkillLevelChanged
+- uid: Fibula.Creatures.CombatantCreature.SkillPerecentualChanged
+  name: SkillPerecentualChanged
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillPerecentualChanged
+  commentId: E:Fibula.Creatures.CombatantCreature.SkillPerecentualChanged
+  fullName: Fibula.Creatures.CombatantCreature.SkillPerecentualChanged
+  nameWithType: CombatantCreature.SkillPerecentualChanged
+- uid: Fibula.Creatures.CombatantCreature.Skills
+  name: Skills
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_Skills
+  commentId: P:Fibula.Creatures.CombatantCreature.Skills
+  fullName: Fibula.Creatures.CombatantCreature.Skills
+  nameWithType: CombatantCreature.Skills
+- uid: Fibula.Creatures.CombatantCreature.Skills*
+  name: Skills
+  href: code/Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_Skills_
+  commentId: Overload:Fibula.Creatures.CombatantCreature.Skills
+  isSpec: "True"
+  fullName: Fibula.Creatures.CombatantCreature.Skills
+  nameWithType: CombatantCreature.Skills
 - uid: Fibula.Creatures.Contracts.Abstractions
   name: Fibula.Creatures.Contracts.Abstractions
   href: code/Fibula.Creatures.Contracts.Abstractions.html
@@ -12737,6 +12995,193 @@ references:
   isSpec: "True"
   fullName: Fibula.Creatures.MonstersDbFile.MonsterDbFileMonsterSpawnLoaderOptions.FilePath
   nameWithType: MonsterDbFileMonsterSpawnLoaderOptions.FilePath
+- uid: Fibula.Creatures.MonsterSkill
+  name: MonsterSkill
+  href: code/Fibula.Creatures.MonsterSkill.html
+  commentId: T:Fibula.Creatures.MonsterSkill
+  fullName: Fibula.Creatures.MonsterSkill
+  nameWithType: MonsterSkill
+- uid: Fibula.Creatures.MonsterSkill.#ctor(Fibula.Common.Contracts.Enumerations.SkillType,System.Int32,System.Int32,System.Int32,System.UInt32,System.UInt32,System.Byte)
+  name: MonsterSkill(SkillType, Int32, Int32, Int32, UInt32, UInt32, Byte)
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill__ctor_Fibula_Common_Contracts_Enumerations_SkillType_System_Int32_System_Int32_System_Int32_System_UInt32_System_UInt32_System_Byte_
+  commentId: M:Fibula.Creatures.MonsterSkill.#ctor(Fibula.Common.Contracts.Enumerations.SkillType,System.Int32,System.Int32,System.Int32,System.UInt32,System.UInt32,System.Byte)
+  fullName: Fibula.Creatures.MonsterSkill.MonsterSkill(Fibula.Common.Contracts.Enumerations.SkillType, System.Int32, System.Int32, System.Int32, System.UInt32, System.UInt32, System.Byte)
+  nameWithType: MonsterSkill.MonsterSkill(SkillType, Int32, Int32, Int32, UInt32, UInt32, Byte)
+- uid: Fibula.Creatures.MonsterSkill.#ctor*
+  name: MonsterSkill
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill__ctor_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.#ctor
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.MonsterSkill
+  nameWithType: MonsterSkill.MonsterSkill
+- uid: Fibula.Creatures.MonsterSkill.Advanced
+  name: Advanced
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Advanced
+  commentId: E:Fibula.Creatures.MonsterSkill.Advanced
+  fullName: Fibula.Creatures.MonsterSkill.Advanced
+  nameWithType: MonsterSkill.Advanced
+- uid: Fibula.Creatures.MonsterSkill.BaseTargetIncrease
+  name: BaseTargetIncrease
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_BaseTargetIncrease
+  commentId: P:Fibula.Creatures.MonsterSkill.BaseTargetIncrease
+  fullName: Fibula.Creatures.MonsterSkill.BaseTargetIncrease
+  nameWithType: MonsterSkill.BaseTargetIncrease
+- uid: Fibula.Creatures.MonsterSkill.BaseTargetIncrease*
+  name: BaseTargetIncrease
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_BaseTargetIncrease_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.BaseTargetIncrease
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.BaseTargetIncrease
+  nameWithType: MonsterSkill.BaseTargetIncrease
+- uid: Fibula.Creatures.MonsterSkill.Count
+  name: Count
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Count
+  commentId: P:Fibula.Creatures.MonsterSkill.Count
+  fullName: Fibula.Creatures.MonsterSkill.Count
+  nameWithType: MonsterSkill.Count
+- uid: Fibula.Creatures.MonsterSkill.Count*
+  name: Count
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Count_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.Count
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.Count
+  nameWithType: MonsterSkill.Count
+- uid: Fibula.Creatures.MonsterSkill.DefaultLevel
+  name: DefaultLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_DefaultLevel
+  commentId: P:Fibula.Creatures.MonsterSkill.DefaultLevel
+  fullName: Fibula.Creatures.MonsterSkill.DefaultLevel
+  nameWithType: MonsterSkill.DefaultLevel
+- uid: Fibula.Creatures.MonsterSkill.DefaultLevel*
+  name: DefaultLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_DefaultLevel_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.DefaultLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.DefaultLevel
+  nameWithType: MonsterSkill.DefaultLevel
+- uid: Fibula.Creatures.MonsterSkill.IncreaseCounter(System.Double)
+  name: IncreaseCounter(Double)
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_IncreaseCounter_System_Double_
+  commentId: M:Fibula.Creatures.MonsterSkill.IncreaseCounter(System.Double)
+  fullName: Fibula.Creatures.MonsterSkill.IncreaseCounter(System.Double)
+  nameWithType: MonsterSkill.IncreaseCounter(Double)
+- uid: Fibula.Creatures.MonsterSkill.IncreaseCounter*
+  name: IncreaseCounter
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_IncreaseCounter_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.IncreaseCounter
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.IncreaseCounter
+  nameWithType: MonsterSkill.IncreaseCounter
+- uid: Fibula.Creatures.MonsterSkill.Level
+  name: Level
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Level
+  commentId: P:Fibula.Creatures.MonsterSkill.Level
+  fullName: Fibula.Creatures.MonsterSkill.Level
+  nameWithType: MonsterSkill.Level
+- uid: Fibula.Creatures.MonsterSkill.Level*
+  name: Level
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Level_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.Level
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.Level
+  nameWithType: MonsterSkill.Level
+- uid: Fibula.Creatures.MonsterSkill.MaxLevel
+  name: MaxLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_MaxLevel
+  commentId: P:Fibula.Creatures.MonsterSkill.MaxLevel
+  fullName: Fibula.Creatures.MonsterSkill.MaxLevel
+  nameWithType: MonsterSkill.MaxLevel
+- uid: Fibula.Creatures.MonsterSkill.MaxLevel*
+  name: MaxLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_MaxLevel_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.MaxLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.MaxLevel
+  nameWithType: MonsterSkill.MaxLevel
+- uid: Fibula.Creatures.MonsterSkill.Percent
+  name: Percent
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Percent
+  commentId: P:Fibula.Creatures.MonsterSkill.Percent
+  fullName: Fibula.Creatures.MonsterSkill.Percent
+  nameWithType: MonsterSkill.Percent
+- uid: Fibula.Creatures.MonsterSkill.Percent*
+  name: Percent
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Percent_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.Percent
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.Percent
+  nameWithType: MonsterSkill.Percent
+- uid: Fibula.Creatures.MonsterSkill.PercentChanged
+  name: PercentChanged
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_PercentChanged
+  commentId: E:Fibula.Creatures.MonsterSkill.PercentChanged
+  fullName: Fibula.Creatures.MonsterSkill.PercentChanged
+  nameWithType: MonsterSkill.PercentChanged
+- uid: Fibula.Creatures.MonsterSkill.PerLevelIncrease
+  name: PerLevelIncrease
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_PerLevelIncrease
+  commentId: P:Fibula.Creatures.MonsterSkill.PerLevelIncrease
+  fullName: Fibula.Creatures.MonsterSkill.PerLevelIncrease
+  nameWithType: MonsterSkill.PerLevelIncrease
+- uid: Fibula.Creatures.MonsterSkill.PerLevelIncrease*
+  name: PerLevelIncrease
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_PerLevelIncrease_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.PerLevelIncrease
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.PerLevelIncrease
+  nameWithType: MonsterSkill.PerLevelIncrease
+- uid: Fibula.Creatures.MonsterSkill.Rate
+  name: Rate
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Rate
+  commentId: P:Fibula.Creatures.MonsterSkill.Rate
+  fullName: Fibula.Creatures.MonsterSkill.Rate
+  nameWithType: MonsterSkill.Rate
+- uid: Fibula.Creatures.MonsterSkill.Rate*
+  name: Rate
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Rate_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.Rate
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.Rate
+  nameWithType: MonsterSkill.Rate
+- uid: Fibula.Creatures.MonsterSkill.StartingCountAtLevel
+  name: StartingCountAtLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_StartingCountAtLevel
+  commentId: P:Fibula.Creatures.MonsterSkill.StartingCountAtLevel
+  fullName: Fibula.Creatures.MonsterSkill.StartingCountAtLevel
+  nameWithType: MonsterSkill.StartingCountAtLevel
+- uid: Fibula.Creatures.MonsterSkill.StartingCountAtLevel*
+  name: StartingCountAtLevel
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_StartingCountAtLevel_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.StartingCountAtLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.StartingCountAtLevel
+  nameWithType: MonsterSkill.StartingCountAtLevel
+- uid: Fibula.Creatures.MonsterSkill.TargetCount
+  name: TargetCount
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_TargetCount
+  commentId: P:Fibula.Creatures.MonsterSkill.TargetCount
+  fullName: Fibula.Creatures.MonsterSkill.TargetCount
+  nameWithType: MonsterSkill.TargetCount
+- uid: Fibula.Creatures.MonsterSkill.TargetCount*
+  name: TargetCount
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_TargetCount_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.TargetCount
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.TargetCount
+  nameWithType: MonsterSkill.TargetCount
+- uid: Fibula.Creatures.MonsterSkill.Type
+  name: Type
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Type
+  commentId: P:Fibula.Creatures.MonsterSkill.Type
+  fullName: Fibula.Creatures.MonsterSkill.Type
+  nameWithType: MonsterSkill.Type
+- uid: Fibula.Creatures.MonsterSkill.Type*
+  name: Type
+  href: code/Fibula.Creatures.MonsterSkill.html#Fibula_Creatures_MonsterSkill_Type_
+  commentId: Overload:Fibula.Creatures.MonsterSkill.Type
+  isSpec: "True"
+  fullName: Fibula.Creatures.MonsterSkill.Type
+  nameWithType: MonsterSkill.Type
 - uid: Fibula.Creatures.MonsterType
   name: MonsterType
   href: code/Fibula.Creatures.MonsterType.html
@@ -13352,6 +13797,180 @@ references:
   isSpec: "True"
   fullName: Fibula.Creatures.PlayerCreationArguments.Client
   nameWithType: PlayerCreationArguments.Client
+- uid: Fibula.Creatures.Skill
+  name: Skill
+  href: code/Fibula.Creatures.Skill.html
+  commentId: T:Fibula.Creatures.Skill
+  fullName: Fibula.Creatures.Skill
+  nameWithType: Skill
+- uid: Fibula.Creatures.Skill.#ctor(Fibula.Common.Contracts.Enumerations.SkillType,System.UInt32,System.Double,System.Double,System.UInt32,System.UInt32,System.Double)
+  name: Skill(SkillType, UInt32, Double, Double, UInt32, UInt32, Double)
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill__ctor_Fibula_Common_Contracts_Enumerations_SkillType_System_UInt32_System_Double_System_Double_System_UInt32_System_UInt32_System_Double_
+  commentId: M:Fibula.Creatures.Skill.#ctor(Fibula.Common.Contracts.Enumerations.SkillType,System.UInt32,System.Double,System.Double,System.UInt32,System.UInt32,System.Double)
+  fullName: Fibula.Creatures.Skill.Skill(Fibula.Common.Contracts.Enumerations.SkillType, System.UInt32, System.Double, System.Double, System.UInt32, System.UInt32, System.Double)
+  nameWithType: Skill.Skill(SkillType, UInt32, Double, Double, UInt32, UInt32, Double)
+- uid: Fibula.Creatures.Skill.#ctor*
+  name: Skill
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill__ctor_
+  commentId: Overload:Fibula.Creatures.Skill.#ctor
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Skill
+  nameWithType: Skill.Skill
+- uid: Fibula.Creatures.Skill.Advanced
+  name: Advanced
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Advanced
+  commentId: E:Fibula.Creatures.Skill.Advanced
+  fullName: Fibula.Creatures.Skill.Advanced
+  nameWithType: Skill.Advanced
+- uid: Fibula.Creatures.Skill.BaseTargetIncrease
+  name: BaseTargetIncrease
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_BaseTargetIncrease
+  commentId: P:Fibula.Creatures.Skill.BaseTargetIncrease
+  fullName: Fibula.Creatures.Skill.BaseTargetIncrease
+  nameWithType: Skill.BaseTargetIncrease
+- uid: Fibula.Creatures.Skill.BaseTargetIncrease*
+  name: BaseTargetIncrease
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_BaseTargetIncrease_
+  commentId: Overload:Fibula.Creatures.Skill.BaseTargetIncrease
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.BaseTargetIncrease
+  nameWithType: Skill.BaseTargetIncrease
+- uid: Fibula.Creatures.Skill.Count
+  name: Count
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Count
+  commentId: P:Fibula.Creatures.Skill.Count
+  fullName: Fibula.Creatures.Skill.Count
+  nameWithType: Skill.Count
+- uid: Fibula.Creatures.Skill.Count*
+  name: Count
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Count_
+  commentId: Overload:Fibula.Creatures.Skill.Count
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Count
+  nameWithType: Skill.Count
+- uid: Fibula.Creatures.Skill.DefaultLevel
+  name: DefaultLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_DefaultLevel
+  commentId: P:Fibula.Creatures.Skill.DefaultLevel
+  fullName: Fibula.Creatures.Skill.DefaultLevel
+  nameWithType: Skill.DefaultLevel
+- uid: Fibula.Creatures.Skill.DefaultLevel*
+  name: DefaultLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_DefaultLevel_
+  commentId: Overload:Fibula.Creatures.Skill.DefaultLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.DefaultLevel
+  nameWithType: Skill.DefaultLevel
+- uid: Fibula.Creatures.Skill.IncreaseCounter(System.Double)
+  name: IncreaseCounter(Double)
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_IncreaseCounter_System_Double_
+  commentId: M:Fibula.Creatures.Skill.IncreaseCounter(System.Double)
+  fullName: Fibula.Creatures.Skill.IncreaseCounter(System.Double)
+  nameWithType: Skill.IncreaseCounter(Double)
+- uid: Fibula.Creatures.Skill.IncreaseCounter*
+  name: IncreaseCounter
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_IncreaseCounter_
+  commentId: Overload:Fibula.Creatures.Skill.IncreaseCounter
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.IncreaseCounter
+  nameWithType: Skill.IncreaseCounter
+- uid: Fibula.Creatures.Skill.Level
+  name: Level
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Level
+  commentId: P:Fibula.Creatures.Skill.Level
+  fullName: Fibula.Creatures.Skill.Level
+  nameWithType: Skill.Level
+- uid: Fibula.Creatures.Skill.Level*
+  name: Level
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Level_
+  commentId: Overload:Fibula.Creatures.Skill.Level
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Level
+  nameWithType: Skill.Level
+- uid: Fibula.Creatures.Skill.MaxLevel
+  name: MaxLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_MaxLevel
+  commentId: P:Fibula.Creatures.Skill.MaxLevel
+  fullName: Fibula.Creatures.Skill.MaxLevel
+  nameWithType: Skill.MaxLevel
+- uid: Fibula.Creatures.Skill.MaxLevel*
+  name: MaxLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_MaxLevel_
+  commentId: Overload:Fibula.Creatures.Skill.MaxLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.MaxLevel
+  nameWithType: Skill.MaxLevel
+- uid: Fibula.Creatures.Skill.Percent
+  name: Percent
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Percent
+  commentId: P:Fibula.Creatures.Skill.Percent
+  fullName: Fibula.Creatures.Skill.Percent
+  nameWithType: Skill.Percent
+- uid: Fibula.Creatures.Skill.Percent*
+  name: Percent
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Percent_
+  commentId: Overload:Fibula.Creatures.Skill.Percent
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Percent
+  nameWithType: Skill.Percent
+- uid: Fibula.Creatures.Skill.PercentChanged
+  name: PercentChanged
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_PercentChanged
+  commentId: E:Fibula.Creatures.Skill.PercentChanged
+  fullName: Fibula.Creatures.Skill.PercentChanged
+  nameWithType: Skill.PercentChanged
+- uid: Fibula.Creatures.Skill.Rate
+  name: Rate
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Rate
+  commentId: P:Fibula.Creatures.Skill.Rate
+  fullName: Fibula.Creatures.Skill.Rate
+  nameWithType: Skill.Rate
+- uid: Fibula.Creatures.Skill.Rate*
+  name: Rate
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Rate_
+  commentId: Overload:Fibula.Creatures.Skill.Rate
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Rate
+  nameWithType: Skill.Rate
+- uid: Fibula.Creatures.Skill.StartingCountAtLevel
+  name: StartingCountAtLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_StartingCountAtLevel
+  commentId: P:Fibula.Creatures.Skill.StartingCountAtLevel
+  fullName: Fibula.Creatures.Skill.StartingCountAtLevel
+  nameWithType: Skill.StartingCountAtLevel
+- uid: Fibula.Creatures.Skill.StartingCountAtLevel*
+  name: StartingCountAtLevel
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_StartingCountAtLevel_
+  commentId: Overload:Fibula.Creatures.Skill.StartingCountAtLevel
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.StartingCountAtLevel
+  nameWithType: Skill.StartingCountAtLevel
+- uid: Fibula.Creatures.Skill.TargetCount
+  name: TargetCount
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_TargetCount
+  commentId: P:Fibula.Creatures.Skill.TargetCount
+  fullName: Fibula.Creatures.Skill.TargetCount
+  nameWithType: Skill.TargetCount
+- uid: Fibula.Creatures.Skill.TargetCount*
+  name: TargetCount
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_TargetCount_
+  commentId: Overload:Fibula.Creatures.Skill.TargetCount
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.TargetCount
+  nameWithType: Skill.TargetCount
+- uid: Fibula.Creatures.Skill.Type
+  name: Type
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Type
+  commentId: P:Fibula.Creatures.Skill.Type
+  fullName: Fibula.Creatures.Skill.Type
+  nameWithType: Skill.Type
+- uid: Fibula.Creatures.Skill.Type*
+  name: Type
+  href: code/Fibula.Creatures.Skill.html#Fibula_Creatures_Skill_Type_
+  commentId: Overload:Fibula.Creatures.Skill.Type
+  isSpec: "True"
+  fullName: Fibula.Creatures.Skill.Type
+  nameWithType: Skill.Type
 - uid: Fibula.Data
   name: Fibula.Data
   href: code/Fibula.Data.html
@@ -19527,6 +20146,32 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SendHeartbeatResponse
   nameWithType: IGameOperationsApi.SendHeartbeatResponse
+- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill,System.UInt32)
+  name: SkilledCreatureSkillLevelChanged(ISkilledCreature, ISkill, UInt32)
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SkilledCreatureSkillLevelChanged_Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Fibula_Common_Contracts_Abstractions_ISkill_System_UInt32_
+  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill,System.UInt32)
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature, Fibula.Common.Contracts.Abstractions.ISkill, System.UInt32)
+  nameWithType: IGameOperationsApi.SkilledCreatureSkillLevelChanged(ISkilledCreature, ISkill, UInt32)
+- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged*
+  name: SkilledCreatureSkillLevelChanged
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SkilledCreatureSkillLevelChanged_
+  commentId: Overload:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillLevelChanged
+  nameWithType: IGameOperationsApi.SkilledCreatureSkillLevelChanged
+- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill)
+  name: SkilledCreatureSkillPerecentualChanged(ISkilledCreature, ISkill)
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SkilledCreatureSkillPerecentualChanged_Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Fibula_Common_Contracts_Abstractions_ISkill_
+  commentId: M:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill)
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature, Fibula.Common.Contracts.Abstractions.ISkill)
+  nameWithType: IGameOperationsApi.SkilledCreatureSkillPerecentualChanged(ISkilledCreature, ISkill)
+- uid: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged*
+  name: SkilledCreatureSkillPerecentualChanged
+  href: code/Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.html#Fibula_Mechanics_Contracts_Abstractions_IGameOperationsApi_SkilledCreatureSkillPerecentualChanged_
+  commentId: Overload:Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Contracts.Abstractions.IGameOperationsApi.SkilledCreatureSkillPerecentualChanged
+  nameWithType: IGameOperationsApi.SkilledCreatureSkillPerecentualChanged
 - uid: Fibula.Mechanics.Contracts.Abstractions.IHandler
   name: IHandler
   href: code/Fibula.Mechanics.Contracts.Abstractions.IHandler.html
@@ -19835,6 +20480,37 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween
   nameWithType: IPathFinder.FindBetween
+- uid: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature
+  name: ISkilledCreature
+  href: code/Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html
+  commentId: T:Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature
+  fullName: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature
+  nameWithType: ISkilledCreature
+- uid: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillLevelChanged
+  name: SkillLevelChanged
+  href: code/Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html#Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_SkillLevelChanged
+  commentId: E:Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillLevelChanged
+  fullName: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillLevelChanged
+  nameWithType: ISkilledCreature.SkillLevelChanged
+- uid: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillPerecentualChanged
+  name: SkillPerecentualChanged
+  href: code/Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html#Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_SkillPerecentualChanged
+  commentId: E:Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillPerecentualChanged
+  fullName: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.SkillPerecentualChanged
+  nameWithType: ISkilledCreature.SkillPerecentualChanged
+- uid: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills
+  name: Skills
+  href: code/Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html#Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Skills
+  commentId: P:Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills
+  fullName: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills
+  nameWithType: ISkilledCreature.Skills
+- uid: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills*
+  name: Skills
+  href: code/Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html#Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Skills_
+  commentId: Overload:Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.Skills
+  nameWithType: ISkilledCreature.Skills
 - uid: Fibula.Mechanics.Contracts.Abstractions.IWorldInformation
   name: IWorldInformation
   href: code/Fibula.Mechanics.Contracts.Abstractions.IWorldInformation.html
@@ -20607,6 +21283,32 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Game.SetCombatantModes
   nameWithType: Game.SetCombatantModes
+- uid: Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill,System.UInt32)
+  name: SkilledCreatureSkillLevelChanged(ISkilledCreature, ISkill, UInt32)
+  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_SkilledCreatureSkillLevelChanged_Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Fibula_Common_Contracts_Abstractions_ISkill_System_UInt32_
+  commentId: M:Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill,System.UInt32)
+  fullName: Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature, Fibula.Common.Contracts.Abstractions.ISkill, System.UInt32)
+  nameWithType: Game.SkilledCreatureSkillLevelChanged(ISkilledCreature, ISkill, UInt32)
+- uid: Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged*
+  name: SkilledCreatureSkillLevelChanged
+  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_SkilledCreatureSkillLevelChanged_
+  commentId: Overload:Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Game.SkilledCreatureSkillLevelChanged
+  nameWithType: Game.SkilledCreatureSkillLevelChanged
+- uid: Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill)
+  name: SkilledCreatureSkillPerecentualChanged(ISkilledCreature, ISkill)
+  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_SkilledCreatureSkillPerecentualChanged_Fibula_Mechanics_Contracts_Abstractions_ISkilledCreature_Fibula_Common_Contracts_Abstractions_ISkill_
+  commentId: M:Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature,Fibula.Common.Contracts.Abstractions.ISkill)
+  fullName: Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged(Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature, Fibula.Common.Contracts.Abstractions.ISkill)
+  nameWithType: Game.SkilledCreatureSkillPerecentualChanged(ISkilledCreature, ISkill)
+- uid: Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged*
+  name: SkilledCreatureSkillPerecentualChanged
+  href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_SkilledCreatureSkillPerecentualChanged_
+  commentId: Overload:Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Game.SkilledCreatureSkillPerecentualChanged
+  nameWithType: Game.SkilledCreatureSkillPerecentualChanged
 - uid: Fibula.Mechanics.Game.StartAsync(System.Threading.CancellationToken)
   name: StartAsync(CancellationToken)
   href: code/Fibula.Mechanics.Game.html#Fibula_Mechanics_Game_StartAsync_System_Threading_CancellationToken_
@@ -23630,6 +24332,19 @@ references:
   isSpec: "True"
   fullName: Fibula.Mechanics.Operations.Operation.GetRequestor
   nameWithType: Operation.GetRequestor
+- uid: Fibula.Mechanics.Operations.Operation.SendNotification(Fibula.Mechanics.Contracts.Abstractions.IOperationContext,Fibula.Mechanics.Contracts.Abstractions.INotification)
+  name: SendNotification(IOperationContext, INotification)
+  href: code/Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_SendNotification_Fibula_Mechanics_Contracts_Abstractions_IOperationContext_Fibula_Mechanics_Contracts_Abstractions_INotification_
+  commentId: M:Fibula.Mechanics.Operations.Operation.SendNotification(Fibula.Mechanics.Contracts.Abstractions.IOperationContext,Fibula.Mechanics.Contracts.Abstractions.INotification)
+  fullName: Fibula.Mechanics.Operations.Operation.SendNotification(Fibula.Mechanics.Contracts.Abstractions.IOperationContext, Fibula.Mechanics.Contracts.Abstractions.INotification)
+  nameWithType: Operation.SendNotification(IOperationContext, INotification)
+- uid: Fibula.Mechanics.Operations.Operation.SendNotification*
+  name: SendNotification
+  href: code/Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_SendNotification_
+  commentId: Overload:Fibula.Mechanics.Operations.Operation.SendNotification
+  isSpec: "True"
+  fullName: Fibula.Mechanics.Operations.Operation.SendNotification
+  nameWithType: Operation.SendNotification
 - uid: Fibula.Mechanics.Operations.OperationContext
   name: OperationContext
   href: code/Fibula.Mechanics.Operations.OperationContext.html

@@ -98,6 +98,7 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></div>
     <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html">ICreatureWithExhaustion</a></div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html">ISkilledCreature</a></div>
     <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a></div>
     <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
@@ -120,6 +121,12 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_ChaseTargetChanged">CombatantCreature.ChaseTargetChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillLevelChanged">CombatantCreature.SkillLevelChanged</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillPerecentualChanged">CombatantCreature.SkillPerecentualChanged</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_AutoAttackTarget">CombatantCreature.AutoAttackTarget</a>
@@ -164,6 +171,9 @@
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_PendingAutoAttackOperation">CombatantCreature.PendingAutoAttackOperation</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_Skills">CombatantCreature.Skills</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_ConsumeCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_">CombatantCreature.ConsumeCredits(CombatCreditType, Byte)</a>
     </div>
     <div>
@@ -185,6 +195,9 @@
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_UInt32_">CombatantCreature.AddExhaustion(ExhaustionType, DateTimeOffset, UInt32)</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_CalculateSkillPercent_Fibula_Common_Contracts_Enumerations_SkillType_">CombatantCreature.CalculateSkillPercent(SkillType)</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_ApplyDamage_Fibula_Mechanics_Contracts_Structs_DamageInfo_System_UInt32_">CombatantCreature.ApplyDamage(DamageInfo, UInt32)</a>
     </div>
     <div>
@@ -198,6 +211,12 @@
     </div>
     <div>
       <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_DecreaseDefenseSpeed_System_Decimal_">CombatantCreature.DecreaseDefenseSpeed(Decimal)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_Fibula_Common_Contracts_Enumerations_SkillType_">CombatantCreature.RaiseSkillLevelAdvance(SkillType)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_Fibula_Common_Contracts_Enumerations_SkillType_">CombatantCreature.RaiseSkillPercentChange(SkillType)</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Creatures.Creature.html#Fibula_Creatures_Creature_ThingId">Creature.ThingId</a>
@@ -342,7 +361,7 @@
   <h6><strong>Assembly</strong>: Fibula.Creatures.dll</h6>
   <h5 id="Fibula_Creatures_Player_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class Player : CombatantCreature, ICombatant, ICreatureWithExhaustion, IPlayer, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public class Player : CombatantCreature, ICombatant, ICreatureWithExhaustion, ISkilledCreature, IPlayer, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -351,7 +370,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player__ctor_Fibula_Client_Contracts_Abstractions_IClient_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.%23ctor(Fibula.Client.Contracts.Abstractions.IClient%2CSystem.String%2CSystem.String%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L38">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L39">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player__ctor_" data-uid="Fibula.Creatures.Player.#ctor*"></a>
   <h4 id="Fibula_Creatures_Player__ctor_Fibula_Client_Contracts_Abstractions_IClient_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_" data-uid="Fibula.Creatures.Player.#ctor(Fibula.Client.Contracts.Abstractions.IClient,System.String,System.String,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt16)">Player(IClient, String, String, UInt16, UInt16, UInt16, UInt16, UInt16)</h4>
@@ -429,7 +448,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_AutoAttackRange.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.AutoAttackRange%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L124">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L115">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_AutoAttackRange_" data-uid="Fibula.Creatures.Player.AutoAttackRange*"></a>
   <h4 id="Fibula_Creatures_Player_AutoAttackRange" data-uid="Fibula.Creatures.Player.AutoAttackRange">AutoAttackRange</h4>
@@ -462,7 +481,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_CanBeMoved.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.CanBeMoved%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L103">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L94">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_CanBeMoved_" data-uid="Fibula.Creatures.Player.CanBeMoved*"></a>
   <h4 id="Fibula_Creatures_Player_CanBeMoved" data-uid="Fibula.Creatures.Player.CanBeMoved">CanBeMoved</h4>
@@ -495,7 +514,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_CharacterId.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.CharacterId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L93">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L84">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_CharacterId_" data-uid="Fibula.Creatures.Player.CharacterId*"></a>
   <h4 id="Fibula_Creatures_Player_CharacterId" data-uid="Fibula.Creatures.Player.CharacterId">CharacterId</h4>
@@ -526,7 +545,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_Client.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.Client%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L129">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L120">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_Client_" data-uid="Fibula.Creatures.Player.Client*"></a>
   <h4 id="Fibula_Creatures_Player_Client" data-uid="Fibula.Creatures.Player.Client">Client</h4>
@@ -557,7 +576,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_Inventory.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.Inventory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L119">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L110">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_Inventory_" data-uid="Fibula.Creatures.Player.Inventory*"></a>
   <h4 id="Fibula_Creatures_Player_Inventory" data-uid="Fibula.Creatures.Player.Inventory">Inventory</h4>
@@ -590,7 +609,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_IsAllowedToLogOut.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.IsAllowedToLogOut%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L114">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L105">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_IsAllowedToLogOut_" data-uid="Fibula.Creatures.Player.IsAllowedToLogOut*"></a>
   <h4 id="Fibula_Creatures_Player_IsAllowedToLogOut" data-uid="Fibula.Creatures.Player.IsAllowedToLogOut">IsAllowedToLogOut</h4>
@@ -621,7 +640,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_PermissionsLevel.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.PermissionsLevel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L98">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L89">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_PermissionsLevel_" data-uid="Fibula.Creatures.Player.PermissionsLevel*"></a>
   <h4 id="Fibula_Creatures_Player_PermissionsLevel" data-uid="Fibula.Creatures.Player.PermissionsLevel">PermissionsLevel</h4>
@@ -652,7 +671,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_SoulPoints.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.SoulPoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L109">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L100">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_SoulPoints_" data-uid="Fibula.Creatures.Player.SoulPoints*"></a>
   <h4 id="Fibula_Creatures_Player_SoulPoints" data-uid="Fibula.Creatures.Player.SoulPoints">SoulPoints</h4>
@@ -683,7 +702,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_Speed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.Speed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L134">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L125">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_Speed_" data-uid="Fibula.Creatures.Player.Speed*"></a>
   <h4 id="Fibula_Creatures_Player_Speed" data-uid="Fibula.Creatures.Player.Speed">Speed</h4>
@@ -718,7 +737,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_ApplyDamageModifiers_Fibula_Mechanics_Contracts_Structs_DamageInfo__.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.ApplyDamageModifiers(Fibula.Mechanics.Contracts.Structs.DamageInfo%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L140">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L131">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_ApplyDamageModifiers_" data-uid="Fibula.Creatures.Player.ApplyDamageModifiers*"></a>
   <h4 id="Fibula_Creatures_Player_ApplyDamageModifiers_Fibula_Mechanics_Contracts_Structs_DamageInfo__" data-uid="Fibula.Creatures.Player.ApplyDamageModifiers(Fibula.Mechanics.Contracts.Structs.DamageInfo@)">ApplyDamageModifiers(ref DamageInfo)</h4>
@@ -754,7 +773,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player_CalculateMovementBaseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player.CalculateMovementBaseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L168">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L159">View Source</a>
   </span>
   <a id="Fibula_Creatures_Player_CalculateMovementBaseSpeed_" data-uid="Fibula.Creatures.Player.CalculateMovementBaseSpeed*"></a>
   <h4 id="Fibula_Creatures_Player_CalculateMovementBaseSpeed" data-uid="Fibula.Creatures.Player.CalculateMovementBaseSpeed">CalculateMovementBaseSpeed()</h4>
@@ -789,6 +808,9 @@
   </div>
   <div>
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html">ICreatureWithExhaustion</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html">ISkilledCreature</a>
   </div>
   <div>
       <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IPlayer.html">IPlayer</a>
@@ -835,7 +857,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Player.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Player%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L25" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/Player.cs/#L26" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

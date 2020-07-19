@@ -99,6 +99,7 @@
     <h5>Implements</h5>
     <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a></div>
     <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html">ICreatureWithExhaustion</a></div>
+    <div><a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html">ISkilledCreature</a></div>
     <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html">IThing</a></div>
     <div><a class="xref" href="Fibula.Common.Contracts.Abstractions.IContainedThing.html">IContainedThing</a></div>
@@ -264,7 +265,7 @@
   <h6><strong>Assembly</strong>: Fibula.Creatures.dll</h6>
   <h5 id="Fibula_Creatures_CombatantCreature_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class CombatantCreature : Creature, ICombatant, ICreatureWithExhaustion, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class CombatantCreature : Creature, ICombatant, ICreatureWithExhaustion, ISkilledCreature, ICreature, IThing, IContainedThing, IEquatable&lt;IThing&gt;, IThingContainer, ILocatable, IEquatable&lt;ICreature&gt;</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -273,7 +274,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature__ctor_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_Decimal_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.%23ctor(System.String%2CSystem.String%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.UInt16%2CSystem.Decimal%2CSystem.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L86">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L88">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature__ctor_" data-uid="Fibula.Creatures.CombatantCreature.#ctor*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature__ctor_System_String_System_String_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_UInt16_System_Decimal_System_Decimal_" data-uid="Fibula.Creatures.CombatantCreature.#ctor(System.String,System.String,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.UInt16,System.Decimal,System.Decimal)">CombatantCreature(String, String, UInt16, UInt16, UInt16, UInt16, UInt16, Decimal, Decimal)</h4>
@@ -361,7 +362,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AttackedBy.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AttackedBy%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L204">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L218">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AttackedBy_" data-uid="Fibula.Creatures.CombatantCreature.AttackedBy*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AttackedBy" data-uid="Fibula.Creatures.CombatantCreature.AttackedBy">AttackedBy</h4>
@@ -392,7 +393,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AttackSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AttackSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L160">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L174">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AttackSpeed_" data-uid="Fibula.Creatures.CombatantCreature.AttackSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AttackSpeed" data-uid="Fibula.Creatures.CombatantCreature.AttackSpeed">AttackSpeed</h4>
@@ -423,7 +424,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoAttackCredits.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoAttackCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L140">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L154">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoAttackCredits_" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoAttackCredits" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackCredits">AutoAttackCredits</h4>
@@ -454,7 +455,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoAttackMaximumCredits.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoAttackMaximumCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L145">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L159">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoAttackMaximumCredits_" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackMaximumCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoAttackMaximumCredits" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackMaximumCredits">AutoAttackMaximumCredits</h4>
@@ -485,7 +486,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoAttackRange.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoAttackRange%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L185">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L199">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoAttackRange_" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackRange*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoAttackRange" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackRange">AutoAttackRange</h4>
@@ -516,7 +517,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoAttackTarget.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoAttackTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L135">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L149">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoAttackTarget_" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackTarget*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoAttackTarget" data-uid="Fibula.Creatures.CombatantCreature.AutoAttackTarget">AutoAttackTarget</h4>
@@ -547,7 +548,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoDefenseCredits.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoDefenseCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L150">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L164">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoDefenseCredits_" data-uid="Fibula.Creatures.CombatantCreature.AutoDefenseCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoDefenseCredits" data-uid="Fibula.Creatures.CombatantCreature.AutoDefenseCredits">AutoDefenseCredits</h4>
@@ -578,7 +579,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AutoDefenseMaximumCredits.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AutoDefenseMaximumCredits%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L155">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L169">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AutoDefenseMaximumCredits_" data-uid="Fibula.Creatures.CombatantCreature.AutoDefenseMaximumCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AutoDefenseMaximumCredits" data-uid="Fibula.Creatures.CombatantCreature.AutoDefenseMaximumCredits">AutoDefenseMaximumCredits</h4>
@@ -609,7 +610,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ChaseMode.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ChaseMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L175">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L189">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ChaseMode_" data-uid="Fibula.Creatures.CombatantCreature.ChaseMode*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ChaseMode" data-uid="Fibula.Creatures.CombatantCreature.ChaseMode">ChaseMode</h4>
@@ -640,7 +641,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ChaseTarget.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ChaseTarget%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L170">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L184">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ChaseTarget_" data-uid="Fibula.Creatures.CombatantCreature.ChaseTarget*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ChaseTarget" data-uid="Fibula.Creatures.CombatantCreature.ChaseTarget">ChaseTarget</h4>
@@ -671,7 +672,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_DamageTakenDistribution.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.DamageTakenDistribution%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L190">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L204">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_DamageTakenDistribution_" data-uid="Fibula.Creatures.CombatantCreature.DamageTakenDistribution*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_DamageTakenDistribution" data-uid="Fibula.Creatures.CombatantCreature.DamageTakenDistribution">DamageTakenDistribution</h4>
@@ -702,7 +703,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_DefenseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.DefenseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L165">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L179">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_DefenseSpeed_" data-uid="Fibula.Creatures.CombatantCreature.DefenseSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_DefenseSpeed" data-uid="Fibula.Creatures.CombatantCreature.DefenseSpeed">DefenseSpeed</h4>
@@ -733,7 +734,7 @@ Defaults to <a class="xref" href="Fibula.Mechanics.Contracts.Constants.CombatCon
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ExhaustionInformation.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ExhaustionInformation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L222">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L236">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ExhaustionInformation_" data-uid="Fibula.Creatures.CombatantCreature.ExhaustionInformation*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ExhaustionInformation" data-uid="Fibula.Creatures.CombatantCreature.ExhaustionInformation">ExhaustionInformation</h4>
@@ -768,7 +769,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_FightMode.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.FightMode%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L180">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L194">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_FightMode_" data-uid="Fibula.Creatures.CombatantCreature.FightMode*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_FightMode" data-uid="Fibula.Creatures.CombatantCreature.FightMode">FightMode</h4>
@@ -799,7 +800,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_PendingAutoAttackOperation.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.PendingAutoAttackOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L227">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L241">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_PendingAutoAttackOperation_" data-uid="Fibula.Creatures.CombatantCreature.PendingAutoAttackOperation*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_PendingAutoAttackOperation" data-uid="Fibula.Creatures.CombatantCreature.PendingAutoAttackOperation">PendingAutoAttackOperation</h4>
@@ -825,6 +826,40 @@ at which exhaustion is completely recovered.</p>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_Skills.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.Skills%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L249">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_CombatantCreature_Skills_" data-uid="Fibula.Creatures.CombatantCreature.Skills*"></a>
+  <h4 id="Fibula_Creatures_CombatantCreature_Skills" data-uid="Fibula.Creatures.CombatantCreature.Skills">Skills</h4>
+  <div class="markdown level1 summary"><p>Gets the current skills information for the combatant.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;SkillType, ISkill&gt; Skills { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.ISkill.html">ISkill</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Fibula_Creatures_CombatantCreature_Skills_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The key is a <a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a>, and the value is a <a class="xref" href="Fibula.Common.Contracts.Abstractions.ISkill.html">ISkill</a>.</p>
+</div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -832,7 +867,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_TimeSpan_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AddExhaustion(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType%2CSystem.DateTimeOffset%2CSystem.TimeSpan)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L352">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L374">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AddExhaustion_" data-uid="Fibula.Creatures.CombatantCreature.AddExhaustion*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_TimeSpan_" data-uid="Fibula.Creatures.CombatantCreature.AddExhaustion(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType,System.DateTimeOffset,System.TimeSpan)">AddExhaustion(ExhaustionType, DateTimeOffset, TimeSpan)</h4>
@@ -878,7 +913,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AddExhaustion(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType%2CSystem.DateTimeOffset%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L371">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L393">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_AddExhaustion_" data-uid="Fibula.Creatures.CombatantCreature.AddExhaustion*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_AddExhaustion_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_System_UInt32_" data-uid="Fibula.Creatures.CombatantCreature.AddExhaustion(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType,System.DateTimeOffset,System.UInt32)">AddExhaustion(ExhaustionType, DateTimeOffset, UInt32)</h4>
@@ -924,7 +959,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ApplyDamage_Fibula_Mechanics_Contracts_Structs_DamageInfo_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ApplyDamage(Fibula.Mechanics.Contracts.Structs.DamageInfo%2CSystem.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L382">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L424">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ApplyDamage_" data-uid="Fibula.Creatures.CombatantCreature.ApplyDamage*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ApplyDamage_Fibula_Mechanics_Contracts_Structs_DamageInfo_System_UInt32_" data-uid="Fibula.Creatures.CombatantCreature.ApplyDamage(Fibula.Mechanics.Contracts.Structs.DamageInfo,System.UInt32)">ApplyDamage(DamageInfo, UInt32)</h4>
@@ -980,7 +1015,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ApplyDamageModifiers_Fibula_Mechanics_Contracts_Structs_DamageInfo__.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ApplyDamageModifiers(Fibula.Mechanics.Contracts.Structs.DamageInfo%40)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L476">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L550">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ApplyDamageModifiers_" data-uid="Fibula.Creatures.CombatantCreature.ApplyDamageModifiers*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ApplyDamageModifiers_Fibula_Mechanics_Contracts_Structs_DamageInfo__" data-uid="Fibula.Creatures.CombatantCreature.ApplyDamageModifiers(Fibula.Mechanics.Contracts.Structs.DamageInfo@)">ApplyDamageModifiers(ref DamageInfo)</h4>
@@ -1014,7 +1049,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_CalculateRemainingCooldownTime_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.CalculateRemainingCooldownTime(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType%2CSystem.DateTimeOffset)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L324">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L346">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_CalculateRemainingCooldownTime_" data-uid="Fibula.Creatures.CombatantCreature.CalculateRemainingCooldownTime*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_CalculateRemainingCooldownTime_Fibula_Mechanics_Contracts_Enumerations_ExhaustionType_System_DateTimeOffset_" data-uid="Fibula.Creatures.CombatantCreature.CalculateRemainingCooldownTime(Fibula.Mechanics.Contracts.Enumerations.ExhaustionType,System.DateTimeOffset)">CalculateRemainingCooldownTime(ExhaustionType, DateTimeOffset)</h4>
@@ -1067,10 +1102,60 @@ at which exhaustion is completely recovered.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_CalculateSkillPercent_Fibula_Common_Contracts_Enumerations_SkillType_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.CalculateSkillPercent(Fibula.Common.Contracts.Enumerations.SkillType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L403">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_CombatantCreature_CalculateSkillPercent_" data-uid="Fibula.Creatures.CombatantCreature.CalculateSkillPercent*"></a>
+  <h4 id="Fibula_Creatures_CombatantCreature_CalculateSkillPercent_Fibula_Common_Contracts_Enumerations_SkillType_" data-uid="Fibula.Creatures.CombatantCreature.CalculateSkillPercent(Fibula.Common.Contracts.Enumerations.SkillType)">CalculateSkillPercent(SkillType)</h4>
+  <div class="markdown level1 summary"><p>Calculates the current percentual value between current and target counts for the given skill.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte CalculateSkillPercent(SkillType skillType)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a></td>
+        <td><span class="parametername">skillType</span></td>
+        <td><p>The type of skill to calculate for.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><p>A value between [0, 100] representing the current percentual value.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ConsumeCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ConsumeCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L234">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L256">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_ConsumeCredits_" data-uid="Fibula.Creatures.CombatantCreature.ConsumeCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_ConsumeCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_" data-uid="Fibula.Creatures.CombatantCreature.ConsumeCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType,System.Byte)">ConsumeCredits(CombatCreditType, Byte)</h4>
@@ -1110,7 +1195,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_DecreaseAttackSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.DecreaseAttackSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L449">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L493">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_DecreaseAttackSpeed_" data-uid="Fibula.Creatures.CombatantCreature.DecreaseAttackSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_DecreaseAttackSpeed_System_Decimal_" data-uid="Fibula.Creatures.CombatantCreature.DecreaseAttackSpeed(System.Decimal)">DecreaseAttackSpeed(Decimal)</h4>
@@ -1144,7 +1229,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_DecreaseDefenseSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.DecreaseDefenseSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L467">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L513">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_DecreaseDefenseSpeed_" data-uid="Fibula.Creatures.CombatantCreature.DecreaseDefenseSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_DecreaseDefenseSpeed_System_Decimal_" data-uid="Fibula.Creatures.CombatantCreature.DecreaseDefenseSpeed(System.Decimal)">DecreaseDefenseSpeed(Decimal)</h4>
@@ -1178,7 +1263,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_IncreaseAttackSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.IncreaseAttackSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L440">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L483">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_IncreaseAttackSpeed_" data-uid="Fibula.Creatures.CombatantCreature.IncreaseAttackSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_IncreaseAttackSpeed_System_Decimal_" data-uid="Fibula.Creatures.CombatantCreature.IncreaseAttackSpeed(System.Decimal)">IncreaseAttackSpeed(Decimal)</h4>
@@ -1212,7 +1297,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_IncreaseDefenseSpeed_System_Decimal_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.IncreaseDefenseSpeed(System.Decimal)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L458">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L503">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_IncreaseDefenseSpeed_" data-uid="Fibula.Creatures.CombatantCreature.IncreaseDefenseSpeed*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_IncreaseDefenseSpeed_System_Decimal_" data-uid="Fibula.Creatures.CombatantCreature.IncreaseDefenseSpeed(System.Decimal)">IncreaseDefenseSpeed(Decimal)</h4>
@@ -1243,10 +1328,78 @@ at which exhaustion is completely recovered.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_Fibula_Common_Contracts_Enumerations_SkillType_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance(Fibula.Common.Contracts.Enumerations.SkillType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L522">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_" data-uid="Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance*"></a>
+  <h4 id="Fibula_Creatures_CombatantCreature_RaiseSkillLevelAdvance_Fibula_Common_Contracts_Enumerations_SkillType_" data-uid="Fibula.Creatures.CombatantCreature.RaiseSkillLevelAdvance(Fibula.Common.Contracts.Enumerations.SkillType)">RaiseSkillLevelAdvance(SkillType)</h4>
+  <div class="markdown level1 summary"><p>Raises the <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillLevelChanged">SkillLevelChanged</a> event for this creature on the given skill.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RaiseSkillLevelAdvance(SkillType forSkill)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a></td>
+        <td><span class="parametername">forSkill</span></td>
+        <td><p>The skill to advance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_Fibula_Common_Contracts_Enumerations_SkillType_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange(Fibula.Common.Contracts.Enumerations.SkillType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L536">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_" data-uid="Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange*"></a>
+  <h4 id="Fibula_Creatures_CombatantCreature_RaiseSkillPercentChange_Fibula_Common_Contracts_Enumerations_SkillType_" data-uid="Fibula.Creatures.CombatantCreature.RaiseSkillPercentChange(Fibula.Common.Contracts.Enumerations.SkillType)">RaiseSkillPercentChange(SkillType)</h4>
+  <div class="markdown level1 summary"><p>Raises the <a class="xref" href="Fibula.Creatures.CombatantCreature.html#Fibula_Creatures_CombatantCreature_SkillPerecentualChanged">SkillPerecentualChanged</a> event for this creature on the given skill.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">protected void RaiseSkillPercentChange(SkillType forSkill)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.SkillType.html">SkillType</a></td>
+        <td><span class="parametername">forSkill</span></td>
+        <td><p>The skill to advance.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_RestoreCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.RestoreCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L253">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L275">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_RestoreCredits_" data-uid="Fibula.Creatures.CombatantCreature.RestoreCredits*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_RestoreCredits_Fibula_Mechanics_Contracts_Combat_Enumerations_CombatCreditType_System_Byte_" data-uid="Fibula.Creatures.CombatantCreature.RestoreCredits(Fibula.Mechanics.Contracts.Combat.Enumerations.CombatCreditType,System.Byte)">RestoreCredits(CombatCreditType, Byte)</h4>
@@ -1286,7 +1439,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_SetAttackTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.SetAttackTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L272">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L294">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_SetAttackTarget_" data-uid="Fibula.Creatures.CombatantCreature.SetAttackTarget*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_SetAttackTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_" data-uid="Fibula.Creatures.CombatantCreature.SetAttackTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)">SetAttackTarget(ICombatant)</h4>
@@ -1336,7 +1489,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_SetChaseTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.SetChaseTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L300">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L322">View Source</a>
   </span>
   <a id="Fibula_Creatures_CombatantCreature_SetChaseTarget_" data-uid="Fibula.Creatures.CombatantCreature.SetChaseTarget*"></a>
   <h4 id="Fibula_Creatures_CombatantCreature_SetChaseTarget_Fibula_Mechanics_Contracts_Abstractions_ICombatant_" data-uid="Fibula.Creatures.CombatantCreature.SetChaseTarget(Fibula.Mechanics.Contracts.Abstractions.ICombatant)">SetChaseTarget(ICombatant)</h4>
@@ -1388,7 +1541,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_AttackTargetChanged.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.AttackTargetChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L125">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L129">View Source</a>
   </span>
   <h4 id="Fibula_Creatures_CombatantCreature_AttackTargetChanged" data-uid="Fibula.Creatures.CombatantCreature.AttackTargetChanged">AttackTargetChanged</h4>
   <div class="markdown level1 summary"><p>Event to call when the attack target changes.</p>
@@ -1418,7 +1571,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_ChaseTargetChanged.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.ChaseTargetChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L130">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L134">View Source</a>
   </span>
   <h4 id="Fibula_Creatures_CombatantCreature_ChaseTargetChanged" data-uid="Fibula.Creatures.CombatantCreature.ChaseTargetChanged">ChaseTargetChanged</h4>
   <div class="markdown level1 summary"><p>Event to call when the chase target changes.</p>
@@ -1448,7 +1601,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_Death.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.Death%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L120">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L124">View Source</a>
   </span>
   <h4 id="Fibula_Creatures_CombatantCreature_Death" data-uid="Fibula.Creatures.CombatantCreature.Death">Death</h4>
   <div class="markdown level1 summary"><p>Event to call when the combatant dies.</p>
@@ -1478,7 +1631,7 @@ at which exhaustion is completely recovered.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_HealthChanged.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.HealthChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L115">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L119">View Source</a>
   </span>
   <h4 id="Fibula_Creatures_CombatantCreature_HealthChanged" data-uid="Fibula.Creatures.CombatantCreature.HealthChanged">HealthChanged</h4>
   <div class="markdown level1 summary"><p>Event to call when the combatant's health changes.</p>
@@ -1503,12 +1656,75 @@ at which exhaustion is completely recovered.</p>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_SkillLevelChanged.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.SkillLevelChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L139">View Source</a>
+  </span>
+  <h4 id="Fibula_Creatures_CombatantCreature_SkillLevelChanged" data-uid="Fibula.Creatures.CombatantCreature.SkillLevelChanged">SkillLevelChanged</h4>
+  <div class="markdown level1 summary"><p>Event triggered when this skilled creature advances a skill to the next level.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnSkillLevelChanged SkillLevelChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Delegates.OnSkillLevelChanged.html">OnSkillLevelChanged</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature_SkillPerecentualChanged.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature.SkillPerecentualChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L144">View Source</a>
+  </span>
+  <h4 id="Fibula_Creatures_CombatantCreature_SkillPerecentualChanged" data-uid="Fibula.Creatures.CombatantCreature.SkillPerecentualChanged">SkillPerecentualChanged</h4>
+  <div class="markdown level1 summary"><p>Event triggered when this skilled creature skill percent changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event OnSkillPerecentualChanged SkillPerecentualChanged</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Delegates.OnSkillPerecentualChanged.html">OnSkillPerecentualChanged</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="implements">Implements</h3>
   <div>
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICombatant.html">ICombatant</a>
   </div>
   <div>
       <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ICreatureWithExhaustion.html">ICreatureWithExhaustion</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Abstractions.ISkilledCreature.html">ISkilledCreature</a>
   </div>
   <div>
       <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreature.html">ICreature</a>
@@ -1552,7 +1768,7 @@ at which exhaustion is completely recovered.</p>
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CombatantCreature.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CombatantCreature%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L29" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CombatantCreature.cs/#L31" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
