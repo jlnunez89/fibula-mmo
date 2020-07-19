@@ -133,7 +133,7 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Gets or sets the amount of experience that this type of monster deals.
+        /// Gets or sets the amount of experience that this type of monster yields.
         /// </summary>
         public uint BaseExperienceYield
         {

@@ -78,16 +78,13 @@ namespace Fibula.Mechanics.Operations
                     combatant.ChaseTargetChanged += context.CombatApi.CombatantChaseTargetChanged;
                 }
 
-                /*
-                if (creature is ICombatant combatant)
+                if (creature is ISkilledCreature skilledCreature)
                 {
-                    combatant.CombatStarted += context.CombatApi.OnCombatantCombatStarted;
-                    combatant.CombatEnded += context.CombatApi.OnCombatantCombatEnded;
-                    combatant.TargetChanged += context.CombatApi.OnCombatantTargetChanged;
-                    combatant.ChaseModeChanged += context.CombatApi.OnCombatantChaseModeChanged;
-                    combatant.CombatCreditsConsumed += context.CombatApi.OnCombatCreditsConsumed;
+                    skilledCreature.SkillLevelChanged += context.GameApi.SkilledCreatureSkillLevelChanged;
+                    skilledCreature.SkillPerecentualChanged += context.GameApi.SkilledCreatureSkillPerecentualChanged;
                 }
 
+                /*
                 if (creature is IPlayer player)
                 {
                     player.Inventory.SlotChanged += context.GameApi.OnPlayerInventoryChanged;
@@ -98,23 +95,24 @@ namespace Fibula.Mechanics.Operations
 
                 var placedAtStackPos = targetTile.GetStackOrderOfThing(creature);
 
-                new CreatureMovedNotification(
-                    () =>
-                    {
-                        if (creature is IPlayer player)
+                this.SendNotification(
+                    context,
+                    new CreatureMovedNotification(
+                        () =>
                         {
-                            return context.Map.PlayersThatCanSee(creature.Location).Except(player.YieldSingleItem());
-                        }
+                            if (creature is IPlayer player)
+                            {
+                                return context.Map.PlayersThatCanSee(creature.Location).Except(player.YieldSingleItem());
+                            }
 
-                        return context.Map.PlayersThatCanSee(creature.Location);
-                    },
-                    creature.Id,
-                    default,
-                    byte.MaxValue,
-                    creature.Location,
-                    placedAtStackPos,
-                    wasTeleport: true)
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                            return context.Map.PlayersThatCanSee(creature.Location);
+                        },
+                        creature.Id,
+                        default,
+                        byte.MaxValue,
+                        creature.Location,
+                        placedAtStackPos,
+                        wasTeleport: true));
             }
 
             return addSuccessful;
@@ -149,6 +147,12 @@ namespace Fibula.Mechanics.Operations
                     combatant.ChaseTargetChanged -= context.CombatApi.CombatantChaseTargetChanged;
                 }
 
+                if (creature is ISkilledCreature skilledCreature)
+                {
+                    skilledCreature.SkillLevelChanged -= context.GameApi.SkilledCreatureSkillLevelChanged;
+                    skilledCreature.SkillPerecentualChanged -= context.GameApi.SkilledCreatureSkillPerecentualChanged;
+                }
+
                 /*
                 if (creature is ICombatant combatant)
                 {
@@ -168,19 +172,16 @@ namespace Fibula.Mechanics.Operations
                 // TODO: formally introduce async/synchronous notifications.
                 if (creature is IPlayer player)
                 {
-                    new CreatureRemovedNotification(
+                    this.SendNotification(
+                        context,
+                        new CreatureRemovedNotification(
                             () => context.Map.PlayersThatCanSee(creature.Location).Union(player.YieldSingleItem()),
                             creature,
-                            oldStackpos)
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                            oldStackpos));
                 }
                 else
                 {
-                    new CreatureRemovedNotification(
-                            () => context.Map.PlayersThatCanSee(creature.Location),
-                            creature,
-                            oldStackpos)
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                    this.SendNotification(context, new CreatureRemovedNotification(() => context.Map.PlayersThatCanSee(creature.Location), creature, oldStackpos));
                 }
             }
 

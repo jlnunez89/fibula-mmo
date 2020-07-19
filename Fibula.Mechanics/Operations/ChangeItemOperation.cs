@@ -116,11 +116,12 @@ namespace Fibula.Mechanics.Operations
             {
                 if (inThingContainer is ITile atTile)
                 {
-                    new TileUpdatedNotification(
-                        () => context.Map.PlayersThatCanSee(atTile.Location),
-                        atTile.Location,
-                        context.MapDescriptor.DescribeTile)
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                    this.SendNotification(
+                        context,
+                        new TileUpdatedNotification(
+                            () => context.Map.PlayersThatCanSee(atTile.Location),
+                            atTile.Location,
+                            context.MapDescriptor.DescribeTile));
 
                     // Evaluate if the new item triggers a collision.
                     // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(fromCylinder.Location, existingThing, this.GetRequestor(context.CreatureFinder)));

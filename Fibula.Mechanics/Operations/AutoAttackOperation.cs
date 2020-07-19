@@ -153,7 +153,9 @@ namespace Fibula.Mechanics.Operations
                     return;
                 }
 
-                attackPerformed = this.PerformAttack(context);
+                this.PerformAttack(context);
+
+                attackPerformed = true;
             }
             finally
             {
@@ -165,7 +167,11 @@ namespace Fibula.Mechanics.Operations
             }
         }
 
-        private bool PerformAttack(IOperationContext context)
+        /// <summary>
+        /// Performs the auto attack from the <see cref="Attacker"/> to it's <see cref="Target"/>.
+        /// </summary>
+        /// <param name="context">The context of the operation.</param>
+        private void PerformAttack(IOperationContext context)
         {
             var rng = new Random();
 
@@ -183,20 +189,18 @@ namespace Fibula.Mechanics.Operations
 
             if (damageDoneInfo.Damage != 0)
             {
-                TextColor damageTextColor = TextColor.White;
-
-                if (damageDoneInfo.Damage < 0)
-                {
-                    damageTextColor = TextColor.Blue;
-                }
-
-                damageTextColor = damageDoneInfo.Blood switch
+                TextColor damageTextColor = damageDoneInfo.Blood switch
                 {
                     BloodType.Bones => TextColor.LightGrey,
                     BloodType.Fire => TextColor.Orange,
                     BloodType.Slime => TextColor.Green,
                     _ => TextColor.Red,
                 };
+
+                if (damageDoneInfo.Damage < 0)
+                {
+                    damageTextColor = TextColor.LightBlue;
+                }
 
                 packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
             }
@@ -218,6 +222,9 @@ namespace Fibula.Mechanics.Operations
                 // this.Target.RecordDamageTaken(this.Attacker.Id, damageToApply);
                 this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
+                // TODO: actual skills.
+                this.Attacker.Skills[SkillType.NoWeapon].IncreaseCounter(1);
+
                 // Normalize the attacker's attack speed based on the global round time and round that up.
                 context.Scheduler.ScheduleEvent(
                     new RestoreCombatCreditOperation(this.Attacker, CombatCreditType.Attack),
@@ -232,22 +239,14 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            new GenericNotification(
-                () => context.Map.PlayersThatCanSee(this.Target.Location),
-                packetsToSend.ToArray())
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+            this.SendNotification(context, new GenericNotification(() => context.Map.PlayersThatCanSee(this.Target.Location), packetsToSend.ToArray()));
 
             if (this.Target is IPlayer targetPlayer)
             {
                 var squarePacket = new SquarePacket(this.Attacker.Id, SquareColor.Black);
 
-                new GenericNotification(
-                    () => targetPlayer.YieldSingleItem(),
-                    squarePacket)
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(context, new GenericNotification(() => targetPlayer.YieldSingleItem(), squarePacket));
             }
-
-            return true;
         }
     }
 }

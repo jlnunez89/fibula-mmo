@@ -55,11 +55,12 @@ namespace Fibula.Mechanics.Operations
         {
             if (!this.Player.IsAllowedToLogOut)
             {
-                new TextMessageNotification(
-                    () => this.Player.YieldSingleItem(),
-                    MessageType.StatusSmall,
-                    "You may not logout at this time.")
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(
+                    context,
+                    new TextMessageNotification(
+                        () => this.Player.YieldSingleItem(),
+                        MessageType.StatusSmall,
+                        "You may not logout at this time."));
 
                 return;
             }
@@ -84,10 +85,7 @@ namespace Fibula.Mechanics.Operations
 
                 if (!this.Player.IsDead)
                 {
-                    new GenericNotification(
-                        () => context.Map.PlayersThatCanSee(playerLocation),
-                        new MagicEffectPacket(playerLocation, AnimatedEffect.Puff))
-                    .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                    this.SendNotification(context, new GenericNotification(() => context.Map.PlayersThatCanSee(playerLocation), new MagicEffectPacket(playerLocation, AnimatedEffect.Puff)));
                 }
 
                 context.CreatureManager.UnregisterCreature(this.Player);

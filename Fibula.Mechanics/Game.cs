@@ -15,14 +15,17 @@ namespace Fibula.Mechanics
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
@@ -269,7 +272,7 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Handles a death from a combatant.
+        /// Handles the death of a combatant.
         /// </summary>
         /// <param name="combatant">The combatant that died.</param>
         public void CombatantDeath(ICombatant combatant)
@@ -489,6 +492,49 @@ namespace Fibula.Mechanics
             var turnToDirOp = new TurnToDirectionOperation(creature, direction);
 
             this.DispatchOperation(turnToDirOp);
+        }
+
+        /// <summary>
+        /// Handles a skill level change from a skilled creature.
+        /// </summary>
+        /// <param name="skilledCreature">The skilled creature for which the skill changed.</param>
+        /// <param name="skillThatChanged">The skill that changed.</param>
+        /// <param name="previousLevel">The previous skill level.</param>
+        public void SkilledCreatureSkillLevelChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel)
+        {
+            if (skilledCreature == null || skillThatChanged == null)
+            {
+                this.logger.Warning($"Null {nameof(skilledCreature)} or {nameof(skillThatChanged)} in {nameof(this.SkilledCreatureSkillLevelChanged)}, ignoring...");
+                return;
+            }
+
+            if (skilledCreature is IPlayer player)
+            {
+                // TODO: do we need to make this an operation?
+                bool isAdvance = skillThatChanged.Level > previousLevel;
+                var message = $"You {(isAdvance ? "advanced" : "regressed")} in {skillThatChanged.Type}.";
+
+                this.logger.Debug($"{(string.IsNullOrWhiteSpace(skilledCreature.Article) ? skilledCreature.Name : $"{skilledCreature.Article} {skilledCreature.Name}")} {(isAdvance ? "advanced" : "regressed")} in {skillThatChanged.Type}.");
+
+                this.scheduler.ScheduleEvent(new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, message));
+            }
+        }
+
+        /// <summary>
+        /// Handles a skill percentual change from a skilled creature.
+        /// </summary>
+        /// <param name="skilledCreature">The skilled creature for which the skill percent changed.</param>
+        /// <param name="skillThatChanged">The skill that changed.</param>
+        public void SkilledCreatureSkillPerecentualChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged)
+        {
+            if (skilledCreature is IPlayer player)
+            {
+                this.scheduler.ScheduleEvent(
+                    new GenericNotification(
+                        () => player.YieldSingleItem(),
+                        new PlayerStatsPacket(player),
+                        new PlayerSkillsPacket(player)));
+            }
         }
 
         /// <summary>

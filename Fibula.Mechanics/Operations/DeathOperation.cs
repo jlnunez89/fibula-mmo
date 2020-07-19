@@ -62,11 +62,9 @@ namespace Fibula.Mechanics.Operations
         {
             if (this.Creature is IPlayer player)
             {
-                new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, "You are dead.")
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(context, new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, "You are dead."));
 
-                new GenericNotification(() => player.YieldSingleItem(), new PlayerDeathPacket())
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerDeathPacket()));
             }
 
             // Remove the creature...

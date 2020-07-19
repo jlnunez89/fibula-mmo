@@ -107,13 +107,14 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            new CreatureSpeechNotification(
+            this.SendNotification(
+                context,
+                new CreatureSpeechNotification(
                     () => context.Map.PlayersThatCanSee(requestor.Location),
                     requestor,
                     this.Type,
                     this.ChannelId,
-                    this.Content)
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                    this.Content));
         }
     }
 }

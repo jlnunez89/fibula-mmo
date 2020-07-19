@@ -68,11 +68,12 @@ namespace Fibula.Mechanics.Operations
                     playerAsCombatant.SetAttackTarget(null);
                 }
 
-                new GenericNotification(
-                    () => player.YieldSingleItem(),
-                    new PlayerCancelAttackPacket(),
-                    new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection()))
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(
+                    context,
+                    new GenericNotification(
+                        () => player.YieldSingleItem(),
+                        new PlayerCancelAttackPacket(),
+                        new PlayerCancelWalkPacket(this.Creature.Direction.GetClientSafeDirection())));
             }
         }
     }

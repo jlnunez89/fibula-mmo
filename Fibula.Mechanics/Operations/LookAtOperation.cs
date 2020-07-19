@@ -138,11 +138,12 @@ namespace Fibula.Mechanics.Operations
 
             description = $"You see {description}";
 
-            new TextMessageNotification(
-                () => this.PlayerToDescribeFor.YieldSingleItem(),
-                MessageType.DescriptionGreen,
-                description)
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+            this.SendNotification(
+                context,
+                new TextMessageNotification(
+                    () => this.PlayerToDescribeFor.YieldSingleItem(),
+                    MessageType.DescriptionGreen,
+                    description));
         }
 
         private string DescribeItem(IItem itemToDescribe)

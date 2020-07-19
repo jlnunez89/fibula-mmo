@@ -149,11 +149,12 @@ namespace Fibula.Mechanics.Operations
                 {
                     if (targetContainer is ITile targetTile)
                     {
-                        new TileUpdatedNotification(
-                            () => context.Map.PlayersThatCanSee(targetTile.Location),
-                            targetTile.Location,
-                            context.MapDescriptor.DescribeTile)
-                       .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                        this.SendNotification(
+                            context,
+                            new TileUpdatedNotification(
+                                () => context.Map.PlayersThatCanSee(targetTile.Location),
+                                targetTile.Location,
+                                context.MapDescriptor.DescribeTile));
 
                         // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(targetContainer.Location, lastAddedThing, requestorCreature));
                     }
@@ -184,8 +185,19 @@ namespace Fibula.Mechanics.Operations
 
             message.ThrowIfNullOrWhiteSpace();
 
-            new TextMessageNotification(() => player.YieldSingleItem(), MessageType.StatusSmall, message)
-            .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+            this.SendNotification(context, new TextMessageNotification(() => player.YieldSingleItem(), MessageType.StatusSmall, message));
+        }
+
+        /// <summary>
+        /// Sends a notification synchronously.
+        /// </summary>
+        /// <param name="context">A reference to the operation context.</param>
+        /// <param name="notification">The notification to send.</param>
+        protected void SendNotification(IOperationContext context, INotification notification)
+        {
+            notification.ThrowIfNull(nameof(notification));
+
+            notification.Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
         }
     }
 }

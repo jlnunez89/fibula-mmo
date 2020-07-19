@@ -1,28 +1,33 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="ISkill.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// jlnunez89@gmail.com
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE.txt file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Delegates;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for skills in the game.
     /// </summary>
     public interface ISkill
     {
-        ///// <summary>
-        ///// Event triggered when this skill advances to the next level.
-        ///// </summary>
-        //event SkillLevelAdvance OnAdvance;
+        /// <summary>
+        /// Event triggered when this skill advances to the next level.
+        /// </summary>
+        event OnSkillAdvanced Advanced;
+
+        /// <summary>
+        /// Event triggered when this skill's percent changes.
+        /// </summary>
+        event OnSkillPercentChanged PercentChanged;
 
         /// <summary>
         /// Gets this skill's type.
@@ -45,6 +50,11 @@ namespace Fibula.Server.Contracts.Abstractions
         uint DefaultLevel { get; }
 
         /// <summary>
+        /// Gets the count at which the current level starts.
+        /// </summary>
+        double StartingCountAtLevel { get; }
+
+        /// <summary>
         /// Gets this skill's current count.
         /// </summary>
         double Count { get; }
@@ -52,7 +62,7 @@ namespace Fibula.Server.Contracts.Abstractions
         /// <summary>
         /// Gets this skill's target count.
         /// </summary>
-        double Target { get; }
+        double TargetCount { get; }
 
         /// <summary>
         /// Gets this skill's target base increase level over level.
@@ -63,6 +73,11 @@ namespace Fibula.Server.Contracts.Abstractions
         /// Gets this skill's rate of target count increase.
         /// </summary>
         double Rate { get; }
+
+        /// <summary>
+        /// Gets the current percentual value between current and target counts this skill.
+        /// </summary>
+        byte Percent { get; }
 
         /// <summary>
         /// Increases this skill's counter.

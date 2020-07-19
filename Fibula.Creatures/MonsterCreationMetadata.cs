@@ -35,31 +35,37 @@ namespace Fibula.Creatures
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public string Name => throw new NotSupportedException();
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public ushort Hitpoints => throw new NotSupportedException();
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public ushort MaxHitpoints => throw new NotSupportedException();
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public ushort Manapoints => throw new NotSupportedException();
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public ushort MaxManapoints => throw new NotSupportedException();
 
         /// <summary>
         /// Gets nothing. Not supported on this class.
+        /// This value is taken from the monster type found in the catalog instead.
         /// </summary>
         public ushort Corpse => throw new NotSupportedException();
     }

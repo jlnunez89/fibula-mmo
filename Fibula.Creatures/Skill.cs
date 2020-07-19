@@ -1,20 +1,20 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="Skill.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace Fibula.Creatures
 {
     using System;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Delegates;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a creature's standard skill.
@@ -70,14 +70,23 @@ namespace OpenTibia.Server
             this.Rate = rate;
             this.BaseTargetIncrease = baseIncrease;
 
-            this.Target = this.CalculateNextTarget();
-            this.Count = Math.Min(count, this.Target);
+            var (startLevelCount, targetCount) = this.CalculateNextTarget();
+
+            this.StartingCountAtLevel = startLevelCount;
+            this.TargetCount = targetCount;
+
+            this.Count = Math.Min(count, this.TargetCount);
         }
 
         /// <summary>
         /// Event triggered when this skill advances to the next level.
         /// </summary>
-        public event SkillLevelAdvance OnAdvance;
+        public event OnSkillAdvanced Advanced;
+
+        /// <summary>
+        /// Event triggered when this skill's percent changes.
+        /// </summary>
+        public event OnSkillPercentChanged PercentChanged;
 
         /// <summary>
         /// Gets this skill's type.
@@ -110,9 +119,14 @@ namespace OpenTibia.Server
         public double Rate { get; }
 
         /// <summary>
+        /// Gets the count at which the current level starts.
+        /// </summary>
+        public double StartingCountAtLevel { get; private set; }
+
+        /// <summary>
         /// Gets this skill's target count.
         /// </summary>
-        public double Target { get; private set; }
+        public double TargetCount { get; private set; }
 
         /// <summary>
         /// Gets this skill's target base increase level over level.
@@ -120,43 +134,71 @@ namespace OpenTibia.Server
         public double BaseTargetIncrease { get; }
 
         /// <summary>
+        /// Gets the current percentual value between current and target counts this skill.
+        /// </summary>
+        public byte Percent
+        {
+            get
+            {
+                var fromCount = Math.Max(0, this.Count - this.StartingCountAtLevel);
+                var toCount = Math.Max(1, this.TargetCount - this.StartingCountAtLevel);
+
+                var unadjustedPercent = Math.Max(0, Math.Min(fromCount / toCount, 100)) * 100;
+
+                return (byte)Math.Floor(unadjustedPercent);
+            }
+        }
+
+        /// <summary>
         /// Increases this skill's counter.
         /// </summary>
         /// <param name="value">The amount by which to increase this skills counter.</param>
         public void IncreaseCounter(double value)
         {
-            this.Count = Math.Min(this.Target, this.Count + value);
+            var lastPercentVal = this.Percent;
+
+            this.Count = Math.Min(this.TargetCount, this.Count + value);
 
             // Skill level advance
-            if (Math.Abs(this.Count - this.Target) < 0.001)
+            if (Math.Abs(this.Count - this.TargetCount) < 0.001)
             {
                 this.Level++;
-                this.Target = this.CalculateNextTarget();
+
+                var (startLevelCount, targetCount) = this.CalculateNextTarget();
+
+                this.StartingCountAtLevel = startLevelCount;
+                this.TargetCount = targetCount;
 
                 // Invoke any subscribers to the level advance.
-                this.OnAdvance?.Invoke(this.Type);
+                this.Advanced?.Invoke(this.Type);
+            }
+
+            if (this.Percent != lastPercentVal)
+            {
+                this.PercentChanged?.Invoke(this.Type);
             }
         }
 
         /// <summary>
         /// Calculates the next target count.
         /// </summary>
-        /// <returns>The next target count value.</returns>
-        private double CalculateNextTarget()
+        /// <returns>A tuple cointaining the current level's starting count, and the next target count.</returns>
+        private (double currentLevelStartCount, double targetCountForNextLevel) CalculateNextTarget()
         {
-            var nextTarget = (this.Target * this.Rate) + this.BaseTargetIncrease;
+            var currentLevelStartCount = this.TargetCount;
+            var nextTarget = (this.TargetCount * this.Rate) + this.BaseTargetIncrease;
 
             // need to recalculate everything.
-            if (Math.Abs(this.Target) < 0.001)
+            if (Math.Abs(this.TargetCount) < 0.001)
             {
                 for (int i = 0; i < this.Level - this.DefaultLevel; i++)
                 {
-                    // how many advances we need to calculate
+                    currentLevelStartCount = nextTarget;
                     nextTarget = (nextTarget * this.Rate) + this.BaseTargetIncrease;
                 }
             }
 
-            return nextTarget;
+            return (currentLevelStartCount, nextTarget);
         }
     }
 }

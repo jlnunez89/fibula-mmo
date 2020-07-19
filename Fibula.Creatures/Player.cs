@@ -13,6 +13,7 @@ namespace Fibula.Creatures
 {
     using System;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -69,17 +70,7 @@ namespace Fibula.Creatures
 
             this.SoulPoints = 0;
 
-            /*
-            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, 1.0, 100, 100, 150);
-            this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 1, 1.0, 10, 1, 150);
-            this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Axe] = new Skill(SkillType.Axe, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Club] = new Skill(SkillType.Club, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Sword] = new Skill(SkillType.Sword, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, 1.0, 10, 10, 150);
-            this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, 1.0, 10, 10, 150);
-            */
+            this.InitializeSkills();
 
             this.BaseSpeed = 220;
             this.Speed = this.CalculateMovementBaseSpeed();
@@ -167,9 +158,48 @@ namespace Fibula.Creatures
         /// <returns>The base movement speed of the player.</returns>
         protected override ushort CalculateMovementBaseSpeed()
         {
-            var expLevel = 20 + new Random().Next(50); // this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
+            var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 
             return (ushort)(this.BaseSpeed + (2 * (expLevel - 1)));
+        }
+
+        private void InitializeSkills()
+        {
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 20, 150);
+            this.Skills[SkillType.Experience].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Experience].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 0, rate: 1.1, 10, 0, 150);
+            this.Skills[SkillType.Magic].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Magic].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.NoWeapon].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.NoWeapon].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Axe] = new Skill(SkillType.Axe, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Axe].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Axe].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Club] = new Skill(SkillType.Club, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Club].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Club].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Sword] = new Skill(SkillType.Sword, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Sword].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Sword].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Shield].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Shield].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Ranged] = new Skill(SkillType.Ranged, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Ranged].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Ranged].PercentChanged += this.RaiseSkillPercentChange;
+
+            this.Skills[SkillType.Fishing] = new Skill(SkillType.Fishing, 10, rate: 1.1, 10, 10, 150);
+            this.Skills[SkillType.Fishing].Advanced += this.RaiseSkillLevelAdvance;
+            this.Skills[SkillType.Fishing].PercentChanged += this.RaiseSkillPercentChange;
         }
     }
 }

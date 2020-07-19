@@ -43,7 +43,6 @@ namespace Fibula.Creatures
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
-            /*
             // make a copy of the type we are based on...
             foreach (var kvp in this.Type.Skills)
             {
@@ -52,9 +51,8 @@ namespace Fibula.Creatures
                 this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
             }
 
-            // Add experience as a skill
-            this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Max(int.MaxValue, (int)monsterType.Experience), 0, int.MaxValue, 100, 1100, 5);
-            */
+            // Add experience yield as a skill
+            this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Max(int.MaxValue, (int)monsterType.BaseExperienceYield), 0, int.MaxValue, 100, 1100, 5);
         }
 
         /// <summary>
@@ -65,7 +63,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the experience yielded when this monster dies.
         /// </summary>
-        public uint Experience => 0; // this.Skills[SkillType.Experience].Level;
+        public uint Experience => this.Skills[SkillType.Experience].Level;
 
         /// <summary>
         /// Gets or sets the inventory for the monster.

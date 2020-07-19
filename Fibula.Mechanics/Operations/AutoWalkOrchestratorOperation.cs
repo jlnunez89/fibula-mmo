@@ -112,10 +112,11 @@ namespace Fibula.Mechanics.Operations
                 {
                     if (this.Creature is IPlayer player)
                     {
-                        new GenericNotification(
-                            () => player.YieldSingleItem(),
-                            new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection()))
-                        .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                        this.SendNotification(
+                            context,
+                            new GenericNotification(
+                                () => player.YieldSingleItem(),
+                                new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection())));
                     }
 
                     return;

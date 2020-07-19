@@ -1,20 +1,20 @@
 ﻿// -----------------------------------------------------------------
 // <copyright file="MonsterSkill.cs" company="2Dudes">
-// Copyright (c) 2018 2Dudes. All rights reserved.
-// Author: Jose L. Nunez de Caceres
-// http://linkedin.com/in/jlnunez89
+// Copyright (c) | Jose L. Nunez de Caceres et al.
+// https://linkedin.com/in/nunezdecaceres
 //
-// Licensed under the MIT license.
-// See LICENSE file in the project root for full license information.
+// All Rights Reserved.
+//
+// Licensed under the MIT License. See LICENSE in the project root for license information.
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Server
+namespace Fibula.Creatures
 {
     using System;
-    using OpenTibia.Server.Contracts.Abstractions;
-    using OpenTibia.Server.Contracts.Delegates;
-    using OpenTibia.Server.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Delegates;
+    using Fibula.Common.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a monster's standard skill.
@@ -54,14 +54,19 @@ namespace OpenTibia.Server
             this.Level = (uint)Math.Min(this.MaxLevel, level == 0 ? defaultLevel : level);
             this.Rate = targetIncreaseFactor / 1000d;
             this.Count = 0;
-            this.Target = targetForNextLevel;
+            this.TargetCount = targetForNextLevel;
             this.PerLevelIncrease = increasePerLevel;
         }
 
         /// <summary>
         /// Event triggered when this skill advances to the next level.
         /// </summary>
-        public event SkillLevelAdvance OnAdvance;
+        public event OnSkillAdvanced Advanced;
+
+        /// <summary>
+        /// Event triggered when this skill's percent changes.
+        /// </summary>
+        public event OnSkillPercentChanged PercentChanged;
 
         /// <summary>
         /// Gets this skill's type.
@@ -101,7 +106,12 @@ namespace OpenTibia.Server
         /// <summary>
         /// Gets this skill's target count.
         /// </summary>
-        public double Target { get; private set; }
+        public double TargetCount { get; private set; }
+
+        /// <summary>
+        /// Gets the count at which the current level starts.
+        /// </summary>
+        public double StartingCountAtLevel { get; private set; }
 
         /// <summary>
         /// Gets this skill's target base increase level over level.
@@ -109,21 +119,43 @@ namespace OpenTibia.Server
         public double BaseTargetIncrease => throw new NotImplementedException();
 
         /// <summary>
+        /// Gets the current percentual value between current and target counts this skill.
+        /// </summary>
+        public byte Percent
+        {
+            get
+            {
+                var unadjustedPercent = Math.Max(0, Math.Min(this.Count / this.TargetCount, 100)) * 100;
+
+                return (byte)Math.Floor(unadjustedPercent);
+            }
+        }
+
+        /// <summary>
         /// Increases this skill's counter.
         /// </summary>
         /// <param name="value">The amount by which to increase this skills counter.</param>
         public void IncreaseCounter(double value)
         {
-            this.Count = Math.Min(this.Target, this.Count + value);
+            var lastPercentVal = this.Percent;
+
+            this.Count = Math.Min(this.TargetCount, this.Count + value);
 
             // Skill level advance
-            if (Math.Abs(this.Count - this.Target) < 0.001)
+            if (Math.Abs(this.Count - this.TargetCount) < 0.001)
             {
                 this.Level += this.PerLevelIncrease;
-                this.Target = Math.Floor(this.Target * this.Rate);
+
+                this.StartingCountAtLevel = this.TargetCount;
+                this.TargetCount = Math.Floor(this.TargetCount * this.Rate);
 
                 // Invoke any subscribers to the level advance.
-                this.OnAdvance?.Invoke(this.Type);
+                this.Advanced?.Invoke(this.Type);
+            }
+
+            if (this.Percent != lastPercentVal)
+            {
+                this.PercentChanged?.Invoke(this.Type);
             }
         }
     }

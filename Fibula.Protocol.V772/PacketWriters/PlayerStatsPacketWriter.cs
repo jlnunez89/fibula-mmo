@@ -12,9 +12,11 @@
 namespace Fibula.Protocol.V772.PacketWriters
 {
     using System;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Serilog;
 
     /// <summary>
@@ -52,13 +54,16 @@ namespace Fibula.Protocol.V772.PacketWriters
 
             ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, playerStatsPacket.Player.CarryStrength * 100));
 
-            // Experience: 7.7x Client debugs after 0x7FFFFFFF (2,147,483,647) exp
-            uint experience = 0; // Math.Min(0x7FFFFFFF, Convert.ToUInt32(playerStatsPacket.Player.Skills[SkillType.Experience].Count));
-            ushort expLevel = 1; // (ushort)Math.Min(1, Math.Min(ushort.MaxValue, playerStatsPacket.Player.Skills[SkillType.Experience].Level));
-            byte expPercentage = 0; // playerStatsPacket.Player.CalculateSkillPercent(SkillType.Experience);
+            ICombatant combatantPlayer = playerStatsPacket.Player as ICombatant;
 
-            byte magicLevel = 0; // (byte)Math.Min(byte.MaxValue, playerStatsPacket.Player.Skills[SkillType.Magic].Level);
-            byte magicLevelPercentage = 0; // playerStatsPacket.Player.CalculateSkillPercent(SkillType.Magic);
+            // Fail off by sending dummy data if the player for some reason is not a combatant.
+            // Experience: 7.7x Client debugs after 0x7FFFFFFF (2,147,483,647) exp
+            uint experience = combatantPlayer != null ? Math.Min(0x7FFFFFFF, Convert.ToUInt32(combatantPlayer.Skills[SkillType.Experience].Count)) : 0;
+            ushort expLevel = (ushort)(combatantPlayer != null ? Math.Max(1, Math.Min(ushort.MaxValue, combatantPlayer.Skills[SkillType.Experience].Level)) : 1);
+            byte expPercentage = (byte)(combatantPlayer != null ? combatantPlayer.Skills[SkillType.Experience].Percent : 0);
+
+            byte magicLevel = (byte)(combatantPlayer != null ? Math.Min(byte.MaxValue, combatantPlayer.Skills[SkillType.Magic].Level) : 0);
+            byte magicLevelPercentage = (byte)(combatantPlayer != null ? combatantPlayer.Skills[SkillType.Magic].Percent : 0);
 
             message.AddByte(playerStatsPacket.PacketType);
 

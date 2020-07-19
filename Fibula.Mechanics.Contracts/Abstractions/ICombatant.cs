@@ -20,7 +20,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreatureWithExhaustion
+    public interface ICombatant : ICreatureWithExhaustion, ISkilledCreature
     {
         /// <summary>
         /// Event to call when the combatant's health changes.
@@ -41,36 +41,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Event to call when the chase target changes.
         /// </summary>
         event OnChaseTargetChanged ChaseTargetChanged;
-
-        ///// <summary>
-        ///// Event to call when the fight mode changes.
-        ///// </summary>
-        // event FightModeChanged FightModeChanged;
-
-        ///// <summary>
-        ///// Event to call when the chase mode changes.
-        ///// </summary>
-        // event ChaseModeChanged ChaseModeChanged;
-
-        ///// <summary>
-        ///// Gets the set of creatures currently in view for this combatant.
-        ///// </summary>
-        // IEnumerable<uint> CreaturesInView { get; }
-
-        ///// <summary>
-        ///// Gets the set of ids of creatures that this combatant considers hostile, and tipically initiates combat against.
-        ///// </summary>
-        // ISet<uint> HostilesInView { get; }
-
-        ///// <summary>
-        ///// Gets the set of ids of creatures that this combatant considers neutral.
-        ///// </summary>
-        // ISet<uint> NeutralsInView { get; }
-
-        ///// <summary>
-        ///// Gets the set of ids of creatures that this combatant considers friendly, and tipically treats favorably.
-        ///// </summary>
-        // ISet<uint> FriendlyInView { get; }
 
         /// <summary>
         /// Gets the current target combatant, if any.

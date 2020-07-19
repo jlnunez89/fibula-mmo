@@ -14,6 +14,8 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Delegates;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -107,6 +109,8 @@ namespace Fibula.Creatures
 
             this.damageTakenFromOthersLock = new object();
             this.damageTakenFromOthers = new Dictionary<uint, uint>();
+
+            this.Skills = new Dictionary<SkillType, ISkill>();
         }
 
         /// <summary>
@@ -128,6 +132,16 @@ namespace Fibula.Creatures
         /// Event to call when the chase target changes.
         /// </summary>
         public event OnChaseTargetChanged ChaseTargetChanged;
+
+        /// <summary>
+        /// Event triggered when this skilled creature advances a skill to the next level.
+        /// </summary>
+        public event OnSkillLevelChanged SkillLevelChanged;
+
+        /// <summary>
+        /// Event triggered when this skilled creature skill percent changes.
+        /// </summary>
+        public event OnSkillPerecentualChanged SkillPerecentualChanged;
 
         /// <summary>
         /// Gets the current target combatant.
@@ -225,6 +239,14 @@ namespace Fibula.Creatures
         /// Gets or sets the pending auto attack operation of this player, if any.
         /// </summary>
         public IOperation PendingAutoAttackOperation { get; set; }
+
+        /// <summary>
+        /// Gets the current skills information for the combatant.
+        /// </summary>
+        /// <remarks>
+        /// The key is a <see cref="SkillType"/>, and the value is a <see cref="ISkill"/>.
+        /// </remarks>
+        public IDictionary<SkillType, ISkill> Skills { get; }
 
         /// <summary>
         /// Consumes combat credits to the combatant.
@@ -374,6 +396,26 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
+        /// Calculates the current percentual value between current and target counts for the given skill.
+        /// </summary>
+        /// <param name="skillType">The type of skill to calculate for.</param>
+        /// <returns>A value between [0, 100] representing the current percentual value.</returns>
+        public byte CalculateSkillPercent(SkillType skillType)
+        {
+            const int LowerBound = 0;
+            const int UpperBound = 100;
+
+            if (!this.Skills.ContainsKey(skillType))
+            {
+                return LowerBound;
+            }
+
+            var unadjustedPercent = Math.Max(LowerBound, Math.Min(this.Skills[skillType].Count / this.Skills[skillType].TargetCount, UpperBound));
+
+            return (byte)Math.Floor(unadjustedPercent);
+        }
+
+        /// <summary>
         /// Applies damage to the combatant, which is expected to apply reductions and protections.
         /// </summary>
         /// <param name="damageInfo">The information of the damage to make, without reductions.</param>
@@ -437,6 +479,7 @@ namespace Fibula.Creatures
         /// Increases the attack speed of this combatant.
         /// </summary>
         /// <param name="increaseAmount">The amount by which to increase.</param>
+        // TODO: this is just for testing purposes and should be removed.
         public void IncreaseAttackSpeed(decimal increaseAmount)
         {
             this.attackSpeedBuff = Math.Min(CombatConstants.MaximumCombatSpeed - this.baseAttackSpeed, this.attackSpeedBuff + increaseAmount);
@@ -446,6 +489,7 @@ namespace Fibula.Creatures
         /// Decreases the attack speed of this combatant.
         /// </summary>
         /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        // TODO: this is just for testing purposes and should be removed.
         public void DecreaseAttackSpeed(decimal decreaseAmount)
         {
             this.attackSpeedBuff = Math.Max(0, this.attackSpeedBuff - decreaseAmount);
@@ -455,6 +499,7 @@ namespace Fibula.Creatures
         /// Increases the defense speed of this combatant.
         /// </summary>
         /// <param name="increaseAmount">The amount by which to increase.</param>
+        // TODO: this is just for testing purposes and should be removed.
         public void IncreaseDefenseSpeed(decimal increaseAmount)
         {
             this.defenseSpeedBuff = Math.Min(CombatConstants.MaximumCombatSpeed - this.baseDefenseSpeed, this.defenseSpeedBuff + increaseAmount);
@@ -464,9 +509,38 @@ namespace Fibula.Creatures
         /// Decreases the defense speed of this combatant.
         /// </summary>
         /// <param name="decreaseAmount">The amount by which to decrease.</param>
+        // TODO: this is just for testing purposes and should be removed.
         public void DecreaseDefenseSpeed(decimal decreaseAmount)
         {
             this.defenseSpeedBuff = Math.Max(0, this.defenseSpeedBuff - decreaseAmount);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="SkillLevelChanged"/> event for this creature on the given skill.
+        /// </summary>
+        /// <param name="forSkill">The skill to advance.</param>
+        protected void RaiseSkillLevelAdvance(SkillType forSkill)
+        {
+            if (!this.Skills.ContainsKey(forSkill))
+            {
+                return;
+            }
+
+            this.SkillLevelChanged?.Invoke(this, this.Skills[forSkill], this.Skills[forSkill].Level - 1);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="SkillPerecentualChanged"/> event for this creature on the given skill.
+        /// </summary>
+        /// <param name="forSkill">The skill to advance.</param>
+        protected void RaiseSkillPercentChange(SkillType forSkill)
+        {
+            if (!this.Skills.ContainsKey(forSkill))
+            {
+                return;
+            }
+
+            this.SkillPerecentualChanged?.Invoke(this, this.Skills[forSkill]);
         }
 
         /// <summary>

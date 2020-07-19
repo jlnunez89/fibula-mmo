@@ -503,10 +503,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     if (requestor != null && creature.Id == this.RequestorId && creature is IPlayer player)
                     {
-                        new GenericNotification(
-                            () => player.YieldSingleItem(),
-                            new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection()))
-                        .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                        this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerCancelWalkPacket(player.Direction.GetClientSafeDirection())));
                     }
 
                     this.DispatchTextNotification(context, OperationMessage.NotEnoughRoom);
@@ -623,12 +620,12 @@ namespace Fibula.Mechanics.Operations
 
             if (fromThingContainer is ITile fromTile)
             {
-                // TODO: formally introduce async/synchronous notifications.
-                new TileUpdatedNotification(
-                    () => context.Map.PlayersThatCanSee(fromTile.Location),
-                    fromTile.Location,
-                    context.MapDescriptor.DescribeTile)
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(
+                    context,
+                    new TileUpdatedNotification(
+                        () => context.Map.PlayersThatCanSee(fromTile.Location),
+                        fromTile.Location,
+                        context.MapDescriptor.DescribeTile));
             }
 
             /* context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromThingContainer.Location, item, requestorCreature)); */
@@ -717,17 +714,16 @@ namespace Fibula.Mechanics.Operations
 
             if (toStackPosition != byte.MaxValue)
             {
-                // TODO: formally introduce async/synchronous notifications.
-                // context.Dispatcher.SendNotificationAsync(new CreatureMovedNotificationArguments(creature.Id, fromTile.Location, fromTileStackPos, toTile.Location, toStackPosition, isTeleport));
-                new CreatureMovedNotification(
-                    () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
-                    creature.Id,
-                    fromTile.Location,
-                    fromTileStackPos,
-                    toTile.Location,
-                    toStackPosition,
-                    isTeleport)
-                .Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+                this.SendNotification(
+                    context,
+                    new CreatureMovedNotification(
+                        () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
+                        creature.Id,
+                        fromTile.Location,
+                        fromTileStackPos,
+                        toTile.Location,
+                        toStackPosition,
+                        isTeleport));
             }
 
             if (creature is IPlayer player)
