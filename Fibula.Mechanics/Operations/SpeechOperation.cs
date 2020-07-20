@@ -16,6 +16,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -84,6 +85,7 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
+            // TODO: [start] remove "Test" trash code.
             if (requestor is ICombatant combatant)
             {
                 switch (this.Content)
@@ -107,6 +109,24 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
+            if (this.Content.StartsWith("!mon"))
+            {
+                try
+                {
+                    var raceStr = this.Content.Replace("!mon", string.Empty);
+                    var raceId = Convert.ToUInt16(raceStr);
+
+                    context.GameApi.PlaceMonsterAt(raceId, requestor.LocationInFront());
+                }
+                catch
+                {
+                    // Don't really care about this one.
+                }
+
+                return;
+            }
+
+            // TODO: [end] remove "Test" trash code.
             this.SendNotification(
                 context,
                 new CreatureSpeechNotification(

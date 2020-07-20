@@ -12,11 +12,14 @@
 namespace Fibula.Creatures
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
@@ -24,6 +27,11 @@ namespace Fibula.Creatures
     /// </summary>
     public class Monster : CombatantCreature, IMonster
     {
+        /// <summary>
+        /// Stores the set of combatants that are deemed hostile to this monster.
+        /// </summary>
+        private readonly ISet<ICombatant> hostileCombatants;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Monster"/> class.
         /// </summary>
@@ -38,21 +46,14 @@ namespace Fibula.Creatures
             this.BaseSpeed += monsterType.BaseSpeed;
 
             this.Blood = monsterType.BloodType;
-            this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+            this.ChaseMode = ChaseMode.Chase;
             this.FightMode = FightMode.FullAttack;
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
-            // make a copy of the type we are based on...
-            foreach (var kvp in this.Type.Skills)
-            {
-                (int defaultLevel, int currentLevel, int maximumLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel) = kvp.Value;
+            this.hostileCombatants = new HashSet<ICombatant>();
 
-                this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
-            }
-
-            // Add experience yield as a skill
-            this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Max(int.MaxValue, (int)monsterType.BaseExperienceYield), 0, int.MaxValue, 100, 1100, 5);
+            this.InitializeSkills();
         }
 
         /// <summary>
@@ -91,6 +92,46 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
+        /// Gets the collection of tracked combatants.
+        /// </summary>
+        public override IEnumerable<ICombatant> TrackedCombatants => this.hostileCombatants;
+
+        /// <summary>
+        /// Starts tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void StartTrackingCombatant(ICombatant otherCombatant)
+        {
+            if (otherCombatant is IPlayer)
+            {
+                this.hostileCombatants.Add(otherCombatant);
+
+                if (this.hostileCombatants.Count == 1)
+                {
+                    this.ChaseMode = ChaseMode.Chase;
+                    this.SetAttackTarget(otherCombatant);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Stops tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void StopTrackingCombatant(ICombatant otherCombatant)
+        {
+            if (otherCombatant is IPlayer)
+            {
+                this.hostileCombatants.Remove(otherCombatant);
+
+                if (otherCombatant == this.AutoAttackTarget)
+                {
+                    this.SetAttackTarget(this.hostileCombatants.Count > 0 ? this.hostileCombatants.First() : null);
+                }
+            }
+        }
+
+        /// <summary>
         /// Applies damage modifiers to the damage information provided.
         /// </summary>
         /// <param name="damageInfo">The damage information.</param>
@@ -110,6 +151,34 @@ namespace Fibula.Creatures
             {
                 damageInfo.Effect = AnimatedEffect.SparkYellow;
                 damageInfo.Damage = 0;
+            }
+        }
+
+        private void InitializeSkills()
+        {
+            // make a copy of the type we are based on...
+            foreach (var kvp in this.Type.Skills)
+            {
+                (int defaultLevel, int currentLevel, int maximumLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel) = kvp.Value;
+
+                this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
+                this.Skills[kvp.Key].Advanced += this.RaiseSkillLevelAdvance;
+                this.Skills[kvp.Key].PercentChanged += this.RaiseSkillPercentChange;
+            }
+
+            // Add experience yield as a skill
+            if (!this.Skills.ContainsKey(SkillType.Experience))
+            {
+                this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Min(int.MaxValue, (int)this.Type.BaseExperienceYield), 0, int.MaxValue, 100, 1100, 5);
+                this.Skills[SkillType.Experience].Advanced += this.RaiseSkillLevelAdvance;
+                this.Skills[SkillType.Experience].PercentChanged += this.RaiseSkillPercentChange;
+            }
+
+            if (!this.Skills.ContainsKey(SkillType.Shield))
+            {
+                this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, rate: 1.1, 10, 10, 150);
+                this.Skills[SkillType.Shield].Advanced += this.RaiseSkillLevelAdvance;
+                this.Skills[SkillType.Shield].PercentChanged += this.RaiseSkillPercentChange;
             }
         }
     }

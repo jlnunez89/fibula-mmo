@@ -87,19 +87,15 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            var itemCreated = thingCreated as IItem;
-
             // At this point, we were able to generate the new one, let's proceed to add it.
-            this.AddContentToContainerOrFallback(context, inThingContainer, ref thingCreated, index, includeTileAsFallback: true, requestor);
-
-            if (itemCreated != null)
+            if (thingCreated is IItem itemCreated && this.AddContentToContainerOrFallback(context, inThingContainer, ref thingCreated, index, includeTileAsFallback: true, requestor))
             {
                 // Start decay for items that need it.
                 if (itemCreated.HasExpiration)
                 {
                     // TODO: the item location will change and this will break.
                     var expirationOp = itemCreated.ExpirationTarget == 0 ?
-                        new DeleteItemOperation(requestorId: 0, thingCreated.ThingId, thingCreated.Location)
+                        new DeleteItemOperation(requestorId: 0, itemCreated.ThingId, itemCreated.Location)
                         :
                         new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
 

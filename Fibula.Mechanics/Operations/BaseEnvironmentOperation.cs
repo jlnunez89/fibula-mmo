@@ -76,6 +76,15 @@ namespace Fibula.Mechanics.Operations
                     combatant.Death += context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged += context.CombatApi.CombatantAttackTargetChanged;
                     combatant.ChaseTargetChanged += context.CombatApi.CombatantChaseTargetChanged;
+
+                    // Find now-spectators of this creature to start tracking that guy.
+                    foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
+                    {
+                        if (spectator is ICombatant combatantSpectator)
+                        {
+                            combatantSpectator.StartTrackingCombatant(combatant);
+                        }
+                    }
                 }
 
                 if (creature is ISkilledCreature skilledCreature)
@@ -141,6 +150,15 @@ namespace Fibula.Mechanics.Operations
             {
                 if (creature is ICombatant combatant)
                 {
+                    // Find spectators of this creature that died and stop tracking the sucker.
+                    foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
+                    {
+                        if (spectator is ICombatant combatantSpectator)
+                        {
+                            combatantSpectator.StopTrackingCombatant(combatant);
+                        }
+                    }
+
                     combatant.HealthChanged -= context.CombatApi.CombatantHealthChanged;
                     combatant.Death -= context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged -= context.CombatApi.CombatantAttackTargetChanged;
@@ -153,23 +171,6 @@ namespace Fibula.Mechanics.Operations
                     skilledCreature.SkillPerecentualChanged -= context.GameApi.SkilledCreatureSkillPerecentualChanged;
                 }
 
-                /*
-                if (creature is ICombatant combatant)
-                {
-                    combatant.CombatStarted -= context.CombatApi.OnCombatantCombatStarted;
-                    combatant.CombatEnded -= context.CombatApi.OnCombatantCombatEnded;
-                    combatant.TargetChanged -= context.CombatApi.OnCombatantTargetChanged;
-                    combatant.ChaseModeChanged -= context.CombatApi.OnCombatantChaseModeChanged;
-                    combatant.CombatCreditsConsumed -= context.CombatApi.OnCombatCreditsConsumed;
-                }
-
-                if (creature is IPlayer player)
-                {
-                    player.Inventory.SlotChanged -= context.GameApi.OnPlayerInventoryChanged;
-                }
-                */
-
-                // TODO: formally introduce async/synchronous notifications.
                 if (creature is IPlayer player)
                 {
                     this.SendNotification(
@@ -178,6 +179,8 @@ namespace Fibula.Mechanics.Operations
                             () => context.Map.PlayersThatCanSee(creature.Location).Union(player.YieldSingleItem()),
                             creature,
                             oldStackpos));
+
+                    // player.Inventory.SlotChanged -= context.GameApi.OnPlayerInventoryChanged;
                 }
                 else
                 {

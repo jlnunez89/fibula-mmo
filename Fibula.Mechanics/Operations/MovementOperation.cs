@@ -12,6 +12,7 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
@@ -750,10 +751,10 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            if (creature is ICombatant combatant)
+            if (creature is ICombatant movingCombatant)
             {
                 // Check if we are in range to perform the attack operation, if any.
-                if (combatant.PendingAutoAttackOperation != null && combatant.PendingAutoAttackOperation is AutoAttackOperation autoAttackOperation)
+                if (movingCombatant.PendingAutoAttackOperation != null && movingCombatant.PendingAutoAttackOperation is AutoAttackOperation autoAttackOperation)
                 {
                     var distanceBetweenCombatants = (autoAttackOperation.Attacker?.Location ?? autoAttackOperation.Target.Location) - autoAttackOperation.Target.Location;
                     var inRange = distanceBetweenCombatants.MaxValueIn2D <= autoAttackOperation.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
@@ -765,13 +766,13 @@ namespace Fibula.Mechanics.Operations
                 }
 
                 // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
-                foreach (var otherCombatantId in combatant.AttackedBy)
+                foreach (var otherCombatantId in movingCombatant.AttackedBy)
                 {
                     if (context.CreatureFinder.FindCreatureById(otherCombatantId) is ICombatant otherCombatant)
                     {
                         if (otherCombatant.PendingAutoAttackOperation == null ||
                             !(otherCombatant.PendingAutoAttackOperation is AutoAttackOperation otherCombatantAutoAttackOperation) ||
-                            otherCombatantAutoAttackOperation.Target != combatant)
+                            otherCombatantAutoAttackOperation.Target != movingCombatant)
                         {
                             continue;
                         }
@@ -785,50 +786,43 @@ namespace Fibula.Mechanics.Operations
                         }
                     }
                 }
-            }
 
-            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
-            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
-            // context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
-
-            /*
-            if (creature is ICombatant combatant)
-            {
                 // And check if it walked into new combatants view range.
-                var spectatorsOfDestination = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, toTile.Location);
-                var spectatorsOfSource = context.CreatureFinder.CreaturesThatCanSee(context.TileAccessor, fromTile.Location);
+                var spectatorsAtDestination = context.Map.CreaturesThatCanSee(toTile.Location).OfType<ICombatant>();
+                var spectatorsAtSource = context.Map.CreaturesThatCanSee(fromTile.Location).OfType<ICombatant>();
 
-                var spectatorsAdded = spectatorsOfDestination.Except(spectatorsOfSource);
-                var spectatorsLost = spectatorsOfSource.Except(spectatorsOfDestination);
+                var spectatorsLost = spectatorsAtSource.Except(spectatorsAtDestination);
+                var spectatorsAdded = spectatorsAtDestination.Where(s => !s.TrackedCombatants.Contains(movingCombatant));
 
+                // Make new spectators aware that this creature moved into their view.
                 foreach (var spectator in spectatorsAdded)
                 {
-                    if (spectator == combatant)
+                    if (spectator == movingCombatant)
                     {
                         continue;
                     }
 
-                    if (spectator is ICombatant newCombatant)
-                    {
-                        newCombatant.CombatantNowInView(combatant);
-                        combatant.CombatantNowInView(newCombatant);
-                    }
+                    spectator.StartTrackingCombatant(movingCombatant);
+                    movingCombatant.StartTrackingCombatant(spectator);
                 }
 
+                // Now make old spectators aware that this creature moved out of their view.
                 foreach (var spectator in spectatorsLost)
                 {
-                    if (spectator == combatant)
+                    if (spectator == movingCombatant)
                     {
                         continue;
                     }
 
-                    if (spectator is ICombatant oldCombatant)
-                    {
-                        oldCombatant.CombatantNoLongerInView(combatant);
-                        combatant.CombatantNoLongerInView(oldCombatant);
-                    }
+                    spectator.StopTrackingCombatant(movingCombatant);
+                    movingCombatant.StopTrackingCombatant(spectator);
                 }
             }
+
+            /*
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
             */
 
             return true;

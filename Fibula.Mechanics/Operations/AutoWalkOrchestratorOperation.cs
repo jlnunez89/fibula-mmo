@@ -12,6 +12,7 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
@@ -81,17 +82,35 @@ namespace Fibula.Mechanics.Operations
             {
                 var (result, _, directions) = context.PathFinder.FindBetween(this.Creature.Location, this.Creature.WalkPlan.DetermineTargetLocation(), this.Creature, targetDistance: this.Creature.WalkPlan.AtGoalDistanceFromLocation);
 
-                if (result == SearchState.Failed && !directions.Any())
+                if (result == SearchState.Failed)
                 {
                     // No way found.
                     this.DispatchTextNotification(context, OperationMessage.ThereIsNoWay);
 
                     if (this.Creature is ICombatant combatant)
                     {
-                        context.CombatApi.SetCombatantModes(combatant, combatant.FightMode, ChaseMode.Stand, false /*combatant.HasSafetyOn*/);
+                        if (this.Creature is IPlayer)
+                        {
+                            // For players, we stop trying, and revert to standing mode.
+                            context.CombatApi.SetCombatantModes(combatant, combatant.FightMode, ChaseMode.Stand, false /*combatant.HasSafetyOn*/);
+                        }
+                        else if (this.Creature is IMonster monster)
+                        {
+                            // For monsters however, we choose a random movement to make.
+                            // TODO: this should only pick from non-avoided tiles.
+                            var newDirs = new List<Direction>
+                            {
+                                monster.RandomAdjacentDirection(),
+                            };
+
+                            directions = newDirs;
+
+                            monster.LastMovementCostModifier = 3;
+                        }
                     }
                 }
-                else
+
+                if (directions.Any())
                 {
                     this.Creature.WalkPlan.RecalculateWaypoints(this.Creature.Location, directions);
 

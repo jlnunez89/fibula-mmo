@@ -12,12 +12,15 @@
 namespace Fibula.Creatures
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
@@ -125,6 +128,27 @@ namespace Fibula.Creatures
         public override ushort Speed { get; protected set; }
 
         /// <summary>
+        /// Gets the collection of tracked combatants.
+        /// </summary>
+        public override IEnumerable<ICombatant> TrackedCombatants => Enumerable.Empty<ICombatant>();
+
+        /// <summary>
+        /// Starts tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void StartTrackingCombatant(ICombatant otherCombatant)
+        {
+        }
+
+        /// <summary>
+        /// Stops tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public override void StopTrackingCombatant(ICombatant otherCombatant)
+        {
+        }
+
+        /// <summary>
         /// Applies damage modifiers to the damage information provided.
         /// </summary>
         /// <param name="damageInfo">The damage information.</param>
@@ -165,7 +189,7 @@ namespace Fibula.Creatures
 
         private void InitializeSkills()
         {
-            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 20, 150);
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 50, 150);
             this.Skills[SkillType.Experience].Advanced += this.RaiseSkillLevelAdvance;
             this.Skills[SkillType.Experience].PercentChanged += this.RaiseSkillPercentChange;
 

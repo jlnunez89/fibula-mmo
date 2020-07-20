@@ -27,6 +27,7 @@ namespace Fibula.Mechanics
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
@@ -621,6 +622,21 @@ namespace Fibula.Mechanics
             }
 
             this.scheduler.ScheduleEvent(movementOp, scheduleDelay);
+        }
+
+        /// <summary>
+        /// Places a new monster of the given race, at the given location.
+        /// </summary>
+        /// <param name="raceId">The id of race of monster to place.</param>
+        /// <param name="location">The location at which to place the monster.</param>
+        public void PlaceMonsterAt(ushort raceId, Location location)
+        {
+            var newMonster = this.creatureFactory.Create(new CreatureCreationArguments() { Type = CreatureType.Monster, Metadata = new MonsterCreationMetadata(raceId), }) as IMonster;
+
+            if (this.map.GetTileAt(location, out ITile targetTile) && !targetTile.IsPathBlocking())
+            {
+                this.scheduler.ScheduleEvent(new PlaceCreatureOperation(requestorId: 0, targetTile, newMonster));
+            }
         }
 
         /// <summary>

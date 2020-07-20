@@ -33,9 +33,9 @@ namespace Fibula.Creatures
         /// <param name="increasePerLevel">This skill's value increase level over level.</param>
         public MonsterSkill(SkillType type, int defaultLevel, int level, int maxLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel)
         {
-            if (defaultLevel < 1)
+            if (defaultLevel < 0)
             {
-                throw new ArgumentException($"{nameof(defaultLevel)} must be positive.", nameof(defaultLevel));
+                throw new ArgumentException($"{nameof(defaultLevel)} must not be negative.", nameof(defaultLevel));
             }
 
             if (maxLevel < 1)

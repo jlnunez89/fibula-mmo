@@ -249,6 +249,11 @@ namespace Fibula.Creatures
         public IDictionary<SkillType, ISkill> Skills { get; }
 
         /// <summary>
+        /// Gets the collection of tracked combatants.
+        /// </summary>
+        public abstract IEnumerable<ICombatant> TrackedCombatants { get; }
+
+        /// <summary>
         /// Consumes combat credits to the combatant.
         /// </summary>
         /// <param name="creditType">The type of combat credits to consume.</param>
@@ -414,6 +419,18 @@ namespace Fibula.Creatures
 
             return (byte)Math.Floor(unadjustedPercent);
         }
+
+        /// <summary>
+        /// Starts tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public abstract void StartTrackingCombatant(ICombatant otherCombatant);
+
+        /// <summary>
+        /// Stops tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        public abstract void StopTrackingCombatant(ICombatant otherCombatant);
 
         /// <summary>
         /// Applies damage to the combatant, which is expected to apply reductions and protections.

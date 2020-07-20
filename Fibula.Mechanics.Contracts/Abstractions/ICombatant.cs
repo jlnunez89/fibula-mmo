@@ -128,6 +128,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ChaseMode ChaseMode { get; set; }
 
         /// <summary>
+        /// Gets the collection of tracked combatants.
+        /// </summary>
+        IEnumerable<ICombatant> TrackedCombatants { get; }
+
+        /// <summary>
         /// Sets the attack target of this combatant.
         /// </summary>
         /// <param name="otherCombatant">The other target combatant, if any.</param>
@@ -187,21 +192,21 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <returns>The information about the damage actually done.</returns>
         DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0);
 
+        /// <summary>
+        /// Starts tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        void StartTrackingCombatant(ICombatant otherCombatant);
+
+        /// <summary>
+        /// Stops tracking another <see cref="ICombatant"/>.
+        /// </summary>
+        /// <param name="otherCombatant">The other combatant, now in view.</param>
+        void StopTrackingCombatant(ICombatant otherCombatant);
+
         ///// <summary>
         ///// Clears the tracking store of damage taken from other combatants.
         ///// </summary>
         // void ClearDamageTaken();
-
-        ///// <summary>
-        ///// Sets a <see cref="ICombatant"/> now in view for this combatant.
-        ///// </summary>
-        ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        // void CombatantNowInView(ICombatant otherCombatant);
-
-        ///// <summary>
-        ///// Sets a <see cref="ICombatant"/> as no longer in view for this combatant.
-        ///// </summary>
-        ///// <param name="otherCombatant">The other combatant, now in view.</param>
-        // void CombatantNoLongerInView(ICombatant otherCombatant);
     }
 }

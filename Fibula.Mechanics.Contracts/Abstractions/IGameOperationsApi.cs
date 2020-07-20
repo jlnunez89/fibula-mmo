@@ -93,8 +93,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 
         // void MoveTo(Location fromLocation, Location targetLocation, params ushort[] exceptTypeIds);
 
-        // void PlaceMonsterAt(Location location, ushort monsterId);
-
         // void TagThing(IPlayer player, string format, IThing targetThing);
 
         /// <summary>
@@ -172,6 +170,13 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="toCreatureId">The id of the creature to which the thing is being moved.</param>
         /// <param name="amount">Optional. The amount of the thing to move. Defaults to 1.</param>
         void Movement(uint requestorId, ushort clientThingId, Location fromLocation, byte fromIndex, uint fromCreatureId, Location toLocation, uint toCreatureId, byte amount = 1);
+
+        /// <summary>
+        /// Places a new monster of the given race, at the given location.
+        /// </summary>
+        /// <param name="raceId">The id of race of monster to place.</param>
+        /// <param name="location">The location at which to place the monster.</param>
+        void PlaceMonsterAt(ushort raceId, Location location);
 
         /// <summary>
         /// Resets a given creature's walk plan and kicks it off.

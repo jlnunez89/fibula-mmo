@@ -66,6 +66,11 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
+            if (this.Combatant.IsDead)
+            {
+                return;
+            }
+
             this.Combatant.RestoreCredits(this.CreditType, AmountToRestore);
 
             var current = this.CreditType == CombatCreditType.Attack ? this.Combatant.AutoAttackCredits : this.Combatant.AutoDefenseCredits;

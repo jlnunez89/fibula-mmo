@@ -207,6 +207,8 @@ namespace Fibula.Mechanics.Operations
 
             this.Target.ConsumeCredits(CombatCreditType.Defense, 1);
 
+            this.Target.Skills[SkillType.Shield].IncreaseCounter(1);
+
             if (damageDoneInfo.ApplyBloodToEnvironment)
             {
                 context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.Blood));
@@ -222,7 +224,7 @@ namespace Fibula.Mechanics.Operations
                 // this.Target.RecordDamageTaken(this.Attacker.Id, damageToApply);
                 this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
 
-                // TODO: actual skills.
+                // TODO: increase the actual skill.
                 this.Attacker.Skills[SkillType.NoWeapon].IncreaseCounter(1);
 
                 // Normalize the attacker's attack speed based on the global round time and round that up.

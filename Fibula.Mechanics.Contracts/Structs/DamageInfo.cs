@@ -58,6 +58,6 @@ namespace Fibula.Mechanics.Contracts.Structs
         /// <summary>
         /// Gets a value indicating whether to apply blood to the environment.
         /// </summary>
-        public bool ApplyBloodToEnvironment => this.Damage > 0 && (this.Blood == BloodType.Blood || this.Blood == BloodType.Slime || DateTime.UtcNow.Ticks % 0 == 0);
+        public bool ApplyBloodToEnvironment => this.Damage > 0 && (this.Blood == BloodType.Blood || this.Blood == BloodType.Slime || (this.Blood == BloodType.Fire && DateTime.UtcNow.Millisecond % 7 == 0));
     }
 }

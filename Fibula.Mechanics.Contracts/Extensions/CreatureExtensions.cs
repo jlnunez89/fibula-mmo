@@ -12,6 +12,9 @@
 namespace Fibula.Mechanics.Contracts.Extensions
 {
     using System;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
+    using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
@@ -44,6 +47,82 @@ namespace Fibula.Mechanics.Contracts.Extensions
             var durationInMs = (uint)(Math.Ceiling(Math.Floor(totalPenalty / stepSpeed) / Epsilon) * Epsilon * creature.LastMovementCostModifier);
 
             return TimeSpan.FromMilliseconds(durationInMs);
+        }
+
+        /// <summary>
+        /// Gets the location in front of a creature.
+        /// </summary>
+        /// <param name="ofCreature">The creature from which to get the location in front of.</param>
+        /// <returns>The location that's in front of a creature.</returns>
+        public static Location LocationInFront(this ICreature ofCreature)
+        {
+            ofCreature.ThrowIfNull(nameof(ofCreature));
+
+            return ofCreature.Direction switch
+            {
+                Direction.North => ofCreature.Location + new Location() { X = 0, Y = -1, Z = 0 },
+                Direction.East => ofCreature.Location + new Location() { X = 1, Y = 0, Z = 0 },
+                Direction.South => ofCreature.Location + new Location() { X = 0, Y = 1, Z = 0 },
+                Direction.West => ofCreature.Location + new Location() { X = -1, Y = 0, Z = 0 },
+                _ => ofCreature.Location,
+            };
+        }
+
+        /// <summary>
+        /// Gets a random direction adjacent to the creature.
+        /// </summary>
+        /// <param name="ofCreature">The creature from which to get the direction from.</param>
+        /// <param name="includeDiagonals">A value indicating whether to pick from diagonal directions too.</param>
+        /// <param name="rng">Optional. An instance of a pseudo-random number generator to use.</param>
+        /// <returns>The direction that's adjacent to a creature.</returns>
+        public static Direction RandomAdjacentDirection(this ICreature ofCreature, bool includeDiagonals = false, Random rng = null)
+        {
+            ofCreature.ThrowIfNull(nameof(ofCreature));
+
+            if (rng == null)
+            {
+                rng = new Random();
+            }
+
+            var pickedLocation = ofCreature.RandomAdjacentLocation(includeDiagonals, rng);
+
+            return ofCreature.Location.DirectionTo(pickedLocation, includeDiagonals);
+        }
+
+        /// <summary>
+        /// Gets a random location adjacent to the creature.
+        /// </summary>
+        /// <param name="ofCreature">The creature from which to get the location from.</param>
+        /// <param name="includeDiagonals">A value indicating whether to pick from diagonal locations too.</param>
+        /// <param name="rng">Optional. An instance of a pseudo-random number generator to use.</param>
+        /// <returns>The location that's adjacent to a creature.</returns>
+        public static Location RandomAdjacentLocation(this ICreature ofCreature, bool includeDiagonals = false, Random rng = null)
+        {
+            ofCreature.ThrowIfNull(nameof(ofCreature));
+
+            if (rng == null)
+            {
+                rng = new Random();
+            }
+
+            // Instead of picking the offset randomly and then checking for the edge case (middle),
+            // we assign all different values to the adjacent locations and then picked from there.
+            var pickedLocationOffset = includeDiagonals ? rng.Next(8) : rng.Next(4);
+
+            return pickedLocationOffset switch
+            {
+                // Non-diagonals.
+                0 => ofCreature.Location + new Location() { X = 0, Y = -1, Z = 0 },
+                1 => ofCreature.Location + new Location() { X = 1, Y = 0, Z = 0 },
+                2 => ofCreature.Location + new Location() { X = -1, Y = 0, Z = 0 },
+                3 => ofCreature.Location + new Location() { X = 0, Y = 1, Z = 0 },
+
+                // Diagonals.
+                4 => ofCreature.Location + new Location() { X = -1, Y = -1, Z = 0 },
+                5 => ofCreature.Location + new Location() { X = 1, Y = -1, Z = 0 },
+                6 => ofCreature.Location + new Location() { X = -1, Y = 1, Z = 0 },
+                _ => ofCreature.Location + new Location() { X = 1, Y = 1, Z = 0 },
+            };
         }
     }
 }
