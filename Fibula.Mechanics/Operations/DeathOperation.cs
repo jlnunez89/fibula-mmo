@@ -65,7 +65,7 @@ namespace Fibula.Mechanics.Operations
             {
                 this.SendNotification(context, new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, "You are dead."));
 
-                this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerDeathPacket()));
+                this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerCancelWalkPacket(player.Direction), new PlayerDeathPacket()));
             }
 
             // Remove the creature...
