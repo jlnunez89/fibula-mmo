@@ -34,6 +34,7 @@ namespace Fibula.Mechanics
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
     using Fibula.Mechanics.Operations;
     using Fibula.Scheduling;
@@ -505,18 +506,27 @@ namespace Fibula.Mechanics
             if (skilledCreature == null || skillThatChanged == null)
             {
                 this.logger.Warning($"Null {nameof(skilledCreature)} or {nameof(skillThatChanged)} in {nameof(this.SkilledCreatureSkillLevelChanged)}, ignoring...");
+
                 return;
             }
 
             if (skilledCreature is IPlayer player)
             {
-                // TODO: do we need to make this an operation?
                 bool isAdvance = skillThatChanged.Level > previousLevel;
-                var message = $"You {(isAdvance ? "advanced" : "regressed")} in {skillThatChanged.Type}.";
 
-                this.logger.Debug($"{(string.IsNullOrWhiteSpace(skilledCreature.Article) ? skilledCreature.Name : $"{skilledCreature.Article} {skilledCreature.Name}")} {(isAdvance ? "advanced" : "regressed")} in {skillThatChanged.Type}.");
+                var nameToLog = string.IsNullOrWhiteSpace(skilledCreature.Article) ? skilledCreature.Name : $"{skilledCreature.Article} {skilledCreature.Name}";
 
-                this.scheduler.ScheduleEvent(new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, message));
+                this.logger.Debug($"{nameToLog} {(isAdvance ? "advanced" : "regressed")} in skill {skillThatChanged.Type}. {previousLevel} => {skillThatChanged.Level}");
+
+                var changeType = isAdvance ? "advanced" : "regressed";
+                var skillChangeNotificationMessage = skillThatChanged.Type switch
+                {
+                    SkillType.Experience => $"You {changeType} from level {previousLevel} to level {skillThatChanged.Level}.",
+                    SkillType.Magic => $"You {changeType} to magic level {skillThatChanged.Level}.",
+                    _ => $"You {changeType} in {skillThatChanged.Type.ToFriendlySkillName()}.",
+                };
+
+                this.scheduler.ScheduleEvent(new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, skillChangeNotificationMessage));
             }
         }
 

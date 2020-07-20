@@ -33,9 +33,9 @@ namespace Fibula.Creatures
         /// <param name="count">This skill's current count.</param>
         public Skill(SkillType type, uint defaultLevel, double rate, double baseIncrease, uint level = 0, uint maxLevel = 1, double count = 0)
         {
-            if (defaultLevel < 1)
+            if (defaultLevel < 0)
             {
-                throw new ArgumentException($"{nameof(defaultLevel)} must be positive.", nameof(defaultLevel));
+                throw new ArgumentException($"{nameof(defaultLevel)} must not be negative.", nameof(defaultLevel));
             }
 
             if (maxLevel < 1)
