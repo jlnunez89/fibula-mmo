@@ -184,7 +184,7 @@ namespace Fibula.PathFinding.AStar
             var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
             return locationDiff.Z == 0 &&
-                locationDiff.MaxValueIn2D <= this.SearchContext.TargetDistance &&
+                locationDiff.MaxValueIn2D == this.SearchContext.TargetDistance &&
                 this.SearchContext.Map.CanThrowBetweenLocations(this.Tile.Location, goalNode.Tile.Location);
         }
     }

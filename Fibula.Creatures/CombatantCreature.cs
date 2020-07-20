@@ -306,7 +306,7 @@ namespace Fibula.Creatures
 
                 this.AutoAttackTarget = otherCombatant;
 
-                if (this.ChaseMode == ChaseMode.Chase)
+                if (this.ChaseMode != ChaseMode.Stand)
                 {
                     this.SetChaseTarget(otherCombatant);
                 }

@@ -116,6 +116,7 @@ namespace Fibula.Mechanics.Operations
             var isCorrectTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
             var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= 1;
             var inRange = nullAttacker || (distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0);
+            var atIdealDistance = nullAttacker || distanceBetweenCombatants.MaxValueIn2D == this.Attacker.AutoAttackRange;
             var canAttackFromThere = nullAttacker || (inRange && context.Map.CanThrowBetweenLocations(this.Attacker.Location, this.Target.Location));
 
             var attackPerformed = false;
@@ -139,13 +140,22 @@ namespace Fibula.Mechanics.Operations
                         // be expedited (or else it's just processed as usual).
                         this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed * 2));
 
-                        if (this.Attacker.ChaseMode == ChaseMode.Chase && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
+                        if (this.Attacker.ChaseMode != ChaseMode.Stand && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
                         {
                             context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
                         }
                     }
 
                     return;
+                }
+
+                if (!atIdealDistance)
+                {
+                    // While we can actually attack, we may want to move away or closer.
+                    if (this.Attacker.ChaseMode == ChaseMode.KeepDistance && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
+                    {
+                        context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
+                    }
                 }
 
                 if (!enoughCredits)

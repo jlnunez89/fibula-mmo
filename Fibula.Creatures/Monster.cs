@@ -28,6 +28,11 @@ namespace Fibula.Creatures
     public class Monster : CombatantCreature, IMonster
     {
         /// <summary>
+        /// An object used as the lock to semaphore access to <see cref="hostileCombatants"/>.
+        /// </summary>
+        private readonly object hostileCombatantsLock;
+
+        /// <summary>
         /// Stores the set of combatants that are deemed hostile to this monster.
         /// </summary>
         private readonly ISet<ICombatant> hostileCombatants;
@@ -46,12 +51,13 @@ namespace Fibula.Creatures
             this.BaseSpeed += monsterType.BaseSpeed;
 
             this.Blood = monsterType.BloodType;
-            this.ChaseMode = ChaseMode.Chase;
+            this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
             this.FightMode = FightMode.FullAttack;
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
 
             this.hostileCombatants = new HashSet<ICombatant>();
+            this.hostileCombatantsLock = new object();
 
             this.InitializeSkills();
         }
@@ -94,7 +100,16 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the collection of tracked combatants.
         /// </summary>
-        public override IEnumerable<ICombatant> TrackedCombatants => this.hostileCombatants;
+        public override IEnumerable<ICombatant> TrackedCombatants
+        {
+            get
+            {
+                lock (this.hostileCombatantsLock)
+                {
+                    return this.hostileCombatants.ToList();
+                }
+            }
+        }
 
         /// <summary>
         /// Starts tracking another <see cref="ICombatant"/>.
@@ -102,13 +117,18 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StartTrackingCombatant(ICombatant otherCombatant)
         {
-            if (otherCombatant is IPlayer)
+            if (this == otherCombatant)
+            {
+                return;
+            }
+
+            lock (this.hostileCombatantsLock)
             {
                 this.hostileCombatants.Add(otherCombatant);
 
                 if (this.hostileCombatants.Count == 1)
                 {
-                    this.ChaseMode = ChaseMode.Chase;
+                    this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
                     this.SetAttackTarget(otherCombatant);
                 }
             }
@@ -120,7 +140,12 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StopTrackingCombatant(ICombatant otherCombatant)
         {
-            if (otherCombatant is IPlayer)
+            if (this == otherCombatant)
+            {
+                return;
+            }
+
+            lock (this.hostileCombatantsLock)
             {
                 this.hostileCombatants.Remove(otherCombatant);
 
@@ -179,6 +204,13 @@ namespace Fibula.Creatures
                 this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, rate: 1.1, 10, 10, 150);
                 this.Skills[SkillType.Shield].Advanced += this.RaiseSkillLevelAdvance;
                 this.Skills[SkillType.Shield].PercentChanged += this.RaiseSkillPercentChange;
+            }
+
+            if (!this.Skills.ContainsKey(SkillType.NoWeapon))
+            {
+                this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 1, rate: 1.0, 100, 1, 0);
+                this.Skills[SkillType.NoWeapon].Advanced += this.RaiseSkillLevelAdvance;
+                this.Skills[SkillType.NoWeapon].PercentChanged += this.RaiseSkillPercentChange;
             }
         }
     }
