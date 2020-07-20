@@ -48,7 +48,7 @@ namespace Fibula.Creatures
             this.Type = monsterType;
             this.Outfit = monsterType.Outfit;
 
-            this.BaseSpeed += monsterType.BaseSpeed;
+            this.BaseSpeed = monsterType.BaseSpeed;
 
             this.Blood = monsterType.BloodType;
             this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
