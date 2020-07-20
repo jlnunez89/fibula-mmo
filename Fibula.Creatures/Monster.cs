@@ -117,7 +117,7 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StartTrackingCombatant(ICombatant otherCombatant)
         {
-            if (this == otherCombatant)
+            if (this == otherCombatant || !(otherCombatant is IPlayer))
             {
                 return;
             }
@@ -140,7 +140,7 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StopTrackingCombatant(ICombatant otherCombatant)
         {
-            if (this == otherCombatant)
+            if (this == otherCombatant || !(otherCombatant is IPlayer))
             {
                 return;
             }
@@ -201,14 +201,14 @@ namespace Fibula.Creatures
 
             if (!this.Skills.ContainsKey(SkillType.Shield))
             {
-                this.Skills[SkillType.Shield] = new Skill(SkillType.Shield, 10, rate: 1.1, 10, 10, 150);
+                this.Skills[SkillType.Shield] = new MonsterSkill(SkillType.Shield, Math.Min(int.MaxValue, this.Type.BaseDefense), 0, int.MaxValue, 100, 1100, 5);
                 this.Skills[SkillType.Shield].Advanced += this.RaiseSkillLevelAdvance;
                 this.Skills[SkillType.Shield].PercentChanged += this.RaiseSkillPercentChange;
             }
 
             if (!this.Skills.ContainsKey(SkillType.NoWeapon))
             {
-                this.Skills[SkillType.NoWeapon] = new Skill(SkillType.NoWeapon, 1, rate: 1.0, 100, 1, 0);
+                this.Skills[SkillType.NoWeapon] = new MonsterSkill(SkillType.NoWeapon, Math.Min(int.MaxValue, this.Type.BaseAttack), 0, int.MaxValue, 100, 1100, 5);
                 this.Skills[SkillType.NoWeapon].Advanced += this.RaiseSkillLevelAdvance;
                 this.Skills[SkillType.NoWeapon].PercentChanged += this.RaiseSkillPercentChange;
             }
