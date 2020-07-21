@@ -80,7 +80,7 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IElevatedOperationContext context)
         {
             // This will eventually come from the character, or fall back.
-            var targetLoginLocation = MapConstants.ThaisTempleMark;
+            var targetLoginLocation = MapConstants.FibulaMark;
 
             var creationArguments = new PlayerCreationArguments()
             {

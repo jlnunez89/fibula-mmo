@@ -43,5 +43,15 @@ namespace Fibula.Map.Contracts.Constants
         /// The mark for the temple in Thais.
         /// </summary>
         public static readonly Location ThaisTempleMark = new Location { X = 32369, Y = 32241, Z = 7 };
+
+        /// <summary>
+        /// The mark for Fibula downdown.
+        /// </summary>
+        public static readonly Location FibulaMark = new Location { X = 32176, Y = 32437, Z = 7 };
+
+        /// <summary>
+        /// The mark for Elvenbane.
+        /// </summary>
+        public static readonly Location ElvenbaneMark = new Location { X = 32590, Y = 31657, Z = 7 };
     }
 }
