@@ -12,6 +12,7 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Data.Entities.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for an <see cref="IMonsterTypeLoader"/> loader.
@@ -22,6 +23,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Attempts to load the monster catalog.
         /// </summary>
         /// <returns>The catalog, containing a mapping of loaded id to the monster types.</returns>
-        IDictionary<ushort, IMonsterType> LoadTypes();
+        IDictionary<ushort, IMonsterTypeEntity> LoadTypes();
     }
 }

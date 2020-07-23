@@ -12,7 +12,7 @@
 namespace Fibula.Common.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Delegates;
-    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for skills in the game.

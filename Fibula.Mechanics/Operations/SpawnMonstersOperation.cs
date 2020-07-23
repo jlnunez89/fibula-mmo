@@ -17,6 +17,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Data.Entities;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -60,14 +61,26 @@ namespace Fibula.Mechanics.Operations
         {
             var rng = new Random();
 
+            using var uow = context.ApplicationContext.CreateNewUnitOfWork();
+
             for (int i = 0; i < this.Spawn.Count; i++)
             {
                 var r = this.Spawn.Radius / 4;
+
+                var monsterType = uow.Monsters.GetById(this.Spawn.MonsterRaceId.ToString());
+
+                if (!(monsterType is MonsterTypeEntity monsterTypeEntity))
+                {
+                    context.Logger.Warning($"Unable to place monster. Could not find a monster with the id {this.Spawn.MonsterRaceId} in the repository. ({nameof(SpawnMonstersOperation)})");
+
+                    return;
+                }
+
                 var newMonster = context.CreatureFactory.Create(
                     new CreatureCreationArguments()
                     {
                         Type = CreatureType.Monster,
-                        Metadata = new MonsterCreationMetadata(this.Spawn.MonsterTypeId),
+                        Metadata = monsterTypeEntity,
                     }) as IMonster;
 
                 var randomLoc = this.Spawn.Location + new Location { X = (int)Math.Round(r * Math.Cos(rng.Next(360))), Y = (int)Math.Round(r * Math.Sin(rng.Next(360))), Z = 0 };

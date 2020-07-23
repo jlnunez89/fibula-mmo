@@ -18,6 +18,9 @@ namespace Fibula.Creatures
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
     using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Extensions;
+    using Fibula.Data.Entities.Contracts.Abstractions;
+    using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Structs;
@@ -42,8 +45,8 @@ namespace Fibula.Creatures
         /// </summary>
         /// <param name="monsterType">The type of this monster.</param>
         /// <param name="itemFactory">A reference to the item factory in use, for inventory generation.</param>
-        public Monster(IMonsterType monsterType, IItemFactory itemFactory)
-            : base(monsterType.Name, monsterType.Article, monsterType.MaxHitPoints, monsterType.MaxManaPoints, monsterType.Corpse)
+        public Monster(IMonsterTypeEntity monsterType, IItemFactory itemFactory)
+            : base(monsterType.Name, monsterType.Article, monsterType.MaxHitpoints, monsterType.MaxManapoints, monsterType.Corpse)
         {
             this.Type = monsterType;
             this.Outfit = monsterType.Outfit;
@@ -51,7 +54,7 @@ namespace Fibula.Creatures
             this.BaseSpeed = monsterType.BaseSpeed;
 
             this.Blood = monsterType.BloodType;
-            this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+            this.ChaseMode = this.AutoAttackRange > 1 ? ChaseMode.KeepDistance : ChaseMode.Chase;
             this.FightMode = FightMode.FullAttack;
 
             this.Inventory = new MonsterInventory(itemFactory, this, monsterType.InventoryComposition);
@@ -65,7 +68,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the type of this monster.
         /// </summary>
-        public IMonsterType Type { get; }
+        public IMonsterTypeEntity Type { get; }
 
         /// <summary>
         /// Gets the experience yielded when this monster dies.
@@ -80,12 +83,12 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets a value indicating whether this monster can be moved by others.
         /// </summary>
-        public override bool CanBeMoved => !this.Type.HasFlag(CreatureFlag.Unpushable);
+        public override bool CanBeMoved => !this.Type.HasCreatureFlag(CreatureFlag.CannotBePushed);
 
         /// <summary>
         /// Gets the range that the auto attack has.
         /// </summary>
-        public override byte AutoAttackRange => (byte)(this.Type.HasFlag(CreatureFlag.DistanceFighting) ? MonsterConstants.DefaultDistanceFightingAttackRange : MonsterConstants.DefaultMeleeFightingAttackRange);
+        public override byte AutoAttackRange => (byte)(this.Type.HasCreatureFlag(CreatureFlag.KeepsDistance) ? MonsterConstants.DefaultDistanceFightingAttackRange : MonsterConstants.DefaultMeleeFightingAttackRange);
 
         /// <summary>
         /// Gets or sets the monster speed.
@@ -128,7 +131,7 @@ namespace Fibula.Creatures
 
                 if (this.hostileCombatants.Count == 1)
                 {
-                    this.ChaseMode = this.Type.HasFlag(CreatureFlag.DistanceFighting) ? ChaseMode.KeepDistance : ChaseMode.Chase;
+                    this.ChaseMode = this.Type.HasCreatureFlag(CreatureFlag.KeepsDistance) ? ChaseMode.KeepDistance : ChaseMode.Chase;
                     this.SetAttackTarget(otherCombatant);
                 }
             }

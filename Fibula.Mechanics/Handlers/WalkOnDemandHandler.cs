@@ -12,9 +12,7 @@
 namespace Fibula.Mechanics.Handlers
 {
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations;
     using Fibula.Client.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;

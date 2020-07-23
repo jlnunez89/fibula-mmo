@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.Contracts.Structs
+namespace Fibula.Data.Entities.Contracts.Structs
 {
     /// <summary>
     /// Structure for creature outfits.

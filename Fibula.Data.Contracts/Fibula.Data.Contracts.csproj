@@ -8,6 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Abstractions\IAccountRepository.cs" />
+    <Compile Remove="Abstractions\ICharacterRepository.cs" />
+    <Compile Remove="Abstractions\IMonsterTypeReadOnlyRepository.cs" />
     <Compile Remove="MapConstants.cs" />
   </ItemGroup>
 

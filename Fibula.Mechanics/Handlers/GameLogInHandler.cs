@@ -20,7 +20,6 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Data;
     using Fibula.Data.Entities;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -94,60 +93,49 @@ namespace Fibula.Mechanics.Handlers
                 return new GameServerDisconnectPacket("The game is just starting.\nPlease try again in a few minutes.").YieldSingleItem();
             }
 
-            using var unitOfWork = new UnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
+            using var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork();
 
-            AccountEntity account = unitOfWork.Accounts.FindOne(a => a.Number == loginInfo.AccountNumber && a.Password.Equals(loginInfo.Password));
-            CharacterEntity character = null;
-
-            if (account == null)
+            if (!(unitOfWork.Accounts.FindOne(a => a.Number == loginInfo.AccountNumber && a.Password.Equals(loginInfo.Password)) is AccountEntity account))
             {
                 // TODO: hardcoded messages.
                 return new GameServerDisconnectPacket("The account number and password combination is invalid.").YieldSingleItem();
             }
-            else
+
+            if (!(unitOfWork.Characters.FindOne(c => c.AccountId.Equals(account.Id) && c.Name.Equals(loginInfo.CharacterName)) is CharacterEntity character))
             {
-                character = unitOfWork.Characters.FindOne(c => c.AccountId.Equals(account.Id) && c.Name.Equals(loginInfo.CharacterName));
+                // TODO: hardcoded messages.
+                return new GameServerDisconnectPacket("The character selected was not found in this account.").YieldSingleItem();
+            }
 
-                CharacterEntity otherCharacterOnline = unitOfWork.Characters.FindOne(c => c.IsOnline && c.AccountId == account.Id && !c.Name.Equals(loginInfo.CharacterName));
-
-                if (character == null)
+            // Check bannishment.
+            if (account.Banished)
+            {
+                // Lift if time is up
+                if (account.Banished && account.BanishedUntil > DateTimeOffset.UtcNow)
                 {
                     // TODO: hardcoded messages.
-                    return new GameServerDisconnectPacket("The character selected was not found in this account.").YieldSingleItem();
+                    return new GameServerDisconnectPacket("Your account is bannished.").YieldSingleItem();
                 }
                 else
                 {
-                    // Check bannishment.
-                    if (account.Banished)
-                    {
-                        // Lift if time is up
-                        if (account.Banished && account.BanishedUntil > DateTimeOffset.UtcNow)
-                        {
-                            // TODO: hardcoded messages.
-                            return new GameServerDisconnectPacket("Your account is bannished.").YieldSingleItem();
-                        }
-                        else
-                        {
-                            account.Banished = false;
-                        }
-                    }
-                    else if (account.Deleted)
-                    {
-                        // TODO: hardcoded messages.
-                        return new GameServerDisconnectPacket("Your account is disabled.\nPlease contact us for more information.").YieldSingleItem();
-                    }
-                    else if (otherCharacterOnline != null)
-                    {
-                        // TODO: hardcoded messages.
-                        // return new GameServerDisconnectPacket("Another character in your account is online.").YieldSingleItem();
-                    }
-                    else if (this.Game.WorldInfo.Status == WorldState.Closed)
-                    {
-                        // TODO: hardcoded messages.
-                        // Check if game is open to the public.
-                        return new GameServerDisconnectPacket("This game world is not open to the public yet.\nCheck your access or the news on our webpage.").YieldSingleItem();
-                    }
+                    account.Banished = false;
                 }
+            }
+            else if (account.Deleted)
+            {
+                // TODO: hardcoded messages.
+                return new GameServerDisconnectPacket("Your account is disabled.\nPlease contact us for more information.").YieldSingleItem();
+            }
+            else if (unitOfWork.Characters.FindOne(c => c.IsOnline && c.AccountId == account.Id && !c.Name.Equals(loginInfo.CharacterName)) is CharacterEntity otherCharacterOnline)
+            {
+                // TODO: hardcoded messages.
+                // return new GameServerDisconnectPacket("Another character in your account is online.").YieldSingleItem();
+            }
+            else if (this.Game.WorldInfo.Status == WorldState.Closed)
+            {
+                // TODO: hardcoded messages.
+                // Check if game is open to the public.
+                return new GameServerDisconnectPacket("This game world is not open to the public yet.\nCheck your access or the news on our webpage.").YieldSingleItem();
             }
 
             // Set player status to online.

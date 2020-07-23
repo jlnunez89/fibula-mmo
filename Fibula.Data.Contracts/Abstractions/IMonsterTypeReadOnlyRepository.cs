@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IMonster.cs" company="2Dudes">
+// <copyright file="IMonsterTypeReadOnlyRepository.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,23 +9,16 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.Contracts.Abstractions
+namespace Fibula.Data.Contracts.Abstractions
 {
     using Fibula.Data.Entities.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for all monsters.
+    /// Interface for a monster type repository, which is read-only.
     /// </summary>
-    public interface IMonster : ICreature
+    /// <typeparam name="TEntity">The type of entity.</typeparam>
+    public interface IMonsterTypeReadOnlyRepository<TEntity> : IReadOnlyRepository<TEntity>
+        where TEntity : IMonsterTypeEntity
     {
-        /// <summary>
-        /// Gets the type of this monster.
-        /// </summary>
-        IMonsterTypeEntity Type { get; }
-
-        /// <summary>
-        /// Gets the experience yielded when this monster dies.
-        /// </summary>
-        uint Experience { get; }
     }
 }

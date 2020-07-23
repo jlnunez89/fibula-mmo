@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Server.Contracts.Enumerations
+namespace Fibula.Parsing.CipFiles.Enumerations
 {
     /// <summary>
     /// Enumerates the possible monster skill types from CIP files.

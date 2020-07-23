@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="MonsterType.cs" company="2Dudes">
+// <copyright file="MonsterTypeEntity.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures
+namespace Fibula.Data.Entities
 {
     using System;
     using System.Collections.Generic;
@@ -18,13 +18,14 @@ namespace Fibula.Creatures
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Abstractions;
+    using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Structs;
 
     /// <summary>
     /// Class that represents a monster type.
     /// </summary>
-    public class MonsterType : IMonsterType
+    public class MonsterTypeEntity : BaseEntity, IMonsterTypeEntity, ICreatureCreationMetadata
     {
         private ushort raceId;
         private string name;
@@ -43,16 +44,15 @@ namespace Fibula.Creatures
         private ushort maxHitPoints;
         private ushort baseSpeed;
         private ushort capacity;
-        private uint flags;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="MonsterType"/> class.
+        /// Initializes a new instance of the <see cref="MonsterTypeEntity"/> class.
         /// </summary>
-        public MonsterType()
+        public MonsterTypeEntity()
         {
             this.RaceId = 0;
             this.Name = string.Empty;
-            this.MaxManaPoints = 0;
+            this.MaxManapoints = 0;
 
             this.BaseAttack = 1;
             this.BaseDefense = 1;
@@ -65,7 +65,6 @@ namespace Fibula.Creatures
             this.ConditionInfect = 0;
 
             // this.KnownSpells = new HashSet<KnownSpell>();
-            this.Flags = (uint)CreatureFlag.None;
             this.Phrases = new List<string>();
             this.Skills = new Dictionary<SkillType, (int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)>();
             this.InventoryComposition = new List<(ushort, byte, ushort)>();
@@ -89,10 +88,11 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.RaceId)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.RaceId)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.raceId = value;
+                this.Id = value.ToString();
             }
         }
 
@@ -107,7 +107,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.name = value.Trim('\"');
@@ -125,7 +125,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Article)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Article)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.article = value.Trim('\"');
@@ -143,7 +143,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseExperienceYield)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseExperienceYield)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.experience = value;
@@ -161,7 +161,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.SummonCost)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.SummonCost)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.summonCost = value;
@@ -179,7 +179,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.HitpointFleeThreshold)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.HitpointFleeThreshold)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.fleeThreshold = value;
@@ -197,7 +197,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.LoseTargetDistance)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.LoseTargetDistance)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.loseTarget = value;
@@ -216,22 +216,10 @@ namespace Fibula.Creatures
         // public ISet<ISpell> KnownSpells { get; private set; }
 
         /// <summary>
-        /// Gets or sets the flags set for this type of monster.
+        /// Gets the flags set for this type of monster.
         /// </summary>
-        public uint Flags
-        {
-            get => this.flags;
-
-            set
-            {
-                if (this.Locked)
-                {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Flags)}. The {nameof(MonsterType)} is locked and cannot be altered.");
-                }
-
-                this.flags = value;
-            }
-        }
+        /// <remarks>The flags are stored as bits in a 64 bit unsigned integer.</remarks>
+        public ulong Flags { get; private set; }
 
         /// <summary>
         /// Gets the skills that this type of monster starts with.
@@ -259,7 +247,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Outfit)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Outfit)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.outfit = value;
@@ -277,7 +265,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Corpse)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Corpse)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.corpse = value;
@@ -287,7 +275,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets or sets the maximum hitpoints that this monster type starts with.
         /// </summary>
-        public ushort MaxHitPoints
+        public ushort MaxHitpoints
         {
             get => this.maxHitPoints;
 
@@ -295,7 +283,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.MaxHitPoints)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.MaxHitpoints)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.maxHitPoints = value;
@@ -305,7 +293,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the maximum manapoints that this monster type starts with.
         /// </summary>
-        public ushort MaxManaPoints { get; private set; }
+        public ushort MaxManapoints { get; private set; }
 
         /// <summary>
         /// Gets or sets the type of blood of this monster type.
@@ -318,7 +306,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BloodType)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BloodType)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.bloodType = value;
@@ -336,7 +324,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseSpeed)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseSpeed)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.baseSpeed = value;
@@ -354,7 +342,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Capacity)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Capacity)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.capacity = value;
@@ -372,7 +360,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Strategy)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Strategy)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.strategy = value;
@@ -390,7 +378,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseAttack)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseAttack)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.baseAttack = value;
@@ -408,7 +396,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseDefense)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseDefense)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.baseDefense = value;
@@ -426,7 +414,7 @@ namespace Fibula.Creatures
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseArmorRating)}. The {nameof(MonsterType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.BaseArmorRating)}. The {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.baseArmorRating = value;
@@ -442,13 +430,17 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Checks if the monster type has the given flag set.
+        /// Sets a creature flag in this type's <see cref="Flags"/>.
         /// </summary>
-        /// <param name="flag">The flag to check for.</param>
-        /// <returns>True if the type has the flag set, false otherwise.</returns>
-        public bool HasFlag(CreatureFlag flag)
+        /// <param name="creatureFlag">The flag to set in the type.</param>
+        public void SetCreatureFlag(CreatureFlag creatureFlag)
         {
-            return (this.Flags & (uint)flag) == (uint)flag;
+            if (this.Locked)
+            {
+                throw new InvalidOperationException($"This type is locked and cannot be altered. {nameof(this.SetCreatureFlag)}({nameof(creatureFlag)}={creatureFlag}");
+            }
+
+            this.Flags |= (ulong)creatureFlag;
         }
 
         /// <summary>
@@ -475,7 +467,7 @@ namespace Fibula.Creatures
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
+                throw new InvalidOperationException($"This {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
             }
 
             // TODO: implement.
@@ -489,7 +481,7 @@ namespace Fibula.Creatures
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
+                throw new InvalidOperationException($"This {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
             }
 
             // TODO: implement.
@@ -511,7 +503,7 @@ namespace Fibula.Creatures
 
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
+                throw new InvalidOperationException($"This {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
             }
 
             foreach (var entry in possibleInventory)
@@ -528,7 +520,7 @@ namespace Fibula.Creatures
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This {nameof(MonsterType)} is locked and cannot be altered.");
+                throw new InvalidOperationException($"This {nameof(MonsterTypeEntity)} is locked and cannot be altered.");
             }
 
             if (phrases == null || !phrases.Any())

@@ -20,9 +20,9 @@ namespace Fibula.Creatures.Contracts.Structs
     public struct Spawn
     {
         /// <summary>
-        /// Gets or sets the id of entities in this spawn.
+        /// Gets or sets the race id of monsters in this spawn.
         /// </summary>
-        public ushort MonsterTypeId { get; set; }
+        public ushort MonsterRaceId { get; set; }
 
         /// <summary>
         /// Gets or sets the location of the spawn.

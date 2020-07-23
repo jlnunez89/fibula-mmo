@@ -12,49 +12,59 @@
 namespace Fibula.Data
 {
     using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
-    using Fibula.Data.Entities;
     using Fibula.Data.Repositories;
     using Microsoft.EntityFrameworkCore;
 
     using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
-        Fibula.Data.Entities.AccountEntity,
-        Fibula.Data.Entities.CharacterEntity>;
+        Fibula.Data.Repositories.AccountRepository,
+        Fibula.Data.Repositories.CharacterRepository,
+        Fibula.Data.Repositories.MonsterTypeReadOnlyRepository>;
 
     /// <summary>
     /// Class that represents a unit of work for the Fibula project.
+    /// All operations that persist data to whatever the underlying storage is, should be done within the same
+    /// unit of work and persisted at the end of it by invoking <see cref="Complete"/>.
     /// </summary>
     public class UnitOfWork : IUnitOfWork
     {
         /// <summary>
-        /// A reference to the underlying context on this unit of work.
+        /// A reference to the underlying database context on this unit of work.
         /// </summary>
-        private readonly DbContext context;
+        private readonly DbContext databaseContext;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
         /// <param name="context">The context to work on.</param>
-        public UnitOfWork(IFibulaDbContext context)
+        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        public UnitOfWork(IFibulaDbContext context, IMonsterTypeLoader monsterTypeLoader)
         {
             context.ThrowIfNull(nameof(context));
 
-            this.context = context.AsDbContext();
-            this.context.Database.EnsureCreatedAsync().Wait();
+            this.databaseContext = context.AsDbContext();
+            this.databaseContext.Database.EnsureCreatedAsync().Wait();
 
-            this.Accounts = new AccountRepository(this.context);
-            this.Characters = new CharacterRepository(this.context);
+            this.Accounts = new AccountRepository(this.databaseContext);
+            this.Characters = new CharacterRepository(this.databaseContext);
+            this.Monsters = new MonsterTypeReadOnlyRepository(monsterTypeLoader);
         }
 
         /// <summary>
         /// Gets a reference to the accounts repository.
         /// </summary>
-        public IAccountRepository<AccountEntity> Accounts { get; }
+        public AccountRepository Accounts { get; }
 
         /// <summary>
         /// Gets a reference to the characters repository.
         /// </summary>
-        public ICharacterRepository<CharacterEntity> Characters { get; }
+        public CharacterRepository Characters { get; }
+
+        /// <summary>
+        /// Gets a reference to the monsters repository.
+        /// </summary>
+        public MonsterTypeReadOnlyRepository Monsters { get; }
 
         /// <summary>
         /// Completes this unit of work.
@@ -62,7 +72,7 @@ namespace Fibula.Data
         /// <returns>The number of changes saved upon completion of this unit of work.</returns>
         public int Complete()
         {
-            return this.context.SaveChanges();
+            return this.databaseContext.SaveChanges();
         }
 
         /// <summary>
@@ -70,7 +80,7 @@ namespace Fibula.Data
         /// </summary>
         public void Dispose()
         {
-            this.context.Dispose();
+            this.databaseContext.Dispose();
         }
     }
 }

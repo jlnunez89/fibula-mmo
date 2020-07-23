@@ -15,7 +15,6 @@ namespace Fibula.Mechanics
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
@@ -29,6 +28,8 @@ namespace Fibula.Mechanics
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Data.Entities;
+    using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
@@ -57,6 +58,11 @@ namespace Fibula.Mechanics
         /// A reference to the logger in use.
         /// </summary>
         private readonly ILogger logger;
+
+        /// <summary>
+        /// Stores the application context.
+        /// </summary>
+        private readonly IApplicationContext applicationContext;
 
         /// <summary>
         /// Stores the scheduler used by the game.
@@ -117,6 +123,7 @@ namespace Fibula.Mechanics
         /// Initializes a new instance of the <see cref="Game"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="applicationContext">A reference to the application context.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="map">A reference to the map.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
@@ -129,6 +136,7 @@ namespace Fibula.Mechanics
         /// <param name="scheduler">A reference to the global scheduler instance.</param>
         public Game(
             ILogger logger,
+            IApplicationContext applicationContext,
             IMapDescriptor mapDescriptor,
             IMap map,
             ICreatureManager creatureManager,
@@ -141,6 +149,7 @@ namespace Fibula.Mechanics
             IScheduler scheduler)
         {
             logger.ThrowIfNull(nameof(logger));
+            applicationContext.ThrowIfNull(nameof(applicationContext));
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             map.ThrowIfNull(nameof(map));
             creatureManager.ThrowIfNull(nameof(creatureManager));
@@ -153,6 +162,7 @@ namespace Fibula.Mechanics
             scheduler.ThrowIfNull(nameof(scheduler));
 
             this.logger = logger.ForContext<Game>();
+            this.applicationContext = applicationContext;
             this.mapDescriptor = mapDescriptor;
             this.map = map;
             this.creatureManager = creatureManager;
@@ -631,7 +641,18 @@ namespace Fibula.Mechanics
         /// <param name="location">The location at which to place the monster.</param>
         public void PlaceMonsterAt(ushort raceId, Location location)
         {
-            var newMonster = this.creatureFactory.Create(new CreatureCreationArguments() { Type = CreatureType.Monster, Metadata = new MonsterCreationMetadata(raceId), }) as IMonster;
+            using var uow = this.applicationContext.CreateNewUnitOfWork();
+
+            var monsterType = uow.Monsters.GetById(raceId.ToString());
+
+            if (!(monsterType is MonsterTypeEntity monsterTypeEntity))
+            {
+                this.logger.Warning($"Unable to place monster. Could not find a monster with the id {raceId} in the repository. ({nameof(this.PlaceMonsterAt)})");
+
+                return;
+            }
+
+            var newMonster = this.creatureFactory.Create(new CreatureCreationArguments() { Type = CreatureType.Monster, Metadata = monsterTypeEntity }) as IMonster;
 
             if (this.map.GetTileAt(location, out ITile targetTile) && !targetTile.IsPathBlocking())
             {
@@ -831,6 +852,7 @@ namespace Fibula.Mechanics
             {
                 return new ElevatedOperationContext(
                     this.logger,
+                    this.applicationContext,
                     this.mapDescriptor,
                     this.map,
                     this.creatureManager,

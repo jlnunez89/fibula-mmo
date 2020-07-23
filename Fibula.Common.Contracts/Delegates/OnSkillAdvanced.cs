@@ -11,7 +11,7 @@
 
 namespace Fibula.Common.Contracts.Delegates
 {
-    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
     /// Delegate meant for a skill level advancement.

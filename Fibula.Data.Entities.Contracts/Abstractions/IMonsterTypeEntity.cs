@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IMonsterType.cs" company="2Dudes">
+// <copyright file="IMonsterTypeEntity.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,24 +9,17 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.Contracts.Abstractions
+namespace Fibula.Data.Entities.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Structs;
 
     /// <summary>
-    /// Inferface for a monster type.
+    /// Interface for 'types of monster' entities.
     /// </summary>
-    public interface IMonsterType
+    public interface IMonsterTypeEntity : IIdentifiableEntity
     {
-        /// <summary>
-        /// Gets a value indicating whether this type is locked and thus, no changes are allowed.
-        /// </summary>
-        bool Locked { get; }
-
         /// <summary>
         /// Gets the id of the monster race.
         /// </summary>
@@ -62,12 +55,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// </summary>
         byte LoseTargetDistance { get; }
 
-        /// <summary>
-        /// Gets an encoded value containing <see cref="ConditionFlag"/>s, detailing if this type of monster infects upon
-        /// successfuly dealing basic damange in combat.
-        /// </summary>
-        ushort ConditionInfect { get; }
-
         ///// <summary>
         ///// Gets a collection of spells known by this type of monster.
         ///// </summary>
@@ -76,7 +63,8 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the flags set for this type of monster.
         /// </summary>
-        uint Flags { get; }
+        /// <remarks>The flags are stored as bits in a 64 bit unsigned integer.</remarks>
+        ulong Flags { get; }
 
         /// <summary>
         /// Gets the skills that this type of monster starts with.
@@ -106,12 +94,12 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the maximum hitpoints that this monster type starts with.
         /// </summary>
-        ushort MaxHitPoints { get; }
+        ushort MaxHitpoints { get; }
 
         /// <summary>
         /// Gets the maximum manapoints that this monster type starts with.
         /// </summary>
-        ushort MaxManaPoints { get; }
+        ushort MaxManapoints { get; }
 
         /// <summary>
         /// Gets the type of blood of this monster type.
@@ -147,12 +135,5 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets the base armor rating for this type of monster.
         /// </summary>
         ushort BaseArmorRating { get; }
-
-        /// <summary>
-        /// Checks if the monster type has the given flag set.
-        /// </summary>
-        /// <param name="flag">The flag to check for.</param>
-        /// <returns>True if the type has the flag set, false otherwise.</returns>
-        bool HasFlag(CreatureFlag flag);
     }
 }

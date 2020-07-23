@@ -19,10 +19,13 @@ namespace Fibula.Creatures.MonFiles
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
+    using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Parsing.CipFiles;
-    using Fibula.Server.Contracts.Enumerations;
+    using Fibula.Parsing.CipFiles.Enumerations;
+    using Fibula.Parsing.CipFiles.Extensions;
     using Microsoft.Extensions.Options;
     using Serilog;
 
@@ -87,9 +90,9 @@ namespace Fibula.Creatures.MonFiles
         /// Attempts to load the monster catalog.
         /// </summary>
         /// <returns>The catalog, containing a mapping of loaded id to the monster types.</returns>
-        public IDictionary<ushort, IMonsterType> LoadTypes()
+        public IDictionary<ushort, IMonsterTypeEntity> LoadTypes()
         {
-            var monsterTypesDictionary = new Dictionary<ushort, IMonsterType>();
+            var monsterTypesDictionary = new Dictionary<ushort, IMonsterTypeEntity>();
 
             if (!this.monsterFilesDirInfo.Exists)
             {
@@ -110,11 +113,11 @@ namespace Fibula.Creatures.MonFiles
         }
 
         /// <summary>
-        /// Reads a <see cref="IMonsterType"/> out of a monster file.
+        /// Reads a <see cref="IMonsterTypeEntity"/> out of a monster file.
         /// </summary>
         /// <param name="monsterFileInfo">The information about the monster file.</param>
-        /// <returns>The <see cref="IMonsterType"/> instance.</returns>
-        private IMonsterType ReadMonsterFile(FileInfo monsterFileInfo)
+        /// <returns>The <see cref="IMonsterTypeEntity"/> instance.</returns>
+        private IMonsterTypeEntity ReadMonsterFile(FileInfo monsterFileInfo)
         {
             monsterFileInfo.ThrowIfNull(nameof(monsterFileInfo));
 
@@ -123,7 +126,7 @@ namespace Fibula.Creatures.MonFiles
                 return null;
             }
 
-            var monsterType = new MonsterType();
+            var monsterType = new MonsterTypeEntity();
 
             foreach ((string name, string value) in this.ReadInDataTuples(File.ReadLines(monsterFileInfo.FullName), monsterFileInfo.FullName))
             {
@@ -197,9 +200,12 @@ namespace Fibula.Creatures.MonFiles
                                 continue;
                             }
 
-                            if (Enum.TryParse(element.Attributes.First().Name, out CreatureFlag creatureFlag))
+                            if (Enum.TryParse(element.Attributes.First().Name, out CipCreatureFlag flagMatch))
                             {
-                                monsterType.Flags |= (uint)creatureFlag;
+                                if (flagMatch.ToCreatureFlag() is CreatureFlag creatureFlag)
+                                {
+                                    monsterType.SetCreatureFlag(creatureFlag);
+                                }
                             }
                         }
 
@@ -217,7 +223,7 @@ namespace Fibula.Creatures.MonFiles
                             switch (mSkill)
                             {
                                 case CipMonsterSkillType.Hitpoints:
-                                    monsterType.MaxHitPoints = skill.CurrentLevel < 0 ? ushort.MaxValue : (ushort)skill.DefaultLevel;
+                                    monsterType.MaxHitpoints = skill.CurrentLevel < 0 ? ushort.MaxValue : (ushort)skill.DefaultLevel;
                                     break;
                                 case CipMonsterSkillType.GoStrength:
                                     monsterType.BaseSpeed = skill.CurrentLevel < 0 ? ushort.MinValue : (ushort)skill.DefaultLevel;

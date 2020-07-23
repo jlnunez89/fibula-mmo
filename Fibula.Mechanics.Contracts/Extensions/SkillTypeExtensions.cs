@@ -12,7 +12,7 @@
 namespace Fibula.Mechanics.Contracts.Extensions
 {
     using System;
-    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
     /// Helper class for extension methods of skill types.

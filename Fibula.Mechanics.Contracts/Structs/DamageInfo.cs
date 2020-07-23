@@ -13,7 +13,7 @@ namespace Fibula.Mechanics.Contracts.Structs
 {
     using System;
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>

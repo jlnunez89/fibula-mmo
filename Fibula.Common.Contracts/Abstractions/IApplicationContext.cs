@@ -17,6 +17,11 @@ namespace Fibula.Common.Contracts.Abstractions
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
 
+    using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
+        Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity>,
+        Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity>,
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>>;
+
     /// <summary>
     /// Interface that represents the common context of the entire application.
     /// </summary>
@@ -46,5 +51,11 @@ namespace Fibula.Common.Contracts.Abstractions
         /// Gets the RSA decryptor to use.
         /// </summary>
         IRsaDecryptor RsaDecryptor { get; }
+
+        /// <summary>
+        /// Creates a new <see cref="IUnitOfWork"/> for data access.
+        /// </summary>
+        /// <returns>The instance created.</returns>
+        IUnitOfWork CreateNewUnitOfWork();
     }
 }

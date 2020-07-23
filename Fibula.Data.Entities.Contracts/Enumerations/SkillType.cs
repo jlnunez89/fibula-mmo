@@ -9,10 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts.Enumerations
+namespace Fibula.Data.Entities.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumeration of the possible skills.
+    /// Enumeration of the possible skills in the game.
     /// </summary>
     public enum SkillType : byte
     {

@@ -11,6 +11,7 @@
 
 namespace Fibula.Mechanics.Contracts.Abstractions
 {
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
@@ -18,6 +19,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// </summary>
     public interface IElevatedOperationContext : IOperationContext
     {
+        /// <summary>
+        /// Gets the reference to the application context.
+        /// </summary>
+        IApplicationContext ApplicationContext { get; }
+
         /// <summary>
         /// Gets the reference to the creature manager in use.
         /// </summary>

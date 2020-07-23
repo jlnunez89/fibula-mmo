@@ -11,6 +11,8 @@
 
 namespace Fibula.Mechanics.Operations
 {
+    using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
@@ -27,6 +29,7 @@ namespace Fibula.Mechanics.Operations
         /// Initializes a new instance of the <see cref="ElevatedOperationContext"/> class.
         /// </summary>
         /// <param name="logger">A reference to the logger in use.</param>
+        /// <param name="applicationContext">A reference to the application context.</param>
         /// <param name="mapDescriptor">A reference to the map descriptor in use.</param>
         /// <param name="map">A reference to the map.</param>
         /// <param name="creatureManager">A reference to the creature manager in use.</param>
@@ -40,6 +43,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="scheduler">A reference to the scheduler instance.</param>
         public ElevatedOperationContext(
             ILogger logger,
+            IApplicationContext applicationContext,
             IMapDescriptor mapDescriptor,
             IMap map,
             ICreatureManager creatureManager,
@@ -65,7 +69,15 @@ namespace Fibula.Mechanics.Operations
                 predefinedItemSet,
                 scheduler)
         {
+            applicationContext.ThrowIfNull(nameof(applicationContext));
+
+            this.ApplicationContext = applicationContext;
         }
+
+        /// <summary>
+        /// Gets the reference to the application context.
+        /// </summary>
+        public IApplicationContext ApplicationContext { get; }
 
         /// <summary>
         /// Gets the reference to the creature manager in use.

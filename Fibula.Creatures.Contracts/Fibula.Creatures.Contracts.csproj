@@ -24,6 +24,7 @@
     <Compile Remove="Abstractions\IEventRulesFactory.cs" />
     <Compile Remove="Abstractions\IEventRulesLoader.cs" />
     <Compile Remove="Abstractions\IItemTypeLoader.cs" />
+    <Compile Remove="Abstractions\IMonsterType.cs" />
     <Compile Remove="Abstractions\IMovementOperation.cs" />
     <Compile Remove="Abstractions\IOperation.cs" />
     <Compile Remove="Abstractions\IOperationContext.cs" />
@@ -60,6 +61,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Client.Contracts\Fibula.Client.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Data.Entities.Contracts\Fibula.Data.Entities.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items.Contracts\Fibula.Items.Contracts.csproj" />
   </ItemGroup>
 

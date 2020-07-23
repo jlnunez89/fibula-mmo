@@ -11,7 +11,7 @@
 
 namespace Fibula.Items.Contracts.Abstractions
 {
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
     /// Interface that defines pre-defined items that are used by the server logic.

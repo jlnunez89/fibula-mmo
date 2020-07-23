@@ -19,7 +19,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Structs;
+    using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Security.Encryption;
 

@@ -9,10 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Items.Contracts.Enumerations
+namespace Fibula.Data.Entities.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the possible blood types.
+    /// Enumerates the possible blood type in the game.
     /// </summary>
     public enum BloodType : byte
     {

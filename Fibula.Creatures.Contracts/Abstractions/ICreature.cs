@@ -16,8 +16,8 @@ namespace Fibula.Creatures.Contracts.Abstractions
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
-    using Fibula.Creatures.Contracts.Structs;
-    using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Structs;
 
     /// <summary>
     /// Interface for all creatures in the game.

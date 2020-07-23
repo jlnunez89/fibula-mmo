@@ -14,7 +14,7 @@ namespace Fibula.Creatures
     using System;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Delegates;
-    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a monster's standard skill.

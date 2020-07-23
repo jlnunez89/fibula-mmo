@@ -12,11 +12,11 @@
 namespace Fibula.Creatures
 {
     using System;
-    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
 
     /// <summary>
@@ -25,24 +25,23 @@ namespace Fibula.Creatures
     public class CreatureFactory : ICreatureFactory
     {
         /// <summary>
-        /// Stores the map between the monster race ids and the actual monster types.
-        /// </summary>
-        private readonly IDictionary<ushort, IMonsterType> monsterTypeCatalog;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="CreatureFactory"/> class.
         /// </summary>
-        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        /// <param name="applicationContext">A reference to the application context..</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
-        public CreatureFactory(IMonsterTypeLoader monsterTypeLoader, IItemFactory itemFactory)
+        public CreatureFactory(IApplicationContext applicationContext, IItemFactory itemFactory)
         {
-            monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
+            applicationContext.ThrowIfNull(nameof(applicationContext));
             itemFactory.ThrowIfNull(nameof(itemFactory));
 
-            this.monsterTypeCatalog = monsterTypeLoader.LoadTypes();
-
+            this.ApplicationContext = applicationContext;
             this.ItemFactory = itemFactory;
         }
+
+        /// <summary>
+        /// Gets the application context.
+        /// </summary>
+        public IApplicationContext ApplicationContext { get; }
 
         /// <summary>
         /// Gets the item factory in use.
@@ -76,17 +75,21 @@ namespace Fibula.Creatures
                 // TODO: suppport other types
                 // case CreatureType.NonPlayerCharacter:
                 case CreatureType.Monster:
-                    if (creatureCreationArguments.Metadata == null)
+                    if (creatureCreationArguments.Metadata == null || !ushort.TryParse(creatureCreationArguments.Metadata.Id, out ushort raceId))
                     {
                         throw new ArgumentException("Invalid metadata in creation arguments for a monster.", nameof(creatureCreationArguments));
                     }
 
-                    if (!this.monsterTypeCatalog.TryGetValue(Convert.ToUInt16(creatureCreationArguments.Metadata.Id), out IMonsterType monsterType))
+                    using (var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork())
                     {
-                        throw new ArgumentException($"Unknown monster with Id {creatureCreationArguments.Metadata.Id} in creation arguments for a monster.", nameof(creatureCreationArguments));
+                        if (!(unitOfWork.Monsters.FindOne(m => m.RaceId == raceId) is IMonsterTypeEntity monsterType))
+                        {
+                            throw new ArgumentException($"Unknown monster with Id {creatureCreationArguments.Metadata.Id} in creation arguments for a monster.", nameof(creatureCreationArguments));
+                        }
+
+                        return new Monster(monsterType, this.ItemFactory);
                     }
 
-                    return new Monster(monsterType, this.ItemFactory);
                 case CreatureType.Player:
 
                     if (creatureCreationArguments == null ||

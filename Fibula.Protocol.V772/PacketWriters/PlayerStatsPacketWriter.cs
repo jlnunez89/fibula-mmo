@@ -12,10 +12,10 @@
 namespace Fibula.Protocol.V772.PacketWriters
 {
     using System;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Serilog;
 

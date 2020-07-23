@@ -17,23 +17,31 @@ namespace Fibula.Data.Contracts.Abstractions
     /// <summary>
     /// Interface for units of work that target the Fibula project.
     /// </summary>
-    /// <typeparam name="TAccounts">The type of account entities.</typeparam>
-    /// <typeparam name="TCharacters">The type of character entities.</typeparam>
+    /// <typeparam name="TAccountsRepository">The type of accounts repository.</typeparam>
+    /// <typeparam name="TCharactersRepository">The type of characters repository.</typeparam>
+    /// <typeparam name="TMonsterTypesRepository">The type of monster types repository.</typeparam>
     public interface IUnitOfWork
-        <TAccounts,
-        TCharacters> : IDisposable
-        where TAccounts : IAccountEntity
-        where TCharacters : ICharacterEntity
+        <out TAccountsRepository,
+        out TCharactersRepository,
+        out TMonsterTypesRepository> : IDisposable
+        where TAccountsRepository : IRepository<IAccountEntity>
+        where TCharactersRepository : IRepository<ICharacterEntity>
+        where TMonsterTypesRepository : IReadOnlyRepository<IMonsterTypeEntity>
     {
         /// <summary>
         /// Gets the repository of accounts.
         /// </summary>
-        IAccountRepository<TAccounts> Accounts { get; }
+        TAccountsRepository Accounts { get; }
 
         /// <summary>
         /// Gets the repository of characters.
         /// </summary>
-        ICharacterRepository<TCharacters> Characters { get; }
+        TCharactersRepository Characters { get; }
+
+        /// <summary>
+        /// Gets the repository of monsters.
+        /// </summary>
+        TMonsterTypesRepository Monsters { get; }
 
         /// <summary>
         /// Saves all changes made during this unit of work to the persistent store.

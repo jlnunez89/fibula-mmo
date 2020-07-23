@@ -16,12 +16,19 @@ namespace Fibula.Common
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Data;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
     using Microsoft.ApplicationInsights.Extensibility;
     using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
     using Microsoft.Extensions.Options;
+
+    using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
+        Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity>,
+        Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity>,
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>>;
 
     /// <summary>
     /// Class that represents the common context of the entire application.
@@ -34,23 +41,31 @@ namespace Fibula.Common
         private readonly Func<IFibulaDbContext> contextGenerationFunction;
 
         /// <summary>
+        /// Stores the reference to the monster type loader in use.
+        /// </summary>
+        private readonly IMonsterTypeLoader monsterTypeLoader;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationContext"/> class.
         /// </summary>
         /// <param name="options">A reference to the application configuration.</param>
         /// <param name="telemetryOptions">A reference to the telemetry configuration that will be used to create the telemetry client.</param>
         /// <param name="rsaDecryptor">A reference to the RSA decryptor in use.</param>
+        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
         /// <param name="cancellationTokenSource">A reference to the master cancellation token source.</param>
         /// <param name="dbContextGenerationFunc">A reference to a function to generate the database context.</param>
         public ApplicationContext(
             IOptions<ApplicationContextOptions> options,
             IOptions<TelemetryConfiguration> telemetryOptions,
             IRsaDecryptor rsaDecryptor,
+            IMonsterTypeLoader monsterTypeLoader,
             CancellationTokenSource cancellationTokenSource,
             Func<IFibulaDbContext> dbContextGenerationFunc)
         {
             options.ThrowIfNull(nameof(options));
             telemetryOptions.ThrowIfNull(nameof(telemetryOptions));
             rsaDecryptor.ThrowIfNull(nameof(rsaDecryptor));
+            monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
             cancellationTokenSource.ThrowIfNull(nameof(cancellationTokenSource));
             dbContextGenerationFunc.ThrowIfNull(nameof(dbContextGenerationFunc));
 
@@ -62,6 +77,7 @@ namespace Fibula.Common
 
             this.TelemetryClient = this.InitializeTelemetry(telemetryOptions.Value);
 
+            this.monsterTypeLoader = monsterTypeLoader;
             this.contextGenerationFunction = dbContextGenerationFunc;
         }
 
@@ -89,6 +105,17 @@ namespace Fibula.Common
         /// Gets the default database context to use.
         /// </summary>
         public IFibulaDbContext DefaultDatabaseContext => this.contextGenerationFunction();
+
+        /// <summary>
+        /// Creates a new <see cref="IUnitOfWork"/> for data access.
+        /// </summary>
+        /// <returns>The instance created.</returns>
+        public IUnitOfWork CreateNewUnitOfWork()
+        {
+            return new UnitOfWork(
+                this.contextGenerationFunction(),
+                this.monsterTypeLoader);
+        }
 
         /// <summary>
         /// Initializes the telemetry client with the given configuration.

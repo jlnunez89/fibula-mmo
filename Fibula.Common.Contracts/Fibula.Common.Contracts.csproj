@@ -33,6 +33,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Data.Contracts\Fibula.Data.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Data.Entities.Contracts\Fibula.Data.Entities.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Parsing.Contracts\Fibula.Parsing.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Security.Contracts\Fibula.Security.Contracts.csproj" />
   </ItemGroup>

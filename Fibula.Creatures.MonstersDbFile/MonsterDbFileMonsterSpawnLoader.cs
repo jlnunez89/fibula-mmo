@@ -100,7 +100,7 @@ namespace Fibula.Creatures.MonstersDbFile
 
                 monsterSpawns.Add(new Spawn()
                 {
-                    MonsterTypeId = Convert.ToUInt16(data[0]),
+                    MonsterRaceId = Convert.ToUInt16(data[0]),
                     Location = new Location() { X = Convert.ToInt32(data[1]), Y = Convert.ToInt32(data[2]), Z = Convert.ToSByte(data[3]) },
                     Radius = Convert.ToUInt16(data[4]),
                     Count = Convert.ToByte(data[5]),

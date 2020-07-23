@@ -16,7 +16,6 @@ namespace Fibula.Mechanics.Operations
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
-    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Common.Utilities.Pathfinding;
     using Fibula.Communications.Packets.Outgoing;

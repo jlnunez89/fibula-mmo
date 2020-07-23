@@ -12,83 +12,34 @@
 namespace Fibula.Creatures.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumerates the distinct flags of creatures.
+    /// Enumerates all the different creature flags.
     /// </summary>
-    public enum CreatureFlag : uint
+    public enum CreatureFlag
     {
         /// <summary>
-        /// No flags.
+        /// The creature attempts to clear it's path by pushing movable items or destroying them.
         /// </summary>
-        None = 0,
+        CanPushItems,
 
         /// <summary>
-        /// The creature can kick movable objects and destroy them.
+        /// The creature attempts to clear it's path by pushing other creatures.
         /// </summary>
-        KickBoxes = 1 << 1,
+        CanPushCreatures,
 
         /// <summary>
-        /// The creature can push or kill other cretuatures that don't have the <see cref="Unpushable"/> flag.
+        /// The creature cannot be pushed by others.
         /// </summary>
-        KickCreatures = 1 << 2,
+        CannotBePushed,
 
         /// <summary>
-        /// The creature can see invisible players.
+        /// The creature cannot be targetted for attack.
         /// </summary>
-        SeeInvisible = 1 << 3,
+        CannotBeTargetted,
 
         /// <summary>
-        /// The creature cannot pushed or killed by other cretuatures with the <see cref="KickCreatures"/> flag.
+        /// The creature keeps their distance when fighting.
         /// </summary>
-        Unpushable = 1 << 4,
-
-        /// <summary>
-        /// The creature figths at a distance.
-        /// </summary>
-        DistanceFighting = 1 << 5,
-
-        /// <summary>
-        /// The creature cannot be summoned.
-        /// </summary>
-        NoSummon = 1 << 6,
-
-        /// <summary>
-        /// The illusion spell cannot be used to turn into this creature.
-        /// </summary>
-        NoIllusion = 1 << 7,
-
-        /// <summary>
-        /// The creature cannot be convinced.
-        /// </summary>
-        NoConvince = 1 << 8,
-
-        /// <summary>
-        /// The creature is immune to fire.
-        /// </summary>
-        NoBurning = 1 << 9,
-
-        /// <summary>
-        /// The creature is immune to poison.
-        /// </summary>
-        NoPoison = 1 << 10,
-
-        /// <summary>
-        /// The creature is immune to energy.
-        /// </summary>
-        NoEnergy = 1 << 11,
-
-        /// <summary>
-        /// The creature is immune to movement impairness spells.
-        /// </summary>
-        NoParalyze = 1 << 12,
-
-        /// <summary>
-        /// The creature cannot be targeted.
-        /// </summary>
-        NoHit = 1 << 13,
-
-        /// <summary>
-        /// The creature is immune to life draining.
-        /// </summary>
-        NoLifeDrain = 1 << 14,
+        // TODO: will be removed in favor of an attribute.
+        KeepsDistance,
     }
 }

@@ -20,7 +20,7 @@ namespace Fibula.Mechanics.Handlers
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
-    using Fibula.Data;
+    using Fibula.Data.Entities;
     using Serilog;
 
     /// <summary>
@@ -82,21 +82,18 @@ namespace Fibula.Mechanics.Handlers
                 return new GatewayServerDisconnectPacket($"You need client version {this.ApplicationContext.Options.SupportedClientVersion.Description} to connect to this server.").YieldSingleItem();
             }
 
-            using var unitOfWork = new UnitOfWork(this.ApplicationContext.DefaultDatabaseContext);
+            using var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork();
 
             // validate credentials.
-            var accounts = unitOfWork.Accounts.FindMany(u => u.Number == accountLoginInfo.AccountNumber && u.Password.Equals(accountLoginInfo.Password));
-            var account = accounts.FirstOrDefault();
-
-            if (account == null)
+            if (!(unitOfWork.Accounts.FindOne(a => a.Number == accountLoginInfo.AccountNumber && a.Password.Equals(accountLoginInfo.Password)) is AccountEntity account))
             {
                 // TODO: hardcoded messages.
                 return new GatewayServerDisconnectPacket("Please enter a valid account number and password.").YieldSingleItem();
             }
 
-            var charactersFound = unitOfWork.Characters.FindMany(p => p.AccountId == account.Id);
+            var charactersInAccount = unitOfWork.Characters.FindMany(p => p.AccountId == account.Id);
 
-            if (!charactersFound.Any())
+            if (!charactersInAccount.Any())
             {
                 // TODO: hardcoded messages.
                 return new GatewayServerDisconnectPacket($"You don't have any characters in your account.\nPlease create a new character in our web site: {this.ApplicationContext.Options.WebsiteUrl}").YieldSingleItem();
@@ -104,7 +101,7 @@ namespace Fibula.Mechanics.Handlers
 
             var charList = new List<CharacterInfo>();
 
-            foreach (var character in charactersFound)
+            foreach (var character in charactersInAccount)
             {
                 charList.Add(new CharacterInfo()
                 {
