@@ -15,9 +15,11 @@ namespace Fibula.Items
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Extensions;
 
     /// <summary>
     /// Class that represents an <see cref="IItem"/> factory.
@@ -25,20 +27,20 @@ namespace Fibula.Items
     public class ItemFactory : IItemFactory
     {
         /// <summary>
-        /// Gets a reference to the item types catalog to use in this factory.
-        /// </summary>
-        private readonly IDictionary<ushort, IItemType> itemTypesCatalog;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="ItemFactory"/> class.
         /// </summary>
-        /// <param name="itemLoader">A reference to the item type loader to use.</param>
-        public ItemFactory(IItemTypeLoader itemLoader)
+        /// <param name="applicationContext">A reference to the application context.</param>
+        public ItemFactory(IApplicationContext applicationContext)
         {
-            itemLoader.ThrowIfNull(nameof(itemLoader));
+            applicationContext.ThrowIfNull(nameof(applicationContext));
 
-            this.itemTypesCatalog = itemLoader.LoadTypes();
+            this.ApplicationContext = applicationContext;
         }
+
+        /// <summary>
+        /// Gets the application context.
+        /// </summary>
+        public IApplicationContext ApplicationContext { get; }
 
         /// <summary>
         /// Creates a new <see cref="IThing"/>.
@@ -62,24 +64,31 @@ namespace Fibula.Items
                 throw new ArgumentException($"Invalid type of arguments '{creationArguments.GetType().Name}' supplied, expected {nameof(ItemCreationArguments)}", nameof(creationArguments));
             }
 
-            if (itemCreationArguments.TypeId < ItemConstants.MaximumAmountOfCummulativeItems || !this.itemTypesCatalog.ContainsKey(itemCreationArguments.TypeId))
+            if (itemCreationArguments.TypeId < ItemConstants.MaximumAmountOfCummulativeItems)
             {
                 return null;
             }
 
-            // TODO: chest actually means a quest chest...
-            if (this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.IsContainer) || this.itemTypesCatalog[itemCreationArguments.TypeId].Flags.Contains(ItemFlag.IsQuestChest))
+            using var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork();
+
+            if (!(unitOfWork.ItemTypes.GetById(itemCreationArguments.TypeId.ToString()) is IItemTypeEntity itemType))
             {
-                return new ContainerItem(this.itemTypesCatalog[itemCreationArguments.TypeId]);
+                throw new ArgumentException($"Unknown item type with Id {itemCreationArguments.TypeId} in creation arguments for an item.", nameof(creationArguments));
             }
 
-            var newItem = new Item(this.itemTypesCatalog[itemCreationArguments.TypeId]);
+            // TODO: chest actually means a quest chest...
+            if (itemType.HasItemFlag(ItemFlag.IsContainer) || itemType.HasItemFlag(ItemFlag.IsQuestChest))
+            {
+                return new ContainerItem(itemType);
+            }
+
+            var newItem = new Item(itemType);
 
             if (itemCreationArguments.Attributes != null)
             {
-                foreach (var (attributeName, attributeValue) in itemCreationArguments.Attributes)
+                foreach (var (attribute, attributeValue) in itemCreationArguments.Attributes)
                 {
-                    newItem.Attributes[attributeName] = attributeValue;
+                    newItem.Attributes[attribute] = attributeValue;
                 }
             }
 
@@ -87,18 +96,15 @@ namespace Fibula.Items
         }
 
         /// <summary>
-        /// Looks up an <see cref="IItemType"/> given a type id.
+        /// Looks up an <see cref="IItemTypeEntity"/> given a type id.
         /// </summary>
         /// <param name="typeId">The id of the type to look for.</param>
-        /// <returns>A reference to the <see cref="IItemType"/> found, and null if not found.</returns>
-        public IItemType FindTypeById(ushort typeId)
+        /// <returns>A reference to the <see cref="IItemTypeEntity"/> found, and null if not found.</returns>
+        public IItemTypeEntity FindTypeById(ushort typeId)
         {
-            if (this.itemTypesCatalog.TryGetValue(typeId, out IItemType itemTypeFound))
-            {
-                return itemTypeFound;
-            }
+            using var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork();
 
-            return null;
+            return unitOfWork.ItemTypes.GetById(typeId.ToString());
         }
     }
 }

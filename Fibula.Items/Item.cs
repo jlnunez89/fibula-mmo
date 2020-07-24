@@ -13,13 +13,16 @@ namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Fibula.Common;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Extensions;
 
     /// <summary>
     /// Class that represents all items in the game.
@@ -35,12 +38,12 @@ namespace Fibula.Items
         /// Initializes a new instance of the <see cref="Item"/> class.
         /// </summary>
         /// <param name="type">The type of this item.</param>
-        public Item(IItemType type)
+        public Item(IItemTypeEntity type)
         {
             this.Type = type;
 
             // make a copy of the type we are based on...
-            this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes);
+            this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes.Select(kvp => KeyValuePair.Create((ItemAttribute)kvp.Key, kvp.Value)));
 
             this.expirationTimeLeft = !this.HasExpiration ? TimeSpan.Zero :
                 this.Attributes.ContainsKey(ItemAttribute.ExpirationTimeLeft) ?
@@ -53,9 +56,9 @@ namespace Fibula.Items
         }
 
         /// <summary>
-        /// Gets a reference to this item's <see cref="IItemType"/>.
+        /// Gets a reference to this item's <see cref="IItemTypeEntity"/>.
         /// </summary>
-        public IItemType Type { get; }
+        public IItemTypeEntity Type { get; }
 
         /// <summary>
         /// Gets the attributes of this item.
@@ -70,7 +73,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item changes on use.
         /// </summary>
-        public bool ChangesOnUse => this.Type.Flags.Contains(ItemFlag.ChangesOnUse);
+        public bool ChangesOnUse => this.Type.HasItemFlag(ItemFlag.ChangesOnUse);
 
         /// <summary>
         /// Gets the Id of the item into which this will change upon use.
@@ -81,7 +84,7 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.ChangesOnUse))
+                if (!this.Type.HasItemFlag(ItemFlag.ChangesOnUse))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ChangeOnUseTo)} on an item which doesn't have a target: {this}");
                 }
@@ -93,7 +96,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item can be rotated.
         /// </summary>
-        public bool CanBeRotated => this.Type.Flags.Contains(ItemFlag.CanBeRotated);
+        public bool CanBeRotated => this.Type.HasItemFlag(ItemFlag.CanBeRotated);
 
         /// <summary>
         /// Gets the Id of the item into which this will rotate to.
@@ -104,7 +107,7 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.CanBeRotated))
+                if (!this.Type.HasItemFlag(ItemFlag.CanBeRotated))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.RotateTo)} on an item which doesn't have a target: {this}");
                 }
@@ -116,7 +119,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item expires.
         /// </summary>
-        public bool HasExpiration => this.Type.Flags.Contains(ItemFlag.HasExpiration);
+        public bool HasExpiration => this.Type.HasItemFlag(ItemFlag.HasExpiration);
 
         /// <summary>
         /// Gets the time left before this item expires, if it <see cref="HasExpiration"/>.
@@ -126,7 +129,7 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.HasExpiration))
+                if (!this.Type.HasItemFlag(ItemFlag.HasExpiration))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ExpirationTimeLeft)} on an item which doesn't have expiration: {this}");
                 }
@@ -143,7 +146,7 @@ namespace Fibula.Items
         {
             get
             {
-                if (!this.Type.Flags.Contains(ItemFlag.HasExpiration))
+                if (!this.Type.HasItemFlag(ItemFlag.HasExpiration))
                 {
                     throw new InvalidOperationException($"Attempted to retrieve {nameof(this.ExpirationTarget)} on an item which doesn't have expiration: {this}");
                 }
@@ -155,22 +158,22 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item can be moved.
         /// </summary>
-        public override bool CanBeMoved => !this.Type.Flags.Contains(ItemFlag.IsUnmoveable);
+        public override bool CanBeMoved => !this.Type.HasItemFlag(ItemFlag.IsUnmoveable);
 
         /// <summary>
         /// Gets a value indicating whether this item triggers a collision event.
         /// </summary>
-        public bool HasCollision => this.Type.Flags.Contains(ItemFlag.TriggersCollision);
+        public bool HasCollision => this.Type.HasItemFlag(ItemFlag.TriggersCollision);
 
         /// <summary>
         /// Gets a value indicating whether this item triggers a separation event.
         /// </summary>
-        public bool HasSeparation => this.Type.Flags.Contains(ItemFlag.TriggersSeparation);
+        public bool HasSeparation => this.Type.HasItemFlag(ItemFlag.TriggersSeparation);
 
         /// <summary>
         /// Gets a value indicating whether this item can be accumulated.
         /// </summary>
-        public bool IsCumulative => this.Type.Flags.Contains(ItemFlag.IsCumulative);
+        public bool IsCumulative => this.Type.HasItemFlag(ItemFlag.IsCumulative);
 
         /// <summary>
         /// Gets or sets the amount of this item.
@@ -196,12 +199,12 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item is a container.
         /// </summary>
-        public bool IsContainer => this.Type.Flags.Contains(ItemFlag.IsContainer);
+        public bool IsContainer => this.Type.HasItemFlag(ItemFlag.IsContainer);
 
         /// <summary>
         /// Gets a value indicating whether this item can be dressed.
         /// </summary>
-        public bool CanBeDressed => this.Type.Flags.Contains(ItemFlag.IsDressable);
+        public bool CanBeDressed => this.Type.HasItemFlag(ItemFlag.IsDressable);
 
         /// <summary>
         /// Gets the position at which the item can be dressed.
@@ -211,7 +214,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item is ground floor.
         /// </summary>
-        public bool IsGround => this.Type.Flags.Contains(ItemFlag.IsGround);
+        public bool IsGround => this.Type.HasItemFlag(ItemFlag.IsGround);
 
         /// <summary>
         /// Gets the movement cost for walking over this item, assuming it <see cref="IsGround"/>.
@@ -243,32 +246,32 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether this item is a ground aesthetic fix.
         /// </summary>
-        public bool IsGroundFix => this.Type.Flags.Contains(ItemFlag.IsGroundBorder);
+        public bool IsGroundFix => this.Type.HasItemFlag(ItemFlag.IsGroundBorder);
 
         /// <summary>
         /// Gets a value indicating whether this item stays on top of the stack.
         /// </summary>
-        public bool StaysOnTop => this.Type.Flags.Contains(ItemFlag.StaysOnTop);
+        public bool StaysOnTop => this.Type.HasItemFlag(ItemFlag.StaysOnTop);
 
         /// <summary>
         /// Gets a value indicating whether this item stays on the bottom of the stack.
         /// </summary>
-        public bool StaysOnBottom => this.Type.Flags.Contains(ItemFlag.StaysOnBottom);
+        public bool StaysOnBottom => this.Type.HasItemFlag(ItemFlag.StaysOnBottom);
 
         /// <summary>
         /// Gets a value indicating whether this item is a liquid pool.
         /// </summary>
-        public bool IsLiquidPool => this.Type.Flags.Contains(ItemFlag.IsLiquidPool);
+        public bool IsLiquidPool => this.Type.HasItemFlag(ItemFlag.IsLiquidPool);
 
         /// <summary>
         /// Gets a value indicating whether this item is a liquid source.
         /// </summary>
-        public bool IsLiquidSource => this.Type.Flags.Contains(ItemFlag.IsLiquidSource);
+        public bool IsLiquidSource => this.Type.HasItemFlag(ItemFlag.IsLiquidSource);
 
         /// <summary>
         /// Gets a value indicating whether this item is a liquid container.
         /// </summary>
-        public bool IsLiquidContainer => this.Type.Flags.Contains(ItemFlag.IsLiquidContainer);
+        public bool IsLiquidContainer => this.Type.HasItemFlag(ItemFlag.IsLiquidContainer);
 
         /// <summary>
         /// Gets the type of liquid in this item, assuming it: <see cref="IsLiquidPool"/>, <see cref="IsLiquidSource"/>, or <see cref="IsLiquidContainer"/>.
@@ -277,7 +280,7 @@ namespace Fibula.Items
         {
             get
             {
-                if ((this.Type.Flags.Contains(ItemFlag.IsLiquidSource) || this.Type.Flags.Contains(ItemFlag.IsLiquidContainer) || this.Type.Flags.Contains(ItemFlag.IsLiquidPool)) &&
+                if ((this.Type.HasItemFlag(ItemFlag.IsLiquidSource) || this.Type.HasItemFlag(ItemFlag.IsLiquidContainer) || this.Type.HasItemFlag(ItemFlag.IsLiquidPool)) &&
                     this.Attributes.TryGetValue(ItemAttribute.LiquidType, out IConvertible typeValue) &&
                     Enum.IsDefined(typeof(LiquidType), typeValue.ToInt32(null)))
                 {
@@ -291,17 +294,17 @@ namespace Fibula.Items
         /// <summary>
         /// Gets a value indicating whether the item blocks throwing through it.
         /// </summary>
-        public bool BlocksThrow => this.Type.Flags.Contains(ItemFlag.BlocksThrow);
+        public bool BlocksThrow => this.Type.HasItemFlag(ItemFlag.BlocksThrow);
 
         /// <summary>
         /// Gets a value indicating whether the item blocks walking on it.
         /// </summary>
-        public bool BlocksPass => this.Type.Flags.Contains(ItemFlag.BlocksWalk);
+        public bool BlocksPass => this.Type.HasItemFlag(ItemFlag.BlocksWalk);
 
         /// <summary>
         /// Gets a value indicating whether the item blocks laying anything on it.
         /// </summary>
-        public bool BlocksLay => this.Type.Flags.Contains(ItemFlag.BlocksLay);
+        public bool BlocksLay => this.Type.HasItemFlag(ItemFlag.BlocksLay);
 
         /// <summary>
         /// Determines if this item is blocks pathfinding.
@@ -317,7 +320,7 @@ namespace Fibula.Items
                 return true;
             }
 
-            blocking |= this.Type.Flags.Contains(ItemFlag.ShouldBeAvoided) && (Convert.ToByte(this.Attributes[ItemAttribute.DamageTypesToAvoid]) ^ avoidTypes) > 0;
+            blocking |= this.Type.HasItemFlag(ItemFlag.ShouldBeAvoided) && (Convert.ToByte(this.Attributes[ItemAttribute.DamageTypesToAvoid]) ^ avoidTypes) > 0;
 
             return blocking;
         }

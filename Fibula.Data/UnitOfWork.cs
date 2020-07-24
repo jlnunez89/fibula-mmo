@@ -15,12 +15,14 @@ namespace Fibula.Data
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Data.Repositories;
+    using Fibula.Items.Contracts.Abstractions;
     using Microsoft.EntityFrameworkCore;
 
     using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
         Fibula.Data.Repositories.AccountRepository,
         Fibula.Data.Repositories.CharacterRepository,
-        Fibula.Data.Repositories.MonsterTypeReadOnlyRepository>;
+        Fibula.Data.Repositories.MonsterTypeReadOnlyRepository,
+        Fibula.Data.Repositories.ItemTypeReadOnlyRepository>;
 
     /// <summary>
     /// Class that represents a unit of work for the Fibula project.
@@ -39,7 +41,8 @@ namespace Fibula.Data
         /// </summary>
         /// <param name="context">The context to work on.</param>
         /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
-        public UnitOfWork(IFibulaDbContext context, IMonsterTypeLoader monsterTypeLoader)
+        /// <param name="itemTypeLoader">A reference to the item type loader in use.</param>
+        public UnitOfWork(IFibulaDbContext context, IMonsterTypeLoader monsterTypeLoader, IItemTypeLoader itemTypeLoader)
         {
             context.ThrowIfNull(nameof(context));
 
@@ -48,7 +51,8 @@ namespace Fibula.Data
 
             this.Accounts = new AccountRepository(this.databaseContext);
             this.Characters = new CharacterRepository(this.databaseContext);
-            this.Monsters = new MonsterTypeReadOnlyRepository(monsterTypeLoader);
+            this.MonsterTypes = new MonsterTypeReadOnlyRepository(monsterTypeLoader);
+            this.ItemTypes = new ItemTypeReadOnlyRepository(itemTypeLoader);
         }
 
         /// <summary>
@@ -62,9 +66,14 @@ namespace Fibula.Data
         public CharacterRepository Characters { get; }
 
         /// <summary>
-        /// Gets a reference to the monsters repository.
+        /// Gets a reference to the monster types repository.
         /// </summary>
-        public MonsterTypeReadOnlyRepository Monsters { get; }
+        public MonsterTypeReadOnlyRepository MonsterTypes { get; }
+
+        /// <summary>
+        /// Gets a reference to the item types repository.
+        /// </summary>
+        public ItemTypeReadOnlyRepository ItemTypes { get; }
 
         /// <summary>
         /// Completes this unit of work.

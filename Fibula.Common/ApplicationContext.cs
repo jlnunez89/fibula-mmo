@@ -19,6 +19,7 @@ namespace Fibula.Common
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data;
     using Fibula.Data.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Abstractions;
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
     using Microsoft.ApplicationInsights.Extensibility;
@@ -28,7 +29,8 @@ namespace Fibula.Common
     using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
         Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity>,
         Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity>,
-        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>>;
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>,
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IItemTypeEntity>>;
 
     /// <summary>
     /// Class that represents the common context of the entire application.
@@ -41,9 +43,14 @@ namespace Fibula.Common
         private readonly Func<IFibulaDbContext> contextGenerationFunction;
 
         /// <summary>
-        /// Stores the reference to the monster type loader in use.
+        /// Stores the reference to the monster types loader in use.
         /// </summary>
         private readonly IMonsterTypeLoader monsterTypeLoader;
+
+        /// <summary>
+        /// Stores the reference to the item types loader in use.
+        /// </summary>
+        private readonly IItemTypeLoader itemTypeLoader;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="ApplicationContext"/> class.
@@ -51,6 +58,7 @@ namespace Fibula.Common
         /// <param name="options">A reference to the application configuration.</param>
         /// <param name="telemetryOptions">A reference to the telemetry configuration that will be used to create the telemetry client.</param>
         /// <param name="rsaDecryptor">A reference to the RSA decryptor in use.</param>
+        /// <param name="itemTypeLoader">A reference to the item type loader in use.</param>
         /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
         /// <param name="cancellationTokenSource">A reference to the master cancellation token source.</param>
         /// <param name="dbContextGenerationFunc">A reference to a function to generate the database context.</param>
@@ -58,6 +66,7 @@ namespace Fibula.Common
             IOptions<ApplicationContextOptions> options,
             IOptions<TelemetryConfiguration> telemetryOptions,
             IRsaDecryptor rsaDecryptor,
+            IItemTypeLoader itemTypeLoader,
             IMonsterTypeLoader monsterTypeLoader,
             CancellationTokenSource cancellationTokenSource,
             Func<IFibulaDbContext> dbContextGenerationFunc)
@@ -65,6 +74,7 @@ namespace Fibula.Common
             options.ThrowIfNull(nameof(options));
             telemetryOptions.ThrowIfNull(nameof(telemetryOptions));
             rsaDecryptor.ThrowIfNull(nameof(rsaDecryptor));
+            itemTypeLoader.ThrowIfNull(nameof(itemTypeLoader));
             monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
             cancellationTokenSource.ThrowIfNull(nameof(cancellationTokenSource));
             dbContextGenerationFunc.ThrowIfNull(nameof(dbContextGenerationFunc));
@@ -77,6 +87,7 @@ namespace Fibula.Common
 
             this.TelemetryClient = this.InitializeTelemetry(telemetryOptions.Value);
 
+            this.itemTypeLoader = itemTypeLoader;
             this.monsterTypeLoader = monsterTypeLoader;
             this.contextGenerationFunction = dbContextGenerationFunc;
         }
@@ -114,7 +125,8 @@ namespace Fibula.Common
         {
             return new UnitOfWork(
                 this.contextGenerationFunction(),
-                this.monsterTypeLoader);
+                this.monsterTypeLoader,
+                this.itemTypeLoader);
         }
 
         /// <summary>

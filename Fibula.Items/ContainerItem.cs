@@ -16,6 +16,7 @@ namespace Fibula.Items
     using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Delegates;
@@ -30,7 +31,7 @@ namespace Fibula.Items
         /// Initializes a new instance of the <see cref="ContainerItem"/> class.
         /// </summary>
         /// <param name="type">The type of this item.</param>
-        public ContainerItem(IItemType type)
+        public ContainerItem(IItemTypeEntity type)
             : base(type)
         {
             this.Content = new List<IItem>();

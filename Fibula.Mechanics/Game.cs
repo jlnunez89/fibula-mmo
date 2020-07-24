@@ -29,6 +29,7 @@ namespace Fibula.Mechanics
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Data.Entities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
@@ -234,14 +235,14 @@ namespace Fibula.Mechanics
         /// <param name="location">The location at which to create the item.</param>
         /// <param name="itemType">The type of item to create.</param>
         /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
-        public void CreateItemAtLocation(Location location, IItemType itemType, params (ItemAttribute, IConvertible)[] additionalAttributes)
+        public void CreateItemAtLocation(Location location, IItemTypeEntity itemType, params (ItemAttribute, IConvertible)[] additionalAttributes)
         {
             if (itemType == null)
             {
                 return;
             }
 
-            var attributesToSet = itemType.DefaultAttributes.Select(kvp => (kvp.Key, kvp.Value));
+            var attributesToSet = itemType.DefaultAttributes.Select(kvp => ((ItemAttribute)kvp.Key, kvp.Value));
 
             if (additionalAttributes != null)
             {
@@ -639,11 +640,11 @@ namespace Fibula.Mechanics
         /// </summary>
         /// <param name="raceId">The id of race of monster to place.</param>
         /// <param name="location">The location at which to place the monster.</param>
-        public void PlaceMonsterAt(ushort raceId, Location location)
+        public void PlaceMonsterAt(string raceId, Location location)
         {
             using var uow = this.applicationContext.CreateNewUnitOfWork();
 
-            var monsterType = uow.Monsters.GetById(raceId.ToString());
+            var monsterType = uow.MonsterTypes.GetById(raceId);
 
             if (!(monsterType is MonsterTypeEntity monsterTypeEntity))
             {

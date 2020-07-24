@@ -24,6 +24,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Extensions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -538,7 +539,7 @@ namespace Fibula.Mechanics.Operations
                 var itemCanBeMoved = item.CanBeMoved;
                 var sourceTileHasEnoughItemAmount = this.ThingMovingId == item.ThingId && item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
-                var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.Flags.Contains(ItemFlag.BlocksWalk) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
+                var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.HasItemFlag(ItemFlag.BlocksWalk) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
 
                 if (!itemCanBeMoved)
                 {

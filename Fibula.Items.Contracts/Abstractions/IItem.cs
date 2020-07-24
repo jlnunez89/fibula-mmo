@@ -15,6 +15,7 @@ namespace Fibula.Items.Contracts.Abstractions
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
@@ -23,9 +24,9 @@ namespace Fibula.Items.Contracts.Abstractions
     public interface IItem : IThing, IContainedThing
     {
         /// <summary>
-        /// Gets a reference to this item's <see cref="IItemType"/>.
+        /// Gets a reference to this item's <see cref="IItemTypeEntity"/>.
         /// </summary>
-        IItemType Type { get; }
+        IItemTypeEntity Type { get; }
 
         /// <summary>
         /// Gets the attributes of this item.

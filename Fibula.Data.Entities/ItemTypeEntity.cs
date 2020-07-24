@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ItemType.cs" company="2Dudes">
+// <copyright file="ItemTypeEntity.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,17 +9,18 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Items
+namespace Fibula.Data.Entities
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Extensions;
 
     /// <summary>
-    /// Class that represents an item type.
+    /// Class that represents an item type entity.
     /// </summary>
-    public class ItemType : IItemType
+    public class ItemTypeEntity : BaseEntity, IItemTypeEntity
     {
         /// <summary>
         /// The id of the type of this item.
@@ -29,15 +30,14 @@ namespace Fibula.Items
         private string description;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ItemType"/> class.
+        /// Initializes a new instance of the <see cref="ItemTypeEntity"/> class.
         /// </summary>
-        public ItemType()
+        public ItemTypeEntity()
         {
             this.TypeId = 0;
             this.Name = string.Empty;
             this.Description = string.Empty;
-            this.Flags = new HashSet<ItemFlag>();
-            this.DefaultAttributes = new Dictionary<ItemAttribute, IConvertible>();
+            this.DefaultAttributes = new Dictionary<byte, IConvertible>();
             this.Locked = false;
         }
 
@@ -52,7 +52,7 @@ namespace Fibula.Items
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.TypeId)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.TypeId)}. The {nameof(ItemTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.typeId = value;
@@ -70,7 +70,7 @@ namespace Fibula.Items
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Name)}. The {nameof(ItemTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.name = value;
@@ -88,7 +88,7 @@ namespace Fibula.Items
             {
                 if (this.Locked)
                 {
-                    throw new InvalidOperationException($"Unable to set {nameof(this.Description)}. The {nameof(ItemType)} is locked and cannot be altered.");
+                    throw new InvalidOperationException($"Unable to set {nameof(this.Description)}. The {nameof(ItemTypeEntity)} is locked and cannot be altered.");
                 }
 
                 this.description = value.Trim('"');
@@ -98,12 +98,13 @@ namespace Fibula.Items
         /// <summary>
         /// Gets the flags for this type of item.
         /// </summary>
-        public ISet<ItemFlag> Flags { get; }
+        /// <remarks>The flags are stored as bits in a 64 bit unsigned integer.</remarks>
+        public ulong Flags { get; private set; }
 
         /// <summary>
         /// Gets the attributes of this type of item.
         /// </summary>
-        public IDictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
+        public IDictionary<byte, IConvertible> DefaultAttributes { get; }
 
         /// <summary>
         /// Gets a value indicating whether this item type is locked and no longer accepting changes.
@@ -113,7 +114,7 @@ namespace Fibula.Items
         /// <summary>
         /// Gets the client id of the type of this item.
         /// </summary>
-        public ushort ClientId => this.Flags.Contains(ItemFlag.IsDisguised) ? Convert.ToUInt16(this.DefaultAttributes[ItemAttribute.DisguiseAs]) : this.TypeId;
+        public ushort ClientId => this.HasItemFlag(ItemFlag.IsDisguised) ? Convert.ToUInt16(this.DefaultAttributes[(byte)ItemAttribute.DisguiseAs]) : this.TypeId;
 
         /// <summary>
         /// Locks the type, preventing it from accepting changes.
@@ -126,15 +127,15 @@ namespace Fibula.Items
         /// <summary>
         /// Sets a flag in this type.
         /// </summary>
-        /// <param name="flag">The flag to set in the type.</param>
-        public void SetFlag(ItemFlag flag)
+        /// <param name="itemFlag">The flag to set in the type.</param>
+        public void SetItemFlag(ItemFlag itemFlag)
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetFlag)}({nameof(flag)}={flag}");
+                throw new InvalidOperationException($"This ItemTypeEntity is locked and cannot be altered. {nameof(this.SetItemFlag)}({nameof(itemFlag)}={itemFlag}");
             }
 
-            this.Flags.Add(flag);
+            this.Flags |= (ulong)itemFlag;
         }
 
         /// <summary>
@@ -146,29 +147,26 @@ namespace Fibula.Items
         {
             if (this.Locked)
             {
-                throw new InvalidOperationException($"This ItemType is locked and cannot be altered. {nameof(this.SetAttribute)}({nameof(attribute)}={attribute},{nameof(attributeValue)}={attributeValue}");
+                throw new InvalidOperationException($"This ItemTypeEntity is locked and cannot be altered. {nameof(this.SetAttribute)}({nameof(attribute)}={attribute},{nameof(attributeValue)}={attributeValue}");
             }
 
-            this.DefaultAttributes[attribute] = attributeValue;
+            this.DefaultAttributes[(byte)attribute] = attributeValue;
         }
 
         /// <summary>
-        /// Clones the <see cref="ItemType"/> into a new instance without locking the clone.
+        /// Clones the <see cref="ItemTypeEntity"/> into a new instance without locking the clone.
         /// </summary>
-        /// <returns>The cloned <see cref="ItemType"/>.</returns>
+        /// <returns>The cloned <see cref="ItemTypeEntity"/>.</returns>
         object ICloneable.Clone()
         {
-            var newInstance = new ItemType()
+            var newInstance = new ItemTypeEntity()
             {
                 TypeId = this.typeId,
                 Name = this.name,
                 Description = this.description,
             };
 
-            foreach (var flag in this.Flags)
-            {
-                newInstance.Flags.Add(flag);
-            }
+            newInstance.Flags = this.Flags;
 
             foreach (var attribute in this.DefaultAttributes)
             {

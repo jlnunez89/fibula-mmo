@@ -20,7 +20,8 @@ namespace Fibula.Common.Contracts.Abstractions
     using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
         Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity>,
         Fibula.Data.Contracts.Abstractions.IRepository<Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity>,
-        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>>;
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity>,
+        Fibula.Data.Contracts.Abstractions.IReadOnlyRepository<Fibula.Data.Entities.Contracts.Abstractions.IItemTypeEntity>>;
 
     /// <summary>
     /// Interface that represents the common context of the entire application.

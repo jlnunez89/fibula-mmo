@@ -23,7 +23,7 @@ namespace Fibula.Data.Entities
     using Fibula.Data.Entities.Contracts.Structs;
 
     /// <summary>
-    /// Class that represents a monster type.
+    /// Class that represents a monster type entity.
     /// </summary>
     public class MonsterTypeEntity : BaseEntity, IMonsterTypeEntity, ICreatureCreationMetadata
     {

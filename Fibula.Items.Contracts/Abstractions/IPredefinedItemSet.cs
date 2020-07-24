@@ -11,6 +11,7 @@
 
 namespace Fibula.Items.Contracts.Abstractions
 {
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
@@ -19,17 +20,17 @@ namespace Fibula.Items.Contracts.Abstractions
     public interface IPredefinedItemSet
     {
         /// <summary>
-        /// Finds the splatter <see cref="IItemType"/> for a given blood type.
+        /// Finds the splatter <see cref="IItemTypeEntity"/> for a given blood type.
         /// </summary>
         /// <param name="bloodType">The type of blood to look the item type for.</param>
-        /// <returns>The <see cref="IItemType"/> that's predefined for that blood type, or null if none is.</returns>
-        IItemType FindSplatterForBloodType(BloodType bloodType);
+        /// <returns>The <see cref="IItemTypeEntity"/> that's predefined for that blood type, or null if none is.</returns>
+        IItemTypeEntity FindSplatterForBloodType(BloodType bloodType);
 
         /// <summary>
-        /// Finds the splatter <see cref="IItemType"/> for a given blood type.
+        /// Finds the splatter <see cref="IItemTypeEntity"/> for a given blood type.
         /// </summary>
         /// <param name="bloodType">The type of blood to look the item type for.</param>
-        /// <returns>The <see cref="IItemType"/> that's predefined for that blood type, or null if none is.</returns>
-        IItemType FindPoolForBloodType(BloodType bloodType);
+        /// <returns>The <see cref="IItemTypeEntity"/> that's predefined for that blood type, or null if none is.</returns>
+        IItemTypeEntity FindPoolForBloodType(BloodType bloodType);
     }
 }

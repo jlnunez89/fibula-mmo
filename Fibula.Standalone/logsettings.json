@@ -1,6 +1,11 @@
 {
   "Serilog": {
-    "MinimumLevel": "Verbose",
+    "MinimumLevel": {
+      "Default": "Verbose",
+      "Override": {
+        "Microsoft.EntityFrameworkCore":  "Warning"
+      }
+    },
     "Using": [
       "Serilog.Sinks.Console",
       "Serilog.Sinks.File"

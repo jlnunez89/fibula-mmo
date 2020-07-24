@@ -19,6 +19,7 @@ namespace Fibula.Items
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Data.Entities;
     using Fibula.Items.Contracts.Abstractions;
 
     /// <summary>
@@ -36,7 +37,7 @@ namespace Fibula.Items
         /// </summary>
         /// <param name="slot">The slot at which this body container is.</param>
         public BodyContainerItem(Slot slot)
-            : base(new ItemType())
+            : base(new ItemTypeEntity())
         {
             this.Slot = slot;
 
