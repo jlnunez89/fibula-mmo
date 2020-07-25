@@ -17,7 +17,6 @@ namespace Fibula.Common
     using Fibula.Common.Contracts.Models;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Data;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Security.Contracts;
@@ -123,10 +122,7 @@ namespace Fibula.Common
         /// <returns>The instance created.</returns>
         public IUnitOfWork CreateNewUnitOfWork()
         {
-            return new UnitOfWork(
-                this.contextGenerationFunction(),
-                this.monsterTypeLoader,
-                this.itemTypeLoader);
+            return new UnitOfWork(this, this.itemTypeLoader, this.monsterTypeLoader);
         }
 
         /// <summary>

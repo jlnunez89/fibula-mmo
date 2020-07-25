@@ -9,12 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Data
+namespace Fibula.Common
 {
     using System;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Data.Contracts.Abstractions;
     using Fibula.Data.Repositories;
     using Fibula.Items.Contracts.Abstractions;
     using Microsoft.EntityFrameworkCore;
@@ -35,7 +35,7 @@ namespace Fibula.Data
         /// <summary>
         /// A reference to the underlying database context on this unit of work.
         /// </summary>
-        private readonly DbContext databaseContext;
+        private readonly IApplicationContext applicationContext;
 
         /// <summary>
         /// Stores the lazy respository instance for accounts.
@@ -48,21 +48,33 @@ namespace Fibula.Data
         private readonly Lazy<CharacterRepository> characters;
 
         /// <summary>
+        /// Stores a locking object used to prevent double initialization of the <see cref="databaseContext"/>.
+        /// </summary>
+        private readonly object databaseContextLock;
+
+        /// <summary>
+        /// Stores the database context in use by this unit of work.
+        /// </summary>
+        private DbContext databaseContext;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
-        /// <param name="context">The context to work on.</param>
-        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        /// <param name="applicationContext">The application context to work in.</param>
         /// <param name="itemTypeLoader">A reference to the item type loader in use.</param>
-        public UnitOfWork(IFibulaDbContext context, IMonsterTypeLoader monsterTypeLoader, IItemTypeLoader itemTypeLoader)
+        /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        public UnitOfWork(IApplicationContext applicationContext, IItemTypeLoader itemTypeLoader, IMonsterTypeLoader monsterTypeLoader)
         {
-            context.ThrowIfNull(nameof(context));
+            applicationContext.ThrowIfNull(nameof(applicationContext));
 
-            this.databaseContext = context.AsDbContext();
+            this.applicationContext = applicationContext;
+
+            this.databaseContextLock = new object();
 
             this.accounts = new Lazy<AccountRepository>(
                 () =>
                 {
-                    this.InitializeContext();
+                    this.GetOrInitializeDbContext();
 
                     return new AccountRepository(this.databaseContext);
                 },
@@ -71,7 +83,7 @@ namespace Fibula.Data
             this.characters = new Lazy<CharacterRepository>(
                 () =>
                 {
-                    this.InitializeContext();
+                    this.GetOrInitializeDbContext();
 
                     return new CharacterRepository(this.databaseContext);
                 },
@@ -108,7 +120,12 @@ namespace Fibula.Data
         /// <returns>The number of changes saved upon completion of this unit of work.</returns>
         public int Complete()
         {
-            return this.databaseContext.SaveChanges();
+            if (this.databaseContext != null)
+            {
+                return this.databaseContext.SaveChanges();
+            }
+
+            return 0;
         }
 
         /// <summary>
@@ -116,15 +133,35 @@ namespace Fibula.Data
         /// </summary>
         public void Dispose()
         {
-            this.databaseContext.Dispose();
+            if (this.databaseContext != null)
+            {
+                lock (this.databaseContextLock)
+                {
+                    if (this.databaseContext != null)
+                    {
+                        this.databaseContext.Dispose();
+                        this.databaseContext = null;
+                    }
+                }
+            }
         }
 
         /// <summary>
-        /// Performs initialization of the db context.
+        /// Gets the current unit of work's db context, or performs initialization of one if none is defined.
         /// </summary>
-        private void InitializeContext()
+        private void GetOrInitializeDbContext()
         {
-            this.databaseContext.Database.EnsureCreatedAsync().Wait();
+            if (this.databaseContext == null)
+            {
+                lock (this.databaseContextLock)
+                {
+                    if (this.databaseContext == null)
+                    {
+                        this.databaseContext = this.applicationContext.DefaultDatabaseContext.AsDbContext();
+                        this.databaseContext.Database.EnsureCreatedAsync().Wait();
+                    }
+                }
+            }
         }
     }
 }
