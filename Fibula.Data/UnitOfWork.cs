@@ -11,6 +11,7 @@
 
 namespace Fibula.Data
 {
+    using System;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Contracts.Abstractions;
@@ -37,6 +38,16 @@ namespace Fibula.Data
         private readonly DbContext databaseContext;
 
         /// <summary>
+        /// Stores the lazy respository instance for accounts.
+        /// </summary>
+        private readonly Lazy<AccountRepository> accounts;
+
+        /// <summary>
+        /// Stores the lazy respository instance for accounts.
+        /// </summary>
+        private readonly Lazy<CharacterRepository> characters;
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="UnitOfWork"/> class.
         /// </summary>
         /// <param name="context">The context to work on.</param>
@@ -47,23 +58,39 @@ namespace Fibula.Data
             context.ThrowIfNull(nameof(context));
 
             this.databaseContext = context.AsDbContext();
-            this.databaseContext.Database.EnsureCreatedAsync().Wait();
 
-            this.Accounts = new AccountRepository(this.databaseContext);
-            this.Characters = new CharacterRepository(this.databaseContext);
+            this.accounts = new Lazy<AccountRepository>(
+                () =>
+                {
+                    this.InitializeContext();
+
+                    return new AccountRepository(this.databaseContext);
+                },
+                System.Threading.LazyThreadSafetyMode.None);
+
+            this.characters = new Lazy<CharacterRepository>(
+                () =>
+                {
+                    this.InitializeContext();
+
+                    return new CharacterRepository(this.databaseContext);
+                },
+                System.Threading.LazyThreadSafetyMode.None);
+
             this.MonsterTypes = new MonsterTypeReadOnlyRepository(monsterTypeLoader);
+
             this.ItemTypes = new ItemTypeReadOnlyRepository(itemTypeLoader);
         }
 
         /// <summary>
         /// Gets a reference to the accounts repository.
         /// </summary>
-        public AccountRepository Accounts { get; }
+        public AccountRepository Accounts => this.accounts.Value;
 
         /// <summary>
         /// Gets a reference to the characters repository.
         /// </summary>
-        public CharacterRepository Characters { get; }
+        public CharacterRepository Characters => this.characters.Value;
 
         /// <summary>
         /// Gets a reference to the monster types repository.
@@ -90,6 +117,14 @@ namespace Fibula.Data
         public void Dispose()
         {
             this.databaseContext.Dispose();
+        }
+
+        /// <summary>
+        /// Performs initialization of the db context.
+        /// </summary>
+        private void InitializeContext()
+        {
+            this.databaseContext.Database.EnsureCreatedAsync().Wait();
         }
     }
 }
