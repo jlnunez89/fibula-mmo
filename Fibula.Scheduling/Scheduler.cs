@@ -19,6 +19,7 @@ namespace Fibula.Scheduling
     using Fibula.Common.Utilities;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
+    using Fibula.Scheduling.Contracts.Enumerations;
     using Fibula.Scheduling.Contracts.Extensions;
     using Priority_Queue;
     using Serilog;
@@ -196,10 +197,17 @@ namespace Fibula.Scheduling
                                 evt.Expedited -= this.HandleEventExpedition;
 
                                 // Repeat the event if it applicable.
-                                if (!wasCancelled && evt.RepeatAfter != TimeSpan.MinValue)
+                                if (!wasCancelled)
                                 {
-                                    // Schedule event protects against negative delays.
-                                    this.ScheduleEvent(evt, evt.RepeatAfter);
+                                    if (evt.RepeatAfter != TimeSpan.MinValue)
+                                    {
+                                        // Schedule event protects against negative delays.
+                                        this.ScheduleEvent(evt, evt.RepeatAfter);
+                                    }
+                                    else
+                                    {
+                                        evt.Complete();
+                                    }
                                 }
                             }
                             else
@@ -282,6 +290,11 @@ namespace Fibula.Scheduling
             lock (this.eventsAvailableLock)
             {
                 this.cancelledEvents.Add(evt.EventId);
+
+                if (evt is BaseEvent baseEvent)
+                {
+                    baseEvent.Complete(asCancelled: true);
+                }
             }
 
             return true;
@@ -327,6 +340,8 @@ namespace Fibula.Scheduling
                 }
 
                 this.priorityQueue.Enqueue(castedEvent, milliseconds);
+
+                castedEvent.State = EventState.Scheduled;
 
                 this.Logger.Verbose($"Scheduled {eventToSchedule.GetType().Name} with id {eventToSchedule.EventId}, due in {delayTime.Value} (at {targetTime.ToUnixTimeMilliseconds()}).");
 

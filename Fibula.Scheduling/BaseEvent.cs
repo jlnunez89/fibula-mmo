@@ -15,6 +15,7 @@ namespace Fibula.Scheduling
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Scheduling.Contracts.Delegates;
+    using Fibula.Scheduling.Contracts.Enumerations;
     using Priority_Queue;
 
     /// <summary>
@@ -34,6 +35,8 @@ namespace Fibula.Scheduling
             this.RequestorId = requestorId;
 
             this.RepeatAfter = TimeSpan.MinValue;
+
+            this.State = EventState.Created;
         }
 
         /// <summary>
@@ -45,6 +48,11 @@ namespace Fibula.Scheduling
         /// Fired when this event is expedited.
         /// </summary>
         public event EventExpeditedDelegate Expedited;
+
+        /// <summary>
+        /// Fired when this even is processed to completion (after no more repeats).
+        /// </summary>
+        public event EventCompletedDelegate Completed;
 
         /// <summary>
         /// Gets a unique identifier for this event.
@@ -78,6 +86,11 @@ namespace Fibula.Scheduling
         public abstract bool CanBeCancelled { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the event's state.
+        /// </summary>
+        public EventState State { get; set; }
+
+        /// <summary>
         /// Executes the event logic.
         /// </summary>
         /// <param name="context">The execution context.</param>
@@ -109,6 +122,17 @@ namespace Fibula.Scheduling
             }
 
             return this.Expedited.Invoke(this);
+        }
+
+        /// <summary>
+        /// Marks this event as completed, notifying subscribers of it's <see cref="Completed"/> event.
+        /// </summary>
+        /// <param name="asCancelled">Optional. A value indicating whether the event was cancelled.</param>
+        public void Complete(bool asCancelled = false)
+        {
+            this.State = asCancelled ? EventState.Cancelled : EventState.Completed;
+
+            this.Completed?.Invoke(this);
         }
 
         /// <summary>

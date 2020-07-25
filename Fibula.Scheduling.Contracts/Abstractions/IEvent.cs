@@ -13,6 +13,7 @@ namespace Fibula.Scheduling.Contracts.Abstractions
 {
     using System;
     using Fibula.Scheduling.Contracts.Delegates;
+    using Fibula.Scheduling.Contracts.Enumerations;
 
     /// <summary>
     /// Interface that represents an event.
@@ -28,6 +29,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// Delegate fired when this event is expedited.
         /// </summary>
         event EventExpeditedDelegate Expedited;
+
+        /// <summary>
+        /// Fired when this even is processed to completion (after no more repeats).
+        /// </summary>
+        event EventCompletedDelegate Completed;
 
         /// <summary>
         /// Gets a unique identifier for this event.
@@ -49,6 +55,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// The event is not repeated if the value is not positive.
         /// </summary>
         TimeSpan RepeatAfter { get; }
+
+        /// <summary>
+        /// Gets the event's state.
+        /// </summary>
+        EventState State { get; }
 
         /// <summary>
         /// Attempts to cancel this event.

@@ -8,12 +8,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Enumerations\**" />
-    <EmbeddedResource Remove="Enumerations\**" />
-    <None Remove="Enumerations\**" />
-  </ItemGroup>
-
-  <ItemGroup>
     <Compile Remove="Abstractions\IEventCondition.cs" />
   </ItemGroup>
 
