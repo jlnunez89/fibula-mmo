@@ -108,6 +108,7 @@ namespace Fibula.Protocol.V772
                 { OutgoingGamePacketType.InventoryItem, typeof(PlayerInventorySetSlotPacketWriter) },
                 { OutgoingGamePacketType.PlayerSkills, typeof(PlayerSkillsPacketWriter) },
                 { OutgoingGamePacketType.PlayerStats, typeof(PlayerStatsPacketWriter) },
+                { OutgoingGamePacketType.ProjectileEffect, typeof(ProjectilePacketWriter) },
                 { OutgoingGamePacketType.RemoveThing, typeof(RemoveAtPositionPacketWriter) },
                 { OutgoingGamePacketType.Square, typeof(SquarePacketWriter) },
                 { OutgoingGamePacketType.PlayerLogin, typeof(PlayerLoginPacketWriter) },

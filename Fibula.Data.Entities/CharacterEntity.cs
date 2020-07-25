@@ -69,7 +69,7 @@ namespace Fibula.Data.Entities
         /// <summary>
         /// Gets the max hitpoints to create the creature with.
         /// </summary>
-        public ushort MaxHitpoints => 100;
+        public ushort MaxHitpoints => 10000;
 
         /// <summary>
         /// Gets the max manapoints to create the creature with.

@@ -191,6 +191,7 @@ namespace Fibula.Mechanics.Operations
 
             var damageToApplyInfo = new DamageInfo(attackPower);
             var damageDoneInfo = this.Target.ApplyDamage(damageToApplyInfo, this.Attacker?.Id ?? 0);
+            var distanceOfAttack = (this.Target.Location - (this.Attacker?.Location ?? this.Target.Location)).MaxValueIn2D;
 
             var packetsToSend = new List<IOutboundPacket>
             {
@@ -213,6 +214,12 @@ namespace Fibula.Mechanics.Operations
                 }
 
                 packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
+            }
+
+            if (distanceOfAttack > 1)
+            {
+                // TODO: actual projectile value.
+                packetsToSend.Add(new ProjectilePacket(this.Attacker.Location, this.Target.Location, ProjectileType.Bolt));
             }
 
             this.Target.ConsumeCredits(CombatCreditType.Defense, 1);

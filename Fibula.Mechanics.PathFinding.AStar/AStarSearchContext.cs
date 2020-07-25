@@ -66,5 +66,10 @@ namespace Fibula.PathFinding.AStar
         /// Gets the target distance from the target node.
         /// </summary>
         public int TargetDistance { get; }
+
+        /// <summary>
+        /// Gets a value indicating whether the intention of the search is to move away from the goal.
+        /// </summary>
+        public bool MoveAway { get; }
     }
 }
