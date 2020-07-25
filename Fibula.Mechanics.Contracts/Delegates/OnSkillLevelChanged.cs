@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts.Delegates
+namespace Fibula.Mechanics.Contracts.Delegates
 {
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;

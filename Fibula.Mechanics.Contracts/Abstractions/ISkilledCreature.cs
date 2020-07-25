@@ -13,9 +13,9 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Delegates;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Delegates;
 
     /// <summary>
     /// Interface for any entity in the game that has skills.
