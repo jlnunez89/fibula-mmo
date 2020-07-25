@@ -228,7 +228,7 @@ namespace Fibula.Mechanics.Operations
 
             if (damageDoneInfo.ApplyBloodToEnvironment)
             {
-                context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.Blood));
+                context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.BloodType));
             }
 
             // Normalize the attacker's defense speed based on the global round time and round that up.

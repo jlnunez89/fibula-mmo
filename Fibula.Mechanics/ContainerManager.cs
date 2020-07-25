@@ -93,7 +93,7 @@ namespace Fibula.Mechanics
                         () => player.YieldSingleItem(),
                         new ContainerOpenPacket(
                             containerId,
-                            container.ThingId,
+                            container.TypeId,
                             container.Type.Name,
                             container.Capacity,
                             container.ParentContainer is IContainerItem parentContainer && parentContainer.Type.TypeId != 0,

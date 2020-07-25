@@ -134,7 +134,7 @@ namespace Fibula.Mechanics.Operations
                     {
                         // TODO: the item location will change and this will break.
                         var expirationOp = itemCreated.ExpirationTarget == 0 ?
-                            new DeleteItemOperation(requestorId: 0, thingCreated.ThingId, thingCreated.Location)
+                            new DeleteItemOperation(requestorId: 0, thingCreated.TypeId, thingCreated.Location)
                             :
                             new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
 

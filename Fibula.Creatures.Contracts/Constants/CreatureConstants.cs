@@ -21,7 +21,7 @@ namespace Fibula.Creatures.Contracts.Constants
         /// <summary>
         /// The id for things that are creatures.
         /// </summary>
-        public const ushort CreatureThingId = 99;
+        public const ushort CreatureTypeId = 99;
 
         /// <summary>
         /// The maximum speed allowed for creatures.

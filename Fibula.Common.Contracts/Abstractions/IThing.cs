@@ -27,10 +27,10 @@ namespace Fibula.Common.Contracts.Abstractions
         /// <summary>
         /// Gets the id of this thing.
         /// </summary>
-        ushort ThingId { get; }
+        ushort TypeId { get; }
 
         /// <summary>
-        /// Gets the unique id of this item.
+        /// Gets the unique id of this thing.
         /// </summary>
         Guid UniqueId { get; }
 

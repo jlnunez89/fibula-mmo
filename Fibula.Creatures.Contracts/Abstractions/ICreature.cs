@@ -32,7 +32,7 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the creature's blood type.
         /// </summary>
-        BloodType Blood { get; }
+        BloodType BloodType { get; }
 
         /// <summary>
         /// Gets the article in the name of the creature.
@@ -45,9 +45,9 @@ namespace Fibula.Creatures.Contracts.Abstractions
         string Name { get; }
 
         /// <summary>
-        /// Gets the creature's corpse.
+        /// Gets the creature's corpse type id.
         /// </summary>
-        ushort Corpse { get; }
+        ushort CorpseTypeId { get; }
 
         /// <summary>
         /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
@@ -90,11 +90,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         Direction Direction { get; }
 
         /// <summary>
-        /// Gets or sets the creature's last move modifier.
-        /// </summary>
-        decimal LastMovementCostModifier { get; set; }
-
-        /// <summary>
         /// Gets this creature's emitted light level.
         /// </summary>
         byte EmittedLightLevel { get; }
@@ -123,6 +118,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets a value indicating whether the creature is dead.
         /// </summary>
         bool IsDead { get; }
+
+        /// <summary>
+        /// Gets or sets the creature's last move modifier.
+        /// </summary>
+        decimal LastMovementCostModifier { get; set; }
 
         /// <summary>
         /// Gets or sets this creature's walk plan.

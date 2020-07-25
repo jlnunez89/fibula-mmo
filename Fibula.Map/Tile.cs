@@ -298,19 +298,19 @@ namespace Fibula.Map
         /// <returns>The item with such id, null otherwise.</returns>
         public IItem FindItemWithId(ushort typeId)
         {
-            if (this.Ground != null && this.Ground.ThingId == typeId)
+            if (this.Ground != null && this.Ground.TypeId == typeId)
             {
                 return this.Ground;
             }
 
-            if (this.LiquidPool != null && this.LiquidPool.ThingId == typeId)
+            if (this.LiquidPool != null && this.LiquidPool.TypeId == typeId)
             {
                 return this.LiquidPool;
             }
 
             lock (this.tileLock)
             {
-                return this.groundBorders.FirstOrDefault(i => i.ThingId == typeId) ?? this.stayOnTopItems.FirstOrDefault(i => i.ThingId == typeId) ?? this.stayOnBottomItems.FirstOrDefault(i => i.ThingId == typeId) ?? this.itemsOnTile.FirstOrDefault(i => i.ThingId == typeId);
+                return this.groundBorders.FirstOrDefault(i => i.TypeId == typeId) ?? this.stayOnTopItems.FirstOrDefault(i => i.TypeId == typeId) ?? this.stayOnBottomItems.FirstOrDefault(i => i.TypeId == typeId) ?? this.itemsOnTile.FirstOrDefault(i => i.TypeId == typeId);
             }
         }
 
@@ -880,7 +880,7 @@ namespace Fibula.Map
                 {
                     var temp = this.stayOnTopItems.Pop();
 
-                    if (stayOnTopItemTypeId == temp.ThingId)
+                    if (stayOnTopItemTypeId == temp.TypeId)
                     {
                         wasRemoved = true;
                         break;
@@ -928,7 +928,7 @@ namespace Fibula.Map
                 {
                     var temp = this.stayOnBottomItems.Pop();
 
-                    if (stayOnBottomItemTypeId == temp.ThingId)
+                    if (stayOnBottomItemTypeId == temp.TypeId)
                     {
                         wasRemoved = true;
                         break;
@@ -976,7 +976,7 @@ namespace Fibula.Map
                 {
                     var temp = this.itemsOnTile.Pop();
 
-                    if (itemTypeId == temp.ThingId)
+                    if (itemTypeId == temp.TypeId)
                     {
                         wasRemoved = true;
                         break;

@@ -52,7 +52,7 @@ namespace Fibula.Protocol.V772.PacketWriters
             ushort manapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.Manapoints);
             ushort maxManapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.MaxManapoints);
 
-            ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, playerStatsPacket.Player.CarryStrength * 100));
+            ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, playerStatsPacket.Player.CarryStrength));
 
             ICombatant combatantPlayer = playerStatsPacket.Player as ICombatant;
 

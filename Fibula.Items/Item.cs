@@ -66,9 +66,9 @@ namespace Fibula.Items
         public IDictionary<ItemAttribute, IConvertible> Attributes { get; }
 
         /// <summary>
-        /// Gets the id of this thing, which is the item's client id.
+        /// Gets the type id of this item.
         /// </summary>
-        public override ushort ThingId => this.Type.TypeId;
+        public override ushort TypeId => this.Type.TypeId;
 
         /// <summary>
         /// Gets a value indicating whether this item changes on use.

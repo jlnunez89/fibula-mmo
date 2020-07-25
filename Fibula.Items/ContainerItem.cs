@@ -184,11 +184,11 @@ namespace Fibula.Items
             }
 
             IItem existingItem = null;
-            ushort thingId = thing.ThingId;
+            ushort thingId = thing.TypeId;
 
             if (index == byte.MaxValue)
             {
-                existingItem = this.Content.FirstOrDefault(i => i.ThingId == thingId);
+                existingItem = this.Content.FirstOrDefault(i => i.TypeId == thingId);
             }
             else
             {
@@ -196,7 +196,7 @@ namespace Fibula.Items
                 existingItem = index >= this.Content.Count ? null : this.Content[index];
             }
 
-            if (existingItem == null || thing.ThingId != existingItem.ThingId || existingItem.Amount < amount)
+            if (existingItem == null || thing.TypeId != existingItem.TypeId || existingItem.Amount < amount)
             {
                 return (false, null);
             }
@@ -250,7 +250,7 @@ namespace Fibula.Items
 
             if (index == byte.MaxValue)
             {
-                existingItem = this.Content.FirstOrDefault(i => i.ThingId == fromThing.ThingId);
+                existingItem = this.Content.FirstOrDefault(i => i.TypeId == fromThing.TypeId);
             }
             else
             {
@@ -258,7 +258,7 @@ namespace Fibula.Items
                 existingItem = index >= this.Content.Count ? null : this.Content[index];
             }
 
-            if (existingItem == null || fromThing.ThingId != existingItem.ThingId || existingItem.Amount < amount)
+            if (existingItem == null || fromThing.TypeId != existingItem.TypeId || existingItem.Amount < amount)
             {
                 return (false, null);
             }

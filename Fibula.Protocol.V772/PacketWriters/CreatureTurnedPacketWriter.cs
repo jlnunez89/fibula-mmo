@@ -49,7 +49,7 @@ namespace Fibula.Protocol.V772.PacketWriters
 
             message.AddLocation(creatureTurnedPacket.Creature.Location);
             message.AddByte(creatureTurnedPacket.StackPosition);
-            message.AddUInt16(creatureTurnedPacket.Creature.ThingId);
+            message.AddUInt16(creatureTurnedPacket.Creature.TypeId);
             message.AddUInt32(creatureTurnedPacket.Creature.Id);
             message.AddByte((byte)creatureTurnedPacket.Creature.Direction);
         }

@@ -453,8 +453,8 @@ namespace Fibula.Creatures
             else if (damageInfo.Damage > 0)
             {
                 damageInfo.Damage = Math.Min(damageInfo.Damage, this.Hitpoints);
-                damageInfo.Blood = this.Blood;
-                damageInfo.Effect = this.Blood switch
+                damageInfo.Blood = this.BloodType;
+                damageInfo.Effect = this.BloodType switch
                 {
                     BloodType.Bones => AnimatedEffect.XGray,
                     BloodType.Fire => AnimatedEffect.XBlood,

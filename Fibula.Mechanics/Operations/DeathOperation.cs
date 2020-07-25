@@ -73,12 +73,12 @@ namespace Fibula.Mechanics.Operations
                 // Add the corpse.
                 var corpseCreationArguments = new ItemCreationArguments()
                 {
-                    TypeId = this.Creature.Corpse,
+                    TypeId = this.Creature.CorpseTypeId,
                 };
 
                 if (context.ItemFactory.Create(corpseCreationArguments) is IThing corpseCreated && this.AddContentToContainerOrFallback(context, creatureTile, ref corpseCreated))
                 {
-                    context.GameApi.CreateItemAtLocation(creatureTile.Location, context.PredefinedItemSet.FindPoolForBloodType(this.Creature.Blood));
+                    context.GameApi.CreateItemAtLocation(creatureTile.Location, context.PredefinedItemSet.FindPoolForBloodType(this.Creature.BloodType));
                 }
 
                 this.RemoveCreature(context, this.Creature);

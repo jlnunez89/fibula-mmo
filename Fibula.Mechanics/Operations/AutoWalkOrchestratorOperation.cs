@@ -146,7 +146,7 @@ namespace Fibula.Mechanics.Operations
 
             var autoWalkOp = new MovementOperation(
                     this.Creature.Id,
-                    CreatureConstants.CreatureThingId,
+                    CreatureConstants.CreatureTypeId,
                     this.Creature.Location,
                     byte.MaxValue,
                     this.Creature.Id,

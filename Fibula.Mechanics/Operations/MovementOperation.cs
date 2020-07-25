@@ -392,7 +392,7 @@ namespace Fibula.Mechanics.Operations
             var thingCanBeMoved = itemMoving != null && (itemMoving == requestor || itemMoving.CanBeMoved);
             var locationsMatch = itemMoving?.Location == this.FromLocation;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
-            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.ThingId && itemMoving.Amount >= this.Amount;
+            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.TypeId && itemMoving.Amount >= this.Amount;
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
@@ -429,7 +429,7 @@ namespace Fibula.Mechanics.Operations
             var locationsMatch = itemMoving?.Location == this.FromLocation;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var creatureHasDestinationContainerOpen = destinationContainer != null;
-            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.ThingId && itemMoving.Amount >= this.Amount;
+            var sourceTileHasEnoughItemAmount = this.ThingMovingId == itemMoving.TypeId && itemMoving.Amount >= this.Amount;
 
             if (sourceTileIsNull || !thingCanBeMoved)
             {
@@ -463,14 +463,14 @@ namespace Fibula.Mechanics.Operations
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
 
-            IThing thingMoving = this.ThingMovingId == CreatureConstants.CreatureThingId ? sourceTile.TopCreature as IThing : sourceTile.TopItem as IThing;
+            IThing thingMoving = this.ThingMovingId == CreatureConstants.CreatureTypeId ? sourceTile.TopCreature as IThing : sourceTile.TopItem as IThing;
 
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
             var destinationHasGround = destinationTile?.Ground != null;
             var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
             var locationsMatch = thingMoving?.Location == this.FromLocation;
-            var isIntendedThing = this.ThingMovingId != CreatureConstants.CreatureThingId ? thingMoving?.ThingId == this.ThingMovingId : (thingMoving as ICreature)?.Id == this.FromCreatureId;
+            var isIntendedThing = this.ThingMovingId != CreatureConstants.CreatureTypeId ? thingMoving?.TypeId == this.ThingMovingId : (thingMoving as ICreature)?.Id == this.FromCreatureId;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;
             var canThrowBetweenLocations = isTeleport || requestor == null || context.Map.CanThrowBetweenLocations(this.FromLocation, this.ToLocation, checkLineOfSight: true);
 
@@ -537,7 +537,7 @@ namespace Fibula.Mechanics.Operations
 
                 // More pre-conditions.
                 var itemCanBeMoved = item.CanBeMoved;
-                var sourceTileHasEnoughItemAmount = this.ThingMovingId == item.ThingId && item.Amount >= this.Amount;
+                var sourceTileHasEnoughItemAmount = this.ThingMovingId == item.TypeId && item.Amount >= this.Amount;
                 var destinationIsObstructed = destinationTile.BlocksLay || (item.BlocksPass && destinationTile.BlocksPass);
                 var movementInRange = requestor == null || (distanceFromSource.MaxValueIn2D <= 1 && distanceFromSource.Z == 0 && (!item.Type.HasItemFlag(ItemFlag.BlocksWalk) || (distanceBetweenLocations.MaxValueIn2D <= 2 && distanceBetweenLocations.Z == 0)));
 

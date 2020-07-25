@@ -48,9 +48,9 @@ namespace Fibula.Common
         public Guid UniqueId { get; }
 
         /// <summary>
-        /// Gets the id of this thing.
+        /// Gets the type id of this thing.
         /// </summary>
-        public abstract ushort ThingId { get; }
+        public abstract ushort TypeId { get; }
 
         /// <summary>
         /// Gets a value indicating whether this thing can be moved.

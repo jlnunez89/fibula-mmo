@@ -52,7 +52,7 @@ namespace Fibula.Creatures
         /// <param name="article">An article for the name of this creature.</param>
         /// <param name="maxHitpoints">The maximum hitpoints of the creature.</param>
         /// <param name="maxManapoints">The maximum manapoints of the creature.</param>
-        /// <param name="corpse">The corpse of the creature.</param>
+        /// <param name="corpseTypeId">The corpse of the creature.</param>
         /// <param name="hitpoints">The current hitpoints of the creature.</param>
         /// <param name="manapoints">The current manapoints of the creature.</param>
         protected Creature(
@@ -60,7 +60,7 @@ namespace Fibula.Creatures
             string article,
             ushort maxHitpoints,
             ushort maxManapoints,
-            ushort corpse = 0,
+            ushort corpseTypeId = 0,
             ushort hitpoints = 0,
             ushort manapoints = 0)
         {
@@ -82,7 +82,7 @@ namespace Fibula.Creatures
             this.Hitpoints = Math.Min(this.MaxHitpoints, hitpoints == 0 ? this.MaxHitpoints : hitpoints);
             this.MaxManapoints = maxManapoints;
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
-            this.Corpse = corpse;
+            this.CorpseTypeId = corpseTypeId;
 
             this.LastMovementCostModifier = 1;
 
@@ -93,20 +93,12 @@ namespace Fibula.Creatures
             };
 
             this.BaseSpeed = 70;
-
-            // this.Skills = new Dictionary<SkillType, ISkill>();
-
-            // Subscribe any attack-impacting conditions here
-            // this.OnThingChanged += this.CheckAutoAttack;             // Are we in range with our target now/still?
-            // this.OnThingChanged += this.CheckPendingActions;         // Are we in range with our pending action?
-            // OnTargetChanged += CheckAutoAttack;                      // Are we attacking someone new / not attacking anymore?
-            // OnInventoryChanged += Mind.AttackConditionsChanged;      // Equipped / DeEquiped something?
         }
 
         /// <summary>
-        /// Gets the id of this creature.
+        /// Gets the type id of this creature.
         /// </summary>
-        public override ushort ThingId => CreatureConstants.CreatureThingId;
+        public override ushort TypeId => CreatureConstants.CreatureTypeId;
 
         /// <summary>
         /// Gets the creature's in-game id.
@@ -126,7 +118,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the corpse of the creature.
         /// </summary>
-        public ushort Corpse { get; }
+        public ushort CorpseTypeId { get; }
 
         /// <summary>
         /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
@@ -181,11 +173,6 @@ namespace Fibula.Creatures
         public Direction Direction { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the creature's last move modifier.
-        /// </summary>
-        public decimal LastMovementCostModifier { get; set; }
-
-        /// <summary>
         /// Gets or sets this creature's light level.
         /// </summary>
         public byte EmittedLightLevel { get; protected set; }
@@ -218,12 +205,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets or sets this creature's blood type.
         /// </summary>
-        public BloodType Blood { get; protected set; }
-
-        ///// <summary>
-        ///// Gets this creature's skills.
-        ///// </summary>
-        // public IDictionary<SkillType, ISkill> Skills { get; }
+        public BloodType BloodType { get; protected set; }
 
         /// <summary>
         /// Gets or sets the inventory for the creature.
@@ -231,12 +213,17 @@ namespace Fibula.Creatures
         public abstract IInventory Inventory { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the creature's last move modifier.
+        /// </summary>
+        public decimal LastMovementCostModifier { get; set; }
+
+        /// <summary>
         /// Gets or sets this creature's walk plan.
         /// </summary>
         public WalkPlan WalkPlan { get; set; }
 
         /// <summary>
-        /// Gets a value indicating whether the creature is dead.
+        /// Gets a value indicating whether the creature is considered dead.
         /// </summary>
         public bool IsDead => this.Hitpoints == 0;
 
@@ -389,10 +376,10 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Calculates the base movement speed of the creature.
+        /// Calculates the movement speed of the creature.
         /// </summary>
-        /// <returns>The base movement speed of the creature.</returns>
-        protected virtual ushort CalculateMovementBaseSpeed()
+        /// <returns>The movement speed of the creature.</returns>
+        protected virtual ushort CalculateMovementSpeed()
         {
             return (ushort)((2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
         }

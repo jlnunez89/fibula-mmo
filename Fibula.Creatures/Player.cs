@@ -77,7 +77,7 @@ namespace Fibula.Creatures
             this.InitializeSkills();
 
             this.BaseSpeed = 220;
-            this.Speed = this.CalculateMovementBaseSpeed();
+            this.Speed = this.CalculateMovementSpeed();
 
             this.Inventory = new PlayerInventory(this);
         }
@@ -181,7 +181,7 @@ namespace Fibula.Creatures
         /// Calculates the base movement speed of the player.
         /// </summary>
         /// <returns>The base movement speed of the player.</returns>
-        protected override ushort CalculateMovementBaseSpeed()
+        protected override ushort CalculateMovementSpeed()
         {
             var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 

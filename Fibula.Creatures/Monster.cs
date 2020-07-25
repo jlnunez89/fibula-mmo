@@ -53,7 +53,7 @@ namespace Fibula.Creatures
 
             this.BaseSpeed = monsterType.BaseSpeed;
 
-            this.Blood = monsterType.BloodType;
+            this.BloodType = monsterType.BloodType;
             this.ChaseMode = this.AutoAttackRange > 1 ? ChaseMode.KeepDistance : ChaseMode.Chase;
             this.FightMode = FightMode.FullAttack;
 

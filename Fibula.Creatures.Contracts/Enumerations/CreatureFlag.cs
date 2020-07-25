@@ -19,27 +19,27 @@ namespace Fibula.Creatures.Contracts.Enumerations
         /// <summary>
         /// The creature attempts to clear it's path by pushing movable items or destroying them.
         /// </summary>
-        CanPushItems,
+        CanPushItems = 1 << 1,
 
         /// <summary>
         /// The creature attempts to clear it's path by pushing other creatures.
         /// </summary>
-        CanPushCreatures,
+        CanPushCreatures = 1 << 2,
 
         /// <summary>
         /// The creature cannot be pushed by others.
         /// </summary>
-        CannotBePushed,
+        CannotBePushed = 1 << 3,
 
         /// <summary>
         /// The creature cannot be targetted for attack.
         /// </summary>
-        CannotBeTargetted,
+        CannotBeTargetted = 1 << 4,
 
         /// <summary>
         /// The creature keeps their distance when fighting.
         /// </summary>
         // TODO: will be removed in favor of an attribute.
-        KeepsDistance,
+        KeepsDistance = 1 << 5,
     }
 }
