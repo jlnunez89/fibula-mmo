@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IItemType.cs" company="2Dudes">
+// <copyright file="IItemTypeEntity.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,16 +9,15 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Items.Contracts.Abstractions
+namespace Fibula.Data.Entities.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Items.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for types of items.
     /// </summary>
-    public interface IItemType : ICloneable
+    public interface IItemTypeEntity : IIdentifiableEntity, ICloneable
     {
         /// <summary>
         /// Gets the id of the type of this item.
@@ -38,13 +37,13 @@ namespace Fibula.Items.Contracts.Abstractions
         /// <summary>
         /// Gets the flags for this type of item.
         /// </summary>
-        ISet<ItemFlag> Flags { get; }
+        ulong Flags { get; }
 
         /// <summary>
         /// Gets the attributes of this type of item.
         /// </summary>
         // TODO: get rid of this and add all attributes as properties?
-        IDictionary<ItemAttribute, IConvertible> DefaultAttributes { get; }
+        IDictionary<byte, IConvertible> DefaultAttributes { get; }
 
         /// <summary>
         /// Gets the client id of the type of this item.

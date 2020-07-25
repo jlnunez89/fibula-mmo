@@ -26,9 +26,14 @@ namespace Fibula.Data.Repositories
     public class MonsterTypeReadOnlyRepository : IReadOnlyRepository<IMonsterTypeEntity>
     {
         /// <summary>
+        /// A locking object to prevent double initialization of the catalog.
+        /// </summary>
+        private static readonly object MonsterTypeCatalogLock = new object();
+
+        /// <summary>
         /// Stores the map between the monster race ids and the actual monster types.
         /// </summary>
-        private readonly IDictionary<ushort, IMonsterTypeEntity> monsterTypeCatalog;
+        private static IDictionary<ushort, IMonsterTypeEntity> monsterTypeCatalog;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MonsterTypeReadOnlyRepository"/> class.
@@ -38,7 +43,16 @@ namespace Fibula.Data.Repositories
         {
             monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
 
-            this.monsterTypeCatalog = monsterTypeLoader.LoadTypes();
+            if (monsterTypeCatalog == null)
+            {
+                lock (MonsterTypeCatalogLock)
+                {
+                    if (monsterTypeCatalog == null)
+                    {
+                        monsterTypeCatalog = monsterTypeLoader.LoadTypes();
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -48,7 +62,7 @@ namespace Fibula.Data.Repositories
         /// <returns>The collection of entities retrieved.</returns>
         public IEnumerable<IMonsterTypeEntity> FindMany(Expression<Func<IMonsterTypeEntity, bool>> predicate)
         {
-            return this.monsterTypeCatalog.Values.AsQueryable().Where(predicate);
+            return monsterTypeCatalog.Values.AsQueryable().Where(predicate);
         }
 
         /// <summary>
@@ -59,7 +73,7 @@ namespace Fibula.Data.Repositories
         /// <returns>The entity found.</returns>
         public IMonsterTypeEntity FindOne(Expression<Func<IMonsterTypeEntity, bool>> predicate)
         {
-            return this.monsterTypeCatalog.Values.AsQueryable().FirstOrDefault(predicate);
+            return monsterTypeCatalog.Values.AsQueryable().FirstOrDefault(predicate);
         }
 
         /// <summary>
@@ -68,7 +82,7 @@ namespace Fibula.Data.Repositories
         /// <returns>The collection of entities retrieved.</returns>
         public IEnumerable<IMonsterTypeEntity> GetAll()
         {
-            return this.monsterTypeCatalog.Values;
+            return monsterTypeCatalog.Values;
         }
 
         /// <summary>
@@ -78,9 +92,9 @@ namespace Fibula.Data.Repositories
         /// <returns>The entity found, if any.</returns>
         public IMonsterTypeEntity GetById(string id)
         {
-            if (ushort.TryParse(id, out ushort raceId) && this.monsterTypeCatalog.ContainsKey(raceId))
+            if (ushort.TryParse(id, out ushort raceId) && monsterTypeCatalog.ContainsKey(raceId))
             {
-                return this.monsterTypeCatalog[raceId];
+                return monsterTypeCatalog[raceId];
             }
 
             return null;

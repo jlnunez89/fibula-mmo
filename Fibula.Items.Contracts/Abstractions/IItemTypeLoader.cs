@@ -12,9 +12,10 @@
 namespace Fibula.Items.Contracts.Abstractions
 {
     using System.Collections.Generic;
+    using Fibula.Data.Entities.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for an <see cref="IItemType"/> loader.
+    /// Interface for an <see cref="IItemTypeEntity"/> loader.
     /// </summary>
     public interface IItemTypeLoader
     {
@@ -22,6 +23,6 @@ namespace Fibula.Items.Contracts.Abstractions
         /// Attempts to load the item catalog.
         /// </summary>
         /// <returns>The catalog, containing a mapping of loaded id to the item types.</returns>
-        IDictionary<ushort, IItemType> LoadTypes();
+        IDictionary<ushort, IItemTypeEntity> LoadTypes();
     }
 }

@@ -22,6 +22,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
+    using Fibula.Items.Contracts.Extensions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -150,14 +151,14 @@ namespace Fibula.Mechanics.Operations
         {
             string description = $"{itemToDescribe.Type.Name}";
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsLiquidPool) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
+            if (itemToDescribe.Type.HasItemFlag(ItemFlag.IsLiquidPool) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
             {
                 var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.LiquidType]).ToString().ToLower();
 
                 description += $" of {liquidTypeName}";
             }
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsLiquidContainer) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
+            if (itemToDescribe.Type.HasItemFlag(ItemFlag.IsLiquidContainer) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.LiquidType))
             {
                 var liquidTypeName = ((LiquidType)itemToDescribe.Attributes[ItemAttribute.LiquidType]).ToString().ToLower();
 
@@ -177,7 +178,7 @@ namespace Fibula.Mechanics.Operations
                 description += $"\n{itemToDescribe.Type.Description}";
             }
 
-            if (itemToDescribe.Type.Flags.Contains(ItemFlag.IsReadable) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.Text) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.ReadRange))
+            if (itemToDescribe.Type.HasItemFlag(ItemFlag.IsReadable) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.Text) && itemToDescribe.Attributes.ContainsKey(ItemAttribute.ReadRange))
             {
                 var text = itemToDescribe.Attributes[ItemAttribute.Text] as string;
                 var fontSize = itemToDescribe.Attributes[ItemAttribute.ReadRange] as int? ?? 0;

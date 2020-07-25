@@ -16,7 +16,8 @@ namespace Fibula.Items.ObjectsFile
     using System.IO;
     using System.Linq;
     using Fibula.Common.Utilities;
-    using Fibula.Items;
+    using Fibula.Data.Entities;
+    using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Parsing.CipFiles;
@@ -82,12 +83,12 @@ namespace Fibula.Items.ObjectsFile
         /// Attempts to load the item catalog.
         /// </summary>
         /// <returns>The catalog, containing a mapping of loaded id to the item types.</returns>
-        public IDictionary<ushort, IItemType> LoadTypes()
+        public IDictionary<ushort, IItemTypeEntity> LoadTypes()
         {
-            var itemDictionary = new Dictionary<ushort, IItemType>();
+            var itemDictionary = new Dictionary<ushort, IItemTypeEntity>();
             var objectsFilePath = Path.Combine(Environment.CurrentDirectory, this.LoaderOptions.FilePath);
 
-            var currentType = new ItemType();
+            var currentType = new ItemTypeEntity();
 
             foreach (var readLine in File.ReadLines(objectsFilePath))
             {
@@ -110,7 +111,7 @@ namespace Fibula.Items.ObjectsFile
                     currentType.LockChanges();
                     itemDictionary.Add(currentType.TypeId, currentType);
 
-                    currentType = new ItemType();
+                    currentType = new ItemTypeEntity();
                     continue;
                 }
 
@@ -144,7 +145,7 @@ namespace Fibula.Items.ObjectsFile
                             {
                                 if (flagMatch.ToItemFlag() is ItemFlag itemflag)
                                 {
-                                    currentType.SetFlag(itemflag);
+                                    currentType.SetItemFlag(itemflag);
                                 }
 
                                 continue;

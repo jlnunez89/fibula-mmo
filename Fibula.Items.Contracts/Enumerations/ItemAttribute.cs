@@ -14,7 +14,7 @@ namespace Fibula.Items.Contracts.Enumerations
     /// <summary>
     /// Enumerates all known item attributes.
     /// </summary>
-    public enum ItemAttribute
+    public enum ItemAttribute : byte
     {
         /// <summary>
         /// Tracks the amount for a cumulative item.

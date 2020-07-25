@@ -67,7 +67,7 @@ namespace Fibula.Mechanics.Operations
             {
                 var r = this.Spawn.Radius / 4;
 
-                var monsterType = uow.Monsters.GetById(this.Spawn.MonsterRaceId.ToString());
+                var monsterType = uow.MonsterTypes.GetById(this.Spawn.MonsterRaceId.ToString());
 
                 if (!(monsterType is MonsterTypeEntity monsterTypeEntity))
                 {

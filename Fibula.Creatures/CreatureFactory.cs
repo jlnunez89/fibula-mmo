@@ -27,7 +27,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Initializes a new instance of the <see cref="CreatureFactory"/> class.
         /// </summary>
-        /// <param name="applicationContext">A reference to the application context..</param>
+        /// <param name="applicationContext">A reference to the application context.</param>
         /// <param name="itemFactory">A reference to the item factory in use.</param>
         public CreatureFactory(IApplicationContext applicationContext, IItemFactory itemFactory)
         {
@@ -75,14 +75,14 @@ namespace Fibula.Creatures
                 // TODO: suppport other types
                 // case CreatureType.NonPlayerCharacter:
                 case CreatureType.Monster:
-                    if (creatureCreationArguments.Metadata == null || !ushort.TryParse(creatureCreationArguments.Metadata.Id, out ushort raceId))
+                    if (creatureCreationArguments.Metadata?.Id == null)
                     {
                         throw new ArgumentException("Invalid metadata in creation arguments for a monster.", nameof(creatureCreationArguments));
                     }
 
                     using (var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork())
                     {
-                        if (!(unitOfWork.Monsters.FindOne(m => m.RaceId == raceId) is IMonsterTypeEntity monsterType))
+                        if (!(unitOfWork.MonsterTypes.GetById(creatureCreationArguments.Metadata.Id) is IMonsterTypeEntity monsterType))
                         {
                             throw new ArgumentException($"Unknown monster with Id {creatureCreationArguments.Metadata.Id} in creation arguments for a monster.", nameof(creatureCreationArguments));
                         }

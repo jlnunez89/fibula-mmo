@@ -113,8 +113,7 @@ namespace Fibula.Mechanics.Operations
             {
                 try
                 {
-                    var raceStr = this.Content.Replace("!mon", string.Empty);
-                    var raceId = Convert.ToUInt16(raceStr);
+                    var raceId = this.Content.Replace("!mon", string.Empty);
 
                     context.GameApi.PlaceMonsterAt(raceId, requestor.LocationInFront());
                 }
