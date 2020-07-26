@@ -9,12 +9,12 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts
+namespace Fibula.Creatures.Contracts.Structs
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Creatures.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a walk plan.

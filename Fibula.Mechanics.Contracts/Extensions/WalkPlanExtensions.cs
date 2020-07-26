@@ -13,9 +13,10 @@ namespace Fibula.Mechanics.Contracts.Extensions
 {
     using System;
     using System.Collections.Generic;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Structs;
 
     /// <summary>
     /// Helper class for extension methods of walk plans.

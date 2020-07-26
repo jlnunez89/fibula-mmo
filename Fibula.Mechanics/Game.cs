@@ -18,7 +18,6 @@ namespace Fibula.Mechanics
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Constants;
     using Fibula.Common.Contracts.Enumerations;
@@ -275,11 +274,13 @@ namespace Fibula.Mechanics
         /// <param name="oldHealthValue">The old value of the combatant's health.</param>
         public void CombatantHealthChanged(ICombatant combatant, ushort oldHealthValue)
         {
+            combatant.ThrowIfNull(nameof(combatant));
+
+            // This updates the health as seen by others.
+            this.scheduler.ScheduleEvent(new GenericNotification(() => this.map.PlayersThatCanSee(combatant.Location), new CreatureHealthPacket(combatant)));
+
             if (combatant is IPlayer playerCombatant)
             {
-                // This updates the health as seen by others.
-                this.scheduler.ScheduleEvent(new GenericNotification(() => this.map.PlayersThatCanSee(playerCombatant.Location), new CreatureHealthPacket(playerCombatant)));
-
                 // And this updates the health of the player.
                 this.scheduler.ScheduleEvent(new GenericNotification(() => playerCombatant.YieldSingleItem(), new PlayerStatsPacket(playerCombatant)));
             }

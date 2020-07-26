@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts.Enumerations
+namespace Fibula.Creatures.Contracts.Enumerations
 {
     /// <summary>
     /// Enumeration of the possible states of a walk plan.

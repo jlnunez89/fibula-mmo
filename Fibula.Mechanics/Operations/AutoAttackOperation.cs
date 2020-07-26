@@ -18,6 +18,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -187,7 +188,7 @@ namespace Fibula.Mechanics.Operations
 
             // Calculate the damage to inflict without any protections and reductions,
             // i.e. the amount of damage that the attacker can generate as it is.
-            var attackPower = rng.Next(10) + 1;
+            var attackPower = 1 + rng.Next(this.Attacker == null ? 10 : (int)this.Attacker.Skills[SkillType.NoWeapon].Level);
 
             var damageToApplyInfo = new DamageInfo(attackPower);
             var damageDoneInfo = this.Target.ApplyDamage(damageToApplyInfo, this.Attacker?.Id ?? 0);

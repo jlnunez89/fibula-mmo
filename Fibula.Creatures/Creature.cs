@@ -15,13 +15,13 @@ namespace Fibula.Creatures
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
+    using Fibula.Creatures.Contracts.Structs;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
