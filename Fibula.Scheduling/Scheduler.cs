@@ -109,6 +109,11 @@ namespace Fibula.Scheduling
         public DateTimeOffset CurrentTime => DateTimeOffset.UtcNow;
 
         /// <summary>
+        /// Gets the queue size of the scheduler.
+        /// </summary>
+        public int QueueSize => this.priorityQueue.Count;
+
+        /// <summary>
         /// Begins the scheduler's processing the queue and firing events.
         /// </summary>
         /// <param name="cancellationToken">A token to observe for cancellation.</param>

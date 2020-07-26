@@ -32,6 +32,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         DateTimeOffset CurrentTime { get; }
 
         /// <summary>
+        /// Gets the queue size of the scheduler.
+        /// </summary>
+        int QueueSize { get; }
+
+        /// <summary>
         /// Schedules an event to be fired at the specified time.
         /// </summary>
         /// <param name="eventToSchedule">The event to schedule.</param>

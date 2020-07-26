@@ -20,6 +20,7 @@ namespace Fibula.Mechanics
     using Fibula.Client.Contracts.Abstractions;
     using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Constants;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -763,7 +764,7 @@ namespace Fibula.Mechanics
             while (!cancellationToken.IsCancellationRequested)
             {
                 // Thread.Sleep here is OK because MiscellaneousEventsLoop runs on it's own thread.
-                Thread.Sleep(TimeSpan.FromMinutes(1));
+                Thread.Sleep(TimeSpan.FromSeconds(2));
 
                 const int NightLightLevel = 30;
                 const int DuskDawnLightLevel = 130;
@@ -804,7 +805,19 @@ namespace Fibula.Mechanics
                             this.worldInfo.LightLevel,
                             this.worldInfo.LightColor));
                 }
+
+                this.TrackServerMetrics();
             }
+        }
+
+        /// <summary>
+        /// Tracks server metrics.
+        /// </summary>
+        private void TrackServerMetrics()
+        {
+            var schedulerQueueSizeMetric = this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.SchedulerQueueSizeMetricName);
+
+            schedulerQueueSizeMetric.TrackValue(this.scheduler.QueueSize);
         }
 
         /// <summary>
