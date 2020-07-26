@@ -12,7 +12,6 @@
 namespace Fibula.Items
 {
     using System;
-    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
     using Fibula.Data.Entities.Contracts.Abstractions;

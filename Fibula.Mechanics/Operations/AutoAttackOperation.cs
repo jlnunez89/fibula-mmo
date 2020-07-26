@@ -99,12 +99,12 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             // We should stop any pending attack operation before carrying this one out.
-            if (this.Attacker.PendingAutoAttackOperation != null && this.Attacker.PendingAutoAttackOperation != this)
+            if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp != this)
             {
-                // Cancel it first, and remove the pointer to it.
-                if (this.Attacker.PendingAutoAttackOperation.Cancel())
+                // Cancel it first, and remove it.
+                if (attackersAtkOp.Cancel())
                 {
-                    this.Attacker.PendingAutoAttackOperation = null;
+                    this.Attacker.StopTrackingEvent(attackersAtkOp);
                 }
             }
 
@@ -134,7 +134,7 @@ namespace Fibula.Mechanics.Operations
                     if (!nullAttacker)
                     {
                         // Set the pending attack operation as this operation.
-                        this.Attacker.PendingAutoAttackOperation = this;
+                        this.Attacker.StartTrackingEvent(this);
 
                         // And set this operation to repeat after some time (we chose it to be 2x the normalized attack speed), so that it can actually
                         // be expedited (or else it's just processed as usual).

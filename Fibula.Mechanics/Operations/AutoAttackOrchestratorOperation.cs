@@ -16,6 +16,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Extensions;
 
     /// <summary>
     /// Class that represents a combat operation that orchestrates auto attack operations.
@@ -62,6 +63,19 @@ namespace Fibula.Mechanics.Operations
 
                 return;
             }
+
+            // We should also stop any OTHER tracked attack orchestration operation before carrying this one out.
+            if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation atkOrchestrationOp) && atkOrchestrationOp != this)
+            {
+                // Cancel it first, and remove it.
+                if (atkOrchestrationOp.Cancel())
+                {
+                    this.Attacker.StopTrackingEvent(atkOrchestrationOp);
+                }
+            }
+
+            // Set the attack orchestration operation as this operation.
+            this.Attacker.StartTrackingEvent(this);
 
             // Normalize the attacker's attack speed based on the global round time and round that up.
             // We do this every time because it could have changed.

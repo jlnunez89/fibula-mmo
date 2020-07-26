@@ -235,11 +235,6 @@ namespace Fibula.Creatures
         public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
 
         /// <summary>
-        /// Gets or sets the pending auto attack operation of this player, if any.
-        /// </summary>
-        public IOperation PendingAutoAttackOperation { get; set; }
-
-        /// <summary>
         /// Gets the current skills information for the combatant.
         /// </summary>
         /// <remarks>

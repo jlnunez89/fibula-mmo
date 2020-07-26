@@ -12,6 +12,7 @@
 namespace Fibula.Creatures
 {
     using System;
+    using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common;
     using Fibula.Common.Contracts;
@@ -24,6 +25,7 @@ namespace Fibula.Creatures
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents all creatures in the game.
@@ -84,6 +86,7 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.CorpseTypeId = corpseTypeId;
 
+            this.TrackedEvents = new Dictionary<string, IEvent>();
             this.LastMovementCostModifier = 1;
 
             this.Outfit = new Outfit
@@ -221,6 +224,11 @@ namespace Fibula.Creatures
         /// Gets or sets this creature's walk plan.
         /// </summary>
         public WalkPlan WalkPlan { get; set; }
+
+        /// <summary>
+        /// Gets the tracked events for this creature.
+        /// </summary>
+        public IDictionary<string, IEvent> TrackedEvents { get; }
 
         /// <summary>
         /// Gets a value indicating whether the creature is considered dead.
@@ -363,6 +371,40 @@ namespace Fibula.Creatures
         public override string DescribeForLogger()
         {
             return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
+        }
+
+        /// <summary>
+        /// Makes the creature start tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</param>
+        public void StartTrackingEvent(IEvent evt, string identifier = "")
+        {
+            evt.ThrowIfNull(nameof(evt));
+
+            if (string.IsNullOrWhiteSpace(identifier))
+            {
+                identifier = evt.GetType().Name;
+            }
+
+            this.TrackedEvents[identifier] = evt;
+        }
+
+        /// <summary>
+        /// Makes the creature stop tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
+        public void StopTrackingEvent(IEvent evt, string identifier = "")
+        {
+            evt.ThrowIfNull(nameof(evt));
+
+            if (string.IsNullOrWhiteSpace(identifier))
+            {
+                identifier = evt.GetType().Name;
+            }
+
+            this.TrackedEvents.Remove(identifier);
         }
 
         /// <summary>

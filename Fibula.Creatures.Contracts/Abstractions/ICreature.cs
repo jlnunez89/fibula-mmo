@@ -12,12 +12,14 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System;
+    using System.Collections.Generic;
     using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for all creatures in the game.
@@ -130,6 +132,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         WalkPlan WalkPlan { get; set; }
 
         /// <summary>
+        /// Gets the tracked events for this creature.
+        /// </summary>
+        IDictionary<string, IEvent> TrackedEvents { get; }
+
+        /// <summary>
         /// Checks if this creature can see a given creature.
         /// </summary>
         /// <param name="creature">The creature to check against.</param>
@@ -154,5 +161,19 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// </summary>
         /// <param name="outfit">The new outfit to change to.</param>
         void SetOutfit(Outfit outfit);
+
+        /// <summary>
+        /// Makes the creature start tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</param>
+        void StartTrackingEvent(IEvent evt, string identifier = "");
+
+        /// <summary>
+        /// Makes the creature stop tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
+        void StopTrackingEvent(IEvent evt, string identifier = "");
     }
 }

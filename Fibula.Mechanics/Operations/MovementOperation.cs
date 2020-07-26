@@ -754,14 +754,20 @@ namespace Fibula.Mechanics.Operations
             if (creature is ICombatant movingCombatant)
             {
                 // Check if we are in range to perform the attack operation, if any.
-                if (movingCombatant.PendingAutoAttackOperation != null && movingCombatant.PendingAutoAttackOperation is AutoAttackOperation autoAttackOperation)
+                if (movingCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp is AutoAttackOperation pAttackOpFromAttacker)
                 {
-                    var distanceBetweenCombatants = (autoAttackOperation.Attacker?.Location ?? autoAttackOperation.Target.Location) - autoAttackOperation.Target.Location;
-                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= autoAttackOperation.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+                    var distanceBetweenCombatants = (pAttackOpFromAttacker.Attacker?.Location ?? pAttackOpFromAttacker.Target.Location) - pAttackOpFromAttacker.Target.Location;
+                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= pAttackOpFromAttacker.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
 
                     if (inRange)
                     {
-                        autoAttackOperation.Expedite();
+                        pAttackOpFromAttacker.Expedite();
+
+                        // Also expedite their orchestration operation, to delay the next attack by the right amount.
+                        if (movingCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation attackersOrchAtkOp))
+                        {
+                            attackersOrchAtkOp.Expedite();
+                        }
                     }
                 }
 
@@ -770,19 +776,24 @@ namespace Fibula.Mechanics.Operations
                 {
                     if (context.CreatureFinder.FindCreatureById(otherCombatantId) is ICombatant otherCombatant)
                     {
-                        if (otherCombatant.PendingAutoAttackOperation == null ||
-                            !(otherCombatant.PendingAutoAttackOperation is AutoAttackOperation otherCombatantAutoAttackOperation) ||
-                            otherCombatantAutoAttackOperation.Target != movingCombatant)
+                        if (!otherCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation otherAtkOp) ||
+                            !(otherAtkOp is AutoAttackOperation pAttackOpFromOther) || pAttackOpFromOther.Target != movingCombatant)
                         {
                             continue;
                         }
 
-                        var distanceBetweenCombatants = (otherCombatantAutoAttackOperation.Attacker?.Location ?? otherCombatantAutoAttackOperation.Target.Location) - otherCombatantAutoAttackOperation.Target.Location;
-                        var inRange = distanceBetweenCombatants.MaxValueIn2D <= otherCombatantAutoAttackOperation.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+                        var distanceBetweenCombatants = (pAttackOpFromOther.Attacker?.Location ?? pAttackOpFromOther.Target.Location) - pAttackOpFromOther.Target.Location;
+                        var inRange = distanceBetweenCombatants.MaxValueIn2D <= pAttackOpFromOther.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
 
                         if (inRange)
                         {
-                            otherCombatant.PendingAutoAttackOperation.Expedite();
+                            pAttackOpFromOther.Expedite();
+
+                            // Also expedite their orchestration operation, to delay the next attack by the right amount.
+                            if (otherCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation othersOrchAtkOp))
+                            {
+                                othersOrchAtkOp.Expedite();
+                            }
                         }
                     }
                 }

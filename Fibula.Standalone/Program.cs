@@ -26,13 +26,13 @@ namespace Fibula.Standalone
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Creatures;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.MonFiles;
     using Fibula.Creatures.MonstersDbFile;
     using Fibula.Data.Contracts.Abstractions;
     using Fibula.Data.InMemoryDatabase;
+    using Fibula.Data.Loaders.MonFiles;
+    using Fibula.Data.Loaders.ObjectsFile;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
-    using Fibula.Items.ObjectsFile;
     using Fibula.Map;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.SectorFiles;

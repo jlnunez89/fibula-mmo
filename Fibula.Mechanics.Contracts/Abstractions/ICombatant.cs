@@ -103,11 +103,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         // ushort ArmorRating { get; }
 
         /// <summary>
-        /// Gets or sets the current auto attack operation that this combatant has pending, if any.
-        /// </summary>
-        IOperation PendingAutoAttackOperation { get; set; }
-
-        /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
         /// </summary>
         IEnumerable<(uint, uint)> DamageTakenDistribution { get; }

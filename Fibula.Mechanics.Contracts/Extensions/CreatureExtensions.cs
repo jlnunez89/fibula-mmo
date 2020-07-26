@@ -17,7 +17,9 @@ namespace Fibula.Mechanics.Contracts.Extensions
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Static class that provides helper methods for creature mechanics.
@@ -47,6 +49,22 @@ namespace Fibula.Mechanics.Contracts.Extensions
             var durationInMs = (uint)(Math.Ceiling(Math.Floor(totalPenalty / stepSpeed) / Epsilon) * Epsilon * creature.LastMovementCostModifier);
 
             return TimeSpan.FromMilliseconds(durationInMs);
+        }
+
+        /// <summary>
+        /// Checks if the creature has an operation being tracked under the given identifier and outputs it if so.
+        /// </summary>
+        /// <param name="creature">The creature to check in.</param>
+        /// <param name="identifier">The identifier of the operation to check for.</param>
+        /// <param name="operation">The operation found, if any.</param>
+        /// <returns>True if a tracked operation was found, and false otherwise.</returns>
+        public static bool TryRetrieveTrackedOperation(this ICreature creature, string identifier, out IOperation operation)
+        {
+            creature.ThrowIfNull(nameof(creature));
+
+            operation = creature.TrackedEvents.TryGetValue(identifier, out IEvent evt) ? evt as IOperation : null;
+
+            return operation != null;
         }
 
         /// <summary>
