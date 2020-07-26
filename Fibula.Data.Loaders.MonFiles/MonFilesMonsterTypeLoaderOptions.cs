@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Creatures.MonFiles
+namespace Fibula.Data.Loaders.MonFiles
 {
     using System.ComponentModel.DataAnnotations;
 

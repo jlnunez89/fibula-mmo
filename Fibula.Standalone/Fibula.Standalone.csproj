@@ -59,11 +59,11 @@
     <ProjectReference Include="..\Fibula.Client\Fibula.Client.csproj" />
     <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Common\Fibula.Common.csproj" />
-    <ProjectReference Include="..\Fibula.Creatures.MonFiles\Fibula.Creatures.MonFiles.csproj" />
     <ProjectReference Include="..\Fibula.Creatures.MonstersDbFile\Fibula.Creatures.MonstersDbFile.csproj" />
     <ProjectReference Include="..\Fibula.Creatures\Fibula.Creatures.csproj" />
     <ProjectReference Include="..\Fibula.Data.InMemoryDatabase\Fibula.Data.InMemoryDatabase.csproj" />
-    <ProjectReference Include="..\Fibula.Items.ObjectsFile\Fibula.Items.ObjectsFile.csproj" />
+    <ProjectReference Include="..\Fibula.Data.Loaders.MonFiles\Fibula.Data.Loaders.MonFiles.csproj" />
+    <ProjectReference Include="..\Fibula.Data.Loaders.ObjectsFile\Fibula.Data.Loaders.ObjectsFile.csproj" />
     <ProjectReference Include="..\Fibula.Items\Fibula.Items.csproj" />
     <ProjectReference Include="..\Fibula.Map.GrassOnly\Fibula.Map.GrassOnly.csproj" />
     <ProjectReference Include="..\Fibula.Map.SectorFiles\Fibula.Map.SectorFiles.csproj" />

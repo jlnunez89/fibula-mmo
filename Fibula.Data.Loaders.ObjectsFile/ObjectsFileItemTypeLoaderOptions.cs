@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Items.ObjectsFile
+namespace Fibula.Data.Loaders.ObjectsFile
 {
     using System.ComponentModel.DataAnnotations;
 
