@@ -103,10 +103,7 @@ namespace Fibula.Mechanics.Operations
             if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp != this)
             {
                 // Cancel it first, and remove it.
-                if (attackersAtkOp.Cancel())
-                {
-                    this.Attacker.StopTrackingEvent(attackersAtkOp);
-                }
+                attackersAtkOp.Cancel();
             }
 
             var distanceBetweenCombatants = (this.Attacker?.Location ?? this.Target.Location) - this.Target.Location;

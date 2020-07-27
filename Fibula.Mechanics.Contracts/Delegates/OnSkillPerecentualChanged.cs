@@ -19,5 +19,5 @@ namespace Fibula.Mechanics.Contracts.Delegates
     /// </summary>
     /// <param name="skilledCreature">The creature for which the skill changed.</param>
     /// <param name="skillThatChanged">The skill that changed.</param>
-    public delegate void OnSkillPerecentualChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged);
+    public delegate void OnSkillPercentUpdated(ISkilledCreature skilledCreature, ISkill skillThatChanged);
 }

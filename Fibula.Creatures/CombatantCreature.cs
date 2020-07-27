@@ -135,12 +135,12 @@ namespace Fibula.Creatures
         /// <summary>
         /// Event triggered when this skilled creature advances a skill to the next level.
         /// </summary>
-        public event OnSkillLevelChanged SkillLevelChanged;
+        public event OnSkillLevelUpdated SkillLevelUpdated;
 
         /// <summary>
         /// Event triggered when this skilled creature skill percent changes.
         /// </summary>
-        public event OnSkillPerecentualChanged SkillPerecentualChanged;
+        public event OnSkillPercentUpdated SkillPercentUpdated;
 
         /// <summary>
         /// Gets the current target combatant.
@@ -527,7 +527,7 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Raises the <see cref="SkillLevelChanged"/> event for this creature on the given skill.
+        /// Raises the <see cref="SkillLevelUpdated"/> event for this creature on the given skill.
         /// </summary>
         /// <param name="forSkill">The skill to advance.</param>
         protected void RaiseSkillLevelAdvance(SkillType forSkill)
@@ -537,11 +537,11 @@ namespace Fibula.Creatures
                 return;
             }
 
-            this.SkillLevelChanged?.Invoke(this, this.Skills[forSkill], this.Skills[forSkill].Level - 1);
+            this.SkillLevelUpdated?.Invoke(this, this.Skills[forSkill], this.Skills[forSkill].Level - 1);
         }
 
         /// <summary>
-        /// Raises the <see cref="SkillPerecentualChanged"/> event for this creature on the given skill.
+        /// Raises the <see cref="SkillPercentUpdated"/> event for this creature on the given skill.
         /// </summary>
         /// <param name="forSkill">The skill to advance.</param>
         protected void RaiseSkillPercentChange(SkillType forSkill)
@@ -551,7 +551,7 @@ namespace Fibula.Creatures
                 return;
             }
 
-            this.SkillPerecentualChanged?.Invoke(this, this.Skills[forSkill]);
+            this.SkillPercentUpdated?.Invoke(this, this.Skills[forSkill]);
         }
 
         /// <summary>

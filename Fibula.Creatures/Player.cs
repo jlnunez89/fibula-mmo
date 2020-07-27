@@ -190,7 +190,7 @@ namespace Fibula.Creatures
 
         private void InitializeSkills()
         {
-            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 50, 150);
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 20, 150);
             this.Skills[SkillType.Experience].Advanced += this.RaiseSkillLevelAdvance;
             this.Skills[SkillType.Experience].PercentChanged += this.RaiseSkillPercentChange;
 

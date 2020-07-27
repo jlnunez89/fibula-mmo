@@ -20,5 +20,5 @@ namespace Fibula.Mechanics.Contracts.Delegates
     /// <param name="skilledCreature">The creature for which the skill changed.</param>
     /// <param name="skillThatChanged">The skill that changed.</param>
     /// <param name="previousLevel">The previous skill level.</param>
-    public delegate void OnSkillLevelChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel);
+    public delegate void OnSkillLevelUpdated(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel);
 }

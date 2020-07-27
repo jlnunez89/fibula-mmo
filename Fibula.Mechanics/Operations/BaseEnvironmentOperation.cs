@@ -89,8 +89,8 @@ namespace Fibula.Mechanics.Operations
 
                 if (creature is ISkilledCreature skilledCreature)
                 {
-                    skilledCreature.SkillLevelChanged += context.GameApi.SkilledCreatureSkillLevelChanged;
-                    skilledCreature.SkillPerecentualChanged += context.GameApi.SkilledCreatureSkillPerecentualChanged;
+                    skilledCreature.SkillLevelUpdated += context.GameApi.SkilledCreatureSkillLevelChanged;
+                    skilledCreature.SkillPercentUpdated += context.GameApi.SkilledCreatureSkillPerecentualChanged;
                 }
 
                 /*
@@ -167,8 +167,8 @@ namespace Fibula.Mechanics.Operations
 
                 if (creature is ISkilledCreature skilledCreature)
                 {
-                    skilledCreature.SkillLevelChanged -= context.GameApi.SkilledCreatureSkillLevelChanged;
-                    skilledCreature.SkillPerecentualChanged -= context.GameApi.SkilledCreatureSkillPerecentualChanged;
+                    skilledCreature.SkillLevelUpdated -= context.GameApi.SkilledCreatureSkillLevelChanged;
+                    skilledCreature.SkillPercentUpdated -= context.GameApi.SkilledCreatureSkillPerecentualChanged;
                 }
 
                 if (creature is IPlayer player)

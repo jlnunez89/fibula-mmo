@@ -23,14 +23,14 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     public interface ISkilledCreature : ICreature
     {
         /// <summary>
-        /// Event triggered when this skilled creature advances a skill to the next level.
+        /// Event triggered when this skilled creature's skill changed in level.
         /// </summary>
-        event OnSkillLevelChanged SkillLevelChanged;
+        event OnSkillLevelUpdated SkillLevelUpdated;
 
         /// <summary>
-        /// Event triggered when this skilled creature skill percent changes.
+        /// Event triggered when this skilled creature's skill percent updates.
         /// </summary>
-        event OnSkillPerecentualChanged SkillPerecentualChanged;
+        event OnSkillPercentUpdated SkillPercentUpdated;
 
         /// <summary>
         /// Gets the current skills information for the entity.

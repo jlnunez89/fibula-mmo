@@ -68,10 +68,7 @@ namespace Fibula.Mechanics.Operations
             if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation atkOrchestrationOp) && atkOrchestrationOp != this)
             {
                 // Cancel it first, and remove it.
-                if (atkOrchestrationOp.Cancel())
-                {
-                    this.Attacker.StopTrackingEvent(atkOrchestrationOp);
-                }
+                atkOrchestrationOp.Cancel();
             }
 
             // Set the attack orchestration operation as this operation.

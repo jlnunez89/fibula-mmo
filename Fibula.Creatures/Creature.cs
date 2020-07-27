@@ -387,6 +387,11 @@ namespace Fibula.Creatures
                 identifier = evt.GetType().Name;
             }
 
+            evt.Completed += (e) =>
+            {
+                this.StopTrackingEvent(e);
+            };
+
             this.TrackedEvents[identifier] = evt;
         }
 

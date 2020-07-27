@@ -65,18 +65,18 @@ namespace Fibula.Mechanics.Contracts.Extensions
             switch (walkPlan.Strategy)
             {
                 case WalkStrategy.ConservativeRecalculation:
-                    // 10% chance of recalculation.
-                    needsRecalculation |= rng.Next(10) == 0;
-
-                    break;
-                case WalkStrategy.AggresiveRecalculation:
                     // 25% chance of recalculation.
                     needsRecalculation |= rng.Next(4) == 0;
 
                     break;
-                case WalkStrategy.ExtremeRecalculation:
+                case WalkStrategy.AggresiveRecalculation:
                     // 50% chance of recalculation.
                     needsRecalculation |= rng.Next(2) == 0;
+
+                    break;
+                case WalkStrategy.ExtremeRecalculation:
+                    // 75% chance of recalculation.
+                    needsRecalculation |= rng.Next(4) != 0;
 
                     break;
             }
