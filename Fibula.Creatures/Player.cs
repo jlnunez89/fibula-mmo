@@ -139,6 +139,7 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StartTrackingCombatant(ICombatant otherCombatant)
         {
+            // Players don't just start attacking the new guy, so do nothing here.
         }
 
         /// <summary>
@@ -147,6 +148,10 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void StopTrackingCombatant(ICombatant otherCombatant)
         {
+            if (otherCombatant == this.AutoAttackTarget)
+            {
+                this.SetAttackTarget(null);
+            }
         }
 
         /// <summary>

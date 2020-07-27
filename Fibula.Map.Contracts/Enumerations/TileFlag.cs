@@ -24,16 +24,16 @@ namespace Fibula.Map.Contracts.Enumerations
         /// <summary>
         /// A tile that reloads after some time of being "unseen".
         /// </summary>
-        Refresh = 1 << 0,
+        Refresh = 1 << 1,
 
         /// <summary>
         /// A tile that is considered a protection zone.
         /// </summary>
-        ProtectionZone = 1 << 1,
+        ProtectionZone = 1 << 2,
 
         /// <summary>
         /// A tile in which a character is not allowed to voluntarily log out on.
         /// </summary>
-        NoLogout = 1 << 2,
+        NoLogout = 1 << 3,
     }
 }

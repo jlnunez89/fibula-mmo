@@ -92,7 +92,7 @@ namespace Fibula.Map.Contracts.Abstractions
         /// </summary>
         /// <param name="typeId">The type to look for.</param>
         /// <returns>The item with such id, null otherwise.</returns>
-        IItem FindItemWithId(ushort typeId);
+        IItem FindItemWithTypeId(ushort typeId);
 
         /// <summary>
         /// Attempts to get the position in the stack for the given <see cref="IThing"/>.

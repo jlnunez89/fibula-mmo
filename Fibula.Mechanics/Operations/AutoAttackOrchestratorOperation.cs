@@ -57,9 +57,14 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             // We should stop this recurrent operation if there is no longer a target or it is dead.
-            if (this.Attacker.AutoAttackTarget == null || this.Attacker.AutoAttackTarget.IsDead)
+            if (this.Attacker.AutoAttackTarget == null)
             {
-                this.Attacker.SetAttackTarget(null);
+                return;
+            }
+
+            if (this.Attacker.AutoAttackTarget.IsDead)
+            {
+                this.Attacker.StopTrackingCombatant(this.Attacker.AutoAttackTarget);
 
                 return;
             }

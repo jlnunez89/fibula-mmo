@@ -77,7 +77,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
         /// <param name="typeId">The type id of the item to look for.</param>
         /// <param name="creature">Optional. The creature that the location's cyclinder targets, if any.</param>
         /// <returns>An item instance, if found at the location.</returns>
-        public static IItem FindItemById(this Location atLocation, IMap map, IContainerManager containerManager, ushort typeId, ICreature creature = null)
+        public static IItem FindItemByTypeId(this Location atLocation, IMap map, IContainerManager containerManager, ushort typeId, ICreature creature = null)
         {
             map.ThrowIfNull(nameof(map));
             containerManager.ThrowIfNull(nameof(containerManager));
@@ -91,7 +91,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
                         return null;
                     }
 
-                    return tile.FindItemWithId(typeId);
+                    return tile.FindItemWithTypeId(typeId);
                 case LocationType.InventorySlot:
                     var fromBodyContainer = creature?.Inventory[(byte)atLocation.Slot] as IContainerItem;
 

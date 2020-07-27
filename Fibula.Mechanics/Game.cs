@@ -807,18 +807,20 @@ namespace Fibula.Mechanics
                             this.worldInfo.LightColor));
                 }
 
-                this.TrackServerMetrics();
+                this.SampleServerMetrics();
             }
         }
 
         /// <summary>
         /// Tracks server metrics.
         /// </summary>
-        private void TrackServerMetrics()
+        private void SampleServerMetrics()
         {
-            var schedulerQueueSizeMetric = this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.SchedulerQueueSizeMetricName);
+            // Scheduler queue size.
+            this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.SchedulerQueueSizeMetricName).TrackValue(this.scheduler.QueueSize);
 
-            schedulerQueueSizeMetric.TrackValue(this.scheduler.QueueSize);
+            // Online player count.
+            this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.OnlinePlayersMetricName).TrackValue(this.creatureManager.PlayerCount);
         }
 
         /// <summary>
@@ -842,6 +844,8 @@ namespace Fibula.Mechanics
                 evt.Execute(this.PrepareContextForEvent(evt));
 
                 sw.Stop();
+
+                this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.ProcessedEventTimeMetricName, TelemetryConstants.EventTypeDimensionName).TrackValue(sw.ElapsedMilliseconds, evt.GetType().Name);
 
                 this.logger.Verbose($"Processed {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
             }

@@ -68,7 +68,7 @@ namespace Fibula.Mechanics.Operations
             var inThingContainer = this.AtLocation.DecodeContainer(context.Map, context.ContainerManager, out byte index, requestor);
 
             // Adjust index if this a map location.
-            var existingThing = (this.AtLocation.Type == LocationType.Map && (inThingContainer is ITile fromTile)) ? fromTile.FindItemWithId(this.TypeId) : inThingContainer?.FindThingAtIndex(index);
+            var existingThing = (this.AtLocation.Type == LocationType.Map && (inThingContainer is ITile fromTile)) ? fromTile.FindItemWithTypeId(this.TypeId) : inThingContainer?.FindThingAtIndex(index);
 
             if (inThingContainer == null || !(existingThing is IItem existingItem))
             {

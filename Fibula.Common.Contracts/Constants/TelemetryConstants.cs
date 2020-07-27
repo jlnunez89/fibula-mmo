@@ -17,8 +17,23 @@ namespace Fibula.Common.Contracts.Constants
     public static class TelemetryConstants
     {
         /// <summary>
+        /// The name of the metric for the number of online players.
+        /// </summary>
+        public const string OnlinePlayersMetricName = "OnlinePlayers";
+
+        /// <summary>
+        /// The name of the metric for processed events.
+        /// </summary>
+        public const string ProcessedEventTimeMetricName = "ProcessedEventTimeMs";
+
+        /// <summary>
         /// The name of the metric for the queue size of the scheduler.
         /// </summary>
         public const string SchedulerQueueSizeMetricName = "SchedulerQueueSize";
+
+        /// <summary>
+        /// The name of the dimension for event types.
+        /// </summary>
+        public const string EventTypeDimensionName = "EventType";
     }
 }

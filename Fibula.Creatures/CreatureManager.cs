@@ -47,6 +47,11 @@ namespace Fibula.Creatures
         public ILogger Logger { get; }
 
         /// <summary>
+        /// Gets the count of players registered in the manager.
+        /// </summary>
+        public int PlayerCount => this.creatureMap.Values.Count(c => c is IPlayer);
+
+        /// <summary>
         /// Registers a new creature to the manager.
         /// </summary>
         /// <param name="creature">The creature to register.</param>

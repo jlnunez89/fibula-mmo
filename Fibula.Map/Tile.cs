@@ -132,6 +132,7 @@ namespace Fibula.Map
                 // TODO: handle setting this as the items get added/removed to avoid constant calculation.
                 return (this.Ground != null && this.Ground.BlocksThrow) ||
                         this.groundBorders.Any(i => i.BlocksThrow) ||
+                        (this.LiquidPool != null && this.LiquidPool.BlocksThrow) ||
                         this.stayOnTopItems.Any(i => i.BlocksThrow) ||
                         this.stayOnBottomItems.Any(i => i.BlocksThrow) ||
                         this.itemsOnTile.Any(i => i.BlocksThrow);
@@ -149,6 +150,7 @@ namespace Fibula.Map
                 return (this.Ground != null && this.Ground.BlocksPass) ||
                         this.Creatures.Any() ||
                         this.groundBorders.Any(i => i.BlocksPass) ||
+                        (this.LiquidPool != null && this.LiquidPool.BlocksPass) ||
                         this.stayOnTopItems.Any(i => i.BlocksPass) ||
                         this.stayOnBottomItems.Any(i => i.BlocksPass) ||
                         this.itemsOnTile.Any(i => i.BlocksPass);
@@ -165,6 +167,7 @@ namespace Fibula.Map
                 // TODO: handle setting this as the items get added/removed to avoid constant calculation.
                 return (this.Ground != null && this.Ground.BlocksLay) ||
                         this.groundBorders.Any(i => i.BlocksLay) ||
+                        (this.LiquidPool != null && this.LiquidPool.BlocksLay) ||
                         this.stayOnTopItems.Any(i => i.BlocksLay) ||
                         this.stayOnBottomItems.Any(i => i.BlocksLay) ||
                         this.itemsOnTile.Any(i => i.BlocksLay);
@@ -217,10 +220,11 @@ namespace Fibula.Map
         /// <remarks>
         /// The algorithm prioritizes the returned items in the following order:
         /// 1) Ground item.
-        /// 2) Clipped items.
-        /// 3) Stay-on-bottom items.
-        /// 4) Stay-on-top items.
-        /// 5) Normal items.
+        /// 2) Ground border items.
+        /// 3) Liquid pool item.
+        /// 4) Stay-on-bottom items.
+        /// 5) Stay-on-top items.
+        /// 6) Normal items.
         /// </remarks>
         public (IEnumerable<IItem> fixedItems, IEnumerable<IItem> normalItems) GetItemsToDescribeByPriority(int maxItemsToGet = MapConstants.MaximumNumberOfThingsToDescribePerTile)
         {
@@ -296,7 +300,7 @@ namespace Fibula.Map
         /// </summary>
         /// <param name="typeId">The type to look for.</param>
         /// <returns>The item with such id, null otherwise.</returns>
-        public IItem FindItemWithId(ushort typeId)
+        public IItem FindItemWithTypeId(ushort typeId)
         {
             if (this.Ground != null && this.Ground.TypeId == typeId)
             {

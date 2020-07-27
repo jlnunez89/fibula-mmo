@@ -17,6 +17,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
     public interface ICreatureManager : ICreatureFinder
     {
         /// <summary>
+        /// Gets the count of players registered in the manager.
+        /// </summary>
+        int PlayerCount { get; }
+
+        /// <summary>
         /// Registers a new creature to the manager.
         /// </summary>
         /// <param name="creature">The creature to register.</param>

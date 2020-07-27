@@ -67,6 +67,11 @@ namespace Fibula.Mechanics.Operations
                 this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerCancelWalkPacket(player.Direction), new PlayerDeathPacket()));
             }
 
+            if (this.Creature is ICombatant combatant)
+            {
+                combatant.SetAttackTarget(null);
+            }
+
             // Remove the creature...
             if (context.Map.GetTileAt(this.Creature.Location) is ITile creatureTile)
             {
