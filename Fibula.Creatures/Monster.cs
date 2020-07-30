@@ -103,7 +103,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the collection of tracked combatants.
         /// </summary>
-        public override IEnumerable<ICombatant> TrackedCombatants
+        public override IEnumerable<ICombatant> CombatList
         {
             get
             {
@@ -118,7 +118,7 @@ namespace Fibula.Creatures
         /// Starts tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void StartTrackingCombatant(ICombatant otherCombatant)
+        public override void AddToCombatList(ICombatant otherCombatant)
         {
             if (this == otherCombatant || !(otherCombatant is IPlayer))
             {
@@ -141,7 +141,7 @@ namespace Fibula.Creatures
         /// Stops tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void StopTrackingCombatant(ICombatant otherCombatant)
+        public override void RemoveFromCombatList(ICombatant otherCombatant)
         {
             if (this == otherCombatant || !(otherCombatant is IPlayer))
             {

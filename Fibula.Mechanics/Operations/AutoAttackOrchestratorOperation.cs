@@ -64,7 +64,7 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Attacker.AutoAttackTarget.IsDead)
             {
-                this.Attacker.StopTrackingCombatant(this.Attacker.AutoAttackTarget);
+                this.Attacker.RemoveFromCombatList(this.Attacker.AutoAttackTarget);
 
                 return;
             }

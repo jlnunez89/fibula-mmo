@@ -123,9 +123,9 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         ChaseMode ChaseMode { get; set; }
 
         /// <summary>
-        /// Gets the collection of tracked combatants.
+        /// Gets the list of combatants.
         /// </summary>
-        IEnumerable<ICombatant> TrackedCombatants { get; }
+        IEnumerable<ICombatant> CombatList { get; }
 
         /// <summary>
         /// Sets the attack target of this combatant.
@@ -188,20 +188,15 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0);
 
         /// <summary>
-        /// Starts tracking another <see cref="ICombatant"/>.
+        /// Adds a combatant to the combat list of this one.
         /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        void StartTrackingCombatant(ICombatant otherCombatant);
+        /// <param name="otherCombatant">The combatant to add to the list.</param>
+        void AddToCombatList(ICombatant otherCombatant);
 
         /// <summary>
-        /// Stops tracking another <see cref="ICombatant"/>.
+        /// Removes a combatant from the combat list of this one.
         /// </summary>
-        /// <param name="otherCombatant">The other combatant, now in view.</param>
-        void StopTrackingCombatant(ICombatant otherCombatant);
-
-        ///// <summary>
-        ///// Clears the tracking store of damage taken from other combatants.
-        ///// </summary>
-        // void ClearDamageTaken();
+        /// <param name="otherCombatant">The combatant to remove from the list.</param>
+        void RemoveFromCombatList(ICombatant otherCombatant);
     }
 }

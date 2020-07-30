@@ -51,6 +51,11 @@ namespace Fibula.Mechanics
     public class Game : IGame
     {
         /// <summary>
+        /// The default maximum delay to introduce between a death ocurring the it's consequences (i.e. body dropping) happening.
+        /// </summary>
+        private const int DefaultDeathDelayMs = 2000;
+
+        /// <summary>
         /// Defines the <see cref="TimeSpan"/> to wait between checks for idle players and connections.
         /// </summary>
         private static readonly TimeSpan IdleCheckDelay = TimeSpan.FromSeconds(30);
@@ -298,7 +303,7 @@ namespace Fibula.Mechanics
             }
 
             var rng = new Random();
-            var deathDelay = TimeSpan.FromMilliseconds(rng.Next(2000));
+            var deathDelay = TimeSpan.FromMilliseconds(rng.Next(DefaultDeathDelayMs));
             var deathOp = new DeathOperation(requestorId: 0, combatant);
 
             this.DispatchOperation(deathOp, deathDelay);
@@ -429,7 +434,7 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.Location, targetDistance, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.IsDead ? creature.Location : targetCreature.Location, targetDistance, waypoints.ToArray());
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 

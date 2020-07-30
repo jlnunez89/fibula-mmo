@@ -131,13 +131,13 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the collection of tracked combatants.
         /// </summary>
-        public override IEnumerable<ICombatant> TrackedCombatants => Enumerable.Empty<ICombatant>();
+        public override IEnumerable<ICombatant> CombatList => Enumerable.Empty<ICombatant>();
 
         /// <summary>
         /// Starts tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void StartTrackingCombatant(ICombatant otherCombatant)
+        public override void AddToCombatList(ICombatant otherCombatant)
         {
             // Players don't just start attacking the new guy, so do nothing here.
         }
@@ -146,7 +146,7 @@ namespace Fibula.Creatures
         /// Stops tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public override void StopTrackingCombatant(ICombatant otherCombatant)
+        public override void RemoveFromCombatList(ICombatant otherCombatant)
         {
             if (otherCombatant == this.AutoAttackTarget)
             {

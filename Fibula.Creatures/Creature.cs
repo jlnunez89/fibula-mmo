@@ -25,12 +25,14 @@ namespace Fibula.Creatures
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents all creatures in the game.
     /// </summary>
-    public abstract class Creature : Thing, ICreature
+    public abstract class Creature : Thing, ICreatureThatSensesOthers
     {
         /// <summary>
         /// The default index for body containers.
@@ -46,6 +48,11 @@ namespace Fibula.Creatures
         /// Counter to assign new ids to new creatures created.
         /// </summary>
         private static uint idCounter = 1;
+
+        /// <summary>
+        /// Stores the creatures sensed by this creature.
+        /// </summary>
+        private readonly HashSet<ICreature> creaturesSensed;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -86,7 +93,6 @@ namespace Fibula.Creatures
             this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.CorpseTypeId = corpseTypeId;
 
-            this.TrackedEvents = new Dictionary<string, IEvent>();
             this.LastMovementCostModifier = 1;
 
             this.Outfit = new Outfit
@@ -96,7 +102,19 @@ namespace Fibula.Creatures
             };
 
             this.BaseSpeed = 70;
+
+            this.creaturesSensed = new HashSet<ICreature>();
         }
+
+        /// <summary>
+        /// Event called when this creature senses another.
+        /// </summary>
+        public event OnCreatureSensed CreatureSensed;
+
+        /// <summary>
+        /// Event called when this creature loses track of a sensed creature.
+        /// </summary>
+        public event OnCreatureLost CreatureLost;
 
         /// <summary>
         /// Gets the type id of this creature.
@@ -226,9 +244,9 @@ namespace Fibula.Creatures
         public WalkPlan WalkPlan { get; set; }
 
         /// <summary>
-        /// Gets the tracked events for this creature.
+        /// Gets the creatures who are sensed by this creature.
         /// </summary>
-        public IDictionary<string, IEvent> TrackedEvents { get; }
+        public IEnumerable<ICreature> SensedCreatures => this.creaturesSensed;
 
         /// <summary>
         /// Gets a value indicating whether the creature is considered dead.
@@ -251,6 +269,34 @@ namespace Fibula.Creatures
         public void SetOutfit(Outfit outfit)
         {
             this.Outfit = outfit;
+        }
+
+        /// <summary>
+        /// Flags a creature as being sensed.
+        /// </summary>
+        /// <param name="creature">The creature which is sensed.</param>
+        public void StartSensingCreature(ICreature creature)
+        {
+            creature.ThrowIfNull(nameof(creature));
+
+            if (this.creaturesSensed.Add(creature))
+            {
+                this.CreatureSensed?.Invoke(creature);
+            }
+        }
+
+        /// <summary>
+        /// Flags a creature as no longed being sensed.
+        /// </summary>
+        /// <param name="creature">The creature that is lost.</param>
+        public void StopSensingCreature(ICreature creature)
+        {
+            creature.ThrowIfNull(nameof(creature));
+
+            if (this.creaturesSensed.Remove(creature))
+            {
+                this.CreatureLost?.Invoke(creature);
+            }
         }
 
         /// <summary>
@@ -371,45 +417,6 @@ namespace Fibula.Creatures
         public override string DescribeForLogger()
         {
             return $"{(string.IsNullOrWhiteSpace(this.Article) ? string.Empty : $"{this.Article} ")}{this.Name}";
-        }
-
-        /// <summary>
-        /// Makes the creature start tracking an event.
-        /// </summary>
-        /// <param name="evt">The event to stop tracking.</param>
-        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</param>
-        public void StartTrackingEvent(IEvent evt, string identifier = "")
-        {
-            evt.ThrowIfNull(nameof(evt));
-
-            if (string.IsNullOrWhiteSpace(identifier))
-            {
-                identifier = evt.GetType().Name;
-            }
-
-            evt.Completed += (e) =>
-            {
-                this.StopTrackingEvent(e);
-            };
-
-            this.TrackedEvents[identifier] = evt;
-        }
-
-        /// <summary>
-        /// Makes the creature stop tracking an event.
-        /// </summary>
-        /// <param name="evt">The event to stop tracking.</param>
-        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
-        public void StopTrackingEvent(IEvent evt, string identifier = "")
-        {
-            evt.ThrowIfNull(nameof(evt));
-
-            if (string.IsNullOrWhiteSpace(identifier))
-            {
-                identifier = evt.GetType().Name;
-            }
-
-            this.TrackedEvents.Remove(identifier);
         }
 
         /// <summary>

@@ -245,7 +245,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the collection of tracked combatants.
         /// </summary>
-        public abstract IEnumerable<ICombatant> TrackedCombatants { get; }
+        public abstract IEnumerable<ICombatant> CombatList { get; }
 
         /// <summary>
         /// Consumes combat credits to the combatant.
@@ -418,13 +418,13 @@ namespace Fibula.Creatures
         /// Starts tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public abstract void StartTrackingCombatant(ICombatant otherCombatant);
+        public abstract void AddToCombatList(ICombatant otherCombatant);
 
         /// <summary>
         /// Stops tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
-        public abstract void StopTrackingCombatant(ICombatant otherCombatant);
+        public abstract void RemoveFromCombatList(ICombatant otherCombatant);
 
         /// <summary>
         /// Applies damage to the combatant, which is expected to apply reductions and protections.

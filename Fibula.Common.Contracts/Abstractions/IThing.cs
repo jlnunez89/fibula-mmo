@@ -12,7 +12,9 @@
 namespace Fibula.Common.Contracts.Abstractions
 {
     using System;
+    using System.Collections.Generic;
     using Fibula.Common.Contracts.Delegates;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for all things in the game.
@@ -40,9 +42,28 @@ namespace Fibula.Common.Contracts.Abstractions
         bool CanBeMoved { get; }
 
         /// <summary>
+        /// Gets the tracked events for this thing.
+        /// </summary>
+        IDictionary<string, IEvent> TrackedEvents { get; }
+
+        /// <summary>
         /// Provides a string describing the current thing for logging purposes.
         /// </summary>
         /// <returns>The string to log.</returns>
         string DescribeForLogger();
+
+        /// <summary>
+        /// Makes the thing start tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</param>
+        void StartTrackingEvent(IEvent evt, string identifier = "");
+
+        /// <summary>
+        /// Makes the thing stop tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
+        void StopTrackingEvent(IEvent evt, string identifier = "");
     }
 }

@@ -82,7 +82,8 @@ namespace Fibula.Mechanics.Operations
                     {
                         if (spectator is ICombatant combatantSpectator)
                         {
-                            combatantSpectator.StartTrackingCombatant(combatant);
+                            combatant.AddToCombatList(combatantSpectator);
+                            combatantSpectator.AddToCombatList(combatant);
                         }
                     }
                 }
@@ -155,7 +156,7 @@ namespace Fibula.Mechanics.Operations
                     {
                         if (spectator is ICombatant combatantSpectator)
                         {
-                            combatantSpectator.StopTrackingCombatant(combatant);
+                            combatantSpectator.RemoveFromCombatList(combatant);
                         }
                     }
 

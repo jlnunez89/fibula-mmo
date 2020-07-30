@@ -803,7 +803,7 @@ namespace Fibula.Mechanics.Operations
                 var spectatorsAtSource = context.Map.CreaturesThatCanSee(fromTile.Location).OfType<ICombatant>();
 
                 var spectatorsLost = spectatorsAtSource.Except(spectatorsAtDestination);
-                var spectatorsAdded = spectatorsAtDestination.Where(s => !s.TrackedCombatants.Contains(movingCombatant));
+                var spectatorsAdded = spectatorsAtDestination.Where(s => !s.CombatList.Contains(movingCombatant));
 
                 // Make new spectators aware that this creature moved into their view.
                 foreach (var spectator in spectatorsAdded)
@@ -813,8 +813,8 @@ namespace Fibula.Mechanics.Operations
                         continue;
                     }
 
-                    spectator.StartTrackingCombatant(movingCombatant);
-                    movingCombatant.StartTrackingCombatant(spectator);
+                    spectator.AddToCombatList(movingCombatant);
+                    movingCombatant.AddToCombatList(spectator);
                 }
 
                 // Now make old spectators aware that this creature moved out of their view.
@@ -825,8 +825,8 @@ namespace Fibula.Mechanics.Operations
                         continue;
                     }
 
-                    spectator.StopTrackingCombatant(movingCombatant);
-                    movingCombatant.StopTrackingCombatant(spectator);
+                    spectator.RemoveFromCombatList(movingCombatant);
+                    movingCombatant.RemoveFromCombatList(spectator);
                 }
             }
 
