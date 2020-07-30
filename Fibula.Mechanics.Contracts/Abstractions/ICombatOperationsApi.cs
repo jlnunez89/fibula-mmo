@@ -12,6 +12,7 @@
 namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for the API of combat operations.
@@ -39,11 +40,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void CombatantAttackTargetChanged(ICombatant combatant, ICombatant oldTarget);
 
         /// <summary>
-        /// Handles a chase target change from a combatant.
+        /// Handles a follow target change from a combatant.
         /// </summary>
-        /// <param name="combatant">The combatant that died.</param>
-        /// <param name="oldTarget">The previous chased target, which can be null.</param>
-        void CombatantChaseTargetChanged(ICombatant combatant, ICombatant oldTarget);
+        /// <param name="combatant">The creature that changed follow target.</param>
+        /// <param name="oldTarget">The old follow target, if any.</param>
+        void CreatureFollowTargetChanged(ICombatant combatant, ICreature oldTarget);
 
         /// <summary>
         /// Sets the fight, chase and safety modes of a combatant.

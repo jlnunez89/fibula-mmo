@@ -21,7 +21,6 @@
     <Compile Remove="Abstractions\IEventRulesLoader.cs" />
     <Compile Remove="Abstractions\IMovementOperation.cs" />
     <Compile Remove="Abstractions\ISeparationEventRule.cs" />
-    <Compile Remove="Abstractions\ISkill.cs" />
     <Compile Remove="Abstractions\IThingMovementEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemEventRule.cs" />
     <Compile Remove="Abstractions\IUseItemOnEventRule.cs" />

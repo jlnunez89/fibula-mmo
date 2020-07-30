@@ -190,30 +190,26 @@ namespace Fibula.Creatures
                 (int defaultLevel, int currentLevel, int maximumLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel) = kvp.Value;
 
                 this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
-                this.Skills[kvp.Key].Advanced += this.RaiseSkillLevelAdvance;
-                this.Skills[kvp.Key].PercentChanged += this.RaiseSkillPercentChange;
+                this.Skills[kvp.Key].Changed += this.RaiseSkillChange;
             }
 
             // Add experience yield as a skill
             if (!this.Skills.ContainsKey(SkillType.Experience))
             {
                 this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Min(int.MaxValue, (int)this.Type.BaseExperienceYield), 0, int.MaxValue, 100, 1100, 5);
-                this.Skills[SkillType.Experience].Advanced += this.RaiseSkillLevelAdvance;
-                this.Skills[SkillType.Experience].PercentChanged += this.RaiseSkillPercentChange;
+                this.Skills[SkillType.Experience].Changed += this.RaiseSkillChange;
             }
 
             if (!this.Skills.ContainsKey(SkillType.Shield))
             {
                 this.Skills[SkillType.Shield] = new MonsterSkill(SkillType.Shield, Math.Min(int.MaxValue, this.Type.BaseDefense), 0, int.MaxValue, 100, 1100, 5);
-                this.Skills[SkillType.Shield].Advanced += this.RaiseSkillLevelAdvance;
-                this.Skills[SkillType.Shield].PercentChanged += this.RaiseSkillPercentChange;
+                this.Skills[SkillType.Shield].Changed += this.RaiseSkillChange;
             }
 
             if (!this.Skills.ContainsKey(SkillType.NoWeapon))
             {
                 this.Skills[SkillType.NoWeapon] = new MonsterSkill(SkillType.NoWeapon, Math.Min(int.MaxValue, this.Type.BaseAttack), 0, int.MaxValue, 100, 1100, 5);
-                this.Skills[SkillType.NoWeapon].Advanced += this.RaiseSkillLevelAdvance;
-                this.Skills[SkillType.NoWeapon].PercentChanged += this.RaiseSkillPercentChange;
+                this.Skills[SkillType.NoWeapon].Changed += this.RaiseSkillChange;
             }
         }
     }

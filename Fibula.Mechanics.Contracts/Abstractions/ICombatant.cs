@@ -13,6 +13,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Mechanics.Contracts.Structs;
@@ -20,7 +21,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreatureWithExhaustion, ISkilledCreature
+    public interface ICombatant : ICreatureWithExhaustion, ICreatureWithSkills
     {
         /// <summary>
         /// Event to call when the combatant's health changes.
@@ -40,17 +41,17 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Event to call when the chase target changes.
         /// </summary>
-        event OnChaseTargetChanged ChaseTargetChanged;
+        event OnFollowTargetChanged FollowTargetChanged;
+
+        /// <summary>
+        /// Gets the current target being chased, if any.
+        /// </summary>
+        ICreature ChaseTarget { get; }
 
         /// <summary>
         /// Gets the current target combatant, if any.
         /// </summary>
         ICombatant AutoAttackTarget { get; }
-
-        /// <summary>
-        /// Gets the current target being chased, if any.
-        /// </summary>
-        ICombatant ChaseTarget { get; }
 
         /// <summary>
         /// Gets the range that the auto attack has.
@@ -139,7 +140,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         /// <param name="target">The target to chase, if any.</param>
         /// <returns>True if the target was actually changed, false otherwise.</returns>
-        bool SetChaseTarget(ICombatant target);
+        bool SetFollowTarget(ICreature target);
 
         /// <summary>
         /// Consumes combat credits to the combatant.

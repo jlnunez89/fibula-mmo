@@ -13,7 +13,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System;
     using Fibula.Client.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -128,14 +127,8 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="skilledCreature">The skilled creature for which the skill changed.</param>
         /// <param name="skillThatChanged">The skill that changed.</param>
         /// <param name="previousLevel">The previous skill level.</param>
-        void SkilledCreatureSkillLevelChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel);
-
-        /// <summary>
-        /// Handles a skill percentual change from a skilled creature.
-        /// </summary>
-        /// <param name="skilledCreature">The skilled creature for which the skill percent changed.</param>
-        /// <param name="skillThatChanged">The skill that changed.</param>
-        void SkilledCreatureSkillPerecentualChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged);
+        /// <param name="previousPercent">The previous percent of completion to next level.</param>
+        void SkilledCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent);
 
         /// <summary>
         /// Describes a thing for a player.

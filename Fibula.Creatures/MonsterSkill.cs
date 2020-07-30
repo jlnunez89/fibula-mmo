@@ -12,9 +12,9 @@
 namespace Fibula.Creatures
 {
     using System;
-    using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Delegates;
     using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Delegates;
 
     /// <summary>
     /// Class that represents a monster's standard skill.
@@ -59,14 +59,9 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Event triggered when this skill advances to the next level.
+        /// Event triggered when this skill changes.
         /// </summary>
-        public event OnSkillAdvanced Advanced;
-
-        /// <summary>
-        /// Event triggered when this skill's percent changes.
-        /// </summary>
-        public event OnSkillPercentChanged PercentChanged;
+        public event OnSkillChanged Changed;
 
         /// <summary>
         /// Gets this skill's type.
@@ -137,6 +132,7 @@ namespace Fibula.Creatures
         /// <param name="value">The amount by which to increase this skills counter.</param>
         public void IncreaseCounter(double value)
         {
+            var lastLevel = this.Level;
             var lastPercentVal = this.Percent;
 
             this.Count = Math.Min(this.TargetCount, this.Count + value);
@@ -148,14 +144,12 @@ namespace Fibula.Creatures
 
                 this.StartingCountAtLevel = this.TargetCount;
                 this.TargetCount = Math.Floor(this.TargetCount * this.Rate);
-
-                // Invoke any subscribers to the level advance.
-                this.Advanced?.Invoke(this.Type);
             }
 
-            if (this.Percent != lastPercentVal)
+            // Invoke any subscribers to the change event.
+            if (this.Level != lastLevel || this.Percent != lastPercentVal)
             {
-                this.PercentChanged?.Invoke(this.Type);
+                this.Changed?.Invoke(this.Type, lastLevel, lastPercentVal);
             }
         }
     }

@@ -64,7 +64,7 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             // Perform the actual, internal turn.
-            this.Creature.TurnToDirection(this.Direction);
+            this.Creature.Direction = this.Direction;
 
             // Send the notification if applicable.
             if (context.Map.GetTileAt(this.Creature.Location, out ITile playerTile))

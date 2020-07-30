@@ -27,7 +27,6 @@ namespace Fibula.Creatures
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Delegates;
-    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents all creatures in the game.
@@ -184,16 +183,6 @@ namespace Fibula.Creatures
         public decimal CarryStrength { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the outfit of this creature.
-        /// </summary>
-        public Outfit Outfit { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the direction that this creature is facing.
-        /// </summary>
-        public Direction Direction { get; protected set; }
-
-        /// <summary>
         /// Gets or sets this creature's light level.
         /// </summary>
         public byte EmittedLightLevel { get; protected set; }
@@ -234,6 +223,16 @@ namespace Fibula.Creatures
         public abstract IInventory Inventory { get; protected set; }
 
         /// <summary>
+        /// Gets or sets the outfit of this creature.
+        /// </summary>
+        public Outfit Outfit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the direction that this creature is facing.
+        /// </summary>
+        public Direction Direction { get; set; }
+
+        /// <summary>
         /// Gets or sets the creature's last move modifier.
         /// </summary>
         public decimal LastMovementCostModifier { get; set; }
@@ -252,24 +251,6 @@ namespace Fibula.Creatures
         /// Gets a value indicating whether the creature is considered dead.
         /// </summary>
         public bool IsDead => this.Hitpoints == 0;
-
-        /// <summary>
-        /// Turns this creature to a given direction.
-        /// </summary>
-        /// <param name="direction">The direction to turn the creature to.</param>
-        public void TurnToDirection(Direction direction)
-        {
-            this.Direction = direction;
-        }
-
-        /// <summary>
-        /// Attempts to set this creature's <see cref="Outfit"/>.
-        /// </summary>
-        /// <param name="outfit">The new outfit to change to.</param>
-        public void SetOutfit(Outfit outfit)
-        {
-            this.Outfit = outfit;
-        }
 
         /// <summary>
         /// Flags a creature as being sensed.

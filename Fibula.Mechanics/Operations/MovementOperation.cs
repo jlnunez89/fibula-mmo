@@ -708,7 +708,7 @@ namespace Fibula.Mechanics.Operations
             var toStackPosition = toTile.GetStackOrderOfThing(creature);
 
             // Then deal with the consequences of the move.
-            creature.TurnToDirection(moveDirection.GetClientSafeDirection());
+            creature.Direction = moveDirection.GetClientSafeDirection();
             creature.LastMovementCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
             this.ExhaustionCost = creature.CalculateStepDuration(fromTile);

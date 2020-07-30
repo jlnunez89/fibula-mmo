@@ -332,18 +332,18 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Handles a chase target change from a combatant.
+        /// Handles a follow target change from a combatant.
         /// </summary>
-        /// <param name="combatant">The combatant that died.</param>
-        /// <param name="oldTarget">The previous chased target, which can be null.</param>
-        public void CombatantChaseTargetChanged(ICombatant combatant, ICombatant oldTarget)
+        /// <param name="combatant">The creature that changed follow target.</param>
+        /// <param name="oldTarget">The old follow target, if any.</param>
+        public void CreatureFollowTargetChanged(ICombatant combatant, ICreature oldTarget)
         {
             if (combatant == null)
             {
                 return;
             }
 
-            if (combatant.ChaseTarget != null)
+            if (combatant.ChaseTarget != null && combatant.ChaseTarget != oldTarget)
             {
                 this.ResetCreatureDynamicWalkPlan(combatant, combatant.ChaseTarget, targetDistance: combatant.AutoAttackRange);
             }
@@ -520,16 +520,22 @@ namespace Fibula.Mechanics
         /// <param name="skilledCreature">The skilled creature for which the skill changed.</param>
         /// <param name="skillThatChanged">The skill that changed.</param>
         /// <param name="previousLevel">The previous skill level.</param>
-        public void SkilledCreatureSkillLevelChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel)
+        /// <param name="previousPercent">The previous percent of completion to next level.</param>
+        public void SkilledCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent)
         {
             if (skilledCreature == null || skillThatChanged == null)
             {
-                this.logger.Warning($"Null {nameof(skilledCreature)} or {nameof(skillThatChanged)} in {nameof(this.SkilledCreatureSkillLevelChanged)}, ignoring...");
+                this.logger.Warning($"Null {nameof(skilledCreature)} or {nameof(skillThatChanged)} in {nameof(this.SkilledCreatureSkillChanged)}, ignoring...");
 
                 return;
             }
 
-            if (skilledCreature is IPlayer player)
+            if (!(skilledCreature is IPlayer player))
+            {
+                return;
+            }
+
+            if (skillThatChanged.Level != previousLevel)
             {
                 bool isAdvance = skillThatChanged.Level > previousLevel;
 
@@ -547,22 +553,10 @@ namespace Fibula.Mechanics
 
                 this.scheduler.ScheduleEvent(new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, skillChangeNotificationMessage));
             }
-        }
 
-        /// <summary>
-        /// Handles a skill percentual change from a skilled creature.
-        /// </summary>
-        /// <param name="skilledCreature">The skilled creature for which the skill percent changed.</param>
-        /// <param name="skillThatChanged">The skill that changed.</param>
-        public void SkilledCreatureSkillPerecentualChanged(ISkilledCreature skilledCreature, ISkill skillThatChanged)
-        {
-            if (skilledCreature is IPlayer player)
+            if (skillThatChanged.Percent != previousPercent)
             {
-                this.scheduler.ScheduleEvent(
-                    new GenericNotification(
-                        () => player.YieldSingleItem(),
-                        new PlayerStatsPacket(player),
-                        new PlayerSkillsPacket(player)));
+                this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new PlayerStatsPacket(player), new PlayerSkillsPacket(player)));
             }
         }
 

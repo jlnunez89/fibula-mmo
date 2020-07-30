@@ -81,11 +81,11 @@ namespace Fibula.Mechanics.Operations
 
             if (this.ChaseMode == ChaseMode.Chase && combatantCreature.AutoAttackTarget != null)
             {
-                combatantCreature.SetChaseTarget(combatantCreature.AutoAttackTarget);
+                combatantCreature.SetFollowTarget(combatantCreature.AutoAttackTarget);
             }
             else if (this.ChaseMode == ChaseMode.Stand)
             {
-                combatantCreature.SetChaseTarget(null);
+                combatantCreature.SetFollowTarget(null);
             }
 
             /* combatantCreature.SafeMode = this.IsSafeModeOn; */

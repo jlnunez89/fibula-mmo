@@ -14,8 +14,8 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
@@ -128,19 +128,19 @@ namespace Fibula.Creatures
         public event OnAttackTargetChanged AttackTargetChanged;
 
         /// <summary>
-        /// Event to call when the chase target changes.
+        /// Event to call when the follow target changes.
         /// </summary>
-        public event OnChaseTargetChanged ChaseTargetChanged;
+        public event OnFollowTargetChanged FollowTargetChanged;
 
         /// <summary>
-        /// Event triggered when this skilled creature advances a skill to the next level.
+        /// Event triggered when this a skill of this creature changes.
         /// </summary>
-        public event OnSkillLevelUpdated SkillLevelUpdated;
+        public event OnCreatureSkillChanged SkillChanged;
 
         /// <summary>
-        /// Event triggered when this skilled creature skill percent changes.
+        /// Gets or sets the target being chased, if any.
         /// </summary>
-        public event OnSkillPercentUpdated SkillPercentUpdated;
+        public ICreature ChaseTarget { get; protected set; }
 
         /// <summary>
         /// Gets the current target combatant.
@@ -178,19 +178,14 @@ namespace Fibula.Creatures
         public decimal DefenseSpeed => this.baseDefenseSpeed + this.defenseSpeedBuff;
 
         /// <summary>
-        /// Gets the target being chased, if any.
+        /// Gets or sets the fight mode selected by this combatant.
         /// </summary>
-        public ICombatant ChaseTarget { get; private set; }
+        public FightMode FightMode { get; set; }
 
         /// <summary>
         /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
         public ChaseMode ChaseMode { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fight mode selected by this combatant.
-        /// </summary>
-        public FightMode FightMode { get; set; }
 
         /// <summary>
         /// Gets the range that the auto attack has.
@@ -302,7 +297,7 @@ namespace Fibula.Creatures
 
                 if (this.ChaseMode != ChaseMode.Stand)
                 {
-                    this.SetChaseTarget(otherCombatant);
+                    this.SetFollowTarget(otherCombatant);
                 }
 
                 this.AttackTargetChanged?.Invoke(this, oldTarget);
@@ -318,7 +313,7 @@ namespace Fibula.Creatures
         /// </summary>
         /// <param name="target">The target to chase, if any.</param>
         /// <returns>True if the target was actually changed, false otherwise.</returns>
-        public bool SetChaseTarget(ICombatant target)
+        public bool SetFollowTarget(ICreature target)
         {
             bool targetWasChanged = false;
 
@@ -328,7 +323,7 @@ namespace Fibula.Creatures
 
                 this.ChaseTarget = target;
 
-                this.ChaseTargetChanged?.Invoke(this, oldTarget);
+                this.FollowTargetChanged?.Invoke(this, oldTarget);
 
                 targetWasChanged = true;
             }
@@ -527,31 +522,19 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Raises the <see cref="SkillLevelUpdated"/> event for this creature on the given skill.
+        /// Raises the <see cref="SkillChanged"/> event for this creature on the given skill.
         /// </summary>
         /// <param name="forSkill">The skill to advance.</param>
-        protected void RaiseSkillLevelAdvance(SkillType forSkill)
+        /// <param name="previousLevel">The previous skill level.</param>
+        /// <param name="previousPercent">The previous percent of completion to next level.</param>
+        protected void RaiseSkillChange(SkillType forSkill, uint previousLevel, byte previousPercent)
         {
             if (!this.Skills.ContainsKey(forSkill))
             {
                 return;
             }
 
-            this.SkillLevelUpdated?.Invoke(this, this.Skills[forSkill], this.Skills[forSkill].Level - 1);
-        }
-
-        /// <summary>
-        /// Raises the <see cref="SkillPercentUpdated"/> event for this creature on the given skill.
-        /// </summary>
-        /// <param name="forSkill">The skill to advance.</param>
-        protected void RaiseSkillPercentChange(SkillType forSkill)
-        {
-            if (!this.Skills.ContainsKey(forSkill))
-            {
-                return;
-            }
-
-            this.SkillPercentUpdated?.Invoke(this, this.Skills[forSkill]);
+            this.SkillChanged?.Invoke(this, this.Skills[forSkill], previousLevel, previousPercent);
         }
 
         /// <summary>

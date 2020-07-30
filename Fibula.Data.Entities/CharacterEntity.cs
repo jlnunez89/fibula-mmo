@@ -41,12 +41,6 @@ namespace Fibula.Data.Entities
         public string World { get; set; }
 
         /// <summary>
-        /// Gets or sets the character's level.
-        /// </summary>
-        // TODO: should this one live here? Should it be considered a skill, i.e. "Experience Level"?.
-        public short Level { get; set; }
-
-        /// <summary>
         /// Gets or sets the character's chosen gender.
         /// </summary>
         public byte Gender { get; set; }
@@ -59,7 +53,7 @@ namespace Fibula.Data.Entities
         /// <summary>
         /// Gets or sets the last observed date and time that this character successfully loged in.
         /// </summary>
-        public DateTimeOffset LastLogin { get; set; }
+        public DateTimeOffset? LastLogin { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this character is currently online.

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OnSkillLevelChanged.cs" company="2Dudes">
+// <copyright file="OnSkillChanged.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -11,14 +11,13 @@
 
 namespace Fibula.Mechanics.Contracts.Delegates
 {
-    using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Data.Entities.Contracts.Enumerations;
 
     /// <summary>
-    /// Delegate meant for a skill level that changed on a skilled creature.
+    /// Delegate meant for a skill change.
     /// </summary>
-    /// <param name="skilledCreature">The creature for which the skill changed.</param>
-    /// <param name="skillThatChanged">The skill that changed.</param>
+    /// <param name="skillType">The type of skill that changed.</param>
     /// <param name="previousLevel">The previous skill level.</param>
-    public delegate void OnSkillLevelUpdated(ISkilledCreature skilledCreature, ISkill skillThatChanged, uint previousLevel);
+    /// <param name="previousPercent">The previous percent of completion to next level.</param>
+    public delegate void OnSkillChanged(SkillType skillType, uint previousLevel, byte previousPercent);
 }

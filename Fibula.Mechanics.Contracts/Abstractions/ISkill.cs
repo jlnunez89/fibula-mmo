@@ -9,10 +9,10 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Common.Contracts.Abstractions
+namespace Fibula.Mechanics.Contracts.Abstractions
 {
-    using Fibula.Common.Contracts.Delegates;
     using Fibula.Data.Entities.Contracts.Enumerations;
+    using Fibula.Mechanics.Contracts.Delegates;
 
     /// <summary>
     /// Interface for skills in the game.
@@ -20,14 +20,9 @@ namespace Fibula.Common.Contracts.Abstractions
     public interface ISkill
     {
         /// <summary>
-        /// Event triggered when this skill advances to the next level.
+        /// Event triggered when this skill changes.
         /// </summary>
-        event OnSkillAdvanced Advanced;
-
-        /// <summary>
-        /// Event triggered when this skill's percent changes.
-        /// </summary>
-        event OnSkillPercentChanged PercentChanged;
+        event OnSkillChanged Changed;
 
         /// <summary>
         /// Gets this skill's type.

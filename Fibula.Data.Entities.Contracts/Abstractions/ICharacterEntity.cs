@@ -39,11 +39,6 @@ namespace Fibula.Data.Entities.Contracts.Abstractions
         string World { get; }
 
         /// <summary>
-        /// Gets the character's level.
-        /// </summary>
-        short Level { get; }
-
-        /// <summary>
         /// Gets the character's gender.
         /// </summary>
         byte Gender { get; }
@@ -56,7 +51,7 @@ namespace Fibula.Data.Entities.Contracts.Abstractions
         /// <summary>
         /// Gets the character's last login date and time.
         /// </summary>
-        DateTimeOffset LastLogin { get; }
+        DateTimeOffset? LastLogin { get; }
 
         /// <summary>
         /// Gets a value indicating whether this character is currently online.

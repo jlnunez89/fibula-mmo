@@ -75,7 +75,7 @@ namespace Fibula.Mechanics.Operations
                     combatant.HealthChanged += context.CombatApi.CombatantHealthChanged;
                     combatant.Death += context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged += context.CombatApi.CombatantAttackTargetChanged;
-                    combatant.ChaseTargetChanged += context.CombatApi.CombatantChaseTargetChanged;
+                    combatant.FollowTargetChanged += context.CombatApi.CreatureFollowTargetChanged;
 
                     // Find now-spectators of this creature to start tracking that guy.
                     foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
@@ -88,10 +88,9 @@ namespace Fibula.Mechanics.Operations
                     }
                 }
 
-                if (creature is ISkilledCreature skilledCreature)
+                if (creature is ICreatureWithSkills skilledCreature)
                 {
-                    skilledCreature.SkillLevelUpdated += context.GameApi.SkilledCreatureSkillLevelChanged;
-                    skilledCreature.SkillPercentUpdated += context.GameApi.SkilledCreatureSkillPerecentualChanged;
+                    skilledCreature.SkillChanged += context.GameApi.SkilledCreatureSkillChanged;
                 }
 
                 /*
@@ -163,13 +162,12 @@ namespace Fibula.Mechanics.Operations
                     combatant.HealthChanged -= context.CombatApi.CombatantHealthChanged;
                     combatant.Death -= context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged -= context.CombatApi.CombatantAttackTargetChanged;
-                    combatant.ChaseTargetChanged -= context.CombatApi.CombatantChaseTargetChanged;
+                    combatant.FollowTargetChanged -= context.CombatApi.CreatureFollowTargetChanged;
                 }
 
-                if (creature is ISkilledCreature skilledCreature)
+                if (creature is ICreatureWithSkills skilledCreature)
                 {
-                    skilledCreature.SkillLevelUpdated -= context.GameApi.SkilledCreatureSkillLevelChanged;
-                    skilledCreature.SkillPercentUpdated -= context.GameApi.SkilledCreatureSkillPerecentualChanged;
+                    skilledCreature.SkillChanged -= context.GameApi.SkilledCreatureSkillChanged;
                 }
 
                 if (creature is IPlayer player)

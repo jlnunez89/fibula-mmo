@@ -12,14 +12,12 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System;
-    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
-    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for all creatures in the game.
@@ -82,16 +80,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         decimal CarryStrength { get; }
 
         /// <summary>
-        /// Gets the creature's outfit.
-        /// </summary>
-        Outfit Outfit { get; }
-
-        /// <summary>
-        /// Gets the creature's facing direction.
-        /// </summary>
-        Direction Direction { get; }
-
-        /// <summary>
         /// Gets this creature's emitted light level.
         /// </summary>
         byte EmittedLightLevel { get; }
@@ -122,6 +110,16 @@ namespace Fibula.Creatures.Contracts.Abstractions
         bool IsDead { get; }
 
         /// <summary>
+        /// Gets or sets the creature's outfit.
+        /// </summary>
+        Outfit Outfit { get; set; }
+
+        /// <summary>
+        /// Gets or sets the creature's facing direction.
+        /// </summary>
+        Direction Direction { get; set; }
+
+        /// <summary>
         /// Gets or sets the creature's last move modifier.
         /// </summary>
         decimal LastMovementCostModifier { get; set; }
@@ -144,17 +142,5 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <param name="location">The location to check against.</param>
         /// <returns>True if this creature can see the given location, false otherwise.</returns>
         bool CanSee(Location location);
-
-        /// <summary>
-        /// Turns this creature to a given direction.
-        /// </summary>
-        /// <param name="direction">The direction to turn the creature to.</param>
-        void TurnToDirection(Direction direction);
-
-        /// <summary>
-        /// Attempts to set this creature's <see cref="Outfit"/>.
-        /// </summary>
-        /// <param name="outfit">The new outfit to change to.</param>
-        void SetOutfit(Outfit outfit);
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ISkilledCreature.cs" company="2Dudes">
+// <copyright file="ICreatureWithSkills.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -12,7 +12,6 @@
 namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System.Collections.Generic;
-    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Delegates;
@@ -20,17 +19,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for any entity in the game that has skills.
     /// </summary>
-    public interface ISkilledCreature : ICreature
+    public interface ICreatureWithSkills : ICreature
     {
         /// <summary>
-        /// Event triggered when this skilled creature's skill changed in level.
+        /// Event triggered when this skilled creature's skill changed.
         /// </summary>
-        event OnSkillLevelUpdated SkillLevelUpdated;
-
-        /// <summary>
-        /// Event triggered when this skilled creature's skill percent updates.
-        /// </summary>
-        event OnSkillPercentUpdated SkillPercentUpdated;
+        event OnCreatureSkillChanged SkillChanged;
 
         /// <summary>
         /// Gets the current skills information for the entity.
