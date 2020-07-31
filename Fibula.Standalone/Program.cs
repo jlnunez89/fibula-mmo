@@ -225,6 +225,7 @@ namespace Fibula.Standalone
                 { typeof(IAutoMovementInfo), typeof(AutoMoveHandler) },
                 { typeof(IActionWithoutContentInfo), typeof(ActionWithoutContentHandler) },
                 { typeof(IBytesInfo), typeof(DefaultRequestHandler) },
+                { typeof(IFollowInfo), typeof(FollowHandler) },
                 { typeof(IGameLogInInfo), typeof(GameLogInHandler) },
                 { typeof(IGatewayLoginInfo), typeof(GatewayLogInHandler) },
                 { typeof(ILookAtInfo), typeof(LookAtHandler) },

@@ -21,6 +21,7 @@ namespace Fibula.Creatures
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
@@ -39,16 +40,6 @@ namespace Fibula.Creatures
         private const byte DefaultBodyContainerIndex = 0;
 
         /// <summary>
-        /// The state for when a creature is sensed.
-        /// </summary>
-        private const byte CreatureSensedState = 0;
-
-        /// <summary>
-        /// The state for when a creature is sensed.
-        /// </summary>
-        private const byte CreatureSeenState = 1;
-
-        /// <summary>
         /// Lock used when assigning creature ids.
         /// </summary>
         private static readonly object IdLock = new object();
@@ -59,9 +50,9 @@ namespace Fibula.Creatures
         private static uint idCounter = 1;
 
         /// <summary>
-        /// Stores the creatures sensed by this creature.
+        /// Stores the creatures that this creature is aware of.
         /// </summary>
-        private readonly Dictionary<ICreature, byte> creaturesTracked;
+        private readonly Dictionary<ICreature, AwarenessLevel> creatureAwareness;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -112,7 +103,7 @@ namespace Fibula.Creatures
 
             this.BaseSpeed = 70;
 
-            this.creaturesTracked = new Dictionary<ICreature, byte>();
+            this.creatureAwareness = new Dictionary<ICreature, AwarenessLevel>();
         }
 
         /// <summary>
@@ -260,7 +251,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the creatures who are sensed by this creature.
         /// </summary>
-        public IEnumerable<ICreature> TrackedCreatures => this.creaturesTracked.Keys;
+        public IEnumerable<ICreature> TrackedCreatures => this.creatureAwareness.Keys;
 
         /// <summary>
         /// Gets a value indicating whether the creature is considered dead.
@@ -282,15 +273,15 @@ namespace Fibula.Creatures
             }
 
             // Add a creature and mark it as sensed only.
-            if (this.creaturesTracked.TryAdd(creature, CreatureSensedState))
+            if (this.creatureAwareness.TryAdd(creature, AwarenessLevel.Sensed))
             {
                 this.CreatureSensed?.Invoke(this, creature);
             }
 
             // check if we can actually see the creature, and mark it as such if so.
-            if (this.creaturesTracked[creature] == CreatureSensedState && this.CanSee(creature))
+            if (this.creatureAwareness[creature] == AwarenessLevel.Sensed && this.CanSee(creature))
             {
-                this.creaturesTracked[creature] = CreatureSeenState;
+                this.creatureAwareness[creature] = AwarenessLevel.Seen;
 
                 this.CreatureSeen?.Invoke(this, creature);
             }
@@ -310,7 +301,7 @@ namespace Fibula.Creatures
                 return;
             }
 
-            if (this.creaturesTracked.Remove(creature))
+            if (this.creatureAwareness.Remove(creature))
             {
                 this.CreatureLost?.Invoke(this, creature);
             }

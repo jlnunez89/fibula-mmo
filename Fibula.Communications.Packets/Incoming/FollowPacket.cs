@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AttackPacket.cs" company="2Dudes">
+// <copyright file="FollowPacket.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -14,15 +14,15 @@ namespace Fibula.Communications.Packets.Incoming
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
-    /// Class that represents an attack packet.
+    /// Class that represents a follow packet.
     /// </summary>
-    public class AttackPacket : IAttackInfo
+    public class FollowPacket : IFollowInfo
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AttackPacket"/> class.
+        /// Initializes a new instance of the <see cref="FollowPacket"/> class.
         /// </summary>
-        /// <param name="targetCreatureId">The id of the creature being attacked.</param>
-        public AttackPacket(uint targetCreatureId)
+        /// <param name="targetCreatureId">The id of the creature being followed.</param>
+        public FollowPacket(uint targetCreatureId)
         {
             this.TargetCreatureId = targetCreatureId;
         }

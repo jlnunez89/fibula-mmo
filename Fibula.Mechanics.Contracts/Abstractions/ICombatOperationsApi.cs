@@ -75,5 +75,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="attacker">The attacker.</param>
         /// <param name="target">The target.</param>
         void SetCombatantAttackTarget(ICombatant attacker, ICombatant target);
+
+        /// <summary>
+        /// Re-sets the follow target of the combatant and it's (possibly new) target.
+        /// </summary>
+        /// <param name="combatant">The attacker.</param>
+        /// <param name="target">The new target.</param>
+        void SetCombatantFollowTarget(ICombatant combatant, ICombatant target);
     }
 }

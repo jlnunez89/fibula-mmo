@@ -54,6 +54,7 @@ namespace Fibula.Protocol.V772
                 { IncomingGamePacketType.AutoMove, typeof(AutoMovePacketReader) },
                 { IncomingGamePacketType.AutoMoveCancel, typeof(AutoMoveCancelPacketReader) },
                 { IncomingGamePacketType.ChangeModes, typeof(ChangeModesPacketReader) },
+                { IncomingGamePacketType.Follow, typeof(FollowPacketReader) },
                 { IncomingGamePacketType.Heartbeat, typeof(HeartbeatPacketReader) },
                 { IncomingGamePacketType.HeartbeatResponse, typeof(HeartbeatResponsePacketReader) },
                 { IncomingGamePacketType.LogIn, typeof(GameLogInPacketReader) },

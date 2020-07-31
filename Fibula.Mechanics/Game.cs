@@ -383,7 +383,7 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Re-sets the combat target of the attacker and it's (possibly new) target.
+        /// Re-sets the attack target of the attacker and it's (possibly new) target.
         /// </summary>
         /// <param name="attacker">The attacker.</param>
         /// <param name="target">The new target.</param>
@@ -395,6 +395,21 @@ namespace Fibula.Mechanics
             }
 
             attacker.SetAttackTarget(target);
+        }
+
+        /// <summary>
+        /// Re-sets the follow target of the combatant and it's (possibly new) target.
+        /// </summary>
+        /// <param name="combatant">The attacker.</param>
+        /// <param name="target">The new target.</param>
+        public void SetCombatantFollowTarget(ICombatant combatant, ICombatant target)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            combatant.SetFollowTarget(target);
         }
 
         /// <summary>
