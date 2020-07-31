@@ -42,9 +42,9 @@ namespace Fibula.Common
         }
 
         /// <summary>
-        /// Event to invoke when any of the properties of this thing have changed.
+        /// Event to invoke when the thing's location has changed.
         /// </summary>
-        public event OnThingStateChanged ThingChanged;
+        public event OnLocationChanged LocationChanged;
 
         /// <summary>
         /// Gets the unique id of this item.
@@ -81,7 +81,7 @@ namespace Fibula.Common
                 // That's why we check if these are now considered different.
                 if (oldLocation != this.Location)
                 {
-                    this.InvokePropertyChanged(nameof(this.Location));
+                    this.RaiseLocationChanged(oldLocation);
                 }
             }
         }
@@ -108,14 +108,12 @@ namespace Fibula.Common
         public IDictionary<string, IEvent> TrackedEvents { get; }
 
         /// <summary>
-        /// Invokes the <see cref="ThingChanged"/> event on this thing.
+        /// Invokes the <see cref="LocationChanged"/> event on this thing.
         /// </summary>
-        /// <param name="propertyName">The name of the property.</param>
-        public void InvokePropertyChanged(string propertyName)
+        /// <param name="fromLocation">The location from which the change happened.</param>
+        public void RaiseLocationChanged(Location fromLocation)
         {
-            propertyName.ThrowIfNullOrWhiteSpace(propertyName);
-
-            this.ThingChanged?.Invoke(this, new ThingStateChangedEventArgs() { PropertyChanged = propertyName });
+            this.LocationChanged?.Invoke(this, fromLocation);
         }
 
         /// <inheritdoc/>

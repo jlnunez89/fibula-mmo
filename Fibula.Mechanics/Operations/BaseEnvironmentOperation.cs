@@ -76,21 +76,24 @@ namespace Fibula.Mechanics.Operations
                     combatant.Death += context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged += context.CombatApi.CombatantAttackTargetChanged;
                     combatant.FollowTargetChanged += context.CombatApi.CreatureFollowTargetChanged;
+                    combatant.LocationChanged += context.GameApi.AfterThingLocationChanged;
+
+                    // As a creature that can sense.
+                    combatant.CreatureSeen += context.CombatApi.CreatureHasSeenCreature;
+                    combatant.CreatureLost += context.CombatApi.CreatureHasLostCreature;
+
+                    // As a skilled creature
+                    combatant.SkillChanged += context.GameApi.SkilledCreatureSkillChanged;
 
                     // Find now-spectators of this creature to start tracking that guy.
                     foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
                     {
                         if (spectator is ICombatant combatantSpectator)
                         {
-                            combatant.AddToCombatList(combatantSpectator);
-                            combatantSpectator.AddToCombatList(combatant);
+                            combatant.StartSensingCreature(combatantSpectator);
+                            combatantSpectator.StartSensingCreature(combatant);
                         }
                     }
-                }
-
-                if (creature is ICreatureWithSkills skilledCreature)
-                {
-                    skilledCreature.SkillChanged += context.GameApi.SkilledCreatureSkillChanged;
                 }
 
                 /*
@@ -150,12 +153,12 @@ namespace Fibula.Mechanics.Operations
             {
                 if (creature is ICombatant combatant)
                 {
-                    // Find spectators of this creature that died and stop tracking the sucker.
+                    // Find spectators of this guy who died and stop tracking the sucker.
                     foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
                     {
                         if (spectator is ICombatant combatantSpectator)
                         {
-                            combatantSpectator.RemoveFromCombatList(combatant);
+                            combatantSpectator.StopSensingCreature(combatant);
                         }
                     }
 
@@ -163,11 +166,14 @@ namespace Fibula.Mechanics.Operations
                     combatant.Death -= context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged -= context.CombatApi.CombatantAttackTargetChanged;
                     combatant.FollowTargetChanged -= context.CombatApi.CreatureFollowTargetChanged;
-                }
+                    combatant.LocationChanged -= context.GameApi.AfterThingLocationChanged;
 
-                if (creature is ICreatureWithSkills skilledCreature)
-                {
-                    skilledCreature.SkillChanged -= context.GameApi.SkilledCreatureSkillChanged;
+                    // As a creature that can sense.
+                    combatant.CreatureSeen -= context.CombatApi.CreatureHasSeenCreature;
+                    combatant.CreatureLost -= context.CombatApi.CreatureHasLostCreature;
+
+                    // As a skilled creature
+                    combatant.SkillChanged -= context.GameApi.SkilledCreatureSkillChanged;
                 }
 
                 if (creature is IPlayer player)

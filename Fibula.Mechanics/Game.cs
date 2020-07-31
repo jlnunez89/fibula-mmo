@@ -32,6 +32,7 @@ namespace Fibula.Mechanics
     using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Items.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
@@ -343,9 +344,41 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            if (combatant.ChaseTarget != null && combatant.ChaseTarget != oldTarget)
+            if (combatant.ChaseTarget != oldTarget)
             {
                 this.ResetCreatureDynamicWalkPlan(combatant, combatant.ChaseTarget, targetDistance: combatant.AutoAttackRange);
+            }
+        }
+
+        /// <summary>
+        /// Handles the event when a creature has seen another creature.
+        /// </summary>
+        /// <param name="creature">The monster that sees the other.</param>
+        /// <param name="creatureSeen">The creature that was seen.</param>
+        public void CreatureHasSeenCreature(ICreatureThatSensesOthers creature, ICreature creatureSeen)
+        {
+            creature.ThrowIfNull(nameof(creature));
+            creatureSeen.ThrowIfNull(nameof(creatureSeen));
+
+            if (creature is ICombatant combatant && creatureSeen is ICombatant combatantSeen)
+            {
+                combatant.AddToCombatList(combatantSeen);
+            }
+        }
+
+        /// <summary>
+        /// Handles the event when a creature has lost another creature.
+        /// </summary>
+        /// <param name="creature">The monster that sees the other.</param>
+        /// <param name="creatureLost">The creature that was lost.</param>
+        public void CreatureHasLostCreature(ICreatureThatSensesOthers creature, ICreature creatureLost)
+        {
+            creature.ThrowIfNull(nameof(creature));
+            creatureLost.ThrowIfNull(nameof(creatureLost));
+
+            if (creature is ICombatant combatant && creatureLost is ICombatant combatantLost)
+            {
+                combatant.RemoveFromCombatList(combatantLost);
             }
         }
 
@@ -410,7 +443,14 @@ namespace Fibula.Mechanics
         /// <param name="targetDistance">Optional. The target distance to calculate from the target creature.</param>
         public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1)
         {
-            if (creature == null || targetCreature == null)
+            if (creature == null)
+            {
+                return;
+            }
+
+            this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
+
+            if (targetCreature == null)
             {
                 return;
             }
@@ -435,8 +475,6 @@ namespace Fibula.Mechanics
             }
 
             creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.IsDead ? creature.Location : targetCreature.Location, targetDistance, waypoints.ToArray());
-
-            this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
             var autoWalkOrchOp = new AutoWalkOrchestratorOperation(creature);
 
@@ -688,6 +726,98 @@ namespace Fibula.Mechanics
             }
 
             this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new HeartbeatResponsePacket()));
+        }
+
+        /// <summary>
+        /// Handles the aftermath of a location change from a thing.
+        /// </summary>
+        /// <param name="thing">The thing which's location changed.</param>
+        /// <param name="previousLocation">The previous location of the thing.</param>
+        public void AfterThingLocationChanged(IThing thing, Location previousLocation)
+        {
+            thing.ThrowIfNull(nameof(thing));
+
+            if (thing is IPlayer player)
+            {
+                // If the creature is a player, we must check if the movement caused it to walk away from any open containers.
+                foreach (var container in this.containerManager.FindAllForCreature(player.Id))
+                {
+                    if (container == null)
+                    {
+                        continue;
+                    }
+
+                    var locationDiff = container.Location - player.Location;
+
+                    if (locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0)
+                    {
+                        var containerId = this.containerManager.FindForCreature(player.Id, container);
+
+                        if (containerId != ItemConstants.UnsetContainerPosition)
+                        {
+                            this.containerManager.CloseContainer(player.Id, container, containerId);
+                        }
+                    }
+                }
+            }
+
+            if (thing is ICombatant movingCombatant)
+            {
+                // Check if we are in range to perform the attack operation, if any.
+                // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
+                foreach (var combatant in movingCombatant.YieldSingleItem().Union(movingCombatant.AttackedBy))
+                {
+                    if (!combatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation operation) || !(operation is AutoAttackOperation attackOp))
+                    {
+                        continue;
+                    }
+
+                    if (attackOp.Target != movingCombatant && attackOp.Attacker != movingCombatant)
+                    {
+                        continue;
+                    }
+
+                    var distanceBetweenCombatants = (attackOp.Attacker?.Location ?? attackOp.Target.Location) - attackOp.Target.Location;
+                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= attackOp.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+
+                    if (inRange)
+                    {
+                        attackOp.Expedite();
+
+                        // Also expedite their orchestration operation, to delay the next attack by the right amount.
+                        if (combatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation othersOrchAtkOp))
+                        {
+                            othersOrchAtkOp.Expedite();
+                        }
+                    }
+                }
+
+                // And check if it walked into new combatants view range.
+                var spectatorsAtDestination = this.map.CreaturesThatCanSee(thing.Location).OfType<ICombatant>();
+                var spectatorsAtSource = this.map.CreaturesThatCanSee(previousLocation).OfType<ICombatant>();
+
+                var spectatorsLost = spectatorsAtSource.Except(spectatorsAtDestination);
+
+                // Make new spectators aware that this creature moved into their view.
+                foreach (var spectator in spectatorsAtDestination)
+                {
+                    spectator.StartSensingCreature(movingCombatant);
+                    movingCombatant.StartSensingCreature(spectator);
+                }
+
+                // Now make old spectators aware that this creature moved out of their view.
+                foreach (var spectator in spectatorsLost)
+                {
+                    spectator.StopSensingCreature(movingCombatant);
+                    movingCombatant.StopSensingCreature(spectator);
+                }
+            }
+
+            /*
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
+            context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
+            */
         }
 
         /// <summary>

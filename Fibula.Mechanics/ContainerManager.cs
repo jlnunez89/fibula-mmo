@@ -17,6 +17,7 @@ namespace Fibula.Mechanics
     using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -280,7 +281,7 @@ namespace Fibula.Mechanics
                         container.ContentAdded -= this.OnContainerContentAdded;
                         container.ContentRemoved -= this.OnContainerContentRemoved;
                         container.ContentUpdated -= this.OnContainerContentUpdated;
-                        container.ThingChanged -= this.OnContainerChanged;
+                        container.LocationChanged -= this.OnContainerLocationChanged;
                     }
                 }
 
@@ -337,7 +338,7 @@ namespace Fibula.Mechanics
                     container.ContentAdded += this.OnContainerContentAdded;
                     container.ContentRemoved += this.OnContainerContentRemoved;
                     container.ContentUpdated += this.OnContainerContentUpdated;
-                    container.ThingChanged += this.OnContainerChanged;
+                    container.LocationChanged += this.OnContainerLocationChanged;
                 }
 
                 this.containersToCreatureIds[container.UniqueId][openedAt] = forCreatureId;
@@ -445,13 +446,12 @@ namespace Fibula.Mechanics
         /// Handles a change event from a container.
         /// </summary>
         /// <param name="containerThatChangedAsThing">The container that changed.</param>
-        /// <param name="eventArgs">The event arguments of the change.</param>
-        private void OnContainerChanged(IThing containerThatChangedAsThing, ThingStateChangedEventArgs eventArgs)
+        /// <param name="previousLocation">The container's previous location.</param>
+        private void OnContainerLocationChanged(IThing containerThatChangedAsThing, Location previousLocation)
         {
             lock (this.internalDictionariesLock)
             {
                 if (!(containerThatChangedAsThing is IContainerItem containerItem) ||
-                    !eventArgs.PropertyChanged.Equals(nameof(containerItem.Location)) ||
                     this.containersToCreatureIds.ContainsKey(containerItem.UniqueId))
                 {
                     return;

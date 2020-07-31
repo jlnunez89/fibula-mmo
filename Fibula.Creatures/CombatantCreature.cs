@@ -12,6 +12,7 @@
 namespace Fibula.Creatures
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
@@ -30,19 +31,14 @@ namespace Fibula.Creatures
     public abstract class CombatantCreature : Creature, ICombatant
     {
         /// <summary>
-        /// An object to use as a lock to semaphone changes to the <see cref="damageTakenFromOthers"/> dictionary.
-        /// </summary>
-        private readonly object damageTakenFromOthersLock;
-
-        /// <summary>
         /// Lock object to semaphore interaction with the exhaustion dictionary.
         /// </summary>
         private readonly object exhaustionLock;
 
         /// <summary>
-        /// Stores the map of other combatants to the damage taken from them.
+        /// Stores the map of combatants to the damage taken from them for the current combat session.
         /// </summary>
-        private readonly Dictionary<uint, uint> damageTakenFromOthers;
+        private readonly ConcurrentDictionary<uint, uint> combatSessionDamageTakenMap;
 
         /// <summary>
         /// The base of how fast a combatant can earn an attack credit per combat round.
@@ -53,6 +49,11 @@ namespace Fibula.Creatures
         /// The base of how fast a combatant can earn a defense credit per combat round.
         /// </summary>
         private readonly decimal baseDefenseSpeed;
+
+        /// <summary>
+        /// Stores the set of combatants currently attacking this combatant for the current combat session.
+        /// </summary>
+        private readonly ISet<ICombatant> combatSessionAttackedBy;
 
         /// <summary>
         /// The buff for attack speed.
@@ -106,8 +107,8 @@ namespace Fibula.Creatures
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
-            this.damageTakenFromOthersLock = new object();
-            this.damageTakenFromOthers = new Dictionary<uint, uint>();
+            this.combatSessionDamageTakenMap = new ConcurrentDictionary<uint, uint>();
+            this.combatSessionAttackedBy = new HashSet<ICombatant>();
 
             this.Skills = new Dictionary<SkillType, ISkill>();
         }
@@ -195,28 +196,22 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
         /// </summary>
-        public IEnumerable<(uint, uint)> DamageTakenDistribution
+        public IEnumerable<(uint, uint)> DamageTakenInSession
         {
             get
             {
-                lock (this.damageTakenFromOthersLock)
-                {
-                    return this.damageTakenFromOthers.Select(kvp => (kvp.Key, kvp.Value)).ToList();
-                }
+                return this.combatSessionDamageTakenMap.Select(kvp => (kvp.Key, kvp.Value)).ToList();
             }
         }
 
         /// <summary>
-        /// Gets the collection of ids of attackers of this combatant.
+        /// Gets the collection of combatants currently attacking this combatant.
         /// </summary>
-        public IEnumerable<uint> AttackedBy
+        public IEnumerable<ICombatant> AttackedBy
         {
             get
             {
-                lock (this.damageTakenFromOthersLock)
-                {
-                    return this.damageTakenFromOthers.Keys.ToList();
-                }
+                return this.combatSessionAttackedBy.ToList();
             }
         }
 
@@ -236,11 +231,6 @@ namespace Fibula.Creatures
         /// The key is a <see cref="SkillType"/>, and the value is a <see cref="ISkill"/>.
         /// </remarks>
         public IDictionary<SkillType, ISkill> Skills { get; }
-
-        /// <summary>
-        /// Gets the collection of tracked combatants.
-        /// </summary>
-        public abstract IEnumerable<ICombatant> CombatList { get; }
 
         /// <summary>
         /// Consumes combat credits to the combatant.
@@ -294,6 +284,9 @@ namespace Fibula.Creatures
                 var oldTarget = this.AutoAttackTarget;
 
                 this.AutoAttackTarget = otherCombatant;
+
+                oldTarget?.UnsetAttackedBy(this);
+                otherCombatant?.SetAttackedBy(this);
 
                 if (this.ChaseMode != ChaseMode.Stand)
                 {
@@ -422,6 +415,34 @@ namespace Fibula.Creatures
         public abstract void RemoveFromCombatList(ICombatant otherCombatant);
 
         /// <summary>
+        /// Sets this combatant as being attacked by another.
+        /// </summary>
+        /// <param name="combatant">The combatant attacking this one, if any.</param>
+        public void SetAttackedBy(ICombatant combatant)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            this.combatSessionAttackedBy.Add(combatant);
+        }
+
+        /// <summary>
+        /// Unsets this combatant as being attacked by another.
+        /// </summary>
+        /// <param name="combatant">The combatant no longer attacking this one, if any.</param>
+        public void UnsetAttackedBy(ICombatant combatant)
+        {
+            if (combatant == null)
+            {
+                return;
+            }
+
+            this.combatSessionAttackedBy.Remove(combatant);
+        }
+
+        /// <summary>
         /// Applies damage to the combatant, which is expected to apply reductions and protections.
         /// </summary>
         /// <param name="damageInfo">The information of the damage to make, without reductions.</param>
@@ -462,15 +483,7 @@ namespace Fibula.Creatures
 
             if (fromCombatantId > 0)
             {
-                lock (this.damageTakenFromOthersLock)
-                {
-                    if (!this.damageTakenFromOthers.ContainsKey(fromCombatantId))
-                    {
-                        this.damageTakenFromOthers.Add(fromCombatantId, 0);
-                    }
-
-                    this.damageTakenFromOthers[fromCombatantId] += (uint)damageInfo.Damage;
-                }
+                this.combatSessionDamageTakenMap.AddOrUpdate(fromCombatantId, (uint)damageInfo.Damage, (key, oldValue) => (uint)(oldValue + damageInfo.Damage));
             }
 
             if (this.Hitpoints == 0)

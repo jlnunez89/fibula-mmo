@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OnCreatureLost.cs" company="2Dudes">
+// <copyright file="OnCreatureSeen.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -15,9 +15,9 @@ namespace Fibula.Mechanics.Contracts.Delegates
     using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
-    /// Delegate meant for when a creature stops sensing a creature (loses track of it).
+    /// Delegate meant for when a creature sees a new creature.
     /// </summary>
-    /// <param name="creature">The creature that lost the other.</param>
-    /// <param name="creatureLost">The creature that was lost.</param>
-    public delegate void OnCreatureLost(ICreatureThatSensesOthers creature, ICreature creatureLost);
+    /// <param name="creature">The creature that sees the other.</param>
+    /// <param name="creatureSeen">The creature that was seen.</param>
+    public delegate void OnCreatureSeen(ICreatureThatSensesOthers creature, ICreature creatureSeen);
 }

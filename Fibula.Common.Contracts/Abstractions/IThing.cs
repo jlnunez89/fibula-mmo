@@ -24,7 +24,7 @@ namespace Fibula.Common.Contracts.Abstractions
         /// <summary>
         /// Event to invoke when any of the properties of this thing have changed.
         /// </summary>
-        event OnThingStateChanged ThingChanged;
+        event OnLocationChanged LocationChanged;
 
         /// <summary>
         /// Gets the id of this thing.

@@ -70,6 +70,21 @@ namespace Fibula.Mechanics.Operations
             if (this.Creature is ICombatant combatant)
             {
                 combatant.SetAttackTarget(null);
+
+                foreach (var attacker in combatant.AttackedBy)
+                {
+                    attacker.StopSensingCreature(combatant);
+                }
+
+                foreach (var creature in combatant.TrackedCreatures)
+                {
+                    combatant.StopSensingCreature(creature);
+
+                    if (creature is ICreatureThatSensesOthers creatureThatSensesOthers)
+                    {
+                        creatureThatSensesOthers.StopSensingCreature(combatant);
+                    }
+                }
             }
 
             // Remove the creature...

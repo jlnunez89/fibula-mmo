@@ -21,7 +21,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreatureWithExhaustion, ICreatureWithSkills
+    public interface ICombatant : ICreatureWithExhaustion, ICreatureWithSkills, ICreatureThatSensesOthers
     {
         /// <summary>
         /// Event to call when the combatant's health changes.
@@ -106,12 +106,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
         /// </summary>
-        IEnumerable<(uint, uint)> DamageTakenDistribution { get; }
+        IEnumerable<(uint, uint)> DamageTakenInSession { get; }
 
         /// <summary>
-        /// Gets the collection of ids of attackers of this combatant.
+        /// Gets the collection of combatants currently attacking this combatant.
         /// </summary>
-        IEnumerable<uint> AttackedBy { get; }
+        IEnumerable<ICombatant> AttackedBy { get; }
 
         /// <summary>
         /// Gets or sets the fight mode selected by this combatant.
@@ -122,11 +122,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
         ChaseMode ChaseMode { get; set; }
-
-        /// <summary>
-        /// Gets the list of combatants.
-        /// </summary>
-        IEnumerable<ICombatant> CombatList { get; }
 
         /// <summary>
         /// Sets the attack target of this combatant.
@@ -199,5 +194,17 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         /// <param name="otherCombatant">The combatant to remove from the list.</param>
         void RemoveFromCombatList(ICombatant otherCombatant);
+
+        /// <summary>
+        /// Sets this combatant as being attacked by another.
+        /// </summary>
+        /// <param name="combatant">The combatant attacking this one, if any.</param>
+        void SetAttackedBy(ICombatant combatant);
+
+        /// <summary>
+        /// Unsets this combatant as being attacked by another.
+        /// </summary>
+        /// <param name="combatant">The combatant no longer attacking this one, if any.</param>
+        void UnsetAttackedBy(ICombatant combatant);
     }
 }

@@ -128,11 +128,6 @@ namespace Fibula.Creatures
         public override ushort Speed { get; protected set; }
 
         /// <summary>
-        /// Gets the collection of tracked combatants.
-        /// </summary>
-        public override IEnumerable<ICombatant> CombatList => Enumerable.Empty<ICombatant>();
-
-        /// <summary>
         /// Starts tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>

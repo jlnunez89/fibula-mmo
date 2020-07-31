@@ -707,134 +707,27 @@ namespace Fibula.Mechanics.Operations
 
             var toStackPosition = toTile.GetStackOrderOfThing(creature);
 
+            if (toStackPosition == byte.MaxValue)
+            {
+                context.Logger.Warning("Unexpected destination stack position during creature movement, suggests that the creature is not found in the destination tile after the move.");
+            }
+
             // Then deal with the consequences of the move.
             creature.Direction = moveDirection.GetClientSafeDirection();
             creature.LastMovementCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
             this.ExhaustionCost = creature.CalculateStepDuration(fromTile);
 
-            if (toStackPosition != byte.MaxValue)
-            {
-                this.SendNotification(
-                    context,
-                    new CreatureMovedNotification(
-                        () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
-                        creature.Id,
-                        fromTile.Location,
-                        fromTileStackPos,
-                        toTile.Location,
-                        toStackPosition,
-                        isTeleport));
-            }
-
-            if (creature is IPlayer player)
-            {
-                // If the creature is a player, we must check if the movement caused it to walk away from any open containers.
-                foreach (var container in context.ContainerManager.FindAllForCreature(player.Id))
-                {
-                    if (container == null)
-                    {
-                        continue;
-                    }
-
-                    var locationDiff = container.Location - player.Location;
-
-                    if (locationDiff.MaxValueIn2D > 1 || locationDiff.Z != 0)
-                    {
-                        var containerId = context.ContainerManager.FindForCreature(player.Id, container);
-
-                        if (containerId != ItemConstants.UnsetContainerPosition)
-                        {
-                            context.ContainerManager.CloseContainer(player.Id, container, containerId);
-                        }
-                    }
-                }
-            }
-
-            if (creature is ICombatant movingCombatant)
-            {
-                // Check if we are in range to perform the attack operation, if any.
-                if (movingCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp is AutoAttackOperation pAttackOpFromAttacker)
-                {
-                    var distanceBetweenCombatants = (pAttackOpFromAttacker.Attacker?.Location ?? pAttackOpFromAttacker.Target.Location) - pAttackOpFromAttacker.Target.Location;
-                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= pAttackOpFromAttacker.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
-
-                    if (inRange)
-                    {
-                        pAttackOpFromAttacker.Expedite();
-
-                        // Also expedite their orchestration operation, to delay the next attack by the right amount.
-                        if (movingCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation attackersOrchAtkOp))
-                        {
-                            attackersOrchAtkOp.Expedite();
-                        }
-                    }
-                }
-
-                // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
-                foreach (var otherCombatantId in movingCombatant.AttackedBy)
-                {
-                    if (context.CreatureFinder.FindCreatureById(otherCombatantId) is ICombatant otherCombatant)
-                    {
-                        if (!otherCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation otherAtkOp) ||
-                            !(otherAtkOp is AutoAttackOperation pAttackOpFromOther) || pAttackOpFromOther.Target != movingCombatant)
-                        {
-                            continue;
-                        }
-
-                        var distanceBetweenCombatants = (pAttackOpFromOther.Attacker?.Location ?? pAttackOpFromOther.Target.Location) - pAttackOpFromOther.Target.Location;
-                        var inRange = distanceBetweenCombatants.MaxValueIn2D <= pAttackOpFromOther.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
-
-                        if (inRange)
-                        {
-                            pAttackOpFromOther.Expedite();
-
-                            // Also expedite their orchestration operation, to delay the next attack by the right amount.
-                            if (otherCombatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation othersOrchAtkOp))
-                            {
-                                othersOrchAtkOp.Expedite();
-                            }
-                        }
-                    }
-                }
-
-                // And check if it walked into new combatants view range.
-                var spectatorsAtDestination = context.Map.CreaturesThatCanSee(toTile.Location).OfType<ICombatant>();
-                var spectatorsAtSource = context.Map.CreaturesThatCanSee(fromTile.Location).OfType<ICombatant>();
-
-                var spectatorsLost = spectatorsAtSource.Except(spectatorsAtDestination);
-                var spectatorsAdded = spectatorsAtDestination.Where(s => !s.CombatList.Contains(movingCombatant));
-
-                // Make new spectators aware that this creature moved into their view.
-                foreach (var spectator in spectatorsAdded)
-                {
-                    if (spectator == movingCombatant)
-                    {
-                        continue;
-                    }
-
-                    spectator.AddToCombatList(movingCombatant);
-                    movingCombatant.AddToCombatList(spectator);
-                }
-
-                // Now make old spectators aware that this creature moved out of their view.
-                foreach (var spectator in spectatorsLost)
-                {
-                    if (spectator == movingCombatant)
-                    {
-                        continue;
-                    }
-
-                    spectator.RemoveFromCombatList(movingCombatant);
-                    movingCombatant.RemoveFromCombatList(spectator);
-                }
-            }
-
-            /*
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Separation, new SeparationEventRuleArguments(fromTile.Location, creature, requestorCreature));
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(toTile.Location, creature, requestorCreature));
-            context.EventRulesApi.EvaluateRules(this, EventRuleType.Movement, new MovementEventRuleArguments(creature, requestorCreature));
-            */
+            this.SendNotification(
+                context,
+                new CreatureMovedNotification(
+                    () => context.Map.PlayersThatCanSee(fromTile.Location, toLocation),
+                    creature.Id,
+                    fromTile.Location,
+                    fromTileStackPos,
+                    toTile.Location,
+                    toStackPosition,
+                    isTeleport));
 
             return true;
         }

@@ -13,6 +13,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -50,6 +51,13 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="itemTypeId">The type id of the item to create.</param>
         /// <param name="additionalAttributes">Optional. Additional item attributes to set on the new item.</param>
         void CreateItemAtLocation(Location location, ushort itemTypeId, params (ItemAttribute, IConvertible)[] additionalAttributes);
+
+        /// <summary>
+        /// Handles the aftermath a location change from a thing.
+        /// </summary>
+        /// <param name="thing">The thing which's location changed.</param>
+        /// <param name="previousLocation">The previous location of the thing.</param>
+        void AfterThingLocationChanged(IThing thing, Location previousLocation);
 
         // void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
 

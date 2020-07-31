@@ -26,6 +26,11 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         event OnCreatureSensed CreatureSensed;
 
         /// <summary>
+        /// Event called when this creature sees another.
+        /// </summary>
+        event OnCreatureSeen CreatureSeen;
+
+        /// <summary>
         /// Event called when this creature loses track of a sensed creature.
         /// </summary>
         event OnCreatureLost CreatureLost;
@@ -33,7 +38,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Gets the creatures who are sensed by this creature.
         /// </summary>
-        IEnumerable<ICreature> SensedCreatures { get; }
+        IEnumerable<ICreature> TrackedCreatures { get; }
 
         /// <summary>
         /// Flags a creature as being sensed.

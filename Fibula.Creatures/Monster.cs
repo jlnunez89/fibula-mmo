@@ -101,26 +101,13 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Gets the collection of tracked combatants.
-        /// </summary>
-        public override IEnumerable<ICombatant> CombatList
-        {
-            get
-            {
-                lock (this.hostileCombatantsLock)
-                {
-                    return this.hostileCombatants.ToList();
-                }
-            }
-        }
-
-        /// <summary>
         /// Starts tracking another <see cref="ICombatant"/>.
         /// </summary>
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void AddToCombatList(ICombatant otherCombatant)
         {
-            if (this == otherCombatant || !(otherCombatant is IPlayer))
+            // || !(otherCombatant is IPlayer)
+            if (this == otherCombatant)
             {
                 return;
             }
@@ -143,7 +130,7 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void RemoveFromCombatList(ICombatant otherCombatant)
         {
-            if (this == otherCombatant || !(otherCombatant is IPlayer))
+            if (this == otherCombatant)
             {
                 return;
             }

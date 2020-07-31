@@ -12,10 +12,12 @@
 namespace Fibula.Mechanics.Contracts.Delegates
 {
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Delegate meant for when a creature senses a new creature.
     /// </summary>
+    /// <param name="creature">The creature that senses the other.</param>
     /// <param name="creatureSensed">The creature that was sensed.</param>
-    public delegate void OnCreatureSensed(ICreature creatureSensed);
+    public delegate void OnCreatureSensed(ICreatureThatSensesOthers creature, ICreature creatureSensed);
 }

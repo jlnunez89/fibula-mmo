@@ -39,6 +39,16 @@ namespace Fibula.Creatures
         private const byte DefaultBodyContainerIndex = 0;
 
         /// <summary>
+        /// The state for when a creature is sensed.
+        /// </summary>
+        private const byte CreatureSensedState = 0;
+
+        /// <summary>
+        /// The state for when a creature is sensed.
+        /// </summary>
+        private const byte CreatureSeenState = 1;
+
+        /// <summary>
         /// Lock used when assigning creature ids.
         /// </summary>
         private static readonly object IdLock = new object();
@@ -51,7 +61,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Stores the creatures sensed by this creature.
         /// </summary>
-        private readonly HashSet<ICreature> creaturesSensed;
+        private readonly Dictionary<ICreature, byte> creaturesTracked;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -102,13 +112,18 @@ namespace Fibula.Creatures
 
             this.BaseSpeed = 70;
 
-            this.creaturesSensed = new HashSet<ICreature>();
+            this.creaturesTracked = new Dictionary<ICreature, byte>();
         }
 
         /// <summary>
         /// Event called when this creature senses another.
         /// </summary>
         public event OnCreatureSensed CreatureSensed;
+
+        /// <summary>
+        /// Event called when this creature sees another.
+        /// </summary>
+        public event OnCreatureSeen CreatureSeen;
 
         /// <summary>
         /// Event called when this creature loses track of a sensed creature.
@@ -245,7 +260,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the creatures who are sensed by this creature.
         /// </summary>
-        public IEnumerable<ICreature> SensedCreatures => this.creaturesSensed;
+        public IEnumerable<ICreature> TrackedCreatures => this.creaturesTracked.Keys;
 
         /// <summary>
         /// Gets a value indicating whether the creature is considered dead.
@@ -260,9 +275,24 @@ namespace Fibula.Creatures
         {
             creature.ThrowIfNull(nameof(creature));
 
-            if (this.creaturesSensed.Add(creature))
+            // Do not track self.
+            if (creature == this)
             {
-                this.CreatureSensed?.Invoke(creature);
+                return;
+            }
+
+            // Add a creature and mark it as sensed only.
+            if (this.creaturesTracked.TryAdd(creature, CreatureSensedState))
+            {
+                this.CreatureSensed?.Invoke(this, creature);
+            }
+
+            // check if we can actually see the creature, and mark it as such if so.
+            if (this.creaturesTracked[creature] == CreatureSensedState && this.CanSee(creature))
+            {
+                this.creaturesTracked[creature] = CreatureSeenState;
+
+                this.CreatureSeen?.Invoke(this, creature);
             }
         }
 
@@ -274,9 +304,15 @@ namespace Fibula.Creatures
         {
             creature.ThrowIfNull(nameof(creature));
 
-            if (this.creaturesSensed.Remove(creature))
+            // We don't track self anyways.
+            if (creature == this)
             {
-                this.CreatureLost?.Invoke(creature);
+                return;
+            }
+
+            if (this.creaturesTracked.Remove(creature))
+            {
+                this.CreatureLost?.Invoke(this, creature);
             }
         }
 
