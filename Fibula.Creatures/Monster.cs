@@ -106,8 +106,7 @@ namespace Fibula.Creatures
         /// <param name="otherCombatant">The other combatant, now in view.</param>
         public override void AddToCombatList(ICombatant otherCombatant)
         {
-            // || !(otherCombatant is IPlayer)
-            if (this == otherCombatant)
+            if (this == otherCombatant || !(otherCombatant is IPlayer))
             {
                 return;
             }
