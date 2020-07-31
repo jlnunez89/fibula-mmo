@@ -13,6 +13,7 @@ namespace Fibula.PathFinding.AStar
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using Fibula.Common.Contracts.Extensions;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -180,6 +181,12 @@ namespace Fibula.PathFinding.AStar
             {
                 // true to stop ASAP.
                 return true;
+            }
+
+            // see if we don't explicitly exclude this location.
+            if (this.SearchContext.ExcludeLocations.Contains(this.Tile.Location))
+            {
+                return false;
             }
 
             var locationDiff = this.Tile.Location - goalNode.Tile.Location;

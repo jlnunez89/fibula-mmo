@@ -115,6 +115,7 @@ namespace Fibula.Mechanics.Operations
             var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= 1;
             var inRange = nullAttacker || (distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0);
             var atIdealDistance = nullAttacker || distanceBetweenCombatants.MaxValueIn2D == this.Attacker.AutoAttackRange;
+            var attackerIsMonster = !nullAttacker && this.Attacker is IMonster;
             var canAttackFromThere = nullAttacker || (inRange && context.Map.CanThrowBetweenLocations(this.Attacker.Location, this.Target.Location));
 
             var attackPerformed = false;
@@ -123,7 +124,7 @@ namespace Fibula.Mechanics.Operations
             {
                 if (!isCorrectTarget || isTargetAlreadyDead)
                 {
-                    // We're not attacking the correct target, so stop right here.
+                    // We're not attacking the correct target, or it's already dead, so stop right here.
                     return;
                 }
 
@@ -147,12 +148,19 @@ namespace Fibula.Mechanics.Operations
                     return;
                 }
 
-                if (!atIdealDistance)
+                // While we can actually attack, we may want to move away, closer, or sideways.
+                // Also, for monsters, we might want to step around.
+                if ((!atIdealDistance || attackerIsMonster) && this.Attacker.ChaseMode != ChaseMode.Stand)
                 {
-                    // While we can actually attack, we may want to move away or closer.
-                    if (this.Attacker.ChaseMode == ChaseMode.KeepDistance && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
+                    if (this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
                     {
-                        context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
+                        var moveAround = attackerIsMonster && DateTimeOffset.UtcNow.Millisecond % 3 == 0;
+
+                        context.GameApi.ResetCreatureDynamicWalkPlan(
+                            this.Attacker,
+                            this.Attacker.ChaseTarget,
+                            targetDistance: this.Attacker.AutoAttackRange,
+                            excludeCurrentPosition: moveAround);
                     }
                 }
 

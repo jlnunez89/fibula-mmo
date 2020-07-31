@@ -441,7 +441,8 @@ namespace Fibula.Mechanics
         /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
         /// <param name="targetDistance">Optional. The target distance to calculate from the target creature.</param>
-        public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1)
+        /// <param name="excludeCurrentPosition">Optional. A value indicating whether to exclude the current creature's position from being the goal location.</param>
+        public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1, bool excludeCurrentPosition = false)
         {
             if (creature == null)
             {
@@ -455,7 +456,10 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            var (result, endLocation, directions) = this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance);
+            var (result, endLocation, directions) = excludeCurrentPosition ?
+                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance, excludeLocations: creature.Location)
+                :
+                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance);
 
             var waypoints = new List<Location>()
             {
