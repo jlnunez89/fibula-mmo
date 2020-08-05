@@ -124,7 +124,7 @@ namespace Fibula.Mechanics.Operations
             {
                 if (!isCorrectTarget || isTargetAlreadyDead)
                 {
-                    // We're not attacking the correct target, or it's already dead, so stop right here.
+                    // We're not attacking the correct target or it's already dead, so stop right here.
                     return;
                 }
 
@@ -139,15 +139,18 @@ namespace Fibula.Mechanics.Operations
                         // be expedited (or else it's just processed as usual).
                         this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed * 2));
 
+                        /*
                         if (this.Attacker.ChaseMode != ChaseMode.Stand && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
                         {
                             context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
                         }
+                        */
                     }
 
                     return;
                 }
 
+                /*
                 // While we can actually attack, we may want to move away, closer, or sideways.
                 // Also, for monsters, we might want to step around.
                 if ((!atIdealDistance || attackerIsMonster) && this.Attacker.ChaseMode != ChaseMode.Stand)
@@ -163,6 +166,7 @@ namespace Fibula.Mechanics.Operations
                             excludeCurrentPosition: moveAround);
                     }
                 }
+                */
 
                 if (!enoughCredits)
                 {

@@ -418,7 +418,7 @@ namespace Fibula.Mechanics
         /// <param name="creature">The creature to reset the walk plan of.</param>
         /// <param name="directions">The directions for the new plan.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
-        public void ResetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkStrategy strategy = WalkStrategy.DoNotRecalculate)
+        public void ResetCreatureStaticWalkPlan(ICreature creature, Direction[] directions, WalkPlanStrategy strategy = WalkPlanStrategy.DoNotRecalculate)
         {
             if (creature == null || !directions.Any())
             {
@@ -440,7 +440,7 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(strategy, () => lastLoc, atGoalDistance: 0, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => lastLoc, goalDistance: 0, waypoints.ToArray());
 
             this.scheduler.CancelAllFor(creature.Id, typeof(AutoWalkOrchestratorOperation));
 
@@ -456,8 +456,8 @@ namespace Fibula.Mechanics
         /// <param name="targetCreature">The creature towards which the walk plan will be generated to.</param>
         /// <param name="strategy">Optional. The strategy to follow in the plan.</param>
         /// <param name="targetDistance">Optional. The target distance to calculate from the target creature.</param>
-        /// <param name="excludeCurrentPosition">Optional. A value indicating whether to exclude the current creature's position from being the goal location.</param>
-        public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkStrategy strategy = WalkStrategy.ConservativeRecalculation, int targetDistance = 1, bool excludeCurrentPosition = false)
+        /// <param name="excludeCurrentLocation">Optional. A value indicating whether to exclude the current creature's location from being the goal location.</param>
+        public void ResetCreatureDynamicWalkPlan(ICreature creature, ICreature targetCreature, WalkPlanStrategy strategy = WalkPlanStrategy.ConservativeRecalculation, int targetDistance = 1, bool excludeCurrentLocation = false)
         {
             if (creature == null)
             {
@@ -471,10 +471,10 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            var (result, endLocation, directions) = excludeCurrentPosition ?
-                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance, excludeLocations: creature.Location)
+            var (result, endLocation, directions) = excludeCurrentLocation ?
+                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance, excludeLocations: creature.Location)
                 :
-                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance: targetDistance);
+                this.pathFinder.FindBetween(creature.Location, targetCreature.Location, creature, targetDistance);
 
             var waypoints = new List<Location>()
             {
@@ -493,7 +493,7 @@ namespace Fibula.Mechanics
                 lastLoc = nextLoc;
             }
 
-            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.IsDead ? creature.Location : targetCreature.Location, targetDistance, waypoints.ToArray());
+            creature.WalkPlan = new WalkPlan(strategy, () => targetCreature.Location, targetDistance, waypoints.ToArray());
 
             var autoWalkOrchOp = new AutoWalkOrchestratorOperation(creature);
 
@@ -993,8 +993,7 @@ namespace Fibula.Mechanics
 
                 sw.Stop();
 
-                this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.ProcessedEventTimeMetricName, TelemetryConstants.EventTypeDimensionName).TrackValue(sw.ElapsedMilliseconds, evt.GetType().Name);
-
+                // this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.ProcessedEventTimeMetricName, TelemetryConstants.EventTypeDimensionName).TrackValue(sw.ElapsedMilliseconds, evt.GetType().Name);
                 this.logger.Verbose($"Processed {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
             catch (Exception ex)

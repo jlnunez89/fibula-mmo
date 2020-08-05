@@ -22,12 +22,12 @@ namespace Fibula.Creatures.Contracts.Enumerations
         OnTrack,
 
         /// <summary>
-        /// The plan is to continue, but the path should be recalculated.
+        /// The plan can continue, but the path should be recalculated.
         /// </summary>
         NeedsToRecalculate,
 
         /// <summary>
-        /// The plan was successfully traversed and we're now at the goal location.
+        /// The plan was successfully traversed and we're at the goal location (for now).
         /// </summary>
         AtGoal,
 

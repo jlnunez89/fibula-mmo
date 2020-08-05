@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="WalkStrategy.cs" company="2Dudes">
+// <copyright file="WalkPlanStrategy.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -12,9 +12,9 @@
 namespace Fibula.Creatures.Contracts.Enumerations
 {
     /// <summary>
-    /// Enumeration of the possible walking strategies.
+    /// Enumeration of the possible walk plan strategies.
     /// </summary>
-    public enum WalkStrategy
+    public enum WalkPlanStrategy
     {
         /// <summary>
         /// Intended for static goals.
@@ -44,7 +44,7 @@ namespace Fibula.Creatures.Contracts.Enumerations
         /// at each waypoint. If the waypoint is not accessible or the creature is otherwise
         /// interrupted, it will recalculate the plan from it's current position.
         /// </summary>
-        AggresiveRecalculation,
+        AggressiveRecalculation,
 
         /// <summary>
         /// Intended for fast moving goals, or highest artificial inteligence. Compute expensive.
