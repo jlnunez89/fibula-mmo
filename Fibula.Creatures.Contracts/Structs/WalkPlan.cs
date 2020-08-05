@@ -153,7 +153,7 @@ namespace Fibula.Creatures.Contracts.Structs
             }
 
             // Update the internal consecutive recalculation counter to weight it in correctly on wait time calculations.
-            if (this.State.ImpliesRecalculationNeeded())
+            if (this.State == WalkPlanState.NeedsToRecalculate)
             {
                 if (oldState == this.State)
                 {

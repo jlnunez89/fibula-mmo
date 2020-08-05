@@ -71,6 +71,9 @@ namespace Fibula.Mechanics.Handlers
             {
                 var combatantTarget = this.CreatureFinder.FindCreatureById(attackInfo.TargetCreatureId) as ICombatant;
 
+                // First stop following (formally) if we are.
+                this.Game.SetCombatantFollowTarget(playerAsCombatant, null);
+
                 this.Game.SetCombatantAttackTarget(playerAsCombatant, combatantTarget);
             }
 

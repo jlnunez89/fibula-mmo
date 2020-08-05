@@ -135,38 +135,12 @@ namespace Fibula.Mechanics.Operations
                         // Set the pending attack operation as this operation.
                         this.Attacker.StartTrackingEvent(this);
 
-                        // And set this operation to repeat after some time (we chose it to be 2x the normalized attack speed), so that it can actually
-                        // be expedited (or else it's just processed as usual).
-                        this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed * 2));
-
-                        /*
-                        if (this.Attacker.ChaseMode != ChaseMode.Stand && this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
-                        {
-                            context.GameApi.ResetCreatureDynamicWalkPlan(this.Attacker, this.Attacker.ChaseTarget, targetDistance: this.Attacker.AutoAttackRange);
-                        }
-                        */
+                        // And set this operation to repeat after some time, so that it can actually be expedited (or else it's just processed as usual).
+                        this.RepeatAfter = TimeSpan.FromMilliseconds((int)Math.Ceiling(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed));
                     }
 
                     return;
                 }
-
-                /*
-                // While we can actually attack, we may want to move away, closer, or sideways.
-                // Also, for monsters, we might want to step around.
-                if ((!atIdealDistance || attackerIsMonster) && this.Attacker.ChaseMode != ChaseMode.Stand)
-                {
-                    if (this.Attacker.ChaseTarget != null && this.Attacker.WalkPlan.State != WalkPlanState.OnTrack)
-                    {
-                        var moveAround = attackerIsMonster && DateTimeOffset.UtcNow.Millisecond % 3 == 0;
-
-                        context.GameApi.ResetCreatureDynamicWalkPlan(
-                            this.Attacker,
-                            this.Attacker.ChaseTarget,
-                            targetDistance: this.Attacker.AutoAttackRange,
-                            excludeCurrentPosition: moveAround);
-                    }
-                }
-                */
 
                 if (!enoughCredits)
                 {
