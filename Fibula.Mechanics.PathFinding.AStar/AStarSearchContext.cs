@@ -30,8 +30,9 @@ namespace Fibula.PathFinding.AStar
         /// <param name="forCreature">The creature on behalf of which the search is being performed.</param>
         /// <param name="considerAvoidsAsBlocking">Optional. A value indicating whether to consider the creature's avoid flags as completely blocking. Defaults to true.</param>
         /// <param name="targetDistance">Optional. A value to use for the target distance from the target node.</param>
+        /// <param name="moveAway">Optional. A value indicating whether the current search is to move away.</param>
         /// <param name="excludeLocations">Optional. Locations to explicitly exclude as a valid goal in the search.</param>
-        public AStarSearchContext(string searchId, IMap map, ICreature forCreature, bool considerAvoidsAsBlocking = true, int targetDistance = 1, params Location[] excludeLocations)
+        public AStarSearchContext(string searchId, IMap map, ICreature forCreature, bool considerAvoidsAsBlocking = true, int targetDistance = 1, bool moveAway = false, params Location[] excludeLocations)
         {
             searchId.ThrowIfNullOrWhiteSpace(nameof(searchId));
             map.ThrowIfNull(nameof(map));
@@ -39,6 +40,7 @@ namespace Fibula.PathFinding.AStar
 
             this.SearchId = searchId;
             this.Map = map;
+            this.MoveAway = moveAway;
             this.OnBehalfOfCreature = forCreature;
             this.ConsiderAvoidsAsBlocking = considerAvoidsAsBlocking;
             this.TargetDistance = targetDistance;

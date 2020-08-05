@@ -165,7 +165,7 @@ namespace Fibula.PathFinding.AStar
             var locationDiff = this.Tile.Location - goalNode.Tile.Location;
 
             this.EstimatedCost = !this.SearchContext.MoveAway ? Math.Abs(locationDiff.X) + Math.Abs(locationDiff.Y)
-                : this.SearchContext.TargetDistance - Math.Abs(locationDiff.X) + (this.SearchContext.TargetDistance - Math.Abs(locationDiff.Y));
+                : this.SearchContext.TargetDistance - Math.Abs(locationDiff.X) + this.SearchContext.TargetDistance - Math.Abs(locationDiff.Y);
         }
 
         /// <summary>

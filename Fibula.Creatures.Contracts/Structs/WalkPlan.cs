@@ -197,17 +197,17 @@ namespace Fibula.Creatures.Contracts.Structs
 
         private TimeSpan GetWaitTime()
         {
-            var maxSecondsPerStrategy = this.Strategy switch
+            var maxMillisecondsPerStrategy = this.Strategy switch
             {
-                WalkPlanStrategy.ExtremeRecalculation => 1,
-                WalkPlanStrategy.AggressiveRecalculation => 2,
-                WalkPlanStrategy.ConservativeRecalculation => 3,
-                _ => 5
+                WalkPlanStrategy.ExtremeRecalculation => 500,
+                WalkPlanStrategy.AggressiveRecalculation => 1500,
+                WalkPlanStrategy.ConservativeRecalculation => 2500,
+                _ => 4000
             };
 
-            var seconds = Math.Min(maxSecondsPerStrategy, this.consecutiveRecalculations);
+            var milliseconds = Math.Min(maxMillisecondsPerStrategy, this.consecutiveRecalculations * 500);
 
-            return TimeSpan.FromSeconds(seconds);
+            return TimeSpan.FromMilliseconds(milliseconds);
         }
     }
 }

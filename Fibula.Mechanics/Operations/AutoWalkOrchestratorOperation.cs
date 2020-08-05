@@ -138,28 +138,31 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            var nextLocation = this.Creature.WalkPlan.Waypoints.First.Value;
-            var scheduleDelay = TimeSpan.Zero;
-
-            var autoWalkOp = new MovementOperation(
-                    this.Creature.Id,
-                    CreatureConstants.CreatureTypeId,
-                    this.Creature.Location,
-                    byte.MaxValue,
-                    this.Creature.Id,
-                    nextLocation,
-                    this.Creature.Id,
-                    amount: 1);
-
-            // Add delay from current exhaustion of the requestor, if any.
-            if (this.Creature is ICreatureWithExhaustion creatureWithExhaustion)
+            if (this.Creature.WalkPlan.State == WalkPlanState.OnTrack)
             {
-                // The scheduling delay becomes any cooldown debt for this operation.
-                scheduleDelay = creatureWithExhaustion.CalculateRemainingCooldownTime(autoWalkOp.ExhaustionType, context.Scheduler.CurrentTime);
-            }
+                var nextLocation = this.Creature.WalkPlan.Waypoints.First.Value;
+                var scheduleDelay = TimeSpan.Zero;
 
-            // Schedule the actual walk operation.
-            context.Scheduler.ScheduleEvent(autoWalkOp, scheduleDelay);
+                var autoWalkOp = new MovementOperation(
+                        this.Creature.Id,
+                        CreatureConstants.CreatureTypeId,
+                        this.Creature.Location,
+                        byte.MaxValue,
+                        this.Creature.Id,
+                        nextLocation,
+                        this.Creature.Id,
+                        amount: 1);
+
+                // Add delay from current exhaustion of the requestor, if any.
+                if (this.Creature is ICreatureWithExhaustion creatureWithExhaustion)
+                {
+                    // The scheduling delay becomes any cooldown debt for this operation.
+                    scheduleDelay = creatureWithExhaustion.CalculateRemainingCooldownTime(autoWalkOp.ExhaustionType, context.Scheduler.CurrentTime);
+                }
+
+                // Schedule the actual walk operation.
+                context.Scheduler.ScheduleEvent(autoWalkOp, scheduleDelay);
+            }
 
             this.RepeatAfter = this.Creature.CalculateStepDuration(context.Map.GetTileAt(this.Creature.Location));
         }

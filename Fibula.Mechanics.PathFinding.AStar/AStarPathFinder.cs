@@ -82,12 +82,15 @@ namespace Fibula.PathFinding.AStar
         {
             maxStepsCount = maxStepsCount == default ? this.Options.DefaultMaximumSteps : maxStepsCount;
 
+            var locDiff = startLocation - targetLocation;
+
             var searchContext = new AStarSearchContext(
                 Guid.NewGuid().ToString(),
                 this.Map,
                 onBehalfOfCreature,
                 considerAvoidsAsBlocking,
                 targetDistance,
+                moveAway: locDiff.MaxValueIn2D < targetDistance,
                 excludeLocations);
 
             var startNode = this.NodeFactory.Create(searchContext, new TileNodeCreationArguments(startLocation));
