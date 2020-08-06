@@ -466,7 +466,7 @@ namespace Fibula.Mechanics.Operations
             // Declare some pre-conditions.
             var sourceTileIsNull = sourceTile == null;
             var destinationHasGround = destinationTile?.Ground != null;
-            var thingCanBeMoved = thingMoving != null && (thingMoving == requestor || thingMoving.CanBeMoved);
+            var thingCanBeMoved = thingMoving != null && ((thingMoving == requestor && requestor.CanWalk) || thingMoving.CanBeMoved);
             var locationsMatch = thingMoving?.Location == this.FromLocation;
             var isIntendedThing = this.ThingMovingId != CreatureConstants.CreatureTypeId ? thingMoving?.TypeId == this.ThingMovingId : (thingMoving as ICreature)?.Id == this.FromCreatureId;
             var requestorInRange = requestor == null || (requestor.Location - this.FromLocation).MaxValueIn2D <= 1;

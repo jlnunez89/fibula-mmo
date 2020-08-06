@@ -110,6 +110,11 @@ namespace Fibula.Creatures.Contracts.Abstractions
         bool IsDead { get; }
 
         /// <summary>
+        /// Gets a value indicating whether this creature can walk.
+        /// </summary>
+        bool CanWalk { get; }
+
+        /// <summary>
         /// Gets or sets the creature's outfit.
         /// </summary>
         Outfit Outfit { get; set; }

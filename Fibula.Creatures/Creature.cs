@@ -259,6 +259,11 @@ namespace Fibula.Creatures
         public bool IsDead => this.Hitpoints == 0;
 
         /// <summary>
+        /// Gets a value indicating whether this creature can walk.
+        /// </summary>
+        public bool CanWalk => this.Speed > 0;
+
+        /// <summary>
         /// Flags a creature as being sensed.
         /// </summary>
         /// <param name="creature">The creature which is sensed.</param>

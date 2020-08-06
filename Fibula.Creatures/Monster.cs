@@ -95,7 +95,7 @@ namespace Fibula.Creatures
         /// </summary>
         public override ushort Speed
         {
-            get => (ushort)((2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
+            get => (ushort)(this.BaseSpeed == 0 ? 0 : (2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
 
             protected set => this.BaseSpeed = value;
         }

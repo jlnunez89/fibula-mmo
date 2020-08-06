@@ -67,7 +67,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IOperationContext context)
         {
-            if (this.Creature.IsDead)
+            if (this.Creature.IsDead || !this.Creature.CanWalk)
             {
                 return;
             }
