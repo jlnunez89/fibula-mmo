@@ -14,7 +14,6 @@ namespace Fibula.Mechanics
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;

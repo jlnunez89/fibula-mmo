@@ -14,7 +14,6 @@ namespace Fibula.Common
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
-    using Fibula.Common.Contracts;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Delegates;
     using Fibula.Common.Contracts.Structs;

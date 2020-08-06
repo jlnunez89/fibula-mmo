@@ -18,7 +18,6 @@ namespace Fibula.Creatures.Contracts.Structs
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Enumerations;
-    using Fibula.Creatures.Contracts.Extensions;
 
     /// <summary>
     /// Class that represents a creature's walk plan.

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AutoAttackOperation.cs" company="2Dudes">
+// <copyright file="BasicAttackOperation.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -18,7 +18,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -30,17 +29,17 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
-    /// Class that represents an auto attack operation.
+    /// Class that represents the basic attack operation.
     /// </summary>
-    public class AutoAttackOperation : Operation
+    public class BasicAttackOperation : Operation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AutoAttackOperation"/> class.
+        /// Initializes a new instance of the <see cref="BasicAttackOperation"/> class.
         /// </summary>
         /// <param name="attacker">The combatant that is attacking.</param>
         /// <param name="target">The combatant that is the target.</param>
         /// <param name="exhaustionCost">Optional. The exhaustion cost of this operation.</param>
-        public AutoAttackOperation(ICombatant attacker, ICombatant target, TimeSpan exhaustionCost)
+        public BasicAttackOperation(ICombatant attacker, ICombatant target, TimeSpan exhaustionCost)
             : base(attacker?.Id ?? 0)
         {
             attacker.ThrowIfNull(nameof(attacker));
@@ -62,11 +61,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets the combatant that is the target on this operation.
         /// </summary>
         public ICombatant Target { get; }
-
-        ///// <summary>
-        ///// Gets the combat operation's attack type.
-        ///// </summary>
-        // public override AttackType AttackType => AttackType.Physical;
 
         /// <summary>
         /// Gets the type of exhaustion that this operation produces.
@@ -100,7 +94,7 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IOperationContext context)
         {
             // We should stop any pending attack operation before carrying this one out.
-            if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp != this)
+            if (this.Attacker.TryRetrieveTrackedOperation(nameof(BasicAttackOperation), out IOperation attackersAtkOp) && attackersAtkOp != this)
             {
                 // Cancel it first, and remove it.
                 attackersAtkOp.Cancel();

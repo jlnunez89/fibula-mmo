@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="AutoAttackOrchestratorOperation.cs" company="2Dudes">
+// <copyright file="AttackOrchestratorOperation.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -19,15 +19,15 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Mechanics.Contracts.Extensions;
 
     /// <summary>
-    /// Class that represents a combat operation that orchestrates auto attack operations.
+    /// Class that represents a combat operation that orchestrates attack operations.
     /// </summary>
-    public class AutoAttackOrchestratorOperation : Operation
+    public class AttackOrchestratorOperation : Operation
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="AutoAttackOrchestratorOperation"/> class.
+        /// Initializes a new instance of the <see cref="AttackOrchestratorOperation"/> class.
         /// </summary>
         /// <param name="attacker">The combatant that is attacking.</param>
-        public AutoAttackOrchestratorOperation(ICombatant attacker)
+        public AttackOrchestratorOperation(ICombatant attacker)
             : base(attacker?.Id ?? 0)
         {
             attacker.ThrowIfNull(nameof(attacker));
@@ -63,7 +63,7 @@ namespace Fibula.Mechanics.Operations
             }
 
             // We should also stop any OTHER tracked attack orchestration operation before carrying this one out.
-            if (this.Attacker.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation atkOrchestrationOp) && atkOrchestrationOp != this)
+            if (this.Attacker.TryRetrieveTrackedOperation(nameof(AttackOrchestratorOperation), out IOperation atkOrchestrationOp) && atkOrchestrationOp != this)
             {
                 // Cancel it first, and remove it.
                 atkOrchestrationOp.Cancel();
@@ -75,7 +75,7 @@ namespace Fibula.Mechanics.Operations
             // Normalize the attacker's attack speed based on the global round time and round that up.
             // We do this every time because it could have changed.
             var normalizedAttackSpeed = TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed));
-            var autoAttackOp = new AutoAttackOperation(this.Attacker, this.Attacker.AutoAttackTarget, normalizedAttackSpeed);
+            var autoAttackOp = new BasicAttackOperation(this.Attacker, this.Attacker.AutoAttackTarget, normalizedAttackSpeed);
             var operationDelay = TimeSpan.Zero;
 
             // Add delay from current exhaustion of the requestor, if any.

@@ -12,7 +12,6 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
-    using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Extensions;
@@ -22,7 +21,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
     using Fibula.Items.Contracts.Abstractions;
-    using Fibula.Items.Contracts.Constants;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Items.Contracts.Extensions;
     using Fibula.Map.Contracts.Abstractions;

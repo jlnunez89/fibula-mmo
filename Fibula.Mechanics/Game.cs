@@ -322,11 +322,11 @@ namespace Fibula.Mechanics
                 return;
             }
 
-            this.scheduler.CancelAllFor(combatant.Id, typeof(AutoAttackOrchestratorOperation));
+            this.scheduler.CancelAllFor(combatant.Id, typeof(AttackOrchestratorOperation));
 
             if (combatant.AutoAttackTarget != null)
             {
-                var autoAttackOrchestrationOp = new AutoAttackOrchestratorOperation(combatant);
+                var autoAttackOrchestrationOp = new AttackOrchestratorOperation(combatant);
 
                 this.DispatchOperation(autoAttackOrchestrationOp);
             }
@@ -786,7 +786,7 @@ namespace Fibula.Mechanics
                 // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
                 foreach (var combatant in movingCombatant.YieldSingleItem().Union(movingCombatant.AttackedBy))
                 {
-                    if (!combatant.TryRetrieveTrackedOperation(nameof(AutoAttackOperation), out IOperation operation) || !(operation is AutoAttackOperation attackOp))
+                    if (!combatant.TryRetrieveTrackedOperation(nameof(BasicAttackOperation), out IOperation operation) || !(operation is BasicAttackOperation attackOp))
                     {
                         continue;
                     }
@@ -804,7 +804,7 @@ namespace Fibula.Mechanics
                         attackOp.Expedite();
 
                         // Also expedite their orchestration operation, to delay the next attack by the right amount.
-                        if (combatant.TryRetrieveTrackedOperation(nameof(AutoAttackOrchestratorOperation), out IOperation othersOrchAtkOp))
+                        if (combatant.TryRetrieveTrackedOperation(nameof(AttackOrchestratorOperation), out IOperation othersOrchAtkOp))
                         {
                             othersOrchAtkOp.Expedite();
                         }
