@@ -122,18 +122,18 @@ namespace Fibula.Creatures.Contracts.Structs
             switch (this.Strategy)
             {
                 case WalkPlanStrategy.ConservativeRecalculation:
-                    // 20% chance of recalculation.
-                    needsRecalculation |= rng.Next(5) == 0;
+                    // 33% chance of recalculation.
+                    needsRecalculation |= rng.Next(3) == 0;
 
                     break;
                 case WalkPlanStrategy.AggressiveRecalculation:
-                    // 40% chance of recalculation.
-                    needsRecalculation |= rng.Next(5) <= 1;
+                    // 50% chance of recalculation.
+                    needsRecalculation |= rng.Next(2) == 0;
 
                     break;
                 case WalkPlanStrategy.ExtremeRecalculation:
-                    // 60% chance of recalculation.
-                    needsRecalculation |= rng.Next(5) <= 2;
+                    // 75% chance of recalculation.
+                    needsRecalculation |= rng.Next(4) != 0;
 
                     break;
             }

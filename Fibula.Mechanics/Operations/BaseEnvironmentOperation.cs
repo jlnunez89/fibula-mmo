@@ -153,12 +153,20 @@ namespace Fibula.Mechanics.Operations
             {
                 if (creature is ICombatant combatant)
                 {
-                    // Find spectators of this guy who died and stop tracking the sucker.
-                    foreach (var spectator in context.Map.CreaturesThatCanSee(creature.Location))
+                    combatant.SetAttackTarget(null);
+
+                    foreach (var attacker in combatant.AttackedBy)
                     {
-                        if (spectator is ICombatant combatantSpectator)
+                        attacker.StopSensingCreature(combatant);
+                    }
+
+                    foreach (var trackedCreature in combatant.TrackedCreatures)
+                    {
+                        combatant.StopSensingCreature(trackedCreature);
+
+                        if (trackedCreature is ICreatureThatSensesOthers creatureThatSensesOthers)
                         {
-                            combatantSpectator.StopSensingCreature(combatant);
+                            creatureThatSensesOthers.StopSensingCreature(combatant);
                         }
                     }
 

@@ -67,26 +67,6 @@ namespace Fibula.Mechanics.Operations
                 this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerCancelWalkPacket(player.Direction), new PlayerDeathPacket()));
             }
 
-            if (this.Creature is ICombatant combatant)
-            {
-                combatant.SetAttackTarget(null);
-
-                foreach (var attacker in combatant.AttackedBy)
-                {
-                    attacker.StopSensingCreature(combatant);
-                }
-
-                foreach (var creature in combatant.TrackedCreatures)
-                {
-                    combatant.StopSensingCreature(creature);
-
-                    if (creature is ICreatureThatSensesOthers creatureThatSensesOthers)
-                    {
-                        creatureThatSensesOthers.StopSensingCreature(combatant);
-                    }
-                }
-            }
-
             // Remove the creature...
             if (context.Map.GetTileAt(this.Creature.Location) is ITile creatureTile)
             {
