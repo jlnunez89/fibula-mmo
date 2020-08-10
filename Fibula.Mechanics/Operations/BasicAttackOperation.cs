@@ -203,7 +203,7 @@ namespace Fibula.Mechanics.Operations
             if (this.Target.Stats[CreatureStat.DefensePoints].Decrease(1))
             {
                 context.Scheduler.ScheduleEvent(
-                    new StatRegenerationOperation(this.Target, CreatureStat.DefensePoints),
+                    new StatChangeOperation(this.Target, CreatureStat.DefensePoints),
                     TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
             }
 
@@ -222,7 +222,7 @@ namespace Fibula.Mechanics.Operations
                 if (this.Attacker.Stats[CreatureStat.AttackPoints].Decrease(1))
                 {
                     context.Scheduler.ScheduleEvent(
-                        new StatRegenerationOperation(this.Attacker, CreatureStat.AttackPoints),
+                        new StatChangeOperation(this.Attacker, CreatureStat.AttackPoints),
                         TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
                 }
 

@@ -42,11 +42,6 @@ namespace Fibula.Creatures.Contracts.Enumerations
         BaseSpeed,
 
         /// <summary>
-        /// The creature's attack power.
-        /// </summary>
-        AttackPower,
-
-        /// <summary>
         /// The creature's attack points.
         /// </summary>
         AttackPoints,
@@ -54,16 +49,6 @@ namespace Fibula.Creatures.Contracts.Enumerations
         /// <summary>
         /// The creature's defense power.
         /// </summary>
-        DefensePower,
-
-        /// <summary>
-        /// The creature's defense power.
-        /// </summary>
         DefensePoints,
-
-        /// <summary>
-        /// The creature's armor rating.
-        /// </summary>
-        ArmorRating,
     }
 }

@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="StatRegenerationOperation.cs" company="2Dudes">
+// <copyright file="StatChangeOperation.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -21,16 +21,20 @@ namespace Fibula.Mechanics.Operations
     /// <summary>
     /// Class that represents an operation to regenerate a particular stat over time.
     /// </summary>
-    public class StatRegenerationOperation : Operation
+    public class StatChangeOperation : Operation
     {
-        private const int AmountToRegen = 1;
+        /// <summary>
+        /// The default amount of points to change in the stat.
+        /// </summary>
+        private const int DefaultAmountToChange = 1;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="StatRegenerationOperation"/> class.
+        /// Initializes a new instance of the <see cref="StatChangeOperation"/> class.
         /// </summary>
-        /// <param name="creature">The creature for which the stat is being regenerated.</param>
-        /// <param name="statId">The id of the stat to regenerate.</param>
-        public StatRegenerationOperation(ICreature creature, CreatureStat statId)
+        /// <param name="creature">The creature for which the stat is being changed.</param>
+        /// <param name="statId">The id of the stat to change.</param>
+        /// <param name="amount">Optional. The amount of points to change.</param>
+        public StatChangeOperation(ICreature creature, CreatureStat statId, int amount = DefaultAmountToChange)
             : base(creature?.Id ?? 0)
         {
             creature.ThrowIfNull(nameof(creature));
@@ -39,6 +43,7 @@ namespace Fibula.Mechanics.Operations
 
             this.Creature = creature;
             this.StatId = statId;
+            this.Amount = amount;
         }
 
         /// <summary>
@@ -52,14 +57,19 @@ namespace Fibula.Mechanics.Operations
         public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
-        /// Gets the creature for which the stat is being regenerated.
+        /// Gets the creature for which the stat is being changed.
         /// </summary>
         public ICreature Creature { get; }
 
         /// <summary>
-        /// Gets the type of stat to regenerate.
+        /// Gets the type of stat to change.
         /// </summary>
         public CreatureStat StatId { get; }
+
+        /// <summary>
+        /// Gets the amount of points to change the stat by.
+        /// </summary>
+        public int Amount { get; }
 
         /// <summary>
         /// Executes the operation's logic.
@@ -72,9 +82,9 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            this.Creature.Stats[this.StatId].Increase(AmountToRegen);
+            this.Creature.Stats[this.StatId].Increase(this.Amount);
 
-            context.Logger.Verbose($"Restored {AmountToRegen} {this.StatId} credit(s) on {this.Creature.Name}. [Id={this.Creature.Id}] [{this.Creature.Stats[this.StatId].Current}/{this.Creature.Stats[this.StatId].Maximum}]");
+            context.Logger.Verbose($"{this.Creature.Name}'s {this.StatId} changed: {this.Amount}. [{this.Creature.Stats[this.StatId].Current}/{this.Creature.Stats[this.StatId].Maximum}]");
         }
     }
 }
