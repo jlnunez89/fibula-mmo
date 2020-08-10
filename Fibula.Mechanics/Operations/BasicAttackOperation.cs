@@ -167,7 +167,7 @@ namespace Fibula.Mechanics.Operations
             // i.e. the amount of damage that the attacker can generate as it is.
             var attackPower = 1 + rng.Next(this.Attacker == null ? 10 : (int)this.Attacker.Skills[SkillType.NoWeapon].Level);
 
-            var damageToApplyInfo = new DamageInfo(attackPower);
+            var damageToApplyInfo = new DamageInfo(attackPower, this.Attacker);
             var damageDoneInfo = this.Target.ApplyDamage(damageToApplyInfo, this.Attacker?.Id ?? 0);
             var distanceOfAttack = (this.Target.Location - (this.Attacker?.Location ?? this.Target.Location)).MaxValueIn2D;
 
@@ -189,6 +189,21 @@ namespace Fibula.Mechanics.Operations
                 if (damageDoneInfo.Damage < 0)
                 {
                     damageTextColor = TextColor.LightBlue;
+                }
+                else
+                {
+                    var hitpointsLostMessage = $"You lose {damageDoneInfo.Damage} hitpoints";
+
+                    if (damageDoneInfo.Dealer != null)
+                    {
+                        var name = string.IsNullOrWhiteSpace(damageDoneInfo.Dealer.Article) ? damageDoneInfo.Dealer.Name : $"{damageDoneInfo.Dealer.Article} {damageDoneInfo.Dealer.Name}";
+
+                        hitpointsLostMessage += $" due to an attack by {name}";
+                    }
+
+                    hitpointsLostMessage += ".";
+
+                    packetsToSend.Add(new TextMessagePacket(MessageType.StatusDefault, hitpointsLostMessage));
                 }
 
                 packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
