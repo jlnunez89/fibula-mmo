@@ -139,7 +139,7 @@ namespace Fibula.Client
             {
                 this.knownCreatures[creatureId] = DateTimeOffset.UtcNow.Ticks;
 
-                this.logger.Debug($"Added creatureId {creatureId} to player {this.playerId} known set.");
+                this.logger.Verbose($"Added creatureId {creatureId} to player {this.playerId} known set.");
             }
         }
 
@@ -174,7 +174,7 @@ namespace Fibula.Client
                 {
                     this.knownCreatures.Remove(creatureId);
 
-                    this.logger.Debug($"Removed creatureId {creatureId} to player {this.playerId} known set.");
+                    this.logger.Verbose($"Removed creatureId {creatureId} to player {this.playerId} known set.");
                 }
             }
         }
