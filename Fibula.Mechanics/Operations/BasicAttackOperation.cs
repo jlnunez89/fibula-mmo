@@ -22,7 +22,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
@@ -203,9 +202,8 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Target.Stats[CreatureStat.DefensePoints].Decrease(1))
             {
-                // Normalize the attacker's defense speed based on the global round time and round that up.
                 context.Scheduler.ScheduleEvent(
-                    new RestoreCombatCreditOperation(this.Target, CombatCreditType.Defense),
+                    new StatRegenerationOperation(this.Target, CreatureStat.DefensePoints),
                     TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
             }
 
@@ -223,9 +221,8 @@ namespace Fibula.Mechanics.Operations
 
                 if (this.Attacker.Stats[CreatureStat.AttackPoints].Decrease(1))
                 {
-                    // Normalize the attacker's attack speed based on the global round time and round that up.
                     context.Scheduler.ScheduleEvent(
-                        new RestoreCombatCreditOperation(this.Attacker, CombatCreditType.Attack),
+                        new StatRegenerationOperation(this.Attacker, CreatureStat.AttackPoints),
                         TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
                 }
 

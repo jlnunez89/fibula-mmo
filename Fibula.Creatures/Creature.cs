@@ -238,7 +238,7 @@ namespace Fibula.Creatures
         /// Gets the current stats information for the creature.
         /// </summary>
         /// <remarks>
-        /// The key is a string, and the value is an <see cref="IStat"/>.
+        /// The key is a <see cref="CreatureStat"/>, and the value is an <see cref="IStat"/>.
         /// </remarks>
         public IDictionary<CreatureStat, IStat> Stats { get; private set; }
 
