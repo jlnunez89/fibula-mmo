@@ -175,7 +175,13 @@ namespace Fibula.Communications.Listeners
                 return;
             }
 
-            connection.Read();
+            try
+            {
+                connection.Read();
+            }
+            catch (Exception)
+            {
+            }
         }
 
         /// <summary>

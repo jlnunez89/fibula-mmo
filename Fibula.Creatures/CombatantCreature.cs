@@ -372,17 +372,6 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Adds exhaustion of the given type.
-        /// </summary>
-        /// <param name="type">The type of exhaustion to add.</param>
-        /// <param name="fromTime">The reference time from which to add.</param>
-        /// <param name="milliseconds">The amount of time in milliseconds to add exhaustion for.</param>
-        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, uint milliseconds)
-        {
-            this.AddExhaustion(type, fromTime, TimeSpan.FromMilliseconds(milliseconds));
-        }
-
-        /// <summary>
         /// Calculates the current percentual value between current and target counts for the given skill.
         /// </summary>
         /// <param name="skillType">The type of skill to calculate for.</param>

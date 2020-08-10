@@ -43,14 +43,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// </summary>
         /// <param name="type">The type of exhaustion to add.</param>
         /// <param name="fromTime">The reference time from which to add.</param>
-        /// <param name="milliseconds">The amount of time in milliseconds to add exhaustion for.</param>
-        void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, uint milliseconds);
-
-        /// <summary>
-        /// Adds exhaustion of the given type.
-        /// </summary>
-        /// <param name="type">The type of exhaustion to add.</param>
-        /// <param name="fromTime">The reference time from which to add.</param>
         /// <param name="timeSpan">The amount of time to add exhaustion for.</param>
         void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, TimeSpan timeSpan);
     }

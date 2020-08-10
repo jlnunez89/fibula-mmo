@@ -786,27 +786,26 @@ namespace Fibula.Mechanics
                 // Do the same for the creatures attacking it, in case the movement caused it to walk into the range of them.
                 foreach (var combatant in movingCombatant.YieldSingleItem().Union(movingCombatant.AttackedBy))
                 {
-                    if (!combatant.TryRetrieveTrackedOperation(nameof(BasicAttackOperation), out IOperation operation) || !(operation is BasicAttackOperation attackOp))
+                    if (!combatant.TryRetrieveTrackedOperation(nameof(BasicAttackOperation), out IOperation operation) || !(operation is BasicAttackOperation basicAttackOp))
                     {
                         continue;
                     }
 
-                    if (attackOp.Target != movingCombatant && attackOp.Attacker != movingCombatant)
+                    if (basicAttackOp.Target != movingCombatant && basicAttackOp.Attacker != movingCombatant)
                     {
                         continue;
                     }
 
-                    var distanceBetweenCombatants = (attackOp.Attacker?.Location ?? attackOp.Target.Location) - attackOp.Target.Location;
-                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= attackOp.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
+                    var distanceBetweenCombatants = (basicAttackOp.Attacker?.Location ?? basicAttackOp.Target.Location) - basicAttackOp.Target.Location;
+                    var inRange = distanceBetweenCombatants.MaxValueIn2D <= basicAttackOp.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0;
 
                     if (inRange)
                     {
-                        attackOp.Expedite();
-
-                        // Also expedite their orchestration operation, to delay the next attack by the right amount.
-                        if (combatant.TryRetrieveTrackedOperation(nameof(AttackOrchestratorOperation), out IOperation othersOrchAtkOp))
+                        // Expedite their orchestration operation instead of the actual basic attack operation.
+                        // This will figure out the next attack's right delay amount.
+                        if (combatant.TryRetrieveTrackedOperation(nameof(AttackOrchestratorOperation), out IOperation atkOrchestrationOp))
                         {
-                            othersOrchAtkOp.Expedite();
+                            atkOrchestrationOp.Expedite();
                         }
                     }
                 }
