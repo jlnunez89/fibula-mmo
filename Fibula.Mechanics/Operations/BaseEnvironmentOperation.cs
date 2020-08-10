@@ -72,7 +72,8 @@ namespace Fibula.Mechanics.Operations
 
                 if (creature is ICombatant combatant)
                 {
-                    combatant.HealthChanged += context.CombatApi.CombatantHealthChanged;
+                    combatant.StatChanged += context.GameApi.CreatureStatChanged;
+
                     combatant.Death += context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged += context.CombatApi.CombatantAttackTargetChanged;
                     combatant.FollowTargetChanged += context.CombatApi.CreatureFollowTargetChanged;
@@ -170,7 +171,8 @@ namespace Fibula.Mechanics.Operations
                         }
                     }
 
-                    combatant.HealthChanged -= context.CombatApi.CombatantHealthChanged;
+                    combatant.StatChanged -= context.GameApi.CreatureStatChanged;
+
                     combatant.Death -= context.CombatApi.CombatantDeath;
                     combatant.AttackTargetChanged -= context.CombatApi.CombatantAttackTargetChanged;
                     combatant.FollowTargetChanged -= context.CombatApi.CreatureFollowTargetChanged;

@@ -274,21 +274,27 @@ namespace Fibula.Mechanics
         }
 
         /// <summary>
-        /// Handles a health change from a combatant.
+        /// Handles a stat change event from a creature.
         /// </summary>
-        /// <param name="combatant">The combatant who's health changed.</param>
-        /// <param name="oldHealthValue">The old value of the combatant's health.</param>
-        public void CombatantHealthChanged(ICombatant combatant, ushort oldHealthValue)
+        /// <param name="creature">The creature for which the stat changed.</param>
+        /// <param name="statThatChanged">The stat that changed.</param>
+        /// <param name="previousValue">The previous stat value.</param>
+        /// <param name="previousPercent">The previous percent for the stat.</param>
+        public void CreatureStatChanged(ICreature creature, IStat statThatChanged, uint previousValue, byte previousPercent)
         {
-            combatant.ThrowIfNull(nameof(combatant));
+            creature.ThrowIfNull(nameof(creature));
+            statThatChanged.ThrowIfNull(nameof(statThatChanged));
 
-            // This updates the health as seen by others.
-            this.scheduler.ScheduleEvent(new GenericNotification(() => this.map.PlayersThatCanSee(combatant.Location), new CreatureHealthPacket(combatant)));
-
-            if (combatant is IPlayer playerCombatant)
+            if (statThatChanged.Type == CreatureStat.HitPoints)
             {
-                // And this updates the health of the player.
-                this.scheduler.ScheduleEvent(new GenericNotification(() => playerCombatant.YieldSingleItem(), new PlayerStatsPacket(playerCombatant)));
+                // This updates the health as seen by others.
+                this.scheduler.ScheduleEvent(new GenericNotification(() => this.map.PlayersThatCanSee(creature.Location), new CreatureHealthPacket(creature)));
+
+                if (creature is IPlayer playerCombatant)
+                {
+                    // And this updates the health of the player.
+                    this.scheduler.ScheduleEvent(new GenericNotification(() => playerCombatant.YieldSingleItem(), new PlayerStatsPacket(playerCombatant)));
+                }
             }
         }
 

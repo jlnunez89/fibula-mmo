@@ -24,6 +24,11 @@ namespace Fibula.Creatures.Contracts.Constants
         public const ushort CreatureTypeId = 99;
 
         /// <summary>
+        /// The maximum carry strengh allowed for cretures.
+        /// </summary>
+        public const ushort MaxCreatureCarryStrength = ushort.MaxValue;
+
+        /// <summary>
         /// The maximum speed allowed for creatures.
         /// </summary>
         public const ushort MaxCreatureSpeed = 1500;
@@ -41,6 +46,6 @@ namespace Fibula.Creatures.Contracts.Constants
         /// <summary>
         /// The minimum speed allowed for players.
         /// </summary>
-        public const ushort MinPlayerSpeed = 10;
+        public const ushort MinPlayerSpeed = MinCreatureSpeed;
     }
 }

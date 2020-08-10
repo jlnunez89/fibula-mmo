@@ -20,6 +20,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Common.Utilities;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
@@ -138,7 +139,7 @@ namespace Fibula.Protocol.V772
                             creatureBytes.AddRange(creatureNameBytes);
                         }
 
-                        creatureBytes.Add((byte)Math.Min(100, creature.Hitpoints * 100 / creature.MaxHitpoints));
+                        creatureBytes.Add(creature.Stats[CreatureStat.HitPoints].Percent);
                         creatureBytes.Add(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
 
                         if (player.CanSee(creature))

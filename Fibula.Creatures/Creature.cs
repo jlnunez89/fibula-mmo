@@ -52,7 +52,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Stores the creatures that this creature is aware of.
         /// </summary>
-        private readonly Dictionary<ICreature, AwarenessLevel> creatureAwareness;
+        private readonly Dictionary<ICreature, AwarenessLevel> creatureAwarenessMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Creature"/> class.
@@ -60,18 +60,14 @@ namespace Fibula.Creatures
         /// <param name="name">The name of this creature.</param>
         /// <param name="article">An article for the name of this creature.</param>
         /// <param name="maxHitpoints">The maximum hitpoints of the creature.</param>
-        /// <param name="maxManapoints">The maximum manapoints of the creature.</param>
         /// <param name="corpseTypeId">The corpse of the creature.</param>
         /// <param name="hitpoints">The current hitpoints of the creature.</param>
-        /// <param name="manapoints">The current manapoints of the creature.</param>
         protected Creature(
             string name,
             string article,
             ushort maxHitpoints,
-            ushort maxManapoints,
-            ushort corpseTypeId = 0,
-            ushort hitpoints = 0,
-            ushort manapoints = 0)
+            ushort corpseTypeId = default,
+            ushort hitpoints = default)
         {
             name.ThrowIfNullOrWhiteSpace(nameof(name));
 
@@ -87,10 +83,6 @@ namespace Fibula.Creatures
 
             this.Name = name;
             this.Article = article;
-            this.MaxHitpoints = maxHitpoints;
-            this.Hitpoints = Math.Min(this.MaxHitpoints, hitpoints == 0 ? this.MaxHitpoints : hitpoints);
-            this.MaxManapoints = maxManapoints;
-            this.Manapoints = Math.Min(this.MaxManapoints, manapoints);
             this.CorpseTypeId = corpseTypeId;
 
             this.LastMovementCostModifier = 1;
@@ -101,10 +93,24 @@ namespace Fibula.Creatures
                 ItemIdLookAlike = 0,
             };
 
-            this.BaseSpeed = 70;
+            this.Stats = new Dictionary<CreatureStat, IStat>();
 
-            this.creatureAwareness = new Dictionary<ICreature, AwarenessLevel>();
+            this.creatureAwarenessMap = new Dictionary<ICreature, AwarenessLevel>();
+
+            this.Stats.Add(CreatureStat.HitPoints, new Stat(CreatureStat.HitPoints, hitpoints == default ? maxHitpoints : hitpoints, maxHitpoints));
+            this.Stats[CreatureStat.HitPoints].Changed += this.RaiseStatChange;
+
+            this.Stats.Add(CreatureStat.CarryStrength, new Stat(CreatureStat.CarryStrength, 150, CreatureConstants.MaxCreatureCarryStrength));
+            this.Stats[CreatureStat.CarryStrength].Changed += this.RaiseStatChange;
+
+            this.Stats.Add(CreatureStat.BaseSpeed, new Stat(CreatureStat.BaseSpeed, 70, CreatureConstants.MaxCreatureSpeed));
+            this.Stats[CreatureStat.BaseSpeed].Changed += this.RaiseStatChange;
         }
+
+        /// <summary>
+        /// Event triggered when this creature's stat has changed.
+        /// </summary>
+        public event OnCreatureStatChanged StatChanged;
 
         /// <summary>
         /// Event called when this creature senses another.
@@ -147,31 +153,6 @@ namespace Fibula.Creatures
         public ushort CorpseTypeId { get; }
 
         /// <summary>
-        /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
-        /// </summary>
-        public byte HitpointPercentage => Convert.ToByte(Math.Min(100, Math.Max(0, this.Hitpoints * 100 / this.MaxHitpoints)));
-
-        /// <summary>
-        /// Gets or sets thre current hitpoints.
-        /// </summary>
-        public ushort Hitpoints { get; protected set; }
-
-        /// <summary>
-        /// Gets the maximum hitpoints.
-        /// </summary>
-        public ushort MaxHitpoints { get; }
-
-        /// <summary>
-        /// Gets the current manapoints.
-        /// </summary>
-        public ushort Manapoints { get; }
-
-        /// <summary>
-        /// Gets the maximum manapoints.
-        /// </summary>
-        public ushort MaxManapoints { get; }
-
-        /// <summary>
         /// Gets the location where this thing is being carried at, which is null for creatures.
         /// </summary>
         public override Location? CarryLocation
@@ -182,11 +163,6 @@ namespace Fibula.Creatures
                 return null;
             }
         }
-
-        /// <summary>
-        /// Gets or sets the creature's strength to carry stuff.
-        /// </summary>
-        public decimal CarryStrength { get; protected set; }
 
         /// <summary>
         /// Gets or sets this creature's light level.
@@ -207,11 +183,6 @@ namespace Fibula.Creatures
         /// Gets or sets this creature's variable speed.
         /// </summary>
         public int VariableSpeed { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets this creature's base speed.
-        /// </summary>
-        public int BaseSpeed { get; protected set; }
 
         /// <summary>
         /// Gets this creature's flags.
@@ -251,17 +222,25 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the creatures who are sensed by this creature.
         /// </summary>
-        public IEnumerable<ICreature> TrackedCreatures => this.creatureAwareness.Keys;
+        public IEnumerable<ICreature> TrackedCreatures => this.creatureAwarenessMap.Keys;
 
         /// <summary>
         /// Gets a value indicating whether the creature is considered dead.
         /// </summary>
-        public bool IsDead => this.Hitpoints == 0;
+        public bool IsDead => this.Stats[CreatureStat.HitPoints].Current == 0;
 
         /// <summary>
         /// Gets a value indicating whether this creature can walk.
         /// </summary>
         public bool CanWalk => this.Speed > 0;
+
+        /// <summary>
+        /// Gets the current stats information for the creature.
+        /// </summary>
+        /// <remarks>
+        /// The key is a string, and the value is an <see cref="IStat"/>.
+        /// </remarks>
+        public IDictionary<CreatureStat, IStat> Stats { get; private set; }
 
         /// <summary>
         /// Flags a creature as being sensed.
@@ -278,15 +257,15 @@ namespace Fibula.Creatures
             }
 
             // Add a creature and mark it as sensed only.
-            if (this.creatureAwareness.TryAdd(creature, AwarenessLevel.Sensed))
+            if (this.creatureAwarenessMap.TryAdd(creature, AwarenessLevel.Sensed))
             {
                 this.CreatureSensed?.Invoke(this, creature);
             }
 
             // check if we can actually see the creature, and mark it as such if so.
-            if (this.creatureAwareness[creature] == AwarenessLevel.Sensed && this.CanSee(creature))
+            if (this.creatureAwarenessMap[creature] == AwarenessLevel.Sensed && this.CanSee(creature))
             {
-                this.creatureAwareness[creature] = AwarenessLevel.Seen;
+                this.creatureAwarenessMap[creature] = AwarenessLevel.Seen;
 
                 this.CreatureSeen?.Invoke(this, creature);
             }
@@ -306,7 +285,7 @@ namespace Fibula.Creatures
                 return;
             }
 
-            if (this.creatureAwareness.Remove(creature))
+            if (this.creatureAwarenessMap.Remove(creature))
             {
                 this.CreatureLost?.Invoke(this, creature);
             }
@@ -448,7 +427,23 @@ namespace Fibula.Creatures
         /// <returns>The movement speed of the creature.</returns>
         protected virtual ushort CalculateMovementSpeed()
         {
-            return (ushort)((2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
+            return (ushort)((2 * (this.VariableSpeed + this.Stats[CreatureStat.BaseSpeed].Current)) + 80);
+        }
+
+        /// <summary>
+        /// Raises the <see cref="StatChanged"/> event for this creature on the given stat.
+        /// </summary>
+        /// <param name="forStat">The stat that changed.</param>
+        /// <param name="previousLevel">The previous stat value.</param>
+        /// <param name="previousPercent">The previous percent value of the stat.</param>
+        protected void RaiseStatChange(CreatureStat forStat, uint previousLevel, byte previousPercent)
+        {
+            if (!this.Stats.ContainsKey(forStat))
+            {
+                return;
+            }
+
+            this.StatChanged?.Invoke(this, this.Stats[forStat], previousLevel, previousPercent);
         }
     }
 }

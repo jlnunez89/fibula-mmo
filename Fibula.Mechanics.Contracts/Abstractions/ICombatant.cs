@@ -14,7 +14,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Mechanics.Contracts.Structs;
 
@@ -23,11 +22,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// </summary>
     public interface ICombatant : ICreatureWithExhaustion, ICreatureWithSkills, ICreatureThatSensesOthers
     {
-        /// <summary>
-        /// Event to call when the combatant's health changes.
-        /// </summary>
-        event OnHealthChanged HealthChanged;
-
         /// <summary>
         /// Event to call when the combatant dies.
         /// </summary>
@@ -59,29 +53,9 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         byte AutoAttackRange { get; }
 
         /// <summary>
-        /// Gets the number of attack credits available.
-        /// </summary>
-        int AutoAttackCredits { get; }
-
-        /// <summary>
-        /// Gets the number of maximum attack credits.
-        /// </summary>
-        ushort AutoAttackMaximumCredits { get; }
-
-        /// <summary>
         /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
         /// </summary>
         decimal AttackSpeed { get; }
-
-        /// <summary>
-        /// Gets the number of auto defense credits available.
-        /// </summary>
-        int AutoDefenseCredits { get; }
-
-        /// <summary>
-        /// Gets the number of maximum defense credits.
-        /// </summary>
-        ushort AutoDefenseMaximumCredits { get; }
 
         /// <summary>
         /// Gets a metric of how fast a combatant can earn a defense credit per combat round.
@@ -136,20 +110,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="target">The target to chase, if any.</param>
         /// <returns>True if the target was actually changed, false otherwise.</returns>
         bool SetFollowTarget(ICreature target);
-
-        /// <summary>
-        /// Consumes combat credits to the combatant.
-        /// </summary>
-        /// <param name="creditType">The type of combat credits to consume.</param>
-        /// <param name="amount">The amount of credits to consume.</param>
-        void ConsumeCredits(CombatCreditType creditType, byte amount);
-
-        /// <summary>
-        /// Restores combat credits to the combatant.
-        /// </summary>
-        /// <param name="creditType">The type of combat credits to restore.</param>
-        /// <param name="amount">The amount of credits to restore.</param>
-        void RestoreCredits(CombatCreditType creditType, byte amount);
 
         /// <summary>
         /// Increases the attack speed of this combatant.

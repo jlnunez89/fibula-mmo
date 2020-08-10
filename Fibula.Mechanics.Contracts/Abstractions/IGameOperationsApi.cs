@@ -130,6 +130,15 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         void CreatureTurn(uint requestorId, ICreature creature, Direction direction);
 
         /// <summary>
+        /// Handles a stat change event from a creature.
+        /// </summary>
+        /// <param name="creature">The creature for which the stat changed.</param>
+        /// <param name="statThatChanged">The stat that changed.</param>
+        /// <param name="previousValue">The previous stat value.</param>
+        /// <param name="previousPercent">The previous percent for the stat.</param>
+        void CreatureStatChanged(ICreature creature, IStat statThatChanged, uint previousValue, byte previousPercent);
+
+        /// <summary>
         /// Handles a skill level change from a skilled creature.
         /// </summary>
         /// <param name="skilledCreature">The skilled creature for which the skill changed.</param>

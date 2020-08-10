@@ -13,6 +13,7 @@ namespace Fibula.Mechanics.Operations
 {
     using System;
     using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -71,12 +72,24 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            this.Combatant.RestoreCredits(this.CreditType, AmountToRestore);
+            uint current = 0;
+            uint maximum = 0;
 
-            var current = this.CreditType == CombatCreditType.Attack ? this.Combatant.AutoAttackCredits : this.Combatant.AutoDefenseCredits;
-            var max = this.CreditType == CombatCreditType.Attack ? this.Combatant.AutoAttackMaximumCredits : this.Combatant.AutoDefenseMaximumCredits;
+            switch (this.CreditType)
+            {
+                case CombatCreditType.Attack:
+                    this.Combatant.Stats[CreatureStat.AttackPoints].Increase(AmountToRestore);
+                    current = this.Combatant.Stats[CreatureStat.AttackPoints].Current;
+                    maximum = this.Combatant.Stats[CreatureStat.AttackPoints].Maximum;
+                    break;
+                case CombatCreditType.Defense:
+                    this.Combatant.Stats[CreatureStat.DefensePoints].Increase(AmountToRestore);
+                    current = this.Combatant.Stats[CreatureStat.DefensePoints].Current;
+                    maximum = this.Combatant.Stats[CreatureStat.DefensePoints].Maximum;
+                    break;
+            }
 
-            context.Logger.Verbose($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{max}]");
+            context.Logger.Debug($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{maximum}]");
         }
     }
 }

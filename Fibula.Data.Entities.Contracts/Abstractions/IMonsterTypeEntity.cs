@@ -97,11 +97,6 @@ namespace Fibula.Data.Entities.Contracts.Abstractions
         ushort MaxHitpoints { get; }
 
         /// <summary>
-        /// Gets the maximum manapoints that this monster type starts with.
-        /// </summary>
-        ushort MaxManapoints { get; }
-
-        /// <summary>
         /// Gets the type of blood of this monster type.
         /// </summary>
         BloodType BloodType { get; }

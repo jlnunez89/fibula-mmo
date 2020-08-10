@@ -12,18 +12,26 @@
 namespace Fibula.Creatures.Contracts.Abstractions
 {
     using System;
+    using System.Collections.Generic;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Structs;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
+    using Fibula.Mechanics.Contracts.Delegates;
 
     /// <summary>
     /// Interface for all creatures in the game.
     /// </summary>
     public interface ICreature : IThing, IThingContainer, IEquatable<ICreature>
     {
+        /// <summary>
+        /// Event triggered when this creature's stat has changed.
+        /// </summary>
+        event OnCreatureStatChanged StatChanged;
+
         /// <summary>
         /// Gets the creature's in-game id.
         /// </summary>
@@ -48,36 +56,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets the creature's corpse type id.
         /// </summary>
         ushort CorpseTypeId { get; }
-
-        /// <summary>
-        /// Gets the percentage of <see cref="Hitpoints"/> left out of <see cref="MaxHitpoints"/>.
-        /// </summary>
-        byte HitpointPercentage { get; }
-
-        /// <summary>
-        /// Gets the creature's current hitpoints.
-        /// </summary>
-        ushort Hitpoints { get; }
-
-        /// <summary>
-        /// Gets the creature's maximum hitpoints.
-        /// </summary>
-        ushort MaxHitpoints { get; }
-
-        /// <summary>
-        /// Gets the creature's current manapoints.
-        /// </summary>
-        ushort Manapoints { get; }
-
-        /// <summary>
-        /// Gets the creature's maximum manapoints.
-        /// </summary>
-        ushort MaxManapoints { get; }
-
-        /// <summary>
-        /// Gets the creature's strength value for carrying stuff.
-        /// </summary>
-        decimal CarryStrength { get; }
 
         /// <summary>
         /// Gets this creature's emitted light level.
@@ -133,6 +111,14 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// Gets or sets this creature's walk plan.
         /// </summary>
         WalkPlan WalkPlan { get; set; }
+
+        /// <summary>
+        /// Gets the current stats information for the creature.
+        /// </summary>
+        /// <remarks>
+        /// The key is a <see cref="CreatureStat"/>, and the value is an <see cref="IStat"/>.
+        /// </remarks>
+        IDictionary<CreatureStat, IStat> Stats { get; }
 
         /// <summary>
         /// Checks if this creature can see a given creature.

@@ -19,6 +19,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Security.Encryption;
@@ -126,7 +127,7 @@ namespace Fibula.Protocol.V772
                 message.AddString(creature.Name);
             }
 
-            message.AddByte(creature.HitpointPercentage);
+            message.AddByte(creature.Stats[CreatureStat.HitPoints].Percent);
             message.AddByte(Convert.ToByte(creature.Direction.GetClientSafeDirection()));
 
             /* if (creature.IsInvisible)

@@ -16,6 +16,7 @@ namespace Fibula.Creatures
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Structs;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -46,7 +47,7 @@ namespace Fibula.Creatures
             ushort corpse,
             ushort hitpoints = 0,
             ushort manapoints = 0)
-            : base(name, string.Empty, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
+            : base(name, string.Empty, maxHitpoints, corpse, hitpoints)
         {
             client.ThrowIfNull(nameof(client));
             characterId.ThrowIfNullOrWhiteSpace(nameof(characterId));
@@ -67,13 +68,18 @@ namespace Fibula.Creatures
 
             this.EmittedLightLevel = (byte)LightLevels.Torch;
             this.EmittedLightColor = (byte)LightColors.Orange;
-            this.CarryStrength = 150;
-
-            this.SoulPoints = 0;
 
             this.InitializeSkills();
 
-            this.BaseSpeed = 220;
+            this.Stats[CreatureStat.CarryStrength].Set(150);
+            this.Stats[CreatureStat.BaseSpeed].Set(220);
+
+            this.Stats.Add(CreatureStat.ManaPoints, new Stat(CreatureStat.ManaPoints, manapoints == default ? maxManapoints : manapoints, maxManapoints));
+            this.Stats[CreatureStat.ManaPoints].Changed += this.RaiseStatChange;
+
+            this.Stats.Add(CreatureStat.SoulPoints, new Stat(CreatureStat.SoulPoints, 0, 0));
+            this.Stats[CreatureStat.SoulPoints].Changed += this.RaiseStatChange;
+
             this.Speed = this.CalculateMovementSpeed();
 
             this.Inventory = new PlayerInventory(this);
@@ -155,7 +161,7 @@ namespace Fibula.Creatures
             var rng = new Random();
 
             // 75% chance to block it?
-            if (this.AutoDefenseCredits > 0 && rng.Next(4) > 0)
+            if (this.Stats[CreatureStat.DefensePoints].Current > 0 && rng.Next(4) > 0)
             {
                 damageInfo.Effect = AnimatedEffect.Puff;
                 damageInfo.Damage = 0;
@@ -182,7 +188,7 @@ namespace Fibula.Creatures
         {
             var expLevel = this.Skills.TryGetValue(SkillType.Experience, out ISkill expSkill) ? expSkill.Level : 0;
 
-            return (ushort)(this.BaseSpeed + (2 * (expLevel - 1)));
+            return (ushort)(this.Stats[CreatureStat.BaseSpeed].Current + (2 * (expLevel - 1)));
         }
 
         private void InitializeSkills()

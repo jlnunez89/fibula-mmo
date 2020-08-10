@@ -18,6 +18,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
@@ -106,7 +107,7 @@ namespace Fibula.Mechanics.Operations
             var nullAttacker = this.Attacker == null;
             var isTargetAlreadyDead = this.Target.IsDead;
             var isCorrectTarget = nullAttacker || this.Attacker?.AutoAttackTarget?.Id == this.TargetIdAtScheduleTime;
-            var enoughCredits = nullAttacker || this.Attacker?.AutoAttackCredits >= 1;
+            var enoughCredits = nullAttacker || this.Attacker?.Stats[CreatureStat.AttackPoints].Current > 0;
             var inRange = nullAttacker || (distanceBetweenCombatants.MaxValueIn2D <= this.Attacker.AutoAttackRange && distanceBetweenCombatants.Z == 0);
             var atIdealDistance = nullAttacker || distanceBetweenCombatants.MaxValueIn2D == this.Attacker.AutoAttackRange;
             var attackerIsMonster = !nullAttacker && this.Attacker is IMonster;
@@ -200,7 +201,13 @@ namespace Fibula.Mechanics.Operations
                 packetsToSend.Add(new ProjectilePacket(this.Attacker.Location, this.Target.Location, ProjectileType.Bolt));
             }
 
-            this.Target.ConsumeCredits(CombatCreditType.Defense, 1);
+            if (this.Target.Stats[CreatureStat.DefensePoints].Decrease(1))
+            {
+                // Normalize the attacker's defense speed based on the global round time and round that up.
+                context.Scheduler.ScheduleEvent(
+                    new RestoreCombatCreditOperation(this.Target, CombatCreditType.Defense),
+                    TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
+            }
 
             this.Target.Skills[SkillType.Shield].IncreaseCounter(1);
 
@@ -209,23 +216,18 @@ namespace Fibula.Mechanics.Operations
                 context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.BloodType));
             }
 
-            // Normalize the attacker's defense speed based on the global round time and round that up.
-            context.Scheduler.ScheduleEvent(
-                new RestoreCombatCreditOperation(this.Target, CombatCreditType.Defense),
-                TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
-
             if (this.Attacker != null)
             {
-                // this.Target.RecordDamageTaken(this.Attacker.Id, damageToApply);
-                this.Attacker.ConsumeCredits(CombatCreditType.Attack, 1);
-
                 // TODO: increase the actual skill.
                 this.Attacker.Skills[SkillType.NoWeapon].IncreaseCounter(1);
 
-                // Normalize the attacker's attack speed based on the global round time and round that up.
-                context.Scheduler.ScheduleEvent(
-                    new RestoreCombatCreditOperation(this.Attacker, CombatCreditType.Attack),
-                    TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
+                if (this.Attacker.Stats[CreatureStat.AttackPoints].Decrease(1))
+                {
+                    // Normalize the attacker's attack speed based on the global round time and round that up.
+                    context.Scheduler.ScheduleEvent(
+                        new RestoreCombatCreditOperation(this.Attacker, CombatCreditType.Attack),
+                        TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));
+                }
 
                 if (this.Attacker.Location != this.Target.Location && this.Attacker.Id != this.Target.Id)
                 {

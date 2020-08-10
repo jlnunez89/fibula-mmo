@@ -46,12 +46,12 @@ namespace Fibula.Creatures
         /// <param name="monsterType">The type of this monster.</param>
         /// <param name="itemFactory">A reference to the item factory in use, for inventory generation.</param>
         public Monster(IMonsterTypeEntity monsterType, IItemFactory itemFactory)
-            : base(monsterType.Name, monsterType.Article, monsterType.MaxHitpoints, monsterType.MaxManapoints, monsterType.Corpse)
+            : base(monsterType.Name, monsterType.Article, monsterType.MaxHitpoints, monsterType.Corpse)
         {
             this.Type = monsterType;
             this.Outfit = monsterType.Outfit;
 
-            this.BaseSpeed = monsterType.BaseSpeed;
+            this.Stats[CreatureStat.BaseSpeed].Set(monsterType.BaseSpeed);
 
             this.BloodType = monsterType.BloodType;
             this.ChaseMode = this.AutoAttackRange > 1 ? ChaseMode.KeepDistance : ChaseMode.Chase;
@@ -95,9 +95,9 @@ namespace Fibula.Creatures
         /// </summary>
         public override ushort Speed
         {
-            get => (ushort)(this.BaseSpeed == 0 ? 0 : (2 * (this.VariableSpeed + this.BaseSpeed)) + 80);
+            get => (ushort)(this.Stats[CreatureStat.BaseSpeed].Current == 0 ? 0 : (2 * (this.VariableSpeed + this.Stats[CreatureStat.BaseSpeed].Current)) + 80);
 
-            protected set => this.BaseSpeed = value;
+            protected set => this.Stats[CreatureStat.BaseSpeed].Set(value);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@ namespace Fibula.Creatures
             var rng = new Random();
 
             // 75% chance to block it?
-            if (this.AutoDefenseCredits > 0 && rng.Next(4) > 0)
+            if (this.Stats[CreatureStat.DefensePoints].Current > 0 && rng.Next(4) > 0)
             {
                 damageInfo.Effect = AnimatedEffect.Puff;
                 damageInfo.Damage = 0;

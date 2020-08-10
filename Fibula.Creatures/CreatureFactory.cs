@@ -105,9 +105,7 @@ namespace Fibula.Creatures
                         playerCreationArguments.Metadata.Name,
                         playerCreationArguments.Metadata.MaxHitpoints,
                         playerCreationArguments.Metadata.MaxManapoints,
-                        playerCreationArguments.Metadata.Corpse,
-                        playerCreationArguments.Metadata.MaxHitpoints,      // TODO: current hitpoints.
-                        playerCreationArguments.Metadata.MaxManapoints);    // TODO: current mana points.
+                        playerCreationArguments.Metadata.Corpse);
             }
 
             throw new NotSupportedException($"{nameof(CreatureFactory)} does not support creation of creatures with type {creatureCreationArguments.Type}.");

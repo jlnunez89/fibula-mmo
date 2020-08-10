@@ -20,13 +20,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     public interface ICombatOperationsApi
     {
         /// <summary>
-        /// Handles a health change event from a combatant.
-        /// </summary>
-        /// <param name="combatant">The combatant who's health changed.</param>
-        /// <param name="oldHealthValue">The old value of the combatant's health.</param>
-        void CombatantHealthChanged(ICombatant combatant, ushort oldHealthValue);
-
-        /// <summary>
         /// Handles a death from a combatant.
         /// </summary>
         /// <param name="combatant">The combatant that died.</param>

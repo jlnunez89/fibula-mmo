@@ -15,6 +15,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Serilog;
@@ -47,12 +48,12 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            ushort hitpoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.Hitpoints);
-            ushort maxHitpoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.MaxHitpoints);
-            ushort manapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.Manapoints);
-            ushort maxManapoints = Math.Min(ushort.MaxValue, playerStatsPacket.Player.MaxManapoints);
+            ushort hitpoints = Math.Min(ushort.MaxValue, (ushort)playerStatsPacket.Player.Stats[CreatureStat.HitPoints].Current);
+            ushort maxHitpoints = Math.Min(ushort.MaxValue, (ushort)playerStatsPacket.Player.Stats[CreatureStat.HitPoints].Maximum);
+            ushort manapoints = Math.Min(ushort.MaxValue, (ushort)playerStatsPacket.Player.Stats[CreatureStat.ManaPoints].Current);
+            ushort maxManapoints = Math.Min(ushort.MaxValue, (ushort)playerStatsPacket.Player.Stats[CreatureStat.ManaPoints].Maximum);
 
-            ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, playerStatsPacket.Player.CarryStrength));
+            ushort capacity = Convert.ToUInt16(Math.Min(ushort.MaxValue, (ushort)playerStatsPacket.Player.Stats[CreatureStat.CarryStrength].Current));
 
             ICombatant combatantPlayer = playerStatsPacket.Player as ICombatant;
 

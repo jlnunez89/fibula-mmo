@@ -17,9 +17,9 @@ namespace Fibula.Creatures
     using System.Linq;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
+    using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Combat.Enumerations;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Delegates;
     using Fibula.Mechanics.Contracts.Enumerations;
@@ -71,10 +71,8 @@ namespace Fibula.Creatures
         /// <param name="name">The name of this creature.</param>
         /// <param name="article">An article for the name of this creature.</param>
         /// <param name="maxHitpoints">The maximum hitpoints of the creature.</param>
-        /// <param name="maxManapoints">The maximum manapoints of the creature.</param>
         /// <param name="corpse">The corpse of the creature.</param>
         /// <param name="hitpoints">The current hitpoints of the creature.</param>
-        /// <param name="manapoints">The current manapoints of the creature.</param>
         /// <param name="baseAttackSpeed">
         /// Optional. The base attack speed for this creature.
         /// Bounded between [<see cref="CombatConstants.MinimumCombatSpeed"/>, <see cref="CombatConstants.MaximumCombatSpeed"/>] inclusive.
@@ -89,20 +87,15 @@ namespace Fibula.Creatures
             string name,
             string article,
             ushort maxHitpoints,
-            ushort maxManapoints,
             ushort corpse,
             ushort hitpoints = 0,
-            ushort manapoints = 0,
             decimal baseAttackSpeed = CombatConstants.DefaultAttackSpeed,
             decimal baseDefenseSpeed = CombatConstants.DefaultDefenseSpeed)
-            : base(name, article, maxHitpoints, maxManapoints, corpse, hitpoints, manapoints)
+            : base(name, article, maxHitpoints, corpse, hitpoints)
         {
             // Normalize combat speeds.
             this.baseAttackSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseAttackSpeed));
             this.baseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
-
-            this.AutoAttackCredits = this.AutoAttackMaximumCredits;
-            this.AutoDefenseCredits = this.AutoDefenseMaximumCredits;
 
             this.exhaustionLock = new object();
             this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
@@ -111,12 +104,24 @@ namespace Fibula.Creatures
             this.combatSessionAttackedBy = new HashSet<ICombatant>();
 
             this.Skills = new Dictionary<SkillType, ISkill>();
-        }
 
-        /// <summary>
-        /// Event to call when the combatant's health changes.
-        /// </summary>
-        public event OnHealthChanged HealthChanged;
+            this.Stats.Add(CreatureStat.AttackPoints, new Stat(CreatureStat.AttackPoints, 1, CombatConstants.DefaultMaximumAttackCredits));
+            this.Stats[CreatureStat.AttackPoints].Changed += this.RaiseStatChange;
+
+            this.Stats.Add(CreatureStat.DefensePoints, new Stat(CreatureStat.DefensePoints, 2, CombatConstants.DefaultMaximumDefenseCredits));
+            this.Stats[CreatureStat.DefensePoints].Changed += this.RaiseStatChange;
+
+            this.StatChanged += (ICreature creature, IStat statThatChanged, uint previousValue, byte previousPercent) =>
+            {
+                if (statThatChanged.Type == CreatureStat.HitPoints && statThatChanged.Current == 0)
+                {
+                    this.Death?.Invoke(this);
+                }
+            };
+
+            // TODO: need to set
+            // combatant.StatChanged = 0;
+        }
 
         /// <summary>
         /// Event to call when the combatant dies.
@@ -147,26 +152,6 @@ namespace Fibula.Creatures
         /// Gets the current target combatant.
         /// </summary>
         public ICombatant AutoAttackTarget { get; private set; }
-
-        /// <summary>
-        /// Gets the number of attack credits available.
-        /// </summary>
-        public int AutoAttackCredits { get; private set; }
-
-        /// <summary>
-        /// Gets the number of maximum attack credits.
-        /// </summary>
-        public ushort AutoAttackMaximumCredits => CombatConstants.DefaultMaximumAttackCredits;
-
-        /// <summary>
-        /// Gets the number of auto defense credits available.
-        /// </summary>
-        public int AutoDefenseCredits { get; private set; }
-
-        /// <summary>
-        /// Gets the number of maximum defense credits.
-        /// </summary>
-        public ushort AutoDefenseMaximumCredits => CombatConstants.DefaultMaximumDefenseCredits;
 
         /// <summary>
         /// Gets a metric of how fast a combatant can earn an attack credit per combat round.
@@ -231,44 +216,6 @@ namespace Fibula.Creatures
         /// The key is a <see cref="SkillType"/>, and the value is a <see cref="ISkill"/>.
         /// </remarks>
         public IDictionary<SkillType, ISkill> Skills { get; }
-
-        /// <summary>
-        /// Consumes combat credits to the combatant.
-        /// </summary>
-        /// <param name="creditType">The type of combat credits to consume.</param>
-        /// <param name="amount">The amount of credits to consume.</param>
-        public void ConsumeCredits(CombatCreditType creditType, byte amount)
-        {
-            switch (creditType)
-            {
-                case CombatCreditType.Attack:
-                    this.AutoAttackCredits -= amount;
-                    break;
-
-                case CombatCreditType.Defense:
-                    this.AutoDefenseCredits -= amount;
-                    break;
-            }
-        }
-
-        /// <summary>
-        /// Restores combat credits to the combatant.
-        /// </summary>
-        /// <param name="creditType">The type of combat credits to restore.</param>
-        /// <param name="amount">The amount of credits to restore.</param>
-        public void RestoreCredits(CombatCreditType creditType, byte amount)
-        {
-            switch (creditType)
-            {
-                case CombatCreditType.Attack:
-                    this.AutoAttackCredits = Math.Min(this.AutoAttackMaximumCredits, this.AutoAttackCredits + amount);
-                    break;
-
-                case CombatCreditType.Defense:
-                    this.AutoDefenseCredits = Math.Min(this.AutoDefenseMaximumCredits, this.AutoDefenseCredits + amount);
-                    break;
-            }
-        }
 
         /// <summary>
         /// Sets the attack target of this combatant.
@@ -439,20 +386,18 @@ namespace Fibula.Creatures
         /// <returns>The information about the damage actually done.</returns>
         public DamageInfo ApplyDamage(DamageInfo damageInfo, uint fromCombatantId = 0)
         {
-            var oldHitpointsValue = this.Hitpoints;
-
             this.ApplyDamageModifiers(ref damageInfo);
 
-            if (damageInfo.Damage < 0)
-            {
-                // heal instead.
-                damageInfo.Damage = Math.Max(damageInfo.Damage, this.Hitpoints - this.MaxHitpoints);
+            var currentHitpoints = this.Stats[CreatureStat.HitPoints].Current;
 
-                this.Hitpoints = (ushort)(this.Hitpoints - damageInfo.Damage);
-            }
-            else if (damageInfo.Damage > 0)
+            if (damageInfo.Damage != 0)
             {
-                damageInfo.Damage = Math.Min(damageInfo.Damage, this.Hitpoints);
+                this.Stats[CreatureStat.HitPoints].Decrease(damageInfo.Damage);
+            }
+
+            if (damageInfo.Damage > 0)
+            {
+                damageInfo.Damage = Math.Min(damageInfo.Damage, (int)currentHitpoints);
                 damageInfo.Blood = this.BloodType;
                 damageInfo.Effect = this.BloodType switch
                 {
@@ -461,23 +406,11 @@ namespace Fibula.Creatures
                     BloodType.Slime => AnimatedEffect.Poison,
                     _ => AnimatedEffect.XBlood,
                 };
-
-                this.Hitpoints = (ushort)(this.Hitpoints - damageInfo.Damage);
-            }
-
-            if (this.Hitpoints != oldHitpointsValue)
-            {
-                this.HealthChanged?.Invoke(this, oldHitpointsValue);
             }
 
             if (fromCombatantId > 0)
             {
                 this.combatSessionDamageTakenMap.AddOrUpdate(fromCombatantId, (uint)damageInfo.Damage, (key, oldValue) => (uint)(oldValue + damageInfo.Damage));
-            }
-
-            if (this.Hitpoints == 0)
-            {
-                this.Death?.Invoke(this);
             }
 
             return damageInfo;
