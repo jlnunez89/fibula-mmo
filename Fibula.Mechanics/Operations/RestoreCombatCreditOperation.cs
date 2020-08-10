@@ -89,7 +89,7 @@ namespace Fibula.Mechanics.Operations
                     break;
             }
 
-            context.Logger.Debug($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{maximum}]");
+            context.Logger.Verbose($"Restored {AmountToRestore} {this.CreditType} credit(s) on {this.Combatant.Name}. [Id={this.Combatant.Id}] [{current}/{maximum}]");
         }
     }
 }
