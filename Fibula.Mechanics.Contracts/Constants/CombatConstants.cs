@@ -34,7 +34,7 @@ namespace Fibula.Mechanics.Contracts.Constants
         /// <summary>
         /// The default defense speed of a combatant.
         /// </summary>
-        public const decimal DefaultDefenseSpeed = 2.0m;
+        public const decimal DefaultDefenseSpeed = 1.0m;
 
         /// <summary>
         /// The default maximum attack credits that a combatant has.

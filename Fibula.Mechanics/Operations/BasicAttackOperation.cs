@@ -190,7 +190,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     damageTextColor = TextColor.LightBlue;
                 }
-                else
+                else if (this.Target is IPlayer)
                 {
                     var hitpointsLostMessage = $"You lose {damageDoneInfo.Damage} hitpoints";
 
@@ -217,12 +217,12 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Target.Stats[CreatureStat.DefensePoints].Decrease(1))
             {
+                this.Target.Skills[SkillType.Shield].IncreaseCounter(1);
+
                 context.Scheduler.ScheduleEvent(
                     new StatChangeOperation(this.Target, CreatureStat.DefensePoints),
                     TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Target.DefenseSpeed)));
             }
-
-            this.Target.Skills[SkillType.Shield].IncreaseCounter(1);
 
             if (damageDoneInfo.ApplyBloodToEnvironment)
             {
@@ -231,11 +231,11 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Attacker != null)
             {
-                // TODO: increase the actual skill.
-                this.Attacker.Skills[SkillType.NoWeapon].IncreaseCounter(1);
-
                 if (this.Attacker.Stats[CreatureStat.AttackPoints].Decrease(1))
                 {
+                    // TODO: increase the actual skill.
+                    this.Attacker.Skills[SkillType.NoWeapon].IncreaseCounter(1);
+
                     context.Scheduler.ScheduleEvent(
                         new StatChangeOperation(this.Attacker, CreatureStat.AttackPoints),
                         TimeSpan.FromMilliseconds((int)Math.Round(CombatConstants.DefaultCombatRoundTimeInMs / this.Attacker.AttackSpeed)));

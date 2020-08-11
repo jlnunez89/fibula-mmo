@@ -86,43 +86,43 @@ namespace Fibula.Mechanics.Operations
             }
 
             // TODO: [start] remove "Test" trash code.
-            if (requestor is ICombatant combatant)
+            try
             {
-                switch (this.Content)
+                if (requestor is ICombatant combatant)
                 {
-                    case "increase atk speed":
-                        combatant.IncreaseAttackSpeed(0.1m);
-                        context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
-                        return;
-                    case "decrease atk speed":
-                        combatant.DecreaseAttackSpeed(0.1m);
-                        context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
-                        return;
-                    case "increase def speed":
-                        combatant.IncreaseDefenseSpeed(0.1m);
-                        context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
-                        return;
-                    case "decrease def speed":
-                        combatant.DecreaseDefenseSpeed(0.1m);
-                        context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
-                        return;
+                    switch (this.Content)
+                    {
+                        case "increase atk speed":
+                            combatant.IncreaseAttackSpeed(0.1m);
+                            context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
+                            return;
+                        case "decrease atk speed":
+                            combatant.DecreaseAttackSpeed(0.1m);
+                            context.Logger.Debug($"Combatant {combatant.Name}'s attack speed is now {combatant.AttackSpeed}.");
+                            return;
+                        case "increase def speed":
+                            combatant.IncreaseDefenseSpeed(0.1m);
+                            context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
+                            return;
+                        case "decrease def speed":
+                            combatant.DecreaseDefenseSpeed(0.1m);
+                            context.Logger.Debug($"Combatant {combatant.Name}'s defense speed is now {combatant.DefenseSpeed}.");
+                            return;
+                    }
                 }
-            }
 
-            if (this.Content.StartsWith("!mon"))
-            {
-                try
+                if (this.Content.StartsWith("!mon"))
                 {
                     var raceId = this.Content.Replace("!mon", string.Empty);
 
                     context.GameApi.PlaceMonsterAt(raceId, requestor.RandomAdjacentLocation(includeDiagonals: true));
-                }
-                catch
-                {
-                    // Don't really care about this one.
-                }
 
-                return;
+                    return;
+                }
+            }
+            catch
+            {
+                // Don't really care about this one.
             }
 
             // TODO: [end] remove "Test" trash code.
