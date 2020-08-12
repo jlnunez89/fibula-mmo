@@ -1,0 +1,90 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Factories\**" />
+    <EmbeddedResource Remove="Factories\**" />
+    <None Remove="Factories\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Handlers\AutoMoveCancelHandler.cs" />
+    <Compile Remove="Handlers\ContainerCloseHandler.cs" />
+    <Compile Remove="Handlers\ContainerMoveUpHandler.cs" />
+    <Compile Remove="Handlers\KeepAliveRequestHandler.cs" />
+    <Compile Remove="Handlers\MoveThingHandler.cs" />
+    <Compile Remove="Handlers\RotateItemHandler.cs" />
+    <Compile Remove="Handlers\SetModeHandler.cs" />
+    <Compile Remove="Handlers\StopAllActionsHandler.cs" />
+    <Compile Remove="Handlers\TurnEastHandler.cs" />
+    <Compile Remove="Handlers\TurnNorthHandler.cs" />
+    <Compile Remove="Handlers\TurnSouthHandler.cs" />
+    <Compile Remove="Handlers\TurnWestHandler.cs" />
+    <Compile Remove="Handlers\UseItemHandler.cs" />
+    <Compile Remove="Handlers\UseItemOnHandler.cs" />
+    <Compile Remove="Handlers\WalkEastHandler.cs" />
+    <Compile Remove="Handlers\WalkNortheastHandler.cs" />
+    <Compile Remove="Handlers\WalkNorthHandler.cs" />
+    <Compile Remove="Handlers\WalkNorthWestHandler.cs" />
+    <Compile Remove="Handlers\WalkSoutheastHandler.cs" />
+    <Compile Remove="Handlers\WalkSouthHandler.cs" />
+    <Compile Remove="Handlers\WalkSouthwestHandler.cs" />
+    <Compile Remove="Handlers\WalkWestHandler.cs" />
+    <Compile Remove="Operations\Unused\AutoAttackCombatOperation.cs" />
+    <Compile Remove="Operations\Unused\AutoWalkOperation.cs" />
+    <Compile Remove="Operations\Unused\BaseActionOperation.cs" />
+    <Compile Remove="Operations\Unused\BaseCombatOperation.cs" />
+    <Compile Remove="Operations\Unused\ChangeItemOperation.cs" />
+    <Compile Remove="Operations\Unused\CloseContainerOperation.cs" />
+    <Compile Remove="Operations\Unused\CreateItemOperation.cs" />
+    <Compile Remove="Operations\Unused\DeleteItemOperation.cs" />
+    <Compile Remove="Operations\Unused\MoveUpContainerOperation.cs" />
+    <Compile Remove="Operations\Unused\OpenContainerOperation.cs" />
+    <Compile Remove="Operations\Unused\PlaceCreatureOperation.cs" />
+    <Compile Remove="Operations\Unused\RemoveCreatureOperation.cs" />
+    <Compile Remove="Operations\Unused\RestoreCombatCreditOperation.cs" />
+    <Compile Remove="Operations\Unused\SpawnMonstersOperation.cs" />
+    <Compile Remove="Operations\Unused\ThinkingOperation.cs" />
+    <Compile Remove="Operations\Unused\UseItemOnOperation.cs" />
+    <Compile Remove="Operations\Unused\UseItemOperation.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="stylecop.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="3.1.4" />
+    <PackageReference Include="Serilog" Version="2.9.1-dev-01151" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="3.1.2-dev-00824" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.118">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
+    <ProjectReference Include="..\Fibula.Communications.Packets\Fibula.Communications.Packets.csproj" />
+    <ProjectReference Include="..\Fibula.Communications\Fibula.Communications.csproj" />
+    <ProjectReference Include="..\Fibula.Creatures\Fibula.Creatures.csproj" />
+    <ProjectReference Include="..\Fibula.Data\Fibula.Data.csproj" />
+    <ProjectReference Include="..\Fibula.Mechanics.Contracts\Fibula.Mechanics.Contracts.csproj" />
+    <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Operations\Unused\" />
+  </ItemGroup>
+
+</Project>

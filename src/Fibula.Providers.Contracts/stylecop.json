@@ -1,0 +1,19 @@
+﻿{
+  "$schema": "https://raw.githubusercontent.com/DotNetAnalyzers/StyleCopAnalyzers/master/StyleCop.Analyzers/StyleCop.Analyzers/Settings/stylecop.schema.json",
+  "settings": {
+    "namingRules": { "tupleElementNameCasing": "PascalCase" },
+    "layoutRules": {
+      "allowConsecutiveUsings": false,
+      "newlineAtEndOfFile": "require"
+    },
+    "documentationRules": {
+      "companyName": "2Dudes",
+      "headerDecoration": "-----------------------------------------------------------------",
+      "copyrightText": "Copyright (c) | {mainAuthor} et al.\r\n{mainAuthorProfile}\r\n\r\nAll Rights Reserved.\r\n\r\nLicensed under the MIT License. See LICENSE in the project root for license information.",
+      "variables": {
+        "mainAuthor": "Jose L. Nunez de Caceres",
+        "mainAuthorProfile": "https://linkedin.com/in/nunezdecaceres"
+      }
+    }
+  }
+}
