@@ -17,7 +17,7 @@ pool:
 jobs:
 - job: Build
   variables:
-    BuildSolution: FibulaMMO.sln
+    BuildSolution: src\FibulaMMO.sln
     BuildPlatform: Any CPU
   strategy:
     matrix:
