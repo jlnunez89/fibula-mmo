@@ -34,7 +34,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.TextMessage;
+        public OutgoingPacketType PacketType => OutgoingPacketType.TextMessage;
 
         /// <summary>
         /// Gets the message type.

@@ -18,7 +18,7 @@ namespace Fibula.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents a packet for an item rotation.
     /// </summary>
-    public class RotateItemPacket : IRotateItemInfo
+    public class RotateItemPacket : IIncomingPacket, IRotateItemInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="RotateItemPacket"/> class.

@@ -24,6 +24,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Map.Contracts;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -113,7 +114,7 @@ namespace Fibula.Protocol.V772
                     {
                         if (player.Client.KnowsCreatureWithId(creature.Id))
                         {
-                            creatureBytes.Add((byte)OutgoingGamePacketType.AddKnownCreature);
+                            creatureBytes.Add(OutgoingPacketType.AddKnownCreature.ToByte());
                             creatureBytes.Add(0x00);
                             creatureBytes.AddRange(BitConverter.GetBytes(creature.Id));
                         }
@@ -121,7 +122,7 @@ namespace Fibula.Protocol.V772
                         {
                             var creatureIdToForget = player.Client.ChooseCreatureToRemoveFromKnownSet(creatureIdsToForget.Count);
 
-                            creatureBytes.Add((byte)OutgoingGamePacketType.AddUnknownCreature);
+                            creatureBytes.Add(OutgoingPacketType.AddUnknownCreature.ToByte());
                             creatureBytes.Add(0x00);
                             creatureBytes.AddRange(BitConverter.GetBytes(creatureIdToForget));
                             creatureBytes.AddRange(BitConverter.GetBytes(creature.Id));

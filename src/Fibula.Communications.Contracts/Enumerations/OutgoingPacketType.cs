@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="OutgoingGamePacketType.cs" company="2Dudes">
+// <copyright file="OutgoingPacketType.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -14,271 +14,286 @@ namespace Fibula.Communications.Contracts.Enumerations
     /// <summary>
     /// Enumerates de different outgoing game server packet types.
     /// </summary>
-    public enum OutgoingGamePacketType : byte
+    public enum OutgoingPacketType : byte
     {
+        /// <summary>
+        /// The message of the day.
+        /// </summary>
+        MessageOfTheDay,
+
+        /// <summary>
+        /// A character list.
+        /// </summary>
+        CharacterList,
+
         /// <summary>
         /// Player login.
         /// </summary>
-        PlayerLogin = 0x0A,
+        PlayerLogin,
 
         /// <summary>
         /// Gamemaster flags.
         /// </summary>
-        GamemasterFlags = 0x0B,
+        GamemasterFlags,
 
         /// <summary>
-        /// Disconnection information.
+        /// Disconnection from game world.
         /// </summary>
-        Disconnect = 0x14,
+        GameDisconnect,
+
+        /// <summary>
+        /// Disconnection from gateway server.
+        /// </summary>
+        GatewayDisconnect,
 
         /// <summary>
         /// Character placed on the waitlist for the world.
         /// </summary>
-        WaitingList = 0x16,
+        WaitingList,
 
         /// <summary>
         /// A heartbeat response.
         /// </summary>
-        HeartbeatResponse = 0x1D,
+        HeartbeatResponse,
 
         /// <summary>
         /// A heartbeat request.
         /// </summary>
-        Heartbeat = 0x1E,
+        Heartbeat,
 
         /// <summary>
         /// Player death notification.
         /// </summary>
-        Death = 0x28,
+        Death,
 
         /// <summary>
         /// Adding an unknown creature description.
         /// </summary>
-        AddUnknownCreature = 0x61,
+        AddUnknownCreature,
 
         /// <summary>
         /// Adding a known creature description.
         /// </summary>
-        AddKnownCreature = 0x62,
+        AddKnownCreature,
 
         /// <summary>
         /// Full map description.
         /// </summary>
-        MapDescription = 0x64,
+        MapDescription,
 
         /// <summary>
         /// Partial north map description.
         /// </summary>
-        MapSliceNorth = 0x65,
+        MapSliceNorth,
 
         /// <summary>
         /// Partial east map description.
         /// </summary>
-        MapSliceEast = 0x66,
+        MapSliceEast,
 
         /// <summary>
         /// Partial south map description.
         /// </summary>
-        MapSliceSouth = 0x67,
+        MapSliceSouth,
 
         /// <summary>
         /// Partial west map description.
         /// </summary>
-        MapSliceWest = 0x68,
+        MapSliceWest,
 
         /// <summary>
         /// Tile description.
         /// </summary>
-        TileUpdate = 0x69,
+        TileUpdate,
 
         /// <summary>
         /// Add a thing.
         /// </summary>
-        AddThing = 0x6A,
+        AddThing,
 
         /// <summary>
         /// Update a thing.
         /// </summary>
-        UpdateThing = 0x6B,
+        UpdateThing,
 
         /// <summary>
         /// Remove a thing.
         /// </summary>
-        RemoveThing = 0x6C,
+        RemoveThing,
 
         /// <summary>
         /// A creature moving in the map.
         /// </summary>
-        CreatureMoved = 0x6D,
+        CreatureMoved,
 
         /// <summary>
         /// A container being open.
         /// </summary>
-        ContainerOpen = 0x6E,
+        ContainerOpen,
 
         /// <summary>
         /// A container being closed.
         /// </summary>
-        ContainerClose = 0x6F,
+        ContainerClose,
 
         /// <summary>
         /// An item being added to an open container.
         /// </summary>
-        ContainerAddItem = 0x70,
+        ContainerAddItem,
 
         /// <summary>
         /// An item being updated to an open container.
         /// </summary>
-        ContainerUpdateItem = 0x71,
+        ContainerUpdateItem,
 
         /// <summary>
         /// An item being removed to an open container.
         /// </summary>
-        ContainerRemoveItem = 0x72,
+        ContainerRemoveItem,
 
         /// <summary>
         /// An item description in the inventory.
         /// </summary>
-        InventoryItem = 0x78,
+        InventoryItem,
 
         /// <summary>
         /// Clear an item description in the inventory.
         /// </summary>
-        InventoryEmpty = 0x79,
+        InventoryEmpty,
 
         /// <summary>
         /// World light description.
         /// </summary>
-        WorldLight = 0x82,
+        WorldLight,
 
         /// <summary>
         /// A magic effect on the map.
         /// </summary>
-        MagicEffect = 0x83,
+        MagicEffect,
 
         /// <summary>
         /// An animated text on the map.
         /// </summary>
-        AnimatedText = 0x84,
+        AnimatedText,
 
         /// <summary>
         /// An animated projectile.
         /// </summary>
-        ProjectileEffect = 0x85,
+        ProjectileEffect,
 
         /// <summary>
         /// A square around a creature.
         /// </summary>
-        Square = 0x86,
+        Square,
 
         /// <summary>
         /// Update creature health.
         /// </summary>
-        CreatureHealth = 0x8C,
+        CreatureHealth,
 
         /// <summary>
         /// Update creature light.
         /// </summary>
-        CreatureLight = 0x8D,
+        CreatureLight,
 
         /// <summary>
         /// Update creature outfit.
         /// </summary>
-        CreatureOutfit = 0x8E,
+        CreatureOutfit,
 
         /// <summary>
         /// Update creature speed.
         /// </summary>
-        CreatureSpeedChange = 0x8F,
+        CreatureSpeedChange,
 
         /// <summary>
         /// Update creature skull.
         /// </summary>
-        CreatureSkull = 0x90,
+        CreatureSkull,
 
         /// <summary>
         /// Update creature shield.
         /// </summary>
-        CreatureShield = 0x91,
+        CreatureShield,
 
         /// <summary>
         /// Sends a text window.
         /// </summary>
-        TextWindow = 0x96,
+        TextWindow,
 
         /// <summary>
         /// Sends a house window.
         /// </summary>
-        HouseWindow = 0x97,
+        HouseWindow,
 
         /// <summary>
         /// Send a player stats.
         /// </summary>
-        PlayerStats = 0xA0,
+        PlayerStats,
 
         /// <summary>
         /// Update a player skill.
         /// </summary>
-        PlayerSkills = 0xA1,
+        PlayerSkills,
 
         /// <summary>
         /// Update a player's conditions.
         /// </summary>
-        PlayerConditions = 0xA2,
+        PlayerConditions,
 
         /// <summary>
         /// Cancel an attack target.
         /// </summary>
-        CancelAttack = 0xA3,
+        CancelAttack,
 
         /// <summary>
         /// Updates a player's modes.
         /// </summary>
-        PlayerModes = 0xA7,
+        PlayerModes,
 
         /// <summary>
         /// A creature speech shown on the map.
         /// </summary>
-        CreatureSpeech = 0xAA,
+        CreatureSpeech,
 
         /// <summary>
         /// A direct text message.
         /// </summary>
-        TextMessage = 0xB4,
+        TextMessage,
 
         /// <summary>
         /// Cancel walking.
         /// </summary>
-        CancelWalk = 0xB5,
+        CancelWalk,
 
         /// <summary>
         /// Going up a floor.
         /// </summary>
-        FloorChangeUp = 0xBE,
+        FloorChangeUp,
 
         /// <summary>
         /// Going down a floor.
         /// </summary>
-        FloorChangeDown = 0xBF,
+        FloorChangeDown,
 
         /// <summary>
         /// Show the outfit window.
         /// </summary>
-        OutfitWindow = 0xC8,
+        OutfitWindow,
 
         /// <summary>
         /// The details of a Vip contact.
         /// </summary>
-        VipDetails = 0xD2,
+        VipDetails,
 
         /// <summary>
         /// Update when a Vip contact goes online.
         /// </summary>
-        VipOnline = 0xD3,
+        VipOnline,
 
         /// <summary>
         /// Update when a Vip contact goes offline.
         /// </summary>
-        VipOffline = 0xD4,
+        VipOffline,
     }
 }

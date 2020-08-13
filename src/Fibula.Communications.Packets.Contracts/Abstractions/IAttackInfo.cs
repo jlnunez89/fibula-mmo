@@ -11,12 +11,10 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Abstractions;
-
     /// <summary>
     /// Interface that represents attack information.
     /// </summary>
-    public interface IAttackInfo : IIncomingPacket
+    public interface IAttackInfo
     {
         /// <summary>
         /// Gets the id of the creature being attacked.

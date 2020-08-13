@@ -38,7 +38,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGatewayPacketType.CharacterList;
+        public OutgoingPacketType PacketType => OutgoingPacketType.CharacterList;
 
         /// <summary>
         /// Gets the list of characters in the account.

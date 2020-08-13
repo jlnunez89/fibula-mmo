@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Structs;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for a thing movement information.
     /// </summary>
-    public interface IThingMoveInfo : IIncomingPacket
+    public interface IThingMoveInfo
     {
         /// <summary>
         /// Gets the id of the thing, as seen by the client.

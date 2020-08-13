@@ -14,6 +14,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -44,7 +45,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(clearSlotPacket.PacketType);
+            message.AddByte(clearSlotPacket.PacketType.ToByte());
 
             message.AddByte((byte)clearSlotPacket.Slot);
         }

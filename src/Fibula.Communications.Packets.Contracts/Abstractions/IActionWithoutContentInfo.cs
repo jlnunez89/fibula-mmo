@@ -11,17 +11,16 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
 
     /// <summary>
     /// Interface for actions without any content to read.
     /// </summary>
-    public interface IActionWithoutContentInfo : IIncomingPacket
+    public interface IActionWithoutContentInfo
     {
         /// <summary>
         /// Gets the action to do.
         /// </summary>
-        public IncomingGamePacketType Action { get; }
+        public IncomingPacketType Action { get; }
     }
 }

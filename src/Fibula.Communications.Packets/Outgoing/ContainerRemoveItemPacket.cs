@@ -33,7 +33,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.ContainerRemoveItem;
+        public OutgoingPacketType PacketType => OutgoingPacketType.ContainerRemoveItem;
 
         /// <summary>
         /// Gets the index within the container, at which the item is being removed.

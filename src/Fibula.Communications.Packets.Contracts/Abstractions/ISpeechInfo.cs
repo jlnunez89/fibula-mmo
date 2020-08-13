@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for speech information.
     /// </summary>
-    public interface ISpeechInfo : IIncomingPacket
+    public interface ISpeechInfo
     {
         /// <summary>
         /// Gets the speech type.

@@ -17,6 +17,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -47,7 +48,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(playerSkillsPacket.PacketType);
+            message.AddByte(playerSkillsPacket.PacketType.ToByte());
 
             if (playerSkillsPacket.Player is ICombatant combatantPlayer)
             {

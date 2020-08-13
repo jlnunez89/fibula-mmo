@@ -45,7 +45,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.CreatureSpeech;
+        public OutgoingPacketType PacketType => OutgoingPacketType.CreatureSpeech;
 
         /// <summary>
         /// Gets the id of the creature that spoke.

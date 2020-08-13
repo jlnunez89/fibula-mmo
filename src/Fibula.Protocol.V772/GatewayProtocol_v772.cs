@@ -31,12 +31,12 @@ namespace Fibula.Protocol.V772
         /// <summary>
         /// The known packet readers to pick from.
         /// </summary>
-        private readonly IDictionary<IncomingGatewayPacketType, IPacketReader> packetReadersMap;
+        private readonly IDictionary<IncomingPacketType, IPacketReader> packetReadersMap;
 
         /// <summary>
         /// The known packet writers to pick from.
         /// </summary>
-        private readonly IDictionary<OutgoingGatewayPacketType, IPacketWriter> packetWritersMap;
+        private readonly IDictionary<OutgoingPacketType, IPacketWriter> packetWritersMap;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GatewayProtocol_v772"/> class.
@@ -48,8 +48,8 @@ namespace Fibula.Protocol.V772
 
             this.logger = logger.ForContext<GatewayProtocol_v772>();
 
-            this.packetReadersMap = new Dictionary<IncomingGatewayPacketType, IPacketReader>();
-            this.packetWritersMap = new Dictionary<OutgoingGatewayPacketType, IPacketWriter>();
+            this.packetReadersMap = new Dictionary<IncomingPacketType, IPacketReader>();
+            this.packetWritersMap = new Dictionary<OutgoingPacketType, IPacketWriter>();
         }
 
         /// <summary>
@@ -57,25 +57,18 @@ namespace Fibula.Protocol.V772
         /// </summary>
         /// <param name="forType">The type of packet to register for.</param>
         /// <param name="packetReader">The packet reader to register.</param>
-        public void RegisterPacketReader(byte forType, IPacketReader packetReader)
+        public void RegisterPacketReader(IncomingPacketType forType, IPacketReader packetReader)
         {
             packetReader.ThrowIfNull(nameof(packetReader));
 
-            if (!Enum.IsDefined(typeof(IncomingGatewayPacketType), forType))
+            if (this.packetReadersMap.ContainsKey(forType))
             {
-                throw new InvalidOperationException($"Unsupported packet type {forType:x2}. Check the types defined in {nameof(IncomingGatewayPacketType)}.");
+                throw new InvalidOperationException($"There is already a reader registered for the packet type {forType}.");
             }
 
-            IncomingGatewayPacketType packetType = (IncomingGatewayPacketType)forType;
+            this.logger.Verbose($"Registered packet reader for type {forType}.");
 
-            if (this.packetReadersMap.ContainsKey(packetType))
-            {
-                throw new InvalidOperationException($"There is already a reader registered for the packet type {packetType}.");
-            }
-
-            this.logger.Verbose($"Registered packet reader for type {packetType}.");
-
-            this.packetReadersMap[packetType] = packetReader;
+            this.packetReadersMap[forType] = packetReader;
         }
 
         /// <summary>
@@ -83,25 +76,18 @@ namespace Fibula.Protocol.V772
         /// </summary>
         /// <param name="forType">The type of packet to register for.</param>
         /// <param name="packetWriter">The packet writer to register.</param>
-        public void RegisterPacketWriter(byte forType, IPacketWriter packetWriter)
+        public void RegisterPacketWriter(OutgoingPacketType forType, IPacketWriter packetWriter)
         {
             packetWriter.ThrowIfNull(nameof(packetWriter));
 
-            if (!Enum.IsDefined(typeof(OutgoingGatewayPacketType), forType))
+            if (this.packetWritersMap.ContainsKey(forType))
             {
-                throw new InvalidOperationException($"Unsupported packet type {forType:x2}. Check the types defined in {nameof(OutgoingGatewayPacketType)}.");
+                throw new InvalidOperationException($"There is already a writer registered for the packet type: {forType}.");
             }
 
-            OutgoingGatewayPacketType packetType = (OutgoingGatewayPacketType)forType;
+            this.logger.Verbose($"Registered packet writer for type {forType}.");
 
-            if (this.packetWritersMap.ContainsKey(packetType))
-            {
-                throw new InvalidOperationException($"There is already a writer registered for the packet type: {packetType}.");
-            }
-
-            this.logger.Verbose($"Registered packet writer for type {packetType}.");
-
-            this.packetWritersMap[packetType] = packetWriter;
+            this.packetWritersMap[forType] = packetWriter;
         }
 
         /// <summary>
@@ -109,9 +95,9 @@ namespace Fibula.Protocol.V772
         /// </summary>
         /// <param name="forPacketType">The type of packet.</param>
         /// <returns>An instance of an <see cref="IPacketReader"/> implementation.</returns>
-        public IPacketReader SelectPacketReader(byte forPacketType)
+        public IPacketReader SelectPacketReader(IncomingPacketType forPacketType)
         {
-            if (Enum.IsDefined(typeof(IncomingGatewayPacketType), forPacketType) && this.packetReadersMap.TryGetValue((IncomingGatewayPacketType)forPacketType, out IPacketReader reader))
+            if (this.packetReadersMap.TryGetValue(forPacketType, out IPacketReader reader))
             {
                 return reader;
             }
@@ -124,14 +110,29 @@ namespace Fibula.Protocol.V772
         /// </summary>
         /// <param name="forPacketType">The type of packet.</param>
         /// <returns>An instance of an <see cref="IPacketWriter"/> implementation.</returns>
-        public IPacketWriter SelectPacketWriter(byte forPacketType)
+        public IPacketWriter SelectPacketWriter(OutgoingPacketType forPacketType)
         {
-            if (Enum.IsDefined(typeof(OutgoingGatewayPacketType), forPacketType) && this.packetWritersMap.TryGetValue((OutgoingGatewayPacketType)forPacketType, out IPacketWriter writer))
+            if (this.packetWritersMap.TryGetValue(forPacketType, out IPacketWriter writer))
             {
                 return writer;
             }
 
             return null;
+        }
+
+        /// <summary>
+        /// Attempts to convert a byte value into an <see cref="IncomingPacketType"/>.
+        /// </summary>
+        /// <param name="fromByte">The byte to convert.</param>
+        /// <returns>The <see cref="IncomingPacketType"/> value converted to.</returns>
+        public IncomingPacketType ByteToIncomingPacketType(byte fromByte)
+        {
+            return fromByte switch
+            {
+                0x01 => IncomingPacketType.LogIn,
+                0xFF => IncomingPacketType.ServerStatus,
+                _ => IncomingPacketType.Unsupported,
+            };
         }
     }
 }

@@ -12,12 +12,13 @@
 namespace Fibula.Communications.Packets.Incoming
 {
     using Fibula.Common.Contracts.Structs;
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a thing movement packet.
     /// </summary>
-    public class ThingMovePacket : IThingMoveInfo
+    public class ThingMovePacket : IIncomingPacket, IThingMoveInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ThingMovePacket"/> class.

@@ -33,7 +33,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.WaitingList;
+        public OutgoingPacketType PacketType => OutgoingPacketType.WaitingList;
 
         /// <summary>
         /// Gets the message to send.

@@ -14,6 +14,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -44,7 +45,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(creatureSkullPacket.PacketType);
+            message.AddByte(creatureSkullPacket.PacketType.ToByte());
 
             message.AddUInt32(creatureSkullPacket.Creature.Id);
             message.AddByte(0x00); // creatureSpeedChangePacket.Creature.Skull

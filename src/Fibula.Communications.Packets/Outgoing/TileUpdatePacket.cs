@@ -35,7 +35,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.TileUpdate;
+        public OutgoingPacketType PacketType => OutgoingPacketType.TileUpdate;
 
         /// <summary>
         /// Gets the tile location.

@@ -34,7 +34,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.PlayerLogin;
+        public OutgoingPacketType PacketType => OutgoingPacketType.PlayerLogin;
 
         /// <summary>
         /// Gets the id of this creature.

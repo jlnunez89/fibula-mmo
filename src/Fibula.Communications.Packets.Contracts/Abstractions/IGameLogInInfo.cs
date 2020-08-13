@@ -11,12 +11,10 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Abstractions;
-
     /// <summary>
     /// Interface for login information supplied on a game server login request.
     /// </summary>
-    public interface IGameLogInInfo : IIncomingPacket
+    public interface IGameLogInInfo
     {
         /// <summary>
         /// Gets the operating system of the character's client.

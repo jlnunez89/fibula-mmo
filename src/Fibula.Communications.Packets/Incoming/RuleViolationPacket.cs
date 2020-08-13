@@ -10,7 +10,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace OpenTibia.Communications.Packets.Incoming
+namespace Fibula.Communications.Packets.Incoming
 {
     using System.Net;
     using Fibula.Communications.Contracts.Abstractions;

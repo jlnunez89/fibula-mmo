@@ -34,7 +34,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.ContainerAddItem;
+        public OutgoingPacketType PacketType => OutgoingPacketType.ContainerAddItem;
 
         /// <summary>
         /// Gets the id of the container, as seen by the target player.

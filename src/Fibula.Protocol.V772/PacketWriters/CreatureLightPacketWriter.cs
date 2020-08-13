@@ -14,6 +14,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -44,7 +45,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(creatureLightPacket.PacketType);
+            message.AddByte(creatureLightPacket.PacketType.ToByte());
 
             message.AddUInt32(creatureLightPacket.Creature.Id);
             message.AddByte(creatureLightPacket.Creature.EmittedLightLevel);

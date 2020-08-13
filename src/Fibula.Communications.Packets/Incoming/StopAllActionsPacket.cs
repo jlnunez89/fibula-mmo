@@ -11,17 +11,18 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a stop everything packet routed to the game server.
     /// </summary>
-    public sealed class StopAllActionsPacket : IActionWithoutContentInfo
+    public sealed class StopAllActionsPacket : IIncomingPacket, IActionWithoutContentInfo
     {
         /// <summary>
         /// Gets the action to do.
         /// </summary>
-        public IncomingGamePacketType Action => IncomingGamePacketType.StopAllActions;
+        public IncomingPacketType Action => IncomingPacketType.StopAllActions;
     }
 }

@@ -11,17 +11,15 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Abstractions;
-
     /// <summary>
     /// Interface for the login information supplied on a gateway server login request.
     /// </summary>
-    public interface IGatewayLoginInfo : IIncomingPacket
+    public interface IGatewayLoginInfo
     {
         /// <summary>
-        /// Gets the account number.
+        /// Gets the account name.
         /// </summary>
-        uint AccountNumber { get; }
+        string AccountName { get; }
 
         /// <summary>
         /// Gets the account password.

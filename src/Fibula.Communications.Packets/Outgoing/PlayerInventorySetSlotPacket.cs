@@ -35,7 +35,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.InventoryItem;
+        public OutgoingPacketType PacketType => OutgoingPacketType.InventoryItem;
 
         /// <summary>
         /// Gets the slot.

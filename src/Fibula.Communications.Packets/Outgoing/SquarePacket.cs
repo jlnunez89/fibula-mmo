@@ -34,7 +34,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.Square;
+        public OutgoingPacketType PacketType => OutgoingPacketType.Square;
 
         /// <summary>
         /// Gets the Id of the creature on which the square goes.

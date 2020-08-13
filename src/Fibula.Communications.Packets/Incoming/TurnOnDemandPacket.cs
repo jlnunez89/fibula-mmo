@@ -12,12 +12,13 @@
 namespace Fibula.Communications.Packets.Incoming
 {
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a turn packet routed to the game server.
     /// </summary>
-    public sealed class TurnOnDemandPacket : ITurnOnDemandInfo
+    public sealed class TurnOnDemandPacket : IIncomingPacket, ITurnOnDemandInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="TurnOnDemandPacket"/> class.

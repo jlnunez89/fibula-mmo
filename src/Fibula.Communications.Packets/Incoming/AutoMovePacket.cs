@@ -13,12 +13,13 @@ namespace Fibula.Communications.Packets.Incoming
 {
     using System;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents an auto movement packet.
     /// </summary>
-    public class AutoMovePacket : IAutoMovementInfo
+    public class AutoMovePacket : IIncomingPacket, IAutoMovementInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AutoMovePacket"/> class.

@@ -181,7 +181,7 @@ namespace Fibula.Mechanics.Notifications
                         description = (new Dictionary<string, object>(), ReadOnlySequence<byte>.Empty);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeDown, description.Data));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.FloorChangeDown, description.Data));
 
                     // moving down a floor makes us out of sync, include east and south
                     var (eastDescriptionMetadata, eastDescriptionBytes) = this.EastSliceDescription(
@@ -198,7 +198,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(eastCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceEast, eastDescriptionBytes));
 
                     var (southDescriptionMetadata, southDescriptionBytes) = this.SouthSliceDescription(context, player, this.OldLocation.Y - this.NewLocation.Y);
 
@@ -210,7 +210,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(southCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceSouth, southDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceSouth, southDescriptionBytes));
                 }
 
                 // floor change up
@@ -261,7 +261,7 @@ namespace Fibula.Mechanics.Notifications
                         description = (new Dictionary<string, object>(), ReadOnlySequence<byte>.Empty);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.FloorChangeUp, description.Data));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.FloorChangeUp, description.Data));
 
                     // moving up a floor up makes us out of sync, include west and north
                     var (westDescriptionMetadata, westDescriptionBytes) = this.WestSliceDescription(
@@ -278,7 +278,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(westCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceWest, westDescriptionBytes));
 
                     var (northDescriptionMetadata, northDescriptionBytes) = this.NorthSliceDescription(context, player, this.OldLocation.Y - this.NewLocation.Y);
 
@@ -290,7 +290,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(northCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceNorth, northDescriptionBytes));
                 }
 
                 if (this.OldLocation.Y > this.NewLocation.Y)
@@ -306,7 +306,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(northCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceNorth, northDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceNorth, northDescriptionBytes));
                 }
                 else if (this.OldLocation.Y < this.NewLocation.Y)
                 {
@@ -321,7 +321,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(southCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceSouth, southDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceSouth, southDescriptionBytes));
                 }
 
                 if (this.OldLocation.X < this.NewLocation.X)
@@ -337,7 +337,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(eastCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceEast, eastDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceEast, eastDescriptionBytes));
                 }
                 else if (this.OldLocation.X > this.NewLocation.X)
                 {
@@ -352,7 +352,7 @@ namespace Fibula.Mechanics.Notifications
                         allCreatureIdsToForget.AddRange(westCreatureIdsToForget);
                     }
 
-                    packets.Add(new MapPartialDescriptionPacket(OutgoingGamePacketType.MapSliceWest, westDescriptionBytes));
+                    packets.Add(new MapPartialDescriptionPacket(OutgoingPacketType.MapSliceWest, westDescriptionBytes));
                 }
             }
             else if (player.CanSee(this.OldLocation) && player.CanSee(this.NewLocation))

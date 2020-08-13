@@ -11,12 +11,10 @@
 
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
-    using Fibula.Communications.Contracts.Abstractions;
-
     /// <summary>
     /// Interface that represents follow information.
     /// </summary>
-    public interface IFollowInfo : IIncomingPacket
+    public interface IFollowInfo
     {
         /// <summary>
         /// Gets the id of the creature being followed.

@@ -31,7 +31,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGatewayPacketType.MessageOfTheDay;
+        public OutgoingPacketType PacketType => OutgoingPacketType.MessageOfTheDay;
 
         /// <summary>
         /// Gets the message of the day.

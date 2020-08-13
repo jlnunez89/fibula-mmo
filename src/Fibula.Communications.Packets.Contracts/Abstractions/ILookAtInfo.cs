@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Structs;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for a look at information.
     /// </summary>
-    public interface ILookAtInfo : IIncomingPacket
+    public interface ILookAtInfo
     {
         /// <summary>
         /// Gets the location we're looking at.

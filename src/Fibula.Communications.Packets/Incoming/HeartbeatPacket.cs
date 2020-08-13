@@ -11,17 +11,18 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a heartbeat packet routed to the game server.
     /// </summary>
-    public sealed class HeartbeatPacket : IActionWithoutContentInfo
+    public sealed class HeartbeatPacket : IIncomingPacket, IActionWithoutContentInfo
     {
         /// <summary>
         /// Gets the action to do.
         /// </summary>
-        public IncomingGamePacketType Action => IncomingGamePacketType.Heartbeat;
+        public IncomingPacketType Action => IncomingPacketType.Heartbeat;
     }
 }

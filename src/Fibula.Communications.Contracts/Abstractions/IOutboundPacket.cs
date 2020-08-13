@@ -11,6 +11,8 @@
 
 namespace Fibula.Communications.Contracts.Abstractions
 {
+    using Fibula.Communications.Contracts.Enumerations;
+
     /// <summary>
     /// Interface for all outbound packets.
     /// </summary>
@@ -19,6 +21,6 @@ namespace Fibula.Communications.Contracts.Abstractions
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        byte PacketType { get; }
+        OutgoingPacketType PacketType { get; }
     }
 }

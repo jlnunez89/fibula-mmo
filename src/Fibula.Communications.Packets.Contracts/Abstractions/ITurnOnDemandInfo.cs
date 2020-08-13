@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for turning on demand information supplied on a game server request.
     /// </summary>
-    public interface ITurnOnDemandInfo : IIncomingPacket
+    public interface ITurnOnDemandInfo
     {
         /// <summary>
         /// Gets the direction to turn to.

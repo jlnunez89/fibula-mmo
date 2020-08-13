@@ -36,7 +36,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.ContainerUpdateItem;
+        public OutgoingPacketType PacketType => OutgoingPacketType.ContainerUpdateItem;
 
         /// <summary>
         /// Gets the index within the container, at which the item being updated is.

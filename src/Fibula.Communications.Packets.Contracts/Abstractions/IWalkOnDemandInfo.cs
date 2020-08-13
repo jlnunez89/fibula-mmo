@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for walking on demand information supplied on a game server request.
     /// </summary>
-    public interface IWalkOnDemandInfo : IIncomingPacket
+    public interface IWalkOnDemandInfo
     {
         /// <summary>
         /// Gets the direction to walk to.

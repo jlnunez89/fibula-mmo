@@ -17,7 +17,7 @@ namespace Fibula.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents a move up container request packet.
     /// </summary>
-    public class ContainerMoveUpPacket : IContainerInfo
+    public class ContainerMoveUpPacket : IIncomingPacket, IContainerInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerMoveUpPacket"/> class.

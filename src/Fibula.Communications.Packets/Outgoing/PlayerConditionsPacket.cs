@@ -32,7 +32,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.PlayerConditions;
+        public OutgoingPacketType PacketType => OutgoingPacketType.PlayerConditions;
 
         /// <summary>
         /// Gets a reference to the player.

@@ -26,26 +26,26 @@ namespace Fibula.Communications.Packets.Outgoing
         /// </summary>
         /// <param name="mapDescriptionType">The type of map description.</param>
         /// <param name="descriptionBytes">The description bytes.</param>
-        public MapPartialDescriptionPacket(OutgoingGamePacketType mapDescriptionType, ReadOnlySequence<byte> descriptionBytes)
+        public MapPartialDescriptionPacket(OutgoingPacketType mapDescriptionType, ReadOnlySequence<byte> descriptionBytes)
         {
-            if (mapDescriptionType != OutgoingGamePacketType.MapSliceEast &&
-                mapDescriptionType != OutgoingGamePacketType.MapSliceNorth &&
-                mapDescriptionType != OutgoingGamePacketType.MapSliceSouth &&
-                mapDescriptionType != OutgoingGamePacketType.MapSliceWest &&
-                mapDescriptionType != OutgoingGamePacketType.FloorChangeUp &&
-                mapDescriptionType != OutgoingGamePacketType.FloorChangeDown)
+            if (mapDescriptionType != OutgoingPacketType.MapSliceEast &&
+                mapDescriptionType != OutgoingPacketType.MapSliceNorth &&
+                mapDescriptionType != OutgoingPacketType.MapSliceSouth &&
+                mapDescriptionType != OutgoingPacketType.MapSliceWest &&
+                mapDescriptionType != OutgoingPacketType.FloorChangeUp &&
+                mapDescriptionType != OutgoingPacketType.FloorChangeDown)
             {
                 throw new ArgumentException(nameof(mapDescriptionType));
             }
 
-            this.PacketType = (byte)mapDescriptionType;
+            this.PacketType = mapDescriptionType;
             this.DescriptionBytes = descriptionBytes;
         }
 
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType { get; }
+        public OutgoingPacketType PacketType { get; }
 
         /// <summary>
         /// Gets the description bytes.

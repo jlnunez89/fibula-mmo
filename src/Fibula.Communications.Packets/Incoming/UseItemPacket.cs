@@ -18,7 +18,7 @@ namespace Fibula.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents a packet for an item use.
     /// </summary>
-    public class UseItemPacket : IUseItemInfo
+    public class UseItemPacket : IIncomingPacket, IUseItemInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UseItemPacket"/> class.

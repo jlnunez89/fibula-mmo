@@ -17,7 +17,7 @@ namespace Fibula.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents the default packet.
     /// </summary>
-    public sealed class DefaultReadPacket : IBytesInfo
+    public sealed class DefaultReadPacket : IIncomingPacket, IBytesInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DefaultReadPacket"/> class.

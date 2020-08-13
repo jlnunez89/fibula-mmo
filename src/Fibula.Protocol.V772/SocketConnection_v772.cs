@@ -20,6 +20,7 @@ namespace Fibula.Protocol.V772
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Delegates;
     using Fibula.Communications.Contracts.Enumerations;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -233,18 +234,15 @@ namespace Fibula.Protocol.V772
                             this.inboundMessage.GetUInt16();
                         }
 
-                        var packetType = this.inboundMessage.GetByte();
+                        var packetType = this.protocol.ByteToIncomingPacketType(this.inboundMessage.GetByte());
+
                         var reader = this.protocol.SelectPacketReader(packetType);
 
                         if (reader == null)
                         {
-                            if (Enum.IsDefined(typeof(IncomingGamePacketType), packetType))
+                            if (Enum.IsDefined(typeof(IncomingPacketType), packetType))
                             {
-                                this.logger.Warning($"No reader found that supports type '{(IncomingGamePacketType)packetType}' of packets. Selecting default reader...");
-                            }
-                            else if (Enum.IsDefined(typeof(IncomingGatewayPacketType), packetType))
-                            {
-                                this.logger.Warning($"No reader found that supports type '{(IncomingGatewayPacketType)packetType}' of packets. Selecting default reader...");
+                                this.logger.Warning($"No reader found that supports type '{(IncomingPacketType)packetType}' of packets. Selecting default reader...");
                             }
                             else
                             {

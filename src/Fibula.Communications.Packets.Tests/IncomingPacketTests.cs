@@ -44,7 +44,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void AutoMoveCancelPacket_Initialization()
         {
-            const IncomingGamePacketType ExpectedPacketType = IncomingGamePacketType.AutoMoveCancel;
+            const IncomingPacketType ExpectedPacketType = IncomingPacketType.AutoMoveCancel;
 
             IActionWithoutContentInfo actionWithoutContentInfo = new AutoMoveCancelPacket();
 
@@ -115,7 +115,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void GameLogOutPacket_Initialization()
         {
-            const IncomingGamePacketType ExpectedPacketType = IncomingGamePacketType.LogOut;
+            const IncomingPacketType ExpectedPacketType = IncomingPacketType.LogOut;
 
             IActionWithoutContentInfo actionWithoutContentInfo = new GameLogOutPacket();
 
@@ -131,7 +131,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
             uint[] expectedKey = new uint[] { 4, 3, 2, 1 };
             const ushort ExpectedOsValue = 100;
             const ushort ExpectedVersionValue = 772;
-            const uint ExpectedAccountNumber = 987654;
+            const string ExpectedAccountNumber = "987654";
             const string ExpectedPassword = "superSecurePwd";
 
             IGatewayLoginInfo gatewayLoginInfo = new GatewayLogInPacket(
@@ -144,7 +144,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
             CollectionAssert.AreEqual(expectedKey, gatewayLoginInfo.XteaKey, $"Expected {nameof(gatewayLoginInfo.XteaKey)} to match {expectedKey}.");
             Assert.AreEqual(ExpectedOsValue, gatewayLoginInfo.ClientOs, $"Expected {nameof(gatewayLoginInfo.ClientOs)} to match {ExpectedOsValue}.");
             Assert.AreEqual(ExpectedVersionValue, gatewayLoginInfo.ClientVersion, $"Expected {nameof(gatewayLoginInfo.ClientVersion)} to match {ExpectedVersionValue}.");
-            Assert.AreEqual(ExpectedAccountNumber, gatewayLoginInfo.AccountNumber, $"Expected {nameof(gatewayLoginInfo.AccountNumber)} to match {ExpectedAccountNumber}.");
+            Assert.AreEqual(ExpectedAccountNumber, gatewayLoginInfo.AccountName, $"Expected {nameof(gatewayLoginInfo.AccountName)} to match {ExpectedAccountNumber}.");
             Assert.AreEqual(ExpectedPassword, gatewayLoginInfo.Password, $"Expected {nameof(gatewayLoginInfo.Password)} to match {ExpectedPassword}.");
         }
 
@@ -154,7 +154,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void HeartbeatPacket_Initialization()
         {
-            const IncomingGamePacketType ExpectedPacketType = IncomingGamePacketType.Heartbeat;
+            const IncomingPacketType ExpectedPacketType = IncomingPacketType.Heartbeat;
 
             IActionWithoutContentInfo actionWithoutContentInfo = new HeartbeatPacket();
 
@@ -167,7 +167,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void HeartbeatResponsePacket_Initialization()
         {
-            const IncomingGamePacketType ExpectedPacketType = IncomingGamePacketType.HeartbeatResponse;
+            const IncomingPacketType ExpectedPacketType = IncomingPacketType.HeartbeatResponse;
 
             IActionWithoutContentInfo actionWithoutContentInfo = new HeartbeatResponsePacket();
 
@@ -246,7 +246,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void StopAllActionsPacket_Initialization()
         {
-            const IncomingGamePacketType ExpectedPacketType = IncomingGamePacketType.StopAllActions;
+            const IncomingPacketType ExpectedPacketType = IncomingPacketType.StopAllActions;
 
             IActionWithoutContentInfo actionWithoutContentInfo = new StopAllActionsPacket();
 

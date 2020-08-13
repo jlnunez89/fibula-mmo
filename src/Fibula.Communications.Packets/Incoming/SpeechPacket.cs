@@ -12,12 +12,13 @@
 namespace Fibula.Communications.Packets.Incoming
 {
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a speech packet.
     /// </summary>
-    public class SpeechPacket : ISpeechInfo
+    public class SpeechPacket : IIncomingPacket, ISpeechInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="SpeechPacket"/> class.

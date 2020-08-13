@@ -31,7 +31,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.Disconnect;
+        public OutgoingPacketType PacketType => OutgoingPacketType.GameDisconnect;
 
         /// <summary>
         /// Gets the reason given for the disconnection, if any.

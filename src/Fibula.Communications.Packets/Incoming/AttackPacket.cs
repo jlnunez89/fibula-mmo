@@ -11,12 +11,13 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents an attack packet.
     /// </summary>
-    public class AttackPacket : IAttackInfo
+    public class AttackPacket : IIncomingPacket, IAttackInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="AttackPacket"/> class.

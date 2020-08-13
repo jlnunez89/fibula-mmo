@@ -41,7 +41,7 @@ namespace Fibula.Standalone
     using Fibula.Mechanics.Handlers;
     using Fibula.Mechanics.Operations;
     using Fibula.PathFinding.AStar;
-    using Fibula.Protocol.V772;
+    using Fibula.Protocol.V772.Extensions;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
     using Fibula.Security;

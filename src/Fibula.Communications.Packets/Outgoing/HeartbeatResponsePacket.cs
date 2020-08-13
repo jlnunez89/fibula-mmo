@@ -29,6 +29,6 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.HeartbeatResponse;
+        public OutgoingPacketType PacketType => OutgoingPacketType.HeartbeatResponse;
     }
 }

@@ -36,7 +36,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.CreatureMoved;
+        public OutgoingPacketType PacketType => OutgoingPacketType.CreatureMoved;
 
         /// <summary>
         /// Gets the location from which the creature moved from.

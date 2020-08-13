@@ -37,7 +37,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.AnimatedText;
+        public OutgoingPacketType PacketType => OutgoingPacketType.AnimatedText;
 
         /// <summary>
         /// Gets the location of the animated text.

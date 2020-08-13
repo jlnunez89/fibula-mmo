@@ -35,7 +35,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.MagicEffect;
+        public OutgoingPacketType PacketType => OutgoingPacketType.MagicEffect;
 
         /// <summary>
         /// Gets the location of the effect.

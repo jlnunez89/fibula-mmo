@@ -32,7 +32,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.CreatureHealth;
+        public OutgoingPacketType PacketType => OutgoingPacketType.CreatureHealth;
 
         /// <summary>
         /// Gets the creature reference.

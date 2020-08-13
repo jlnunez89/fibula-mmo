@@ -66,7 +66,7 @@ namespace Fibula.Protocol.V772.PacketReaders
                 version,
                 operatingSystem,
                 xteaKey: new uint[] { message.GetUInt32(), message.GetUInt32(), message.GetUInt32(), message.GetUInt32() },
-                accountNumber: message.GetUInt32(),
+                accountName: message.GetUInt32().ToString(),
                 password: message.GetString());
         }
     }

@@ -11,12 +11,13 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a login packet routed to the game server.
     /// </summary>
-    public sealed class GameLogInPacket : IGameLogInInfo
+    public sealed class GameLogInPacket : IIncomingPacket, IGameLogInInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="GameLogInPacket"/> class.

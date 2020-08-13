@@ -15,7 +15,7 @@ namespace Fibula.Communications.Packets.Incoming
     using Fibula.Communications.Packets.Contracts.Abstractions;
     using Fibula.Server.Contracts.Structs;
 
-    public class UseItemOnPacket : IUseItemOnInfo
+    public class UseItemOnPacket : IIncomingPacket, IUseItemOnInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="UseItemOnPacket"/> class.

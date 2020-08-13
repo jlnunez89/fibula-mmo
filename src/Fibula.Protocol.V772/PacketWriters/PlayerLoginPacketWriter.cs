@@ -16,6 +16,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -46,7 +47,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(playerLoginPacket.PacketType);
+            message.AddByte(playerLoginPacket.PacketType.ToByte());
 
             message.AddUInt32(playerLoginPacket.CreatureId);
             message.AddByte(playerLoginPacket.GraphicsSpeed);
@@ -56,7 +57,7 @@ namespace Fibula.Protocol.V772.PacketWriters
 
             if (playerLoginPacket.Player.PermissionsLevel > 0)
             {
-                message.AddByte((byte)OutgoingGamePacketType.GamemasterFlags);
+                message.AddByte(OutgoingPacketType.GamemasterFlags.ToByte());
 
                 for (var i = 0; i < 32; i++)
                 {

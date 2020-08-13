@@ -17,7 +17,7 @@ namespace Fibula.Communications.Packets.Incoming
     /// <summary>
     /// Class that represents a close container request packet.
     /// </summary>
-    public class ContainerCloseRequestPacket : IContainerInfo
+    public class ContainerCloseRequestPacket : IIncomingPacket, IContainerInfo
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="ContainerCloseRequestPacket"/> class.

@@ -18,6 +18,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -66,7 +67,7 @@ namespace Fibula.Protocol.V772.PacketWriters
             byte magicLevel = (byte)(combatantPlayer != null ? Math.Min(byte.MaxValue, combatantPlayer.Skills[SkillType.Magic].Level) : 0);
             byte magicLevelPercentage = (byte)(combatantPlayer != null ? combatantPlayer.Skills[SkillType.Magic].Percent : 0);
 
-            message.AddByte(playerStatsPacket.PacketType);
+            message.AddByte(playerStatsPacket.PacketType.ToByte());
 
             message.AddUInt16(hitpoints);
             message.AddUInt16(maxHitpoints);

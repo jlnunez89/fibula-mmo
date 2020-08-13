@@ -9,7 +9,7 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Protocol.V772
+namespace Fibula.Protocol.V772.Extensions
 {
     using System;
     using Fibula.Common.Contracts.Enumerations;
@@ -116,12 +116,12 @@ namespace Fibula.Protocol.V772
         {
             if (asKnown)
             {
-                message.AddUInt16((byte)OutgoingGamePacketType.AddKnownCreature);
+                message.AddUInt16(OutgoingPacketType.AddKnownCreature.ToByte());
                 message.AddUInt32(creature.Id);
             }
             else
             {
-                message.AddUInt16((byte)OutgoingGamePacketType.AddUnknownCreature);
+                message.AddUInt16(OutgoingPacketType.AddUnknownCreature.ToByte());
                 message.AddUInt32(creatureToRemoveId);
                 message.AddUInt32(creature.Id);
                 message.AddString(creature.Name);

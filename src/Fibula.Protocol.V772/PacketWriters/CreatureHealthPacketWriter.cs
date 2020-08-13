@@ -15,6 +15,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Enumerations;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -45,7 +46,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(creatureHealthPacket.PacketType);
+            message.AddByte(creatureHealthPacket.PacketType.ToByte());
 
             message.AddUInt32(creatureHealthPacket.Creature.Id);
             message.AddByte(creatureHealthPacket.Creature.Stats[CreatureStat.HitPoints].Percent);

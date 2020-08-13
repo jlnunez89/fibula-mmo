@@ -34,7 +34,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.UpdateThing;
+        public OutgoingPacketType PacketType => OutgoingPacketType.UpdateThing;
 
         /// <summary>
         /// Gets the creature that turned.

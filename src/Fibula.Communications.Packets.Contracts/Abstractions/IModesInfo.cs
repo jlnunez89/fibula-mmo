@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface for fight and chase modes information.
     /// </summary>
-    public interface IModesInfo : IIncomingPacket
+    public interface IModesInfo
     {
         /// <summary>
         /// Gets the fight mode.

@@ -12,12 +12,11 @@
 namespace Fibula.Communications.Packets.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Communications.Contracts.Abstractions;
 
     /// <summary>
     /// Interface that represents the auto movement information.
     /// </summary>
-    public interface IAutoMovementInfo : IIncomingPacket
+    public interface IAutoMovementInfo
     {
         /// <summary>
         /// Gets the movement directions.

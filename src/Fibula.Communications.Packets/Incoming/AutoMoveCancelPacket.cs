@@ -11,17 +11,18 @@
 
 namespace Fibula.Communications.Packets.Incoming
 {
+    using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Contracts.Enumerations;
     using Fibula.Communications.Packets.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents an auto movement cancellation packet routed to the game server.
     /// </summary>
-    public sealed class AutoMoveCancelPacket : IActionWithoutContentInfo
+    public sealed class AutoMoveCancelPacket : IIncomingPacket, IActionWithoutContentInfo
     {
         /// <summary>
         /// Gets the action to do.
         /// </summary>
-        public IncomingGamePacketType Action => IncomingGamePacketType.AutoMoveCancel;
+        public IncomingPacketType Action => IncomingPacketType.AutoMoveCancel;
     }
 }

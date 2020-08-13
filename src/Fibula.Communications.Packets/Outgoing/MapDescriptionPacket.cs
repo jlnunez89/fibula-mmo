@@ -35,7 +35,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.MapDescription;
+        public OutgoingPacketType PacketType => OutgoingPacketType.MapDescription;
 
         /// <summary>
         /// Gets the origin location.

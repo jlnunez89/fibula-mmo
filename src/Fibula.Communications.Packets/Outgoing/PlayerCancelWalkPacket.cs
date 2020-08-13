@@ -32,7 +32,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.CancelWalk;
+        public OutgoingPacketType PacketType => OutgoingPacketType.CancelWalk;
 
         /// <summary>
         /// Gets the direction in which the creature will be left facing.

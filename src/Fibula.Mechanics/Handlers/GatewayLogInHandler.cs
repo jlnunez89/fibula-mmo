@@ -85,7 +85,7 @@ namespace Fibula.Mechanics.Handlers
             using var unitOfWork = this.ApplicationContext.CreateNewUnitOfWork();
 
             // validate credentials.
-            if (!(unitOfWork.Accounts.FindOne(a => a.Number == accountLoginInfo.AccountNumber && a.Password.Equals(accountLoginInfo.Password)) is AccountEntity account))
+            if (!uint.TryParse(accountLoginInfo.AccountName, out uint accountNumber) || !(unitOfWork.Accounts.FindOne(a => a.Number == accountNumber && a.Password.Equals(accountLoginInfo.Password)) is AccountEntity account))
             {
                 // TODO: hardcoded messages.
                 return new GatewayServerDisconnectPacket("Please enter a valid account number and password.").YieldSingleItem();

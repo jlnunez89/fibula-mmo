@@ -37,7 +37,7 @@ namespace Fibula.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)OutgoingGamePacketType.ProjectileEffect;
+        public OutgoingPacketType PacketType => OutgoingPacketType.ProjectileEffect;
 
         /// <summary>
         /// Gets the location of origin.

@@ -31,7 +31,7 @@ namespace OpenTibia.Communications.Packets.Outgoing
         /// <summary>
         /// Gets the type of this packet.
         /// </summary>
-        public byte PacketType => (byte)GameRequestType.StartOutfitChange;
+        public OutgoingPacketType PacketType => OutgoingPacketType.StartOutfitChange;
 
         public ICreature Creature { get; }
 

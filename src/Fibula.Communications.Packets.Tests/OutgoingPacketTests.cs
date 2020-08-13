@@ -38,7 +38,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void AddCreaturePacket_Initialization()
         {
-            const byte ExpectedPacketType = (byte)OutgoingGamePacketType.AddThing;
+            const OutgoingPacketType ExpectedPacketType = OutgoingPacketType.AddThing;
             const bool ExpectedAsKnownValue = true;
             const uint ExpectedCreatureIdToRemove = 1;
 
@@ -60,7 +60,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void AnimatedTextPacket_Initialization()
         {
-            const byte ExpectedPacketType = (byte)OutgoingGamePacketType.AnimatedText;
+            const OutgoingPacketType ExpectedPacketType = OutgoingPacketType.AnimatedText;
             const TextColor ExpectedTextColor = TextColor.Green;
             const string ExpectedText = "this is a test!";
 
@@ -80,7 +80,7 @@ namespace Fibula.Communications.Packets.Incoming.Tests
         [TestMethod]
         public void CharacterListPacket_Initialization()
         {
-            const byte ExpectedPacketType = (byte)OutgoingGatewayPacketType.CharacterList;
+            const OutgoingPacketType ExpectedPacketType = OutgoingPacketType.CharacterList;
             const ushort ExpectedPremiumDays = 7;
 
             ExceptionAssert.Throws<ArgumentException>(() => new CharacterListPacket(null, ExpectedPremiumDays), "Value cannot be null. (Parameter 'characters')");

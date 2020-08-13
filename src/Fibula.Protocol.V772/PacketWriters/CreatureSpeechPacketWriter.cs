@@ -15,6 +15,7 @@ namespace Fibula.Protocol.V772.PacketWriters
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
     /// <summary>
@@ -45,7 +46,7 @@ namespace Fibula.Protocol.V772.PacketWriters
                 return;
             }
 
-            message.AddByte(creatureSpeechPacket.PacketType);
+            message.AddByte(creatureSpeechPacket.PacketType.ToByte());
 
             message.AddUInt32(0);
             message.AddString(creatureSpeechPacket.SenderName);
