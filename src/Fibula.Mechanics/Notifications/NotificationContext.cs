@@ -15,12 +15,13 @@ namespace Fibula.Mechanics.Notifications
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Scheduling;
     using Serilog;
 
     /// <summary>
     /// Class that represents a context for notifications.
     /// </summary>
-    public class NotificationContext : INotificationContext
+    public class NotificationContext : EventContext, INotificationContext
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="NotificationContext"/> class.
@@ -32,20 +33,14 @@ namespace Fibula.Mechanics.Notifications
             ILogger logger,
             IMapDescriptor mapDescriptor,
             ICreatureFinder creatureFinder)
+            : base(logger)
         {
-            logger.ThrowIfNull(nameof(logger));
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));
 
-            this.Logger = logger.ForContext<NotificationContext>();
             this.MapDescriptor = mapDescriptor;
             this.CreatureFinder = creatureFinder;
         }
-
-        /// <summary>
-        /// Gets the logger in use.
-        /// </summary>
-        public ILogger Logger { get; }
 
         /// <summary>
         /// Gets the map descriptor in use.
