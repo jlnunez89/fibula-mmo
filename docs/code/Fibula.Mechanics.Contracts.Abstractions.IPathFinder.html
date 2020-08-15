@@ -96,19 +96,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location%2CFibula.Common.Contracts.Structs.Location%2CFibula.Creatures.Contracts.Abstractions.ICreature%2CSystem.Int32%2CSystem.Boolean%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_Fibula_Common_Contracts_Structs_Location___.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location%2CFibula.Common.Contracts.Structs.Location%2CFibula.Creatures.Contracts.Abstractions.ICreature%2CSystem.Int32%2CSystem.Boolean%2CSystem.Int32%2CFibula.Common.Contracts.Structs.Location%5B%5D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/IPathFinder.cs/#L35">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics.Contracts/Abstractions/IPathFinder.cs/#L36">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_" data-uid="Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween*"></a>
-  <h4 id="Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_" data-uid="Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32)">FindBetween(Location, Location, ICreature, Int32, Boolean, Int32)</h4>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_IPathFinder_FindBetween_Fibula_Common_Contracts_Structs_Location_Fibula_Common_Contracts_Structs_Location_Fibula_Creatures_Contracts_Abstractions_ICreature_System_Int32_System_Boolean_System_Int32_Fibula_Common_Contracts_Structs_Location___" data-uid="Fibula.Mechanics.Contracts.Abstractions.IPathFinder.FindBetween(Fibula.Common.Contracts.Structs.Location,Fibula.Common.Contracts.Structs.Location,Fibula.Creatures.Contracts.Abstractions.ICreature,System.Int32,System.Boolean,System.Int32,Fibula.Common.Contracts.Structs.Location[])">FindBetween(Location, Location, ICreature, Int32, Boolean, Int32, Location[])</h4>
   <div class="markdown level1 summary"><p>Attempts to find a path using the <a class="xref" href="Fibula.Common.Utilities.Pathfinding.AStar.html">AStar</a> implementation between two <a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>s.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">(SearchState result, Location endLocation, IEnumerable&lt;Direction&gt; directions) FindBetween(Location startLocation, Location targetLocation, ICreature onBehalfOfCreature = null, int maxStepsCount = 0, bool considerAvoidsAsBlocking = true, int targetDistance = 1)</code></pre>
+    <pre><code class="lang-csharp hljs">(SearchState result, Location endLocation, IEnumerable&lt;Direction&gt; directions) FindBetween(Location startLocation, Location targetLocation, ICreature onBehalfOfCreature = null, int maxStepsCount = 0, bool considerAvoidsAsBlocking = true, int targetDistance = 1, params Location[] excludeLocations)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -156,6 +156,12 @@
         <td><p>Optional. The target distance from the target node to shoot for.</p>
 </td>
       </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Structs.Location.html">Location</a>[]</td>
+        <td><span class="parametername">excludeLocations</span></td>
+        <td><p>Optional. Locations to explicitly exclude as a valid goal in the search.</p>
+</td>
+      </tr>
     </tbody>
   </table>
   <h5 class="returns">Returns</h5>
@@ -195,7 +201,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IPathFinder.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IPathFinder%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/IPathFinder.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics.Contracts/Abstractions/IPathFinder.cs/#L23" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

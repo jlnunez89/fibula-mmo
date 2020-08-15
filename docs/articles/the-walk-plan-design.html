@@ -1,0 +1,275 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>The Creature's walk plan design: | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="The Creature's walk plan design: | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="">
+<h1 id="the-creatures-walk-plan-design">The Creature's walk plan design:</h1>
+
+<p>Every creature is initialized with a single <code>WalkPlan</code> instance and maintains this reference throughout it's existence. This <code>WalkPlan</code> is the class that encapsulates the walking plan that a <code>Creature</code> has, and it comes into play when an <code>AutoWalkOrchestrationOperation</code> is executed with the creature as the requestor.</p>
+<p>Instead of instructing the game to move a creature when a move request -arrow keys are pressed- is handled (walking on-demand), we buffer the directions that a creature intends to move to in a set. This set of directions to walk in are called <em>waypoints</em>. The walk plan is initialized with empty <em>waypoints</em>, which are implemented using a linked list.</p>
+<p>The <code>AutoWalkOrchestrationOperation</code> operation is responsible for the decisions that the creature makes regarding walks, while the <code>WalkPlan</code> is active, which includes:</p>
+<ul>
+<li>Deciding whether the current walk plan is still active, and if so;</li>
+<li>Scheduling new movements as <code>MovementOperations</code> (with the creature as the requestor) between each waypoint reached.</li>
+<li>Deciding whether the current walk plan's waypoints need to be recalculated.</li>
+<li>Completing the walk plan, going into an inactive state.</li>
+</ul>
+<blockquote>
+<p>A walk plan's <em>waypoints</em> are usually <del>re</del>calculated using the game's chosen path-finding algorithm, abstracted in the <code>IPathFinder</code> interface.</p>
+</blockquote>
+<p>The <code>AutoWalkOrchestrationOperation</code> repeats itself until the walk plan is no longer active, or it is cancelled. This operation ends naturally when:</p>
+<ul>
+<li>The goal is reached and the plan does not support recalculation.</li>
+<li>The walk plan is interrupted (i.e. a waypoint could not be reached) and the plan does not support recalculation.</li>
+</ul>
+<blockquote>
+<p>The <code>AutoWalkOrchestrationOperation</code> is cancellable. Actions such as <em>stop attacking</em>, <em>stop following</em>, or <em>stop everything</em>, cancel the creature's current auto walk orchestration operation.</p>
+</blockquote>
+<h2 id="transitioning-between-interaction-states">Transitioning between interaction states:</h2>
+<p>A creature can only ever be in one of 3 different <em>interaction states</em>:</p>
+<pre><code>          .------&gt; Attacking &lt;-.
+         /          /       \   \         
+    Standing &lt;---.-'         |   |
+         \        \          |   |
+          '---&gt; Following &lt;-'    |
+                       `--------'                       
+</code></pre>
+<p>This implies that a creature can't be <code>Attacking</code> and <code>Following</code> at the same time and, thus, the next logical question is: <em><strong>&quot;What about chasing after an attacked creature?&quot;</strong></em>. There is a distinction between the <code>Following</code> state and <em>chasing</em> after a creature while in an <code>Attacking</code> state: <code>Following</code> refers only to the (friendly) mechanic of following another creature without attacking it, while <code>Attacking</code> may be carried out while <em>chasing</em>, <em>keeping distance</em>, or <em>staying</em> wherever you direct to.</p>
+<p>Transitioning between interaction states has the following effects over a creature's <code>AutoWalkOrchestrationOperation</code>:</p>
+<table>
+<thead>
+<tr>
+<th>From</th>
+<th>To</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Standing</td>
+<td>Attacking</td>
+<td>Any current <code>AutoWalkOrchestrationOperation</code> is cancelled, and a new operation is scheduled.</td>
+</tr>
+<tr>
+<td>Standing</td>
+<td>Following</td>
+<td>Any current <code>AutoWalkOrchestrationOperation</code> is cancelled, and a new operation is scheduled.</td>
+</tr>
+<tr>
+<td>Attacking</td>
+<td>Standing</td>
+<td>Any current <code>AutoWalkOrchestrationOperation</code> is cancelled.</td>
+</tr>
+<tr>
+<td>Following</td>
+<td>Standing</td>
+<td>Any current <code>AutoWalkOrchestrationOperation</code> is cancelled.</td>
+</tr>
+<tr>
+<td>Attacking</td>
+<td>Following</td>
+<td>-</td>
+</tr>
+<tr>
+<td>Following</td>
+<td>Attacking</td>
+<td>-</td>
+</tr>
+</tbody>
+</table>
+<h2 id="walk-plan-states-and-strategies">Walk plan states and strategies:</h2>
+<p>Reiterating, the creature's <code>AutoWalkOrchestrationOperation</code> manages the entire walk plan, stopping when the goal is reached, or when it gives up, or until it is cancelled.</p>
+<p>During it's excution, a <code>WalkPlan</code> transitions between 4 different <code>WalkPlanStates</code>:</p>
+<pre><code>         .------&gt; AtGoal
+        /          /    \         
+    OnTrack &lt;---.-'      '------,----&gt; Aborted
+         \       \             /
+          '---&gt; NeedsToRecalculate
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Active?</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>OnTrack</td>
+<td>Yes</td>
+<td>The walk plan is considered to be on track, having waypoints still pending to be visited.</td>
+</tr>
+<tr>
+<td>NeedsToRecalculate</td>
+<td>Yes</td>
+<td>The walk plan's waypoints need to be recalculated.</td>
+</tr>
+<tr>
+<td>AtGoal</td>
+<td>Yes</td>
+<td>The walk plan reached the goal set for the time being.</td>
+</tr>
+<tr>
+<td>Aborted</td>
+<td>No</td>
+<td>The walk plan was aborted.</td>
+</tr>
+</tbody>
+</table>
+<p>A <code>WalkPlan</code> has implicit stategies, based on the goal toward which the plan marks the way for, with one being completely <code>Static</code> and the other labeled as <code>Dynamic</code>.</p>
+<p>As the name would suggest:</p>
+<ul>
+<li>A <code>static goal</code>, always remains static, like a specific <code>Location</code> in the map.</li>
+<li>A <code>dynamic goal</code>, can constantly change/move, but also remain static, like a creature's location.</li>
+</ul>
+<p>These implicit strategies are broken down into 5 different explicit strategies:</p>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Type</th>
+<th>Behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DoNotRecalculate</td>
+<td>Static</td>
+<td>When a creature following a walk plan with this strategy is suddenly interrupted, it will give up and abort without recalculating. This is useful for static goals where we don't care if the action is interrupted. One example would be walking towards an item after the directive to use it.</td>
+</tr>
+<tr>
+<td>RecalculateOnInterruption</td>
+<td>Static</td>
+<td>When a creature following a walk plan with this strategy is suddenly interrupted, it will recalculate the plan from it's current position. This is useful for static goals where we only care to retry if an interruption happens.</td>
+</tr>
+<tr>
+<td>ConservativeRecalculation</td>
+<td>Dynamic</td>
+<td>The creature follows the walk plan and there is a low chance of recalculating at each waypoint. If the waypoint is not accessible or the creature is otherwise interrupted, it will recalculate the plan from it's current position. This is useful for slow moving goals or low-level AI simulation.</td>
+</tr>
+<tr>
+<td>AggressiveRecalculation</td>
+<td>Dynamic</td>
+<td>The creature follows the walk plan and there is a medium chance of recalculating at each waypoint. If the waypoint is not accessible or the creature is otherwise interrupted, it will recalculate the plan from it's current position. This is useful for moderate moving goals or medium-level AI simulation.</td>
+</tr>
+<tr>
+<td>ExtremeRecalculation</td>
+<td>Dynamic</td>
+<td>The creature follows the walk plan and there is a high chance of recalculating at each waypoint. If the waypoint is not accessible or the creature is otherwise interrupted, it will recalculate the plan from it's current position. This is useful for fast moving goals or high-level AI simulation.</td>
+</tr>
+</tbody>
+</table>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/docfx_project/articles/the-walk-plan-design.md/#L1" class="contribution-link">Improve this Doc</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href="https://linkedin.com/in/nunezdecaceres">Jose L. Nuñez de Caceres</a> et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

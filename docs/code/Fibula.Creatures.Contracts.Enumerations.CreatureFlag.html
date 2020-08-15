@@ -83,14 +83,14 @@
   
   <h1 id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag" data-uid="Fibula.Creatures.Contracts.Enumerations.CreatureFlag" class="text-break">Enum CreatureFlag
   </h1>
-  <div class="markdown level0 summary"><p>Enumerates the distinct flags of creatures.</p>
+  <div class="markdown level0 summary"><p>Enumerates all the different creature flags.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Creatures.Contracts.Enumerations.html">Fibula.Creatures.Contracts.Enumerations</a></h6>
   <h6><strong>Assembly</strong>: Fibula.Creatures.Contracts.dll</h6>
   <h5 id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public enum CreatureFlag : uint</code></pre>
+    <pre><code class="lang-csharp hljs">public enum CreatureFlag</code></pre>
   </div>
   <h3 id="fields">Fields
   </h3>
@@ -103,78 +103,28 @@
     <thead>
     <tbody>
       <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_DistanceFighting">DistanceFighting</td>
-        <td><p>The creature figths at a distance.</p>
+        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_CannotBePushed">CannotBePushed</td>
+        <td><p>The creature cannot be pushed by others.</p>
 </td>
       </tr>
       <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_KickBoxes">KickBoxes</td>
-        <td><p>The creature can kick movable objects and destroy them.</p>
+        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_CannotBeTargetted">CannotBeTargetted</td>
+        <td><p>The creature cannot be targetted for attack.</p>
 </td>
       </tr>
       <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_KickCreatures">KickCreatures</td>
-        <td><p>The creature can push or kill other cretuatures that don't have the <a class="xref" href="Fibula.Creatures.Contracts.Enumerations.CreatureFlag.html#Fibula_Creatures_Contracts_Enumerations_CreatureFlag_Unpushable">Unpushable</a> flag.</p>
+        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_CanPushCreatures">CanPushCreatures</td>
+        <td><p>The creature attempts to clear it's path by pushing other creatures.</p>
 </td>
       </tr>
       <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoBurning">NoBurning</td>
-        <td><p>The creature is immune to fire.</p>
+        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_CanPushItems">CanPushItems</td>
+        <td><p>The creature attempts to clear it's path by pushing movable items or destroying them.</p>
 </td>
       </tr>
       <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoConvince">NoConvince</td>
-        <td><p>The creature cannot be convinced.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoEnergy">NoEnergy</td>
-        <td><p>The creature is immune to energy.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoHit">NoHit</td>
-        <td><p>The creature cannot be targeted.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoIllusion">NoIllusion</td>
-        <td><p>The illusion spell cannot be used to turn into this creature.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoLifeDrain">NoLifeDrain</td>
-        <td><p>The creature is immune to life draining.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_None">None</td>
-        <td><p>No flags.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoParalyze">NoParalyze</td>
-        <td><p>The creature is immune to movement impairness spells.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoPoison">NoPoison</td>
-        <td><p>The creature is immune to poison.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_NoSummon">NoSummon</td>
-        <td><p>The creature cannot be summoned.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_SeeInvisible">SeeInvisible</td>
-        <td><p>The creature can see invisible players.</p>
-</td>
-      </tr>
-      <tr>
-        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_Unpushable">Unpushable</td>
-        <td><p>The creature cannot pushed or killed by other cretuatures with the <a class="xref" href="Fibula.Creatures.Contracts.Enumerations.CreatureFlag.html#Fibula_Creatures_Contracts_Enumerations_CreatureFlag_KickCreatures">KickCreatures</a> flag.</p>
+        <td id="Fibula_Creatures_Contracts_Enumerations_CreatureFlag_KeepsDistance">KeepsDistance</td>
+        <td><p>The creature keeps their distance when fighting.</p>
 </td>
       </tr>
     </tbody>
@@ -203,7 +153,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_Contracts_Enumerations_CreatureFlag.md&amp;value=---%0Auid%3A%20Fibula.Creatures.Contracts.Enumerations.CreatureFlag%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures.Contracts/Enumerations/CreatureFlag.cs/#L17" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures.Contracts/Enumerations/CreatureFlag.cs/#L17" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

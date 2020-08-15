@@ -1,0 +1,1234 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class MonsterTypeEntity
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class MonsterTypeEntity
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Data.Entities.MonsterTypeEntity">
+  
+  
+  <h1 id="Fibula_Data_Entities_MonsterTypeEntity" data-uid="Fibula.Data.Entities.MonsterTypeEntity" class="text-break">Class MonsterTypeEntity
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents a monster type entity.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Fibula.Data.Entities.BaseEntity.html">BaseEntity</a></div>
+    <div class="level2"><span class="xref">MonsterTypeEntity</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity.html">IMonsterTypeEntity</a></div>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IIdentifiableEntity.html">IIdentifiableEntity</a></div>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IEntity.html">IEntity</a></div>
+    <div><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata.html">ICreatureCreationMetadata</a></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Data.Entities.BaseEntity.html#Fibula_Data_Entities_BaseEntity_Id">BaseEntity.Id</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Data.Entities.html">Fibula.Data.Entities</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Data.Entities.dll</h6>
+  <h5 id="Fibula_Data_Entities_MonsterTypeEntity_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class MonsterTypeEntity : BaseEntity, IMonsterTypeEntity, IIdentifiableEntity, IEntity, ICreatureCreationMetadata</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity__ctor.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L51">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity__ctor_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.#ctor*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity__ctor" data-uid="Fibula.Data.Entities.MonsterTypeEntity.#ctor">MonsterTypeEntity()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Data.Entities.MonsterTypeEntity.html">MonsterTypeEntity</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public MonsterTypeEntity()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Article.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Article%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L120">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Article_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Article*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Article" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Article">Article</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the article to use with the name.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Article { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BaseArmorRating.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BaseArmorRating%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L409">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BaseArmorRating_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseArmorRating*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BaseArmorRating" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseArmorRating">BaseArmorRating</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the base armor rating for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort BaseArmorRating { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BaseAttack.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BaseAttack%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L373">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BaseAttack_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseAttack*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BaseAttack" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseAttack">BaseAttack</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the base attack for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort BaseAttack { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BaseDefense.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BaseDefense%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L391">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BaseDefense_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseDefense*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BaseDefense" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseDefense">BaseDefense</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the base defense for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort BaseDefense { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BaseExperienceYield.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BaseExperienceYield%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L138">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BaseExperienceYield_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseExperienceYield*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BaseExperienceYield" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseExperienceYield">BaseExperienceYield</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the amount of experience that this type of monster yields.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public uint BaseExperienceYield { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BaseSpeed.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BaseSpeed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L319">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BaseSpeed_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseSpeed*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BaseSpeed" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BaseSpeed">BaseSpeed</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the base movement speed for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort BaseSpeed { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_BloodType.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.BloodType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L301">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_BloodType_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BloodType*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_BloodType" data-uid="Fibula.Data.Entities.MonsterTypeEntity.BloodType">BloodType</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the type of blood of this monster type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public BloodType BloodType { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Data.Entities.Contracts.Enumerations.BloodType.html">BloodType</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Capacity.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Capacity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L337">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Capacity_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Capacity*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Capacity" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Capacity">Capacity</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the maximum capacity for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Capacity { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_ConditionInfect.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.ConditionInfect%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L211">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_ConditionInfect_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.ConditionInfect*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_ConditionInfect" data-uid="Fibula.Data.Entities.MonsterTypeEntity.ConditionInfect">ConditionInfect</h4>
+  <div class="markdown level1 summary"><p>Gets an encoded value containing <a class="xref" href="Fibula.Common.Contracts.Enumerations.ConditionType.html">ConditionType</a>s, detailing if this type of monster infects upon
+successfuly dealing basic damange in combat.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort ConditionInfect { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Corpse.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Corpse%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L260">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Corpse_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Corpse*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Corpse" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Corpse">Corpse</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this type of monster's corpse item type id.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort Corpse { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Flags.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Flags%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L222">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Flags_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Flags*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Flags" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Flags">Flags</h4>
+  <div class="markdown level1 summary"><p>Gets the flags set for this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong Flags { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Fibula_Data_Entities_MonsterTypeEntity_Flags_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The flags are stored as bits in a 64 bit unsigned integer.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_HitpointFleeThreshold.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.HitpointFleeThreshold%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L174">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_HitpointFleeThreshold_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.HitpointFleeThreshold*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_HitpointFleeThreshold" data-uid="Fibula.Data.Entities.MonsterTypeEntity.HitpointFleeThreshold">HitpointFleeThreshold</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the threshold value under which this type of monster begins to flee battle.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort HitpointFleeThreshold { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_InventoryComposition.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.InventoryComposition%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L237">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_InventoryComposition_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.InventoryComposition*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_InventoryComposition" data-uid="Fibula.Data.Entities.MonsterTypeEntity.InventoryComposition">InventoryComposition</h4>
+  <div class="markdown level1 summary"><p>Gets the composition of the inventory that this type of monster has a chance to be created with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;(ushort typeId, byte maxAmount, ushort chance)&gt; InventoryComposition { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.UInt16</span>, <span class="xref">System.Byte</span>, <span class="xref">System.UInt16</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Locked.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Locked%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L78">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Locked_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Locked*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Locked" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Locked">Locked</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this type is locked and thus, no changes are allowed.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Locked { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_LoseTargetDistance.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.LoseTargetDistance%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L192">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_LoseTargetDistance_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.LoseTargetDistance*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_LoseTargetDistance" data-uid="Fibula.Data.Entities.MonsterTypeEntity.LoseTargetDistance">LoseTargetDistance</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the distance in tiles after which this type of monster looses track of their target.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public byte LoseTargetDistance { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_MaxHitpoints.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.MaxHitpoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L278">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_MaxHitpoints_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.MaxHitpoints*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_MaxHitpoints" data-uid="Fibula.Data.Entities.MonsterTypeEntity.MaxHitpoints">MaxHitpoints</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the maximum hitpoints that this monster type starts with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort MaxHitpoints { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_MaxManapoints.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.MaxManapoints%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L296">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_MaxManapoints_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.MaxManapoints*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_MaxManapoints" data-uid="Fibula.Data.Entities.MonsterTypeEntity.MaxManapoints">MaxManapoints</h4>
+  <div class="markdown level1 summary"><p>Gets the maximum manapoints that this monster type starts with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort MaxManapoints { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Name.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L102">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Name_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Name*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Name" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name of the monster type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Outfit.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Outfit%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L242">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Outfit_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Outfit*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Outfit" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Outfit">Outfit</h4>
+  <div class="markdown level1 summary"><p>Gets or sets this type of monster outfit.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public Outfit Outfit { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Data.Entities.Contracts.Structs.Outfit.html">Outfit</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Phrases.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Phrases%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L232">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Phrases_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Phrases*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Phrases" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Phrases">Phrases</h4>
+  <div class="markdown level1 summary"><p>Gets the phrases that this monster type uses.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IList&lt;string&gt; Phrases { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IList</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_RaceId.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.RaceId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L83">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_RaceId_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.RaceId*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_RaceId" data-uid="Fibula.Data.Entities.MonsterTypeEntity.RaceId">RaceId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the id of the monster race.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort RaceId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Skills.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Skills%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L227">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Skills_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Skills*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Skills" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Skills">Skills</h4>
+  <div class="markdown level1 summary"><p>Gets the skills that this type of monster starts with.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;SkillType, (int DefaultLevel, int CurrentLevel, int MaximumLevel, uint TargetCount, uint CountIncreaseFactor, byte IncreaserPerLevel)&gt; Skills { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Fibula.Data.Entities.Contracts.Enumerations.SkillType.html">SkillType</a>, <span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.Int32</span>, <span class="xref">System.UInt32</span>, <span class="xref">System.UInt32</span>, <span class="xref">System.Byte</span>&gt;&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Strategy.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Strategy%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L355">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Strategy_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Strategy*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Strategy" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Strategy">Strategy</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the fighting strategy of this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public (byte switchToClosest, byte switchToLowestHp, byte switchToHigestDmgDealt, byte randomSwitch) Strategy { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Byte</span>, <span class="xref">System.Byte</span>, <span class="xref">System.Byte</span>, <span class="xref">System.Byte</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SummonCost.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SummonCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L156">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SummonCost_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SummonCost*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SummonCost" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SummonCost">SummonCost</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the base cost to summon this type of monster.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort SummonCost { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_Lock.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.Lock%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L427">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_Lock_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Lock*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_Lock" data-uid="Fibula.Data.Entities.MonsterTypeEntity.Lock">Lock()</h4>
+  <div class="markdown level1 summary"><p>Locks this type to protect from further changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Lock()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetConditionInfect_Fibula_Common_Contracts_Enumerations_ConditionType_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetConditionInfect(Fibula.Common.Contracts.Enumerations.ConditionType%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L466">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetConditionInfect_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetConditionInfect*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetConditionInfect_Fibula_Common_Contracts_Enumerations_ConditionType_System_UInt16_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetConditionInfect(Fibula.Common.Contracts.Enumerations.ConditionType,System.UInt16)">SetConditionInfect(ConditionType, UInt16)</h4>
+  <div class="markdown level1 summary"><p>Sets a type's infection condition flag.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetConditionInfect(ConditionType condition, ushort value)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Enumerations.ConditionType.html">ConditionType</a></td>
+        <td><span class="parametername">condition</span></td>
+        <td><p>The type of condition flag.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td><span class="parametername">value</span></td>
+        <td><p>The base value by which to infect.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetCreatureFlag_Fibula_Creatures_Contracts_Enumerations_CreatureFlag_.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetCreatureFlag(Fibula.Creatures.Contracts.Enumerations.CreatureFlag)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L436">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetCreatureFlag_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetCreatureFlag*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetCreatureFlag_Fibula_Creatures_Contracts_Enumerations_CreatureFlag_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetCreatureFlag(Fibula.Creatures.Contracts.Enumerations.CreatureFlag)">SetCreatureFlag(CreatureFlag)</h4>
+  <div class="markdown level1 summary"><p>Sets a creature flag in this type's <a class="xref" href="Fibula.Data.Entities.MonsterTypeEntity.html#Fibula_Data_Entities_MonsterTypeEntity_Flags">Flags</a>.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetCreatureFlag(CreatureFlag creatureFlag)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Enumerations.CreatureFlag.html">CreatureFlag</a></td>
+        <td><span class="parametername">creatureFlag</span></td>
+        <td><p>The flag to set in the type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetInventory_System_Collections_Generic_IEnumerable_System_ValueTuple_System_UInt16_System_Byte_System_UInt16___.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetInventory(System.Collections.Generic.IEnumerable%7BSystem.ValueTuple%7BSystem.UInt16%2CSystem.Byte%2CSystem.UInt16%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L494">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetInventory_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetInventory*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetInventory_System_Collections_Generic_IEnumerable_System_ValueTuple_System_UInt16_System_Byte_System_UInt16___" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetInventory(System.Collections.Generic.IEnumerable{System.ValueTuple{System.UInt16,System.Byte,System.UInt16}})">SetInventory(IEnumerable&lt;(UInt16 typeId, Byte maxAmount, UInt16 dropChance)&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the type's inventory.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetInventory(IEnumerable&lt;(ushort typeId, byte maxAmount, ushort dropChance)&gt; possibleInventory)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.UInt16</span>, <span class="xref">System.Byte</span>, <span class="xref">System.UInt16</span>&gt;&gt;</td>
+        <td><span class="parametername">possibleInventory</span></td>
+        <td><p>The inventory of the monster type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetPhrases_System_Collections_Generic_IEnumerable_System_String__.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetPhrases(System.Collections.Generic.IEnumerable%7BSystem.String%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L519">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetPhrases_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetPhrases*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetPhrases_System_Collections_Generic_IEnumerable_System_String__" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetPhrases(System.Collections.Generic.IEnumerable{System.String})">SetPhrases(IEnumerable&lt;String&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the type's phrases.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetPhrases(IEnumerable&lt;string&gt; phrases)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;</td>
+        <td><span class="parametername">phrases</span></td>
+        <td><p>The phrases of the monster type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetSkill_Fibula_Data_Entities_Contracts_Enumerations_SkillType_System_Int32_System_Int32_System_Int32_System_UInt32_System_UInt32_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetSkill(Fibula.Data.Entities.Contracts.Enumerations.SkillType%2CSystem.Int32%2CSystem.Int32%2CSystem.Int32%2CSystem.UInt32%2CSystem.UInt32%2CSystem.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L456">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetSkill_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetSkill*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetSkill_Fibula_Data_Entities_Contracts_Enumerations_SkillType_System_Int32_System_Int32_System_Int32_System_UInt32_System_UInt32_System_Byte_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetSkill(Fibula.Data.Entities.Contracts.Enumerations.SkillType,System.Int32,System.Int32,System.Int32,System.UInt32,System.UInt32,System.Byte)">SetSkill(SkillType, Int32, Int32, Int32, UInt32, UInt32, Byte)</h4>
+  <div class="markdown level1 summary"><p>Sets a given skill for this monster type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSkill(SkillType skillType, int currentLevel, int defaultLevel, int maximumLevel, uint targetCount, uint countIncreaseFactor, byte increaserPerLevel)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Data.Entities.Contracts.Enumerations.SkillType.html">SkillType</a></td>
+        <td><span class="parametername">skillType</span></td>
+        <td><p>The type of skill to set.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">currentLevel</span></td>
+        <td><p>The current skill level.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">defaultLevel</span></td>
+        <td><p>The default level of the skill.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">maximumLevel</span></td>
+        <td><p>The maximum skill level.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">targetCount</span></td>
+        <td><p>The next target count for skill advancement.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="parametername">countIncreaseFactor</span></td>
+        <td><p>The factor by which the next target count increases upon advancement.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">increaserPerLevel</span></td>
+        <td><p>The base increase per level upon advancement.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity_SetSpells_System_Collections_Generic_IEnumerable_System_ValueTuple_System_Collections_Generic_IEnumerable_System_String__System_Collections_Generic_IEnumerable_System_String__System_String___.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity.SetSpells(System.Collections.Generic.IEnumerable%7BSystem.ValueTuple%7BSystem.Collections.Generic.IEnumerable%7BSystem.String%7D%2CSystem.Collections.Generic.IEnumerable%7BSystem.String%7D%2CSystem.String%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L480">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_MonsterTypeEntity_SetSpells_" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetSpells*"></a>
+  <h4 id="Fibula_Data_Entities_MonsterTypeEntity_SetSpells_System_Collections_Generic_IEnumerable_System_ValueTuple_System_Collections_Generic_IEnumerable_System_String__System_Collections_Generic_IEnumerable_System_String__System_String___" data-uid="Fibula.Data.Entities.MonsterTypeEntity.SetSpells(System.Collections.Generic.IEnumerable{System.ValueTuple{System.Collections.Generic.IEnumerable{System.String},System.Collections.Generic.IEnumerable{System.String},System.String}})">SetSpells(IEnumerable&lt;(IEnumerable&lt;String&gt; conditions, IEnumerable&lt;String&gt; effects, String chance)&gt;)</h4>
+  <div class="markdown level1 summary"><p>Sets the type's spells.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetSpells(IEnumerable&lt;(IEnumerable&lt;string&gt; conditions, IEnumerable&lt;string&gt; effects, string chance)&gt; spells)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;, <span class="xref">System.Collections.Generic.IEnumerable</span>&lt;<span class="xref">System.String</span>&gt;, <span class="xref">System.String</span>&gt;&gt;</td>
+        <td><span class="parametername">spells</span></td>
+        <td><p>The spells of the monster type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity.html">IMonsterTypeEntity</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IIdentifiableEntity.html">IIdentifiableEntity</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IEntity.html">IEntity</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Abstractions.ICreatureCreationMetadata.html">ICreatureCreationMetadata</a>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Creatures.Contracts.Extensions.MonsterTypeEntityExtensions.html#Fibula_Creatures_Contracts_Extensions_MonsterTypeEntityExtensions_HasCreatureFlag_Fibula_Data_Entities_Contracts_Abstractions_IMonsterTypeEntity_Fibula_Creatures_Contracts_Enumerations_CreatureFlag_">MonsterTypeEntityExtensions.HasCreatureFlag(IMonsterTypeEntity, CreatureFlag)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_MonsterTypeEntity.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.MonsterTypeEntity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/MonsterTypeEntity.cs/#L28" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href="https://linkedin.com/in/nunezdecaceres">Jose L. Nuñez de Caceres</a> et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

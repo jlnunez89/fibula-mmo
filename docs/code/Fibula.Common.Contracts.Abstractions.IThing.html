@@ -114,7 +114,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.CanBeMoved%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L40">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L43">View Source</a>
   </span>
   <a id="Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.CanBeMoved*"></a>
   <h4 id="Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved" data-uid="Fibula.Common.Contracts.Abstractions.IThing.CanBeMoved">CanBeMoved</h4>
@@ -142,19 +142,84 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_ThingId.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.ThingId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_Conditions.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.Conditions%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L30">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L56">View Source</a>
   </span>
-  <a id="Fibula_Common_Contracts_Abstractions_IThing_ThingId_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.ThingId*"></a>
-  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_ThingId" data-uid="Fibula.Common.Contracts.Abstractions.IThing.ThingId">ThingId</h4>
+  <a id="Fibula_Common_Contracts_Abstractions_IThing_Conditions_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.Conditions*"></a>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_Conditions" data-uid="Fibula.Common.Contracts.Abstractions.IThing.Conditions">Conditions</h4>
+  <div class="markdown level1 summary"><p>Gets the current condition information for the thing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IDictionary&lt;ConditionType, ICondition&gt; Conditions { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Enumerations.ConditionType.html">ConditionType</a>, <a class="xref" href="Fibula.Common.Contracts.Abstractions.ICondition.html">ICondition</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Fibula_Common_Contracts_Abstractions_IThing_Conditions_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The key is a <a class="xref" href="Fibula.Common.Contracts.Enumerations.ConditionType.html">ConditionType</a>, and the value is the <a class="xref" href="Fibula.Common.Contracts.Abstractions.ICondition.html">ICondition</a>.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_TrackedEvents.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.TrackedEvents%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L48">View Source</a>
+  </span>
+  <a id="Fibula_Common_Contracts_Abstractions_IThing_TrackedEvents_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.TrackedEvents*"></a>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_TrackedEvents" data-uid="Fibula.Common.Contracts.Abstractions.IThing.TrackedEvents">TrackedEvents</h4>
+  <div class="markdown level1 summary"><p>Gets the tracked events for this thing.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">IDictionary&lt;string, IEvent&gt; TrackedEvents { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.String</span>, <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_TypeId.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.TypeId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L33">View Source</a>
+  </span>
+  <a id="Fibula_Common_Contracts_Abstractions_IThing_TypeId_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.TypeId*"></a>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_TypeId" data-uid="Fibula.Common.Contracts.Abstractions.IThing.TypeId">TypeId</h4>
   <div class="markdown level1 summary"><p>Gets the id of this thing.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ushort ThingId { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">ushort TypeId { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -176,11 +241,11 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_UniqueId.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.UniqueId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L35">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L38">View Source</a>
   </span>
   <a id="Fibula_Common_Contracts_Abstractions_IThing_UniqueId_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.UniqueId*"></a>
   <h4 id="Fibula_Common_Contracts_Abstractions_IThing_UniqueId" data-uid="Fibula.Common.Contracts.Abstractions.IThing.UniqueId">UniqueId</h4>
-  <div class="markdown level1 summary"><p>Gets the unique id of this item.</p>
+  <div class="markdown level1 summary"><p>Gets the unique id of this thing.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
@@ -209,7 +274,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.DescribeForLogger%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L46">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L62">View Source</a>
   </span>
   <a id="Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.DescribeForLogger*"></a>
   <h4 id="Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger" data-uid="Fibula.Common.Contracts.Abstractions.IThing.DescribeForLogger">DescribeForLogger()</h4>
@@ -236,22 +301,102 @@
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_StartTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.StartTrackingEvent(Fibula.Scheduling.Contracts.Abstractions.IEvent%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L69">View Source</a>
+  </span>
+  <a id="Fibula_Common_Contracts_Abstractions_IThing_StartTrackingEvent_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.StartTrackingEvent*"></a>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_StartTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.StartTrackingEvent(Fibula.Scheduling.Contracts.Abstractions.IEvent,System.String)">StartTrackingEvent(IEvent, String)</h4>
+  <div class="markdown level1 summary"><p>Makes the thing start tracking an event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void StartTrackingEvent(IEvent evt, string identifier = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></td>
+        <td><span class="parametername">evt</span></td>
+        <td><p>The event to stop tracking.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">identifier</span></td>
+        <td><p>Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_StopTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.StopTrackingEvent(Fibula.Scheduling.Contracts.Abstractions.IEvent%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L76">View Source</a>
+  </span>
+  <a id="Fibula_Common_Contracts_Abstractions_IThing_StopTrackingEvent_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.StopTrackingEvent*"></a>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_StopTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_" data-uid="Fibula.Common.Contracts.Abstractions.IThing.StopTrackingEvent(Fibula.Scheduling.Contracts.Abstractions.IEvent,System.String)">StopTrackingEvent(IEvent, String)</h4>
+  <div class="markdown level1 summary"><p>Makes the thing stop tracking an event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">void StopTrackingEvent(IEvent evt, string identifier = &quot;&quot;)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html">IEvent</a></td>
+        <td><span class="parametername">evt</span></td>
+        <td><p>The event to stop tracking.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">identifier</span></td>
+        <td><p>Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="events">Events
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_ThingChanged.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.ThingChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing_LocationChanged.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing.LocationChanged%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L25">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L28">View Source</a>
   </span>
-  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_ThingChanged" data-uid="Fibula.Common.Contracts.Abstractions.IThing.ThingChanged">ThingChanged</h4>
+  <h4 id="Fibula_Common_Contracts_Abstractions_IThing_LocationChanged" data-uid="Fibula.Common.Contracts.Abstractions.IThing.LocationChanged">LocationChanged</h4>
   <div class="markdown level1 summary"><p>Event to invoke when any of the properties of this thing have changed.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">event OnThingStateChanged ThingChanged</code></pre>
+    <pre><code class="lang-csharp hljs">event OnLocationChanged LocationChanged</code></pre>
   </div>
   <h5 class="eventType">Event Type</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -263,15 +408,12 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Common.Contracts.Delegates.OnThingStateChanged.html">OnThingStateChanged</a></td>
+        <td><a class="xref" href="Fibula.Common.Contracts.Delegates.OnLocationChanged.html">OnLocationChanged</a></td>
         <td></td>
       </tr>
     </tbody>
   </table>
   <h3 id="extensionmethods">Extension Methods</h3>
-  <div>
-      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IContainedThing_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IContainedThing, Boolean)</a>
-  </div>
   <div>
       <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
   </div>
@@ -280,6 +422,15 @@
   </div>
   <div>
       <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IContainedThing_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IContainedThing, Boolean)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ThingExtensions.html#Fibula_Mechanics_Contracts_Extensions_ThingExtensions_RemainingCooldownTime_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Enumerations_ConditionType_System_DateTimeOffset_">ThingExtensions.RemainingCooldownTime(IThing, ConditionType, DateTimeOffset)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ThingExtensions.html#Fibula_Mechanics_Contracts_Extensions_ThingExtensions_AddOrExtendCondition_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_ICondition_">ThingExtensions.AddOrExtendCondition(IThing, ICondition)</a>
   </div>
 </article>
           </div>
@@ -292,7 +443,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_Contracts_Abstractions_IThing.md&amp;value=---%0Auid%3A%20Fibula.Common.Contracts.Abstractions.IThing%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common.Contracts/Abstractions/IThing.cs/#L20" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common.Contracts/Abstractions/IThing.cs/#L23" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

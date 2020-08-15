@@ -89,16 +89,32 @@
   <div class="inheritance">
     <h5>Inheritance</h5>
     <div class="level0"><span class="xref">System.Object</span></div>
-    <div class="level1"><span class="xref">GenericRepository&lt;TEntity&gt;</span></div>
-      <div class="level2"><a class="xref" href="Fibula.Data.Repositories.AccountRepository.html">AccountRepository</a></div>
-      <div class="level2"><a class="xref" href="Fibula.Data.Repositories.CharacterRepository.html">CharacterRepository</a></div>
+    <div class="level1"><a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html">GenericReadOnlyRepository</a>&lt;TEntity&gt;</div>
+    <div class="level2"><span class="xref">GenericRepository&lt;TEntity&gt;</span></div>
+      <div class="level3"><a class="xref" href="Fibula.Data.Repositories.AccountRepository.html">AccountRepository</a></div>
+      <div class="level3"><a class="xref" href="Fibula.Data.Repositories.CharacterRepository.html">CharacterRepository</a></div>
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Fibula.Data.Contracts.Abstractions.IRepository-1.html">IRepository</a>&lt;TEntity&gt;</div>
+    <div><a class="xref" href="Fibula.Data.Contracts.Abstractions.IReadOnlyRepository-1.html">IReadOnlyRepository</a>&lt;TEntity&gt;</div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html#Fibula_Data_Repositories_GenericReadOnlyRepository_1_Context">GenericReadOnlyRepository&lt;TEntity&gt;.Context</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html#Fibula_Data_Repositories_GenericReadOnlyRepository_1_GetById_System_String_">GenericReadOnlyRepository&lt;TEntity&gt;.GetById(String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html#Fibula_Data_Repositories_GenericReadOnlyRepository_1_GetAll">GenericReadOnlyRepository&lt;TEntity&gt;.GetAll()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html#Fibula_Data_Repositories_GenericReadOnlyRepository_1_FindMany_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">GenericReadOnlyRepository&lt;TEntity&gt;.FindMany(Expression&lt;Func&lt;TEntity, Boolean&gt;&gt;)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Data.Repositories.GenericReadOnlyRepository-1.html#Fibula_Data_Repositories_GenericReadOnlyRepository_1_FindOne_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___">GenericReadOnlyRepository&lt;TEntity&gt;.FindOne(Expression&lt;Func&lt;TEntity, Boolean&gt;&gt;)</a>
+    </div>
     <div>
       <span class="xref">System.Object.Equals(System.Object)</span>
     </div>
@@ -122,10 +138,10 @@
     </div>
   </div>
   <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Data.Repositories.html">Fibula.Data.Repositories</a></h6>
-  <h6><strong>Assembly</strong>: Fibula.Data.Repositories.dll</h6>
+  <h6><strong>Assembly</strong>: Fibula.Data.dll</h6>
   <h5 id="Fibula_Data_Repositories_GenericRepository_1_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public abstract class GenericRepository&lt;TEntity&gt; : IRepository&lt;TEntity&gt; where TEntity : BaseEntity</code></pre>
+    <pre><code class="lang-csharp hljs">public abstract class GenericRepository&lt;TEntity&gt; : GenericReadOnlyRepository&lt;TEntity&gt;, IReadOnlyRepository&lt;TEntity&gt; where TEntity : BaseEntity</code></pre>
   </div>
   <h5 class="typeParameters">Type Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,7 +166,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1__ctor_Microsoft_EntityFrameworkCore_DbContext_.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.%23ctor(Microsoft.EntityFrameworkCore.DbContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L34">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L29">View Source</a>
   </span>
   <a id="Fibula_Data_Repositories_GenericRepository_1__ctor_" data-uid="Fibula.Data.Repositories.GenericRepository`1.#ctor*"></a>
   <h4 id="Fibula_Data_Repositories_GenericRepository_1__ctor_Microsoft_EntityFrameworkCore_DbContext_" data-uid="Fibula.Data.Repositories.GenericRepository`1.#ctor(Microsoft.EntityFrameworkCore.DbContext)">GenericRepository(DbContext)</h4>
@@ -179,39 +195,6 @@
       </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_Context.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.Context%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L44">View Source</a>
-  </span>
-  <a id="Fibula_Data_Repositories_GenericRepository_1_Context_" data-uid="Fibula.Data.Repositories.GenericRepository`1.Context*"></a>
-  <h4 id="Fibula_Data_Repositories_GenericRepository_1_Context" data-uid="Fibula.Data.Repositories.GenericRepository`1.Context">Context</h4>
-  <div class="markdown level1 summary"><p>Gets the reference to the context.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">protected DbContext Context { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">Microsoft.EntityFrameworkCore.DbContext</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -219,7 +202,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_Add__0_.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.Add(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L94">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L38">View Source</a>
   </span>
   <a id="Fibula_Data_Repositories_GenericRepository_1_Add_" data-uid="Fibula.Data.Repositories.GenericRepository`1.Add*"></a>
   <h4 id="Fibula_Data_Repositories_GenericRepository_1_Add__0_" data-uid="Fibula.Data.Repositories.GenericRepository`1.Add(`0)">Add(TEntity)</h4>
@@ -253,7 +236,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_AddRange_System_Collections_Generic_IEnumerable__0__.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.AddRange(System.Collections.Generic.IEnumerable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L103">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L47">View Source</a>
   </span>
   <a id="Fibula_Data_Repositories_GenericRepository_1_AddRange_" data-uid="Fibula.Data.Repositories.GenericRepository`1.AddRange*"></a>
   <h4 id="Fibula_Data_Repositories_GenericRepository_1_AddRange_System_Collections_Generic_IEnumerable__0__" data-uid="Fibula.Data.Repositories.GenericRepository`1.AddRange(System.Collections.Generic.IEnumerable{`0})">AddRange(IEnumerable&lt;TEntity&gt;)</h4>
@@ -284,193 +267,10 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_FindMany_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.FindMany(System.Linq.Expressions.Expression%7BSystem.Func%7B%600%2CSystem.Boolean%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L74">View Source</a>
-  </span>
-  <a id="Fibula_Data_Repositories_GenericRepository_1_FindMany_" data-uid="Fibula.Data.Repositories.GenericRepository`1.FindMany*"></a>
-  <h4 id="Fibula_Data_Repositories_GenericRepository_1_FindMany_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___" data-uid="Fibula.Data.Repositories.GenericRepository`1.FindMany(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">FindMany(Expression&lt;Func&lt;TEntity, Boolean&gt;&gt;)</h4>
-  <div class="markdown level1 summary"><p>Finds all the entities in the set within the context that satisfy an expression.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TEntity&gt; FindMany(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TEntity, <span class="xref">System.Boolean</span>&gt;&gt;</td>
-        <td><span class="parametername">predicate</span></td>
-        <td><p>The expression to satisfy.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
-        <td><p>The collection of entities retrieved.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_FindOne_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.FindOne(System.Linq.Expressions.Expression%7BSystem.Func%7B%600%2CSystem.Boolean%7D%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L85">View Source</a>
-  </span>
-  <a id="Fibula_Data_Repositories_GenericRepository_1_FindOne_" data-uid="Fibula.Data.Repositories.GenericRepository`1.FindOne*"></a>
-  <h4 id="Fibula_Data_Repositories_GenericRepository_1_FindOne_System_Linq_Expressions_Expression_System_Func__0_System_Boolean___" data-uid="Fibula.Data.Repositories.GenericRepository`1.FindOne(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">FindOne(Expression&lt;Func&lt;TEntity, Boolean&gt;&gt;)</h4>
-  <div class="markdown level1 summary"><p>Finds an entity in the set within the context that satisfies an expression.
-If more than one entity satisfies the expression, one is picked up in an unknown criteria.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TEntity FindOne(Expression&lt;Func&lt;TEntity, bool&gt;&gt; predicate)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Linq.Expressions.Expression</span>&lt;<span class="xref">System.Func</span>&lt;TEntity, <span class="xref">System.Boolean</span>&gt;&gt;</td>
-        <td><span class="parametername">predicate</span></td>
-        <td><p>The expression to satisfy.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TEntity</span></td>
-        <td><p>The entity found.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_GetAll.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.GetAll%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L60">View Source</a>
-  </span>
-  <a id="Fibula_Data_Repositories_GenericRepository_1_GetAll_" data-uid="Fibula.Data.Repositories.GenericRepository`1.GetAll*"></a>
-  <h4 id="Fibula_Data_Repositories_GenericRepository_1_GetAll" data-uid="Fibula.Data.Repositories.GenericRepository`1.GetAll">GetAll()</h4>
-  <div class="markdown level1 summary"><p>Gets all the entities from the set in the context.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IEnumerable&lt;TEntity&gt; GetAll()</code></pre>
-  </div>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.Collections.Generic.IEnumerable</span>&lt;TEntity&gt;</td>
-        <td><p>The collection of entities retrieved.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_GetById_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.GetById(System.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L51">View Source</a>
-  </span>
-  <a id="Fibula_Data_Repositories_GenericRepository_1_GetById_" data-uid="Fibula.Data.Repositories.GenericRepository`1.GetById*"></a>
-  <h4 id="Fibula_Data_Repositories_GenericRepository_1_GetById_System_String_" data-uid="Fibula.Data.Repositories.GenericRepository`1.GetById(System.String)">GetById(String)</h4>
-  <div class="markdown level1 summary"><p>Gets an entity that matches an id, from the context.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public TEntity GetById(string id)</code></pre>
-  </div>
-  <h5 class="parameters">Parameters</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Name</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.String</span></td>
-        <td><span class="parametername">id</span></td>
-        <td><p>The id to match.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="returns">Returns</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">TEntity</span></td>
-        <td><p>The entity found, if any.</p>
-</td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_Remove__0_.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.Remove(%600)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L112">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L56">View Source</a>
   </span>
   <a id="Fibula_Data_Repositories_GenericRepository_1_Remove_" data-uid="Fibula.Data.Repositories.GenericRepository`1.Remove*"></a>
   <h4 id="Fibula_Data_Repositories_GenericRepository_1_Remove__0_" data-uid="Fibula.Data.Repositories.GenericRepository`1.Remove(`0)">Remove(TEntity)</h4>
@@ -504,7 +304,7 @@ If more than one entity satisfies the expression, one is picked up in an unknown
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1_RemoveRange_System_Collections_Generic_IEnumerable__0__.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601.RemoveRange(System.Collections.Generic.IEnumerable%7B%600%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L121">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L65">View Source</a>
   </span>
   <a id="Fibula_Data_Repositories_GenericRepository_1_RemoveRange_" data-uid="Fibula.Data.Repositories.GenericRepository`1.RemoveRange*"></a>
   <h4 id="Fibula_Data_Repositories_GenericRepository_1_RemoveRange_System_Collections_Generic_IEnumerable__0__" data-uid="Fibula.Data.Repositories.GenericRepository`1.RemoveRange(System.Collections.Generic.IEnumerable{`0})">RemoveRange(IEnumerable&lt;TEntity&gt;)</h4>
@@ -535,7 +335,7 @@ If more than one entity satisfies the expression, one is picked up in an unknown
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Fibula.Data.Contracts.Abstractions.IRepository-1.html">IRepository&lt;TEntity&gt;</a>
+      <a class="xref" href="Fibula.Data.Contracts.Abstractions.IReadOnlyRepository-1.html">IReadOnlyRepository&lt;TEntity&gt;</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
@@ -558,7 +358,7 @@ If more than one entity satisfies the expression, one is picked up in an unknown
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Repositories_GenericRepository_1.md&amp;value=---%0Auid%3A%20Fibula.Data.Repositories.GenericRepository%601%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Data.Repositories/GenericRepository.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data/Repositories/GenericRepository.cs/#L22" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

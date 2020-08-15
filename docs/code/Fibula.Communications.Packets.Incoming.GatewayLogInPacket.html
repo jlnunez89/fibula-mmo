@@ -93,8 +93,8 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IGatewayLoginInfo.html">IGatewayLoginInfo</a></div>
     <div><a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a></div>
+    <div><a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IGatewayLoginInfo.html">IGatewayLoginInfo</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -124,25 +124,25 @@
   <h6><strong>Assembly</strong>: Fibula.Communications.Packets.dll</h6>
   <h5 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public sealed class GatewayLogInPacket : IGatewayLoginInfo, IIncomingPacket</code></pre>
+    <pre><code class="lang-csharp hljs">public sealed class GatewayLogInPacket : IIncomingPacket, IGatewayLoginInfo</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket__ctor_System_UInt16_System_UInt16_System_UInt32___System_UInt32_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.%23ctor(System.UInt16%2CSystem.UInt16%2CSystem.UInt32%5B%5D%2CSystem.UInt32%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket__ctor_System_UInt16_System_UInt16_System_UInt32___System_String_System_String_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.%23ctor(System.UInt16%2CSystem.UInt16%2CSystem.UInt32%5B%5D%2CSystem.String%2CSystem.String)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L29">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L30">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket__ctor_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.#ctor*"></a>
-  <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket__ctor_System_UInt16_System_UInt16_System_UInt32___System_UInt32_System_String_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.#ctor(System.UInt16,System.UInt16,System.UInt32[],System.UInt32,System.String)">GatewayLogInPacket(UInt16, UInt16, UInt32[], UInt32, String)</h4>
+  <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket__ctor_System_UInt16_System_UInt16_System_UInt32___System_String_System_String_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.#ctor(System.UInt16,System.UInt16,System.UInt32[],System.String,System.String)">GatewayLogInPacket(UInt16, UInt16, UInt32[], String, String)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.html">GatewayLogInPacket</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public GatewayLogInPacket(ushort clientVersion, ushort clientOs, uint[] xteaKey, uint accountNumber, string password)</code></pre>
+    <pre><code class="lang-csharp hljs">public GatewayLogInPacket(ushort clientVersion, ushort clientOs, uint[] xteaKey, string accountName, string password)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -173,9 +173,9 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
-        <td><span class="parametername">accountNumber</span></td>
-        <td><p>The account number.</p>
+        <td><span class="xref">System.String</span></td>
+        <td><span class="parametername">accountName</span></td>
+        <td><p>The account name.</p>
 </td>
       </tr>
       <tr>
@@ -190,19 +190,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountNumber.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountNumber%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountName.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountName%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L41">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L42">View Source</a>
   </span>
-  <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountNumber_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountNumber*"></a>
-  <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountNumber" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountNumber">AccountNumber</h4>
-  <div class="markdown level1 summary"><p>Gets the account number.</p>
+  <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountName_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountName*"></a>
+  <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_AccountName" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.AccountName">AccountName</h4>
+  <div class="markdown level1 summary"><p>Gets the account name.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public uint AccountNumber { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">public string AccountName { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -214,7 +214,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.UInt32</span></td>
+        <td><span class="xref">System.String</span></td>
         <td></td>
       </tr>
     </tbody>
@@ -224,7 +224,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientOs.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientOs%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L61">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L62">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientOs_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientOs*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientOs" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientOs">ClientOs</h4>
@@ -255,7 +255,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientVersion.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientVersion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L56">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L57">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientVersion_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientVersion*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_ClientVersion" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.ClientVersion">ClientVersion</h4>
@@ -286,7 +286,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_Password.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.Password%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L46">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L47">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_Password_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.Password*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_Password" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.Password">Password</h4>
@@ -317,7 +317,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket_XteaKey.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket.XteaKey%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L51">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L52">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_XteaKey_" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.XteaKey*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_GatewayLogInPacket_XteaKey" data-uid="Fibula.Communications.Packets.Incoming.GatewayLogInPacket.XteaKey">XteaKey</h4>
@@ -345,10 +345,10 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IGatewayLoginInfo.html">IGatewayLoginInfo</a>
+      <a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a>
   </div>
   <div>
-      <a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a>
+      <a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IGatewayLoginInfo.html">IGatewayLoginInfo</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
@@ -371,7 +371,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_GatewayLogInPacket.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.GatewayLogInPacket%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/GatewayLogInPacket.cs/#L20" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

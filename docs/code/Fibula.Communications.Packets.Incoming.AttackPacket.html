@@ -83,7 +83,7 @@
   
   <h1 id="Fibula_Communications_Packets_Incoming_AttackPacket" data-uid="Fibula.Communications.Packets.Incoming.AttackPacket" class="text-break">Class AttackPacket
   </h1>
-  <div class="markdown level0 summary"><p>Class that represents and attack packet.</p>
+  <div class="markdown level0 summary"><p>Class that represents an attack packet.</p>
 </div>
   <div class="markdown level0 conceptual"></div>
   <div class="inheritance">
@@ -93,8 +93,8 @@
   </div>
   <div classs="implements">
     <h5>Implements</h5>
-    <div><a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IAttackInfo.html">IAttackInfo</a></div>
     <div><a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a></div>
+    <div><a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IAttackInfo.html">IAttackInfo</a></div>
   </div>
   <div class="inheritedMembers">
     <h5>Inherited Members</h5>
@@ -124,7 +124,7 @@
   <h6><strong>Assembly</strong>: Fibula.Communications.Packets.dll</h6>
   <h5 id="Fibula_Communications_Packets_Incoming_AttackPacket_syntax">Syntax</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public class AttackPacket : IAttackInfo, IIncomingPacket</code></pre>
+    <pre><code class="lang-csharp hljs">public class AttackPacket : IIncomingPacket, IAttackInfo</code></pre>
   </div>
   <h3 id="constructors">Constructors
   </h3>
@@ -133,7 +133,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_AttackPacket__ctor_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.AttackPacket.%23ctor(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L25">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L26">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_AttackPacket__ctor_" data-uid="Fibula.Communications.Packets.Incoming.AttackPacket.#ctor*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_AttackPacket__ctor_System_UInt32_" data-uid="Fibula.Communications.Packets.Incoming.AttackPacket.#ctor(System.UInt32)">AttackPacket(UInt32)</h4>
@@ -169,7 +169,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_AttackPacket_TargetCreatureId.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.AttackPacket.TargetCreatureId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L33">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L34">View Source</a>
   </span>
   <a id="Fibula_Communications_Packets_Incoming_AttackPacket_TargetCreatureId_" data-uid="Fibula.Communications.Packets.Incoming.AttackPacket.TargetCreatureId*"></a>
   <h4 id="Fibula_Communications_Packets_Incoming_AttackPacket_TargetCreatureId" data-uid="Fibula.Communications.Packets.Incoming.AttackPacket.TargetCreatureId">TargetCreatureId</h4>
@@ -197,10 +197,10 @@
   </table>
   <h3 id="implements">Implements</h3>
   <div>
-      <a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IAttackInfo.html">IAttackInfo</a>
+      <a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a>
   </div>
   <div>
-      <a class="xref" href="Fibula.Communications.Contracts.Abstractions.IIncomingPacket.html">IIncomingPacket</a>
+      <a class="xref" href="Fibula.Communications.Packets.Contracts.Abstractions.IAttackInfo.html">IAttackInfo</a>
   </div>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
@@ -223,7 +223,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Communications_Packets_Incoming_AttackPacket.md&amp;value=---%0Auid%3A%20Fibula.Communications.Packets.Incoming.AttackPacket%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L19" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Communications.Packets/Incoming/AttackPacket.cs/#L20" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

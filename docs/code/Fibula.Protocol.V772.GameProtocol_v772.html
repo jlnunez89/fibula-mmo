@@ -132,7 +132,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772__ctor_Serilog_ILogger_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.%23ctor(Serilog.ILogger)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L45">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L45">View Source</a>
   </span>
   <a id="Fibula_Protocol_V772_GameProtocol_v772__ctor_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.#ctor*"></a>
   <h4 id="Fibula_Protocol_V772_GameProtocol_v772__ctor_Serilog_ILogger_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.#ctor(Serilog.ILogger)">GameProtocol_v772(ILogger)</h4>
@@ -165,19 +165,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_System_Byte_Fibula_Communications_Contracts_Abstractions_IPacketReader_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader(System.Byte%2CFibula.Communications.Contracts.Abstractions.IPacketReader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_ByteToIncomingPacketType_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.ByteToIncomingPacketType(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L60">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L128">View Source</a>
   </span>
-  <a id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader*"></a>
-  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_System_Byte_Fibula_Communications_Contracts_Abstractions_IPacketReader_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader(System.Byte,Fibula.Communications.Contracts.Abstractions.IPacketReader)">RegisterPacketReader(Byte, IPacketReader)</h4>
-  <div class="markdown level1 summary"><p>Registers a packet reader to this protocol.</p>
+  <a id="Fibula_Protocol_V772_GameProtocol_v772_ByteToIncomingPacketType_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.ByteToIncomingPacketType*"></a>
+  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_ByteToIncomingPacketType_System_Byte_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.ByteToIncomingPacketType(System.Byte)">ByteToIncomingPacketType(Byte)</h4>
+  <div class="markdown level1 summary"><p>Attempts to convert a byte value into an <a class="xref" href="Fibula.Communications.Contracts.Enumerations.IncomingPacketType.html">IncomingPacketType</a>.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RegisterPacketReader(byte forType, IPacketReader packetReader)</code></pre>
+    <pre><code class="lang-csharp hljs">public IncomingPacketType ByteToIncomingPacketType(byte fromByte)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -191,6 +191,56 @@
     <tbody>
       <tr>
         <td><span class="xref">System.Byte</span></td>
+        <td><span class="parametername">fromByte</span></td>
+        <td><p>The byte to convert.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Enumerations.IncomingPacketType.html">IncomingPacketType</a></td>
+        <td><p>The <a class="xref" href="Fibula.Communications.Contracts.Enumerations.IncomingPacketType.html">IncomingPacketType</a> value converted to.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_Fibula_Communications_Contracts_Enumerations_IncomingPacketType_Fibula_Communications_Contracts_Abstractions_IPacketReader_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader(Fibula.Communications.Contracts.Enumerations.IncomingPacketType%2CFibula.Communications.Contracts.Abstractions.IPacketReader)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L60">View Source</a>
+  </span>
+  <a id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader*"></a>
+  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketReader_Fibula_Communications_Contracts_Enumerations_IncomingPacketType_Fibula_Communications_Contracts_Abstractions_IPacketReader_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketReader(Fibula.Communications.Contracts.Enumerations.IncomingPacketType,Fibula.Communications.Contracts.Abstractions.IPacketReader)">RegisterPacketReader(IncomingPacketType, IPacketReader)</h4>
+  <div class="markdown level1 summary"><p>Registers a packet reader to this protocol.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void RegisterPacketReader(IncomingPacketType forType, IPacketReader packetReader)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Enumerations.IncomingPacketType.html">IncomingPacketType</a></td>
         <td><span class="parametername">forType</span></td>
         <td><p>The type of packet to register for.</p>
 </td>
@@ -205,19 +255,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketWriter_System_Byte_Fibula_Communications_Contracts_Abstractions_IPacketWriter_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketWriter(System.Byte%2CFibula.Communications.Contracts.Abstractions.IPacketWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketWriter_Fibula_Communications_Contracts_Enumerations_OutgoingPacketType_Fibula_Communications_Contracts_Abstractions_IPacketWriter_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketWriter(Fibula.Communications.Contracts.Enumerations.OutgoingPacketType%2CFibula.Communications.Contracts.Abstractions.IPacketWriter)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L86">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L79">View Source</a>
   </span>
   <a id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketWriter_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketWriter*"></a>
-  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketWriter_System_Byte_Fibula_Communications_Contracts_Abstractions_IPacketWriter_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketWriter(System.Byte,Fibula.Communications.Contracts.Abstractions.IPacketWriter)">RegisterPacketWriter(Byte, IPacketWriter)</h4>
+  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_RegisterPacketWriter_Fibula_Communications_Contracts_Enumerations_OutgoingPacketType_Fibula_Communications_Contracts_Abstractions_IPacketWriter_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.RegisterPacketWriter(Fibula.Communications.Contracts.Enumerations.OutgoingPacketType,Fibula.Communications.Contracts.Abstractions.IPacketWriter)">RegisterPacketWriter(OutgoingPacketType, IPacketWriter)</h4>
   <div class="markdown level1 summary"><p>Registers a packet writer to this protocol.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public void RegisterPacketWriter(byte forType, IPacketWriter packetWriter)</code></pre>
+    <pre><code class="lang-csharp hljs">public void RegisterPacketWriter(OutgoingPacketType forType, IPacketWriter packetWriter)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -230,7 +280,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Enumerations.OutgoingPacketType.html">OutgoingPacketType</a></td>
         <td><span class="parametername">forType</span></td>
         <td><p>The type of packet to register for.</p>
 </td>
@@ -245,19 +295,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_SelectPacketReader_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.SelectPacketReader(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_SelectPacketReader_Fibula_Communications_Contracts_Enumerations_IncomingPacketType_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.SelectPacketReader(Fibula.Communications.Contracts.Enumerations.IncomingPacketType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L112">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L98">View Source</a>
   </span>
   <a id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketReader_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketReader*"></a>
-  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketReader_System_Byte_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketReader(System.Byte)">SelectPacketReader(Byte)</h4>
+  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketReader_Fibula_Communications_Contracts_Enumerations_IncomingPacketType_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketReader(Fibula.Communications.Contracts.Enumerations.IncomingPacketType)">SelectPacketReader(IncomingPacketType)</h4>
   <div class="markdown level1 summary"><p>Selects the most appropriate packet reader for the specified type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IPacketReader SelectPacketReader(byte forPacketType)</code></pre>
+    <pre><code class="lang-csharp hljs">public IPacketReader SelectPacketReader(IncomingPacketType forPacketType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -270,7 +320,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Enumerations.IncomingPacketType.html">IncomingPacketType</a></td>
         <td><span class="parametername">forPacketType</span></td>
         <td><p>The type of packet.</p>
 </td>
@@ -295,19 +345,19 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_SelectPacketWriter_System_Byte_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.SelectPacketWriter(System.Byte)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772_SelectPacketWriter_Fibula_Communications_Contracts_Enumerations_OutgoingPacketType_.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772.SelectPacketWriter(Fibula.Communications.Contracts.Enumerations.OutgoingPacketType)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L127">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L113">View Source</a>
   </span>
   <a id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketWriter_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketWriter*"></a>
-  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketWriter_System_Byte_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketWriter(System.Byte)">SelectPacketWriter(Byte)</h4>
+  <h4 id="Fibula_Protocol_V772_GameProtocol_v772_SelectPacketWriter_Fibula_Communications_Contracts_Enumerations_OutgoingPacketType_" data-uid="Fibula.Protocol.V772.GameProtocol_v772.SelectPacketWriter(Fibula.Communications.Contracts.Enumerations.OutgoingPacketType)">SelectPacketWriter(OutgoingPacketType)</h4>
   <div class="markdown level1 summary"><p>Selects the most appropriate packet writer for the specified type.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public IPacketWriter SelectPacketWriter(byte forPacketType)</code></pre>
+    <pre><code class="lang-csharp hljs">public IPacketWriter SelectPacketWriter(OutgoingPacketType forPacketType)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -320,7 +370,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.Byte</span></td>
+        <td><a class="xref" href="Fibula.Communications.Contracts.Enumerations.OutgoingPacketType.html">OutgoingPacketType</a></td>
         <td><span class="parametername">forPacketType</span></td>
         <td><p>The type of packet.</p>
 </td>
@@ -368,7 +418,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Protocol_V772_GameProtocol_v772.md&amp;value=---%0Auid%3A%20Fibula.Protocol.V772.GameProtocol_v772%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Protocol.V772/GameProtocol_v772.cs/#L24" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Protocol.V772/GameProtocol_v772.cs/#L24" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

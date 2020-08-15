@@ -130,19 +130,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory__ctor_Fibula_Creatures_Contracts_Abstractions_IMonsterTypeLoader_Fibula_Items_Contracts_Abstractions_IItemFactory_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.%23ctor(Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader%2CFibula.Items.Contracts.Abstractions.IItemFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory__ctor_Fibula_Common_Contracts_Abstractions_IApplicationContext_Fibula_Items_Contracts_Abstractions_IItemFactory_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.%23ctor(Fibula.Common.Contracts.Abstractions.IApplicationContext%2CFibula.Items.Contracts.Abstractions.IItemFactory)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CreatureFactory.cs/#L37">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L32">View Source</a>
   </span>
   <a id="Fibula_Creatures_CreatureFactory__ctor_" data-uid="Fibula.Creatures.CreatureFactory.#ctor*"></a>
-  <h4 id="Fibula_Creatures_CreatureFactory__ctor_Fibula_Creatures_Contracts_Abstractions_IMonsterTypeLoader_Fibula_Items_Contracts_Abstractions_IItemFactory_" data-uid="Fibula.Creatures.CreatureFactory.#ctor(Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader,Fibula.Items.Contracts.Abstractions.IItemFactory)">CreatureFactory(IMonsterTypeLoader, IItemFactory)</h4>
+  <h4 id="Fibula_Creatures_CreatureFactory__ctor_Fibula_Common_Contracts_Abstractions_IApplicationContext_Fibula_Items_Contracts_Abstractions_IItemFactory_" data-uid="Fibula.Creatures.CreatureFactory.#ctor(Fibula.Common.Contracts.Abstractions.IApplicationContext,Fibula.Items.Contracts.Abstractions.IItemFactory)">CreatureFactory(IApplicationContext, IItemFactory)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Creatures.CreatureFactory.html">CreatureFactory</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public CreatureFactory(IMonsterTypeLoader monsterTypeLoader, IItemFactory itemFactory)</code></pre>
+    <pre><code class="lang-csharp hljs">public CreatureFactory(IApplicationContext applicationContext, IItemFactory itemFactory)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -155,9 +155,9 @@
     </thead>
     <tbody>
       <tr>
-        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader.html">IMonsterTypeLoader</a></td>
-        <td><span class="parametername">monsterTypeLoader</span></td>
-        <td><p>A reference to the monster type loader in use.</p>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IApplicationContext.html">IApplicationContext</a></td>
+        <td><span class="parametername">applicationContext</span></td>
+        <td><p>A reference to the application context.</p>
 </td>
       </tr>
       <tr>
@@ -172,10 +172,41 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory_ApplicationContext.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.ApplicationContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L44">View Source</a>
+  </span>
+  <a id="Fibula_Creatures_CreatureFactory_ApplicationContext_" data-uid="Fibula.Creatures.CreatureFactory.ApplicationContext*"></a>
+  <h4 id="Fibula_Creatures_CreatureFactory_ApplicationContext" data-uid="Fibula.Creatures.CreatureFactory.ApplicationContext">ApplicationContext</h4>
+  <div class="markdown level1 summary"><p>Gets the application context.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IApplicationContext ApplicationContext { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Common.Contracts.Abstractions.IApplicationContext.html">IApplicationContext</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory_ItemFactory.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.ItemFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CreatureFactory.cs/#L50">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L49">View Source</a>
   </span>
   <a id="Fibula_Creatures_CreatureFactory_ItemFactory_" data-uid="Fibula.Creatures.CreatureFactory.ItemFactory*"></a>
   <h4 id="Fibula_Creatures_CreatureFactory_ItemFactory" data-uid="Fibula.Creatures.CreatureFactory.ItemFactory">ItemFactory</h4>
@@ -208,7 +239,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory_Create_Fibula_Common_Contracts_Abstractions_IThingCreationArguments_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.Create(Fibula.Common.Contracts.Abstractions.IThingCreationArguments)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CreatureFactory.cs/#L57">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L56">View Source</a>
   </span>
   <a id="Fibula_Creatures_CreatureFactory_Create_" data-uid="Fibula.Creatures.CreatureFactory.Create*"></a>
   <h4 id="Fibula_Creatures_CreatureFactory_Create_Fibula_Common_Contracts_Abstractions_IThingCreationArguments_" data-uid="Fibula.Creatures.CreatureFactory.Create(Fibula.Common.Contracts.Abstractions.IThingCreationArguments)">Create(IThingCreationArguments)</h4>
@@ -258,7 +289,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory_CreateCreature_Fibula_Common_Contracts_Abstractions_IThingCreationArguments_.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory.CreateCreature(Fibula.Common.Contracts.Abstractions.IThingCreationArguments)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CreatureFactory.cs/#L67">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L66">View Source</a>
   </span>
   <a id="Fibula_Creatures_CreatureFactory_CreateCreature_" data-uid="Fibula.Creatures.CreatureFactory.CreateCreature*"></a>
   <h4 id="Fibula_Creatures_CreatureFactory_CreateCreature_Fibula_Common_Contracts_Abstractions_IThingCreationArguments_" data-uid="Fibula.Creatures.CreatureFactory.CreateCreature(Fibula.Common.Contracts.Abstractions.IThingCreationArguments)">CreateCreature(IThingCreationArguments)</h4>
@@ -331,7 +362,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Creatures_CreatureFactory.md&amp;value=---%0Auid%3A%20Fibula.Creatures.CreatureFactory%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Creatures/CreatureFactory.cs/#L25" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Creatures/CreatureFactory.cs/#L25" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

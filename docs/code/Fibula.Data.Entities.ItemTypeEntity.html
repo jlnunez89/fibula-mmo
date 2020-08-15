@@ -1,0 +1,568 @@
+﻿<!DOCTYPE html>
+<!--[if IE]><![endif]-->
+<html>
+  
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Class ItemTypeEntity
+   | Fibula MMO </title>
+    <meta name="viewport" content="width=device-width">
+    <meta name="title" content="Class ItemTypeEntity
+   | Fibula MMO ">
+    <meta name="generator" content="docfx 2.56.1.0">
+    
+    <link rel="shortcut icon" href="../favicon.ico">
+    <link rel="stylesheet" href="../styles/docfx.vendor.css">
+    <link rel="stylesheet" href="../styles/docfx.css">
+    <link rel="stylesheet" href="../styles/main.css">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans" rel="stylesheet">
+    <meta property="docfx:navrel" content="../toc.html">
+    <meta property="docfx:tocrel" content="toc.html">
+    
+    <meta property="docfx:rel" content="../">
+    
+  </head>  <body data-spy="scroll" data-target="#affix" data-offset="120">
+    <div id="wrapper">
+      <header>
+        
+        <nav id="autocollapse" class="navbar navbar-inverse ng-scope" role="navigation">
+          <div class="container">
+            <div class="navbar-header">
+              <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+              </button>
+              
+              <a class="navbar-brand" href="../index.html">
+                <img id="logo" class="svg" src="../images/logo.png" alt="">
+              </a>
+            </div>
+            <div class="collapse navbar-collapse" id="navbar">
+              <form class="navbar-form navbar-right" role="search" id="search">
+                <div class="form-group">
+                  <input type="text" class="form-control" id="search-query" placeholder="Search" autocomplete="off">
+                </div>
+              </form>
+            </div>
+          </div>
+        </nav>
+        
+        <div class="subnav navbar navbar-default">
+          <div class="container hide-when-search" id="breadcrumb">
+            <ul class="breadcrumb">
+              <li></li>
+            </ul>
+          </div>
+        </div>
+      </header>
+      <div class="container body-content">
+        
+        <div id="search-results">
+          <div class="search-list"></div>
+          <div class="sr-items">
+            <p><i class="glyphicon glyphicon-refresh index-loading"></i></p>
+          </div>
+          <ul id="pagination"></ul>
+        </div>
+      </div>
+      <div role="main" class="container body-content hide-when-search">
+        
+        <div class="sidenav hide-when-search">
+          <a class="btn toc-toggle collapse" data-toggle="collapse" href="#sidetoggle" aria-expanded="false" aria-controls="sidetoggle">Show / Hide Table of Contents</a>
+          <div class="sidetoggle collapse" id="sidetoggle">
+            <div id="sidetoc"></div>
+          </div>
+        </div>
+        <div class="article row grid-right">
+          <div class="col-md-10">
+            <article class="content wrap" id="_content" data-uid="Fibula.Data.Entities.ItemTypeEntity">
+  
+  
+  <h1 id="Fibula_Data_Entities_ItemTypeEntity" data-uid="Fibula.Data.Entities.ItemTypeEntity" class="text-break">Class ItemTypeEntity
+  </h1>
+  <div class="markdown level0 summary"><p>Class that represents an item type entity.</p>
+</div>
+  <div class="markdown level0 conceptual"></div>
+  <div class="inheritance">
+    <h5>Inheritance</h5>
+    <div class="level0"><span class="xref">System.Object</span></div>
+    <div class="level1"><a class="xref" href="Fibula.Data.Entities.BaseEntity.html">BaseEntity</a></div>
+    <div class="level2"><span class="xref">ItemTypeEntity</span></div>
+  </div>
+  <div classs="implements">
+    <h5>Implements</h5>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IItemTypeEntity.html">IItemTypeEntity</a></div>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IIdentifiableEntity.html">IIdentifiableEntity</a></div>
+    <div><a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IEntity.html">IEntity</a></div>
+    <div><span class="xref">System.ICloneable</span></div>
+  </div>
+  <div class="inheritedMembers">
+    <h5>Inherited Members</h5>
+    <div>
+      <a class="xref" href="Fibula.Data.Entities.BaseEntity.html#Fibula_Data_Entities_BaseEntity_Id">BaseEntity.Id</a>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.Equals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetHashCode()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.GetType()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.MemberwiseClone()</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ReferenceEquals(System.Object, System.Object)</span>
+    </div>
+    <div>
+      <span class="xref">System.Object.ToString()</span>
+    </div>
+  </div>
+  <h6><strong>Namespace</strong>: <a class="xref" href="Fibula.Data.Entities.html">Fibula.Data.Entities</a></h6>
+  <h6><strong>Assembly</strong>: Fibula.Data.Entities.dll</h6>
+  <h5 id="Fibula_Data_Entities_ItemTypeEntity_syntax">Syntax</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public class ItemTypeEntity : BaseEntity, IItemTypeEntity, IIdentifiableEntity, IEntity, ICloneable</code></pre>
+  </div>
+  <h3 id="constructors">Constructors
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity__ctor.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.%23ctor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L35">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity__ctor_" data-uid="Fibula.Data.Entities.ItemTypeEntity.#ctor*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity__ctor" data-uid="Fibula.Data.Entities.ItemTypeEntity.#ctor">ItemTypeEntity()</h4>
+  <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Data.Entities.ItemTypeEntity.html">ItemTypeEntity</a> class.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ItemTypeEntity()</code></pre>
+  </div>
+  <h3 id="properties">Properties
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_ClientId.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.ClientId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L117">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_ClientId_" data-uid="Fibula.Data.Entities.ItemTypeEntity.ClientId*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_ClientId" data-uid="Fibula.Data.Entities.ItemTypeEntity.ClientId">ClientId</h4>
+  <div class="markdown level1 summary"><p>Gets the client id of the type of this item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort ClientId { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_DefaultAttributes.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.DefaultAttributes%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L107">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_DefaultAttributes_" data-uid="Fibula.Data.Entities.ItemTypeEntity.DefaultAttributes*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_DefaultAttributes" data-uid="Fibula.Data.Entities.ItemTypeEntity.DefaultAttributes">DefaultAttributes</h4>
+  <div class="markdown level1 summary"><p>Gets the attributes of this type of item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IDictionary&lt;byte, IConvertible&gt; DefaultAttributes { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Collections.Generic.IDictionary</span>&lt;<span class="xref">System.Byte</span>, <span class="xref">System.IConvertible</span>&gt;</td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_Description.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.Description%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L83">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_Description_" data-uid="Fibula.Data.Entities.ItemTypeEntity.Description*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_Description" data-uid="Fibula.Data.Entities.ItemTypeEntity.Description">Description</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the decription of this type of item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Description { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_Flags.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.Flags%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L102">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_Flags_" data-uid="Fibula.Data.Entities.ItemTypeEntity.Flags*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_Flags" data-uid="Fibula.Data.Entities.ItemTypeEntity.Flags">Flags</h4>
+  <div class="markdown level1 summary"><p>Gets the flags for this type of item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ulong Flags { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt64</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h5 id="Fibula_Data_Entities_ItemTypeEntity_Flags_remarks">Remarks</h5>
+  <div class="markdown level1 remarks"><p>The flags are stored as bits in a 64 bit unsigned integer.</p>
+</div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_Locked.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.Locked%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L112">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_Locked_" data-uid="Fibula.Data.Entities.ItemTypeEntity.Locked*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_Locked" data-uid="Fibula.Data.Entities.ItemTypeEntity.Locked">Locked</h4>
+  <div class="markdown level1 summary"><p>Gets a value indicating whether this item type is locked and no longer accepting changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool Locked { get; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_Name.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.Name%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L65">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_Name_" data-uid="Fibula.Data.Entities.ItemTypeEntity.Name*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_Name" data-uid="Fibula.Data.Entities.ItemTypeEntity.Name">Name</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the name of this type of item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public string Name { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.String</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_TypeId.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.TypeId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L47">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_TypeId_" data-uid="Fibula.Data.Entities.ItemTypeEntity.TypeId*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_TypeId" data-uid="Fibula.Data.Entities.ItemTypeEntity.TypeId">TypeId</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the id of the type of this item.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public ushort TypeId { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.UInt16</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_LockChanges.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.LockChanges%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L122">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_LockChanges_" data-uid="Fibula.Data.Entities.ItemTypeEntity.LockChanges*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_LockChanges" data-uid="Fibula.Data.Entities.ItemTypeEntity.LockChanges">LockChanges()</h4>
+  <div class="markdown level1 summary"><p>Locks the type, preventing it from accepting changes.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void LockChanges()</code></pre>
+  </div>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_SetAttribute_Fibula_Items_Contracts_Enumerations_ItemAttribute_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.SetAttribute(Fibula.Items.Contracts.Enumerations.ItemAttribute%2CSystem.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L146">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_SetAttribute_" data-uid="Fibula.Data.Entities.ItemTypeEntity.SetAttribute*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_SetAttribute_Fibula_Items_Contracts_Enumerations_ItemAttribute_System_Int32_" data-uid="Fibula.Data.Entities.ItemTypeEntity.SetAttribute(Fibula.Items.Contracts.Enumerations.ItemAttribute,System.Int32)">SetAttribute(ItemAttribute, Int32)</h4>
+  <div class="markdown level1 summary"><p>Sets an attribute in this type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetAttribute(ItemAttribute attribute, int attributeValue)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Enumerations.ItemAttribute.html">ItemAttribute</a></td>
+        <td><span class="parametername">attribute</span></td>
+        <td><p>The attribute to set in the type.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">System.Int32</span></td>
+        <td><span class="parametername">attributeValue</span></td>
+        <td><p>The value of the attribute to set in the type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_SetItemFlag_Fibula_Items_Contracts_Enumerations_ItemFlag_.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.SetItemFlag(Fibula.Items.Contracts.Enumerations.ItemFlag)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L131">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_SetItemFlag_" data-uid="Fibula.Data.Entities.ItemTypeEntity.SetItemFlag*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_SetItemFlag_Fibula_Items_Contracts_Enumerations_ItemFlag_" data-uid="Fibula.Data.Entities.ItemTypeEntity.SetItemFlag(Fibula.Items.Contracts.Enumerations.ItemFlag)">SetItemFlag(ItemFlag)</h4>
+  <div class="markdown level1 summary"><p>Sets a flag in this type.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void SetItemFlag(ItemFlag itemFlag)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Enumerations.ItemFlag.html">ItemFlag</a></td>
+        <td><span class="parametername">itemFlag</span></td>
+        <td><p>The flag to set in the type.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="eii">Explicit Interface Implementations
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity_System_ICloneable_Clone.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity.System%23ICloneable%23Clone%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L160">View Source</a>
+  </span>
+  <a id="Fibula_Data_Entities_ItemTypeEntity_System_ICloneable_Clone_" data-uid="Fibula.Data.Entities.ItemTypeEntity.System#ICloneable#Clone*"></a>
+  <h4 id="Fibula_Data_Entities_ItemTypeEntity_System_ICloneable_Clone" data-uid="Fibula.Data.Entities.ItemTypeEntity.System#ICloneable#Clone">ICloneable.Clone()</h4>
+  <div class="markdown level1 summary"><p>Clones the <a class="xref" href="Fibula.Data.Entities.ItemTypeEntity.html">ItemTypeEntity</a> into a new instance without locking the clone.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">object ICloneable.Clone()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Object</span></td>
+        <td><p>The cloned <a class="xref" href="Fibula.Data.Entities.ItemTypeEntity.html">ItemTypeEntity</a>.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="implements">Implements</h3>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IItemTypeEntity.html">IItemTypeEntity</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IIdentifiableEntity.html">IIdentifiableEntity</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IEntity.html">IEntity</a>
+  </div>
+  <div>
+      <span class="xref">System.ICloneable</span>
+  </div>
+  <h3 id="extensionmethods">Extension Methods</h3>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Items.Contracts.Extensions.ItemTypeEntityExtensions.html#Fibula_Items_Contracts_Extensions_ItemTypeEntityExtensions_HasItemFlag_Fibula_Data_Entities_Contracts_Abstractions_IItemTypeEntity_Fibula_Items_Contracts_Enumerations_ItemFlag_">ItemTypeEntityExtensions.HasItemFlag(IItemTypeEntity, ItemFlag)</a>
+  </div>
+</article>
+          </div>
+          
+          <div class="hidden-sm col-md-2" role="complementary">
+            <div class="sideaffix">
+              <div class="contribution">
+                <ul class="nav">
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Data_Entities_ItemTypeEntity.md&amp;value=---%0Auid%3A%20Fibula.Data.Entities.ItemTypeEntity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
+                  </li>
+                  <li>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Data.Entities/ItemTypeEntity.cs/#L23" class="contribution-link">View Source</a>
+                  </li>
+                </ul>
+              </div>
+              <nav class="bs-docs-sidebar hidden-print hidden-xs hidden-sm affix" id="affix">
+              <!-- <p><a class="back-to-top" href="#top">Back to top</a><p> -->
+              </nav>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <footer>
+        <div class="grad-bottom"></div>
+        <div class="footer">
+          <div class="container">
+            <span class="pull-right">
+              <a href="#top">Back to top</a>
+            </span>
+            <span>Copyright © 2018-2020 | The Fibula Project<br>Generated using <strong>DocFX</strong> | <a href="https://linkedin.com/in/nunezdecaceres">Jose L. Nuñez de Caceres</a> et al.</span>
+            
+          </div>
+        </div>
+      </footer>
+    </div>
+    
+    <script type="text/javascript" src="../styles/docfx.vendor.js"></script>
+    <script type="text/javascript" src="../styles/docfx.js"></script>
+    <script type="text/javascript" src="../styles/main.js"></script>
+  </body>
+</html>

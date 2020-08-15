@@ -129,19 +129,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext__ctor_Microsoft_Extensions_Options_IOptions_Fibula_Common_Contracts_Models_ApplicationContextOptions__Microsoft_Extensions_Options_IOptions_Microsoft_ApplicationInsights_Extensibility_TelemetryConfiguration__Fibula_Security_Contracts_IRsaDecryptor_System_Threading_CancellationTokenSource_System_Func_Fibula_Data_Contracts_Abstractions_IFibulaDbContext__.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.%23ctor(Microsoft.Extensions.Options.IOptions%7BFibula.Common.Contracts.Models.ApplicationContextOptions%7D%2CMicrosoft.Extensions.Options.IOptions%7BMicrosoft.ApplicationInsights.Extensibility.TelemetryConfiguration%7D%2CFibula.Security.Contracts.IRsaDecryptor%2CSystem.Threading.CancellationTokenSource%2CSystem.Func%7BFibula.Data.Contracts.Abstractions.IFibulaDbContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext__ctor_Microsoft_Extensions_Options_IOptions_Fibula_Common_Contracts_Models_ApplicationContextOptions__Fibula_Security_Contracts_IRsaDecryptor_Fibula_Items_Contracts_Abstractions_IItemTypeLoader_Fibula_Creatures_Contracts_Abstractions_IMonsterTypeLoader_Microsoft_ApplicationInsights_TelemetryClient_System_Threading_CancellationTokenSource_System_Func_Fibula_Data_Contracts_Abstractions_IFibulaDbContext__.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.%23ctor(Microsoft.Extensions.Options.IOptions%7BFibula.Common.Contracts.Models.ApplicationContextOptions%7D%2CFibula.Security.Contracts.IRsaDecryptor%2CFibula.Items.Contracts.Abstractions.IItemTypeLoader%2CFibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader%2CMicrosoft.ApplicationInsights.TelemetryClient%2CSystem.Threading.CancellationTokenSource%2CSystem.Func%7BFibula.Data.Contracts.Abstractions.IFibulaDbContext%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L44">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L62">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext__ctor_" data-uid="Fibula.Common.ApplicationContext.#ctor*"></a>
-  <h4 id="Fibula_Common_ApplicationContext__ctor_Microsoft_Extensions_Options_IOptions_Fibula_Common_Contracts_Models_ApplicationContextOptions__Microsoft_Extensions_Options_IOptions_Microsoft_ApplicationInsights_Extensibility_TelemetryConfiguration__Fibula_Security_Contracts_IRsaDecryptor_System_Threading_CancellationTokenSource_System_Func_Fibula_Data_Contracts_Abstractions_IFibulaDbContext__" data-uid="Fibula.Common.ApplicationContext.#ctor(Microsoft.Extensions.Options.IOptions{Fibula.Common.Contracts.Models.ApplicationContextOptions},Microsoft.Extensions.Options.IOptions{Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration},Fibula.Security.Contracts.IRsaDecryptor,System.Threading.CancellationTokenSource,System.Func{Fibula.Data.Contracts.Abstractions.IFibulaDbContext})">ApplicationContext(IOptions&lt;ApplicationContextOptions&gt;, IOptions&lt;TelemetryConfiguration&gt;, IRsaDecryptor, CancellationTokenSource, Func&lt;IFibulaDbContext&gt;)</h4>
+  <h4 id="Fibula_Common_ApplicationContext__ctor_Microsoft_Extensions_Options_IOptions_Fibula_Common_Contracts_Models_ApplicationContextOptions__Fibula_Security_Contracts_IRsaDecryptor_Fibula_Items_Contracts_Abstractions_IItemTypeLoader_Fibula_Creatures_Contracts_Abstractions_IMonsterTypeLoader_Microsoft_ApplicationInsights_TelemetryClient_System_Threading_CancellationTokenSource_System_Func_Fibula_Data_Contracts_Abstractions_IFibulaDbContext__" data-uid="Fibula.Common.ApplicationContext.#ctor(Microsoft.Extensions.Options.IOptions{Fibula.Common.Contracts.Models.ApplicationContextOptions},Fibula.Security.Contracts.IRsaDecryptor,Fibula.Items.Contracts.Abstractions.IItemTypeLoader,Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader,Microsoft.ApplicationInsights.TelemetryClient,System.Threading.CancellationTokenSource,System.Func{Fibula.Data.Contracts.Abstractions.IFibulaDbContext})">ApplicationContext(IOptions&lt;ApplicationContextOptions&gt;, IRsaDecryptor, IItemTypeLoader, IMonsterTypeLoader, TelemetryClient, CancellationTokenSource, Func&lt;IFibulaDbContext&gt;)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Common.ApplicationContext.html">ApplicationContext</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public ApplicationContext(IOptions&lt;ApplicationContextOptions&gt; options, IOptions&lt;TelemetryConfiguration&gt; telemetryOptions, IRsaDecryptor rsaDecryptor, CancellationTokenSource cancellationTokenSource, Func&lt;IFibulaDbContext&gt; dbContextGenerationFunc)</code></pre>
+    <pre><code class="lang-csharp hljs">public ApplicationContext(IOptions&lt;ApplicationContextOptions&gt; options, IRsaDecryptor rsaDecryptor, IItemTypeLoader itemTypeLoader, IMonsterTypeLoader monsterTypeLoader, TelemetryClient telemetryClient, CancellationTokenSource cancellationTokenSource, Func&lt;IFibulaDbContext&gt; dbContextGenerationFunc)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -160,15 +160,27 @@
 </td>
       </tr>
       <tr>
-        <td><span class="xref">Microsoft.Extensions.Options.IOptions</span>&lt;<span class="xref">Microsoft.ApplicationInsights.Extensibility.TelemetryConfiguration</span>&gt;</td>
-        <td><span class="parametername">telemetryOptions</span></td>
-        <td><p>A reference to the telemetry configuration that will be used to create the telemetry client.</p>
-</td>
-      </tr>
-      <tr>
         <td><a class="xref" href="Fibula.Security.Contracts.IRsaDecryptor.html">IRsaDecryptor</a></td>
         <td><span class="parametername">rsaDecryptor</span></td>
         <td><p>A reference to the RSA decryptor in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Items.Contracts.Abstractions.IItemTypeLoader.html">IItemTypeLoader</a></td>
+        <td><span class="parametername">itemTypeLoader</span></td>
+        <td><p>A reference to the item type loader in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><a class="xref" href="Fibula.Creatures.Contracts.Abstractions.IMonsterTypeLoader.html">IMonsterTypeLoader</a></td>
+        <td><span class="parametername">monsterTypeLoader</span></td>
+        <td><p>A reference to the monster type loader in use.</p>
+</td>
+      </tr>
+      <tr>
+        <td><span class="xref">Microsoft.ApplicationInsights.TelemetryClient</span></td>
+        <td><span class="parametername">telemetryClient</span></td>
+        <td><p>A reference to the telemetry client.</p>
 </td>
       </tr>
       <tr>
@@ -192,7 +204,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_CancellationTokenSource.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.CancellationTokenSource%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L81">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L104">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext_CancellationTokenSource_" data-uid="Fibula.Common.ApplicationContext.CancellationTokenSource*"></a>
   <h4 id="Fibula_Common_ApplicationContext_CancellationTokenSource" data-uid="Fibula.Common.ApplicationContext.CancellationTokenSource">CancellationTokenSource</h4>
@@ -223,7 +235,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_DefaultDatabaseContext.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.DefaultDatabaseContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L91">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L114">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext_DefaultDatabaseContext_" data-uid="Fibula.Common.ApplicationContext.DefaultDatabaseContext*"></a>
   <h4 id="Fibula_Common_ApplicationContext_DefaultDatabaseContext" data-uid="Fibula.Common.ApplicationContext.DefaultDatabaseContext">DefaultDatabaseContext</h4>
@@ -254,7 +266,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_Options.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.Options%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L71">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L94">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext_Options_" data-uid="Fibula.Common.ApplicationContext.Options*"></a>
   <h4 id="Fibula_Common_ApplicationContext_Options" data-uid="Fibula.Common.ApplicationContext.Options">Options</h4>
@@ -285,7 +297,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_RsaDecryptor.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.RsaDecryptor%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L76">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L99">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext_RsaDecryptor_" data-uid="Fibula.Common.ApplicationContext.RsaDecryptor*"></a>
   <h4 id="Fibula_Common_ApplicationContext_RsaDecryptor" data-uid="Fibula.Common.ApplicationContext.RsaDecryptor">RsaDecryptor</h4>
@@ -316,7 +328,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_TelemetryClient.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.TelemetryClient%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L86">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L109">View Source</a>
   </span>
   <a id="Fibula_Common_ApplicationContext_TelemetryClient_" data-uid="Fibula.Common.ApplicationContext.TelemetryClient*"></a>
   <h4 id="Fibula_Common_ApplicationContext_TelemetryClient" data-uid="Fibula.Common.ApplicationContext.TelemetryClient">TelemetryClient</h4>
@@ -339,6 +351,40 @@
       <tr>
         <td><span class="xref">Microsoft.ApplicationInsights.TelemetryClient</span></td>
         <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <h3 id="methods">Methods
+  </h3>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext_CreateNewUnitOfWork.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext.CreateNewUnitOfWork%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L120">View Source</a>
+  </span>
+  <a id="Fibula_Common_ApplicationContext_CreateNewUnitOfWork_" data-uid="Fibula.Common.ApplicationContext.CreateNewUnitOfWork*"></a>
+  <h4 id="Fibula_Common_ApplicationContext_CreateNewUnitOfWork" data-uid="Fibula.Common.ApplicationContext.CreateNewUnitOfWork">CreateNewUnitOfWork()</h4>
+  <div class="markdown level1 summary"><p>Creates a new <a class="xref" href="Fibula.Data.Contracts.Abstractions.IUnitOfWork-4.html">IUnitOfWork&lt;TAccountsRepository, TCharactersRepository, TMonsterTypesRepository, TItemTypesRepository&gt;</a> for data access.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public IUnitOfWork&lt;IRepository&lt;IAccountEntity&gt;, IRepository&lt;ICharacterEntity&gt;, IReadOnlyRepository&lt;IMonsterTypeEntity&gt;, IReadOnlyRepository&lt;IItemTypeEntity&gt;&gt; CreateNewUnitOfWork()</code></pre>
+  </div>
+  <h5 class="returns">Returns</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Data.Contracts.Abstractions.IUnitOfWork-4.html">IUnitOfWork</a>&lt;<a class="xref" href="Fibula.Data.Contracts.Abstractions.IRepository-1.html">IRepository</a>&lt;<a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IAccountEntity.html">IAccountEntity</a>&gt;, <a class="xref" href="Fibula.Data.Contracts.Abstractions.IRepository-1.html">IRepository</a>&lt;<a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.ICharacterEntity.html">ICharacterEntity</a>&gt;, <a class="xref" href="Fibula.Data.Contracts.Abstractions.IReadOnlyRepository-1.html">IReadOnlyRepository</a>&lt;<a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IMonsterTypeEntity.html">IMonsterTypeEntity</a>&gt;, <a class="xref" href="Fibula.Data.Contracts.Abstractions.IReadOnlyRepository-1.html">IReadOnlyRepository</a>&lt;<a class="xref" href="Fibula.Data.Entities.Contracts.Abstractions.IItemTypeEntity.html">IItemTypeEntity</a>&gt;&gt;</td>
+        <td><p>The instance created.</p>
+</td>
       </tr>
     </tbody>
   </table>
@@ -367,7 +413,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Common_ApplicationContext.md&amp;value=---%0Auid%3A%20Fibula.Common.ApplicationContext%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Common/ApplicationContext.cs/#L29" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Common/ApplicationContext.cs/#L35" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

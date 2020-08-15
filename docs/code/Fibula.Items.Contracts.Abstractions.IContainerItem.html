@@ -182,10 +182,10 @@
       <a class="xref" href="Fibula.Items.Contracts.Abstractions.IItem.html#Fibula_Items_Contracts_Abstractions_IItem_IsPathBlocking_System_Byte_">IItem.IsPathBlocking(Byte)</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingChanged">IThing.ThingChanged</a>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_LocationChanged">IThing.LocationChanged</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_ThingId">IThing.ThingId</a>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_TypeId">IThing.TypeId</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_UniqueId">IThing.UniqueId</a>
@@ -194,7 +194,19 @@
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_CanBeMoved">IThing.CanBeMoved</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_TrackedEvents">IThing.TrackedEvents</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_Conditions">IThing.Conditions</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_DescribeForLogger">IThing.DescribeForLogger()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_StartTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_">IThing.StartTrackingEvent(IEvent, String)</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Common.Contracts.Abstractions.IThing.html#Fibula_Common_Contracts_Abstractions_IThing_StopTrackingEvent_Fibula_Scheduling_Contracts_Abstractions_IEvent_System_String_">IThing.StopTrackingEvent(IEvent, String)</a>
     </div>
     <div>
       <span class="xref">System.IEquatable&lt;Fibula.Common.Contracts.Abstractions.IThing&gt;.Equals(Fibula.Common.Contracts.Abstractions.IThing)</span>
@@ -234,7 +246,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_DefaultContainerCapacity.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.DefaultContainerCapacity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L26">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L26">View Source</a>
   </span>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_DefaultContainerCapacity" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.DefaultContainerCapacity">DefaultContainerCapacity</h4>
   <div class="markdown level1 summary"><p>The default container capacity value.</p>
@@ -266,7 +278,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_Capacity.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.Capacity%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L51">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L51">View Source</a>
   </span>
   <a id="Fibula_Items_Contracts_Abstractions_IContainerItem_Capacity_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Capacity*"></a>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_Capacity" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Capacity">Capacity</h4>
@@ -297,7 +309,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_Content.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.Content%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L46">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L46">View Source</a>
   </span>
   <a id="Fibula_Items_Contracts_Abstractions_IContainerItem_Content_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Content*"></a>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_Content" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Content">Content</h4>
@@ -328,7 +340,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_Item_System_Int32_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.Item(System.Int32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L58">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L58">View Source</a>
   </span>
   <a id="Fibula_Items_Contracts_Abstractions_IContainerItem_Item_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Item*"></a>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_Item_System_Int32_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.Item(System.Int32)">Item[Int32]</h4>
@@ -380,7 +392,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_CountAmountAt_System_Byte_System_UInt16_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.CountAmountAt(System.Byte%2CSystem.UInt16)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L66">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L66">View Source</a>
   </span>
   <a id="Fibula_Items_Contracts_Abstractions_IContainerItem_CountAmountAt_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.CountAmountAt*"></a>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_CountAmountAt_System_Byte_System_UInt16_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.CountAmountAt(System.Byte,System.UInt16)">CountAmountAt(Byte, UInt16)</h4>
@@ -436,7 +448,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_IsChildOf_Fibula_Items_Contracts_Abstractions_IItem_.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.IsChildOf(Fibula.Items.Contracts.Abstractions.IItem)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L73">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L73">View Source</a>
   </span>
   <a id="Fibula_Items_Contracts_Abstractions_IContainerItem_IsChildOf_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.IsChildOf*"></a>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_IsChildOf_Fibula_Items_Contracts_Abstractions_IItem_" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.IsChildOf(Fibula.Items.Contracts.Abstractions.IItem)">IsChildOf(IItem)</h4>
@@ -488,7 +500,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_ContentAdded.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.ContentAdded%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L31">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L31">View Source</a>
   </span>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_ContentAdded" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.ContentAdded">ContentAdded</h4>
   <div class="markdown level1 summary"><p>A delegate to invoke when new content is added to this container.</p>
@@ -518,7 +530,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_ContentRemoved.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.ContentRemoved%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L41">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L41">View Source</a>
   </span>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_ContentRemoved" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.ContentRemoved">ContentRemoved</h4>
   <div class="markdown level1 summary"><p>A delegate to invoke when content is removed from this container.</p>
@@ -548,7 +560,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem_ContentUpdated.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem.ContentUpdated%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L36">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L36">View Source</a>
   </span>
   <h4 id="Fibula_Items_Contracts_Abstractions_IContainerItem_ContentUpdated" data-uid="Fibula.Items.Contracts.Abstractions.IContainerItem.ContentUpdated">ContentUpdated</h4>
   <div class="markdown level1 summary"><p>A delegate to invoke when content is updated in this container.</p>
@@ -575,6 +587,15 @@
   </table>
   <h3 id="extensionmethods">Extension Methods</h3>
   <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
+  </div>
+  <div>
+      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+  </div>
+  <div>
       <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ContainerExtensions.html#Fibula_Mechanics_Contracts_Extensions_ContainerExtensions_GetParentContainerHierarchy_Fibula_Common_Contracts_Abstractions_IContainedThing_System_Boolean_">ContainerExtensions.GetParentContainerHierarchy(IContainedThing, Boolean)</a>
   </div>
   <div>
@@ -584,13 +605,10 @@
       <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ItemExtensions.html#Fibula_Mechanics_Contracts_Extensions_ItemExtensions_GetCarrier_Fibula_Items_Contracts_Abstractions_IItem_">ItemExtensions.GetCarrier(IItem)</a>
   </div>
   <div>
-      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_YieldSingleItem__1___0_">ObjectExtensions.YieldSingleItem&lt;T&gt;(T)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ThingExtensions.html#Fibula_Mechanics_Contracts_Extensions_ThingExtensions_RemainingCooldownTime_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Enumerations_ConditionType_System_DateTimeOffset_">ThingExtensions.RemainingCooldownTime(IThing, ConditionType, DateTimeOffset)</a>
   </div>
   <div>
-      <a class="xref" href="Fibula.Common.Utilities.ObjectExtensions.html#Fibula_Common_Utilities_ObjectExtensions_GetPropertyValue_System_Object_System_String_">ObjectExtensions.GetPropertyValue(Object, String)</a>
-  </div>
-  <div>
-      <a class="xref" href="Fibula.Common.Utilities.Validate.html#Fibula_Common_Utilities_Validate_ThrowIfNull_System_Object_System_String_">Validate.ThrowIfNull(Object, String)</a>
+      <a class="xref" href="Fibula.Mechanics.Contracts.Extensions.ThingExtensions.html#Fibula_Mechanics_Contracts_Extensions_ThingExtensions_AddOrExtendCondition_Fibula_Common_Contracts_Abstractions_IThing_Fibula_Common_Contracts_Abstractions_ICondition_">ThingExtensions.AddOrExtendCondition(IThing, ICondition)</a>
   </div>
 </article>
           </div>
@@ -603,7 +621,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Items_Contracts_Abstractions_IContainerItem.md&amp;value=---%0Auid%3A%20Fibula.Items.Contracts.Abstractions.IContainerItem%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Items.Contracts/Abstractions/IContainerItem.cs/#L21" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

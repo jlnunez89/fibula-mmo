@@ -92,6 +92,7 @@
     <div class="level1"><span class="xref">Priority_Queue.FastPriorityQueueNode</span></div>
     <div class="level2"><span class="xref">Priority_Queue.StablePriorityQueueNode</span></div>
     <div class="level3"><span class="xref">BaseEvent</span></div>
+      <div class="level4"><a class="xref" href="Fibula.Mechanics.Conditions.Condition.html">Condition</a></div>
       <div class="level4"><a class="xref" href="Fibula.Mechanics.Notifications.Notification.html">Notification</a></div>
       <div class="level4"><a class="xref" href="Fibula.Mechanics.Operations.Operation.html">Operation</a></div>
   </div>
@@ -146,7 +147,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent__ctor_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.%23ctor(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L29">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L30">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent__ctor_" data-uid="Fibula.Scheduling.BaseEvent.#ctor*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent__ctor_System_UInt32_" data-uid="Fibula.Scheduling.BaseEvent.#ctor(System.UInt32)">BaseEvent(UInt32)</h4>
@@ -182,7 +183,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_CanBeCancelled.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.CanBeCancelled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L78">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L86">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_CanBeCancelled_" data-uid="Fibula.Scheduling.BaseEvent.CanBeCancelled*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_CanBeCancelled" data-uid="Fibula.Scheduling.BaseEvent.CanBeCancelled">CanBeCancelled</h4>
@@ -213,7 +214,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_EventId.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.EventId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L52">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L60">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_EventId_" data-uid="Fibula.Scheduling.BaseEvent.EventId*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_EventId" data-uid="Fibula.Scheduling.BaseEvent.EventId">EventId</h4>
@@ -241,10 +242,41 @@
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_ExcludeFromTelemetry.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.ExcludeFromTelemetry%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L91">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_ExcludeFromTelemetry_" data-uid="Fibula.Scheduling.BaseEvent.ExcludeFromTelemetry*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_ExcludeFromTelemetry" data-uid="Fibula.Scheduling.BaseEvent.ExcludeFromTelemetry">ExcludeFromTelemetry</h4>
+  <div class="markdown level1 summary"><p>Gets or sets a value indicating whether to exclude this event from telemetry logging.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public bool ExcludeFromTelemetry { get; protected set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_HasCancellationHandler.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.HasCancellationHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L68">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L76">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_HasCancellationHandler_" data-uid="Fibula.Scheduling.BaseEvent.HasCancellationHandler*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_HasCancellationHandler" data-uid="Fibula.Scheduling.BaseEvent.HasCancellationHandler">HasCancellationHandler</h4>
@@ -275,7 +307,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_HasExpeditionHandler.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.HasExpeditionHandler%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L73">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L81">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_HasExpeditionHandler_" data-uid="Fibula.Scheduling.BaseEvent.HasExpeditionHandler*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_HasExpeditionHandler" data-uid="Fibula.Scheduling.BaseEvent.HasExpeditionHandler">HasExpeditionHandler</h4>
@@ -306,7 +338,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_RepeatAfter.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.RepeatAfter%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L63">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L71">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_RepeatAfter_" data-uid="Fibula.Scheduling.BaseEvent.RepeatAfter*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_RepeatAfter" data-uid="Fibula.Scheduling.BaseEvent.RepeatAfter">RepeatAfter</h4>
@@ -338,7 +370,7 @@ The event is not repeated if the value is not positive.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_RequestorId.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.RequestorId%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L57">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L65">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_RequestorId_" data-uid="Fibula.Scheduling.BaseEvent.RequestorId*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_RequestorId" data-uid="Fibula.Scheduling.BaseEvent.RequestorId">RequestorId</h4>
@@ -364,6 +396,37 @@ The event is not repeated if the value is not positive.</p>
       </tr>
     </tbody>
   </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_State.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.State%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L96">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_State_" data-uid="Fibula.Scheduling.BaseEvent.State*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_State" data-uid="Fibula.Scheduling.BaseEvent.State">State</h4>
+  <div class="markdown level1 summary"><p>Gets or sets the event's state.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public EventState State { get; set; }</code></pre>
+  </div>
+  <h5 class="propertyValue">Property Value</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Enumerations.EventState.html">EventState</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -371,7 +434,7 @@ The event is not repeated if the value is not positive.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Cancel.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Cancel%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L90">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L108">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_Cancel_" data-uid="Fibula.Scheduling.BaseEvent.Cancel*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_Cancel" data-uid="Fibula.Scheduling.BaseEvent.Cancel">Cancel()</h4>
@@ -400,10 +463,44 @@ The event is not repeated if the value is not positive.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Complete_System_Boolean_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Complete(System.Boolean)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L136">View Source</a>
+  </span>
+  <a id="Fibula_Scheduling_BaseEvent_Complete_" data-uid="Fibula.Scheduling.BaseEvent.Complete*"></a>
+  <h4 id="Fibula_Scheduling_BaseEvent_Complete_System_Boolean_" data-uid="Fibula.Scheduling.BaseEvent.Complete(System.Boolean)">Complete(Boolean)</h4>
+  <div class="markdown level1 summary"><p>Marks this event as completed, notifying subscribers of it's <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Completed">Completed</a> event.</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public void Complete(bool asCancelled = false)</code></pre>
+  </div>
+  <h5 class="parameters">Parameters</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Name</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><span class="xref">System.Boolean</span></td>
+        <td><span class="parametername">asCancelled</span></td>
+        <td><p>Optional. A value indicating whether the event was cancelled.</p>
+</td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Equals(Fibula.Scheduling.BaseEvent)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L119">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L148">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_Equals_" data-uid="Fibula.Scheduling.BaseEvent.Equals*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_" data-uid="Fibula.Scheduling.BaseEvent.Equals(Fibula.Scheduling.BaseEvent)">Equals(BaseEvent)</h4>
@@ -453,7 +550,7 @@ The event is not repeated if the value is not positive.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L84">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L102">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_Execute_" data-uid="Fibula.Scheduling.BaseEvent.Execute*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_Execute_Fibula_Scheduling_Contracts_Abstractions_IEventContext_" data-uid="Fibula.Scheduling.BaseEvent.Execute(Fibula.Scheduling.Contracts.Abstractions.IEventContext)">Execute(IEventContext)</h4>
@@ -487,7 +584,7 @@ The event is not repeated if the value is not positive.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Expedite.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Expedite%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L104">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L122">View Source</a>
   </span>
   <a id="Fibula_Scheduling_BaseEvent_Expedite_" data-uid="Fibula.Scheduling.BaseEvent.Expedite*"></a>
   <h4 id="Fibula_Scheduling_BaseEvent_Expedite" data-uid="Fibula.Scheduling.BaseEvent.Expedite">Expedite()</h4>
@@ -521,7 +618,7 @@ The event is not repeated if the value is not positive.</p>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Cancelled.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Cancelled%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L42">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L45">View Source</a>
   </span>
   <h4 id="Fibula_Scheduling_BaseEvent_Cancelled" data-uid="Fibula.Scheduling.BaseEvent.Cancelled">Cancelled</h4>
   <div class="markdown level1 summary"><p>Fired when this event is cancelled.</p>
@@ -548,10 +645,40 @@ The event is not repeated if the value is not positive.</p>
   </table>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Completed.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Completed%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+  </span>
+  <span class="small pull-right mobile-hide">
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L55">View Source</a>
+  </span>
+  <h4 id="Fibula_Scheduling_BaseEvent_Completed" data-uid="Fibula.Scheduling.BaseEvent.Completed">Completed</h4>
+  <div class="markdown level1 summary"><p>Fired when this even is processed to completion (after no more repeats).</p>
+</div>
+  <div class="markdown level1 conceptual"></div>
+  <h5 class="decalaration">Declaration</h5>
+  <div class="codewrapper">
+    <pre><code class="lang-csharp hljs">public event EventCompletedDelegate Completed</code></pre>
+  </div>
+  <h5 class="eventType">Event Type</h5>
+  <table class="table table-bordered table-striped table-condensed">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Description</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><a class="xref" href="Fibula.Scheduling.Contracts.Delegates.EventCompletedDelegate.html">EventCompletedDelegate</a></td>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <span class="small pull-right mobile-hide">
+    <span class="divider">|</span>
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent_Expedited.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent.Expedited%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L47">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L50">View Source</a>
   </span>
   <h4 id="Fibula_Scheduling_BaseEvent_Expedited" data-uid="Fibula.Scheduling.BaseEvent.Expedited">Expedited</h4>
   <div class="markdown level1 summary"><p>Fired when this event is expedited.</p>
@@ -604,7 +731,7 @@ The event is not repeated if the value is not positive.</p>
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Scheduling_BaseEvent.md&amp;value=---%0Auid%3A%20Fibula.Scheduling.BaseEvent%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Scheduling/BaseEvent.cs/#L23" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Scheduling/BaseEvent.cs/#L24" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

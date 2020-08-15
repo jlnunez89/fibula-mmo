@@ -124,7 +124,7 @@
       <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_CanBeCancelled">Operation.CanBeCancelled</a>
     </div>
     <div>
-      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_ExhaustionType">Operation.ExhaustionType</a>
+      <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_AssociatedExhaustion">Operation.AssociatedExhaustion</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_GetRequestor_Fibula_Creatures_Contracts_Abstractions_ICreatureFinder_">Operation.GetRequestor(ICreatureFinder)</a>
@@ -148,6 +148,9 @@
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedited">BaseEvent.Expedited</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Completed">BaseEvent.Completed</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_EventId">BaseEvent.EventId</a>
     </div>
     <div>
@@ -163,10 +166,19 @@
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_HasExpeditionHandler">BaseEvent.HasExpeditionHandler</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_ExcludeFromTelemetry">BaseEvent.ExcludeFromTelemetry</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_State">BaseEvent.State</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Cancel">BaseEvent.Cancel()</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Expedite">BaseEvent.Expedite()</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Complete_System_Boolean_">BaseEvent.Complete(Boolean)</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Scheduling.BaseEvent.html#Fibula_Scheduling_BaseEvent_Equals_Fibula_Scheduling_BaseEvent_">BaseEvent.Equals(BaseEvent)</a>
@@ -212,19 +224,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation__ctor_System_UInt32_System_Nullable_System_TimeSpan__.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation.%23ctor(System.UInt32%2CSystem.Nullable%7BSystem.TimeSpan%7D)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation__ctor_System_UInt32_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation.%23ctor(System.UInt32)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L39">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L33">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Operations_BaseEnvironmentOperation__ctor_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.#ctor*"></a>
-  <h4 id="Fibula_Mechanics_Operations_BaseEnvironmentOperation__ctor_System_UInt32_System_Nullable_System_TimeSpan__" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.#ctor(System.UInt32,System.Nullable{System.TimeSpan})">BaseEnvironmentOperation(UInt32, Nullable&lt;TimeSpan&gt;)</h4>
+  <h4 id="Fibula_Mechanics_Operations_BaseEnvironmentOperation__ctor_System_UInt32_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.#ctor(System.UInt32)">BaseEnvironmentOperation(UInt32)</h4>
   <div class="markdown level1 summary"><p>Initializes a new instance of the <a class="xref" href="Fibula.Mechanics.Operations.BaseEnvironmentOperation.html">BaseEnvironmentOperation</a> class.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public BaseEnvironmentOperation(uint requestorId, TimeSpan? actionExhaustionCost = default(TimeSpan? ))</code></pre>
+    <pre><code class="lang-csharp hljs">public BaseEnvironmentOperation(uint requestorId)</code></pre>
   </div>
   <h5 class="parameters">Parameters</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -242,49 +254,8 @@
         <td><p>The id of the creature requesting the movement.</p>
 </td>
       </tr>
-      <tr>
-        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.TimeSpan</span>&gt;</td>
-        <td><span class="parametername">actionExhaustionCost</span></td>
-        <td><p>Optional. The cost of this operation. Defaults to <span class="xref">Fibula.Mechanics.Operations.BaseEnvironmentOperation.DefaultExhaustionCost</span>.</p>
-</td>
-      </tr>
     </tbody>
   </table>
-  <h3 id="properties">Properties
-  </h3>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation_ExhaustionCost.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation.ExhaustionCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L53">View Source</a>
-  </span>
-  <a id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_ExhaustionCost_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.ExhaustionCost*"></a>
-  <h4 id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_ExhaustionCost" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.ExhaustionCost">ExhaustionCost</h4>
-  <div class="markdown level1 summary"><p>Gets or sets the exhaustion cost time of this operation.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">public override TimeSpan ExhaustionCost { get; protected set; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><span class="xref">System.TimeSpan</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <h5 class="overrides">Overrides</h5>
-  <div><a class="xref" href="Fibula.Mechanics.Operations.Operation.html#Fibula_Mechanics_Operations_Operation_ExhaustionCost">Operation.ExhaustionCost</a></div>
   <h3 id="methods">Methods
   </h3>
   <span class="small pull-right mobile-hide">
@@ -292,7 +263,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation_PlaceCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Map_Contracts_Abstractions_ITile_Fibula_Creatures_Contracts_Abstractions_ICreature_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation.PlaceCreature(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext%2CFibula.Map.Contracts.Abstractions.ITile%2CFibula.Creatures.Contracts.Abstractions.ICreature)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L62">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L50">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_PlaceCreature_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.PlaceCreature*"></a>
   <h4 id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_PlaceCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Map_Contracts_Abstractions_ITile_Fibula_Creatures_Contracts_Abstractions_ICreature_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.PlaceCreature(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext,Fibula.Map.Contracts.Abstractions.ITile,Fibula.Creatures.Contracts.Abstractions.ICreature)">PlaceCreature(IElevatedOperationContext, ITile, ICreature)</h4>
@@ -354,7 +325,7 @@
     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation_RemoveCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Creatures_Contracts_Abstractions_ICreature_.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation.RemoveCreature(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext%2CFibula.Creatures.Contracts.Abstractions.ICreature)%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L127">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L128">View Source</a>
   </span>
   <a id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_RemoveCreature_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.RemoveCreature*"></a>
   <h4 id="Fibula_Mechanics_Operations_BaseEnvironmentOperation_RemoveCreature_Fibula_Mechanics_Contracts_Abstractions_IElevatedOperationContext_Fibula_Creatures_Contracts_Abstractions_ICreature_" data-uid="Fibula.Mechanics.Operations.BaseEnvironmentOperation.RemoveCreature(Fibula.Mechanics.Contracts.Abstractions.IElevatedOperationContext,Fibula.Creatures.Contracts.Abstractions.ICreature)">RemoveCreature(IElevatedOperationContext, ICreature)</h4>
@@ -439,7 +410,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Operations_BaseEnvironmentOperation.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Operations.BaseEnvironmentOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L27" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics/Operations/BaseEnvironmentOperation.cs/#L27" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>

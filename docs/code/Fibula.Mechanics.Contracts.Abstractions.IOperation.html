@@ -95,6 +95,9 @@
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_Expedited">IEvent.Expedited</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_Completed">IEvent.Completed</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_EventId">IEvent.EventId</a>
     </div>
     <div>
@@ -104,7 +107,13 @@
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_CanBeCancelled">IEvent.CanBeCancelled</a>
     </div>
     <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_ExcludeFromTelemetry">IEvent.ExcludeFromTelemetry</a>
+    </div>
+    <div>
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_RepeatAfter">IEvent.RepeatAfter</a>
+    </div>
+    <div>
+      <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_State">IEvent.State</a>
     </div>
     <div>
       <a class="xref" href="Fibula.Scheduling.Contracts.Abstractions.IEvent.html#Fibula_Scheduling_Contracts_Abstractions_IEvent_Cancel">IEvent.Cancel()</a>
@@ -126,19 +135,19 @@
   </h3>
   <span class="small pull-right mobile-hide">
     <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionCost.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionCost%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IOperation_AssociatedExhaustion.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IOperation.AssociatedExhaustion%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
   </span>
   <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/IOperation.cs/#L31">View Source</a>
+    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics.Contracts/Abstractions/IOperation.cs/#L26">View Source</a>
   </span>
-  <a id="Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionCost_" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionCost*"></a>
-  <h4 id="Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionCost" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionCost">ExhaustionCost</h4>
-  <div class="markdown level1 summary"><p>Gets the exhaustion cost of this operation.</p>
+  <a id="Fibula_Mechanics_Contracts_Abstractions_IOperation_AssociatedExhaustion_" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.AssociatedExhaustion*"></a>
+  <h4 id="Fibula_Mechanics_Contracts_Abstractions_IOperation_AssociatedExhaustion" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.AssociatedExhaustion">AssociatedExhaustion</h4>
+  <div class="markdown level1 summary"><p>Gets the information about the exhaustion that this operation produces.</p>
 </div>
   <div class="markdown level1 conceptual"></div>
   <h5 class="decalaration">Declaration</h5>
   <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">TimeSpan ExhaustionCost { get; }</code></pre>
+    <pre><code class="lang-csharp hljs">(ConditionType Type, TimeSpan Cost)? AssociatedExhaustion { get; }</code></pre>
   </div>
   <h5 class="propertyValue">Property Value</h5>
   <table class="table table-bordered table-striped table-condensed">
@@ -150,38 +159,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><span class="xref">System.TimeSpan</span></td>
-        <td></td>
-      </tr>
-    </tbody>
-  </table>
-  <span class="small pull-right mobile-hide">
-    <span class="divider">|</span>
-    <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionType.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionType%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A">Improve this Doc</a>
-  </span>
-  <span class="small pull-right mobile-hide">
-    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/IOperation.cs/#L26">View Source</a>
-  </span>
-  <a id="Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionType_" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionType*"></a>
-  <h4 id="Fibula_Mechanics_Contracts_Abstractions_IOperation_ExhaustionType" data-uid="Fibula.Mechanics.Contracts.Abstractions.IOperation.ExhaustionType">ExhaustionType</h4>
-  <div class="markdown level1 summary"><p>Gets the type of exhaustion that this operation produces.</p>
-</div>
-  <div class="markdown level1 conceptual"></div>
-  <h5 class="decalaration">Declaration</h5>
-  <div class="codewrapper">
-    <pre><code class="lang-csharp hljs">ExhaustionType ExhaustionType { get; }</code></pre>
-  </div>
-  <h5 class="propertyValue">Property Value</h5>
-  <table class="table table-bordered table-striped table-condensed">
-    <thead>
-      <tr>
-        <th>Type</th>
-        <th>Description</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><a class="xref" href="Fibula.Mechanics.Contracts.Enumerations.ExhaustionType.html">ExhaustionType</a></td>
+        <td><span class="xref">System.Nullable</span>&lt;<span class="xref">System.ValueTuple</span>&lt;<a class="xref" href="Fibula.Common.Contracts.Enumerations.ConditionType.html">ConditionType</a>, <span class="xref">System.TimeSpan</span>&gt;&gt;</td>
         <td></td>
       </tr>
     </tbody>
@@ -207,7 +185,7 @@
                     <a href="https://github.com/jlnunez89/fibula-mmo/new/master/apiSpec/new?filename=Fibula_Mechanics_Contracts_Abstractions_IOperation.md&amp;value=---%0Auid%3A%20Fibula.Mechanics.Contracts.Abstractions.IOperation%0Asummary%3A%20'*You%20can%20override%20summary%20for%20the%20API%20here%20using%20*MARKDOWN*%20syntax'%0A---%0A%0A*Please%20type%20below%20more%20information%20about%20this%20API%3A*%0A%0A" class="contribution-link">Improve this Doc</a>
                   </li>
                   <li>
-                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/Fibula.Mechanics.Contracts/Abstractions/IOperation.cs/#L21" class="contribution-link">View Source</a>
+                    <a href="https://github.com/jlnunez89/fibula-mmo/blob/master/src/Fibula.Mechanics.Contracts/Abstractions/IOperation.cs/#L21" class="contribution-link">View Source</a>
                   </li>
                 </ul>
               </div>
