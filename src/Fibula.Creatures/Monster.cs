@@ -14,6 +14,7 @@ namespace Fibula.Creatures
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Constants;
@@ -121,6 +122,15 @@ namespace Fibula.Creatures
                     this.SetAttackTarget(otherCombatant);
                 }
             }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Monster"/> that is a shallow copy of the current instance.
+        /// </summary>
+        /// <returns>A new <see cref="Monster"/> that is a shallow copy of this instance.</returns>
+        public override IThing Clone()
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>

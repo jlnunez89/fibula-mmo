@@ -16,6 +16,7 @@ namespace Fibula.Items
     using System.Globalization;
     using System.Linq;
     using Fibula.Common;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
@@ -380,6 +381,23 @@ namespace Fibula.Items
         public override string DescribeForLogger()
         {
             return $"[{this.Type.TypeId}] {this.GetType().Name}: {this.Amount} {this.Type.Name}";
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Item"/> that is a shallow copy of the current instance.
+        /// </summary>
+        /// <returns>A new <see cref="Item"/> that is a shallow copy of this instance.</returns>
+        public override IThing Clone()
+        {
+            var newItem = new Item(this.Type);
+
+            // Override the default attributes with the actual attributes this guy has.
+            foreach (var (attribute, attributeValue) in this.Attributes)
+            {
+                newItem.Attributes[attribute] = attributeValue;
+            }
+
+            return newItem;
         }
 
         /// <summary>

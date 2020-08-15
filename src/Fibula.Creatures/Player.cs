@@ -13,6 +13,7 @@ namespace Fibula.Creatures
 {
     using System;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
@@ -150,6 +151,15 @@ namespace Fibula.Creatures
             {
                 this.SetAttackTarget(null);
             }
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="Player"/> that is a shallow copy of the current instance.
+        /// </summary>
+        /// <returns>A new <see cref="Player"/> that is a shallow copy of this instance.</returns>
+        public override IThing Clone()
+        {
+            throw new NotSupportedException();
         }
 
         /// <summary>

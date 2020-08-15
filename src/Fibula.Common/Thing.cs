@@ -185,5 +185,11 @@ namespace Fibula.Common
 
             this.TrackedEvents.Remove(identifier);
         }
+
+        /// <summary>
+        /// Creates a new <see cref="IThing"/> that is a shallow copy of the current instance.
+        /// </summary>
+        /// <returns>A new <see cref="IThing"/> that is a shallow copy of this instance.</returns>
+        public abstract IThing Clone();
     }
 }

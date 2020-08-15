@@ -339,6 +339,23 @@ namespace Fibula.Items
         }
 
         /// <summary>
+        /// Creates a new <see cref="ContainerItem"/> that is a shallow copy of the current instance.
+        /// </summary>
+        /// <returns>A new <see cref="ContainerItem"/> that is a shallow copy of this instance.</returns>
+        public override IThing Clone()
+        {
+            var newItem = new ContainerItem(this.Type);
+
+            // Override the default attributes with the actual attributes this guy has.
+            foreach (var (attribute, attributeValue) in this.Attributes)
+            {
+                newItem.Attributes[attribute] = attributeValue;
+            }
+
+            return newItem;
+        }
+
+        /// <summary>
         /// Invokes the <see cref="ContentAdded"/> event on this container.
         /// </summary>
         /// <param name="itemAdded">The item added.</param>
