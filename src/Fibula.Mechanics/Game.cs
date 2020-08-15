@@ -687,13 +687,10 @@ namespace Fibula.Mechanics
             var movementOp = new MovementOperation(requestorId, clientThingId, fromLocation, fromIndex, fromCreatureId, toLocation, toCreatureId, amount);
 
             // Add delay from current exhaustion of the requestor if it's a creature, and this is a movement in the map.
-            if (requestorId == fromCreatureId &&
-                fromLocation.Type == LocationType.Map &&
-                toLocation.Type == LocationType.Map &&
-                creature is ICreatureWithExhaustion creatureWithExhaustion)
+            if (requestorId == fromCreatureId && fromLocation.Type == LocationType.Map && toLocation.Type == LocationType.Map)
             {
                 // The scheduling delay becomes any cooldown debt for this operation.
-                scheduleDelay = creatureWithExhaustion.CalculateRemainingCooldownTime(movementOp.ExhaustionType, this.scheduler.CurrentTime);
+                scheduleDelay = creature.RemainingCooldownTime(ConditionType.ExhaustedMovement, this.scheduler.CurrentTime);
             }
 
             this.scheduler.ScheduleEvent(movementOp, scheduleDelay);
@@ -856,12 +853,10 @@ namespace Fibula.Mechanics
             // Normalize delay to protect against negative time spans.
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
 
-            // Add delay from current exhaustion of the requestor, if any.
-            if (operation.RequestorId > 0 && this.creatureManager.FindCreatureById(operation.RequestorId) is ICreatureWithExhaustion creatureWithExhaustion)
+            // Add delay if there is an associated exhaustion to this operation, if any.
+            if (operation.RequestorId > 0 && operation.AssociatedExhaustion.HasValue && this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
             {
-                TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(operation.ExhaustionType, this.scheduler.CurrentTime);
-
-                operationDelay += cooldownRemaining;
+                operationDelay += requestor.RemainingCooldownTime(operation.AssociatedExhaustion.Value.Type, this.scheduler.CurrentTime);
             }
 
             this.scheduler.ScheduleEvent(operation, operationDelay);
@@ -998,7 +993,10 @@ namespace Fibula.Mechanics
 
                 sw.Stop();
 
-                this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.ProcessedEventTimeMetricName, TelemetryConstants.EventTypeDimensionName).TrackValue(sw.ElapsedMilliseconds, evt.GetType().Name);
+                if (!evt.ExcludeFromTelemetry)
+                {
+                    this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.ProcessedEventTimeMetricName, TelemetryConstants.EventTypeDimensionName).TrackValue(sw.ElapsedMilliseconds, evt.GetType().Name);
+                }
 
                 this.logger.Verbose($"Processed {evt.GetType().Name} with id: {evt.EventId}, current game time: {this.scheduler.CurrentTime.ToUnixTimeMilliseconds()}.");
             }
@@ -1061,7 +1059,7 @@ namespace Fibula.Mechanics
                     this.creatureManager);
             }
 
-            return new EventContext(this.logger);
+            return new EventContext(this.logger, () => this.scheduler.CurrentTime);
         }
 
         /// <summary>

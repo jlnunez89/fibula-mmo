@@ -55,23 +55,22 @@ namespace Fibula.Common
         /// Initializes a new instance of the <see cref="ApplicationContext"/> class.
         /// </summary>
         /// <param name="options">A reference to the application configuration.</param>
-        /// <param name="telemetryOptions">A reference to the telemetry configuration that will be used to create the telemetry client.</param>
         /// <param name="rsaDecryptor">A reference to the RSA decryptor in use.</param>
         /// <param name="itemTypeLoader">A reference to the item type loader in use.</param>
         /// <param name="monsterTypeLoader">A reference to the monster type loader in use.</param>
+        /// <param name="telemetryClient">A reference to the telemetry client.</param>
         /// <param name="cancellationTokenSource">A reference to the master cancellation token source.</param>
         /// <param name="dbContextGenerationFunc">A reference to a function to generate the database context.</param>
         public ApplicationContext(
             IOptions<ApplicationContextOptions> options,
-            IOptions<TelemetryConfiguration> telemetryOptions,
             IRsaDecryptor rsaDecryptor,
             IItemTypeLoader itemTypeLoader,
             IMonsterTypeLoader monsterTypeLoader,
+            TelemetryClient telemetryClient,
             CancellationTokenSource cancellationTokenSource,
             Func<IFibulaDbContext> dbContextGenerationFunc)
         {
             options.ThrowIfNull(nameof(options));
-            telemetryOptions.ThrowIfNull(nameof(telemetryOptions));
             rsaDecryptor.ThrowIfNull(nameof(rsaDecryptor));
             itemTypeLoader.ThrowIfNull(nameof(itemTypeLoader));
             monsterTypeLoader.ThrowIfNull(nameof(monsterTypeLoader));
@@ -84,7 +83,7 @@ namespace Fibula.Common
             this.RsaDecryptor = rsaDecryptor;
             this.CancellationTokenSource = cancellationTokenSource;
 
-            this.TelemetryClient = this.InitializeTelemetry(telemetryOptions.Value);
+            this.TelemetryClient = telemetryClient;
 
             this.itemTypeLoader = itemTypeLoader;
             this.monsterTypeLoader = monsterTypeLoader;

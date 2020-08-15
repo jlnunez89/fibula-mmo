@@ -17,7 +17,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Communications.Packets.Outgoing;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -37,11 +36,6 @@ namespace Fibula.Mechanics.Operations
             this.Creature = creature;
             this.TypeToCancel = typeToCancel ?? typeof(IOperation);
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
         /// <summary>
         /// Gets the creature who's actions are being cancelled.

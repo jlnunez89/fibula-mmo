@@ -18,7 +18,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
@@ -42,11 +41,6 @@ namespace Fibula.Mechanics.Operations
             this.AtLocation = atLocation;
             this.TypeId = typeId;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.MentalCombat;
 
         /// <summary>
         /// Gets the location at which to delete the item.

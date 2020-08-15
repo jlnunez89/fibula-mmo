@@ -22,15 +22,6 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     public interface ICreatureWithExhaustion : ICreature
     {
         /// <summary>
-        /// Gets the current exhaustion information for the entity.
-        /// </summary>
-        /// <remarks>
-        /// The key is a <see cref="ExhaustionType"/>, and the value is a <see cref="DateTimeOffset"/>: the date and time
-        /// at which exhaustion is completely recovered.
-        /// </remarks>
-        IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
-
-        /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
         /// </summary>
         /// <param name="type">The type of exhaustion.</param>

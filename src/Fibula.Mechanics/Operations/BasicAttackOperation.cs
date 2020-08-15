@@ -23,7 +23,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Structs;
     using Fibula.Mechanics.Notifications;
@@ -48,7 +47,7 @@ namespace Fibula.Mechanics.Operations
             this.Target = target;
             this.Attacker = attacker;
 
-            this.ExhaustionCost = exhaustionCost;
+            this.AssociatedExhaustion = (ConditionType.ExhaustedCombat, exhaustionCost);
             this.TargetIdAtScheduleTime = attacker?.AutoAttackTarget?.Id ?? 0;
         }
 
@@ -61,16 +60,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets the combatant that is the target on this operation.
         /// </summary>
         public ICombatant Target { get; }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.PhysicalCombat;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets the id of the target at schedule time.
@@ -150,7 +139,7 @@ namespace Fibula.Mechanics.Operations
                 if (!attackPerformed)
                 {
                     // Update the actual cost if the attack wasn't performed.
-                    this.ExhaustionCost = TimeSpan.Zero;
+                    this.AssociatedExhaustion = null;
                 }
             }
         }

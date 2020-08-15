@@ -20,7 +20,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     /// <summary>
     /// Interface for all creatures that can participate in combat.
     /// </summary>
-    public interface ICombatant : ICreatureWithExhaustion, ICreatureWithSkills, ICreatureThatSensesOthers
+    public interface ICombatant : ICreatureWithSkills, ICreatureThatSensesOthers
     {
         /// <summary>
         /// Event to call when the combatant dies.

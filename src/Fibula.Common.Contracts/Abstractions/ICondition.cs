@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IEventContext.cs" company="2Dudes">
+// <copyright file="ICondition.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,24 +9,25 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Scheduling.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
     using System;
-    using Serilog;
+    using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for an operation context.
+    /// Interface for all conditions.
     /// </summary>
-    public interface IEventContext
+    public interface ICondition : IEvent
     {
         /// <summary>
-        /// Gets a reference to the logger in use.
+        /// Gets the type of this condition.
         /// </summary>
-        ILogger Logger { get; }
+        ConditionType Type { get; }
 
         /// <summary>
-        /// Gets the current time.
+        /// Gets or sets the end time for this condition.
         /// </summary>
-        DateTimeOffset CurrentTime { get; }
+        DateTimeOffset EndTime { get; set; }
     }
 }

@@ -11,10 +11,8 @@
 
 namespace Fibula.Mechanics.Operations
 {
-    using System;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a change modes operation.
@@ -35,16 +33,6 @@ namespace Fibula.Mechanics.Operations
             this.ChaseMode = chaseMode;
             this.IsSafeModeOn = safeModeOn;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.Speech;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets the fight mode to set.

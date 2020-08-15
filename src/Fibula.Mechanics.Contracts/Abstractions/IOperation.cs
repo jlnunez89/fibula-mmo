@@ -12,7 +12,7 @@
 namespace Fibula.Mechanics.Contracts.Abstractions
 {
     using System;
-    using Fibula.Mechanics.Contracts.Enumerations;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
@@ -21,13 +21,8 @@ namespace Fibula.Mechanics.Contracts.Abstractions
     public interface IOperation : IEvent
     {
         /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
+        /// Gets the information about the exhaustion that this operation produces.
         /// </summary>
-        ExhaustionType ExhaustionType { get; }
-
-        /// <summary>
-        /// Gets the exhaustion cost of this operation.
-        /// </summary>
-        TimeSpan ExhaustionCost { get; }
+        (ConditionType Type, TimeSpan Cost)? AssociatedExhaustion { get; }
     }
 }

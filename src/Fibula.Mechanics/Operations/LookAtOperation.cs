@@ -25,7 +25,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Items.Contracts.Extensions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -48,16 +47,6 @@ namespace Fibula.Mechanics.Operations
             this.StackPosition = stackPosition;
             this.PlayerToDescribeFor = playerToDescribeFor;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets the id of the thing to describe.

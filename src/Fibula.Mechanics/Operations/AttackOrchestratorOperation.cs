@@ -12,10 +12,11 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
 
     /// <summary>
@@ -34,16 +35,6 @@ namespace Fibula.Mechanics.Operations
 
             this.Attacker = attacker;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets the combatant that is attacking on this operation.
@@ -79,12 +70,9 @@ namespace Fibula.Mechanics.Operations
             var operationDelay = TimeSpan.Zero;
 
             // Add delay from current exhaustion of the requestor, if any.
-            // Notice that this exhaustion comes from the actual attack operation, not *this* operation.
-            if (this.Attacker is ICreatureWithExhaustion creatureWithExhaustion)
+            if (this.Attacker is ICreature creature)
             {
-                TimeSpan cooldownRemaining = creatureWithExhaustion.CalculateRemainingCooldownTime(autoAttackOp.ExhaustionType, context.Scheduler.CurrentTime);
-
-                operationDelay += cooldownRemaining;
+                operationDelay += creature.RemainingCooldownTime(ConditionType.ExhaustedCombat, context.Scheduler.CurrentTime);
             }
 
             // Schedule the actual attack operation.

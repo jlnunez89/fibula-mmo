@@ -181,10 +181,11 @@ namespace Fibula.Standalone
             // Add the master cancellation token source of the entire service.
             services.AddSingleton(Program.MasterCancellationTokenSource);
 
+            services.AddApplicationInsightsTelemetryWorkerService();
+
             // Add known instances of configuration and logger.
             services.AddSingleton(hostingContext.Configuration);
             services.AddSingleton(Log.Logger);
-            services.AddSingleton<TelemetryClient>();
 
             services.AddSingleton<IApplicationContext, ApplicationContext>();
             services.AddSingleton<IScheduler, Scheduler>();

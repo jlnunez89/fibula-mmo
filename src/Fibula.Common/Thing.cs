@@ -16,6 +16,7 @@ namespace Fibula.Common
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Delegates;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Scheduling.Contracts.Abstractions;
@@ -38,6 +39,7 @@ namespace Fibula.Common
             this.UniqueId = Guid.NewGuid();
 
             this.TrackedEvents = new Dictionary<string, IEvent>();
+            this.Conditions = new Dictionary<ConditionType, ICondition>();
         }
 
         /// <summary>
@@ -105,6 +107,14 @@ namespace Fibula.Common
         /// Gets the tracked events for this thing.
         /// </summary>
         public IDictionary<string, IEvent> TrackedEvents { get; }
+
+        /// <summary>
+        /// Gets the current condition information for the thing.
+        /// </summary>
+        /// <remarks>
+        /// The key is a <see cref="ConditionType"/>, and the value is the <see cref="ICondition"/>.
+        /// </remarks>
+        public IDictionary<ConditionType, ICondition> Conditions { get; }
 
         /// <summary>
         /// Invokes the <see cref="LocationChanged"/> event on this thing.

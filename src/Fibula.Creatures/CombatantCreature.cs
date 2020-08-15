@@ -22,7 +22,6 @@ namespace Fibula.Creatures
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Delegates;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Structs;
 
     /// <summary>
@@ -98,7 +97,6 @@ namespace Fibula.Creatures
             this.baseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
 
             this.exhaustionLock = new object();
-            this.ExhaustionInformation = new Dictionary<ExhaustionType, DateTimeOffset>();
 
             this.combatSessionDamageTakenMap = new ConcurrentDictionary<uint, uint>();
             this.combatSessionAttackedBy = new HashSet<ICombatant>();
@@ -201,15 +199,6 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
-        /// Gets the current exhaustion information for the entity.
-        /// </summary>
-        /// <remarks>
-        /// The key is a <see cref="ExhaustionType"/>, and the value is a <see cref="DateTimeOffset"/>: the date and time
-        /// at which exhaustion is completely recovered.
-        /// </remarks>
-        public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionInformation { get; }
-
-        /// <summary>
         /// Gets the current skills information for the combatant.
         /// </summary>
         /// <remarks>
@@ -269,53 +258,6 @@ namespace Fibula.Creatures
             }
 
             return targetWasChanged;
-        }
-
-        /// <summary>
-        /// Calculates the remaining <see cref="TimeSpan"/> until the entity's exhaustion is recovered from.
-        /// </summary>
-        /// <param name="type">The type of exhaustion.</param>
-        /// <param name="currentTime">The current time to calculate from.</param>
-        /// <returns>The <see cref="TimeSpan"/> result.</returns>
-        public TimeSpan CalculateRemainingCooldownTime(ExhaustionType type, DateTimeOffset currentTime)
-        {
-            lock (this.exhaustionLock)
-            {
-                if (!this.ExhaustionInformation.TryGetValue(type, out DateTimeOffset readyAtTime))
-                {
-                    return TimeSpan.Zero;
-                }
-
-                var timeLeft = readyAtTime - currentTime;
-
-                if (timeLeft < TimeSpan.Zero)
-                {
-                    this.ExhaustionInformation.Remove(type);
-
-                    return TimeSpan.Zero;
-                }
-
-                return timeLeft;
-            }
-        }
-
-        /// <summary>
-        /// Adds exhaustion of the given type.
-        /// </summary>
-        /// <param name="type">The type of exhaustion to add.</param>
-        /// <param name="fromTime">The reference time from which to add.</param>
-        /// <param name="timeSpan">The amount of time to add exhaustion for.</param>
-        public void AddExhaustion(ExhaustionType type, DateTimeOffset fromTime, TimeSpan timeSpan)
-        {
-            lock (this.exhaustionLock)
-            {
-                if (this.ExhaustionInformation.ContainsKey(type) && this.ExhaustionInformation[type] > fromTime)
-                {
-                    fromTime = this.ExhaustionInformation[type];
-                }
-
-                this.ExhaustionInformation[type] = fromTime + timeSpan;
-            }
         }
 
         /// <summary>

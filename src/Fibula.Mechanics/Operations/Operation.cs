@@ -18,8 +18,8 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
+    using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
     using Fibula.Scheduling;
@@ -51,14 +51,9 @@ namespace Fibula.Mechanics.Operations
         public override bool CanBeCancelled { get; protected set; }
 
         /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
+        /// Gets or sets the information about the exhaustion that this operation produces.
         /// </summary>
-        public abstract ExhaustionType ExhaustionType { get; }
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public abstract TimeSpan ExhaustionCost { get; protected set; }
+        public (ConditionType Type, TimeSpan Cost)? AssociatedExhaustion { get; protected set; }
 
         /// <summary>
         /// Gets the creature that is requesting the event, if known.
@@ -97,10 +92,26 @@ namespace Fibula.Mechanics.Operations
 
             this.Execute(operationContext);
 
-            // Add any exhaustion for the requestor of the operation, if any.
-            if (this.GetRequestor(operationContext.CreatureFinder) is ICreatureWithExhaustion requestor)
+            // Add any associated exhaustion from this operation, the the requestor, if there was one.
+            if (this.AssociatedExhaustion.HasValue && this.GetRequestor(operationContext.CreatureFinder) is ICreature requestor)
             {
-                requestor.AddExhaustion(this.ExhaustionType, operationContext.Scheduler.CurrentTime, this.ExhaustionCost);
+                var exhaustionCondition = new ExhaustionContidion(this.AssociatedExhaustion.Value.Type, context.CurrentTime + this.AssociatedExhaustion.Value.Cost);
+
+                if (requestor.AddOrExtendCondition(exhaustionCondition))
+                {
+                    context.Logger.Verbose($"Added exhaustion condition of type {exhaustionCondition.Type}.");
+
+                    // Remove the condition from the creature once completed.
+                    exhaustionCondition.Completed += (c) =>
+                    {
+                        requestor.Conditions.Remove(exhaustionCondition.Type);
+
+                        context.Logger.Verbose($"Removed exhaustion condition of type {exhaustionCondition.Type}.");
+                    };
+
+                    // And don't forget to actually schedule the condition so that it ends.
+                    operationContext.Scheduler.ScheduleEvent(exhaustionCondition, this.AssociatedExhaustion.Value.Cost);
+                }
             }
         }
 

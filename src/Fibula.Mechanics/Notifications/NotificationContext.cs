@@ -11,6 +11,7 @@
 
 namespace Fibula.Mechanics.Notifications
 {
+    using System;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
@@ -33,7 +34,7 @@ namespace Fibula.Mechanics.Notifications
             ILogger logger,
             IMapDescriptor mapDescriptor,
             ICreatureFinder creatureFinder)
-            : base(logger)
+            : base(logger, () => DateTimeOffset.UtcNow)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             creatureFinder.ThrowIfNull(nameof(creatureFinder));

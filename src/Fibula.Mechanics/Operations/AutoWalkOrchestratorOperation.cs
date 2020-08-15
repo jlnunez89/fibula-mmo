@@ -25,7 +25,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Creatures.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
@@ -45,16 +44,6 @@ namespace Fibula.Mechanics.Operations
 
             this.Creature = creature;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Gets the combatant that is attacking on this operation.
@@ -154,10 +143,10 @@ namespace Fibula.Mechanics.Operations
                         amount: 1);
 
                 // Add delay from current exhaustion of the requestor, if any.
-                if (this.Creature is ICreatureWithExhaustion creatureWithExhaustion)
+                if (this.Creature is ICreature creature)
                 {
                     // The scheduling delay becomes any cooldown debt for this operation.
-                    scheduleDelay = creatureWithExhaustion.CalculateRemainingCooldownTime(autoWalkOp.ExhaustionType, context.Scheduler.CurrentTime);
+                    scheduleDelay = creature.RemainingCooldownTime(ConditionType.ExhaustedMovement, context.Scheduler.CurrentTime);
                 }
 
                 // Schedule the actual walk operation.

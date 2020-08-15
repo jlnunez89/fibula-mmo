@@ -14,7 +14,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents an operation for placing a creature on the map.
@@ -43,11 +42,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets the tile at which to place the creature.
         /// </summary>
         public ITile AtTile { get; }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
 
         /// <summary>
         /// Executes the operation's logic.

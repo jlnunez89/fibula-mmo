@@ -27,30 +27,18 @@ namespace Fibula.Mechanics.Operations
     public abstract class BaseEnvironmentOperation : ElevatedOperation
     {
         /// <summary>
-        /// The default exhaustion cost for environment operations.
-        /// </summary>
-        private static readonly TimeSpan DefaultExhaustionCost = TimeSpan.Zero;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="BaseEnvironmentOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the movement.</param>
-        /// <param name="actionExhaustionCost">Optional. The cost of this operation. Defaults to <see cref="DefaultExhaustionCost"/>.</param>
-        public BaseEnvironmentOperation(uint requestorId, TimeSpan? actionExhaustionCost = null)
+        public BaseEnvironmentOperation(uint requestorId)
             : base(requestorId)
         {
-            this.ExhaustionCost = actionExhaustionCost ?? DefaultExhaustionCost;
         }
 
         ///// <summary>
         ///// Gets the type of exhaustion that this operation produces.
         ///// </summary>
         // public override ExhaustionType ExhaustionType => ExhaustionType.None;
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Attempts to place a creature on the map.

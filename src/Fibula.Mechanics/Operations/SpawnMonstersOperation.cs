@@ -20,7 +20,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Data.Entities;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
 
     /// <summary>
     /// Class that represents a monsters spawn operation.
@@ -39,19 +38,9 @@ namespace Fibula.Mechanics.Operations
         }
 
         /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.None;
-
-        /// <summary>
         /// Gets the spawn that this operation targets.
         /// </summary>
         public Spawn Spawn { get; }
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Executes the operation's logic.

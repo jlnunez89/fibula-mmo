@@ -11,6 +11,7 @@
     <Compile Remove="Abstractions\IActionOperation.cs" />
     <Compile Remove="Abstractions\ICollisionEventRule.cs" />
     <Compile Remove="Abstractions\ICombatOperation.cs" />
+    <Compile Remove="Abstractions\ICreatureWithExhaustion.cs" />
     <Compile Remove="Abstractions\IEventRule.cs" />
     <Compile Remove="Abstractions\IEventRuleArguments.cs" />
     <Compile Remove="Abstractions\IEventRuleContext.cs" />
@@ -36,6 +37,7 @@
     <Compile Remove="Enumerations\ChaseMode.cs" />
     <Compile Remove="Enumerations\ConditionFlag.cs" />
     <Compile Remove="Enumerations\EventRuleType.cs" />
+    <Compile Remove="Enumerations\ExhaustionType.cs" />
     <Compile Remove="Enumerations\FightMode.cs" />
     <Compile Remove="Extensions\EventExtensions.cs" />
     <Compile Remove="Extensions\ScriptExtensions.cs" />
@@ -50,7 +52,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.ApplicationInsights" Version="2.14.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.1.4" />
     <PackageReference Include="Microsoft.Extensions.Hosting.Abstractions" Version="3.1.4" />

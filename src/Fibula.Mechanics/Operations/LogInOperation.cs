@@ -22,7 +22,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -47,11 +46,6 @@ namespace Fibula.Mechanics.Operations
 
             this.PlayerMetadata = playerMetadata;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.MentalCombat;
 
         /// <summary>
         /// Gets the client requesting the log in.

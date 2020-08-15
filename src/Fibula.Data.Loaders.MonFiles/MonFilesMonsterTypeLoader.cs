@@ -182,7 +182,7 @@ namespace Fibula.Data.Loaders.MonFiles
                         monsterType.BaseArmorRating = Convert.ToUInt16(value);
                         break;
                     case "poison":
-                        monsterType.SetConditionInfect(ConditionFlag.Posion, Convert.ToUInt16(value));
+                        monsterType.SetConditionInfect(ConditionType.Posioned, Convert.ToUInt16(value));
                         break;
                     case "losetarget":
                         monsterType.LoseTargetDistance = Convert.ToByte(value);

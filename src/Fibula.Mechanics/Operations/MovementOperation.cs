@@ -26,7 +26,6 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
@@ -51,7 +50,6 @@ namespace Fibula.Mechanics.Operations
         /// <param name="toLocation">The location to which the movement is happening.</param>
         /// <param name="toCreatureId">The id of the creature to which the movement is happening, if any.</param>
         /// <param name="amount">The amount of the thing to move.</param>
-        /// <param name="movementExhaustionCost">Optional. The cost of this operation. Defaults to <see cref="DefaultMovementExhaustionCost"/>.</param>
         public MovementOperation(
             uint requestorId,
             ushort thingId,
@@ -60,8 +58,7 @@ namespace Fibula.Mechanics.Operations
             uint fromCreatureId,
             Location toLocation,
             uint toCreatureId,
-            byte amount,
-            TimeSpan? movementExhaustionCost = null)
+            byte amount)
             : base(requestorId)
         {
             this.ThingMovingId = thingId;
@@ -71,13 +68,7 @@ namespace Fibula.Mechanics.Operations
             this.ToLocation = toLocation;
             this.ToCreatureId = toCreatureId;
             this.Amount = amount;
-            this.ExhaustionCost = movementExhaustionCost ?? DefaultMovementExhaustionCost;
         }
-
-        /// <summary>
-        /// Gets the type of exhaustion that this operation produces.
-        /// </summary>
-        public override ExhaustionType ExhaustionType => ExhaustionType.Movement;
 
         /// <summary>
         /// Gets the id of the thing moving.
@@ -113,11 +104,6 @@ namespace Fibula.Mechanics.Operations
         /// Gets the amount of thing being moved.
         /// </summary>
         public byte Amount { get; }
-
-        /// <summary>
-        /// Gets or sets the exhaustion cost time of this operation.
-        /// </summary>
-        public override TimeSpan ExhaustionCost { get; protected set; }
 
         /// <summary>
         /// Executes the operation's logic.
@@ -714,7 +700,7 @@ namespace Fibula.Mechanics.Operations
             creature.Direction = moveDirection.GetClientSafeDirection();
             creature.LastMovementCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
-            this.ExhaustionCost = creature.CalculateStepDuration(fromTile);
+            this.AssociatedExhaustion = (ConditionType.ExhaustedMovement, creature.CalculateStepDuration(fromTile));
 
             this.SendNotification(
                 context,

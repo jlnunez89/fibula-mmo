@@ -53,7 +53,7 @@ namespace Fibula.Mechanics.Operations
             IPathFinder pathFinderAlgo,
             IPredefinedItemSet predefinedItemSet,
             IScheduler scheduler)
-            : base(logger)
+            : base(logger, () => scheduler.CurrentTime)
         {
             mapDescriptor.ThrowIfNull(nameof(mapDescriptor));
             map.ThrowIfNull(nameof(map));

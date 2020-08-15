@@ -51,6 +51,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         bool CanBeCancelled { get; }
 
         /// <summary>
+        /// Gets a value indicating whether to exclude this event from telemetry logging.
+        /// </summary>
+        bool ExcludeFromTelemetry { get; }
+
+        /// <summary>
         /// Gets the time after which this event should be repeated.
         /// The event is not repeated if the value is not positive.
         /// </summary>

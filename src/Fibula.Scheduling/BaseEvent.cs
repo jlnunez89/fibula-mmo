@@ -86,6 +86,11 @@ namespace Fibula.Scheduling
         public abstract bool CanBeCancelled { get; protected set; }
 
         /// <summary>
+        /// Gets or sets a value indicating whether to exclude this event from telemetry logging.
+        /// </summary>
+        public bool ExcludeFromTelemetry { get; protected set; }
+
+        /// <summary>
         /// Gets or sets the event's state.
         /// </summary>
         public EventState State { get; set; }

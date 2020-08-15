@@ -205,7 +205,7 @@ namespace Fibula.Data.Entities
         }
 
         /// <summary>
-        /// Gets an encoded value containing <see cref="ConditionFlag"/>s, detailing if this type of monster infects upon
+        /// Gets an encoded value containing <see cref="ConditionType"/>s, detailing if this type of monster infects upon
         /// successfuly dealing basic damange in combat.
         /// </summary>
         public ushort ConditionInfect { get; private set; }
@@ -463,7 +463,7 @@ namespace Fibula.Data.Entities
         /// </summary>
         /// <param name="condition">The type of condition flag.</param>
         /// <param name="value">The base value by which to infect.</param>
-        public void SetConditionInfect(ConditionFlag condition, ushort value)
+        public void SetConditionInfect(ConditionType condition, ushort value)
         {
             if (this.Locked)
             {
