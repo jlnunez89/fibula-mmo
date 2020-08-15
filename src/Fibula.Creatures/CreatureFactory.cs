@@ -87,6 +87,9 @@ namespace Fibula.Creatures
                             throw new ArgumentException($"Unknown monster with Id {creatureCreationArguments.Metadata.Id} in creation arguments for a monster.", nameof(creatureCreationArguments));
                         }
 
+                        // TODO: go through inventory composition here.
+                        // For each inventory item (and chance or whatever), add the items to the monster (as IContainerThing),
+                        // which will make the items fall in place, and also not have us have to pass the item factory into the monster instance, because it's weird.
                         return new Monster(monsterType, this.ItemFactory);
                     }
 

@@ -21,8 +21,6 @@ namespace Fibula.Common
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Security.Contracts;
     using Microsoft.ApplicationInsights;
-    using Microsoft.ApplicationInsights.Extensibility;
-    using Microsoft.ApplicationInsights.Extensibility.PerfCounterCollector.QuickPulse;
     using Microsoft.Extensions.Options;
 
     using IUnitOfWork = Fibula.Data.Contracts.Abstractions.IUnitOfWork<
@@ -122,36 +120,6 @@ namespace Fibula.Common
         public IUnitOfWork CreateNewUnitOfWork()
         {
             return new UnitOfWork(this, this.itemTypeLoader, this.monsterTypeLoader);
-        }
-
-        /// <summary>
-        /// Initializes the telemetry client with the given configuration.
-        /// </summary>
-        /// <param name="telemetryConfig">The telemetry configuration.</param>
-        /// <returns>The telemetry client.</returns>
-        private TelemetryClient InitializeTelemetry(TelemetryConfiguration telemetryConfig)
-        {
-            QuickPulseTelemetryProcessor processor = null;
-
-            telemetryConfig.TelemetryInitializers.Add(new OperationCorrelationTelemetryInitializer());
-            telemetryConfig.TelemetryProcessorChainBuilder
-                .Use((next) =>
-                {
-                    processor = new QuickPulseTelemetryProcessor(next);
-
-                    return processor;
-                })
-                .Build();
-
-            var quickPulse = new QuickPulseTelemetryModule()
-            {
-                AuthenticationApiKey = telemetryConfig.InstrumentationKey,
-            };
-
-            quickPulse.Initialize(telemetryConfig);
-            quickPulse.RegisterTelemetryProcessor(processor);
-
-            return new TelemetryClient(telemetryConfig);
         }
     }
 }
