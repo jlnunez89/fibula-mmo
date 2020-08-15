@@ -89,9 +89,7 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            var creationArguments = new ItemCreationArguments() { TypeId = this.ToTypeId };
-
-            IThing thingCreated = context.ItemFactory.Create(creationArguments);
+            IThing thingCreated = context.ItemFactory.Create(ItemCreationArguments.WithTypeId(this.ToTypeId));
 
             if (thingCreated == null)
             {

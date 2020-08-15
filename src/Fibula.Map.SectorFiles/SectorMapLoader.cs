@@ -358,7 +358,7 @@ namespace Fibula.Map.SectorFiles
                                     continue;
                                 }
 
-                                IItem item = this.ItemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
+                                IItem item = this.ItemFactory.CreateItem(ItemCreationArguments.WithTypeId((ushort)element.Id));
 
                                 if (item == null)
                                 {
@@ -428,7 +428,7 @@ namespace Fibula.Map.SectorFiles
                             continue;
                         }
 
-                        IItem contentItem = this.ItemFactory.CreateItem(new ItemCreationArguments() { TypeId = (ushort)element.Id });
+                        IItem contentItem = this.ItemFactory.CreateItem(ItemCreationArguments.WithTypeId((ushort)element.Id));
 
                         if (contentItem == null)
                         {

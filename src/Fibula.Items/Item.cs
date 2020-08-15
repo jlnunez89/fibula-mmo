@@ -13,6 +13,7 @@ namespace Fibula.Items
 {
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using Fibula.Common;
     using Fibula.Common.Contracts.Enumerations;
@@ -45,14 +46,7 @@ namespace Fibula.Items
             // make a copy of the type we are based on...
             this.Attributes = new Dictionary<ItemAttribute, IConvertible>(this.Type.DefaultAttributes.Select(kvp => KeyValuePair.Create((ItemAttribute)kvp.Key, kvp.Value)));
 
-            this.expirationTimeLeft = !this.HasExpiration ? TimeSpan.Zero :
-                this.Attributes.ContainsKey(ItemAttribute.ExpirationTimeLeft) ?
-                    TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationTimeLeft]))
-                    :
-                    this.Attributes.ContainsKey(ItemAttribute.ExpirationStartTime) ?
-                        TimeSpan.FromSeconds(Convert.ToUInt32(this.Attributes[ItemAttribute.ExpirationStartTime]))
-                        :
-                        TimeSpan.Zero;
+            this.InitializeExpirationTime();
         }
 
         /// <summary>
@@ -372,7 +366,7 @@ namespace Fibula.Items
 
             this.Amount -= amount;
 
-            var remainder = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = this.Type.TypeId });
+            var remainder = itemFactory.CreateItem(ItemCreationArguments.WithTypeId(this.Type.TypeId));
 
             remainder.Amount = amount;
 
@@ -386,6 +380,32 @@ namespace Fibula.Items
         public override string DescribeForLogger()
         {
             return $"[{this.Type.TypeId}] {this.GetType().Name}: {this.Amount} {this.Type.Name}";
+        }
+
+        /// <summary>
+        /// Initializes this item's expiration time.
+        /// </summary>
+        private void InitializeExpirationTime()
+        {
+            if (!this.HasExpiration)
+            {
+                this.expirationTimeLeft = TimeSpan.Zero;
+
+                return;
+            }
+
+            if (this.Attributes.TryGetValue(ItemAttribute.ExpirationTimeLeft, out IConvertible expTimeLeft))
+            {
+                this.expirationTimeLeft = TimeSpan.FromSeconds(expTimeLeft.ToUInt32(CultureInfo.InvariantCulture));
+            }
+            else if (this.Attributes.TryGetValue(ItemAttribute.ExpirationStartTime, out IConvertible expStartTime))
+            {
+                this.expirationTimeLeft = TimeSpan.FromSeconds(expStartTime.ToUInt32(CultureInfo.InvariantCulture));
+            }
+            else
+            {
+                this.expirationTimeLeft = TimeSpan.Zero;
+            }
         }
     }
 }

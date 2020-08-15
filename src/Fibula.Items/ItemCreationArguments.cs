@@ -30,5 +30,12 @@ namespace Fibula.Items
         /// Gets or sets the attributes to set in the item to create.
         /// </summary>
         public IReadOnlyCollection<(ItemAttribute, IConvertible)> Attributes { get; set; }
+
+        /// <summary>
+        /// Convenient method that initializes <see cref="ItemCreationArguments"/> with the given type id.
+        /// </summary>
+        /// <param name="typeId">The type id of the item to create.</param>
+        /// <returns>A new instance of <see cref="ItemCreationArguments"/> specifying the given type id.</returns>
+        public static ItemCreationArguments WithTypeId(ushort typeId) => new ItemCreationArguments() { TypeId = typeId };
     }
 }

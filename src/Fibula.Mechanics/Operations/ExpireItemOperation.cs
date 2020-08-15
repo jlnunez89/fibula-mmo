@@ -56,7 +56,7 @@ namespace Fibula.Mechanics.Operations
                 return;
             }
 
-            var creationArguments = new ItemCreationArguments() { TypeId = this.Item.ExpirationTarget };
+            var creationArguments = ItemCreationArguments.WithTypeId(this.Item.ExpirationTarget);
 
             if (this.Item.IsLiquidPool)
             {

@@ -486,7 +486,7 @@ namespace Fibula.Map
                                 break;
                             }
 
-                            item = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = item.Type.TypeId });
+                            item = itemFactory.CreateItem(ItemCreationArguments.WithTypeId(item.Type.TypeId));
 
                             item.Amount = remainingAmountToAdd;
 
@@ -607,7 +607,7 @@ namespace Fibula.Map
                             // item amount is left wrong.
 
                             // Create a new item as the remainder.
-                            remainder = itemFactory.CreateItem(new ItemCreationArguments() { TypeId = item.Type.TypeId });
+                            remainder = itemFactory.CreateItem(ItemCreationArguments.WithTypeId(item.Type.TypeId));
 
                             remainder.Amount = amount;
 

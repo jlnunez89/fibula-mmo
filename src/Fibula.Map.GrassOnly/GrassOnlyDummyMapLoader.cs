@@ -98,7 +98,7 @@ namespace Fibula.Map.GrassOnly
             {
                 for (int y = fromY; y <= toY; y++)
                 {
-                    var groundItem = this.ItemFactory.CreateItem(new ItemCreationArguments() { TypeId = GrassTypeId });
+                    var groundItem = this.ItemFactory.CreateItem(ItemCreationArguments.WithTypeId(GrassTypeId));
 
                     var location = new Location() { X = x, Y = y, Z = fromZ };
                     var newTuple = (location, new Tile(location, groundItem));

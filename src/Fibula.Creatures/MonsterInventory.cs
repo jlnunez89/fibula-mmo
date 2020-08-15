@@ -116,7 +116,7 @@ namespace Fibula.Creatures
                 }
 
                 // Got lucky! This creature has this item.
-                if (!(itemFactory.Create(new ItemCreationArguments() { TypeId = typeId }) is IItem newItem))
+                if (!(itemFactory.Create(ItemCreationArguments.WithTypeId(typeId)) is IItem newItem))
                 {
                     // TODO: propper logging.
                     // Console.WriteLine($"Unknown item with id {typeId} as loot in monster type {(this.Owner as Monster)?.Type.RaceId}.");
