@@ -179,7 +179,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     damageTextColor = TextColor.LightBlue;
                 }
-                else if (this.Target is IPlayer)
+                else if (this.Target is IPlayer playerTarget)
                 {
                     var hitpointsLostMessage = $"You lose {damageDoneInfo.Damage} hitpoints";
 
@@ -192,7 +192,8 @@ namespace Fibula.Mechanics.Operations
 
                     hitpointsLostMessage += ".";
 
-                    packetsToSend.Add(new TextMessagePacket(MessageType.StatusDefault, hitpointsLostMessage));
+                    var hitpointsLostPacket = new TextMessagePacket(MessageType.StatusDefault, hitpointsLostMessage);
+                    this.SendNotification(context, new GenericNotification(() => playerTarget.YieldSingleItem(), hitpointsLostPacket));
                 }
 
                 packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
