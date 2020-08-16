@@ -41,7 +41,8 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// </summary>
         /// <param name="eventToSchedule">The event to schedule.</param>
         /// <param name="delayTime">Optional. The time delay after which the event should be fired. If left null, the event is scheduled to be fired ASAP.</param>
-        void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null);
+        /// <param name="scheduleAsync">Optional. A value indicating whether to schedule asynchronously or not.</param>
+        void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null, bool scheduleAsync = false);
 
         /// <summary>
         /// Cancels an event.

@@ -189,7 +189,7 @@ namespace Fibula.Mechanics
                 LightLevel = (byte)LightLevels.World,
             };
 
-            // this.itemFactory.ItemCreated += this.AfterItemIsCreated;
+            this.itemFactory.ItemCreated += this.AfterItemIsCreated;
 
             // Load the spawns
             this.monsterSpawns = monsterSpawnsLoader.LoadSpawns();
@@ -1114,7 +1114,7 @@ namespace Fibula.Mechanics
                     :
                     new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
 
-                this.scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft);
+                this.scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft, scheduleAsync: true);
             }
         }
     }

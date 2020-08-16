@@ -12,6 +12,7 @@
 namespace Fibula.Scheduling
 {
     using System;
+    using System.Collections.Concurrent;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Threading;
@@ -50,6 +51,11 @@ namespace Fibula.Scheduling
         private readonly StablePriorityQueue<BaseEvent> priorityQueue;
 
         /// <summary>
+        /// Internal queue to handle asynchronous event scheduling.
+        /// </summary>
+        private readonly ConcurrentQueue<(IEvent evt, DateTimeOffset requestTime, TimeSpan requestedDelay)> eventSchedulingQueue;
+
+        /// <summary>
         /// Stores the ids of cancelled events.
         /// </summary>
         private readonly ISet<string> cancelledEvents;
@@ -83,6 +89,7 @@ namespace Fibula.Scheduling
             this.eventsAvailableLock = new object();
             this.startTime = this.CurrentTime;
             this.priorityQueue = new StablePriorityQueue<BaseEvent>(this.maxQueueNodes);
+            this.eventSchedulingQueue = new ConcurrentQueue<(IEvent evt, DateTimeOffset requestTime, TimeSpan requestedDelay)>();
             this.cancelledEvents = new HashSet<string>();
             this.eventsIndexedByRequestor = new Dictionary<uint, ISet<BaseEvent>>();
         }
@@ -221,6 +228,13 @@ namespace Fibula.Scheduling
 
                         cycleTimeTotal += sw.ElapsedMilliseconds;
                     }
+
+                    while (this.eventSchedulingQueue.TryDequeue(out (IEvent Event, DateTimeOffset RequestedAt, TimeSpan Delay) requestedEvent))
+                    {
+                        var updatedDelay = requestedEvent.Delay - (this.CurrentTime - requestedEvent.RequestedAt);
+
+                        this.ScheduleEvent(requestedEvent.Event, updatedDelay);
+                    }
                 }
 
                 this.Logger.Debug("Scheduler finished.");
@@ -301,7 +315,8 @@ namespace Fibula.Scheduling
         /// </summary>
         /// <param name="eventToSchedule">The event to schedule.</param>
         /// <param name="delayTime">Optional. The time delay after which the event should be fired. If left null, the event is scheduled to be fired ASAP.</param>
-        public void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null)
+        /// <param name="scheduleAsync">Optional. A value indicating whether to schedule asynchronously or not.</param>
+        public void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null, bool scheduleAsync = false)
         {
             eventToSchedule.ThrowIfNull(nameof(eventToSchedule));
 
@@ -313,6 +328,13 @@ namespace Fibula.Scheduling
             if (delayTime == null || delayTime < TimeSpan.Zero)
             {
                 delayTime = TimeSpan.Zero;
+            }
+
+            if (scheduleAsync)
+            {
+                this.eventSchedulingQueue.Enqueue((eventToSchedule, this.CurrentTime, delayTime.Value));
+
+                return;
             }
 
             lock (this.eventsAvailableLock)
