@@ -17,6 +17,7 @@ namespace Fibula.Items
     using Fibula.Data.Entities.Contracts.Abstractions;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Constants;
+    using Fibula.Items.Contracts.Delegates;
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Items.Contracts.Extensions;
 
@@ -35,6 +36,11 @@ namespace Fibula.Items
 
             this.ApplicationContext = applicationContext;
         }
+
+        /// <summary>
+        /// Event called when an item is created.
+        /// </summary>
+        public event OnItemCreated ItemCreated;
 
         /// <summary>
         /// Gets the application context.
@@ -75,13 +81,17 @@ namespace Fibula.Items
                 throw new ArgumentException($"Unknown item type with Id {itemCreationArguments.TypeId} in creation arguments for an item.", nameof(creationArguments));
             }
 
+            IItem newItem = null;
+
             // TODO: chest actually means a quest chest...
             if (itemType.HasItemFlag(ItemFlag.IsContainer) || itemType.HasItemFlag(ItemFlag.IsQuestChest))
             {
-                return new ContainerItem(itemType);
+                newItem = new ContainerItem(itemType);
             }
-
-            var newItem = new Item(itemType);
+            else
+            {
+                newItem = new Item(itemType);
+            }
 
             if (itemCreationArguments.Attributes != null)
             {
@@ -90,6 +100,8 @@ namespace Fibula.Items
                     newItem.Attributes[attribute] = attributeValue;
                 }
             }
+
+            this.ItemCreated?.Invoke(newItem);
 
             return newItem;
         }

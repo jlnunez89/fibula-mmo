@@ -118,21 +118,6 @@ namespace Fibula.Mechanics.Operations
                     // Evaluate if the new item triggers a collision.
                     // context.EventRulesApi.EvaluateRules(this, EventRuleType.Collision, new CollisionEventRuleArguments(fromCylinder.Location, existingThing, this.GetRequestor(context.CreatureFinder)));
                 }
-
-                if (thingCreated is IItem itemCreated)
-                {
-                    // Start decay for items that need it.
-                    if (itemCreated.HasExpiration)
-                    {
-                        // TODO: the item location will change and this will break.
-                        var expirationOp = itemCreated.ExpirationTarget == 0 ?
-                            new DeleteItemOperation(requestorId: 0, thingCreated.TypeId, thingCreated.Location)
-                            :
-                            new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
-
-                        context.Scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft);
-                    }
-                }
             }
         }
     }

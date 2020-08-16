@@ -161,7 +161,18 @@ namespace Fibula.Standalone
                 tcpListener.NewConnection += OnNewConnection;
             }
 
+            TaskScheduler.UnobservedTaskException += HandleUnobservedTaskException;
+
             await host.RunAsync(Program.MasterCancellationTokenSource.Token).ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Handles an unobserved task exception.
+        /// </summary>
+        /// <param name="sender">The sender of the exception.</param>
+        /// <param name="e">The exception arguments.</param>
+        private static void HandleUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
         }
 
         /// <summary>

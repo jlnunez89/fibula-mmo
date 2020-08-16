@@ -18,6 +18,7 @@ namespace Fibula.Mechanics
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
+    using Fibula.Common;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Constants;
     using Fibula.Common.Contracts.Enumerations;
@@ -188,6 +189,8 @@ namespace Fibula.Mechanics
                 LightLevel = (byte)LightLevels.World,
             };
 
+            // this.itemFactory.ItemCreated += this.AfterItemIsCreated;
+
             // Load the spawns
             this.monsterSpawns = monsterSpawnsLoader.LoadSpawns();
 
@@ -230,6 +233,8 @@ namespace Fibula.Mechanics
         public Task StopAsync(CancellationToken cancellationToken)
         {
             this.logger.Warning($"Cancellation requested on game instance, beginning shut-down...");
+
+            this.itemFactory.ItemCreated -= this.AfterItemIsCreated;
 
             // TODO: probably save game state here.
             return Task.CompletedTask;
@@ -1089,6 +1094,27 @@ namespace Fibula.Mechanics
             foreach (var spawn in spawnsInWindow)
             {
                 this.DispatchOperation(new SpawnMonstersOperation(requestorId: 0, spawn));
+            }
+        }
+
+        /// <summary>
+        /// Handles commonly executed logic on any item being created.
+        /// </summary>
+        /// <param name="itemCreated">The item that was created.</param>
+        private void AfterItemIsCreated(IItem itemCreated)
+        {
+            itemCreated.ThrowIfNull(nameof(itemCreated));
+
+            // Start decay for items that need it.
+            if (itemCreated.HasExpiration)
+            {
+                // TODO: the item location will change and this will break.
+                var expirationOp = itemCreated.ExpirationTarget == 0 ?
+                    new DeleteItemOperation(requestorId: 0, itemCreated.TypeId, itemCreated.Location)
+                    :
+                    new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
+
+                this.scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft);
             }
         }
     }

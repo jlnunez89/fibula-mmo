@@ -13,12 +13,18 @@ namespace Fibula.Items.Contracts.Abstractions
 {
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Data.Entities.Contracts.Abstractions;
+    using Fibula.Items.Contracts.Delegates;
 
     /// <summary>
     /// Interface for an item factory.
     /// </summary>
     public interface IItemFactory : IThingFactory
     {
+        /// <summary>
+        /// Event called when an item is created.
+        /// </summary>
+        event OnItemCreated ItemCreated;
+
         /// <summary>
         /// Creates a new <see cref="IItem"/>.
         /// </summary>
