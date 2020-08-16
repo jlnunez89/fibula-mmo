@@ -16,7 +16,6 @@ namespace Fibula.Common
     using System.Diagnostics.CodeAnalysis;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Delegates;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Contracts.Structs;
     using Fibula.Common.Utilities;
     using Fibula.Scheduling.Contracts.Abstractions;
@@ -39,7 +38,6 @@ namespace Fibula.Common
             this.UniqueId = Guid.NewGuid();
 
             this.TrackedEvents = new Dictionary<string, IEvent>();
-            this.Conditions = new Dictionary<ConditionType, ICondition>();
         }
 
         /// <summary>
@@ -109,14 +107,6 @@ namespace Fibula.Common
         public IDictionary<string, IEvent> TrackedEvents { get; }
 
         /// <summary>
-        /// Gets the current condition information for the thing.
-        /// </summary>
-        /// <remarks>
-        /// The key is a <see cref="ConditionType"/>, and the value is the <see cref="ICondition"/>.
-        /// </remarks>
-        public IDictionary<ConditionType, ICondition> Conditions { get; }
-
-        /// <summary>
         /// Invokes the <see cref="LocationChanged"/> event on this thing.
         /// </summary>
         /// <param name="fromLocation">The location from which the change happened.</param>
@@ -161,10 +151,7 @@ namespace Fibula.Common
                 identifier = evt.GetType().Name;
             }
 
-            evt.Completed += (e) =>
-            {
-                this.StopTrackingEvent(e);
-            };
+            evt.Completed += this.StopTrackingEvent;
 
             this.TrackedEvents[identifier] = evt;
         }
@@ -173,17 +160,26 @@ namespace Fibula.Common
         /// Makes the thing stop tracking an event.
         /// </summary>
         /// <param name="evt">The event to stop tracking.</param>
-        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
-        public void StopTrackingEvent(IEvent evt, string identifier = "")
+        public void StopTrackingEvent(IEvent evt)
         {
             evt.ThrowIfNull(nameof(evt));
 
-            if (string.IsNullOrWhiteSpace(identifier))
-            {
-                identifier = evt.GetType().Name;
-            }
+            this.StopTrackingEvent(evt, evt.GetType().Name);
+        }
+
+        /// <summary>
+        /// Makes the thing stop tracking an event.
+        /// </summary>
+        /// <param name="evt">The event to stop tracking.</param>
+        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
+        public void StopTrackingEvent(IEvent evt, string identifier)
+        {
+            evt.ThrowIfNull(nameof(evt));
+            identifier.ThrowIfNullOrWhiteSpace(nameof(identifier));
 
             this.TrackedEvents.Remove(identifier);
+
+            evt.Completed -= this.StopTrackingEvent;
         }
 
         /// <summary>

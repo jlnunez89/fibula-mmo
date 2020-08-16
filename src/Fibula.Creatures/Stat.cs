@@ -66,7 +66,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the current percentual value between current and maximum values.
         /// </summary>
-        public byte Percent => Convert.ToByte(Math.Min(100, Math.Max(0, this.Current * 100 / this.Maximum)));
+        public byte Percent => Convert.ToByte(this.Current == 0 ? 0x00 : Math.Min(100, Math.Max(1, this.Current * 100 / this.Maximum)));
 
         /// <summary>
         /// Increases this stats's value.

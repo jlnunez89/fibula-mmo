@@ -11,7 +11,6 @@
 
 namespace Fibula.Mechanics.Operations
 {
-    using System;
     using Fibula.Common.Utilities;
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Creatures.Contracts.Enumerations;

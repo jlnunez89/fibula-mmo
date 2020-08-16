@@ -14,7 +14,6 @@ namespace Fibula.Common.Contracts.Abstractions
     using System;
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Delegates;
-    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
@@ -46,14 +45,6 @@ namespace Fibula.Common.Contracts.Abstractions
         /// Gets the tracked events for this thing.
         /// </summary>
         IDictionary<string, IEvent> TrackedEvents { get; }
-
-        /// <summary>
-        /// Gets the current condition information for the thing.
-        /// </summary>
-        /// <remarks>
-        /// The key is a <see cref="ConditionType"/>, and the value is the <see cref="ICondition"/>.
-        /// </remarks>
-        IDictionary<ConditionType, ICondition> Conditions { get; }
 
         /// <summary>
         /// Provides a string describing the current thing for logging purposes.

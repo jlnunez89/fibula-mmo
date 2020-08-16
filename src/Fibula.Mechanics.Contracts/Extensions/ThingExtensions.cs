@@ -15,6 +15,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
     /// Static class with helper methods for things.
@@ -32,7 +33,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
         {
             thing.ThrowIfNull(nameof(thing));
 
-            if (!thing.Conditions.TryGetValue(type, out ICondition condition))
+            if (!thing.TrackedEvents.TryGetValue(type.ToString(), out IEvent conditionEvent) || !(conditionEvent is ICondition condition))
             {
                 return TimeSpan.Zero;
             }
@@ -41,8 +42,6 @@ namespace Fibula.Mechanics.Contracts.Extensions
 
             if (timeLeft < TimeSpan.Zero)
             {
-                thing.Conditions.Remove(type);
-
                 return TimeSpan.Zero;
             }
 
@@ -60,16 +59,16 @@ namespace Fibula.Mechanics.Contracts.Extensions
             thing.ThrowIfNull(nameof(thing));
             condition.ThrowIfNull(nameof(condition));
 
-            if (!thing.Conditions.ContainsKey(condition.Type))
+            if (!thing.TrackedEvents.TryGetValue(condition.Type.ToString(), out IEvent conditionEvent) || !(conditionEvent is ICondition existingCondition))
             {
-                thing.Conditions[condition.Type] = condition;
+                thing.StartTrackingEvent(condition, condition.Type.ToString());
 
                 return true;
             }
 
-            if (thing.Conditions[condition.Type].EndTime < condition.EndTime)
+            if (existingCondition.EndTime < condition.EndTime)
             {
-                thing.Conditions[condition.Type].EndTime = condition.EndTime;
+                existingCondition.EndTime = condition.EndTime;
             }
 
             return false;

@@ -367,7 +367,7 @@ namespace Fibula.Items
 
             this.Amount -= amount;
 
-            var remainder = itemFactory.CreateItem(ItemCreationArguments.WithTypeId(this.Type.TypeId));
+            var remainder = this.Clone() as Item;
 
             remainder.Amount = amount;
 

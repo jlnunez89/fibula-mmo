@@ -101,15 +101,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     context.Logger.Verbose($"Added exhaustion condition of type {exhaustionCondition.Type}.");
 
-                    // Remove the condition from the creature once completed.
-                    exhaustionCondition.Completed += (c) =>
-                    {
-                        requestor.Conditions.Remove(exhaustionCondition.Type);
-
-                        context.Logger.Verbose($"Removed exhaustion condition of type {exhaustionCondition.Type}.");
-                    };
-
-                    // And don't forget to actually schedule the condition so that it ends.
+                    // And actually schedule the condition so that it completes.
                     operationContext.Scheduler.ScheduleEvent(exhaustionCondition, this.AssociatedExhaustion.Value.Cost);
                 }
             }

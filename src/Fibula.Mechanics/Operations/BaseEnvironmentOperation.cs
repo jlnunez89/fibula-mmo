@@ -11,7 +11,6 @@
 
 namespace Fibula.Mechanics.Operations
 {
-    using System;
     using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Utilities;
