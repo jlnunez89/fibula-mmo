@@ -42,7 +42,7 @@ namespace Fibula.Scheduling.Tests
         }
 
         /// <summary>
-        /// Checks that <see cref="Scheduler.ScheduleEvent(IEvent, TimeSpan?)"/> throws when needed.
+        /// Checks that <see cref="Scheduler.ScheduleEvent(IEvent, TimeSpan?, bool)"/> throws when needed.
         /// </summary>
         [TestMethod]
         public void ScheduleEvent_Throws_WhenBad()
