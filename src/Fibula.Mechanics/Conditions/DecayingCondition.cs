@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="ExpireItemOperation.cs" company="2Dudes">
+// <copyright file="DecayingCondition.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,10 +9,11 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Operations
+namespace Fibula.Mechanics.Conditions
 {
     using System;
     using Fibula.Common.Contracts.Abstractions;
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
@@ -20,39 +21,48 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Notifications;
+    using Fibula.Mechanics.Operations;
 
     /// <summary>
     /// Class that represents an event for an item expiring.
     /// </summary>
-    public class ExpireItemOperation : BaseEnvironmentOperation
+    public class DecayingCondition : Condition
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="ExpireItemOperation"/> class.
+        /// Initializes a new instance of the <see cref="DecayingCondition"/> class.
         /// </summary>
-        /// <param name="requestorId">The id of the creature requesting the change.</param>
-        /// <param name="item">The item that's expiring.</param>
-        public ExpireItemOperation(uint requestorId, IItem item)
-            : base(requestorId)
+        /// <param name="item">The item that's decaying.</param>
+        /// <param name="decayAtTime">The time at which it will decay to the next target.</param>
+        public DecayingCondition(IItem item, DateTimeOffset decayAtTime)
+            : base(ConditionType.Decaying, decayAtTime)
         {
             this.Item = item;
         }
 
         /// <summary>
-        /// Gets the item that is expiring.
+        /// Gets the item that is decaying.
         /// </summary>
         public IItem Item { get; }
 
         /// <summary>
-        /// Executes the operation's logic.
+        /// Executes the condition's logic.
         /// </summary>
-        /// <param name="context">A reference to the operation context.</param>
-        protected override void Execute(IElevatedOperationContext context)
+        /// <param name="context">The execution context for this condition.</param>
+        protected override void Pulse(IConditionContext context)
         {
             var inThingContainer = this.Item.ParentContainer;
 
             if (!(this.Item is IThing existingThing) || !this.Item.HasExpiration || inThingContainer == null)
             {
                 // Silent fail.
+                return;
+            }
+
+            if (this.Item.ExpirationTarget == 0)
+            {
+                // We will delete this item.
+                context.Scheduler.ScheduleEvent(new DeleteItemOperation(requestorId: 0, this.Item));
+
                 return;
             }
 

@@ -37,6 +37,7 @@ namespace Fibula.Mechanics
     using Fibula.Items.Contracts.Enumerations;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
+    using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
@@ -1056,6 +1057,16 @@ namespace Fibula.Mechanics
                     this.predefinedItemSet,
                     this.scheduler);
             }
+            else if (typeof(ICondition).IsAssignableFrom(eventType))
+            {
+                return new ConditionContext(
+                    this.logger,
+                    this.mapDescriptor,
+                    this.map,
+                    this.creatureManager,
+                    this.itemFactory,
+                    this.scheduler);
+            }
             else if (typeof(INotification).IsAssignableFrom(eventType))
             {
                 return new NotificationContext(
@@ -1105,16 +1116,20 @@ namespace Fibula.Mechanics
         {
             itemCreated.ThrowIfNull(nameof(itemCreated));
 
+            this.logger.Verbose($"Item created: {itemCreated.DescribeForLogger()}.");
+
             // Start decay for items that need it.
             if (itemCreated.HasExpiration)
             {
-                // TODO: the item location will change and this will break.
-                var expirationOp = itemCreated.ExpirationTarget == 0 ?
-                    new DeleteItemOperation(requestorId: 0, itemCreated.TypeId, itemCreated.Location)
-                    :
-                    new ExpireItemOperation(requestorId: 0, itemCreated) as IOperation;
+                var decayCondition = new DecayingCondition(itemCreated, this.scheduler.CurrentTime + itemCreated.ExpirationTimeLeft);
 
-                this.scheduler.ScheduleEvent(expirationOp, itemCreated.ExpirationTimeLeft, scheduleAsync: true);
+                if (itemCreated.AddOrExtendCondition(decayCondition))
+                {
+                    this.logger.Verbose($"Added decaying condition to {itemCreated.DescribeForLogger()}.");
+
+                    // Schedule the condition asynchronously, because we'll be often creating items as part of other operations.
+                    this.scheduler.ScheduleEvent(decayCondition, itemCreated.ExpirationTimeLeft, scheduleAsync: true);
+                }
             }
         }
     }

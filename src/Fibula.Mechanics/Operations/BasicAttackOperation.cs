@@ -160,7 +160,8 @@ namespace Fibula.Mechanics.Operations
             var damageDoneInfo = this.Target.ApplyDamage(damageToApplyInfo, this.Attacker?.Id ?? 0);
             var distanceOfAttack = (this.Target.Location - (this.Attacker?.Location ?? this.Target.Location)).MaxValueIn2D;
 
-            var packetsToSend = new List<IOutboundPacket>
+            var packetsToSendToTargetPlayer = new List<IOutboundPacket>();
+            var packetsToSendToAllSpectators = new List<IOutboundPacket>
             {
                 new MagicEffectPacket(this.Target.Location, damageDoneInfo.Effect),
             };
@@ -179,7 +180,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     damageTextColor = TextColor.LightBlue;
                 }
-                else if (this.Target is IPlayer playerTarget)
+                else if (this.Target is IPlayer)
                 {
                     var hitpointsLostMessage = $"You lose {damageDoneInfo.Damage} hitpoints";
 
@@ -192,17 +193,16 @@ namespace Fibula.Mechanics.Operations
 
                     hitpointsLostMessage += ".";
 
-                    var hitpointsLostPacket = new TextMessagePacket(MessageType.StatusDefault, hitpointsLostMessage);
-                    this.SendNotification(context, new GenericNotification(() => playerTarget.YieldSingleItem(), hitpointsLostPacket));
+                    packetsToSendToTargetPlayer.Add(new TextMessagePacket(MessageType.StatusDefault, hitpointsLostMessage));
                 }
 
-                packetsToSend.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
+                packetsToSendToAllSpectators.Add(new AnimatedTextPacket(this.Target.Location, damageTextColor, Math.Abs(damageDoneInfo.Damage).ToString()));
             }
 
             if (distanceOfAttack > 1)
             {
                 // TODO: actual projectile value.
-                packetsToSend.Add(new ProjectilePacket(this.Attacker.Location, this.Target.Location, ProjectileType.Bolt));
+                packetsToSendToAllSpectators.Add(new ProjectilePacket(this.Attacker.Location, this.Target.Location, ProjectileType.Bolt));
             }
 
             if (this.Target.Stats[CreatureStat.DefensePoints].Decrease(1))
@@ -221,6 +221,8 @@ namespace Fibula.Mechanics.Operations
 
             if (this.Attacker != null)
             {
+                packetsToSendToTargetPlayer.Add(new SquarePacket(this.Attacker.Id, SquareColor.Black));
+
                 if (this.Attacker.Stats[CreatureStat.AttackPoints].Decrease(1))
                 {
                     // TODO: increase the actual skill.
@@ -240,13 +242,11 @@ namespace Fibula.Mechanics.Operations
                 }
             }
 
-            this.SendNotification(context, new GenericNotification(() => context.Map.PlayersThatCanSee(this.Target.Location), packetsToSend.ToArray()));
+            this.SendNotification(context, new GenericNotification(() => context.Map.PlayersThatCanSee(this.Target.Location), packetsToSendToAllSpectators.ToArray()));
 
             if (this.Target is IPlayer targetPlayer)
             {
-                var squarePacket = new SquarePacket(this.Attacker.Id, SquareColor.Black);
-
-                this.SendNotification(context, new GenericNotification(() => targetPlayer.YieldSingleItem(), squarePacket));
+                this.SendNotification(context, new GenericNotification(() => targetPlayer.YieldSingleItem(), packetsToSendToTargetPlayer.ToArray()));
             }
         }
     }

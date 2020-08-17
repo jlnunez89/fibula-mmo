@@ -12,13 +12,10 @@
 namespace Fibula.Mechanics.Operations
 {
     using Fibula.Common.Contracts.Abstractions;
-    using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Common.Contracts.Structs;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Contracts.Abstractions;
-    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -30,27 +27,17 @@ namespace Fibula.Mechanics.Operations
         /// Initializes a new instance of the <see cref="DeleteItemOperation"/> class.
         /// </summary>
         /// <param name="requestorId">The id of the creature requesting the deletion.</param>
-        /// <param name="typeId">The type id of the item being deleted.</param>
-        /// <param name="atLocation">The location from which the item is being deleted.</param>
-        public DeleteItemOperation(
-            uint requestorId,
-            ushort typeId,
-            Location atLocation)
+        /// <param name="item">The item that's being deleted.</param>
+        public DeleteItemOperation(uint requestorId, IItem item)
             : base(requestorId)
         {
-            this.AtLocation = atLocation;
-            this.TypeId = typeId;
+            this.Item = item;
         }
 
         /// <summary>
-        /// Gets the location at which to delete the item.
+        /// Gets the item that is expiring.
         /// </summary>
-        public Location AtLocation { get; }
-
-        /// <summary>
-        /// Gets the type id of the item to be deleted.
-        /// </summary>
-        public ushort TypeId { get; }
+        public IItem Item { get; }
 
         /// <summary>
         /// Executes the operation's logic.
@@ -59,18 +46,15 @@ namespace Fibula.Mechanics.Operations
         protected override void Execute(IElevatedOperationContext context)
         {
             var requestor = this.GetRequestor(context.CreatureFinder);
-            var inThingContainer = this.AtLocation.DecodeContainer(context.Map, context.ContainerManager, out byte index, requestor);
+            var inThingContainer = this.Item.ParentContainer;
 
-            // Adjust index if this a map location.
-            var existingThing = (this.AtLocation.Type == LocationType.Map && (inThingContainer is ITile fromTile)) ? fromTile.FindItemWithTypeId(this.TypeId) : inThingContainer?.FindThingAtIndex(index);
-
-            if (inThingContainer == null || !(existingThing is IItem existingItem))
+            if (inThingContainer == null || !(this.Item is IThing existingThing))
             {
                 return;
             }
 
             // At this point, we have an item to remove, let's proceed.
-            (bool removeSuccessful, IThing remainder) = inThingContainer.RemoveContent(context.ItemFactory, ref existingThing, index, amount: existingItem.Amount);
+            (bool removeSuccessful, IThing remainder) = inThingContainer.RemoveContent(context.ItemFactory, ref existingThing, amount: this.Item.Amount);
 
             if (!removeSuccessful)
             {

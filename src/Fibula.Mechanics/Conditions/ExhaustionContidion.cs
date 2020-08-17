@@ -13,7 +13,7 @@ namespace Fibula.Mechanics.Conditions
 {
     using System;
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Scheduling.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Abstractions;
 
     /// <summary>
     /// Class that represents a condition for exhaustion.
@@ -23,17 +23,17 @@ namespace Fibula.Mechanics.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="ExhaustionContidion"/> class.
         /// </summary>
-        /// <param name="conditionType">The type of exhaustion.</param>
+        /// <param name="exhaustionType">The type of exhaustion.</param>
         /// <param name="endTime">The date and time at which the condition is set to end.</param>
-        public ExhaustionContidion(ConditionType conditionType, DateTimeOffset endTime)
-            : base(conditionType, endTime)
+        public ExhaustionContidion(ConditionType exhaustionType, DateTimeOffset endTime)
+            : base(exhaustionType, endTime)
         {
-            if (conditionType != ConditionType.ExhaustedAction &&
-                conditionType != ConditionType.ExhaustedCombat &&
-                conditionType != ConditionType.ExhaustedMagic &&
-                conditionType != ConditionType.ExhaustedMovement)
+            if (exhaustionType != ConditionType.ExhaustedAction &&
+                exhaustionType != ConditionType.ExhaustedCombat &&
+                exhaustionType != ConditionType.ExhaustedMagic &&
+                exhaustionType != ConditionType.ExhaustedMovement)
             {
-                throw new ArgumentException($"Invalid condition type {conditionType}.", nameof(conditionType));
+                throw new ArgumentException($"Invalid condition type {exhaustionType}.", nameof(exhaustionType));
             }
 
             this.ExcludeFromTelemetry = true;
@@ -42,8 +42,8 @@ namespace Fibula.Mechanics.Conditions
         /// <summary>
         /// Executes the condition's logic.
         /// </summary>
-        /// <param name="context">The execution context.</param>
-        protected override void Pulse(IEventContext context)
+        /// <param name="context">The execution context for this condition.</param>
+        protected override void Pulse(IConditionContext context)
         {
             // Nothing done on exhaustion.
         }

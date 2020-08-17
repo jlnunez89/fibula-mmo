@@ -37,6 +37,7 @@ namespace Fibula.Standalone
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.SectorFiles;
     using Fibula.Mechanics;
+    using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Handlers;
     using Fibula.Mechanics.Operations;

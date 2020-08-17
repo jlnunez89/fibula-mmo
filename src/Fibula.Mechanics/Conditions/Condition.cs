@@ -15,6 +15,8 @@ namespace Fibula.Mechanics.Conditions
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
+    using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Notifications;
     using Fibula.Scheduling;
     using Fibula.Scheduling.Contracts.Abstractions;
 
@@ -23,6 +25,11 @@ namespace Fibula.Mechanics.Conditions
     /// </summary>
     public abstract class Condition : BaseEvent, ICondition
     {
+        /// <summary>
+        /// A threshold within which to accept the end of the condition.
+        /// </summary>
+        private const int EndTimeMillisecondsThreshold = 25;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Condition"/> class.
         /// </summary>
@@ -57,30 +64,46 @@ namespace Fibula.Mechanics.Conditions
         {
             context.ThrowIfNull(nameof(context));
 
+            var conditionContext = context as IConditionContext;
+
             var currentTime = context.CurrentTime;
 
             // Reset the condition's Repeat property, to avoid implementations running perpetually.
             this.RepeatAfter = TimeSpan.MinValue;
 
             // Check if we're ready to remove the exhaustion from the afflicted thing.
-            if (currentTime < this.EndTime)
+            if ((this.EndTime - currentTime).TotalMilliseconds > EndTimeMillisecondsThreshold)
             {
                 var timeLeft = this.EndTime - currentTime;
 
                 // Setup repeat to 'snooze' the removal.
                 this.RepeatAfter = timeLeft;
 
+                context.Logger.Debug($"{this.GetType().Name} not ready to end yet, snoozing for {timeLeft.TotalMilliseconds}");
+
                 return;
             }
 
             // Pulse the condition so that any effects execute.
-            this.Pulse(context);
+            this.Pulse(conditionContext);
         }
 
         /// <summary>
         /// Executes the operation's logic.
         /// </summary>
-        /// <param name="context">The execution context for this operation.</param>
-        protected abstract void Pulse(IEventContext context);
+        /// <param name="context">The execution context for this condition.</param>
+        protected abstract void Pulse(IConditionContext context);
+
+        /// <summary>
+        /// Sends a notification synchronously.
+        /// </summary>
+        /// <param name="context">A reference to the condition context.</param>
+        /// <param name="notification">The notification to send.</param>
+        protected void SendNotification(IConditionContext context, INotification notification)
+        {
+            notification.ThrowIfNull(nameof(notification));
+
+            notification.Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+        }
     }
 }

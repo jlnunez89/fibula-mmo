@@ -249,7 +249,7 @@ namespace Fibula.Map
                     addedCount += itemsToAdd.Count();
                 }
 
-                if (this.LiquidPool != null)
+                if (addedCount < maxItemsToGet && this.LiquidPool != null)
                 {
                     fixedItemList.Add(this.LiquidPool);
                     addedCount++;
