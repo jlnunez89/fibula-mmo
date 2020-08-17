@@ -11,9 +11,12 @@
 
 namespace Fibula.Protocol.V772.PacketWriters
 {
+    using Fibula.Common.Contracts.Enumerations;
     using Fibula.Communications;
     using Fibula.Communications.Contracts.Abstractions;
     using Fibula.Communications.Packets.Outgoing;
+    using Fibula.Mechanics.Conditions;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Protocol.V772.Extensions;
     using Serilog;
 
@@ -47,8 +50,52 @@ namespace Fibula.Protocol.V772.PacketWriters
 
             message.AddByte(playerConditionsPacket.PacketType.ToByte());
 
-            // TODO: implement contidions.
-            message.AddByte(0x00);
+            byte conditionFlags = 0;
+
+            // Add condition icons supported by this version.
+            /*
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.Posioned))
+            {
+                conditionFlags |= 1 << 0;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.Burning))
+            {
+                conditionFlags |= 1 << 1;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.Electrified))
+            {
+                conditionFlags |= 1 << 2;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.Drunk))
+            {
+                conditionFlags |= 1 << 3;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.ManaShield))
+            {
+                conditionFlags |= 1 << 4;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.Paralyzed))
+            {
+                conditionFlags |= 1 << 5;
+            }
+
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.ChangedSpeed))
+            {
+                conditionFlags |= 1 << 6;
+            }
+            */
+
+            if (playerConditionsPacket.Player.HasCondition(typeof(InFightCondition)))
+            {
+                conditionFlags |= 1 << 7;
+            }
+
+            message.AddByte(conditionFlags);
         }
     }
 }

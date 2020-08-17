@@ -50,5 +50,10 @@ namespace Fibula.Mechanics.Contracts.Constants
         /// The default combat round time in milliseconds.
         /// </summary>
         public const int DefaultCombatRoundTimeInMs = 2000;
+
+        /// <summary>
+        /// The default in fight duration time in milliseconds.
+        /// </summary>
+        public const int DefaultInFightTimeInMs = 30000;
     }
 }

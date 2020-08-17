@@ -38,10 +38,5 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// </summary>
         // TODO: nobody likes soulpoints... figure out what to do with them.
         byte SoulPoints { get; }
-
-        /// <summary>
-        /// Gets a value indicating whether this player is allowed to logout.
-        /// </summary>
-        bool IsAllowedToLogOut { get; }
     }
 }

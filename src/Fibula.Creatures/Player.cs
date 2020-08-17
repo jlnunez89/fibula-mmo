@@ -108,11 +108,6 @@ namespace Fibula.Creatures
         public byte SoulPoints { get; }
 
         /// <summary>
-        /// Gets a value indicating whether this player is allowed to logout.
-        /// </summary>
-        public bool IsAllowedToLogOut => this.AutoAttackTarget == null;
-
-        /// <summary>
         /// Gets or sets the inventory for the player.
         /// </summary>
         public sealed override IInventory Inventory { get; protected set; }

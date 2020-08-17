@@ -39,6 +39,7 @@ namespace Fibula.Mechanics
     using Fibula.Map.Contracts.Extensions;
     using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Enumerations;
     using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
@@ -341,6 +342,34 @@ namespace Fibula.Mechanics
                 var autoAttackOrchestrationOp = new AttackOrchestratorOperation(combatant);
 
                 this.DispatchOperation(autoAttackOrchestrationOp);
+
+                var combatDurationTime = TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs);
+
+                if (combatant is IPlayer attackerPlayer)
+                {
+                    var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + combatDurationTime, attackerPlayer);
+
+                    if (attackerPlayer.AddOrExtendCondition(inFightCondition))
+                    {
+                        this.logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
+
+                        this.scheduler.ScheduleEvent(inFightCondition, combatDurationTime, scheduleAsync: true);
+                        this.scheduler.ScheduleEvent(new GenericNotification(() => attackerPlayer.YieldSingleItem(), new PlayerConditionsPacket(attackerPlayer)), scheduleAsync: true);
+                    }
+                }
+
+                if (combatant.AutoAttackTarget is IPlayer targetPlayer)
+                {
+                    var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
+
+                    if (targetPlayer.AddOrExtendCondition(inFightCondition))
+                    {
+                        this.logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
+
+                        this.scheduler.ScheduleEvent(inFightCondition, combatDurationTime, scheduleAsync: true);
+                        this.scheduler.ScheduleEvent(new GenericNotification(() => targetPlayer.YieldSingleItem(), new PlayerConditionsPacket(targetPlayer)), scheduleAsync: true);
+                    }
+                }
             }
         }
 

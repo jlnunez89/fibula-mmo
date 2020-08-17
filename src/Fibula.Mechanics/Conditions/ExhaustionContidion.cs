@@ -43,7 +43,7 @@ namespace Fibula.Mechanics.Conditions
         /// Executes the condition's logic.
         /// </summary>
         /// <param name="context">The execution context for this condition.</param>
-        protected override void Pulse(IConditionContext context)
+        protected override void Execute(IConditionContext context)
         {
             // Nothing done on exhaustion.
         }

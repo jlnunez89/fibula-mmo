@@ -17,7 +17,9 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Abstractions;
     using Fibula.Map.Contracts.Abstractions;
     using Fibula.Map.Contracts.Extensions;
+    using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
+    using Fibula.Mechanics.Contracts.Extensions;
     using Fibula.Mechanics.Notifications;
 
     /// <summary>
@@ -47,14 +49,14 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">A reference to the operation context.</param>
         protected override void Execute(IElevatedOperationContext context)
         {
-            if (!this.Player.IsAllowedToLogOut)
+            if (this.Player.HasCondition(typeof(InFightCondition)))
             {
                 this.SendNotification(
                     context,
                     new TextMessageNotification(
                         () => this.Player.YieldSingleItem(),
                         MessageType.StatusSmall,
-                        "You may not logout at this time."));
+                        "You may not logout during or immediately after a fight."));
 
                 return;
             }

@@ -26,7 +26,7 @@ namespace Fibula.Mechanics.Contracts.Extensions
         /// Calculates the remaining <see cref="TimeSpan"/> until the thing's condition is over.
         /// </summary>
         /// <param name="thing">The thing to check the conditions on.</param>
-        /// <param name="type">The type of exhaustion.</param>
+        /// <param name="type">The type of condition.</param>
         /// <param name="currentTime">The current time to calculate from.</param>
         /// <returns>The <see cref="TimeSpan"/> result.</returns>
         public static TimeSpan RemainingCooldownTime(this IThing thing, ConditionType type, DateTimeOffset currentTime)
@@ -59,9 +59,9 @@ namespace Fibula.Mechanics.Contracts.Extensions
             thing.ThrowIfNull(nameof(thing));
             condition.ThrowIfNull(nameof(condition));
 
-            if (!thing.TrackedEvents.TryGetValue(condition.Type.ToString(), out IEvent conditionEvent) || !(conditionEvent is ICondition existingCondition))
+            if (!thing.TrackedEvents.TryGetValue(condition.GetType().Name, out IEvent conditionEvent) || !(conditionEvent is ICondition existingCondition))
             {
-                thing.StartTrackingEvent(condition, condition.Type.ToString());
+                thing.StartTrackingEvent(condition);
 
                 return true;
             }
@@ -72,6 +72,20 @@ namespace Fibula.Mechanics.Contracts.Extensions
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Checks if the thing has the given condition.
+        /// </summary>
+        /// <param name="thing">The thing to check the conditions on.</param>
+        /// <param name="type">The type of condition.</param>
+        /// <returns>True if the thing has such condition, false otherwise.</returns>
+        public static bool HasCondition(this IThing thing, Type type)
+        {
+            thing.ThrowIfNull(nameof(thing));
+            type.ThrowIfNull(nameof(type));
+
+            return thing.TrackedEvents.ContainsKey(type.Name);
         }
     }
 }

@@ -79,20 +79,20 @@ namespace Fibula.Mechanics.Conditions
                 // Setup repeat to 'snooze' the removal.
                 this.RepeatAfter = timeLeft;
 
-                context.Logger.Debug($"{this.GetType().Name} not ready to end yet, snoozing for {timeLeft.TotalMilliseconds}");
+                context.Logger.Verbose($"Effect of {this.GetType().Name} extended for {timeLeft} more.");
 
                 return;
             }
 
-            // Pulse the condition so that any effects execute.
-            this.Pulse(conditionContext);
+            // Ready to execute.
+            this.Execute(conditionContext);
         }
 
         /// <summary>
-        /// Executes the operation's logic.
+        /// Executes the condition's logic.
         /// </summary>
         /// <param name="context">The execution context for this condition.</param>
-        protected abstract void Pulse(IConditionContext context);
+        protected abstract void Execute(IConditionContext context);
 
         /// <summary>
         /// Sends a notification synchronously.
@@ -101,9 +101,24 @@ namespace Fibula.Mechanics.Conditions
         /// <param name="notification">The notification to send.</param>
         protected void SendNotification(IConditionContext context, INotification notification)
         {
+            context.ThrowIfNull(nameof(context));
             notification.ThrowIfNull(nameof(notification));
 
             notification.Send(new NotificationContext(context.Logger, context.MapDescriptor, context.CreatureFinder));
+        }
+
+        /// <summary>
+        /// Sends a notification asynchronously.
+        /// </summary>
+        /// <param name="context">A reference to the condition context.</param>
+        /// <param name="notification">The notification to send.</param>
+        /// <param name="delayTime">Optional. The time delay after which the notification should be sent. If left null, the notificaion is scheduled to be sent ASAP.</param>
+        protected void SendNotificationAsync(IConditionContext context, INotification notification, TimeSpan? delayTime = null)
+        {
+            context.ThrowIfNull(nameof(context));
+            notification.ThrowIfNull(nameof(notification));
+
+            context.Scheduler.ScheduleEvent(notification, delayTime);
         }
     }
 }

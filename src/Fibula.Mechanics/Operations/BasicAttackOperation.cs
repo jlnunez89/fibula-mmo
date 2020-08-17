@@ -21,6 +21,7 @@ namespace Fibula.Mechanics.Operations
     using Fibula.Creatures.Contracts.Enumerations;
     using Fibula.Data.Entities.Contracts.Enumerations;
     using Fibula.Map.Contracts.Extensions;
+    using Fibula.Mechanics.Conditions;
     using Fibula.Mechanics.Contracts.Abstractions;
     using Fibula.Mechanics.Contracts.Constants;
     using Fibula.Mechanics.Contracts.Extensions;
@@ -150,6 +151,7 @@ namespace Fibula.Mechanics.Operations
         /// <param name="context">The context of the operation.</param>
         private void PerformAttack(IOperationContext context)
         {
+            // TODO: this method has grown pretty big, it should at least be broken down when formulas get implemented.
             var rng = new Random();
 
             // Calculate the damage to inflict without any protections and reductions,
@@ -219,6 +221,8 @@ namespace Fibula.Mechanics.Operations
                 context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.BloodType));
             }
 
+            var inFightLockDurationTime = TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs);
+
             if (this.Attacker != null)
             {
                 packetsToSendToTargetPlayer.Add(new SquarePacket(this.Attacker.Id, SquareColor.Black));
@@ -240,6 +244,19 @@ namespace Fibula.Mechanics.Operations
 
                     context.Scheduler.ScheduleEvent(turnToDirOp);
                 }
+
+                if (this.Attacker is IPlayer attackerPlayer)
+                {
+                    var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + inFightLockDurationTime, attackerPlayer);
+
+                    if (attackerPlayer.AddOrExtendCondition(inFightCondition))
+                    {
+                        context.Logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
+
+                        context.Scheduler.ScheduleEvent(inFightCondition, inFightLockDurationTime, scheduleAsync: true);
+                        context.Scheduler.ScheduleEvent(new GenericNotification(() => attackerPlayer.YieldSingleItem(), new PlayerConditionsPacket(attackerPlayer)), scheduleAsync: true);
+                    }
+                }
             }
 
             this.SendNotification(context, new GenericNotification(() => context.Map.PlayersThatCanSee(this.Target.Location), packetsToSendToAllSpectators.ToArray()));
@@ -247,6 +264,16 @@ namespace Fibula.Mechanics.Operations
             if (this.Target is IPlayer targetPlayer)
             {
                 this.SendNotification(context, new GenericNotification(() => targetPlayer.YieldSingleItem(), packetsToSendToTargetPlayer.ToArray()));
+
+                var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
+
+                if (targetPlayer.AddOrExtendCondition(inFightCondition))
+                {
+                    context.Logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
+
+                    context.Scheduler.ScheduleEvent(inFightCondition, inFightLockDurationTime, scheduleAsync: true);
+                    context.Scheduler.ScheduleEvent(new GenericNotification(() => targetPlayer.YieldSingleItem(), new PlayerConditionsPacket(targetPlayer)), scheduleAsync: true);
+                }
             }
         }
     }
