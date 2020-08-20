@@ -72,7 +72,7 @@ namespace Fibula.Mechanics.Operations
             // Add delay from current exhaustion of the requestor, if any.
             if (this.Attacker is ICreature creature)
             {
-                operationDelay += creature.RemainingCooldownTime(ConditionType.ExhaustedCombat, context.Scheduler.CurrentTime);
+                operationDelay += creature.RemainingExhaustionTime(ExhaustionType.Combat, context.Scheduler.CurrentTime);
             }
 
             // Schedule the actual attack operation.

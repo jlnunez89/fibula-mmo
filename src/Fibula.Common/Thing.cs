@@ -141,14 +141,14 @@ namespace Fibula.Common
         /// Makes the thing start tracking an event.
         /// </summary>
         /// <param name="evt">The event to stop tracking.</param>
-        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's type name is used.</param>
+        /// <param name="identifier">Optional. The identifier under which to start tracking the event. If no identifier is provided, the event's <see cref="IEvent.EventType"/> is used.</param>
         public void StartTrackingEvent(IEvent evt, string identifier = "")
         {
             evt.ThrowIfNull(nameof(evt));
 
             if (string.IsNullOrWhiteSpace(identifier))
             {
-                identifier = evt.GetType().Name;
+                identifier = evt.EventType;
             }
 
             evt.Completed += this.StopTrackingEvent;
@@ -164,14 +164,14 @@ namespace Fibula.Common
         {
             evt.ThrowIfNull(nameof(evt));
 
-            this.StopTrackingEvent(evt, evt.GetType().Name);
+            this.StopTrackingEvent(evt, evt.EventType);
         }
 
         /// <summary>
         /// Makes the thing stop tracking an event.
         /// </summary>
         /// <param name="evt">The event to stop tracking.</param>
-        /// <param name="identifier">Optional. The identifier under which to look for and stop tracking the event. If no identifier is provided, the event's type name is used.</param>
+        /// <param name="identifier">The identifier under which to look for and stop tracking the event.</param>
         public void StopTrackingEvent(IEvent evt, string identifier)
         {
             evt.ThrowIfNull(nameof(evt));

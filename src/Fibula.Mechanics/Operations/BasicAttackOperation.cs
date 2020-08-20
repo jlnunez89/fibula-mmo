@@ -48,7 +48,8 @@ namespace Fibula.Mechanics.Operations
             this.Target = target;
             this.Attacker = attacker;
 
-            this.AssociatedExhaustion = (ConditionType.ExhaustedCombat, exhaustionCost);
+            this.ExhaustionInfo[ExhaustionType.Combat] = exhaustionCost;
+
             this.TargetIdAtScheduleTime = attacker?.AutoAttackTarget?.Id ?? 0;
         }
 
@@ -140,7 +141,7 @@ namespace Fibula.Mechanics.Operations
                 if (!attackPerformed)
                 {
                     // Update the actual cost if the attack wasn't performed.
-                    this.AssociatedExhaustion = null;
+                    this.ExhaustionInfo.Remove(ExhaustionType.Combat);
                 }
             }
         }
@@ -249,7 +250,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + inFightLockDurationTime, attackerPlayer);
 
-                    if (attackerPlayer.AddOrExtendCondition(inFightCondition))
+                    if (attackerPlayer.AddOrAggregateCondition(inFightCondition))
                     {
                         context.Logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
 
@@ -267,7 +268,7 @@ namespace Fibula.Mechanics.Operations
 
                 var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
 
-                if (targetPlayer.AddOrExtendCondition(inFightCondition))
+                if (targetPlayer.AddOrAggregateCondition(inFightCondition))
                 {
                     context.Logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
 

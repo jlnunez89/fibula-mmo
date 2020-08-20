@@ -112,23 +112,8 @@ namespace Fibula.Common.Contracts.Enumerations
         Regenerating,
 
         /// <summary>
-        /// Exhausted to use items or otherwise perform actions.
+        /// Exhausted, which can be of any <see cref="ExhaustionType"/>.
         /// </summary>
-        ExhaustedAction,
-
-        /// <summary>
-        /// Exhausted to fight.
-        /// </summary>
-        ExhaustedCombat,
-
-        /// <summary>
-        /// Exhausted to cast spells or using runes.
-        /// </summary>
-        ExhaustedMagic,
-
-        /// <summary>
-        /// Exhausted to move.
-        /// </summary>
-        ExhaustedMovement,
+        Exhausted,
     }
 }

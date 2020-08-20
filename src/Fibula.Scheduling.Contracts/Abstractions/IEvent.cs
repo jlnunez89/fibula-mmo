@@ -41,6 +41,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         string EventId { get; }
 
         /// <summary>
+        /// Gets a string representing this event's type.
+        /// </summary>
+        string EventType { get; }
+
+        /// <summary>
         /// Gets the id of the requestor of this event, if available.
         /// </summary>
         uint RequestorId { get; }

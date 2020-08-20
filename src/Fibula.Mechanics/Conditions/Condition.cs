@@ -42,6 +42,11 @@ namespace Fibula.Mechanics.Conditions
         }
 
         /// <summary>
+        /// Gets a string representing this condition's type.
+        /// </summary>
+        public override string EventType => this.Type.ToString();
+
+        /// <summary>
         /// Gets the type of this condition.
         /// </summary>
         public ConditionType Type { get; }
@@ -79,7 +84,7 @@ namespace Fibula.Mechanics.Conditions
                 // Setup repeat to 'snooze' the removal.
                 this.RepeatAfter = timeLeft;
 
-                context.Logger.Verbose($"Effect of {this.GetType().Name} extended for {timeLeft} more.");
+                context.Logger.Debug($"Effect of {this.GetType().Name} extended for {timeLeft} more.");
 
                 return;
             }
@@ -87,6 +92,12 @@ namespace Fibula.Mechanics.Conditions
             // Ready to execute.
             this.Execute(conditionContext);
         }
+
+        /// <summary>
+        /// Aggregates the current condition with another of the same type.
+        /// </summary>
+        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
+        public abstract void AggregateWith(ICondition conditionOfSameType);
 
         /// <summary>
         /// Executes the condition's logic.

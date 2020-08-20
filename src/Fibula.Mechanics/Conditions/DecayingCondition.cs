@@ -14,6 +14,7 @@ namespace Fibula.Mechanics.Conditions
     using System;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
+    using Fibula.Common.Utilities;
     using Fibula.Items;
     using Fibula.Items.Contracts.Abstractions;
     using Fibula.Items.Contracts.Enumerations;
@@ -43,6 +44,25 @@ namespace Fibula.Mechanics.Conditions
         /// Gets the item that is decaying.
         /// </summary>
         public IItem Item { get; }
+
+        /// <summary>
+        /// Aggregates the current condition with another of the same type.
+        /// </summary>
+        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
+        public override void AggregateWith(ICondition conditionOfSameType)
+        {
+            conditionOfSameType.ThrowIfNull(nameof(conditionOfSameType));
+
+            if (!(conditionOfSameType is DecayingCondition otherDecayCondition) || otherDecayCondition.Item.TypeId != this.Item.TypeId)
+            {
+                return;
+            }
+
+            if (this.EndTime < otherDecayCondition.EndTime)
+            {
+                this.EndTime = otherDecayCondition.EndTime;
+            }
+        }
 
         /// <summary>
         /// Executes the condition's logic.

@@ -392,6 +392,11 @@ namespace Fibula.Scheduling.Tests
             }
 
             /// <summary>
+            /// Gets a string representing this event's type.
+            /// </summary>
+            public override string EventType => nameof(ConcreteMockedEvent);
+
+            /// <summary>
             /// Gets or sets a value indicating whether the event can be cancelled.
             /// </summary>
             public override bool CanBeCancelled { get; protected set; }

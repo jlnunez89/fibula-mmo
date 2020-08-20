@@ -14,7 +14,9 @@ namespace Fibula.Mechanics
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.IO;
     using System.Linq;
+    using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
     using Fibula.Client.Contracts.Abstractions;
@@ -349,7 +351,7 @@ namespace Fibula.Mechanics
                 {
                     var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + combatDurationTime, attackerPlayer);
 
-                    if (attackerPlayer.AddOrExtendCondition(inFightCondition))
+                    if (attackerPlayer.AddOrAggregateCondition(inFightCondition))
                     {
                         this.logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
 
@@ -362,7 +364,7 @@ namespace Fibula.Mechanics
                 {
                     var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
 
-                    if (targetPlayer.AddOrExtendCondition(inFightCondition))
+                    if (targetPlayer.AddOrAggregateCondition(inFightCondition))
                     {
                         this.logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
 
@@ -725,7 +727,7 @@ namespace Fibula.Mechanics
             if (requestorId == fromCreatureId && fromLocation.Type == LocationType.Map && toLocation.Type == LocationType.Map)
             {
                 // The scheduling delay becomes any cooldown debt for this operation.
-                scheduleDelay = creature.RemainingCooldownTime(ConditionType.ExhaustedMovement, this.scheduler.CurrentTime);
+                scheduleDelay = creature.RemainingExhaustionTime(ExhaustionType.Movement, this.scheduler.CurrentTime);
             }
 
             this.scheduler.ScheduleEvent(movementOp, scheduleDelay);
@@ -889,9 +891,10 @@ namespace Fibula.Mechanics
             var operationDelay = withDelay < TimeSpan.Zero ? TimeSpan.Zero : withDelay;
 
             // Add delay if there is an associated exhaustion to this operation, if any.
-            if (operation.RequestorId > 0 && operation.AssociatedExhaustion.HasValue && this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
+            if (operation.RequestorId > 0 && operation.ExhaustionInfo.Any() && this.creatureManager.FindCreatureById(operation.RequestorId) is ICreature requestor)
             {
-                operationDelay += requestor.RemainingCooldownTime(operation.AssociatedExhaustion.Value.Type, this.scheduler.CurrentTime);
+                // Delay by the maximum of any conditions needed to cool down.
+                operationDelay += operation.ExhaustionInfo.Max(exhaustionInfo => requestor.RemainingExhaustionTime(exhaustionInfo.Key, this.scheduler.CurrentTime));
             }
 
             this.scheduler.ScheduleEvent(operation, operationDelay);
@@ -1152,7 +1155,7 @@ namespace Fibula.Mechanics
             {
                 var decayCondition = new DecayingCondition(itemCreated, this.scheduler.CurrentTime + itemCreated.ExpirationTimeLeft);
 
-                if (itemCreated.AddOrExtendCondition(decayCondition))
+                if (itemCreated.AddOrAggregateCondition(decayCondition))
                 {
                     this.logger.Verbose($"Added decaying condition to {itemCreated.DescribeForLogger()}.");
 

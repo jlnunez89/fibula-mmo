@@ -12,6 +12,7 @@
 namespace Fibula.Mechanics.Conditions
 {
     using System;
+    using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications.Packets.Outgoing;
@@ -45,6 +46,25 @@ namespace Fibula.Mechanics.Conditions
         public IPlayer Player { get; }
 
         /// <summary>
+        /// Aggregates the current condition with another of the same type.
+        /// </summary>
+        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
+        public override void AggregateWith(ICondition conditionOfSameType)
+        {
+            conditionOfSameType.ThrowIfNull(nameof(conditionOfSameType));
+
+            if (!(conditionOfSameType is InFightCondition otherInFightCondition))
+            {
+                return;
+            }
+
+            if (this.EndTime < otherInFightCondition.EndTime)
+            {
+                this.EndTime = otherInFightCondition.EndTime;
+            }
+        }
+
+        /// <summary>
         /// Executes the condition's logic.
         /// </summary>
         /// <param name="context">The execution context for this condition.</param>
@@ -54,7 +74,7 @@ namespace Fibula.Mechanics.Conditions
             this.SendNotificationAsync(
                 context,
                 new GenericNotification(() => this.Player.YieldSingleItem(), new PlayerConditionsPacket(this.Player)),
-                TimeSpan.FromSeconds(1));
+                this.EndTime - context.CurrentTime);
         }
     }
 }

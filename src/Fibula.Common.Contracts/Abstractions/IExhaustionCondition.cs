@@ -1,5 +1,5 @@
 ﻿// -----------------------------------------------------------------
-// <copyright file="IOperation.cs" company="2Dudes">
+// <copyright file="IExhaustionCondition.cs" company="2Dudes">
 // Copyright (c) | Jose L. Nunez de Caceres et al.
 // https://linkedin.com/in/nunezdecaceres
 //
@@ -9,21 +9,20 @@
 // </copyright>
 // -----------------------------------------------------------------
 
-namespace Fibula.Mechanics.Contracts.Abstractions
+namespace Fibula.Common.Contracts.Abstractions
 {
     using System;
     using System.Collections.Generic;
     using Fibula.Common.Contracts.Enumerations;
-    using Fibula.Scheduling.Contracts.Abstractions;
 
     /// <summary>
-    /// Interface for a game operation.
+    /// Interface for the special type of exhaustion condition.
     /// </summary>
-    public interface IOperation : IEvent
+    public interface IExhaustionCondition : ICondition
     {
         /// <summary>
-        /// Gets the exhaustion conditions that this operation checks for and produces.
+        /// Gets the current types that this exhaustion covers.
         /// </summary>
-        IDictionary<ExhaustionType, TimeSpan> ExhaustionInfo { get; }
+        IDictionary<ExhaustionType, DateTimeOffset> ExhaustionTimesPerType { get; }
     }
 }

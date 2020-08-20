@@ -53,7 +53,6 @@ namespace Fibula.Protocol.V772.PacketWriters
             byte conditionFlags = 0;
 
             // Add condition icons supported by this version.
-            /*
             if (playerConditionsPacket.Player.HasCondition(ConditionType.Posioned))
             {
                 conditionFlags |= 1 << 0;
@@ -88,9 +87,8 @@ namespace Fibula.Protocol.V772.PacketWriters
             {
                 conditionFlags |= 1 << 6;
             }
-            */
 
-            if (playerConditionsPacket.Player.HasCondition(typeof(InFightCondition)))
+            if (playerConditionsPacket.Player.HasCondition(ConditionType.InFight))
             {
                 conditionFlags |= 1 << 7;
             }

@@ -43,6 +43,8 @@ namespace Fibula.Mechanics.Operations
             creature.ThrowIfNull(nameof(creature));
 
             this.Creature = creature;
+
+            this.ExhaustionInfo.Add(ExhaustionType.Movement, TimeSpan.Zero);
         }
 
         /// <summary>
@@ -146,7 +148,7 @@ namespace Fibula.Mechanics.Operations
                 if (this.Creature is ICreature creature)
                 {
                     // The scheduling delay becomes any cooldown debt for this operation.
-                    scheduleDelay = creature.RemainingCooldownTime(ConditionType.ExhaustedMovement, context.Scheduler.CurrentTime);
+                    scheduleDelay = creature.RemainingExhaustionTime(ExhaustionType.Movement, context.Scheduler.CurrentTime);
                 }
 
                 // Schedule the actual walk operation.

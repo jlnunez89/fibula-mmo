@@ -60,6 +60,11 @@ namespace Fibula.Scheduling
         public string EventId { get; }
 
         /// <summary>
+        /// Gets a string representing this event's type.
+        /// </summary>
+        public abstract string EventType { get; }
+
+        /// <summary>
         /// Gets the id of the requestor of this event, if available.
         /// </summary>
         public uint RequestorId { get; }

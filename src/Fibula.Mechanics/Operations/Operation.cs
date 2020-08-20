@@ -12,6 +12,8 @@
 namespace Fibula.Mechanics.Operations
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
@@ -43,7 +45,14 @@ namespace Fibula.Mechanics.Operations
             : base(requestorId)
         {
             this.CanBeCancelled = true;
+
+            this.ExhaustionInfo = new Dictionary<ExhaustionType, TimeSpan>();
         }
+
+        /// <summary>
+        /// Gets a string representing this operation's event type.
+        /// </summary>
+        public override string EventType => this.GetType().Name;
 
         /// <summary>
         /// Gets or sets a value indicating whether the event can be cancelled.
@@ -51,9 +60,9 @@ namespace Fibula.Mechanics.Operations
         public override bool CanBeCancelled { get; protected set; }
 
         /// <summary>
-        /// Gets or sets the information about the exhaustion that this operation produces.
+        /// Gets the exhaustion conditions that this operation checks for and produces.
         /// </summary>
-        public (ConditionType Type, TimeSpan Cost)? AssociatedExhaustion { get; protected set; }
+        public IDictionary<ExhaustionType, TimeSpan> ExhaustionInfo { get; }
 
         /// <summary>
         /// Gets the creature that is requesting the event, if known.
@@ -93,16 +102,19 @@ namespace Fibula.Mechanics.Operations
             this.Execute(operationContext);
 
             // Add any associated exhaustion from this operation, the the requestor, if there was one.
-            if (this.AssociatedExhaustion.HasValue && this.GetRequestor(operationContext.CreatureFinder) is ICreature requestor)
+            if (this.ExhaustionInfo.Any() && this.GetRequestor(operationContext.CreatureFinder) is ICreature requestor)
             {
-                var exhaustionCondition = new ExhaustionContidion(this.AssociatedExhaustion.Value.Type, context.CurrentTime + this.AssociatedExhaustion.Value.Cost);
-
-                if (requestor.AddOrExtendCondition(exhaustionCondition))
+                foreach (var (exhaustionType, duration) in this.ExhaustionInfo)
                 {
-                    context.Logger.Verbose($"Added exhaustion condition of type {exhaustionCondition.Type}.");
+                    var exhaustionCondition = new ExhaustionCondition(exhaustionType, context.CurrentTime + duration);
 
-                    // And actually schedule the condition so that it completes.
-                    operationContext.Scheduler.ScheduleEvent(exhaustionCondition, this.AssociatedExhaustion.Value.Cost);
+                    if (requestor.AddOrAggregateCondition(exhaustionCondition))
+                    {
+                        context.Logger.Verbose($"Added exhaustion condition of type {exhaustionCondition.Type}.");
+
+                        // And actually schedule the condition so that it completes.
+                        operationContext.Scheduler.ScheduleEvent(exhaustionCondition, duration);
+                    }
                 }
             }
         }

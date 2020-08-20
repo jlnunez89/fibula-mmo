@@ -44,6 +44,11 @@ namespace Fibula.Mechanics.Notifications
         public event OnSent Sent;
 
         /// <summary>
+        /// Gets a string representing this notification's event type.
+        /// </summary>
+        public override string EventType => this.GetType().Name;
+
+        /// <summary>
         /// Gets or sets a value indicating whether the event can be cancelled.
         /// </summary>
         public override bool CanBeCancelled { get; protected set; }

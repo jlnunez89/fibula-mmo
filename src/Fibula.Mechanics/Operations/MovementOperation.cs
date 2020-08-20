@@ -68,6 +68,8 @@ namespace Fibula.Mechanics.Operations
             this.ToLocation = toLocation;
             this.ToCreatureId = toCreatureId;
             this.Amount = amount;
+
+            this.ExhaustionInfo.Add(ExhaustionType.Movement, TimeSpan.Zero);
         }
 
         /// <summary>
@@ -700,7 +702,7 @@ namespace Fibula.Mechanics.Operations
             creature.Direction = moveDirection.GetClientSafeDirection();
             creature.LastMovementCostModifier = (fromTile.Location - toLocation).Z != 0 ? 2 : moveDirection.IsDiagonal() ? 3 : 1;
 
-            this.AssociatedExhaustion = (ConditionType.ExhaustedMovement, creature.CalculateStepDuration(fromTile));
+            this.ExhaustionInfo[ExhaustionType.Movement] = creature.CalculateStepDuration(fromTile);
 
             this.SendNotification(
                 context,

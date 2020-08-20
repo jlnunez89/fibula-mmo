@@ -29,5 +29,11 @@ namespace Fibula.Common.Contracts.Abstractions
         /// Gets or sets the end time for this condition.
         /// </summary>
         DateTimeOffset EndTime { get; set; }
+
+        /// <summary>
+        /// Aggregates the current condition with another of the same type.
+        /// </summary>
+        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
+        void AggregateWith(ICondition conditionOfSameType);
     }
 }
