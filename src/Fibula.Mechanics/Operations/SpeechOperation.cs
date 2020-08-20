@@ -107,15 +107,6 @@ namespace Fibula.Mechanics.Operations
 
                     return;
                 }
-
-                if (this.Content.StartsWith("!test"))
-                {
-                    var script = this.Content.Replace("!test", string.Empty).Trim();
-
-                    context.GameApi.TestScripting(script).Wait();
-
-                    return;
-                }
             }
             catch
             {
