@@ -172,10 +172,14 @@ namespace Fibula.Common
         /// </summary>
         /// <param name="evt">The event to stop tracking.</param>
         /// <param name="identifier">The identifier under which to look for and stop tracking the event.</param>
-        public void StopTrackingEvent(IEvent evt, string identifier)
+        public void StopTrackingEvent(IEvent evt, string identifier = "")
         {
             evt.ThrowIfNull(nameof(evt));
-            identifier.ThrowIfNullOrWhiteSpace(nameof(identifier));
+
+            if (string.IsNullOrWhiteSpace(identifier))
+            {
+                identifier = evt.EventType;
+            }
 
             this.TrackedEvents.Remove(identifier);
 

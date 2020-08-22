@@ -11,7 +11,6 @@
 
 namespace Fibula.Common.Contracts.Abstractions
 {
-    using System;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Scheduling.Contracts.Abstractions;
 
@@ -26,14 +25,10 @@ namespace Fibula.Common.Contracts.Abstractions
         ConditionType Type { get; }
 
         /// <summary>
-        /// Gets or sets the end time for this condition.
+        /// Aggregates this condition's properties with another of the same type.
         /// </summary>
-        DateTimeOffset EndTime { get; set; }
-
-        /// <summary>
-        /// Aggregates the current condition with another of the same type.
-        /// </summary>
-        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
-        void AggregateWith(ICondition conditionOfSameType);
+        /// <param name="conditionOfSameType">The condition to aggregate with.</param>
+        /// <returns>True if this condition's properties were changed as a result, and false if nothing changed.</returns>
+        bool Aggregate(ICondition conditionOfSameType);
     }
 }

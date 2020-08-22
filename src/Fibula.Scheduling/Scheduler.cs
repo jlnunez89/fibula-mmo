@@ -199,8 +199,9 @@ namespace Fibula.Scheduling
                                 // Clean the processed event.
                                 this.CleanUp(evt, evt.RequestorId);
 
-                                // And clean up the expedition hook.
+                                // And clean up the expedition and delay hooks.
                                 evt.Expedited -= this.HandleEventExpedition;
+                                evt.Delayed -= this.HandleEventDelay;
 
                                 // Repeat the event if it applicable.
                                 if (!wasCancelled)
@@ -352,6 +353,11 @@ namespace Fibula.Scheduling
                     castedEvent.Expedited += this.HandleEventExpedition;
                 }
 
+                if (!castedEvent.HasDelayHandler)
+                {
+                    castedEvent.Delayed += this.HandleEventDelay;
+                }
+
                 if (!castedEvent.HasCancellationHandler)
                 {
                     castedEvent.Cancelled += this.HandleEventCancellation;
@@ -376,6 +382,26 @@ namespace Fibula.Scheduling
 
                 Monitor.Pulse(this.eventsAvailableLock);
             }
+        }
+
+        /// <summary>
+        /// Calculates the time left to fire a given event.
+        /// </summary>
+        /// <param name="evt">The event to calculate against.</param>
+        /// <returns>A <see cref="TimeSpan"/> representing the time left to fire, or <see cref="TimeSpan.Zero"/>.</returns>
+        public TimeSpan CalculateTimeToFire(IEvent evt)
+        {
+            evt.ThrowIfNull(nameof(evt));
+
+            if (!(evt is BaseEvent castedEvent))
+            {
+                throw new ArgumentException($"Argument must be of type {nameof(BaseEvent)}.", nameof(evt));
+            }
+
+            var currentAfterStartTime = this.CurrentTime - this.startTime;
+            var millisecondsLeftToFire = castedEvent.Priority - currentAfterStartTime.TotalMilliseconds;
+
+            return millisecondsLeftToFire < 0 ? TimeSpan.Zero : TimeSpan.FromMilliseconds(millisecondsLeftToFire);
         }
 
         /// <summary>
@@ -418,6 +444,40 @@ namespace Fibula.Scheduling
 
                 // Flag the processing queue.
                 Monitor.Pulse(this.eventsAvailableLock);
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Handles a call from an expedited event.
+        /// </summary>
+        /// <param name="sender">The event that was expedited.</param>
+        /// <param name="delayByTime">The time by which to delay the event.</param>
+        private bool HandleEventDelay(IEvent sender, TimeSpan delayByTime)
+        {
+            if (sender == null || !(sender is BaseEvent evt))
+            {
+                return false;
+            }
+
+            if (delayByTime < TimeSpan.Zero)
+            {
+                delayByTime = TimeSpan.Zero;
+            }
+
+            // Lock on the events available to prevent race conditions on the manually firing list vs firing.
+            lock (this.eventsAvailableLock)
+            {
+                // Delay the event by either updating it's priority (if it's enqueued), or enqueueing it with delay.
+                if (this.priorityQueue.Contains(evt))
+                {
+                    this.priorityQueue.UpdatePriority(evt, Convert.ToSingle(evt.Priority + delayByTime.TotalMilliseconds));
+                }
+                else
+                {
+                    this.ScheduleEvent(evt, delayByTime);
+                }
             }
 
             return true;

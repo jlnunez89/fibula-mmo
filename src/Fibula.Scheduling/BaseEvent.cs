@@ -50,6 +50,11 @@ namespace Fibula.Scheduling
         public event EventExpeditedDelegate Expedited;
 
         /// <summary>
+        /// Fired when this event is delayed.
+        /// </summary>
+        public event EventDelayedDelegate Delayed;
+
+        /// <summary>
         /// Fired when this even is processed to completion (after no more repeats).
         /// </summary>
         public event EventCompletedDelegate Completed;
@@ -84,6 +89,11 @@ namespace Fibula.Scheduling
         /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Expedited"/> event.
         /// </summary>
         public bool HasExpeditionHandler => this.Expedited != null;
+
+        /// <summary>
+        /// Gets a value indicating whether this event has a handler hooked up for it's <see cref="Delayed"/> event.
+        /// </summary>
+        public bool HasDelayHandler => this.Delayed != null;
 
         /// <summary>
         /// Gets or sets a value indicating whether the event can be cancelled.
@@ -132,6 +142,21 @@ namespace Fibula.Scheduling
             }
 
             return this.Expedited.Invoke(this);
+        }
+
+        /// <summary>
+        /// Attempts to delay this event.
+        /// </summary>
+        /// <param name="byTime">The time by which to delay the event.</param>
+        /// <returns>True if the event is successfully delayed, false otherwise.</returns>
+        public bool Delay(TimeSpan byTime)
+        {
+            if (this.Delayed == null)
+            {
+                return false;
+            }
+
+            return this.Delayed.Invoke(this, byTime);
         }
 
         /// <summary>

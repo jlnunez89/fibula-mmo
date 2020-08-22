@@ -54,6 +54,7 @@ namespace Fibula.Mechanics.Contracts.Constants
         /// <summary>
         /// The default in fight duration time in milliseconds.
         /// </summary>
-        public const int DefaultInFightTimeInMs = 30000;
+        /// <remarks>One minute.</remarks>
+        public const int DefaultInFightTimeInMs = 60000;
     }
 }

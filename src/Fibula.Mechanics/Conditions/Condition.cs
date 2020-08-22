@@ -26,19 +26,14 @@ namespace Fibula.Mechanics.Conditions
     public abstract class Condition : BaseEvent, ICondition
     {
         /// <summary>
-        /// A threshold within which to accept the end of the condition.
-        /// </summary>
-        private const int EndTimeMillisecondsThreshold = 25;
-
-        /// <summary>
         /// Initializes a new instance of the <see cref="Condition"/> class.
         /// </summary>
         /// <param name="conditionType">The type of exhaustion.</param>
-        /// <param name="endTime">The date and time at which the condition is set to end.</param>
-        public Condition(ConditionType conditionType, DateTimeOffset endTime)
+        public Condition(ConditionType conditionType)
         {
             this.Type = conditionType;
-            this.EndTime = endTime;
+
+            this.CanBeCancelled = true;
         }
 
         /// <summary>
@@ -50,11 +45,6 @@ namespace Fibula.Mechanics.Conditions
         /// Gets the type of this condition.
         /// </summary>
         public ConditionType Type { get; }
-
-        /// <summary>
-        /// Gets or sets the end time for this condition.
-        /// </summary>
-        public DateTimeOffset EndTime { get; set; }
 
         /// <summary>
         /// Gets or sets a value indicating whether this condition can be cured.
@@ -69,35 +59,26 @@ namespace Fibula.Mechanics.Conditions
         {
             context.ThrowIfNull(nameof(context));
 
-            var conditionContext = context as IConditionContext;
-
-            var currentTime = context.CurrentTime;
-
-            // Reset the condition's Repeat property, to avoid implementations running perpetually.
-            this.RepeatAfter = TimeSpan.MinValue;
-
-            // Check if we're ready to remove the exhaustion from the afflicted thing.
-            if ((this.EndTime - currentTime).TotalMilliseconds > EndTimeMillisecondsThreshold)
+            if (!typeof(IConditionContext).IsAssignableFrom(context.GetType()) || !(context is IConditionContext conditionContext))
             {
-                var timeLeft = this.EndTime - currentTime;
-
-                // Setup repeat to 'snooze' the removal.
-                this.RepeatAfter = timeLeft;
-
-                context.Logger.Debug($"Effect of {this.GetType().Name} extended for {timeLeft} more.");
-
-                return;
+                throw new ArgumentException($"{nameof(context)} must be an {nameof(IConditionContext)}.");
             }
 
-            // Ready to execute.
+            // Reset the condition's Repeat property, to avoid implementations running perpetually.
+            // It's the responsability of the implementation to extend or repeat duration by modifiying
+            // this property each time the condition executes.
+            this.RepeatAfter = TimeSpan.MinValue;
+
+            // And execute as condition.
             this.Execute(conditionContext);
         }
 
         /// <summary>
-        /// Aggregates the current condition with another of the same type.
+        /// Aggregates this condition's properties with another of the same type.
         /// </summary>
-        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
-        public abstract void AggregateWith(ICondition conditionOfSameType);
+        /// <param name="conditionOfSameType">The condition to aggregate with.</param>
+        /// <returns>True if this condition's properties were changed as a result, and false if nothing changed.</returns>
+        public abstract bool Aggregate(ICondition conditionOfSameType);
 
         /// <summary>
         /// Executes the condition's logic.

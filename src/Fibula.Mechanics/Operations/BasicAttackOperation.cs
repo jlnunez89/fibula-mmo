@@ -222,8 +222,6 @@ namespace Fibula.Mechanics.Operations
                 context.GameApi.CreateItemAtLocation(this.Target.Location, context.PredefinedItemSet.FindSplatterForBloodType(this.Target.BloodType));
             }
 
-            var inFightLockDurationTime = TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs);
-
             if (this.Attacker != null)
             {
                 packetsToSendToTargetPlayer.Add(new SquarePacket(this.Attacker.Id, SquareColor.Black));
@@ -248,15 +246,10 @@ namespace Fibula.Mechanics.Operations
 
                 if (this.Attacker is IPlayer attackerPlayer)
                 {
-                    var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + inFightLockDurationTime, attackerPlayer);
-
-                    if (attackerPlayer.AddOrAggregateCondition(inFightCondition))
-                    {
-                        context.Logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
-
-                        context.Scheduler.ScheduleEvent(inFightCondition, inFightLockDurationTime, scheduleAsync: true);
-                        context.Scheduler.ScheduleEvent(new GenericNotification(() => attackerPlayer.YieldSingleItem(), new PlayerConditionsPacket(attackerPlayer)), scheduleAsync: true);
-                    }
+                    context.GameApi.AddOrAggregateCondition(
+                        attackerPlayer,
+                        new InFightCondition(attackerPlayer),
+                        duration: TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs));
                 }
             }
 
@@ -266,15 +259,10 @@ namespace Fibula.Mechanics.Operations
             {
                 this.SendNotification(context, new GenericNotification(() => targetPlayer.YieldSingleItem(), packetsToSendToTargetPlayer.ToArray()));
 
-                var inFightCondition = new InFightCondition(context.Scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
-
-                if (targetPlayer.AddOrAggregateCondition(inFightCondition))
-                {
-                    context.Logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
-
-                    context.Scheduler.ScheduleEvent(inFightCondition, inFightLockDurationTime, scheduleAsync: true);
-                    context.Scheduler.ScheduleEvent(new GenericNotification(() => targetPlayer.YieldSingleItem(), new PlayerConditionsPacket(targetPlayer)), scheduleAsync: true);
-                }
+                context.GameApi.AddOrAggregateCondition(
+                    targetPlayer,
+                    new InFightCondition(targetPlayer),
+                    duration: TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs));
             }
         }
     }

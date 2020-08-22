@@ -30,7 +30,7 @@ namespace Fibula.Mechanics.Conditions
         /// <param name="exhaustionType">The type of exhaustion.</param>
         /// <param name="endTime">The date and time at which the condition is set to end.</param>
         public ExhaustionCondition(ExhaustionType exhaustionType, DateTimeOffset endTime)
-            : base(ConditionType.Exhausted, endTime)
+            : base(ConditionType.Exhausted)
         {
             this.ExhaustionTimesPerType = new Dictionary<ExhaustionType, DateTimeOffset>()
             {
@@ -46,27 +46,35 @@ namespace Fibula.Mechanics.Conditions
         public IDictionary<ExhaustionType, DateTimeOffset> ExhaustionTimesPerType { get; }
 
         /// <summary>
-        /// Aggregates the current condition with another of the same type.
+        /// Aggregates this condition into another of the same type.
         /// </summary>
-        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
-        public override void AggregateWith(ICondition conditionOfSameType)
+        /// <param name="conditionOfSameType">The condition to aggregate into.</param>
+        /// <returns>True if the conditions were aggregated (changed), and false if nothing was done.</returns>
+        public override bool Aggregate(ICondition conditionOfSameType)
         {
             conditionOfSameType.ThrowIfNull(nameof(conditionOfSameType));
 
             if (!(conditionOfSameType is ExhaustionCondition otherExhaustionCondition))
             {
-                return;
+                return false;
             }
 
-            foreach (var (exhaustionType, endTime) in otherExhaustionCondition.ExhaustionTimesPerType)
+            var changed = false;
+
+            foreach (var (exhaustionType, newEndTime) in otherExhaustionCondition.ExhaustionTimesPerType)
             {
-                if (this.ExhaustionTimesPerType.TryGetValue(exhaustionType, out DateTimeOffset currentEndTime) && currentEndTime > endTime)
+                // Only carry over if out end times are greater.
+                if (this.ExhaustionTimesPerType.TryGetValue(exhaustionType, out DateTimeOffset currentEndTime) && newEndTime < currentEndTime)
                 {
                     continue;
                 }
 
-                this.ExhaustionTimesPerType[exhaustionType] = endTime;
+                this.ExhaustionTimesPerType[exhaustionType] = newEndTime;
+
+                changed = true;
             }
+
+            return changed;
         }
 
         /// <summary>

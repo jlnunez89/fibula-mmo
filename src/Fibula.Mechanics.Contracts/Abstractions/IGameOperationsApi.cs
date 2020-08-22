@@ -60,6 +60,14 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <param name="previousLocation">The previous location of the thing.</param>
         void AfterThingLocationChanged(IThing thing, Location previousLocation);
 
+        /// <summary>
+        /// Adds or aggregates a condition to an afflicted thing.
+        /// </summary>
+        /// <param name="thing">The thing to check the conditions on.</param>
+        /// <param name="condition">The condition to add or extend.</param>
+        /// <param name="duration">The duration for the condition being added.</param>
+        void AddOrAggregateCondition(IThing thing, ICondition condition, TimeSpan duration);
+
         // void Damage(IThing damagingThing, IThing damagedThing, byte damageSourceType, ushort damageValue);
 
         // void Delete(IThing thing);

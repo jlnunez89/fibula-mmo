@@ -23,32 +23,6 @@ namespace Fibula.Mechanics.Contracts.Extensions
     public static class ThingExtensions
     {
         /// <summary>
-        /// Calculates the remaining <see cref="TimeSpan"/> until the thing's condition is over.
-        /// </summary>
-        /// <param name="thing">The thing to check the conditions on.</param>
-        /// <param name="type">The type of condition.</param>
-        /// <param name="currentTime">The current time to calculate from.</param>
-        /// <returns>The <see cref="TimeSpan"/> result.</returns>
-        public static TimeSpan RemainingConditionCooldown(this IThing thing, ConditionType type, DateTimeOffset currentTime)
-        {
-            thing.ThrowIfNull(nameof(thing));
-
-            if (!thing.TrackedEvents.TryGetValue("ExhaustionCondition", out IEvent conditionEvent) || !(conditionEvent is ICondition condition) || condition.Type != type)
-            {
-                return TimeSpan.Zero;
-            }
-
-            var timeLeft = condition.EndTime - currentTime;
-
-            if (timeLeft < TimeSpan.Zero)
-            {
-                return TimeSpan.Zero;
-            }
-
-            return timeLeft;
-        }
-
-        /// <summary>
         /// Calculates the remaining <see cref="TimeSpan"/> until the thing's exhaustion is over.
         /// </summary>
         /// <param name="thing">The thing to check the conditions on.</param>
@@ -74,29 +48,6 @@ namespace Fibula.Mechanics.Contracts.Extensions
             var timeLeft = exhaustionEndTime - currentTime;
 
             return timeLeft < TimeSpan.Zero ? TimeSpan.Zero : timeLeft;
-        }
-
-        /// <summary>
-        /// Adds or aggregates a condition to the afflicted thing.
-        /// </summary>
-        /// <param name="thing">The thing to check the conditions on.</param>
-        /// <param name="condition">The condition to add or extend.</param>
-        /// <returns>True if the condition was added, false otherwise.</returns>
-        public static bool AddOrAggregateCondition(this IThing thing, ICondition condition)
-        {
-            thing.ThrowIfNull(nameof(thing));
-            condition.ThrowIfNull(nameof(condition));
-
-            if (!thing.TrackedEvents.TryGetValue(condition.EventType, out IEvent conditionEvent) || !(conditionEvent is ICondition existingCondition))
-            {
-                thing.StartTrackingEvent(condition);
-
-                return true;
-            }
-
-            existingCondition.AggregateWith(condition);
-
-            return false;
         }
 
         /// <summary>

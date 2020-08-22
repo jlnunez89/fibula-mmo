@@ -33,9 +33,8 @@ namespace Fibula.Mechanics.Conditions
         /// Initializes a new instance of the <see cref="DecayingCondition"/> class.
         /// </summary>
         /// <param name="item">The item that's decaying.</param>
-        /// <param name="decayAtTime">The time at which it will decay to the next target.</param>
-        public DecayingCondition(IItem item, DateTimeOffset decayAtTime)
-            : base(ConditionType.Decaying, decayAtTime)
+        public DecayingCondition(IItem item)
+            : base(ConditionType.Decaying)
         {
             this.Item = item;
         }
@@ -46,22 +45,20 @@ namespace Fibula.Mechanics.Conditions
         public IItem Item { get; }
 
         /// <summary>
-        /// Aggregates the current condition with another of the same type.
+        /// Aggregates this condition into another of the same type.
         /// </summary>
-        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
-        public override void AggregateWith(ICondition conditionOfSameType)
+        /// <param name="conditionOfSameType">The condition to aggregate into.</param>
+        /// <returns>True if the conditions were aggregated (changed), and false if nothing was done.</returns>
+        public override bool Aggregate(ICondition conditionOfSameType)
         {
             conditionOfSameType.ThrowIfNull(nameof(conditionOfSameType));
 
             if (!(conditionOfSameType is DecayingCondition otherDecayCondition) || otherDecayCondition.Item.TypeId != this.Item.TypeId)
             {
-                return;
+                return false;
             }
 
-            if (this.EndTime < otherDecayCondition.EndTime)
-            {
-                this.EndTime = otherDecayCondition.EndTime;
-            }
+            return false;
         }
 
         /// <summary>

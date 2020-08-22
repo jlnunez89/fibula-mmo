@@ -108,13 +108,7 @@ namespace Fibula.Mechanics.Operations
                 {
                     var exhaustionCondition = new ExhaustionCondition(exhaustionType, context.CurrentTime + duration);
 
-                    if (requestor.AddOrAggregateCondition(exhaustionCondition))
-                    {
-                        context.Logger.Verbose($"Added exhaustion condition of type {exhaustionCondition.Type}.");
-
-                        // And actually schedule the condition so that it completes.
-                        operationContext.Scheduler.ScheduleEvent(exhaustionCondition, duration);
-                    }
+                    operationContext.GameApi.AddOrAggregateCondition(requestor, exhaustionCondition, duration);
                 }
             }
         }

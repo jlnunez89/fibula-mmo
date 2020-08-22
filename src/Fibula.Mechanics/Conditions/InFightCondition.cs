@@ -11,7 +11,6 @@
 
 namespace Fibula.Mechanics.Conditions
 {
-    using System;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
@@ -28,10 +27,9 @@ namespace Fibula.Mechanics.Conditions
         /// <summary>
         /// Initializes a new instance of the <see cref="InFightCondition"/> class.
         /// </summary>
-        /// <param name="endTime">The date and time at which the condition is set to end.</param>
         /// <param name="player">The player that is in fight.</param>
-        public InFightCondition(DateTimeOffset endTime, IPlayer player)
-            : base(ConditionType.InFight, endTime)
+        public InFightCondition(IPlayer player)
+            : base(ConditionType.InFight)
         {
             player.ThrowIfNull(nameof(player));
 
@@ -46,22 +44,20 @@ namespace Fibula.Mechanics.Conditions
         public IPlayer Player { get; }
 
         /// <summary>
-        /// Aggregates the current condition with another of the same type.
+        /// Aggregates this condition into another of the same type.
         /// </summary>
-        /// <param name="conditionOfSameType">The condition to aggregate into this one.</param>
-        public override void AggregateWith(ICondition conditionOfSameType)
+        /// <param name="conditionOfSameType">The condition to aggregate into.</param>
+        /// <returns>True if the conditions were aggregated (changed), and false if nothing was done.</returns>
+        public override bool Aggregate(ICondition conditionOfSameType)
         {
             conditionOfSameType.ThrowIfNull(nameof(conditionOfSameType));
 
-            if (!(conditionOfSameType is InFightCondition otherInFightCondition))
+            if (!(conditionOfSameType is InFightCondition))
             {
-                return;
+                return false;
             }
 
-            if (this.EndTime < otherInFightCondition.EndTime)
-            {
-                this.EndTime = otherInFightCondition.EndTime;
-            }
+            return true;
         }
 
         /// <summary>
@@ -71,10 +67,7 @@ namespace Fibula.Mechanics.Conditions
         protected override void Execute(IConditionContext context)
         {
             // For InFight, we just send the updated flags.
-            this.SendNotificationAsync(
-                context,
-                new GenericNotification(() => this.Player.YieldSingleItem(), new PlayerConditionsPacket(this.Player)),
-                this.EndTime - context.CurrentTime);
+            this.SendNotificationAsync(context, new GenericNotification(() => this.Player.YieldSingleItem(), new PlayerConditionsPacket(this.Player)));
         }
     }
 }

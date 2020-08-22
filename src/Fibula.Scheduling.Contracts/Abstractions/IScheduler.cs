@@ -45,6 +45,13 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         void ScheduleEvent(IEvent eventToSchedule, TimeSpan? delayTime = null, bool scheduleAsync = false);
 
         /// <summary>
+        /// Calculates the time left to fire a given event.
+        /// </summary>
+        /// <param name="evt">The event to calculate against.</param>
+        /// <returns>A <see cref="TimeSpan"/> representing the time left to fire, or <see cref="TimeSpan.Zero"/>.</returns>
+        TimeSpan CalculateTimeToFire(IEvent evt);
+
+        /// <summary>
         /// Cancels an event.
         /// </summary>
         /// <param name="evt">The event to cancel.</param>

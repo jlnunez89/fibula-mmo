@@ -31,6 +31,11 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         event EventExpeditedDelegate Expedited;
 
         /// <summary>
+        /// Delegate fired when this event is delayed.
+        /// </summary>
+        event EventDelayedDelegate Delayed;
+
+        /// <summary>
         /// Fired when this even is processed to completion (after no more repeats).
         /// </summary>
         event EventCompletedDelegate Completed;
@@ -88,5 +93,12 @@ namespace Fibula.Scheduling.Contracts.Abstractions
         /// </summary>
         /// <returns>True if the event is successfully expedited, false otherwise.</returns>
         bool Expedite();
+
+        /// <summary>
+        /// Attempts to delay this event.
+        /// </summary>
+        /// <param name="byTime">The time by which to delay the event.</param>
+        /// <returns>True if the event is successfully delayed, false otherwise.</returns>
+        bool Delay(TimeSpan byTime);
     }
 }

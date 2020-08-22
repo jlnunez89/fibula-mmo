@@ -345,31 +345,62 @@ namespace Fibula.Mechanics
 
                 this.DispatchOperation(autoAttackOrchestrationOp);
 
-                var combatDurationTime = TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs);
-
                 if (combatant is IPlayer attackerPlayer)
                 {
-                    var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + combatDurationTime, attackerPlayer);
-
-                    if (attackerPlayer.AddOrAggregateCondition(inFightCondition))
-                    {
-                        this.logger.Verbose($"Added in fight condition to {attackerPlayer.DescribeForLogger()}.");
-
-                        this.scheduler.ScheduleEvent(inFightCondition, combatDurationTime, scheduleAsync: true);
-                        this.scheduler.ScheduleEvent(new GenericNotification(() => attackerPlayer.YieldSingleItem(), new PlayerConditionsPacket(attackerPlayer)), scheduleAsync: true);
-                    }
+                    this.AddOrAggregateCondition(
+                        attackerPlayer,
+                        new InFightCondition(attackerPlayer),
+                        duration: TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs));
                 }
 
                 if (combatant.AutoAttackTarget is IPlayer targetPlayer)
                 {
-                    var inFightCondition = new InFightCondition(this.scheduler.CurrentTime + TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs), targetPlayer);
+                    this.AddOrAggregateCondition(
+                        targetPlayer,
+                        new InFightCondition(targetPlayer),
+                        duration: TimeSpan.FromMilliseconds(CombatConstants.DefaultInFightTimeInMs));
+                }
+            }
+        }
 
-                    if (targetPlayer.AddOrAggregateCondition(inFightCondition))
+        /// <summary>
+        /// Adds or aggregates a condition to an afflicted thing.
+        /// </summary>
+        /// <param name="thing">The thing to check the conditions on.</param>
+        /// <param name="condition">The condition to add or extend.</param>
+        /// <param name="duration">The duration for the condition being added.</param>
+        public void AddOrAggregateCondition(IThing thing, ICondition condition, TimeSpan duration)
+        {
+            thing.ThrowIfNull(nameof(thing));
+            condition.ThrowIfNull(nameof(condition));
+
+            if (!thing.TrackedEvents.TryGetValue(condition.EventType, out IEvent existingEvent))
+            {
+                thing.StartTrackingEvent(condition);
+
+                this.scheduler.ScheduleEvent(condition, duration, scheduleAsync: true);
+
+                this.logger.Verbose($"Added {condition.GetType().Name} to {thing.DescribeForLogger()}.");
+
+                if (thing is IPlayer player)
+                {
+                    this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new PlayerConditionsPacket(player)), scheduleAsync: true);
+                }
+
+                return;
+            }
+
+            if (existingEvent is ICondition existingCondition && existingCondition.Type == condition.Type)
+            {
+                if (existingCondition.Aggregate(condition))
+                {
+                    // Calculate the delay that we need to apply to the condition.
+                    var existingConditionTimeToFire = this.scheduler.CalculateTimeToFire(existingCondition);
+                    var extraTimeNeeded = duration > existingConditionTimeToFire ? duration - existingConditionTimeToFire : TimeSpan.Zero;
+
+                    if (extraTimeNeeded > TimeSpan.Zero)
                     {
-                        this.logger.Verbose($"Added in fight condition to {targetPlayer.DescribeForLogger()}.");
-
-                        this.scheduler.ScheduleEvent(inFightCondition, combatDurationTime, scheduleAsync: true);
-                        this.scheduler.ScheduleEvent(new GenericNotification(() => targetPlayer.YieldSingleItem(), new PlayerConditionsPacket(targetPlayer)), scheduleAsync: true);
+                        existingCondition.Delay(extraTimeNeeded);
                     }
                 }
             }
@@ -1153,15 +1184,7 @@ namespace Fibula.Mechanics
             // Start decay for items that need it.
             if (itemCreated.HasExpiration)
             {
-                var decayCondition = new DecayingCondition(itemCreated, this.scheduler.CurrentTime + itemCreated.ExpirationTimeLeft);
-
-                if (itemCreated.AddOrAggregateCondition(decayCondition))
-                {
-                    this.logger.Verbose($"Added decaying condition to {itemCreated.DescribeForLogger()}.");
-
-                    // Schedule the condition asynchronously, because we'll be often creating items as part of other operations.
-                    this.scheduler.ScheduleEvent(decayCondition, itemCreated.ExpirationTimeLeft, scheduleAsync: true);
-                }
+                this.AddOrAggregateCondition(itemCreated, new DecayingCondition(itemCreated), itemCreated.ExpirationTimeLeft);
             }
         }
     }
