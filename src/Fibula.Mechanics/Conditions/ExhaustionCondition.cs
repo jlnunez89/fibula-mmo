@@ -64,7 +64,7 @@ namespace Fibula.Mechanics.Conditions
             foreach (var (exhaustionType, newEndTime) in otherExhaustionCondition.ExhaustionTimesPerType)
             {
                 // Only carry over if out end times are greater.
-                if (this.ExhaustionTimesPerType.TryGetValue(exhaustionType, out DateTimeOffset currentEndTime) && newEndTime < currentEndTime)
+                if (this.ExhaustionTimesPerType.TryGetValue(exhaustionType, out DateTimeOffset currentEndTime) && newEndTime <= currentEndTime)
                 {
                     continue;
                 }

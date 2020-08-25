@@ -32,6 +32,11 @@ namespace Fibula.Common.Contracts.Constants
         public const string SchedulerQueueSizeMetricName = "SchedulerQueueSize";
 
         /// <summary>
+        /// The name of the metric for when a window of map tiles is loaded.
+        /// </summary>
+        public const string MapTilesLoadedMetricName = "MapTilesLoaded";
+
+        /// <summary>
         /// The name of the dimension for event types.
         /// </summary>
         public const string EventTypeDimensionName = "EventType";

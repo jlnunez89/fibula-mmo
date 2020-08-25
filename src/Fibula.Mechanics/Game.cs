@@ -1152,7 +1152,12 @@ namespace Fibula.Mechanics
         /// <param name="toZ">The end Z coordinate for the loaded window.</param>
         private void OnMapWindowLoaded(int fromX, int toX, int fromY, int toY, sbyte fromZ, sbyte toZ)
         {
-            var rng = new Random();
+            var x = 1 + Math.Abs(toX - fromX);
+            var y = 1 + Math.Abs(toY - fromY);
+            var z = 1 + Math.Abs(toZ - fromZ);
+
+            // Track the loaded tiles in window.
+            this.applicationContext.TelemetryClient.GetMetric(TelemetryConstants.MapTilesLoadedMetricName).TrackValue(x * y * z);
 
             // For spawns, check which fall within this window:
             var spawnsInWindow = this.monsterSpawns
