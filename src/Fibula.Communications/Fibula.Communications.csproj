@@ -29,8 +29,8 @@
   </ItemGroup>
   
   <ItemGroup>
+    <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Communications.Contracts\Fibula.Communications.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Communications.Packets.Contracts\Fibula.Communications.Packets.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Security.Contracts\Fibula.Security.Contracts.csproj" />
   </ItemGroup>
 </Project>

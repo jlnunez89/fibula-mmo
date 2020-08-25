@@ -31,8 +31,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Creatures.Contracts\Fibula.Creatures.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Data\Fibula.Data.csproj" />
-    <ProjectReference Include="..\Fibula.Items.Contracts\Fibula.Items.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Items\Fibula.Items.csproj" />
     <ProjectReference Include="..\Fibula.Mechanics.Contracts\Fibula.Mechanics.Contracts.csproj" />
   </ItemGroup>

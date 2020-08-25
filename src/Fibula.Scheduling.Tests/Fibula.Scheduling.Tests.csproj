@@ -35,7 +35,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Common.TestingUtilities\Fibula.Common.TestingUtilities.csproj" />
-    <ProjectReference Include="..\Fibula.Scheduling.Contracts\Fibula.Scheduling.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Scheduling\Fibula.Scheduling.csproj" />
   </ItemGroup>
 

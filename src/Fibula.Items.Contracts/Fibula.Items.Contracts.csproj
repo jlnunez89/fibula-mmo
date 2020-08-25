@@ -27,7 +27,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Fibula.Common.Contracts\Fibula.Common.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Parsing.Contracts\Fibula.Parsing.Contracts.csproj" />
   </ItemGroup>
 
 </Project>

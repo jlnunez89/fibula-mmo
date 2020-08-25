@@ -29,7 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common.Contracts\Fibula.Common.Contracts.csproj" />
     <ProjectReference Include="..\Fibula.Common.Utilities\Fibula.Common.Utilities.csproj" />
     <ProjectReference Include="..\Fibula.Providers.Contracts\Fibula.Providers.Contracts.csproj" />
   </ItemGroup>

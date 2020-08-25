@@ -38,9 +38,4 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
-  
-  <ItemGroup>
-    <ProjectReference Include="..\Fibula.Common.Contracts\Fibula.Common.Contracts.csproj" />
-    <ProjectReference Include="..\Fibula.Scheduling.Contracts\Fibula.Scheduling.Contracts.csproj" />
-  </ItemGroup>
 </Project>
