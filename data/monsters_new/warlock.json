@@ -24,6 +24,37 @@
     "CanSeeInvisible"
   ],
   "combat": {
+    "baseAttackPower": 40,
+    "baseDefensePower": 50,
+    "baseArmor": 32,
+    "distance": 4,
+    "immunities": {
+      "poison": 1.00,
+      "fire": 1.00,
+      "energy": 1.00,
+      "lifeDrain": 1.00,
+      "paralysis": 1.00
+    },
+    "skills": {
+      "Fist": {
+        "level": 50,
+        "targetCount": 100,
+        "factor": 1.10,
+        "increase": 2
+      }
+    },
+    "strategy": {
+      "changeTarget": {
+        "chance": 0.5
+      },
+      "flee": {
+        "hitpointThreshold": 1000
+      },
+      "closest": 100,
+      "weakest": 0,
+      "strongest": 0,
+      "random": 0
+    },
     "abilities": [
       { 
         "type": "self",
@@ -171,38 +202,7 @@
         ],
         "chance": 0.125
       },
-    ],
-    "baseAttackPower": 40,
-    "baseDefensePower": 50,
-    "baseArmor": 32,
-    "distance": 4,
-    "immunities": {
-      "poison": 1.00,
-      "fire": 1.00,
-      "energy": 1.00,
-      "lifeDrain": 1.00,
-      "paralysis": 1.00
-    },
-    "skills": {
-      "Fist": {
-        "level": 50,
-        "targetCount": 100,
-        "factor": 1.10,
-        "increase": 2
-      }
-    },
-    "strategy": {
-      "changeTarget": {
-        "chance": 0.5
-      },
-      "flee": {
-        "hitpointThreshold": 1000
-      },
-      "closest": 100,
-      "weakest": 0,
-      "strongest": 0,
-      "random": 0
-    }
+    ]
   },
   "inventory": [
     { "id": "3567", "name": "blue robe", "maximumCount": 1, "chance": 0.02 },

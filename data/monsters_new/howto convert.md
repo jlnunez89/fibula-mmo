@@ -13,28 +13,18 @@
 This means the following:
 
 ```
-RaceNumber    = 10
 Name          = "warlock"
 Article       = "a"
-Outfit        = (130, 0-52-128-95)
 Corpse        = 4240
 Blood         = Blood
 Experience    = 4000
-SummonCost    = 0
-FleeThreshold = 1000
-Attack        = 40
-Defend        = 50
-Armor         = 32
-Poison        = 0
-LoseTarget    = 50
-Strategy      = (100, 0, 0, 0)
 ```
 gets converted to:
 
 ```
 {
-  "article": "a",
   "name": "warlock",
+  "article": "a",
   "blood": "blood",
   "experienceYield": 4000,
   "corpse": "4240"
@@ -43,7 +33,7 @@ gets converted to:
 ---
 
 # Ignored fields:
-The following fields **do not need to be migrated**:
+The following fields **do not need to be converted**:
 ```
 RaceNumber    = 10
 ...
@@ -500,6 +490,10 @@ where `duration` is in milliseconds instead of seconds, so multiply by 1000.
 }
 ```
 where `duration` is in milliseconds instead of seconds, so multiply by 1000.
+
+## `Strength (int chance, int base%, int variation%, int duration)`
+
+Ingore this one...
 
 ## `Outfit ((0, 0), int duration)` for invisible
 
