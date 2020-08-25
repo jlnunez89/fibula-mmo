@@ -1,0 +1,89 @@
+{
+  "article": "a",
+  "name": "hunter",
+  "blood": "blood",
+  "experienceYield": 150,
+  "look": {
+    "type": "outfit",
+    "id": 129,
+    "head": 95,
+    "body": 116,
+    "legs": 120,
+    "feet": 115
+  },
+  "corpse": "4240",
+  "stats": {
+    "hitpoints": 150,
+    "baseSpeed": 65,
+    "carryStrength": 200
+  },
+  "flags": [
+    "CannotBePushed",
+    "CanPushItems",
+    "CanPushCreatures"
+  ],
+  "combat": {
+    "abilities": [
+      { 
+        "type": "target",
+        "range": 7,
+        "projectileEffect": "Arrow",
+        "targetEffect": "None",
+        "actions": [
+          {
+            "type": "damage",
+            "kind": "Physical",
+            "base": 75,
+            "variation": 25
+          }
+        ],
+        "chance": 0.50
+      }
+    ],
+  	"baseAttackPower": 13,
+  	"baseDefensePower": 10,
+  	"baseArmor": 8,
+    "distance": 4,
+    "immunities": {
+      "poison": 1.00
+    },
+    "skills": {
+      "Fist": {
+        "level": 50,
+        "targetCount": 100,
+        "factor": 1.20,
+        "increase": 1
+      }
+    },
+    "strategy": {
+      "changeTarget": {
+        "chance": 0.50
+      },
+      "flee": {
+        "hitpointThreshold": 10
+      },
+      "closest": 100,
+      "weakest": 0,
+      "strongest": 0,
+      "random": 0
+    }
+  },
+  "inventory": [
+    { "id": "3447", "name": "arrow", "maximumCount": 10, "chance": 0.70 },
+    { "id": "3447", "name": "arrow", "maximumCount": 12, "chance": 0.40 },
+    { "id": "3350", "name": "bow", "maximumCount": 1, "chance": 0.30 },
+    { "id": "3359", "name": "brass armor", "maximumCount": 1, "chance": 0.05 },
+    { "id": "3354", "name": "brass helmet", "maximumCount": 1, "chance": 0.05 },
+    { "id": "3449", "name": "burst arrow", "maximumCount": 3, "chance": 0.05 },
+    { "id": "3085", "name": "dragon necklace", "maximumCount": 1, "chance": 0.03 },
+    { "id": "3355", "name": "leather helmet", "maximumCount": 1, "chance": 0.10 },
+    { "id": "3559", "name": "leather legs", "maximumCount": 1, "chance": 0.14 },
+    { "id": "3586", "name": "orange", "maximumCount": 2, "chance": 0.20 },
+    { "id": "3601", "name": "roll", "maximumCount": 2, "chance": 0.11 },
+    { "id": "3030", "name": "small ruby", "maximumCount": 1, "chance": 0.002 },
+    { "id": "2920", "name": "torch", "maximumCount": 1, "chance": 0.05 }
+  ],
+  "speech": [
+    "Guess who we are hunting, hahaha!"
+  ]
+}

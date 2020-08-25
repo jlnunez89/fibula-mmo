@@ -1,0 +1,118 @@
+{
+  "article": "a",
+  "name": "vampire",
+  "blood": "bones",
+  "experienceYield": 290,
+  "look": {
+    "type": "race",
+    "id": 68
+  },
+  "corpse": "4137",
+  "stats": {
+    "hitpoints": 450,
+    "baseSpeed": 70,
+    "carryStrength": 1000
+  },
+  "flags": [
+    "CannotBePushed",
+    "CanPushItems",
+    "CanPushCreatures",
+    "CanSeeInvisible"
+  ],
+  "combat": {
+    "abilities": [
+      { 
+        "type": "self",
+        "casterEffect": "SparklesBlue",
+        "actions": [
+          {
+            "type": "lookChange",
+            "targetLook": {
+              "type": "race",
+              "id": 122
+            },
+            "duration": 6000
+          }
+        ],
+        "chance": 0.008
+      },
+      { 
+        "type": "target",
+        "range": 1,
+        "projectileEffect": "None",
+        "targetEffect": "None",
+        "actions": [
+          {
+            "type": "damage",
+            "kind": "LifeDrain",
+            "base": 80,
+            "variation": 25
+          }
+        ],
+        "chance": 0.2
+      },
+      { 
+        "type": "target",
+        "range": 7,
+        "projectileEffect": "None",
+        "targetEffect": "SparklesRed",
+        "actions": [
+          {
+            "type": "speedChange",
+            "base": -70,
+            "variation": 20,
+            "duration": 30000
+          }
+        ],
+        "chance": 0.111
+      }
+    ],
+    "baseAttackPower": 42,
+    "baseDefensePower": 38,
+    "baseArmor": 27,
+    "distance": 1,
+    "immunities": {
+      "poison": 1.00,
+      "lifeDrain": 1.00,
+      "paralysis": 1.00
+    },
+    "skills": {
+      "Fist": {
+        "level": 65,
+        "targetCount": 100,
+        "factor": 1.50,
+        "increase": 1
+      }
+    },
+    "strategy": {
+      "changeTarget": {
+        "chance": 0.05
+      },
+      "closest": 70,
+      "weakest": 30,
+      "strongest": 0,
+      "random": 0
+    }
+  },
+  "inventory": [
+    { "id": "3027", "name": "black pearl", "maximumCount": 1, "chance": 0.015 },
+    { "id": "2902", "name": "bowl", "maximumCount": 1, "chance": 0.11 },
+    { "id": "3056", "name": "bronze amulet", "maximumCount": 1, "chance": 0.002 },
+    { "id": "3010", "name": "emerald bangle", "maximumCount": 1, "chance": 0.002 },
+    { "id": "3031", "name": "gold coin", "maximumCount": 20, "chance": 0.15 },
+    { "id": "3661", "name": "grave flower", "maximumCount": 1, "chance": 0.18 },
+    { "id": "3284", "name": "ice rapier", "maximumCount": 1, "chance": 0.003 },
+    { "id": "3300", "name": "katana", "maximumCount": 1, "chance": 0.15 },
+    { "id": "3559", "name": "leather legs", "maximumCount": 1, "chance": 0.08 },
+    { "id": "3114", "name": "skull", "maximumCount": 1, "chance": 0.10 },
+    { "id": "3271", "name": "spike sword", "maximumCount": 1, "chance": 0.01 },
+    { "id": "3373", "name": "strange helmet", "maximumCount": 1, "chance": 0.004 },
+    { "id": "3434", "name": "vampire shield", "maximumCount": 1, "chance": 0.001 }
+  ],
+  "speech": [
+    "#Y BLOOD!",
+    "Let me kiss your neck.",
+    "I smell warm blood.",
+    "I call you, my bats! Come!"
+  ]
+}

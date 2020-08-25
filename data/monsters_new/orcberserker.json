@@ -1,0 +1,74 @@
+{
+  "article": "an",
+  "name": "orc berserker",
+  "blood": "blood",
+  "experienceYield": 195,
+  "look": {
+    "type": "race",
+    "id": 8
+  },
+  "corpse": "4045",
+  "stats": {
+    "hitpoints": 210,
+    "baseSpeed": 85,
+    "carryStrength": 400
+  },
+  "flags": [
+    "CannotBePushed",
+    "CanPushItems",
+    "CanPushCreatures"
+  ],
+  "combat": {
+    "abilities": [
+      { 
+        "type": "self",
+        "castEffect": "GlitterRed",
+        "actions": [
+          {
+            "type": "speedChange",
+            "base": 50,
+            "variation": 5,
+            "duration": 6000
+          }
+        ],
+        "chance": 0.083
+      }
+    ],
+  	"baseAttackPower": 65,
+  	"baseDefensePower": 12,
+  	"baseArmor": 4,
+    "distance": 1,
+    "immunities": {
+      "poison": 1.00
+    },
+    "skills": {
+      "Fist": {
+        "level": 50,
+        "targetCount": 100,
+        "factor": 1.20,
+        "increase": 1
+      }
+    },
+    "strategy": {
+      "changeTarget": {
+        "chance": 0.1
+      },
+      "closest": 60,
+      "weakest": 40,
+      "strongest": 0,
+      "random": 0
+    }
+  },
+  "inventory": [
+    { "id": "3266", "name": "battle axe", "maximumCount": 1, "chance": 0.06 },
+    { "id": "3358", "name": "chain armor", "maximumCount": 1, "chance": 0.10 },
+    { "id": "3352", "name": "chain helmet", "maximumCount": 1, "chance": 0.11 },
+    { "id": "3031", "name": "gold coin", "maximumCount": 12, "chance": 0.55 },
+    { "id": "3269", "name": "halberd", "maximumCount": 1, "chance": 0.07 },
+    { "id": "3582", "name": "ham", "maximumCount": 1, "chance": 0.17 },
+    { "id": "2914", "name": "lamp", "maximumCount": 1, "chance": 0.08 }
+  ],
+  "speech": [
+    "#Y KRAK ORRRRRRK!"
+  ]
+}
