@@ -17,139 +17,129 @@ namespace Fibula.Common.Contracts.Enumerations
     public enum AnimatedEffect : byte
     {
         /// <summary>
-        /// A pointer to the first valid value in this enumeration.
-        /// </summary>
-        First = XBlood,
-
-        /// <summary>
         /// The bleeding animation.
         /// </summary>
-        XBlood = 0x01,
+        XBlood,
 
         /// <summary>
         /// Three blue rings.
         /// </summary>
-        RingsBlue = 0x02,
+        RingsBlue,
 
         /// <summary>
         /// A puff of smoke.
         /// </summary>
-        Puff = 0x03,
+        Puff,
 
         /// <summary>
         /// Yellow sparks.
         /// </summary>
-        SparkYellow = 0x04,
+        SparkYellow,
 
         /// <summary>
         /// Explosion animation.
         /// </summary>
-        DamageExplosion = 0x05,
+        DamageExplosion,
 
         /// <summary>
         /// Magic missile impact animation.
         /// </summary>
-        DamageMagicMissile = 0x06,
+        DamageMagicMissile,
 
         /// <summary>
         /// Flame animation.
         /// </summary>
-        AreaFlame = 0x07,
+        AreaFlame,
 
         /// <summary>
         /// Three yellow rings.
         /// </summary>
-        RingsYellow = 0x08,
+        RingsYellow,
 
         /// <summary>
         /// Three green rings.
         /// </summary>
-        RingsGreen = 0x09,
+        RingsGreen,
 
         /// <summary>
         /// Bones being cut.
         /// </summary>
-        XGray = 0x0A,
+        XGray,
 
         /// <summary>
         /// Blue bubble animation.
         /// </summary>
-        BubbleBlue = 0x0B,
+        BubbleBlue,
 
         /// <summary>
         /// Electricity damage animation.
         /// </summary>
-        DamageEnergy = 0x0C,
+        DamageEnergy,
 
         /// <summary>
         /// Blue glitter animation.
         /// </summary>
-        GlitterBlue = 0x0D,
+        GlitterBlue,
 
         /// <summary>
         /// Red glitter animation.
         /// </summary>
-        GlitterRed = 0x0E,
+        GlitterRed,
 
         /// <summary>
         /// Green glitter animation.
         /// </summary>
-        GlitterGreen = 0x0F,
+        GlitterGreen,
 
         /// <summary>
         /// Flame animation.
         /// </summary>
-        Flame = 0x10,
+        Flame,
 
         /// <summary>
         /// Poison animation.
         /// </summary>
-        Poison = 0x11,
+        Poison,
 
         /// <summary>
         /// Black bubble animation.
         /// </summary>
-        BubbleBlack = 0x12,
+        BubbleBlack,
 
         /// <summary>
         /// Green notes of sound animation.
         /// </summary>
-        SoundGreen = 0x13,
+        SoundGreen,
 
         /// <summary>
         /// Red notes of sound animation.
         /// </summary>
-        SoundRed = 0x14,
+        SoundRed,
 
         /// <summary>
         /// Venom missile impact animation.
         /// </summary>
-        DamageVenomMissile = 0x15,
+        DamageVenomMissile,
 
         /// <summary>
         /// Yellow notes of sound animation.
         /// </summary>
-        SoundYellow = 0x16,
+        SoundYellow,
 
         /// <summary>
         /// Purple notes of sound animation.
         /// </summary>
-        SoundPurple = 0x17,
+        SoundPurple,
 
         /// <summary>
         /// Blue notes of sound animation.
         /// </summary>
-        SoundBlue = 0x18,
+        SoundBlue,
 
         /// <summary>
         /// White notes of sound animation.
         /// </summary>
-        SoundWhite = 0x19,
-
-        /// <summary>
-        /// A pointer to the last valid value in this enumeration.
-        /// </summary>
-        Last = SoundWhite,
+        SoundWhite,
 
         /// <summary>
         /// No animation.

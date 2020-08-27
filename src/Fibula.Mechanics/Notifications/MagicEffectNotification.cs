@@ -38,11 +38,6 @@ namespace Fibula.Mechanics.Notifications
             AnimatedEffect effect = AnimatedEffect.None)
             : base(findTargetPlayers)
         {
-            if (effect == AnimatedEffect.None)
-            {
-                throw new ArgumentException($"Invalid value for effect parameter: {effect}.", nameof(effect));
-            }
-
             this.Location = location;
             this.Effect = effect;
         }

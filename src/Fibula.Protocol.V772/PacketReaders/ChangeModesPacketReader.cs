@@ -11,7 +11,6 @@
 
 namespace Fibula.Protocol.V772.PacketReaders
 {
-    using System;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
     using Fibula.Communications;
@@ -43,28 +42,27 @@ namespace Fibula.Protocol.V772.PacketReaders
             message.ThrowIfNull(nameof(message));
 
             // 1 - offensive, 2 - balanced, 3 - defensive
-            var rawFightMode = message.GetByte();
+            FightMode fightMode = message.GetByte() switch
+            {
+                0x01 => FightMode.FullAttack,
+                0x02 => FightMode.Balanced,
+                0x03 => FightMode.FullDefense,
+                _ => FightMode.Balanced,
+            };
 
             // 0 - stand while fightning, 1 - chase opponent
-            var rawChaseMode = message.GetByte();
+            ChaseMode chaseMode = message.GetByte() switch
+            {
+                0x00 => ChaseMode.Stand,
+                0x01 => ChaseMode.Chase,
+                0x02 => ChaseMode.KeepDistance,
+                _ => ChaseMode.Chase,
+            };
 
             // 0 - safe mode, 1 - free mode
-            var rawSafeMode = message.GetByte();
+            var isSafetyEnabled = message.GetByte() > 0;
 
-            FightMode fightMode = FightMode.Balanced;
-            ChaseMode chaseMode = ChaseMode.Stand;
-
-            if (Enum.IsDefined(typeof(FightMode), rawFightMode))
-            {
-                fightMode = (FightMode)rawFightMode;
-            }
-
-            if (Enum.IsDefined(typeof(ChaseMode), rawChaseMode))
-            {
-                chaseMode = (ChaseMode)rawChaseMode;
-            }
-
-            return new ModesPacket(fightMode, chaseMode, isSafetyEnabled: rawSafeMode > 0);
+            return new ModesPacket(fightMode, chaseMode, isSafetyEnabled);
         }
     }
 }

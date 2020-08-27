@@ -20,17 +20,17 @@ namespace Fibula.Common.Contracts.Enumerations
         /// Full offensive attack.
         /// Focuses on dealing damage but leaves the attacker open to receive more damage, too.
         /// </summary>
-        FullAttack = 0x01,
+        FullAttack,
 
         /// <summary>
         /// A balanced stance.
         /// </summary>
-        Balanced = 0x02,
+        Balanced,
 
         /// <summary>
         /// Least aggresive stance.
         /// Focuses on blocking attacks instead of dealing damage.
         /// </summary>
-        FullDefense = 0x03,
+        FullDefense,
     }
 }

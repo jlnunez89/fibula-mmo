@@ -141,7 +141,7 @@ namespace Fibula.Mechanics.Handlers
             // Set player status to online.
             character.IsOnline = true;
 
-            // TODO: possibly a friendly name conversion here.
+            // TODO: possibly a friendly name conversion here. Also, the actual values might change per version, so this really should be set by the packet reader.
             client.Information.Type = Enum.IsDefined(typeof(AgentType), loginInfo.ClientOs) ? (AgentType)loginInfo.ClientOs : AgentType.Windows;
             client.Information.Version = loginInfo.ClientVersion.ToString();
 

@@ -19,16 +19,16 @@ namespace Fibula.Common.Contracts.Enumerations
         /// <summary>
         /// Does not chase the target.
         /// </summary>
-        Stand = 0x00,
+        Stand,
 
         /// <summary>
         /// Chases the target closely.
         /// </summary>
-        Chase = 0x01,
+        Chase,
 
         /// <summary>
         /// Maintains a constant distance to the target.
         /// </summary>
-        KeepDistance = 0x02,
+        KeepDistance,
     }
 }
