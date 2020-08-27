@@ -30,11 +30,6 @@ namespace Fibula.Creatures
     public abstract class CombatantCreature : Creature, ICombatant
     {
         /// <summary>
-        /// Lock object to semaphore interaction with the exhaustion dictionary.
-        /// </summary>
-        private readonly object exhaustionLock;
-
-        /// <summary>
         /// Stores the map of combatants to the damage taken from them for the current combat session.
         /// </summary>
         private readonly ConcurrentDictionary<uint, uint> combatSessionDamageTakenMap;
@@ -96,8 +91,6 @@ namespace Fibula.Creatures
             this.baseAttackSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseAttackSpeed));
             this.baseDefenseSpeed = Math.Min(CombatConstants.MaximumCombatSpeed, Math.Max(CombatConstants.MinimumCombatSpeed, baseDefenseSpeed));
 
-            this.exhaustionLock = new object();
-
             this.combatSessionDamageTakenMap = new ConcurrentDictionary<uint, uint>();
             this.combatSessionAttackedBy = new HashSet<ICombatant>();
 
@@ -137,7 +130,7 @@ namespace Fibula.Creatures
         public event OnFollowTargetChanged FollowTargetChanged;
 
         /// <summary>
-        /// Event triggered when this a skill of this creature changes.
+        /// Event triggered when a skill of this creature changes.
         /// </summary>
         public event OnCreatureSkillChanged SkillChanged;
 
@@ -179,7 +172,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
         /// </summary>
-        public IEnumerable<(uint, uint)> DamageTakenInSession
+        public IEnumerable<(uint CombatantId, uint Damage)> DamageTakenInSession
         {
             get
             {
@@ -321,6 +314,25 @@ namespace Fibula.Creatures
         }
 
         /// <summary>
+        /// Adds a value of experience to the combatant, which can be positive or negative.
+        /// </summary>
+        /// <param name="expToGiveOrTake">The experience value to give or take.</param>
+        public void AddExperience(long expToGiveOrTake)
+        {
+            if (!this.Skills.ContainsKey(SkillType.Experience) || expToGiveOrTake == 0)
+            {
+                return;
+            }
+
+            if (expToGiveOrTake < 0)
+            {
+                throw new NotSupportedException($"Taking experience is not supported yet. Therefore, {nameof(expToGiveOrTake)} ({expToGiveOrTake}) must not be negative.");
+            }
+
+            this.Skills[SkillType.Experience].IncreaseCounter(expToGiveOrTake);
+        }
+
+        /// <summary>
         /// Applies damage to the combatant, which is expected to apply reductions and protections.
         /// </summary>
         /// <param name="damageInfo">The information of the damage to make, without reductions.</param>
@@ -404,14 +416,15 @@ namespace Fibula.Creatures
         /// <param name="forSkill">The skill to advance.</param>
         /// <param name="previousLevel">The previous skill level.</param>
         /// <param name="previousPercent">The previous percent of completion to next level.</param>
-        protected void RaiseSkillChange(SkillType forSkill, uint previousLevel, byte previousPercent)
+        /// <param name="countDelta">Optional. The delta in the count for the skill. Not always sent.</param>
+        protected void RaiseSkillChange(SkillType forSkill, uint previousLevel, byte previousPercent, long? countDelta = null)
         {
             if (!this.Skills.ContainsKey(forSkill))
             {
                 return;
             }
 
-            this.SkillChanged?.Invoke(this, this.Skills[forSkill], previousLevel, previousPercent);
+            this.SkillChanged?.Invoke(this, this.Skills[forSkill], previousLevel, previousPercent, countDelta);
         }
 
         /// <summary>

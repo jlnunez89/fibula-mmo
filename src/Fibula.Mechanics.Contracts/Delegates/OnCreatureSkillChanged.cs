@@ -20,5 +20,6 @@ namespace Fibula.Mechanics.Contracts.Delegates
     /// <param name="skillThatChanged">The skill that changed.</param>
     /// <param name="previousLevel">The previous skill level.</param>
     /// <param name="previousPercent">The previous percent of completion to next level.</param>
-    public delegate void OnCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent);
+    /// <param name="countDelta">Optional. The delta in the count for this skill. Not always sent.</param>
+    public delegate void OnCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent, long? countDelta = null);
 }

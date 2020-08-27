@@ -19,5 +19,6 @@ namespace Fibula.Mechanics.Contracts.Delegates
     /// <param name="skillType">The type of skill that changed.</param>
     /// <param name="previousLevel">The previous skill level.</param>
     /// <param name="previousPercent">The previous percent of completion to next level.</param>
-    public delegate void OnSkillChanged(SkillType skillType, uint previousLevel, byte previousPercent);
+    /// <param name="countDelta">Optional. The delta in the count for this skill. Not always sent.</param>
+    public delegate void OnSkillChanged(SkillType skillType, uint previousLevel, byte previousPercent, long? countDelta = null);
 }

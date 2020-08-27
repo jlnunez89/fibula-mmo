@@ -55,7 +55,7 @@ namespace Fibula.Protocol.V772.PacketWriters
 
             message.AddLocation(magicEffectPacket.Location);
 
-            var valueToSend = magicEffectPacket.Effect switch
+            byte valueToSend = magicEffectPacket.Effect switch
             {
                 AnimatedEffect.XBlood => 0x01,
                 AnimatedEffect.RingsBlue => 0x02,

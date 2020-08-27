@@ -26,6 +26,6 @@ namespace Fibula.Creatures.Contracts.Abstractions
         /// <summary>
         /// Gets the experience yielded when this monster dies.
         /// </summary>
-        uint Experience { get; }
+        uint ExperienceToYield { get; }
     }
 }

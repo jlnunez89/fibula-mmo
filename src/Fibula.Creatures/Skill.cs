@@ -31,7 +31,8 @@ namespace Fibula.Creatures
         /// <param name="level">This skill's current level.</param>
         /// <param name="maxLevel">This skill's maximum level.</param>
         /// <param name="count">This skill's current count.</param>
-        public Skill(SkillType type, uint defaultLevel, double rate, double baseIncrease, uint level = 0, uint maxLevel = 1, double count = 0)
+        /// <param name="notifyOnEveryCounterChange">Optional. A value indicating whether the skill shoudl raise changed events on every counter change.</param>
+        public Skill(SkillType type, uint defaultLevel, double rate, double baseIncrease, uint level = 0, uint maxLevel = 1, double count = 0, bool notifyOnEveryCounterChange = false)
         {
             if (defaultLevel < 0)
             {
@@ -76,6 +77,8 @@ namespace Fibula.Creatures
             this.TargetCount = targetCount;
 
             this.Count = Math.Min(count, this.TargetCount);
+
+            this.SendOnCounterChange = notifyOnEveryCounterChange;
         }
 
         /// <summary>
@@ -107,6 +110,11 @@ namespace Fibula.Creatures
         /// Gets this skill's current count.
         /// </summary>
         public double Count { get; private set; }
+
+        /// <summary>
+        /// Gets a value indicating whether this skill will raise <see cref="Changed"/> events every time the counter changes.
+        /// </summary>
+        public bool SendOnCounterChange { get; }
 
         /// <summary>
         /// Gets this skill's rate of target count increase.
@@ -150,6 +158,11 @@ namespace Fibula.Creatures
         /// <param name="value">The amount by which to increase this skills counter.</param>
         public void IncreaseCounter(double value)
         {
+            if (value == 0)
+            {
+                return;
+            }
+
             var lastLevel = this.Level;
             var lastPercentVal = this.Percent;
 
@@ -167,9 +180,9 @@ namespace Fibula.Creatures
             }
 
             // Invoke any subscribers to the change event.
-            if (this.Level != lastLevel || this.Percent != lastPercentVal)
+            if (this.SendOnCounterChange || this.Level != lastLevel || this.Percent != lastPercentVal)
             {
-                this.Changed?.Invoke(this.Type, lastLevel, lastPercentVal);
+                this.Changed?.Invoke(this.Type, lastLevel, lastPercentVal, (long)value);
             }
         }
 

@@ -198,7 +198,7 @@ namespace Fibula.Creatures
 
         private void InitializeSkills()
         {
-            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 20, 150);
+            this.Skills[SkillType.Experience] = new Skill(SkillType.Experience, 1, rate: 1.1, 100, 20, 150, notifyOnEveryCounterChange: true);
             this.Skills[SkillType.Experience].Changed += this.RaiseSkillChange;
 
             this.Skills[SkillType.Magic] = new Skill(SkillType.Magic, 0, rate: 1.1, 10, 0, 150);

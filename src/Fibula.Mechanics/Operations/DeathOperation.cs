@@ -11,6 +11,8 @@
 
 namespace Fibula.Mechanics.Operations
 {
+    using System;
+    using System.Linq;
     using Fibula.Common.Contracts.Abstractions;
     using Fibula.Common.Contracts.Enumerations;
     using Fibula.Common.Utilities;
@@ -53,6 +55,33 @@ namespace Fibula.Mechanics.Operations
                 this.SendNotification(context, new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, "You are dead."));
 
                 this.SendNotification(context, new GenericNotification(() => player.YieldSingleItem(), new PlayerCancelWalkPacket(player.Direction), new PlayerDeathPacket()));
+            }
+
+            // Give out the experience if this is a monster
+            if (this.Creature is IMonster monster && monster.ExperienceToYield > 0 && this.Creature is ICombatant monsterCombatant)
+            {
+                ulong totalDamageDealt = (ulong)monsterCombatant.DamageTakenInSession.Sum(t => t.Damage);
+
+                foreach (var (combatantId, damage) in monsterCombatant.DamageTakenInSession)
+                {
+                    if (damage == 0)
+                    {
+                        continue;
+                    }
+
+                    var expPercentage = Convert.ToDecimal(damage) / totalDamageDealt;
+                    var expToGive = (long)Math.Round(monster.ExperienceToYield * expPercentage, 0, MidpointRounding.ToEven);
+
+                    if (expToGive == 0)
+                    {
+                        continue;
+                    }
+
+                    if (context.CreatureFinder.FindCreatureById(combatantId) is ICombatant combatantGainingExp)
+                    {
+                        combatantGainingExp.AddExperience(expToGive);
+                    }
+                }
             }
 
             // Remove the creature...

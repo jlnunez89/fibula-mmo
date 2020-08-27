@@ -28,10 +28,11 @@ namespace Fibula.Creatures
         /// <param name="defaultLevel">This skill's default level.</param>
         /// <param name="level">This skill's current level.</param>
         /// <param name="maxLevel">This skill's maximum level.</param>
+        /// <param name="currentCount">The skill's current count.</param>
         /// <param name="targetForNextLevel">This skill's target count for next level.</param>
         /// <param name="targetIncreaseFactor">This skill's target increase factor for calculating the next level's target.</param>
         /// <param name="increasePerLevel">This skill's value increase level over level.</param>
-        public MonsterSkill(SkillType type, int defaultLevel, int level, int maxLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel)
+        public MonsterSkill(SkillType type, int defaultLevel, int level, int maxLevel, uint currentCount, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel)
         {
             if (defaultLevel < 0)
             {
@@ -53,7 +54,7 @@ namespace Fibula.Creatures
             this.MaxLevel = (uint)Math.Max(0, maxLevel);
             this.Level = (uint)Math.Min(this.MaxLevel, level == 0 ? defaultLevel : level);
             this.Rate = targetIncreaseFactor / 1000d;
-            this.Count = 0;
+            this.Count = currentCount;
             this.TargetCount = targetForNextLevel;
             this.PerLevelIncrease = increasePerLevel;
         }

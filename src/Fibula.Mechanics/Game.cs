@@ -652,7 +652,8 @@ namespace Fibula.Mechanics
         /// <param name="skillThatChanged">The skill that changed.</param>
         /// <param name="previousLevel">The previous skill level.</param>
         /// <param name="previousPercent">The previous percent of completion to next level.</param>
-        public void SkilledCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent)
+        /// <param name="countDelta">Optional. The delta in the count for this skill. Not always sent.</param>
+        public void SkilledCreatureSkillChanged(ICreatureWithSkills skilledCreature, ISkill skillThatChanged, uint previousLevel, byte previousPercent, long? countDelta = null)
         {
             if (skilledCreature == null || skillThatChanged == null)
             {
@@ -685,9 +686,14 @@ namespace Fibula.Mechanics
                 this.scheduler.ScheduleEvent(new TextMessageNotification(() => player.YieldSingleItem(), MessageType.EventAdvance, skillChangeNotificationMessage));
             }
 
-            if (skillThatChanged.Percent != previousPercent)
+            if (skillThatChanged.Type == SkillType.Experience || skillThatChanged.Percent != previousPercent)
             {
                 this.scheduler.ScheduleEvent(new GenericNotification(() => player.YieldSingleItem(), new PlayerStatsPacket(player), new PlayerSkillsPacket(player)));
+
+                if (skillThatChanged.Type == SkillType.Experience && countDelta.HasValue && countDelta.Value > 0)
+                {
+                    this.scheduler.ScheduleEvent(new AnimatedTextNotification(() => this.map.PlayersThatCanSee(player.Location), player.Location, TextColor.White, countDelta.Value.ToString()));
+                }
             }
         }
 

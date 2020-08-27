@@ -74,7 +74,7 @@ namespace Fibula.Creatures
         /// <summary>
         /// Gets the experience yielded when this monster dies.
         /// </summary>
-        public uint Experience => this.Skills[SkillType.Experience].Level;
+        public uint ExperienceToYield => Convert.ToUInt32(Math.Min(uint.MaxValue, this.Skills[SkillType.Experience].Count));
 
         /// <summary>
         /// Gets or sets the inventory for the monster.
@@ -185,26 +185,26 @@ namespace Fibula.Creatures
             {
                 (int defaultLevel, int currentLevel, int maximumLevel, uint targetForNextLevel, uint targetIncreaseFactor, byte increasePerLevel) = kvp.Value;
 
-                this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
+                this.Skills[kvp.Key] = new MonsterSkill(kvp.Key, defaultLevel, currentLevel, maximumLevel, 0, targetForNextLevel, targetIncreaseFactor, increasePerLevel);
                 this.Skills[kvp.Key].Changed += this.RaiseSkillChange;
             }
 
             // Add experience yield as a skill
             if (!this.Skills.ContainsKey(SkillType.Experience))
             {
-                this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, Math.Min(int.MaxValue, (int)this.Type.BaseExperienceYield), 0, int.MaxValue, 100, 1100, 5);
+                this.Skills[SkillType.Experience] = new MonsterSkill(SkillType.Experience, 1, 0, int.MaxValue, Math.Min(uint.MaxValue, this.Type.BaseExperienceYield), Math.Min(uint.MaxValue, this.Type.BaseExperienceYield) * 2, 1100, 1);
                 this.Skills[SkillType.Experience].Changed += this.RaiseSkillChange;
             }
 
             if (!this.Skills.ContainsKey(SkillType.Shield))
             {
-                this.Skills[SkillType.Shield] = new MonsterSkill(SkillType.Shield, Math.Min(int.MaxValue, this.Type.BaseDefense), 0, int.MaxValue, 100, 1100, 5);
+                this.Skills[SkillType.Shield] = new MonsterSkill(SkillType.Shield, Math.Min(int.MaxValue, this.Type.BaseDefense), 0, int.MaxValue, 0, 100, 1100, 1);
                 this.Skills[SkillType.Shield].Changed += this.RaiseSkillChange;
             }
 
             if (!this.Skills.ContainsKey(SkillType.NoWeapon))
             {
-                this.Skills[SkillType.NoWeapon] = new MonsterSkill(SkillType.NoWeapon, Math.Min(int.MaxValue, this.Type.BaseAttack), 0, int.MaxValue, 100, 1100, 5);
+                this.Skills[SkillType.NoWeapon] = new MonsterSkill(SkillType.NoWeapon, Math.Min(int.MaxValue, this.Type.BaseAttack), 0, int.MaxValue, 0, 100, 1100, 1);
                 this.Skills[SkillType.NoWeapon].Changed += this.RaiseSkillChange;
             }
         }

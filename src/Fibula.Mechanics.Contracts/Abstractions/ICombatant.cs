@@ -80,7 +80,7 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// <summary>
         /// Gets the distribution of damage taken by any combatant that has attacked this combatant while the current combat is active.
         /// </summary>
-        IEnumerable<(uint, uint)> DamageTakenInSession { get; }
+        IEnumerable<(uint CombatantId, uint Damage)> DamageTakenInSession { get; }
 
         /// <summary>
         /// Gets the collection of combatants currently attacking this combatant.
@@ -96,6 +96,12 @@ namespace Fibula.Mechanics.Contracts.Abstractions
         /// Gets or sets the chase mode selected by this combatant.
         /// </summary>
         ChaseMode ChaseMode { get; set; }
+
+        /// <summary>
+        /// Adds a value of experience to the combatant, which can be positive or negative.
+        /// </summary>
+        /// <param name="expToGiveOrTake">The experience value to give or take.</param>
+        void AddExperience(long expToGiveOrTake);
 
         /// <summary>
         /// Sets the attack target of this combatant.
