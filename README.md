@@ -9,20 +9,8 @@
 [![Donate](https://img.shields.io/badge/$-.buyCoffee(Providers.PayPal)-5f69b7.svg)](https://paypal.me/jlnunez89)
 [![Donate](https://img.shields.io/badge/$-.buyCoffee(Providers.Venmo)-d16d9c.svg)](https://venmo.com/jlnunez89)
 
-#### A C# NetCore open-source server for that other leg-bone game (one which must not be named).
+# Project Moved!
 
-# Repo guidelines and content map:
+This repo is now frozen and moved under `The Fibula Project`
 
-If you're looking for the TL;DR trying to check out what this is about, see [how to setup and run the Server](https://jlnunez89.github.io/fibula-mmo/articles/setup.html).
-
-For more complex setup and configuration information check out the [server configuration](https://jlnunez89.github.io/fibula-mmo/articles/configuration.html) section.
-
-For some ramblings about me, and why I started this project, visit this [project's motivation](https://jlnunez89.github.io/fibula-mmo/articles/motivation.html) page.
-
-And so... what's the status and overview of things implemented? Here's the [project feature overview / roadmap](https://jlnunez89.github.io/fibula-mmo/articles/roadmap.html).
-
-Otherwise: 
-## Visit the [Fibula Project's GitHub pages!](https://jlnunez89.github.io/fibula-mmo/index.html)
-
-# Some Frequently Asked Questions
-Moved to [F.A.Q.](https://jlnunez89.github.io/fibula-mmo/articles/faq.html)
+https://github.com/Fibula-MMO/fibula-server
